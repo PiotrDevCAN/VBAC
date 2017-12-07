@@ -12,13 +12,14 @@ $navBar_data = array(
     array("",'endOfDropDown'),
 
     array("vBac Admin",'dropDown'),
-    array('Upload','pa_upload.php'),
     array("",'endOfDropDown'),
 
-    array("Define",'dropDown'),
+    array("On Boarding",'dropDown'),
+    array('Board Individual','pon_individual.php'),
     array("",'endOfDropDown'),
 
-    array("Manage",'dropDown'),
+    array("Off Boarding",'dropDown'),
+    array('Off Board Individual','poff_individual.php'),
     array("",'endOfDropDown'),
 
     array('Planned Outages','ppo_PlannedOutages.php')
