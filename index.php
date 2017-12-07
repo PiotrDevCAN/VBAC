@@ -14,7 +14,11 @@ body {
 
 <div class="container">
 	<div class="jumbotron">
-		<h4 id='welcomeJumotron'>Ventus Boarding & Access Control</h4>
+		<h1 id='welcomeJumotron'>Ventus Boarding & Access Control</h1>
+		<div class='btn-group'>
+		<button type='button' class='btn btn-default'><span class="glyphicon glyphicon-log-in"></span>On Boarding</button>
+		<button type='button' class='btn btn-default'><span class="glyphicon glyphicon-log-out"></span>Off Boarding</button>
+		</div>
 	</div>
 </div>
 <!-- /.container-fluid -->
