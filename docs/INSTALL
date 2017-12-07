@@ -1,0 +1,69 @@
+INSTALL OVERVIEW
+----------------
+
+Make sure you have the following packages installed. The levels listed have
+been tested. Later versions should work. Earlier versions may not. The
+versions listed are the defaults for Red Hat Enterprise Linux 3 update 3 
+which is where the templates were developed.
+
+ - apache 1.x or 2.x where php is NOT configured for CGI use
+ - php 4.3.2 or later (4.3.0 may work as well)
+ - * php support for openldap 2.0.27 is needed for w3 IBM Intranet Password and Bluegroups support.
+ - ** HTML::Table v1.5 from php pear (http://pear.php.net/) for building w3 v8 tables via w3table()
+
+NOTE: Items marked with (*) are only required if you plan to use IBM
+      Intranet Passwords (IIP) for user authentication
+
+NOTE: Items marked with (**) are only required if you plan to use
+      the w3table() functions for building w3v8 style tables. See the
+      online docs below.
+      
+NOTE: If your setup of openssl / openldap / php is broken and you get SSL
+      errors accessing ldaps://bluepages.ibm.com then you can use stunnel 
+      instead. See the online docs for more info.
+
+NOTE: You MUST have apache configured to use SSL connections if you plan to
+      use IIP for user authentication. Doing IIP authentication over HTTP
+      will result in an error page. This can be hacked
+      around but you really don't want the same password you use to access all
+      your personal HR data being sent in clear text across the IBM networks. 
+      
+INSTALL
+-------
+
+NOTE: The info below will change slightly if you're using the current CVS
+      tree. If you know how to use CVS then most likely you can also figure
+      out how to install this template given the info below :)
+
+NOTE: See below for upgrade info if you've installed a previous version.
+
+1) Use tar to uncompress the w3php-v8-X.XX.tgz file. 
+
+2) Copy the contents of w3php-v8-X.XX/site/* to /var/www/http/ or wherever your 
+   apache documentroot is setup. (For example, RHEL3 uses /var/www/html 
+   for the default documentroot.) 
+
+3) cp sample.htaccess to /var/www/html/.htaccess and edit the paths in it.
+
+4) In your httpd.conf make sure "AllowOverride All" and "Options All" is set
+   for the documentroot directory you installed to. If you don't do this
+   then you will see apache config errors in your error_log file.
+   
+5) Edit the php/w3config.php and php/menuconf.php files. See the
+   comments in each file for more info. You shouldn't have to edit
+   the other files but you might want to wait to edit the menuconf.php
+   file until you're sure the templates work correctly.
+
+6) Fire up your web browser and point them at your site. :) If you don't
+   get the results you expect check the config steps above and look in 
+   /var/log/httpd/error_log for any messages about problems with your 
+   config.
+
+ONLINE DOCS
+-----------
+
+The default sample site created by following the INSTALL instructions
+includes docs on how to use the w3php templates. 
+
+You can also view the online instructions at 
+http://web.opensource.ibm.com/www/w3php/

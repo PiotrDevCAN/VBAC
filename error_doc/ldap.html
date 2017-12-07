@@ -1,0 +1,31 @@
+
+<?php
+include('../php/templates/errordoc.header.html');
+
+if(defined('IIP_LDAP_ERRNO')){
+	$title='LDAP Error '.IIP_LDAP_ERRNO.': '.iip_ldap_err2str();
+}else{
+	$title='LDAP Error: request failed';
+}
+//if(!$GLOBALS['header_done'])
+//	do_header('<span style="color:#990000">'.$title.'.</span>',$_SERVER['SCRIPT_NAME']);
+?>
+
+<div class="container-fluid">
+	<br>
+	<div class="row">
+		<div class="col-md-12">
+
+			<div class="alert alert-warning" role="alert">
+				<p>An LDAP error has occurred. This could indicate a problem
+					with the IBM Bluepages or Bluegroups Enterprise Directory server.
+					You may reload this page to try the request again. If the problem
+					continues, please wait until service to the Enterprise Directory
+					server has been restored.</p>
+				<p>
+					<a href="javascript:history.back()">Go Back to previous Page</a>
+				</p>
+			</div>
+		</div>
+	</div>
+</div>

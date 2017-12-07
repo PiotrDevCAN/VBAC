@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title><%title_bar%></title>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+	<meta name="keywords" content="<%keywords%>" />
+	<meta name="owner" content="<%owner%>" />
+	<meta name="feedback" content="<%feedback%>" />
+	<meta name="security" content="<%security%>" />
+	<meta name="robots" content="<%robots%>" />
+	<meta name="source" content="<%source%>" />
+	<meta name="ibm.country" content="<%ibm.country%>" />
+	<meta name="dc.date" scheme="iso8601" content="<%dc.date%>" />
+	<meta name="dc.language" scheme="rfc1766" content="<%dc.language%>" />
+	<meta name="dc.rights" content="<%dc.rights%>" />
+	<meta name="descripiton" content="<%description%>" />
+	<script type="text/javaScript" src="<%assets%>/scripts/scripts.js"></script>
+	<link rel="stylesheet" type="text/css" href="<%assets%>/css/v4-screen.css" />
+	<style type="text/css" media="all">
+	<!--
+	@import url("<%assets%>/css/screen.css");
+	@import url("<%assets%>/css/icons.css");
+	@import url("<%assets%>/css/interior.css");
+	@import url("<%assets%>/css/interior-1-col.css");
+	@import url("<%assets%>/css/tables.css");
+		@import url("<%assets%>/css/popup-window.css");
+		@import url("<%assets%>/css/popup-help.css");
+	-->
+	</style>
+	<!-- print stylesheet MUST follow imported stylesheets -->
+	<link rel="stylesheet" type="text/css" media="print" href="<%assets%>/css/print.css" />
+	<%header%>
+</head>
+<body id="w3-ibm-com" <%onload%> >
+<!-- start popup masthead -->
+<div id="popup-masthead">
+<img id="popup-w3-sitemark" src="<%assets%>/images/id-w3-sitemark-small.gif" alt="" width="182" height="26" />
+</div>
+<!-- stop popup masthead -->
+<!-- start content -->
+<div id="content">
+<!-- start main content -->
+<div id="content-main">

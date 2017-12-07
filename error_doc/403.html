@@ -1,0 +1,37 @@
+<?php
+$group='';
+if(defined('IIP_AUTH_ERRNO')){
+	$title = "403 Authorization Failure " . IIP_AUTH_ERRNO . ": " .  iip_auth_err2str();
+	$group = IIP_AUTH_GROUP;
+}else{
+	$title = "403 Authorization Failure";
+}
+?>
+
+<div class="container-fluid">
+	<br>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="alert alert-warning" role="alert">
+
+<?php
+if($group==''){
+	echo '<p>You are not authorised to access this page.</p>';
+}else{
+if(IIP_AUTH_ERRNO == 7){
+	echo '<p>An authorization failure has occurred. The Bluegroup named <b><i>'.$group.'</i></b> does not exist in the Enterprise Directory. Please use the feedback link to report this problem including the URL of this page.</p>';
+}else{
+	echo '<p>An authorization failure has occurred.<br/>Only members of the Bluegroup <b><i>'.$group.'</i></b> have access to this content.<br/>To gain access to this web-page, please contact the owner/administrator of the Bluegroup <b><i>'.$group.'</i></b> and request access.</p>';
+	}
+}
+?>
+
+				<p>
+					<a href="javascript:history.back()">Go Back to previous Page</a>
+				</p>
+
+			</div>
+		</div>
+	</div>
+</div>
+

@@ -1,0 +1,80 @@
+Updates for w3php 0.5.8
+ - Corrected Navigation HTML generated to conform to W3V8 standard, and pass WebKing validation
+ - Added Page Help, and onload parameters to do_header() to display a Page level Help link, 
+   or insert onload javascript to the body tag
+ - $_w3_banner global variable to display page banner
+ - Partial sidebar also supported
+ - Error docs improved to show menue item in left navigation
+ - First, Last links added to paged tables
+ - Changes:
+	config changed to w3config.php
+	$w3bodyjs changed to $_w3_bodyjs to conform to naming standard of other gloabl variables
+	$bread_crumbs changed to $_w3_bread_crumbs
+	$page_date changed to $_w3_page_date
+	Template changes - popup have Print option
+
+Updates since w3php 0.5.4
+
+ - Fix css in w3table() to remove the need for table2.css
+ - Added xhtml 1.0 validation button and link to config.php file
+ - Clean up error_doc pages to be a bit more robust
+ - All example pages and generated code now validate xhtml 1.0 transitional
+
+Updates since w3php 0.5.2
+ 
+ - The w3table() code has been rewritten to take better advantage of
+   w3v8 css styles. The new code uses a new w3_table() class.
+ - A new w3_table() and w3_table_paged() class were added.
+ - A initial attempt at adding a w3 rendering for PEAR QuickForm.
+ - New make_ldap_filter() function in ldap.php
+ - The bluepages_search() function can now return results keyed on different
+   attributes
+ - The sidebar files are now parsed for php code
+ - A new do_pear_error() function was added to display errors from PEAR::Error
+   objects.
+ - Handling of magic_quotes for userids and passwords with ' or other odd
+   chars now works. (Login was broken for some people without this)
+ - Jucy bug fixes and teaks.
+
+Updates since w3php 0.5.1
+
+ - Fixed possible php errors in user_auth.php that could happen during
+   login failure.
+
+ - Added logging for failed logins and ldap errors during login  
+   via syslog. See the $w3php['log_auth'] var in php/config.php. 
+
+Updates since w3php 0.5
+
+ - The following undocumented functions from user.php have been moved 
+   to siteheader.php: strcheck(), passverify(), make_passwd(). It is possible
+   the functions will change or be removed in the future.
+
+ - The following functions in user.php have been removed:
+   inagroup(), user_authz(), user_authn(), group_info()
+
+ - The user.php file has been removed as it was no longer needed.
+
+ - Authentication and authorization (bluepages, bluegroups) functions have
+   been rewritten for greater speed.
+
+ - LDAP server errors are now detected and halt the authentication
+   process rather than ask for the user id and password again.
+
+ - The 401.html, 403.html and ldap.html error documents have been updated
+   to report more useful information during an authentication failure.
+
+ - Cached login credentials now expire after 3600 seconds (1 hour) to force
+   the user to reauth with bluepages and/or bluegroups.
+
+ - Multiple groups are now cached in the $GLOBALS['ltcuser'] array saving the
+   need to reauth with bluegroups. The $GLOBALS['ltcgroup'] array has been
+   eliminated.
+
+ - The following bluepages and bluegroups functions in ldap.php have been 
+   updated or added: employee_in_group(), employees_by_dn(), 
+   bluegroup_metadata(), bluegroup_employees(), bluegroup_members(),
+   bluepages_search(), dn2uid()
+
+ - Page dates can now be set to any string.
+

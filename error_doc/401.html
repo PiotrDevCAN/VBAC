@@ -1,0 +1,40 @@
+<?php
+if (defined('IIP_AUTH_ERRNO')) {
+	$title = "401 Authentication Failure " . IIP_AUTH_ERRNO . ": " .  iip_auth_err2str();
+} else {
+	$title = "401 Authentication Failure";
+}
+?>
+
+<div class="container-fluid">
+	<br>
+	<div class="row">
+		<div class="col-md-12">
+
+			<div class="alert alert-warning" role="alert">
+
+				<p>An authentication failure has occurred. This could mean your
+					user id or password was entered incorrectly. You can reload this
+					page to try to login again.</p>
+				<p>
+					To get a new IBM Intranet Password or user id, or reset your
+					existing user id, see the IBM Intranet Password site at <a
+						href="http://w3.ibm.com/password">w3.ibm.com/password</a>.
+				</p>
+				<p>
+					<a href="javascript:history.back()">Go Back to previous Page</a>
+				</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<script>
+$(document).ready( function (){
+	$('.navbar').hide();
+});
+
+
+</script>

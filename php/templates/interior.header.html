@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en-US"><!--lang= is REQUIRED for V18 compliance-->
+<head>
+
+    <!--START meta data REQUIRED or V18 compliance-->
+	<meta http-equiv="Content-type" content="text/html; ">
+	<meta name="viewport" content="width=device-width,initial-scale=1, user-scalable=no">
+	<!-- NOTE user-scalable opion above is not a V18 requirement and is used only to stop scaling on mobile devices. Do NOT include by default as there are accessibility consequences-->
+	<meta charset="UTF-8">
+    <link rel="icon" href="./ui/images/favicon.ico">
+    <link rel="canonical" href="http://www.ibm.com/______">
+    <meta name="dcterms.date" content="YYYY-MM-DD">
+    <meta name="dcterms.rights" content="������ Copyright IBM Corp. 2015">
+    <meta name="description" content="______">
+    <meta name="geo.country" content="GB">
+    <meta name="keywords" content="______">
+    <meta name="robots" content="index,follow">
+    <!--END meta data REQUIRED or V18 compliance-->
+
+	<script	  src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+
+    <!--the digitalData js object required for V18 compliance. Set data sepcific to your app in that file-->
+    <script type="text/javascript" src="./config/digitalData.js"></script>
+
+	<title><?php echo $_SESSION['SITE_NAME']; ?>...	</title>
+
+	<link rel="shortcut icon" href="http://itdq.vienna.at.ibm.com/rest/" type="image/vnd.microsoft.icon" />
+	<link rel="icon" href="http://itdq.vienna.at.ibm.com/rest/favicon.ico" type="image/vnd.microsoft.icon" />
+
+
+
+	<!--  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" class="init"> -->
+
+	<?php
+	echo strtoupper($_SERVER['environment'])=='REST' ? '<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cerulean/bootstrap.min.css" rel="stylesheet" integrity="sha384-zF4BRsG/fLiTGfR9QL82DrilZxrwgY/+du4p/c7J72zZj+FLYq4zY00RylP9ZjiT" crossorigin="anonymous">' : '<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/united/bootstrap.min.css" rel="stylesheet" integrity="sha384-pVJelSCJ58Og1XDc2E95RVYHZDPb9AVyXsI8NoVpB2xmtxoZKJePbMfE4mlXw7BJ" crossorigin="anonymous">';
+	?>
+    <link rel="stylesheet" type="text/css" href="./css/localStyle_<?=$_SERVER['environment'];?>.css" class="init">
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.1.1/min/basic.min.css" class="init">
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.1.1/min/dropzone.min.css" class="init">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css" class="init">
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/css/pikaday.min.css"/>
+
+	<!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.16/b-1.4.2/b-colvis-1.4.2/b-html5-1.4.2/b-print-1.4.2/cr-1.4.1/kt-2.3.2/r-2.2.0/rg-1.0.2/sl-1.2.3/datatables.min.css"/>  -->
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.16/b-1.4.2/b-colvis-1.4.2/b-html5-1.4.2/b-print-1.4.2/cr-1.4.1/fc-3.2.3/fh-3.1.3/r-2.2.0/sc-1.4.3/datatables.min.css"/>
+
+
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.1.1/min/dropzone.min.js" crossorigin="anonymous"></script>
+
+
+
+	<script>
+	$( document ).ready(function() {
+		console.log( "Page ready" );
+		//enable all tooltips on this page (including dynamically generated ones!!!)
+		$("body").tooltip({ selector: '[data-toggle="tooltip"]' });
+	});
+
+	</script>
+
+	</head>
+<body>

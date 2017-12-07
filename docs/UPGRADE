@@ -1,0 +1,50 @@
+When upgrading from 0.5.6 to 0.5.8:
+ 1) Replace the following files with updated versions:
+	/var/www/html/php/siteheader.php
+	/var/www/html/php/user_auth.php
+	/var/www/html/php/w3table_paged.php
+	/var/www/html/php/templates/* (all files get updated!!!)
+	/var/www/html/error_doc/*.html
+
+ 2) Rename /var/www/html/php/config.php to /var/www/html/php/w3config.php
+
+ 3) Add the following new files:
+	/var/www/html/ui/local/w3php-banner.jpg
+
+ 4) Change use of global variables $w3bodyjs and $bead_crumbs
+
+When upgrading from 0.5.4 to 0.5.6:
+
+ 1) Replace the following files with updated versions:
+	/var/www/html/php/siteheader.php
+	/var/www/html/php/QuickForm/Renderer/w3v8.php
+	/var/www/html/php/w3table.php
+	/var/www/html/php/w3table_paged.php
+	/var/www/html/php/templates/* (all files get updated!!!)
+	/var/www/html/error_doc/401.html
+	/var/www/html/error_doc/403.html
+	/var/www/html/error_doc/404.html
+
+ 2) Add the following new files:
+	/var/www/html/ui/local/valid-xhtml10.png
+
+ 3) Delete the following files:
+	/var/www/html/ui/css/table2.css
+
+ 4) Edit /var/www/html/php/config.php and verify the following settings exist:
+    xhtml_valid.
+
+When upgrading from 0.5.2 to 0.5.4:
+
+ 1) Replace the following files with updated versions:
+	/var/www/html/php/siteheader.php
+	/var/www/html/php/user_auth.php
+	/var/www/html/php/ldap.php
+	/var/www/html/php/w3table.php
+	/var/www/html/php/templates/* (all files get updated!!!)
+	/var/www/ui/css/table2.css
+
+ 2) Add the following new files:
+	/var/www/html/php/w3form.php
+	/var/www/html/php/w3table_paged.php
+	/var/www/html/QuickForm

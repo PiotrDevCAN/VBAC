@@ -1,0 +1,15 @@
+<!-- start popup footer -->
+<div id="popup-footer"><div class="hrule-dots">&nbsp;</div><div class="content">
+<a class="float-right" href="javascript:close();">Close Window</a>
+<a class="popup-print-link" href="javascript:window.print()//">Print</a>
+</div>
+<div style="clear:both;">&nbsp;</div>
+</div>
+<!-- stop popup footer -->
+</div>
+<!-- stop main content -->
+</div>
+<!-- stop content -->
+</body>
+<!-- $Id: popup.footer,v 1.4 2008/06/25 05:23:10 bleister Exp $ -->
+</html>
