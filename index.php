@@ -16,10 +16,8 @@ body {
 	<div class="jumbotron">
 		<h1 id='welcomeJumotron'>Ventus Boarding & Access Control</h1>
 	</div>
-	<button type='button' class='btn btn-default'><span class="glyphicon glyphicon-log-in"></span>&nbsp;On Boarding</button>
-	<button type='button' class='btn btn-default'><span class="glyphicon glyphicon-log-out"></span>&nbsp;Off Boarding</button>
+	<button type='button' class='btn btn-default' id='onBoardingBtn'><a href="pon_individual.php">
+	<span class="glyphicon glyphicon-log-in"></span>&nbsp;On Boarding</a></button>
+	<button type='button' class='btn btn-default' id='offBoardingBtn><span class="glyphicon glyphicon-log-out"></span>&nbsp;Off Boarding</button>
 
 </div>
-<!-- /.container-fluid -->
-
-
