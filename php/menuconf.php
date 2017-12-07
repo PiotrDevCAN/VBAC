@@ -1,6 +1,6 @@
 <?php
 $navBarImage = ""; //a small image to displayed at the top left of the nav bar
-$navBarBrand = array(strtoupper($_SERVER['environment']),"index.php");
+$navBarBrand = array(lcfirst(strtoupper($_SERVER['environment'])),"index.php");
 $navBarSearch = false;
 
 
