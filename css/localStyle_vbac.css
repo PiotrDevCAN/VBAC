@@ -40,14 +40,10 @@ td { font-size: 10px; }
 
 
 .jumbotron {
-  opacity: 0.5;
+  opacity: 0.4;
   position:relative;
   padding-top:50px;
   padding-bottom:50px;
-}
-.jumbotron .container {
-  position:relative;
-  z-index:2;
 }
 
 .btn-space {
