@@ -1,0 +1,10 @@
+## All these values need to be customized for the directory
+## structure of your site.
+##
+## Pay particular attention to the "include_path" value.
+
+# this allows php code in .html docs
+AddType application/x-httpd-php .php .html
+
+# handle errors for the site
+ErrorDocument 404 /error_doc/404.html
