@@ -17,12 +17,12 @@ if( getenv( "VCAP_SERVICES" ) )
     $conn_string = $driver . $dsn;     # Non-SSL
     $conn_string = $driver . $ssl_dsn; # SSL
 
-//    $conn = db2_connect( $conn_string, "", "" );
-$conn=true;
+    $conn = db2_connect( $conn_string, "", "" );
+
     if( $conn )
     {
         $_SESSION['conn'] = $conn;
-        $schema = isset($_SESSION['Db2Schema']) ? $_SESSION['Db2Schema'] : 'REST';
+        $schema = isset($_SESSION['Db2Schema']) ? $_SESSION['Db2Schema'] : 'VBAC';
         $Statement = "SET CURRENT SCHEMA='$schema';";
         $rs = db2_exec($conn, $Statement);
 
