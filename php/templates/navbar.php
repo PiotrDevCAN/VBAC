@@ -86,7 +86,7 @@ include ('UserComms/responsiveOutages_V2.php');
   $isAdmin = employee_in_group($_SESSION['adminBg'], $GLOBALS['ltcuser']['mail']);
   $validUser = employee_in_group($_SESSION['userBg'], $GLOBALS['ltcuser']['mail']);
   $isItdq = employee_in_group($_SESSION['itdqBg'], $GLOBALS['ltcuser']['mail']);
-  $isPmo = employee_in_group($_SESSION['pmoBg'], $GLOBALS['ltcuser']['mail']);
+//  $isPmo = employee_in_group($_SESSION['pmoBg'], $GLOBALS['ltcuser']['mail']);
 
   ?>
   <script>
@@ -94,11 +94,9 @@ include ('UserComms/responsiveOutages_V2.php');
 	  surpressMenuOptions(     <?=$isAdmin ? 'true' : 'false';?>
       , <?=$validUser ? 'true' : 'false';?>
       , <?=$isItdq ? 'true':'false';?>
-      , <?=$isPmo ? 'true':'false';?>
       );
 
 	  <?=$validUser ? '$("#userLevel").html("Valid User");' : '$("#userLevel").html("Not Defined");';?>
-	  <?=$isPmo ? '$("#userLevel").html("PMO User");' : null;?>
 	  <?=$isAdmin ? '$("#userLevel").html("Admin User");' : null;?>
 
 
