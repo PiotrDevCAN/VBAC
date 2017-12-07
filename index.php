@@ -3,7 +3,7 @@
 ?>
 <style type="text/css" class="init">
 body {
-	background: url('./public/img/rawpixel-com-284723.jpg')
+	background: url('./public/img/vBAC.jpg')
 		no-repeat center center fixed;
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
