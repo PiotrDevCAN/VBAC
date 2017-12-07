@@ -1,0 +1,39 @@
+@CHARSET "ISO-8859-1";
+
+body {
+    padding-top: 65px;
+}
+
+table.dataTable th, table.dataTable td {
+	white-space: wrap;
+}
+
+td {
+	cursor: pointer;
+	cursor: hand;
+}
+
+
+.required .control-label:after {
+  content:"*";
+  color:red;
+}
+
+.glyphicon.spinningsm {
+		    animation: spin 1s infinite linear;
+		    -webkit-animation: spin2 1s infinite linear;
+			font-size: 1em;
+		}
+
+		@keyframes spin {
+		    from { transform: scale(1) rotate(0deg);}
+		    to { transform: scale(1) rotate(360deg);}
+		}
+
+		@-webkit-keyframes spin2 {
+		    from { -webkit-transform: rotate(0deg);}
+		    to { -webkit-transform: rotate(360deg);}
+		}
+
+th { font-size: 11px; }
+td { font-size: 10px; }
