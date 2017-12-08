@@ -3,7 +3,7 @@
 ?>
 <style type="text/css" class="init">
 body {
-	background: url('./public/img/vBAC.jpg')
+	background: url('./public/img/vBAC2.jpg')
 		no-repeat center center fixed;
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
@@ -15,7 +15,7 @@ body {
 <div class="container">
 	<div class="jumbotron">
 		<h1 id='welcomeJumotron'>Ventus Boarding & Access Control</h1>
-	</div>		
+	</div>
 		<button type='button' class='btn btn-default' id='onBoardingBtn'><a href='pon_individual.php'><span class="glyphicon glyphicon-log-in"></span>&nbsp;On Boarding</a></button>
 		<button type='button' class='btn btn-default' id='offBoardingBtn'><a href='poff_individual.php'><span class="glyphicon glyphicon-log-out"></span>&nbsp;Off Boarding</a></button>
 
