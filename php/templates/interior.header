@@ -54,8 +54,8 @@
 	<!-- jquery.datePicker.js -->
 	<script type="text/javascript" src="<%assets%>/scripts/jquery.datePicker.js"></script>
 
-	<link rel="stylesheet" href="//ciolab.ibm.com/misc/typeahead/builds/facestypeahead-0.4.4.min.css"/>
-	<script src="//ciolab.ibm.com/misc/typeahead/builds/facestypeahead-0.4.4.min.js"></script>
+	<link rel="stylesheet" href="//ciolab.ibm.com/misc/typeahead/builds/facestypeahead-0.4.4.css"/>
+	<script src="//ciolab.ibm.com/misc/typeahead/builds/facestypeahead-0.4.4.js"></script>
 
 
 	<script type="text/javascript" charset="utf-8">
