@@ -13,7 +13,7 @@ set_time_limit(0);
 
 <script>
 //Use your API key instead of API_KEY
-var config = { key: vbac;rob.daniel@uk.ibm.com};
+var config = { key: 'vbac;rob.daniel@uk.ibm.com'};
 
 FacesTypeAhead.init(
     document.getElementById('faces-input'),
