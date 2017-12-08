@@ -1013,7 +1013,7 @@ function formTextArea($label, $fieldName, $state = null, $textAreaclass = null, 
            <script>
 	           var config = {
 	               //API Key [REQUIRED]
-	               key: 'mcab;tim.j.minter@uk.ibm.com',
+	               key: 'vbac;rob.daniel@uk.ibm.com',
 	               faces: {
 	                   //The handler for clicking a person in the drop-down.
 	                   onclick: function(person) {

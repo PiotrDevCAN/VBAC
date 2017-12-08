@@ -13,15 +13,24 @@ class personRecord extends DbRecord
 {
 
     protected $NAME;
-    protected $NAME_NOTES_ID;
-    protected $NAME_INTRANET_ID;
     protected $CNUM;
     protected $FUNCTIONAL_MGR_FLAG;
     protected $FUNCTIONAL_MGR_CNUM;
 
+    protected $person_NOTES_ID;
+    protected $person_INTRANET_ID;
+    protected $person_PHONE;
+
 
     function displayBpDetails($mode){
-        $this->formUserid('NAME', 'Name');
+        ?>
+        <form id='displayBpDetails' name='displayBpDetails' class="form-horizontal"  method='post'>
+        <?php
+        $this->setfcformName('displayBpDetails');
+        $this->formUserid('person', 'Name');
+        ?>
+        </form>
+        <?php
 
     }
 

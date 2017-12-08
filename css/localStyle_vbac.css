@@ -50,8 +50,10 @@ td { font-size: 10px; }
     margin-right: 5px;
 }
 
-.welcomeJumotron {
-	font-size: 140%;
+.typeahead-results ul li.result {
+  overflow: hidden;
+  cursor: pointer;
+  letter-spacing: 0.01em;
+  line-height: 26px;
 }
-
 
