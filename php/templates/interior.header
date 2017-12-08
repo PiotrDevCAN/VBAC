@@ -88,10 +88,6 @@
 	document.write('<style type="text/css">.tabber{display:none;}<\/style>');
 	</script><style type="text/css">.tabber{display:none;}</style>
 
-	<script type="text/javascript" src="/rob2.js"></script>
-
-
-
 	<link rel="shortcut icon" href="favicon.ico" />
 	<!-- print stylesheet MUST follow imported stylesheets -->
 	<link rel="stylesheet" type="text/css" media="print" href="<%assets%>/css/print.css" />
