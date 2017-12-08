@@ -50,18 +50,8 @@ td { font-size: 10px; }
     margin-right: 5px;
 }
 
-.typeahead-results ul li.result {
-  overflow: hidden;
-  cursor: pointer;
-  letter-spacing: 0.01em;
-  line-height: 26px;
+.faces-typeahead-results .result {
+  height: 65px;
+  padding: 10px;
 }
-
-.faces-typeahead-results .small-result img {
-    width: 32px;
-}
-.faces-typeahead-results .large-result img {
-    width: 40px;
-}
-
 

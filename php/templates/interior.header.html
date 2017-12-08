@@ -24,17 +24,12 @@
 
 	<title><?php echo $_SESSION['SITE_NAME']; ?>...	</title>
 
-	<link rel="shortcut icon" href="http://itdq.vienna.at.ibm.com/rest/" type="image/vnd.microsoft.icon" />
-	<link rel="icon" href="http://itdq.vienna.at.ibm.com/rest/favicon.ico" type="image/vnd.microsoft.icon" />
-
-
-
 	<!--  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" class="init"> -->
 
 	<?php
 	echo strtoupper($_SERVER['environment'])=='VBAC' ? '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/cosmo/bootstrap.min.css" integrity="sha256-GamwdmSkzX/X39UCQREOQHmmuU2ewsnrft1flUimjxA=" crossorigin="anonymous" />' : '<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/united/bootstrap.min.css" rel="stylesheet" integrity="sha384-pVJelSCJ58Og1XDc2E95RVYHZDPb9AVyXsI8NoVpB2xmtxoZKJePbMfE4mlXw7BJ" crossorigin="anonymous">';
 	?>
-    <link rel="stylesheet" type="text/css" href="./css/localStyle_<?=$_SERVER['environment'];?>.css" class="init">
+
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.1.1/min/basic.min.css" class="init">
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.1.1/min/dropzone.min.css" class="init">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css" class="init">
@@ -49,6 +44,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.1.1/min/dropzone.min.js" crossorigin="anonymous"></script>
 	<script src="//ciolab.ibm.com/misc/typeahead/builds/facestypeahead-0.4.4.js"></script>
 
+    <link rel="stylesheet" type="text/css" href="./css/localStyle_<?=$_SERVER['environment'];?>.css" class="init">
 
 
 	<script>
