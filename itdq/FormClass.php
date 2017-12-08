@@ -1017,17 +1017,17 @@ function formTextArea($label, $fieldName, $state = null, $textAreaclass = null, 
 	               faces: {
 	                   //The handler for clicking a person in the drop-down.
 	                   onclick: function(person) {
-
-                        var intranet = document.forms.<?php echo $this->fcFormName;?>.elements['<?=$intranet?>'];
+	                	   console.log(person);
+	                	   var intranet = document.forms.<?=$this->fcFormName;?>.elements['<?=$intranet?>'];
                             if(typeof(intranet) !== 'undefined'){ intranet.value = person['email'];};
 
-                            var name =  document.forms.<?php echo $this->fcFormName;?>.elements['<?=$name?>'];
+                            var name =  document.forms.<?=$this->fcFormName;?>.elements['<?=$name?>'];
                             if(typeof(name) !== 'undefined'){ name.value = person['name'];};
 
-                            var uid = document.forms.<?php echo $this->fcFormName;?>.elements['<?=$uid?>'];
+                            var uid = document.forms.<?=$this->fcFormName;?>.elements['<?=$uid?>'];
                             if(typeof(uid) !== 'undefined'){ uid.value = person['uid'];};
 
-                            var phone = document.forms.<?php echo $this->fcFormName;?>.elements['<?=$phone?>'];
+                            var phone = document.forms.<?=$this->fcFormName;?>.elements['<?=$phone?>'];
                             if(typeof(phone) !== 'undefined'){ phone.value = person['phone'];};
 
                             return person['notes-id'];

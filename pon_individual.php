@@ -11,11 +11,23 @@ set_time_limit(0);
 <?php
 $mode = FormClass::$modeDEFINE;
 $person = new personRecord();
-$person->displayBpDetails($mode)
+$person->displayBpDetails($mode);
 ?>
 
 
-
 </div>
+
+<<script type="text/javascript">
+<!--
+$(document).ready(function() {
+	var person = new personRecord();
+    person.listenForName();
+});
+//-->
+
+console.log($('#NAME'));
+
+</script>
+
 <?php
 

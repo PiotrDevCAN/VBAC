@@ -294,7 +294,7 @@ do_auth();
 include ('php/ldap.php');
 include ('php/templates/interior.header.html');
 include ('itdq/java/scripts.html');
-// include ('vbac/java/scripts.html');
+include ('vbac/java/scripts.html');
 include ('vendor/autoload.php');
 include ('splClassLoader.php');
 include ('connect.php');

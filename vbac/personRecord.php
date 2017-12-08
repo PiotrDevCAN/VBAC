@@ -20,16 +20,49 @@ class personRecord extends DbRecord
     protected $person_NOTES_ID;
     protected $person_INTRANET_ID;
     protected $person_PHONE;
+    protected $person_UID;
 
 
     function displayBpDetails($mode){
         ?>
-        <form id='displayBpDetails' name='displayBpDetails' class="form-horizontal"  method='post'>
-        <?php
-        $this->setfcformName('displayBpDetails');
-        $this->formUserid('person', 'Name');
-        ?>
-        </form>
+
+        <form id='displayBpDetails'  class="form-horizontal">
+        <div class="form-group" id="displayBpDetails">
+
+		<div class="form-group">
+		<label class='control-label col-sm-2' for='NAME'>Name</label>
+        <div class="col-sm-5">
+        <input class="form-control" id="NAME" name="NAME" value="<?=$this->NAME?>" required="required" type="text" >
+        </div>
+        </div>
+
+        <div id='personDetails' hidden >
+
+        <div class='form-group' >
+        <label class='col-sm-2 control-label' for='person_notesid'>Notesid</label>
+        <div class='col-sm-3'>
+        <input class='form-control' id='person_notesid' name='person_notesid' value='' required='required' type='text' disabled='disabled' >
+        </div>
+
+        <label class='col-md-1 control-label' for='person_intranet'>eMail</label>
+        <div class='col-sm-3'>
+        <input class='form-control' id='person_intranet' name='person_intranet' value='' required='required' type='text' disabled='disabled'>
+        </div>
+        </div>
+
+        <div class='form-group' >
+        <label class='col-sm-2 control-label' for='person_bio'>Bio</label>
+        <div class='col-sm-7'>
+        	<input class='form-control' id='person_bio' name='person_bio' value='' required='required' type='text' disabled='disabled' placeholder="Enter email">
+        <input id='person_uid' name='person_uid' value='' required='required' type='hidden'  >
+        </div>
+        </div>
+
+        </div>
+
+
+		</form>
+    	</div>
         <?php
 
     }
