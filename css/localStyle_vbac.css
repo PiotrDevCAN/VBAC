@@ -57,3 +57,11 @@ td { font-size: 10px; }
   line-height: 26px;
 }
 
+.faces-typeahead-results .small-result img {
+    width: 32px;
+}
+.faces-typeahead-results .large-result img {
+    width: 40px;
+}
+
+
