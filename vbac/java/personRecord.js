@@ -80,8 +80,31 @@ function personRecord() {
 			    	success: function(result){
 			    		console.log('success');
 			    		console.log(result);
-			    		var jsonResult = JSON.parse(result);
-			    		console.log(jsonResult);
+			    		var personDetailsObj = JSON.parse(result);
+			    		console.log(personDetailsObj);
+
+			    		console.log(personDetailsObj.search.entry[0]);
+			    		var attributes = personDetailsObj.search.entry[0];
+			    		console.log(attributes);
+
+			    		var intranet = document.getElementById('person_intranet');
+		                if(typeof(intranet) !== 'undefined'){ intranet.value = jsonResult.['email'];};
+
+		                   var notesId =  document.getElementById('person_notesid');
+		                   if(typeof(notesId) !== 'undefined'){ notesId.value = person['notes-id'];};
+
+		                   var bio =  document.getElementById('person_bio');
+		                   if(typeof(bio) !== 'undefined'){ bio.value = person['bio'];};
+
+		                   var uid =  document.getElementById('person_uid');
+		                   if(typeof(uid) !== 'undefined'){ uid.value = person['uid'];};
+
+		                   $('#personDetails').show();
+
+
+
+
+
 			    	},
 			        error: function (xhr, status) {
 			            // handle errors
