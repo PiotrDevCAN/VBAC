@@ -75,11 +75,13 @@ function personRecord() {
 			console.log($(e.target).val());
 			if(cnum.length == 9){
 			    $.ajax({
-			    	url: "https://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmperson/(uid=001399866).search/byjson",
+			    	url: "https://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmperson/(uid=" + cnum + ").search/byjson",
 			        type: 'GET',
 			    	success: function(result){
 			    		console.log('success');
 			    		console.log(result);
+			    		var jsonResult = JSON.parse(result);
+			    		console.log(jsonResult);
 			    	},
 			        error: function (xhr, status) {
 			            // handle errors
