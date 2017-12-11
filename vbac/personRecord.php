@@ -30,8 +30,12 @@ class personRecord extends DbRecord
         <div class="form-group" id="displayBpDetails">
 
 		<div class="form-group">
-        <div class="col-sm-5">
+        <div class="col-sm-3">
         <input class="form-control" id="NAME" name="NAME" value="<?=$this->NAME?>" required="required" type="text" placeholder='Start typing a name to perform a lookup' >
+        </div>
+        <label class='col-sm-1 label-centre' for='person_serial'>Or</label>
+        <div class='col-sm-3'>
+        <input class='form-control' id='person_serial' name='person_serial' value='' required='required' type='text' placeholder='9 digit serial, including country code' >
         </div>
         </div>
 

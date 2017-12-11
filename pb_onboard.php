@@ -22,6 +22,7 @@ $person->displayBpDetails($mode);
 $(document).ready(function() {
 	var person = new personRecord();
     person.listenForName();
+    person.listenForSerial();
 });
 //-->
 

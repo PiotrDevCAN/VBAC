@@ -67,12 +67,32 @@ function personRecord() {
 			 window.open('pb_offboard.php', '_self');
 		});
 
+	},
+
+	this.listenForSerial = function(){
+		$(document).on('keyup change',function(e){
+			var cnum = $(e.target).val();
+			console.log($(e.target).val());
+			if(cnum.length == 9){
+			    $.ajax({
+			    	url: "http://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmperson/(sn=bali).search/byjson",
+			        type: 'GET',
+			        crossDomain: true,
+			    	success: function(result){
+			    		console.log('success');
+			    		console.log(result);
+			    	},
+			        error: function (xhr, status) {
+			            // handle errors
+			        	console.log('error');
+			        	console.log(xhr);
+			        	console.log(status);
+			        }
+			    });
+			}
+
+		});
 	}
-
-
-
-
-
 }
 
 $( document ).ready(function() {
