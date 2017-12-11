@@ -53,7 +53,23 @@ function personRecord() {
         		config
         		);
 
+	},
+
+	this.listenForOnBoarding = function() {
+		console.log('listening');
+		$(document).on('click','#onBoardingBtn', function(){
+			window.open('pb_onboard.php', '_self');
+		});
+	},
+
+	this.listenForOffBoarding = function(){
+		$(document).on('click','#offBoardingBtn', function(){
+			 window.open('pb_offboard.php', '_self');
+		});
+
 	}
+
+
 
 
 
