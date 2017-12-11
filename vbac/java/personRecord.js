@@ -75,9 +75,8 @@ function personRecord() {
 			console.log($(e.target).val());
 			if(cnum.length == 9){
 			    $.ajax({
-			    	url: "http://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmperson/(sn=bali).search/byjson",
+			    	url: "https://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmperson/(uid=001399866).search/byjson",
 			        type: 'GET',
-			        crossDomain: true,
 			    	success: function(result){
 			    		console.log('success');
 			    		console.log(result);
