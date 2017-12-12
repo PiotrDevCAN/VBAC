@@ -93,7 +93,8 @@ function personRecord() {
 			    			var name = object.name;
 			    			switch(name){
 			    			case 'preferredidentity':
-			    				if(typeof(intranet) !== 'undefined'){ intranet.value = jsonResult.['email'];};
+			    				var intranet = document.getElementById('person_intranet');
+			    				if(typeof(intranet) !== 'undefined'){ intranet.value = value;};
 			    				break;
 			    			default:
 			    				console.log(name + ":" + value);
