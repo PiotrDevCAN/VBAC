@@ -33,7 +33,6 @@ class personRecord extends DbRecord
         <div class="col-sm-3">
         <input class="form-control" id="NAME" name="NAME" value="<?=$this->NAME?>" required="required" type="text" placeholder='Start typing a name to perform a lookup' >
         </div>
-        <label class='col-sm-1 label-centre' for='person_serial'>Or</label>
         <div class='col-sm-3'>
         <input class='form-control' id='person_serial' name='person_serial' value='' required='required' type='text' placeholder='Serial Number & Country Code (9 digits)' >
         </div>
@@ -52,7 +51,7 @@ class personRecord extends DbRecord
         </div>
 
         <div class='form-group' >
-        <div class='col-sm-7'>
+        <div class='col-sm-6'>
         <input class='form-control' id='person_bio' name='person_bio' value='' required='required' type='text' disabled='disabled' placeholder="Enter email">
         <input id='person_uid' name='person_uid' value='' required='required' type='hidden'  >
         </div>
