@@ -115,25 +115,8 @@ function personRecord() {
 			    				console.log(name + ":" + value);
 			    			}
 			    		}
-
-//			    		var intranet = document.getElementById('person_intranet');
-//		                if(typeof(intranet) !== 'undefined'){ intranet.value = jsonResult.['email'];};
-
-//
-//		                   var notesId =  document.getElementById('person_notesid');
-//		                   if(typeof(notesId) !== 'undefined'){ notesId.value = person['notes-id'];};
-//
-//		                   var bio =  document.getElementById('person_bio');
-//		                   if(typeof(bio) !== 'undefined'){ bio.value = person['bio'];};
-//
-//		                   var uid =  document.getElementById('person_uid');
-//		                   if(typeof(uid) !== 'undefined'){ uid.value = person['uid'];};
-
-		                   $('#personDetails').show();
-
-
-
-
+	                   $('#personDetails').show();
+	                   $('').attr('disable',true);
 
 			    	},
 			        error: function (xhr, status) {

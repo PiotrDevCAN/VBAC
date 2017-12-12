@@ -35,28 +35,25 @@ class personRecord extends DbRecord
         </div>
         <label class='col-sm-1 label-centre' for='person_serial'>Or</label>
         <div class='col-sm-3'>
-        <input class='form-control' id='person_serial' name='person_serial' value='' required='required' type='text' placeholder='9 digit serial, including country code' >
+        <input class='form-control' id='person_serial' name='person_serial' value='' required='required' type='text' placeholder='Serial Number & Country Code (9 digits)' >
         </div>
         </div>
 
         <div id='personDetails' hidden >
 
         <div class='form-group' >
-        <label class='col-sm-1 ' for='person_notesid'>Notesid</label>
         <div class='col-sm-3'>
         <input class='form-control' id='person_notesid' name='person_notesid' value='' required='required' type='text' disabled='disabled' >
         </div>
 
-        <label class='col-sm-1 ' for='person_intranet'>eMail</label>
         <div class='col-sm-3'>
         <input class='form-control' id='person_intranet' name='person_intranet' value='' required='required' type='text' disabled='disabled'>
         </div>
         </div>
 
         <div class='form-group' >
-        <label class='col-sm-1 ' for='person_bio'>Bio</label>
         <div class='col-sm-7'>
-        	<input class='form-control' id='person_bio' name='person_bio' value='' required='required' type='text' disabled='disabled' placeholder="Enter email">
+        <input class='form-control' id='person_bio' name='person_bio' value='' required='required' type='text' disabled='disabled' placeholder="Enter email">
         <input id='person_uid' name='person_uid' value='' required='required' type='hidden'  >
         </div>
         </div>

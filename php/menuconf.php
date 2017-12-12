@@ -20,6 +20,7 @@ $navBar_data = array(
     array("Boarding",'dropDown'),
     array('On Board','pb_onboard.php'),
     array('Off Board','pb_offboard.php'),
+    array('Manager Portal','pb_manager.php'),
     array("",'endOfDropDown'),
 
     array("Access",'dropDown'),
