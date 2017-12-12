@@ -87,10 +87,14 @@ function personRecord() {
 			    		var attributes = personDetailsObj.search.entry[0];
 			    		console.log(attributes);
 
+			    		console.log(attributes.length);
+
 			    		for(a=0;a<attributes.length;a++){
 			    			var object = attributes[a];
 			    			var value = object.value;
 			    			var name = object.name;
+			    			console.log(object);
+			    			console.log(name);
 			    			switch(name){
 			    			case 'preferredidentity':
 			    				var intranet = document.getElementById('person_intranet');
