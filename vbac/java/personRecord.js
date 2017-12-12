@@ -93,8 +93,6 @@ function personRecord() {
 			    			var object = attributes[a];
 			    			var value = object.value;
 			    			var name = object.name;
-			    			console.log(object);
-			    			console.log(name);
 			    			switch(name){
 			    			case 'preferredidentity':
 			    				var intranet = document.getElementById('person_intranet');
@@ -111,12 +109,22 @@ function personRecord() {
 			    			case 'uid':
 				                   var uid =  document.getElementById('person_uid');
 				                   if(typeof(uid) !== 'undefined'){ uid.value = value;};
+			    			case 'preferredfirstname':
+				                   var name =  document.getElementById('NAME');
+				                   if(typeof(name) !== 'undefined'){ name.value = value;};
+				                   $('#NAME').attr('disable',true);
+				                   break;
+			    			case 'sn':
+				                   var name =  document.getElementById('NAME');
+				                   if(typeof(name) !== 'undefined'){ name.value = name.value() + " " + value ;};
+				                   $('#NAME').attr('disable',true);
+				                   break;
 			    			default:
 			    				console.log(name + ":" + value);
 			    			}
 			    		}
 	                   $('#personDetails').show();
-	                   $('').attr('disable',true);
+	                   $('#NAME').attr('disable',true);
 
 			    	},
 			        error: function (xhr, status) {
