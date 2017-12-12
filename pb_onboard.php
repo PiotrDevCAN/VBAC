@@ -17,7 +17,7 @@ $person->displayBpDetails($mode);
 
 </div>
 
-<<script type="text/javascript">
+<script type="text/javascript">
 <!--
 $(document).ready(function() {
 	var person = new personRecord();

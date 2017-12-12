@@ -116,7 +116,7 @@ function personRecord() {
 				                   break;
 			    			case 'sn':
 				                   var name =  document.getElementById('NAME');
-				                   if(typeof(name) !== 'undefined'){ name.value = name.value() + " " + value ;};
+				                   if(typeof(name) !== 'undefined'){ name.value = name.value + " " + value ;};
 				                   $('#NAME').attr('disable',true);
 				                   break;
 			    			default:
