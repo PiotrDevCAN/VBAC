@@ -87,8 +87,22 @@ function personRecord() {
 			    		var attributes = personDetailsObj.search.entry[0];
 			    		console.log(attributes);
 
+			    		for(a=0;a<attributes.length;a++){
+			    			var object = attributes[a];
+			    			var value = object.value;
+			    			var name = object.name;
+			    			switch(name){
+			    			case 'preferredidentity':
+			    				if(typeof(intranet) !== 'undefined'){ intranet.value = jsonResult.['email'];};
+			    				break;
+			    			default:
+			    				console.log(name + ":" + value);
+			    			}
+			    		}
+
 //			    		var intranet = document.getElementById('person_intranet');
 //		                if(typeof(intranet) !== 'undefined'){ intranet.value = jsonResult.['email'];};
+
 //
 //		                   var notesId =  document.getElementById('person_notesid');
 //		                   if(typeof(notesId) !== 'undefined'){ notesId.value = person['notes-id'];};
