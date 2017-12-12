@@ -84,7 +84,7 @@ function personRecord() {
 			    		console.log(personDetailsObj);
 
 			    		console.log(personDetailsObj.search.entry[0]);
-			    		var attributes = personDetailsObj.search.entry[0];
+			    		var attributes = personDetailsObj.search.entry[0].attribute;
 			    		console.log(attributes);
 
 			    		console.log(attributes.length);
