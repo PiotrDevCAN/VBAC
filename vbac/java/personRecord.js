@@ -33,7 +33,8 @@ function personRecord() {
                    var bio =  document.getElementById('person_bio');
                    if(typeof(bio) !== 'undefined'){ bio.value = person['bio'];};
 
-                   var uid = document.getElementById['person_serial'];
+                   var uid = document.getElementById('person_serial');
+                   console.log(uid);
                    if(typeof(uid) !== 'undefined'){ uid.value = person['uid'];};
                    $('#person_serial').attr('disabled','disabled');
 
