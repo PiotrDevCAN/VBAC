@@ -33,13 +33,13 @@ function personRecord() {
                    var bio =  document.getElementById('person_bio');
                    if(typeof(bio) !== 'undefined'){ bio.value = person['bio'];};
 
-                   var uid =  document.getElementById('person_uid');
+                   var uid = document.getElementById['person_serial'];
                    if(typeof(uid) !== 'undefined'){ uid.value = person['uid'];};
+                   $('#person_serial').attr('disabled','disabled');
 
                    $('#personDetails').show();
 //
-//                   var uid = document.forms.displayBpDetails.elements['person_uid'];
-//                   if(typeof(uid) !== 'undefined'){ uid.value = person['uid'];};
+
 //
 //                   var phone = document.forms.displayBpDetails.elements['person_phone'];
 //                   if(typeof(phone) !== 'undefined'){ phone.value = person['phone'];};
@@ -109,15 +109,16 @@ function personRecord() {
 			    			case 'uid':
 				                   var uid =  document.getElementById('person_uid');
 				                   if(typeof(uid) !== 'undefined'){ uid.value = value;};
+				                   break;
 			    			case 'preferredfirstname':
 				                   var name =  document.getElementById('NAME');
 				                   if(typeof(name) !== 'undefined'){ name.value = value;};
-				                   $('#NAME').attr('disable',true);
+				                   $('#NAME').attr('disabled','disabled');
 				                   break;
 			    			case 'sn':
 				                   var name =  document.getElementById('NAME');
 				                   if(typeof(name) !== 'undefined'){ name.value = name.value + " " + value ;};
-				                   $('#NAME').attr('disable',true);
+				                   $('#NAME').attr('disable','disabled');
 				                   break;
 			    			default:
 			    				console.log(name + ":" + value);
