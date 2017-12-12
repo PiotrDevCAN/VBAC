@@ -100,6 +100,17 @@ function personRecord() {
 			    				var intranet = document.getElementById('person_intranet');
 			    				if(typeof(intranet) !== 'undefined'){ intranet.value = value;};
 			    				break;
+			    			case 'jobresponsibilities':
+			    				var bio =  document.getElementById('person_bio');
+			                   if(typeof(bio) !== 'undefined'){ bio.value = value;};
+			                   break;
+			    			case 'notesemail':
+				                   var notesId =  document.getElementById('person_notesid');
+				                   if(typeof(notesId) !== 'undefined'){ notesId.value = value;};
+			                   break;
+			    			case 'uid':
+				                   var uid =  document.getElementById('person_uid');
+				                   if(typeof(uid) !== 'undefined'){ uid.value = value;};
 			    			default:
 			    				console.log(name + ":" + value);
 			    			}
