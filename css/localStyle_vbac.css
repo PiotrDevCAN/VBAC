@@ -65,3 +65,15 @@ td { font-size: 10px; }
   top: 50%;
   transform: translateY(-50%);
 }
+
+
+dropdown-menu > li > a {
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: normal;
+    line-height: 1.42857143;
+    color: #333333;
+    white-space: nowrap;
+}
+

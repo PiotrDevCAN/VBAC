@@ -75,7 +75,7 @@ include ('UserComms/responsiveOutages_V2.php');
               <ul class="nav navbar-nav navbar-right">
               </ul>
 
-              <p class='nav navbar-nav navbar-right text-primary bg-primary'>User Level is:<scan id='userLevel'></scan></p>
+              <p class='nav navbar-nav navbar-right '>User Level is:<scan id='userLevel'></scan></p>
             </div><!-- /.navbar-collapse -->
           </div><!-- /.container-fluid -->
         </nav>
