@@ -88,3 +88,11 @@ dropdown-menu > li > a {
     background-color: #bbbbbb;
 }
 
+.panel-body {
+    padding: 15px;
+        padding-top: 15px;
+        padding-right: 15px;
+        padding-bottom: 5px;
+        padding-left: 15px;
+}
+

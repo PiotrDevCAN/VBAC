@@ -77,3 +77,11 @@ dropdown-menu > li > a {
     white-space: nowrap;
 }
 
+.panel-body {
+    padding: 15px;
+        padding-top: 15px;
+        padding-right: 15px;
+        padding-bottom: 5px;
+        padding-left: 15px;
+}
+
