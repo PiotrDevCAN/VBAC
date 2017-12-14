@@ -25,6 +25,7 @@ $navBar_data = array(
 
     array("Access",'dropDown'),
     array('Access Request','pc_accessRequest.php'),
+    array('IAM Admin','pc_iamAdmin.php'),
     array("",'endOfDropDown'),
 
     array('Planned Outages','ppo_PlannedOutages.php')
