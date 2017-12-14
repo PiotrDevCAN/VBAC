@@ -26,15 +26,84 @@ $person->displayBpDetails($mode);
 </div>
 
 <script type="text/javascript">
-<!--
 $(document).ready(function() {
+ 	$('#person_fm_mgr').select2();
+ 	$('#work_stream').select2();
 	var person = new personRecord();
     person.listenForName();
     person.listenForSerial();
 });
-//-->
 
-console.log($('#NAME'));
+$(document).ready(function(){
+
+	var startDate,
+    	endDate,
+    updateStartDate = function() {
+		console.log('updatedStartDate');
+        startPicker.setStartRange(startDate);
+        endPicker.setStartRange(startDate);
+        endPicker.setMinDate(startDate);
+    },
+    updateEndDate = function() {
+		console.log('updatedEndDate');
+        startPicker.setEndRange(endDate);
+        startPicker.setMaxDate(endDate);
+        endPicker.setEndRange(endDate);
+    },
+    startPicker = new Pikaday({
+    	firstDay:1,
+		disableDayFn: function(date){
+		    // Disable weekend
+		    return date.getDay() === 0 || date.getDay() === 6;
+		},
+        field: document.getElementById('start_date'),
+        format: 'D MMM YYYY',
+        showTime: false,
+        onSelect: function() {
+            console.log(this.getMoment().format('Do MMMM YYYY'));
+            var db2Value = this.getMoment().format('YYYY-MM-DD')
+            console.log(db2Value);
+            jQuery('#start_date').val(db2Value);
+            startDate = this.getDate();
+            console.log(startDate);
+            updateStartDate();
+        }
+    }),
+    endPicker = new Pikaday({
+    	firstDay:1,
+		disableDayFn: function(date){
+		    // Disable weekend
+		    return date.getDay() === 0 || date.getDay() === 6;
+		},
+        field: document.getElementById('end_date'),
+        format: 'D MMM YYYY',
+        showTime: false,
+        onSelect: function() {
+            console.log(this.getMoment().format('Do MMMM YYYY'));
+            var db2Value = this.getMoment().format('YYYY-MM-DD')
+            console.log(db2Value);
+            jQuery('#end_date').val(db2Value);
+            endDate = this.getDate();
+            updateEndDate();
+        }
+    }),
+    _startDate = startPicker.getDate(),
+    _endDate = endPicker.getDate();
+
+    if (_startDate) {
+        startDate = _startDate;
+        updateStartDate();
+    }
+
+    if (_endDate) {
+        endDate = _endDate;
+        updateEndDate();
+    }
+});
+
+
+
+
 
 </script>
 

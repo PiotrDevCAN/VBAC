@@ -39,6 +39,7 @@ function personRecord() {
                    $('#person_serial').attr('disabled','disabled');
 
                    $('#personDetails').show();
+                   $('#person_contractor_id').select2();
 //
 
 //
@@ -49,11 +50,19 @@ function personRecord() {
                    }
             }
         };
-        FacesTypeAhead.init(
-        		document.getElementById('NAME'),
-        		config
-        		);
 
+        if(typeof FacesTypeAhead !== 'object'){
+        	alert('Faces Type Ahead not found, ensure you are connected to IBM network');
+        	$('#NAME').attr('disabled',true);
+        	$('#NAME').attr('placeholder','Please connect to IBM network');
+        	$('#person_serial').attr('disabled',true);
+        	$('#person_serial').attr('placeholder','Please connect to IBM network');
+        } else {
+            FacesTypeAhead.init(
+            		document.getElementById('NAME'),
+            		config
+            		);
+        }
 	},
 
 	this.listenForOnBoarding = function() {

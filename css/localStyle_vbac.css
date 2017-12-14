@@ -6,11 +6,13 @@ body {
 
 table.dataTable th, table.dataTable td {
 	white-space: wrap;
+	font-size: 15px;
 }
 
 td {
 	cursor: pointer;
 	cursor: hand;
+}cursor: hand;
 }
 
 

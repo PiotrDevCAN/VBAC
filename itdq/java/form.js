@@ -11,7 +11,7 @@ function Form() {
 		console.log('+++ Function +++ Form.init');
 		//this.enableTinyMceForClass();	 - Caused problems on the ActionForms page when it was initialsed here.
 
-		$('select').select2();
+		// $('select').select2();
 
 		console.log('--- Function --- Form.init');
 
