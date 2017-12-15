@@ -27,29 +27,6 @@ $allTables = array('Role Table'=> $allRoles, 'Groups'=>$allGroups);
 <table class="table table-striped table-bordered" cellspacing="0" width="50%" id='staticDataValues'>
 <thead><tr><th>Table Name</th><th>Entry</th></tr></thead>
 <tbody>
-<?php
-foreach ($allTables as $tableName => $allEntries){
-    ?><tr><td><?=$tableName?></td><td>
-                  <button type='button' class='btn btn-default btn-xs newEntry' aria-label='Left Align'
-                          data-tablename='<?=$tableName?>' data-value='' data-uid='newEntry' >
-                <span class='glyphicon glyphicon-plus ' aria-hidden='true'></span>
-                </button><span style='font-style:italic'>new_entry</span></td></tr><?php
-
-    foreach ($allEntries as $uid => $value){
-        ?><tr><td><?=$tableName?></td><td>
-              <button type='button' class='btn btn-default btn-xs editRecord' aria-label='Left Align'
-                      data-tablename='<?=$tableName?>' data-value='<?=$value?>' data-uid='<?=$uid?>' >
-            <span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>
-            </button>
-              <button type='button' class='btn btn-default btn-xs disableRecord' aria-label='Left Align'
-                      data-tablename='<?=$tableName?>' data-value='<?=$value?>' data-uid='<?=$uid?>' >
-            <span class='glyphicon glyphicon-trash ' aria-hidden='true'></span>
-            </button>
-
-           <?=$value;?></td></tr><?php
-    }
-}
-?>
 </tbody>
 <tfoot>
 <tr><th>Table Name</th><th>Entry</th></tr>
@@ -173,6 +150,10 @@ $('document').ready(function() {
 
 
     var table = $('#staticDataValues').DataTable({
+    	ajax: {
+            url: 'ajax/returnStaticDataForEdit.php',
+            type: 'POST',
+        }	,
     	responsive: true,
     	processing: true,
     	deferRender:true,

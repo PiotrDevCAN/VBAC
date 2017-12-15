@@ -17,28 +17,28 @@ if( getenv( "VCAP_SERVICES" ) )
     $conn_string = $driver . $dsn;     # Non-SSL
     $conn_string = $driver . $ssl_dsn; # SSL
 
-//    $conn = db2_connect( $conn_string, "", "" );
+    $conn = db2_connect( $conn_string, "", "" );
 
     $GLOBALS['ltcuser']['mail'] = 'dummyUser';
-//     if( $conn )
-//     {
-//         $_SESSION['conn'] = $conn;
-//         $schema = isset($_SESSION['Db2Schema']) ? $_SESSION['Db2Schema'] : 'VBAC';
-//         $Statement = "SET CURRENT SCHEMA='$schema';";
-//         $rs = db2_exec($conn, $Statement);
+    if( $conn )
+    {
+        $_SESSION['conn'] = $conn;
+        $schema = isset($_SESSION['Db2Schema']) ? $_SESSION['Db2Schema'] : 'VBAC';
+        $Statement = "SET CURRENT SCHEMA='$schema';";
+        $rs = db2_exec($conn, $Statement);
 
-//         if (! $rs) {
-//             echo "<br/>" . $Statement . "<br/>";
-//             echo "<BR>" . db2_stmt_errormsg() . "<BR>";
-//             echo "<BR>" . db2_stmt_error() . "<BR>";
-//             exit("Set current schema failed");
-//         }
-//         db2_autocommit($conn, TRUE); // This is how it was on the Wintel Box - so the code has no/few commit points.
-//     }
-//     else
-//     {
-//         echo "<p>Connection failed.</p>";
-//     }
+        if (! $rs) {
+            echo "<br/>" . $Statement . "<br/>";
+            echo "<BR>" . db2_stmt_errormsg() . "<BR>";
+            echo "<BR>" . db2_stmt_error() . "<BR>";
+            exit("Set current schema failed");
+        }
+        db2_autocommit($conn, TRUE); // This is how it was on the Wintel Box - so the code has no/few commit points.
+    }
+    else
+    {
+        echo "<p>Connection failed.</p>";
+    }
 }
 else
 {
