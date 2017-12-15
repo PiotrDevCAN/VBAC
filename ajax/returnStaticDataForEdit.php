@@ -1,12 +1,15 @@
 <?php
+use itdq\Loader;
+use vbac\allTables;
+
 ob_start();
-$allRoles = array('001'=>'DBA','002'=>'Storage Analyst','003'=>'Sys prog','004'=>'Service Mgr','005'=>'Resource Mgr ');
+$loader = new Loader();
+
+$allRoles = $loader->loadIndexed('ROLE_TITLE','ROLE_ID',allTables::$STATIC_ROLES);
 $allGroups = array();
 $allTables = array('Roles'=> $allRoles, 'Groups'=>$allGroups);
 
 $allData = null;
-
-
 foreach ($allTables as $tableName => $allEntries){
     $row =array();
     $row[] = trim($tableName);

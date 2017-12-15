@@ -24,6 +24,7 @@ if( getenv( "VCAP_SERVICES" ) )
     {
         $_SESSION['conn'] = $conn;
         $schema = isset($_SESSION['Db2Schema']) ? $_SESSION['Db2Schema'] : 'VBAC';
+        $schema = 'VBAC';
         $Statement = "SET CURRENT SCHEMA='$schema';";
         $rs = db2_exec($conn, $Statement);
 

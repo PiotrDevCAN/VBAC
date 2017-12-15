@@ -101,6 +101,12 @@ class Loader
         $sql .= " order by 1 $order ";
 
         Trace::traceVariable($sql, __METHOD__, __LINE__);
+
+        echo "SQL:$sql";
+        var_dump($_SESSION['conn']);
+
+
+
         $rs5 = db2_exec($_SESSION['conn'], $sql);
         if (! $rs5) {
             DbTable::displayErrorMessage($rs5, __CLASS__, __METHOD__, $sql);

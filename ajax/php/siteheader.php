@@ -8,6 +8,11 @@ set_include_path("./" . PATH_SEPARATOR . "../" . PATH_SEPARATOR . "../../" . PAT
 include "vendor/autoload.php";
 include "splClassLoader.php";
 session_start();
+
 include "connect.php";
+
+print_r($_SESSION);
+
+
 
 ?>
