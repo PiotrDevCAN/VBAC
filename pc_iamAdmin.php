@@ -66,6 +66,7 @@ $allTables = array('Role Table'=> $allRoles, 'Groups'=>$allGroups);
         <h4 class="modal-title">Amend Static Data Entry</h4>
       </div>
       <div class="modal-body" >
+        <form id='manageStaticDataForm'>
         <div class='row originalValueRow'>
         	<div class='form-group' >
             	<label for='amendedValue' class='col-md-3 control-label ceta-label-left'>Original Value</label>
@@ -83,6 +84,7 @@ $allTables = array('Role Table'=> $allRoles, 'Groups'=>$allGroups);
            		<input id='amendUid' name='amendUid' type='hidden' >
            </div>
       </div>
+      </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" id='saveAmendedStaticData'>Save</button>
@@ -96,7 +98,7 @@ $allTables = array('Role Table'=> $allRoles, 'Groups'=>$allGroups);
 
 
 <script type="text/javascript">
-$('body').on('click','.editRecord',function(){
+$(document).on('click','.editRecord',function(){
 	var tablename = $(this).data('tablename');
 	var value = $(this).data('value');
 	var uid = $(this).data('uid');
@@ -110,7 +112,7 @@ $('body').on('click','.editRecord',function(){
 	$('#myModal').modal('show')
 });
 
-$('body').on('click','.newEntry',function(){
+$(document).on('click','.newEntry',function(){
 	var tablename = $(this).data('tablename');
 	var value = $(this).data('value');
 	var uid = $(this).data('uid');
@@ -124,6 +126,25 @@ $('body').on('click','.newEntry',function(){
 	$('.originalValueRow').hide();
 
 	$('#myModal').modal('show')
+});
+
+$(document).on('click','#saveAmendedStaticData',function(e){
+	var tables = $('.dataTable').DataTable();
+	console.log(tables);
+	var table = tables.table('#staticDataValues');
+	console.log(table);
+	var formData = $('#manageStaticDataForm').serialize();
+	console.log(formData);
+	$.ajax({
+	   	url: "ajax/manageStaticDataTables.php",
+	    type: 'POST',
+	   	data: formData,
+	  	success: function(result){
+	   		console.log(result);
+			$('#myModal').modal('hide');
+			table.ajax.reload();
+	   		}
+	});
 });
 
 
@@ -178,6 +199,8 @@ table.columns().every( function () {
         }
     } );
 } );
+
+
 
 });
 

@@ -7,7 +7,7 @@ $loader = new Loader();
 
 $allRoles = $loader->loadIndexed('ROLE_TITLE','ROLE_ID',allTables::$STATIC_ROLES);
 $allGroups = array();
-$allTables = array('Roles'=> $allRoles, 'Groups'=>$allGroups);
+$allTables = array(allTables::$STATIC_ROLES=> $allRoles, allTables::$STATIC_GROUPS=>$allGroups);
 
 $allData = null;
 foreach ($allTables as $tableName => $allEntries){
