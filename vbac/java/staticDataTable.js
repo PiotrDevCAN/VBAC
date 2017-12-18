@@ -116,9 +116,9 @@ function staticDataTable() {
 	},
 
 	this.listenForSelectStaticData = function(){
-		$('#selectGroupsForRoles').on('click',function(){
-			$('#editStaticDataTables').removeClass('active').hide();
-			$('#editGroupsForRoles').addClass('active').show();
+		$('#selectStaticData').on('click',function(){
+			$('#editGroupsForRoles').removeClass('active').hide();
+			$('#editStaticDataTables').addClass('active').show();
 		});
 	}
 
