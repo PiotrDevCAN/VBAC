@@ -6,7 +6,7 @@ ob_start();
 $loader = new Loader();
 
 $allRoles = $loader->loadIndexed('ROLE_TITLE','ROLE_ID',allTables::$STATIC_ROLES);
-$allGroups = array();
+$allGroups =  $loader->loadIndexed('GROUP','GROUP_ID',allTables::$STATIC_GROUPS);
 $allTables = array(allTables::$STATIC_ROLES=> $allRoles, allTables::$STATIC_GROUPS=>$allGroups);
 
 $allData = null;
