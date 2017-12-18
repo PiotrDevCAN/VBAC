@@ -2,6 +2,8 @@
 namespace vbac;
 
 use itdq\DbTable;
+use vbac\staticRolesTable;
+use vbac\staticGroupsTable;
 
 class staticDataTable extends DbTable {
 
@@ -29,6 +31,7 @@ class staticDataTable extends DbTable {
 				<table class="table table-striped table-bordered" cellspacing="0" width="50%" id='staticDataValues'>
 				<thead><tr><th>Table Name</th><th>Entry</th></tr></thead>
 				<tbody>
+<!-- 				will be populated by ajax all when DataTables is initiated by JS functiom -->
 				</tbody>
 				<tfoot>
 				<tr><th>Table Name</th><th>Entry</th></tr>
@@ -84,6 +87,38 @@ class staticDataTable extends DbTable {
   		</div>
 		</div>
         <?php
+    }
+
+
+    static function getStaticDataValuesForEdit(){
+        $allRoles = staticRolesTable::getallRoles();
+        $allGroups = staticGroupsTable::getallGroups();
+        $allTables = array(allTables::$STATIC_ROLES=> $allRoles, allTables::$STATIC_GROUPS=>$allGroups);
+
+        $allData = null;
+        foreach ($allTables as $tableName => $allEntries){
+            $row =array();
+            $row[] = trim($tableName);
+            $row[] = "<button type='button' class='btn btn-default btn-xs newEntry' aria-label='Left Align' data-tablename='" . trim($tableName) . "' data-value='' data-uid='newEntry' >
+              <span class='glyphicon glyphicon-plus ' aria-hidden='true'></span>
+              </button><span style='font-style:italic'>new_entry</span>";
+            $allData[] = $row;
+            foreach ($allEntries as $uid => $value){
+                $row = array();
+                $row[]= trim($tableName);
+                $row[] = "<button type='button' class='btn btn-default btn-xs editRecord' aria-label='Left Align'
+                      data-tablename='" . trim($tableName) . "' data-value='" . trim($value) . "' data-uid='" . trim($uid) . "' >
+            <span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>
+            </button>
+              <button type='button' class='btn btn-default btn-xs disableRecord' aria-label='Left Align'
+                      data-tablename='" . trim($tableName) . "' data-value='" . trim($value) . "' data-uid='" . trim($uid) . "' >
+            <span class='glyphicon glyphicon-trash ' aria-hidden='true'></span>
+            </button>" . trim($value);
+                $allData[] = $row;
+            }
+        }
+        return $allData;
+
     }
 
 }
