@@ -12,9 +12,9 @@ $value = trim($_POST['amendedValue']);
 $execute = false;
 
 switch ($table){
-    case allTables::$STATIC_GROUPS:
-        $valueField = 'GROUP';
-        $valueId = 'GROUP_ID';
+    case allTables::$STATIC_DOMAINS:
+        $valueField = 'DOMAIN';
+        $valueId = 'DOMAIN_ID';
         break;
     case allTables::$STATIC_ROLES:
         $valueField = 'ROLE_TITLE';

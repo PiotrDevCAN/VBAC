@@ -1,6 +1,6 @@
 <?php
 use vbac\staticDataTable;
-use vbac\staticRolesTable;
+use vbac\staticDataRolesTable;
 
 ?>
 <div class='container'>
@@ -10,7 +10,7 @@ staticDataTable::setScreenTabs();
 
 staticDataTable::editStaticDataTable();
 
-staticRolesTable::editGroupsForRoles();
+staticDataRolesTable::editGroupsForRoles();
 
 staticDataTable::amendStaticDataModal();
 ?>

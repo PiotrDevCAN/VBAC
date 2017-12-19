@@ -3,7 +3,7 @@ namespace vbac;
 
 use itdq\DbRecord;
 
-class staticRolesRecord extends DbRecord
+class staticDataRolesRecord extends DbRecord
 {
 
     protected $ROLE_ID;

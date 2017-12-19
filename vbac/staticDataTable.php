@@ -2,8 +2,7 @@
 namespace vbac;
 
 use itdq\DbTable;
-use vbac\staticRolesTable;
-use vbac\staticGroupsTable;
+use vbac\staticDataRolesTable;
 
 class staticDataTable extends DbTable {
 
@@ -91,9 +90,9 @@ class staticDataTable extends DbTable {
 
 
     static function getStaticDataValuesForEdit(){
-        $allRoles = staticRolesTable::getallRoles();
-        $allGroups = staticGroupsTable::getallGroups();
-        $allTables = array(allTables::$STATIC_ROLES=> $allRoles, allTables::$STATIC_GROUPS=>$allGroups);
+        $allRoles = staticDataRolesTable::getallRoles();
+        $allDomains = staticDataDomainsTable::getallDomains();
+        $allTables = array(allTables::$STATIC_ROLES=> $allRoles, allTables::$STATIC_DOMAINS=>$allDomains);
 
         $allData = null;
         foreach ($allTables as $tableName => $allEntries){

@@ -12,6 +12,7 @@ class allTables
 {
     public static $DB2_ERRORS       = 'DB2_ERRORS';
 
+    public static $STATIC_DOMAINS  = 'STATIC_DOMAINS';
     public static $STATIC_GROUPS  = 'STATIC_GROUPS';
     public static $STATIC_ROLES   = 'STATIC_ROLES';
 
