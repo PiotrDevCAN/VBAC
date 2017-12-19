@@ -15,7 +15,7 @@ function personRecord() {
 	},
 
 	this.listenForName = function(){
-		var name = document.getElementById['NAME'];
+		var name = document.getElementById['person_name'];
 		console.log($(name));
 
         var config = {
@@ -40,11 +40,7 @@ function personRecord() {
 
                    $('#personDetails').show();
                    $('#person_contractor_id').select2();
-//
-
-//
-//                   var phone = document.forms.displayBpDetails.elements['person_phone'];
-//                   if(typeof(phone) !== 'undefined'){ phone.value = person['phone'];};
+                   $('#person_functionalMgr').select2();
 
                    return person['name'];
                    }
@@ -53,13 +49,13 @@ function personRecord() {
 
         if(typeof FacesTypeAhead !== 'object'){
         	alert('Faces Type Ahead not found, ensure you are connected to IBM network');
-        	$('#NAME').attr('disabled',true);
-        	$('#NAME').attr('placeholder','Please connect to IBM network');
+        	$('#person_name').attr('disabled',true);
+        	$('#person_name').attr('placeholder','Please connect to IBM network');
         	$('#person_serial').attr('disabled',true);
         	$('#person_serial').attr('placeholder','Please connect to IBM network');
         } else {
             FacesTypeAhead.init(
-            		document.getElementById('NAME'),
+            		document.getElementById('person_name'),
             		config
             		);
         }

@@ -12,21 +12,62 @@ use itdq\DbRecord;
 class personRecord extends DbRecord
 {
 
-    protected $NAME;
     protected $CNUM;
-    protected $FUNCTIONAL_MGR_FLAG;
-    protected $FUNCTIONAL_MGR_CNUM;
+    protected $OPEN_SEAT_NUMBER;
+    protected $FIRST_NAME;
+    protected $LAST_NAME;
+    protected $PHONE_NUMBER;
+    protected $EMAIL_ADDRESS;
+    protected $LBG_EMAIL;
+    protected $EMPLOYEE_TYPE;
 
+    protected $FM_CNUM;
+    protected $FM_MANAGER_FLAG;
+
+    protected $CTB_RTB;
     protected $TT_BAU;
-    protected $OPEN_SEAT;
-    protected $ACCOUNT_ORGANISATION;
-    protected $START_DATE;
-    protected $END_DATE;
+    protected $LOB;
 
-    protected $person_NOTES_ID;
-    protected $person_INTRANET_ID;
-    protected $person_PHONE;
-    protected $person_UID;
+    protected $ROLE_ON_THE_ACCOUNT;
+    protected $ROLE_TECHNOLOGY;
+
+    protected $START_DATE;
+    protected $PROJECTED_END_DATE;
+
+    protected $THIRD_PARTY_VDI_ACCESS;
+    protected $EXTERNAL_COMPANY;
+    protected $COUNTRY;
+    protected $CT_ID;
+    protected $CT_REQUEST;
+    protected $CYBERARK;
+    protected $FM_APPROVAL;
+    protected $FULL_VPN;
+    protected $IBM_BASE_LOCATION;
+    protected $LBG_LOCATION;
+    protected $LAPTOP_ASSET;
+    protected $MPW_ACCOUNT_TYPE;
+    protected $MPW_DOMAIN;
+    protected $MPW_ID;
+    protected $OCS;
+    protected $OFFBOARDED_DATE;
+
+    protected $PES_DATE_REQUESTED;
+    protected $PES_DATE_RESPONDED;
+    protected $PES_DETAILS;
+    protected $PES_STATUS;
+
+    protected $RAS_ACCESS;
+
+    protected $REVALIDATION_DATE_FIELD;
+    protected $REVALIDATION_STATUS;
+
+    protected $SDID;
+    protected $VDI;
+    protected $VPN_LITE;
+    protected $WORK_STREAM;
+
+    protected $person_notesid;
+    protected $person_bio;
 
 
     function displayBpDetails($mode){
@@ -48,21 +89,21 @@ class personRecord extends DbRecord
   		<div class="panel-body">
 		<div class="form-group">
         <div class="col-sm-6">
-        <input class="form-control" id="NAME" name="NAME" value="<?=$this->NAME?>" required="required" type="text" placeholder='Start typing name' >
+        <input class="form-control" id="person_name" name="person_name" value="" required="required" type="text" placeholder='Start typing name' >
         </div>
         <div class='col-sm-6'>
-        <input class='form-control' id='person_serial' name='person_serial' value='' required='required' type='text' placeholder='or SerialNum & Country Code (9 digits)' >
+        <input class='form-control' id='person_serial' name='person_serial' value='<?=$this->CNUM?>' required='required' type='text' placeholder='or SerialNum & Country Code (9 digits)' >
         </div>
         </div>
 
-    <div id='personDetails' hidden >
+    <div id='personDetails'  hidden>
         <div class='form-group' >
         <div class='col-sm-6'>
-        <input class='form-control' id='person_notesid' name='person_notesid' value='' required='required' type='text' disabled='disabled' >
+        <input class='form-control' id='person_notesid' name='person_NOTES_ID' value='' required='required' type='text' disabled='disabled' >
         </div>
 
         <div class='col-sm-6'>
-        <input class='form-control' id='person_intranet' name='person_intranet' value='' required='required' type='text' disabled='disabled'>
+        <input class='form-control' id='person_intranet' name='EMAIL_ADDRESS' value='' required='required' type='text' disabled='disabled'>
         </div>
         </div>
 
@@ -131,23 +172,41 @@ class personRecord extends DbRecord
 
     <div class='form-group' >
         <div class='col-sm-6'>
-          <input class="form-control" id="open_seat" name="open_seat" value="<?=$this->OPEN_SEAT?>" required="required" type="text" placeholder='Open Seat' >
+          <input class="form-control" id="open_seat" name="OPEN_SEAT_NUMBER" value="<?=$this->OPEN_SEAT_NUMBER?>" required="required" type="text" placeholder='Open Seat' >
 
          </div>
         <div class='col-sm-6'>
-          <input class="form-control" id="account_organization" name="account_organization" value="<?=$this->ACCOUNT_ORGANISATION?>" required="required" type="text" placeholder='Account Organization' >
+                <select class='form-control select select2' id='account_organisation'
+                  	          name='ACCOUNT_ORGANISATION'
+                  	          required='required'
+                  	          placeholder='Select Account Organisation'
+                >
+                	<option value=''>Select Account Organisation</option>
+                	<option value='CTB'>CTB</option>
+                	<option value='RTB'>RTB</option>
+                	<option value='Other'>Other</option>
+            	</select>
 
            </div>
          </div>
 
     <div class='form-group' >
         <div class='col-sm-6'>
-          <input class="form-control" id="tt_bau" name="tt_bau" value="<?=$this->TT_BAU?>" required="required" type="text" placeholder='T&T/BAU' >
-         </div>
+                <select class='form-control select select2' id='tt_bau'
+                  	          name='TT_BAU'
+                  	          required='required'
+                  	          placeholder='Select TT/BAU'
+                >
+                	<option value=''>Select TT/BAU</option>
+                	<option value='BAU'>BAU</option>
+                	<option value='TT'>TT</option>
+            	</select>
+
+           </div>
 
         <div class='col-sm-6'>
-                  	<select class='form-control select select2' id='work_stream'
-                  	          name='person_contractor_id'
+              <select class='form-control select select2' id='work_stream'
+                  	          name='work_stream'
                   	          required='required'
                   	          placeholder='Select functional manager'
                 >
@@ -167,7 +226,7 @@ class personRecord extends DbRecord
            </div>
 
         <div class='col-sm-6'>
-          <input class="form-control" id="end_date" name="end_date" value="<?=$this->END_DATE?>" required="required" type="text" placeholder='End Date (if known)' >
+          <input class="form-control" id="end_date" name="end_date" value="<?=$this->PROJECTED_END_DATE?>" required="required" type="text" placeholder='End Date (if known)' >
 
            </div>
          </div>

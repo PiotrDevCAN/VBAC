@@ -27,8 +27,9 @@ $person->displayBpDetails($mode);
 
 <script type="text/javascript">
 $(document).ready(function() {
- 	$('#person_fm_mgr').select2();
+ 	$('#tt_bau').select2();
  	$('#work_stream').select2();
+ 	$('#account_organisation').select2();
 	var person = new personRecord();
     person.listenForName();
     person.listenForSerial();
