@@ -70,7 +70,7 @@ class personRecord extends DbRecord
     protected $person_bio;
 
 
-    function displayBpDetails($mode){
+    function displayForm($mode){
         $allManagers = array('bob Mgr'=>'bob@email.com','cheryl mgr'=>'cheryl@email.com','cheryl two'=>'cheryl2@email.com');
         $allWorkStream = array('Work Stream 1'=>'ws001','Work Stream 2'=>'ws002','Work Stream 3'=>'ws003','Work Stream 4'=>'ws004');
 
@@ -176,35 +176,6 @@ class personRecord extends DbRecord
 
          </div>
         <div class='col-sm-6'>
-                <select class='form-control select select2' id='account_organisation'
-                  	          name='ACCOUNT_ORGANISATION'
-                  	          required='required'
-                  	          placeholder='Select Account Organisation'
-                >
-                	<option value=''>Select Account Organisation</option>
-                	<option value='CTB'>CTB</option>
-                	<option value='RTB'>RTB</option>
-                	<option value='Other'>Other</option>
-            	</select>
-
-           </div>
-         </div>
-
-    <div class='form-group' >
-        <div class='col-sm-6'>
-                <select class='form-control select select2' id='tt_bau'
-                  	          name='TT_BAU'
-                  	          required='required'
-                  	          placeholder='Select TT/BAU'
-                >
-                	<option value=''>Select TT/BAU</option>
-                	<option value='BAU'>BAU</option>
-                	<option value='TT'>TT</option>
-            	</select>
-
-           </div>
-
-        <div class='col-sm-6'>
               <select class='form-control select select2' id='work_stream'
                   	          name='work_stream'
                   	          required='required'
@@ -218,8 +189,25 @@ class personRecord extends DbRecord
                 ?>
             	</select>
         </div>
+     </div>
 
+    <div class='form-group' >
+        <div class='col-sm-6'>
+            <div class="radio">
+  			<label><input type="radio" name="TT_BAU">T&T</label>
+  			<label><input type="radio" name="TT_BAU">BAU</label>
+			</div>
+        </div>
+
+        <div class='col-sm-6'>
+            <div class="radio">
+  			<label><input type="radio" name="ACCOUNT_ORGANISATION">CTB</label>
+  			<label><input type="radio" name="ACCOUNT_ORGANISATION">RTB</label>
+  			<label><input type="radio" name="ACCOUNT_ORGANISATION">Other</label>
+			</div>
+			</div>
     </div>
+
     <div class='form-group' >
         <div class='col-sm-6'>
           <input class="form-control" id="start_date" name=""start_date"" value="<?=$this->START_DATE?>" required="required" type="text" placeholder='Start Date' >
@@ -241,11 +229,6 @@ class personRecord extends DbRecord
 
 
     <?php
-    }
-
-
-    function displayForm($mode){
-
     }
 
 }

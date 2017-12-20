@@ -16,9 +16,9 @@ set_time_limit(0);
 </div>
 <div class='row'>
 <?php
-$mode = FormClass::$modeDEFINE;
+$mode = personRecord::$modeDEFINE;
 $person = new personRecord();
-$person->displayBpDetails($mode);
+$person->displayForm($mode);
 ?>
 </div>
 
@@ -27,12 +27,14 @@ $person->displayBpDetails($mode);
 
 <script type="text/javascript">
 $(document).ready(function() {
- 	$('#tt_bau').select2();
+//  	$('#tt_bau').select2();
  	$('#work_stream').select2();
- 	$('#account_organisation').select2();
+ 	$('#person_fm_mgr').select2();
+//  	$('#account_organisation').select2();
 	var person = new personRecord();
     person.listenForName();
     person.listenForSerial();
+    person.listenForBoardButton();
 });
 
 $(document).ready(function(){

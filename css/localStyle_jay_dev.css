@@ -1,0 +1,108 @@
+@CHARSET "ISO-8859-1";
+
+body {
+    padding-top: 65px;
+}
+
+table.dataTable th, table.dataTable td {
+	white-space: wrap;
+	font-size: 15px;
+}
+
+td {
+	cursor: pointer;
+	cursor: hand;
+}
+
+
+.required .control-label:after {
+  content:"*";
+  color:red;
+}
+
+.glyphicon.spinningsm {
+		    animation: spin 1s infinite linear;
+		    -webkit-animation: spin2 1s infinite linear;
+			font-size: 1em;
+		}
+
+		@keyframes spin {
+		    from { transform: scale(1) rotate(0deg);}
+		    to { transform: scale(1) rotate(360deg);}
+		}
+
+		@-webkit-keyframes spin2 {
+		    from { -webkit-transform: rotate(0deg);}
+		    to { -webkit-transform: rotate(360deg);}
+		}
+
+th { font-size: 11px; }
+td { font-size: 10px; }
+
+
+.jumbotron {
+  opacity: 0.5;
+  position:relative;
+  padding-top:50px;
+  padding-bottom:50px;
+}
+
+.btn-space {
+    margin-right: 5px;
+}
+
+.faces-typeahead-results .result {
+  height: 65px;
+  padding: 10px;
+}
+
+
+.typeahead-results {
+  width: 400px;
+}
+
+
+.label-centre{
+  text-align:center;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+
+dropdown-menu > li > a {
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: normal;
+    line-height: 1.42857143;
+    color: #333333;
+    white-space: nowrap;
+	background-color: #cccccc;
+}
+
+
+.dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus {
+    color: #ffffff;
+    text-decoration: none;
+    outline: 0;
+    background-color: #bbbbbb;
+}
+
+.panel-body {
+    padding: 15px;
+        padding-top: 15px;
+        padding-right: 15px;
+        padding-bottom: 5px;
+        padding-left: 15px;
+}
+
+.select2-container .select2-selection--single {
+	padding-top: 5px;
+    height: 38px;
+}
+
+#welcomeJumotron {
+	font-size:200%;
+}
+
