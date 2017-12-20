@@ -2,6 +2,7 @@
 namespace vbac;
 
 use itdq\DbRecord;
+use itdq\FormClass;
 
 
 /**
@@ -221,13 +222,18 @@ class personRecord extends DbRecord
          </div>
          </div>
 	</form>
+
+		<?php
+	$allButtons = null;
+	$submitButton = $mode==FormClass::$modeEDIT ?  $this->formButton('submit','Submit','updateRfs',null,'Update') :  $this->formButton('submit','Submit','saveRfs',null,'Submit');
+  	$resetButton  = $this->formButton('reset','Reset','resetRfs',null,'Reset','btn-warning');
+	$allButtons[] = $submitButton;
+	$allButtons[] = $resetButton;
+	$this->formBlueButtons($allButtons);
+	?>
+
+
 	</div>
-	<div class='col-sm-2'></div>
-
-
-
-
-
     <?php
     }
 
