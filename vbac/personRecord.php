@@ -21,10 +21,12 @@ class personRecord extends DbRecord
     protected $LAST_NAME;
     protected $PHONE_NUMBER;
     protected $EMAIL_ADDRESS;
+
     protected $LBG_EMAIL;
     protected $EMPLOYEE_TYPE;
+    protected $WORK_STREAM;
 
-    protected $FM_CNUM;
+    protected $FM_EMAIL;
     protected $FM_MANAGER_FLAG;
 
     protected $CTB_RTB;
@@ -67,7 +69,7 @@ class personRecord extends DbRecord
     protected $SDID;
     protected $VDI;
     protected $VPN_LITE;
-    protected $WORK_STREAM;
+
 
     protected $person_notesid;
     protected $person_bio;
@@ -79,7 +81,7 @@ class personRecord extends DbRecord
         $allWorkstream = $workstreamTable->getallWorkstream();
         JavaScript::buildSelectArray($allWorkstream, 'workStream');
         ?>
-        <form id='boardingForm'  class="form-horizontal">
+        <form id='boardingForm'  class="form-horizontal" onsubmit="return false;">
 		<div class='col-sm-2'></div>
 
 		<div class='col-sm-8'>
@@ -98,7 +100,7 @@ class personRecord extends DbRecord
 
         </div>
         <div class='col-sm-6'>
-        <input class='form-control' id='person_serial' name='person_serial' value='<?=$this->CNUM?>' required type='text' placeholder='or SerialNum & Country Code (9 digits)' >
+        <input class='form-control' id='person_serial' name='CNUM' value='<?=$this->CNUM?>' required type='text' placeholder='or SerialNum & Country Code (9 digits)' >
         </div>
         </div>
 
@@ -116,7 +118,8 @@ class personRecord extends DbRecord
         <div class='form-group' >
         <div class='col-sm-12'>
         <input class='form-control' id='person_bio' name='person_bio' value='' required type='text' disabled='disabled' placeholder="Enter email">
-        <input id='person_uid' name='person_uid' value='' required='required' type='hidden'  >
+        <input id='person_uid' name='person_uid' value='' type='hidden'  >
+        <input id='person_is_mgr' name='person_is_mgr' value=''  type='hidden'  >
         </div>
         </div>
 
@@ -142,8 +145,8 @@ class personRecord extends DbRecord
   <div class="panel-body">
         <div class="form-group">
         <div class="col-sm-6">
-        	<select class='form-control select select2' id='person_fm_mgr'
-                  	          name='person_contractor_id'
+        	<select class='form-control select select2' id='FM_EMAIL'
+                  	          name='person_fm_mgr'
                   	          required='required'
                   	          placeholder='Select functional manager'
                 >
@@ -173,9 +176,9 @@ class personRecord extends DbRecord
          </div>
         <div class='col-sm-6'>
             <div class="radio">
-  				<label><input type="radio" name="CTB_RTB" required>CTB</label>
-  				<label><input type="radio" name="CTB_RTB" required>RTB</label>
-  				<label><input type="radio" name="CTB_RTB" required>Other</label>
+  				<label><input type="radio" name="CTB_RTB" required value='CTB'>CTB</label>
+  				<label><input type="radio" name="CTB_RTB" required value='RTB'>RTB</label>
+  				<label><input type="radio" name="CTB_RTB" required value='Other'>Other</label>
 			</div>
 
 
@@ -192,7 +195,7 @@ class personRecord extends DbRecord
 
         <div class='col-sm-6'>
         	<select class='form-control select select2' id='work_stream'
-                  	          name='work_stream'
+                  	          name='WORK_STREAM'
                   	          disabled
                   	          placeholder='Select T&T/BAU First'
             >
@@ -204,11 +207,11 @@ class personRecord extends DbRecord
 
     <div class='form-group' >
         <div class='col-sm-6'>
-          <input class="form-control" id="start_date" name=""start_date"" value="<?=$this->START_DATE?>" required="required" type="text" placeholder='Start Date' >
+          <input class="form-control" id="start_date" name="START_DATE" value="<?=$this->START_DATE?>" required="required" type="text" placeholder='Start Date' >
            </div>
 
         <div class='col-sm-6'>
-          <input class="form-control" id="end_date" name="end_date" value="<?=$this->PROJECTED_END_DATE?>" required="required" type="text" placeholder='End Date (if known)' >
+          <input class="form-control" id="end_date" name="PROJECTED_END_DATE" value="<?=$this->PROJECTED_END_DATE?>"  type="text" placeholder='End Date (if known)' >
 
            </div>
          </div>
