@@ -120,12 +120,12 @@ function personRecord() {
 			                   if(typeof(uid) !== 'undefined'){ uid.value = value;};
 			                   break;
 		    			case 'preferredfirstname':
-			                   var name =  document.getElementById('NAME');
+			                   var name =  document.getElementById('person_first_name');
 			                   if(typeof(name) !== 'undefined'){ name.value = value;};
 			                   $('#NAME').attr('disabled','disabled');
 			                   break;
 		    			case 'sn':
-			                   var name =  document.getElementById('NAME');
+			                   var name =  document.getElementById('person_last_name');
 			                   if(typeof(name) !== 'undefined'){ name.value = name.value + " " + value ;};
 			                   $('#NAME').attr('disable','disabled');
 			                   break;
@@ -138,7 +138,7 @@ function personRecord() {
 		    			}
 		    		}
                    $('#personDetails').show();
-                   $('#NAME').attr('disable',true);
+                   $('#person_name').val($('#person_first_name').val() + " " + $('#person_last_name').val()).attr('disable',true);
 
 		    	},
 		        error: function (xhr, status) {

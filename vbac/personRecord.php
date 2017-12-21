@@ -118,8 +118,10 @@ class personRecord extends DbRecord
         <div class='form-group' >
         <div class='col-sm-12'>
         <input class='form-control' id='person_bio' name='person_bio' value='' required type='text' disabled='disabled' placeholder="Enter email">
-        <input id='person_uid' name='person_uid' value='' type='hidden'  >
-        <input id='person_is_mgr' name='person_is_mgr' value=''  type='hidden'  >
+        <input id='person_uid' name='person_uid' value='' type='hidden'  required >
+        <input id='person_is_mgr' name='person_is_mgr' value=''  type='hidden'  required >
+        <input id='person_first_name' name='person_first_name' value=''  type='hidden'  required >
+        <input id='person_last_name' name='person_last_name' value=''  type='hidden'  required >
         </div>
         </div>
 
