@@ -3,6 +3,8 @@ namespace vbac;
 
 use itdq\DbRecord;
 use itdq\FormClass;
+use itdq\Loader;
+use itdq\JavaScript;
 
 
 /**
@@ -70,18 +72,19 @@ class personRecord extends DbRecord
     protected $person_notesid;
     protected $person_bio;
 
-
-    function displayForm($mode){
+    function displayBoardingForm($mode){
+        $workstreamTable = new staticDataWorkstreamTable(allTables::$STATIC_WORKSTREAMS);
         $allManagers = array('bob Mgr'=>'bob@email.com','cheryl mgr'=>'cheryl@email.com','cheryl two'=>'cheryl2@email.com');
-        $allWorkStream = array('Work Stream 1'=>'ws001','Work Stream 2'=>'ws002','Work Stream 3'=>'ws003','Work Stream 4'=>'ws004');
-
+        //$allWorkStream = array('Work Stream 1'=>'ws001','Work Stream 2'=>'ws002','Work Stream 3'=>'ws003','Work Stream 4'=>'ws004');
+        $allWorkstream = $workstreamTable->getallWorkstream();
+        JavaScript::buildSelectArray($allWorkstream, 'workStream');
         ?>
-
+        <form id='boardingForm'  class="form-horizontal">
 		<div class='col-sm-2'></div>
 
 		<div class='col-sm-8'>
 
-        <form id='displayBpDetails'  class="form-horizontal">
+
 
         <div class="panel panel-default">
   		<div class="panel-heading">
@@ -90,27 +93,29 @@ class personRecord extends DbRecord
   		<div class="panel-body">
 		<div class="form-group">
         <div class="col-sm-6">
-        <input class="form-control" id="person_name" name="person_name" value="" required="required" type="text" placeholder='Start typing name' >
+
+        <input class="form-control" id="person_name" name="person_name" value="" required type="text" placeholder='Start typing name' >
+
         </div>
         <div class='col-sm-6'>
-        <input class='form-control' id='person_serial' name='person_serial' value='<?=$this->CNUM?>' required='required' type='text' placeholder='or SerialNum & Country Code (9 digits)' >
+        <input class='form-control' id='person_serial' name='person_serial' value='<?=$this->CNUM?>' required type='text' placeholder='or SerialNum & Country Code (9 digits)' >
         </div>
         </div>
 
     <div id='personDetails'  hidden>
         <div class='form-group' >
         <div class='col-sm-6'>
-        <input class='form-control' id='person_notesid' name='person_NOTES_ID' value='' required='required' type='text' disabled='disabled' >
+        <input class='form-control' id='person_notesid' name='person_NOTES_ID' value='' required type='text' disabled='disabled' >
         </div>
 
         <div class='col-sm-6'>
-        <input class='form-control' id='person_intranet' name='EMAIL_ADDRESS' value='' required='required' type='text' disabled='disabled'>
+        <input class='form-control' id='person_intranet' name='EMAIL_ADDRESS' value='' required type='text' disabled='disabled'>
         </div>
         </div>
 
         <div class='form-group' >
         <div class='col-sm-12'>
-        <input class='form-control' id='person_bio' name='person_bio' value='' required='required' type='text' disabled='disabled' placeholder="Enter email">
+        <input class='form-control' id='person_bio' name='person_bio' value='' required type='text' disabled='disabled' placeholder="Enter email">
         <input id='person_uid' name='person_uid' value='' required='required' type='hidden'  >
         </div>
         </div>
@@ -152,16 +157,6 @@ class personRecord extends DbRecord
         </div>
 
         </div>
-<!--         <div id='functionalManagerDetails' > -->
-<!--         <div class='form-group' > -->
-<!--         <div class='col-sm-6'> -->
-<!--         <input class='form-control' id='person_fm_notesid' name='person_fm_notesid' value='' required='required' type='text' disabled='disabled' placeholder='Notes ID' > -->
-<!--         </div> -->
-<!--         <div class='col-sm-6'> -->
-<!--         <input class='form-control' id='person_fm_intranet' name='person_fm_intranet' value='' required='required' type='text' disabled='disabled' placeholder='Email'> -->
-<!--         </div> -->
-<!--         </div> -->
-<!-- 		</div> -->
 </div>
 </div>
 
@@ -173,40 +168,38 @@ class personRecord extends DbRecord
 
     <div class='form-group' >
         <div class='col-sm-6'>
-          <input class="form-control" id="open_seat" name="OPEN_SEAT_NUMBER" value="<?=$this->OPEN_SEAT_NUMBER?>" required="required" type="text" placeholder='Open Seat' >
+          <input class="form-control" id="open_seat" name="OPEN_SEAT_NUMBER" value="<?=$this->OPEN_SEAT_NUMBER?>" required type="text" placeholder='Open Seat' >
 
          </div>
         <div class='col-sm-6'>
-              <select class='form-control select select2' id='work_stream'
-                  	          name='work_stream'
-                  	          required='required'
-                  	          placeholder='Select functional manager'
-                >
-                <option value=''>Select Work Stream</option>
-                <?php
-                foreach ($allWorkStream as $wsName => $wsId){
-                    echo"<option value='" . $wsId . "'>" . $wsName . "</option>";
-                };
-                ?>
-            	</select>
+            <div class="radio">
+  				<label><input type="radio" name="CTB_RTB" required>CTB</label>
+  				<label><input type="radio" name="CTB_RTB" required>RTB</label>
+  				<label><input type="radio" name="CTB_RTB" required>Other</label>
+			</div>
+
+
         </div>
      </div>
 
     <div class='form-group' >
         <div class='col-sm-6'>
             <div class="radio">
-  			<label><input type="radio" name="TT_BAU">T&T</label>
-  			<label><input type="radio" name="TT_BAU">BAU</label>
+  			<label><input type="radio" name="TT_BAU" required class='accountOrganisation' value='T&T'>T&T</label>
+  			<label><input type="radio" name="TT_BAU" required class='accountOrganisation' value='BAU'>BAU</label>
 			</div>
         </div>
 
         <div class='col-sm-6'>
-            <div class="radio">
-  			<label><input type="radio" name="ACCOUNT_ORGANISATION">CTB</label>
-  			<label><input type="radio" name="ACCOUNT_ORGANISATION">RTB</label>
-  			<label><input type="radio" name="ACCOUNT_ORGANISATION">Other</label>
-			</div>
-			</div>
+        	<select class='form-control select select2' id='work_stream'
+                  	          name='work_stream'
+                  	          disabled
+                  	          placeholder='Select T&T/BAU First'
+            >
+                <option value=''>Select T&T/BAU First</option>
+            </select>
+
+		</div>
     </div>
 
     <div class='form-group' >
@@ -221,20 +214,16 @@ class personRecord extends DbRecord
          </div>
          </div>
          </div>
-	</form>
+
 
 		<?php
 	$allButtons = null;
-	$submitButton = $mode==FormClass::$modeEDIT ?  $this->formButton('submit','Submit','updateRfs',null,'Update') :  $this->formButton('submit','Submit','saveRfs',null,'Submit');
-  	$resetButton  = $this->formButton('reset','Reset','resetRfs',null,'Reset','btn-warning');
-	$allButtons[] = $submitButton;
-	$allButtons[] = $resetButton;
+	$submitButton = $mode==FormClass::$modeEDIT ?  $this->formButton('submit','Submit','updateBoarding',null,'Update') :  $this->formButton('submit','Submit','saveBoarding',null,'Submit');
+  	$allButtons[] = $submitButton;
 	$this->formBlueButtons($allButtons);
 	?>
-
-
 	</div>
+	</form>
     <?php
     }
-
 }

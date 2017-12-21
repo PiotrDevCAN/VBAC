@@ -18,7 +18,7 @@ set_time_limit(0);
 <?php
 $mode = personRecord::$modeDEFINE;
 $person = new personRecord();
-$person->displayForm($mode);
+$person->displayBoardingForm($mode);
 ?>
 </div>
 
@@ -34,7 +34,8 @@ $(document).ready(function() {
 	var person = new personRecord();
     person.listenForName();
     person.listenForSerial();
-    person.listenForBoardButton();
+    person.listenForSaveBoarding();
+    person.listenForAccountOrganisation();
 });
 
 $(document).ready(function(){

@@ -16,8 +16,6 @@ function personRecord() {
 
 	this.listenForName = function(){
 		var name = document.getElementById['person_name'];
-		console.log($(name));
-
         var config = {
             key: 'vbac;rob.daniel@uk.ibm.com',
             faces: {
@@ -76,7 +74,7 @@ function personRecord() {
 	},
 
 	this.listenForSerial = function(){
-		$(document).on('keyup change',function(e){
+		$(document).on('keyup change','#person_serial',function(e){
 			var cnum = $(e.target).val();
 			console.log($(e.target).val());
 			if(cnum.length == 9){
@@ -84,17 +82,8 @@ function personRecord() {
 			    	url: "https://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmperson/(uid=" + cnum + ").search/byjson",
 			        type: 'GET',
 			    	success: function(result){
-			    		console.log('success');
-			    		console.log(result);
 			    		var personDetailsObj = JSON.parse(result);
-			    		console.log(personDetailsObj);
-
-			    		console.log(personDetailsObj.search.entry[0]);
 			    		var attributes = personDetailsObj.search.entry[0].attribute;
-			    		console.log(attributes);
-
-			    		console.log(attributes.length);
-
 			    		for(a=0;a<attributes.length;a++){
 			    			var object = attributes[a];
 			    			var value = object.value;
@@ -144,6 +133,48 @@ function personRecord() {
 			}
 
 		});
+	},
+
+	this.listenForAccountOrganisation = function(){
+		$(document).on('click','.accountOrganisation', function(){
+			var accountOrganisation = $(this).val();
+			var nullFirstEntry  = [''];
+			for(i=0;i<workStream.length;i++){
+				if(workStream[0][i]==accountOrganisation){
+					var workStreamValues = nullFirstEntry.concat(workStream[i+1]);
+				}
+			}
+			$('#work_stream').select2('destroy');
+			$('#work_stream').html('');
+			if(typeof(workStreamValues)!='undefined'){
+				$('#work_stream').select2({
+					data:workStreamValues,
+					placeholder:"Select workstream",
+					})
+					.attr('disabled',false)
+					.attr('required',true);
+			} else {
+				$('#work_stream').select2({
+					data:[''],
+					placeholder:"No workstream required",
+					})
+				.attr('disabled',true)
+				.attr('required',false);
+			};
+		});
+	},
+
+	this.listenForSaveBoarding = function(){
+		$(document).on('click','#saveBoarding', function(){
+			var form = $('#boardingForm');
+			var formValid = form[0].checkValidity();
+			console.log(workStream);
+			if(formValid){
+				alert('can save this form now');
+			}
+
+		});
+
 	}
 }
 

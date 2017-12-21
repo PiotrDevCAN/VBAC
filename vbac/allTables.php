@@ -15,12 +15,8 @@ class allTables
     public static $STATIC_DOMAINS  = 'STATIC_DOMAINS';
     public static $STATIC_GROUPS  = 'STATIC_GROUPS';
     public static $STATIC_ROLES   = 'STATIC_ROLES';
-
-
+    public static $STATIC_WORKSTREAMS = 'STATIC_WORKSTREAMS';
 
     public static $TRACE            = 'TRACE';
     public static $TRACE_CONTROL    = 'TRACE_CONTROL';
-
-
-
 }
