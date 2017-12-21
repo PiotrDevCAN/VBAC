@@ -19,12 +19,15 @@ set_time_limit(0);
 $mode = personRecord::$modeDEFINE;
 $person = new personRecord();
 $person->displayBoardingForm($mode);
+
 ?>
 </div>
 
 
 </div>
-
+<?php
+$person->errorSavingBoardingDetailsModal();
+?>
 <script type="text/javascript">
 $(document).ready(function() {
 //  	$('#tt_bau').select2();
