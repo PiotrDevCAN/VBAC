@@ -134,7 +134,7 @@ function personRecord() {
 			                   if(typeof(isMgr) !== 'undefined'){ isMgr.value = value ;};
 				               break;
 		    			default:
-		    				console.log(name + ":" + value);
+		    				// console.log(name + ":" + value);
 		    			}
 		    		}
                    $('#personDetails').show();
@@ -197,7 +197,10 @@ function personRecord() {
 			    	type: 'POST',
 			        data : formData,
 			    	success: function(result){
-			    		console.log(result);
+			    		var resultObj = JSON.parse(result);
+			    		console.log(resultObj);
+			    		$('#errorSavingBoardingDetailsModal','.modal_body').html(resultObj.messages);
+			    		$('#errorSavingBoardingDetailsModal').modal('show');
 			    	}
 			    });
 			}
