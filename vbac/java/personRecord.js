@@ -113,7 +113,7 @@ function personRecord() {
 		                   break;
 		    			case 'notesemail':
 			                   var notesId =  document.getElementById('person_notesid');
-			                   if(typeof(notesId) !== 'undefined'){ notesId.value = value;};
+			                   if(typeof(notesId) !== 'undefined' && notesId.value == '' ){ notesId.value = value;};
 		                   break;
 		    			case 'uid':
 			                   var uid =  document.getElementById('person_uid');
@@ -132,6 +132,10 @@ function personRecord() {
 		    			case 'ismanager':
 		    				   var isMgr =  document.getElementById('person_is_mgr');
 			                   if(typeof(isMgr) !== 'undefined'){ isMgr.value = value ;};
+				               break;
+		    			case 'phonemailnumber':
+		    				   var phone =  document.getElementById('person_phone');
+			                   if(typeof(phone) !== 'undefined'){ phone.value = value ;};
 				               break;
 		    			default:
 		    				// console.log(name + ":" + value);

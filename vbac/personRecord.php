@@ -120,8 +120,9 @@ class personRecord extends DbRecord
         <input class='form-control' id='person_bio' name='person_bio' value='' required type='text' disabled='disabled' placeholder="Enter email">
         <input id='person_uid' name='person_uid' value='' type='hidden'  required >
         <input id='person_is_mgr' name='person_is_mgr' value=''  type='hidden'  required >
-        <input id='person_first_name' name='person_first_name' value=''  type='hidden'  required >
-        <input id='person_last_name' name='person_last_name' value=''  type='hidden'  required >
+        <input id='person_first_name' name='FIRST_NAME' value=''  type='hidden'  required >
+        <input id='person_last_name' name='LAST_NAME' value=''  type='hidden'  required >
+        <input id='person_phone' name='PHONE_NUMBER' value=''  type='hidden'  required >
         </div>
         </div>
 
