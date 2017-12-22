@@ -112,8 +112,13 @@ function personRecord() {
 		                   if(typeof(bio) !== 'undefined'){ bio.value = value;};
 		                   break;
 		    			case 'notesemail':
-			                   var notesId =  document.getElementById('person_notesid');
-			                   if(typeof(notesId) !== 'undefined' && notesId.value == '' ){ notesId.value = value;};
+		    					var Step1 = email.replace('CN=','');
+		    					var Step2 = Step1.replace('OU=','');
+		    					var Step3 = Step2.replace('O=','');
+		    					var Split = Step3.split('@');
+		    					var notesId = Split[0];
+		    				    var notesIdElem =  document.getElementById('person_notesid');
+			                   if(typeof(notesIdElem) !== 'undefined' && notesIdElem.value == '' ){ notesIdElem.value = notesID;};
 		                   break;
 		    			case 'uid':
 			                   var uid =  document.getElementById('person_uid');
