@@ -121,7 +121,7 @@ function personRecord() {
 		    					var Split = Step3.split('@');
 		    					var notesId = Split[0];
 		    				    var notesIdElem =  document.getElementById('person_notesid');
-			                   if(typeof(notesIdElem) !== 'undefined' && notesIdElem.value == '' ){ notesIdElem.value = notesID;};
+			                   if(typeof(notesIdElem) !== 'undefined' && notesIdElem.value == '' ){ notesIdElem.value = notesId;};
 		                   break;
 		    			case 'uid':
 			                   var uid =  document.getElementById('person_uid');
