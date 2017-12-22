@@ -112,10 +112,10 @@ function personRecord() {
 		                   if(typeof(bio) !== 'undefined'){ bio.value = value;};
 		                   break;
 		    			case 'notesemail':
-		    				console.log(value);
-		    				console.log(typeof(value));
+		    				console.log(value[0]);
+		    				console.log(typeof(value[0]));
 
-		    					var Step1 = value.replace('CN=','');
+		    					var Step1 = value[0].replace('CN=','');
 		    					var Step2 = Step1.replace('OU=','');
 		    					var Step3 = Step2.replace('O=','');
 		    					var Split = Step3.split('@');
