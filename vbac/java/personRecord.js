@@ -126,20 +126,22 @@ function personRecord() {
 			                   break;
 		    			case 'preferredfirstname':
 			                   var name =  document.getElementById('person_first_name');
+			                   console.log(name + ":" + value);
 			                   if(typeof(name) !== 'undefined'){ name.value = value;};
-			                   $('#NAME').attr('disabled','disabled');
 			                   break;
 		    			case 'sn':
 			                   var name =  document.getElementById('person_last_name');
-			                   if(typeof(name) !== 'undefined'){ name.value = name.value + " " + value ;};
-			                   $('#NAME').attr('disable','disabled');
+			                   console.log(name + ":" + value);
+			                   if(typeof(name) !== 'undefined'){ name.value = value ;};
 			                   break;
 		    			case 'ismanager':
 		    				   var isMgr =  document.getElementById('person_is_mgr');
+		    				   console.log(isMgr + ":" + value);
 			                   if(typeof(isMgr) !== 'undefined'){ isMgr.value = value ;};
 				               break;
 		    			case 'phonemailnumber':
 		    				   var phone =  document.getElementById('person_phone');
+		    				   console.log(phone + ":" + value);
 			                   if(typeof(phone) !== 'undefined'){ phone.value = value ;};
 				               break;
 		    			default:
