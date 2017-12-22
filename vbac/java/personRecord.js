@@ -198,8 +198,7 @@ function personRecord() {
 			        data : formData,
 			    	success: function(result){
 			    		var resultObj = JSON.parse(result);
-			    		console.log(resultObj);
-			    		$('#errorSavingBoardingDetailsModal','.modal_body').html(resultObj.messages);
+			    		$('#errorSavingBoardingDetailsModal  .modal-body').html(resultObj.messages);
 			    		$('#errorSavingBoardingDetailsModal').modal('show');
 			    	}
 			    });

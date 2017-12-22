@@ -230,7 +230,9 @@ class FormClass
         foreach ($this as $key => $value) {
             if (! $dbFieldsOnly and is_array($value)) {
                 echo "<b>$key =></b>";
+                echo "<span style='color:red'>";
                 print_r($value);
+                echo "</span>";
             } elseif (! $dbFieldsOnly and is_object($value)) {
                 echo "<br/><b> OBJECT (" . get_class($value) . "): $key</b>";
                 $value->iterateVisible($length);
@@ -239,8 +241,9 @@ class FormClass
                 echo $value->format('y-m-d h:i:s');
             } else {
                 if ($dbFieldsOnly and $key == strtoupper($key))
-                    print "<b>$key =></b> $value\n";
+                    print "<b>$key =></b><span style='color:red'>$value</span>\n";
             }
+
             if ($length != 'short') {
                 echo "<br>";
             }

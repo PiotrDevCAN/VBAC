@@ -245,7 +245,7 @@ class personRecord extends DbRecord
         		<button type="button" class="close" data-dismiss="modal">&times;</button>
         		<h4 class="modal-title">Error Saving Boarding Details</h4>
       		</div>
-      		<div class="modal-body" >
+      		<div class="modal-body" ><p>unchanged</p>
       		</div>
       		<div class="modal-footer">
         		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
