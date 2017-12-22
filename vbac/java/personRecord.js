@@ -112,6 +112,9 @@ function personRecord() {
 		                   if(typeof(bio) !== 'undefined'){ bio.value = value;};
 		                   break;
 		    			case 'notesemail':
+		    				console.log(value);
+		    				console.log(typeof(value));
+
 		    					var Step1 = value.replace('CN=','');
 		    					var Step2 = Step1.replace('OU=','');
 		    					var Step3 = Step2.replace('O=','');
