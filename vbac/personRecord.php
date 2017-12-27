@@ -119,7 +119,7 @@ class personRecord extends DbRecord
         <div class='col-sm-12'>
         <input class='form-control' id='person_bio' name='person_bio' value='' required type='text' disabled='disabled' placeholder="Enter email">
         <input id='person_uid' name='person_uid' value='' type='hidden'  required >
-        <input id='person_is_mgr' name='person_is_mgr' value=''  type='hidden'  required >
+        <input id='person_is_mgr' name='FM_MANAGER_FLAG' value=''  type='hidden'  required >
         <input id='person_first_name' name='FIRST_NAME' value=''  type='hidden'  required >
         <input id='person_last_name' name='LAST_NAME' value=''  type='hidden'  required >
         <input id='person_phone' name='PHONE_NUMBER' value=''  type='hidden'  required >
@@ -149,7 +149,7 @@ class personRecord extends DbRecord
         <div class="form-group">
         <div class="col-sm-6">
         	<select class='form-control select select2' id='FM_EMAIL'
-                  	          name='person_fm_mgr'
+                  	          name='FM_EMAIL'
                   	          required='required'
                   	          placeholder='Select functional manager'
                 >
