@@ -26,7 +26,7 @@ $person->displayBoardingForm($mode);
 
 </div>
 <?php
-$person->errorSavingBoardingDetailsModal();
+$person->savingBoardingDetailsModal();
 ?>
 <script type="text/javascript">
 $(document).ready(function() {

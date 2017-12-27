@@ -952,12 +952,14 @@ class DbTable
         $insertArray = $record->getColumns($populated, $key, $null, $db2);
         Trace::traceVariable($insertArray, __METHOD__, __LINE__);
         $preparedInsert = $this->prepareInsert($insertArray);
-        $rs = db2_execute($preparedInsert, $insertArray);
+
+        $rs = @db2_execute($preparedInsert, $insertArray);
 
         if (! $rs) {
             $this->lastDb2StmtError = db2_stmt_error();
             $this->lastDb2StmtErrorMsg = db2_stmt_errormsg();
-            echo "<BR/>Insert Array<pre>";
+
+            echo "<BR/>Insert Array@<pre>" . __METHOD__ . __LINE__ ;
             print_r($insertArray);
             echo "</pre>";
             self::displayErrorMessage($rs, __CLASS__, __METHOD__, $this->preparedInsertSQL, $this->pwd, $this->lastDb2StmtError, $this->lastDb2StmtErrorMsg, $insertArray);
@@ -1895,7 +1897,7 @@ class DbTable
                     ;
                     break;
             }
-            throw new Exception("Error in: '$method' running: $printableSql", $db2Error);
+            throw new \Exception("Error in: '$method' running: $printableSql", $db2Error);
         }
     }
 
@@ -1905,6 +1907,7 @@ class DbTable
         $elapsed = isset($_SESSION['tracePageOpenTime']) ? microtime(true) - $_SESSION['tracePageOpenTime'] : null;
 
         $sql = " INSERT INTO " . $_SESSION['Db2Schema'] . "." . AllItdqTables::$DB2_ERRORS . " ( USERID, PAGE, DB2_ERROR, DB2_MESSAGE, BACKTRACE, REQUEST ) ";
+
         ob_start();
         echo "<pre>";
         debug_print_backtrace();
@@ -1912,7 +1915,7 @@ class DbTable
         $backtrace = ob_get_contents();
         @ob_end_clean();
 
-        $backtrace = strlen($backtrace) > 1024 ? substr($backtrace, 0, 1024) : $backtrace;
+        $backtrace = strlen(db2_escape_string($backtrace)) > 1024 ? substr(db2_escape_string($backtrace), 0, 1000) : db2_escape_string($backtrace);
 
         ob_start();
         print_r($_REQUEST);
@@ -1925,9 +1928,8 @@ class DbTable
             $request .= ":data:" . ob_get_contents();
             @ob_end_clean();
         }
-
-        $request = strlen($request) > 1024 ? substr($request, 0, 1024) : $request;
-        $sql .= " VALUES ('" . $userid . "','" . $_SERVER['PHP_SELF'] . "','" . db2_stmt_error() . "','" . db2_stmt_errormsg() . "','" . db2_escape_string($backtrace) . "','" . db2_escape_string($request) . "')";
+        $request = strlen(db2_escape_string($request)) > 1024 ? substr(db2_escape_string($request), 0, 1000) : db2_escape_string($request);
+        $sql .= " VALUES ('" . $userid . "','" . $_SERVER['PHP_SELF'] . "','" . db2_stmt_error() . "','" . db2_stmt_errormsg() . "','" . $backtrace . "','" . $request . "')";
 
         if (isset($_SESSION['phoneHome']) && class_exists('Email')) {
             $to = $_SESSION['phoneHome'];
@@ -1938,11 +1940,11 @@ class DbTable
             echo "<h4>An email has been sent to: $to informing them of this problem</h4>";
         }
 
-        $rs = DB2_EXEC($_SESSION['conn'], $sql);
+        $rs = @db2_exec($_SESSION['conn'], $sql);
         if (! $rs) {
             echo "<BR>Error: " . db2_stmt_error();
             echo "<BR>Msg: " . db2_stmt_errormsg() . "<BR>";
-            exit("Error in: " . __METHOD__ . __LINE__ . "<BR>running: $sql");
+            throw new \Exception("Error in: " . __METHOD__ . __LINE__ . "<BR>running: $sql");
         }
     }
 

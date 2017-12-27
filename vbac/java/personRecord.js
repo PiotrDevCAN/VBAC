@@ -211,9 +211,18 @@ function personRecord() {
 			    	type: 'POST',
 			        data : formData,
 			    	success: function(result){
+			    		console.log(result);
 			    		var resultObj = JSON.parse(result);
-			    		$('#errorSavingBoardingDetailsModal  .modal-body').html(resultObj.messages);
-			    		$('#errorSavingBoardingDetailsModal').modal('show');
+			    		$('#savingBoardingDetailsModal  .modal-body').html(resultObj.messages);
+			    		$('#savingBoardingDetailsModal').modal('show');
+			    		if(resultObj.success==true){
+			    			$('#savingBoardingDetailsModal  .modal-body').addClass('bg-success');
+			    			$('#savingBoardingDetailsModal  .modal-body').removeClass('bg-danger');
+			    		} else {
+			    			$('#savingBoardingDetailsModal  .modal-body').addClass('bg-danger');
+			    			$('#savingBoardingDetailsModal  .modal-body').removeClass('bg-success');
+			    		}
+			    		$('#boardingForm')[0].reset();
 			    	}
 			    });
 			}

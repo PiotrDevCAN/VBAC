@@ -5,7 +5,7 @@ use vbac\allTables;
 
 ob_start();
 
-$success = true;
+
 
 try {
     $person = new personRecord();
@@ -13,15 +13,15 @@ try {
 
     $table = new personTable(allTables::$PERSON);
     $saveRecordResult = $table->saveRecord($person);
+    echo "Boarding Form Record - Saved.";
+    $success = true;
 } catch (Exception $e) {
     echo $e->getCode();
     echo $e->getMessage();
     $success = false;
 }
+
 $messages = ob_get_clean();
-
-
-$response = array("newRecord"=>$saveRecordResult,'messages'=>$messages,'success'=>$success);
-
+$response = array('success'=>$success,'messages'=>$messages,"saveRecord"=>$saveRecordResult);
 ob_clean();
 echo json_encode($response);
