@@ -10,13 +10,15 @@ namespace vbac;
  */
 class allTables
 {
-    public static $DB2_ERRORS       = 'DB2_ERRORS';
+    public static $DB2_ERRORS         = 'DB2_ERRORS';
 
-    public static $STATIC_DOMAINS  = 'STATIC_DOMAINS';
-    public static $STATIC_GROUPS  = 'STATIC_GROUPS';
-    public static $STATIC_ROLES   = 'STATIC_ROLES';
+    public static $PERSON             = 'PERSON';
+
+    public static $STATIC_DOMAINS     = 'STATIC_DOMAINS';
+    public static $STATIC_GROUPS      = 'STATIC_GROUPS';
+    public static $STATIC_ROLES       = 'STATIC_ROLES';
     public static $STATIC_WORKSTREAMS = 'STATIC_WORKSTREAMS';
 
-    public static $TRACE            = 'TRACE';
-    public static $TRACE_CONTROL    = 'TRACE_CONTROL';
+    public static $TRACE              = 'TRACE';
+    public static $TRACE_CONTROL      = 'TRACE_CONTROL';
 }
