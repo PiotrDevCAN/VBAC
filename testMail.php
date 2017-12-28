@@ -1,4 +1,6 @@
 <?php
+use vbac\personRecord;
+
 // $vcapServices = json_decode($_SERVER['VCAP_SERVICES']);
 
 // echo "<pre>";
@@ -62,9 +64,29 @@
 
 //     var_dump($info);
 
+$message = '<table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+        <td align="center">
+            <table width="50%">
+            <tr><th style="background-color:silver;font-size:20px">Name</th><td style="font-size:20px">Jeremy Norfolk</td></tr>
+            <tr><th style="background-color:silver;font-size:20px">Email Address</th><td style="font-size:20px">Jeremy.Norfolk@ibm.com</td></tr>
+            <tr><th style="background-color:silver;font-size:20px">Country working in </th><td style="font-size:20px">UK</td></tr>
+            <tr><th style="background-color:silver;font-size:20px">LoB</th><td style="font-size:20px">GTS</td></tr>
+            <tr><th style="background-color:silver;font-size:20px">Role on Project</th><td style="font-size:20px">Linux Systems - Admin</td></tr>
+            <tr><th style="background-color:silver;font-size:20px">Contract</th><td style="font-size:20px">Ventus</td></tr>
+            </table>
+        </td>
+    </tr>
+</table>';
 
 
-$response = itdq\BlueMail::send_mail(array('rob.daniel@uk.ibm.com'), 'new test 14:19','simple message', 'rob_dev@uk.ibm.com',array(),array(),false);
-echo "<pre>";
-var_dump($response);
+
+
+// $response = itdq\BlueMail::send_mail(array('rob.daniel@uk.ibm.com'), 'HTML Table?',$message, 'rob_dev@uk.ibm.com');
+// echo "<pre>";
+// var_dump($response);
+
+$person = new personRecord();
+
+$person->sendPesRequest();
 

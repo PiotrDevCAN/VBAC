@@ -74,6 +74,38 @@ class personRecord extends DbRecord
     protected $person_notesid;
     protected $person_bio;
 
+
+   // private static $pesTaskId = 'lbgvetpr@uk.ibm.com';
+    private static $pesTaskId = 'rob.daniel@uk.ibm.com';
+    private static $pesEmailBody = '<table width="100%" border="0" cellspacing="0" cellpadding="0">
+                             <tr><td align="center">
+                                <table width="50%">
+                                    <tr><td colspan="2" style="font-size:16px;padding-bottom:10px"">Please initiate PES check for the following individual:</td></tr>
+                                    <tr><th style="background-color:silver;font-size:20px">Name</th><td style="font-size:20px">&&name&&</td></tr>
+                                    <tr><th style="background-color:silver;font-size:20px">Email Address</th><td style="font-size:20px">&&email&&</td></tr>
+                                    <tr><th style="background-color:silver;font-size:20px">Country working in </th><td style="font-size:20px">&&country&&</td></tr>
+                                    <tr><th style="background-color:silver;font-size:20px">LoB</th><td style="font-size:20px">&&lob&&</td></tr>
+                                    <tr><th style="background-color:silver;font-size:20px">Role on Project</th><td style="font-size:20px">&&role&&</td></tr>
+                                    <tr><th style="background-color:silver;font-size:20px">Contract</th><td style="font-size:20px">&&contract&&</td></tr>
+                                    <tr><th style="background-color:WhiteSmoke;font-size:16px">Requested By</th><td style="font-size:16px">&&requestor&&</td></tr>
+                                    <tr><th style="background-color:WhiteSmoke;font-size:16px">Requested Timestamp</th><td style="font-size:16px">&&requested&&</td></tr>
+                                    <tr><th style="background-color:WhiteSmoke;font-size:16px">Functional Mgr (on CC)</th><td style="font-size:16px">&&functionalMgr&&</td></tr>
+                                </table>
+                            </td></tr>
+                            </table>';
+    private static $pesEmailPatterns = array(
+        '/&&name&&/',
+        '/&&email&&/',
+        '/&&country&&/',
+        '/&&lob&&/',
+        '/&&role&&/',
+        '/&&contract&&/',
+        '/&&requestor&&/',
+        '/&&requested&&/',
+        '/&&functionalMgr&&/',
+    );
+
+
     function displayBoardingForm($mode){
         $workstreamTable = new staticDataWorkstreamTable(allTables::$STATIC_WORKSTREAMS);
         $allManagers = array('bob Mgr'=>'bob@email.com','cheryl mgr'=>'cheryl@email.com','cheryl two'=>'cheryl2@email.com');
@@ -256,5 +288,15 @@ class personRecord extends DbRecord
 		</div>
         <?php
     }
+
+
+    function sendPesRequest(){
+        $now = new \DateTime();
+        $replacements = array('Rob Daniel','robdaniel@uk.ibm.com','UK','GTS','Cognitive Delivery','Ventus','fred.smith@uk.ibm.com',$now->format('Y-m-d H:i:s'),'mickeyMouse@ibm.com');
+        $message = preg_replace(self::$pesEmailPatterns, $replacements, self::$pesEmailBody);
+
+        \itdq\BlueMail::send_mail(array(self::$pesTaskId), 'PES Request - Fred Smith', $message, 'vbacNoReply@uk.ibm.com');
+    }
+
 
 }

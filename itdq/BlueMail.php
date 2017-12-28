@@ -87,25 +87,20 @@ class BlueMail
         $statusObject = json_decode($status);
 
         if(!$asynchronous){
-            sleep(3);
+            sleep(5);
             $prevStatus = $status;
             $status = self::getStatus($emailLogRecordID, $statusUrl, $prevStatus);
             $statusObject = json_decode($status);
             $iteration =0;
             $attempts = 0;
-            echo "<pre>";
-            var_dump($status);
-            var_dump($statusObject);
-            echo "</pre>";
 
             while (!$statusObject->sent){
                 if($attempts++ > 20){
                     throw new \Exception($attempts . " unsuccessful attempts to send email. Abandoning process");
                 }
-                $iteration = ++$iteration <10 ? $iteration : 9; // wait a little longer each time up till 30 seconds wait. so if they are busy we're not hitting too frequently
-                echo "<br/>Resending:" . $responseObject->link[1]->href;
+                $iteration = ++$iteration <10 ? $iteration : 9; // wait a little longer each time up till 50 seconds wait. so if they are busy we're not hitting too frequently
                 self::resend($emailLogRecordID,$responseObject->link[1]->href);
-                sleep(3 + $iteration);
+                sleep(5 + $iteration*5);
                 $prevStatus = $status;
                 $status = self::getStatus($emailLogRecordID, $statusUrl, $prevStatus);
                 $statusObject = json_decode($status);
