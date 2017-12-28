@@ -13,7 +13,7 @@ class AllItdqTables
     public static $DB2_ERRORS       = 'DB2_ERRORS';
 //     public static $DIARY            = 'DIARY';
 
-//     public static $EMAIL_LOG        = 'EMAIL_LOG';
+    public static $EMAIL_LOG        = 'EMAIL_LOG';
 
 //     public static $TRACE            = 'TRACE';
 //     public static $TRACE_CONTROL    = 'TRACE_CONTROL';
