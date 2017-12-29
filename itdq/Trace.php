@@ -4,11 +4,11 @@ use DateTime;
 
 /**
  * @author GB001399
- * 
+ *
  * Enables Tracing, optionally writing trace records to a TRACE table rather than outputing on the screen.
- * 
+ *
  * Call the static functions anywhere in your code to create an trace entry.
- * 
+ *
  * Enable Tracing by setting :
  *  $_SESSION['trace'] = 'Yes' - Trace output written to the screen.
  *  $_SESSION['trace'] = 'Log' - Will write the traceoutput to TRACE table.
@@ -16,23 +16,23 @@ use DateTime;
  *  $_SESSION['methodIgnore'][method name here]
  * Optionally suppress tracing from some Class's by :
  *  $_SESSION['classIgnore'][class name here]
-   
+
  *
  */
 class Trace extends Log{
 	protected $CLASS;
 	protected $METHOD;
 	protected $PAGE;
-	
+
 //	public static $fields = array(
 //	'LOG_ENTRY' => ARRAY('HEADING' => 'LOG ENTRY', 'COLUMN' => 'LOG_ENTRY')
 //	,'LASTUPDATED' => ARRAY('HEADING' => 'LAST UPDATED', 'COLUMN' => 'LASTUPDATED')
 //	,'LASTUPDATER' => ARRAY('HEADING' => 'LAST UPDATER', 'COLUMN' => 'LASTUPDATER')
 //	,'CLASS' => ARRAY('HEADING' => 'CLASS', 'COLUMN' => 'CLASS')
-//	,'METHOD' => ARRAY('HEADING' => 'METHOD', 'COLUMN' => 'METHOD')		
-//	,'PAGE' => ARRAY('HEADING' => 'PAGE', 'COLUMN' => 'PAGE')	
+//	,'METHOD' => ARRAY('HEADING' => 'METHOD', 'COLUMN' => 'METHOD')
+//	,'PAGE' => ARRAY('HEADING' => 'PAGE', 'COLUMN' => 'PAGE')
 //	);
-	
+
 	static function traceTimings($additionalText=null, $methodParm='Method', $line=null ){
 		$page = pathinfo($_SERVER['SCRIPT_FILENAME'],PATHINFO_BASENAME);
 		if(!strpos($methodParm,"::")===FALSE){
@@ -47,16 +47,16 @@ class Trace extends Log{
 			$class = 'pageAccess';
 			$method = trim($page);
 		}
-	
+
 		if((isset($_SESSION['methodTimings'][$method])) or (isset($_SESSION['classTimings'][$class]))){ // Are we tracing ?
 			$memory = (memory_get_peak_usage(true)/1048576);
 			$elapsed = isset($_SESSION['tracePageOpenTime']) ? microtime(true) - $_SESSION['tracePageOpenTime'] : null;
 			$traceString = "<b>*T*:" . $methodParm . "-" . $line . "</b>:<br/> " . htmlspecialchars($additionalText) . "<br/><b>Time : $elapsed Memory:$memory mb</b>";
 			self::logEntry($traceString,$class,$method,$page);
-		} 
+		}
 	}
-	
-	
+
+
 
 	static function traceComment($additionalText=null, $methodParm='Method', $line=null ){
 		$page = pathinfo($_SERVER['SCRIPT_FILENAME'],PATHINFO_BASENAME);
@@ -70,9 +70,9 @@ class Trace extends Log{
 			$levels = sizeof($fileLocation);
 			//$page = $fileLocation[$levels-1];
 			$class = 'pageAccess';
-			$method = trim($fileLocation[$levels-1]);			
+			$method = trim($fileLocation[$levels-1]);
 		}
-		
+
 		if(isset($_SESSION['trace']) or (isset($_SESSION['methodInclude'][$method])) or (isset($_SESSION['classInclude'][$class]))){ // Are we tracing ?
 			if(!isset($_SESSION['methodExclude'][$method]) and !isset($_SESSION['classExclude'][$class])){ // Is this Class/Method one we're ignoring ?
 				$now = new \DateTime();
@@ -82,7 +82,7 @@ class Trace extends Log{
 			}
 		}
 	}
-	
+
 	static function traceVariable($variable, $methodParm='Method', $line=null){
 		$page = pathinfo($_SERVER['SCRIPT_FILENAME'],PATHINFO_BASENAME);
 		if(!strpos($methodParm,"::")===FALSE){
@@ -93,11 +93,11 @@ class Trace extends Log{
 		} else {
 			$fileLocation = explode("/",$methodParm);
 			$levels = sizeof($fileLocation);
-			//$page = $fileLocation[$levels-1];		
+			//$page = $fileLocation[$levels-1];
 			$class = 'pageAccess';
-			$method = trim($fileLocation[$levels-1]);	
-		}	
-		
+			$method = trim($fileLocation[$levels-1]);
+		}
+
 		$output = print_r($variable, TRUE);
 		// $output = serialize($variable);
 		$length = strlen($output);
@@ -112,7 +112,7 @@ class Trace extends Log{
 			}
 		}
 	}
-	
+
 	/**
  	* Actually writes the Log Entry to the Log Table.
 	*
@@ -121,15 +121,15 @@ class Trace extends Log{
  	*/
 	static function logEntry($entry,$class=null, $method=null, $page=null, $pwd=null){
 		$userid = isset($GLOBALS['ltcuser']['mail']) ? db2_escape_string($GLOBALS['ltcuser']['mail']) : "unknown";
-		$elapsed = isset($_SESSION['tracePageOpenTime']) ? microtime(true) - $_SESSION['tracePageOpenTime'] : null;				
+		$elapsed = isset($_SESSION['tracePageOpenTime']) ? microtime(true) - $_SESSION['tracePageOpenTime'] : null;
 		$elapsed =  ($elapsed > 3600) ? 0 : $elapsed ; // Fix for long page opening times.
 
 		$sql  = " INSERT INTO " . $_SESSION['Db2Schema'] . "." . AllItdqTables::$TRACE . " ( LOG_ENTRY,LASTUPDATER,CLASS,METHOD,PAGE ";
 		$sql .= empty($elapsed) ? ") " : ",ELAPSED) ";
 		$db2Entry = db2_escape_string($entry);
-				
+
 		$db2Entry = strlen($db2Entry)>31000 ? "**TRUNCATED**" . substr($db2Entry, 0,31000) : $db2Entry;
-				
+
 		if($pwd != null){
 			$db2Entry =  str_replace($pwd,'********',$db2Entry);
 			$sql .= " VALUES (ENCRYPT_RC2('$db2Entry','$pwd'),ENCRYPT_RC2('$userid','$pwd'), ENCRYPT_RC2('$class','$pwd'), ENCRYPT_RC2('$method','$pwd'), ENCRYPT_RC2('$page','$pwd') ";
@@ -145,11 +145,11 @@ class Trace extends Log{
 			echo "<BR>Msg: " . db2_stmt_errormsg() . "<BR>";
 			exit("Error in: " . __METHOD__ .  __LINE__ . "<BR>running: $sql");
 		}
-	}		
-			
+	}
+
 	static function deleteTraceRecords($keepDays=2){
 		$sql = "DELETE FROM " . $_SESSION['Db2Schema'] . "." . AllItdqTables::$TRACE . " WHERE LASTUPDATED < (CURRENT TIMESTAMP - $keepDays DAYS) ";
-		
+
 		Trace::traceVariable($keepDays);
 		$rs = DB2_EXEC($_SESSION['conn'],$sql);
 		if(!$rs)
@@ -161,6 +161,7 @@ class Trace extends Log{
 	}
 
 	static function setTraceControls(){
+
 		$sql = "SELECT * FROM " . $_SESSION['Db2Schema'] . "." . AllItdqTables::$TRACE_CONTROL ;
 		$rs = DB2_EXEC($_SESSION['conn'],$sql);
 		if(!$rs)
@@ -174,57 +175,61 @@ class Trace extends Log{
 		$_SESSION['methodExclude'] = array(); // Allows you to make changes, by reseting the array before setting specific values later.
 		$_SESSION['methodTimings'] = array(); // Allows you to make changes, by reseting the array before setting specific values later.
 		$_SESSION['classInclude'] = array(); // Allows you to make changes, by reseting the array before setting specific values later.
-		$_SESSION['classExclude'] = array(); // Allows you to make changes, by reseting the array before setting specific values later.	
+		$_SESSION['classExclude'] = array(); // Allows you to make changes, by reseting the array before setting specific values later.
 		$_SESSION['classTimings'] = array(); // Allows you to make changes, by reseting the array before setting specific values later.
 		unset($_SESSION['trace']);
-	
+
 		while($row = db2_fetch_assoc($rs)){
 			if(trim($row['TRACE_CONTROL_TYPE'])=='methodExclude' or trim($row['TRACE_CONTROL_TYPE'])=='classExclude'){
 				$anyExcludes = TRUE;
 			}
-			$_SESSION[trim($row['TRACE_CONTROL_TYPE'])][trim($row['TRACE_CONTROL_VALUE'])] = 'On';	
-		}	
+			$_SESSION[trim($row['TRACE_CONTROL_TYPE'])][trim($row['TRACE_CONTROL_VALUE'])] = 'On';
+		}
 		if($anyExcludes){
 			$_SESSION['trace']='Log';
 		}
 	}
-	
+
 	static function pageOpening($file=null,$tracePost = true,$traceRequest = false, $debugBacktrace=false){
-		$fileName = empty($file) ? $_SERVER['PHP_SELF'] : $file;
-		$_SESSION['tracePageOpenTime'] = microtime(TRUE);
-		self::setTraceControls();
-		self::traceComment("Page opening." , $fileName);
-		$tracePost ? self::traceVariable($_POST,$fileName) : null;
-		$traceRequest ? self::traceVariable($_REQUEST,$fileName) : null;
-		$debugBacktrace ? self::traceVariable(debug_backtrace()) : null;		
+	    if(isset(AllItdqTables::$TRACE_CONTROL)){
+	        $fileName = empty($file) ? $_SERVER['PHP_SELF'] : $file;
+	        $_SESSION['tracePageOpenTime'] = microtime(TRUE);
+	        self::setTraceControls();
+	        self::traceComment("Page opening." , $fileName);
+	        $tracePost ? self::traceVariable($_POST,$fileName) : null;
+	        $traceRequest ? self::traceVariable($_REQUEST,$fileName) : null;
+	        $debugBacktrace ? self::traceVariable(debug_backtrace()) : null;
+	    }
 	}
-	
-	
+
+
 	static function pageLoadComplete($file=null){
-		$fileName = empty($file) ? $_SERVER['PHP_SELF'] : $file;
-		$elapsed = isset($_SESSION['tracePageOpenTime']) ? microtime(true) - $_SESSION['tracePageOpenTime'] : null;
-		$memory = (memory_get_peak_usage(true)/1048576);
-		Trace::traceComment("Page Load Time : $elapsed Memory:$memory mb", $fileName); 
+	    if(isset(AllItdqTables::$TRACE_CONTROL)){
+	        $fileName = empty($file) ? $_SERVER['PHP_SELF'] : $file;
+	        $elapsed = isset($_SESSION['tracePageOpenTime']) ? microtime(true) - $_SESSION['tracePageOpenTime'] : null;
+	        $memory = (memory_get_peak_usage(true)/1048576);
+	        Trace::traceComment("Page Load Time : $elapsed Memory:$memory mb", $fileName);
+	    }
 	}
-	
-	
+
+
 	static function allApplicationsClasses($directory=null,$withItdq = true){
 		if(empty($directory)){
 			$self = $_SERVER['PHP_SELF'];
 			$elementsOfSelf = explode("/", $self);
 			$directory = $elementsOfSelf[1];
-		}		
+		}
 		$allLocalClasses = Trace::allClassesInDirectory($directory);
-		$allItdqClasses =  $withItdq ? Trace::allClassesInDirectory("itdq") : null;	
+		$allItdqClasses =  $withItdq ? Trace::allClassesInDirectory("itdq") : null;
 		return array_unique(array_merge($allItdqClasses,$allLocalClasses));
 	}
-	
+
 	static function allClassesInDirectory($directory=null){
 		if(empty($directory)){
 			$self = $_SERVER['PHP_SELF'];
 			$elementsOfSelf = explode("/", $self);
 			$directory = $elementsOfSelf[1];
-		}		
+		}
 		$allFiles = scandir($directory);
 		$allClasses = null;
 		foreach ($allFiles as $fileName) {
@@ -233,18 +238,18 @@ class Trace extends Log{
 				$allClasses[] = $className;
 			}
 		}
-		$allClasses[] = 'pageAccess';	
+		$allClasses[] = 'pageAccess';
 		return empty($allClasses) ? false : $allClasses;
 	}
-	
-	
+
+
 	static function listFunctionsInClass($class){
 		if(empty($directory)){
 			$self = $_SERVER['PHP_SELF'];
 			$elementsOfSelf = explode("/", $self);
 			$directory = $elementsOfSelf[1];
 		}
-		$dirFile = $class . ".php";		
+		$dirFile = $class . ".php";
 		$file = fopen($dirFile,'r',true);
 
 		$classFound = false;
@@ -257,8 +262,8 @@ class Trace extends Log{
   					if(trim($matches[2])!=""){
   						//Trace::listFunctionsInClass(trim($matches[2]));
   					}
-  					$classFound = true;		
-  				}		
+  					$classFound = true;
+  				}
   			}
   			$comment = preg_match('/(\/\/.)/', $line,$comments);
   			if($comment===0){
@@ -270,12 +275,12 @@ class Trace extends Log{
 		}
 		fclose($file);
 		return array_unique($method);
-		
-	}	
-	
-	
 
-	
-	
+	}
+
+
+
+
+
 }
 ?>

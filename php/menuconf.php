@@ -9,12 +9,14 @@ $navBar_data = array(
     array("View Trace", "pi_trace.php"),
     array("Trace Control", "pi_traceControl.php"),
     array("Trace Deletion", "pi_traceDelete.php"),
+    array('Email Log','pi_emailLog.php'),
     array("",'endOfDropDown'),
 
     array("vBac Admin",'dropDown'),
     array('PMO','pa_pmo.php'),
     array('Revalidation','pa_revalidation.php'),
     array('Control','pa_control.php'),
+
     array("",'endOfDropDown'),
 
     array("Boarding",'dropDown'),
