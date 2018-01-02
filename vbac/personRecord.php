@@ -19,41 +19,28 @@ class personRecord extends DbRecord
     protected $OPEN_SEAT_NUMBER;
     protected $FIRST_NAME;
     protected $LAST_NAME;
-    protected $PHONE_NUMBER;
+
     protected $EMAIL_ADDRESS;
-
     protected $LBG_EMAIL;
-    protected $EMPLOYEE_TYPE;
-    protected $WORK_STREAM;
 
-    protected $FM_EMAIL;
+    protected $EMPLOYEE_TYPE;
+
+    protected $FM_CNUM;
     protected $FM_MANAGER_FLAG;
 
     protected $CTB_RTB;
     protected $TT_BAU;
     protected $LOB;
-
     protected $ROLE_ON_THE_ACCOUNT;
     protected $ROLE_TECHNOLOGY;
 
     protected $START_DATE;
     protected $PROJECTED_END_DATE;
 
-    protected $THIRD_PARTY_VDI_ACCESS;
-    protected $EXTERNAL_COMPANY;
     protected $COUNTRY;
-    protected $CT_ID;
-    protected $CT_REQUEST;
-    protected $CYBERARK;
-    protected $FM_APPROVAL;
-    protected $FULL_VPN;
     protected $IBM_BASE_LOCATION;
     protected $LBG_LOCATION;
-    protected $LAPTOP_ASSET;
-    protected $MPW_ACCOUNT_TYPE;
-    protected $MPW_DOMAIN;
-    protected $MPW_ID;
-    protected $OCS;
+
     protected $OFFBOARDED_DATE;
 
     protected $PES_DATE_REQUESTED;
@@ -61,14 +48,13 @@ class personRecord extends DbRecord
     protected $PES_DETAILS;
     protected $PES_STATUS;
 
-    protected $RAS_ACCESS;
-
     protected $REVALIDATION_DATE_FIELD;
     protected $REVALIDATION_STATUS;
 
-    protected $SDID;
-    protected $VDI;
-    protected $VPN_LITE;
+    protected $CBN_DATE_FIELD;
+    protected $CBN_STATUS;
+
+    protected $WORK_STREAM;
 
 
     protected $person_notesid;
