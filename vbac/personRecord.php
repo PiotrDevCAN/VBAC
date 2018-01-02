@@ -295,7 +295,7 @@ class personRecord extends DbRecord
         $replacements = array('Rob Daniel','robdaniel@uk.ibm.com','UK','GTS','Cognitive Delivery','Ventus','fred.smith@uk.ibm.com',$now->format('Y-m-d H:i:s'),'mickeyMouse@ibm.com');
         $message = preg_replace(self::$pesEmailPatterns, $replacements, self::$pesEmailBody);
 
-        \itdq\BlueMail::send_mail(array(self::$pesTaskId), 'PES Request - Fred Smith', $message, 'vbacNoReply@uk.ibm.com');
+        \itdq\BlueMail::send_mail(array(self::$pesTaskId,'antstark@uk.ibm.com'), 'PES Request - Fred Smith', $message, 'vbacNoReply@uk.ibm.com');
     }
 
 

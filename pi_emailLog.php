@@ -45,10 +45,10 @@ Trace::pageOpening($_SERVER['PHP_SELF']);
 <div id='emailLogDiv'>
 <table id='emailLogTable' class='table table-striped table-bordered compact' cellspacing='0' width='100%'>
 <thead>
-<tr><th>Record ID</th><th>To</th><th>Subject</th><th>Message</th><th>Response</th><th>Status</th><th>Sent Timestamp</th><th>Status Timestamp</th></tr></thead>
+<tr><th>Id</th><th>Details</th><th>Message</th><th>Status</th><th>Sent Timestamp</th><th>Status Timestamp</th></tr></thead>
 <tbody>
 </tbody>
-<tfoot><tr><th>Record ID</th><th>To</th><th>Subject</th><th>Message</th><th>Response</th><th>Status</th><th>Sent Timestamp</th><th>Status Timestamp</th></tr></tfoot></table>
+<tfoot><tr><th>Id</th><th>Details</th><th>Message</th><th>Status</th><th>Sent Timestamp</th><th>Status Timestamp</th></tr></tfoot></table>
 
 </div>
 </div>
@@ -67,6 +67,8 @@ $(document).ready(function() {
 	var emailLog = new EmailLog();
 	emailLog.initialiseDateSelect();
 	emailLog.initialiseDataTable();
+	emailLog.listenForcheckStatus();
+	emailLog.listenForResendEmail();
 });
 
 </script>

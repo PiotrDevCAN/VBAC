@@ -25,6 +25,7 @@ function EmailLog() {
 	            },
 	            type: 'POST',
 	        }	,
+	        order: [[ 0, "desc" ]],
 	    	autoWidth: false,
 	    	deferRender: true,
 	    	responsive: false,
@@ -63,26 +64,46 @@ function EmailLog() {
 
 	},
 
-//	this.buildEmailLog =  function(){
-//		var formData = $('form').serialize();
-//		var emailLog = new EmailLog();
-//
-//	    $.ajax({
-//	    	url: "ajax/populateEmailLogDatatable.php",
-//	        type: 'POST',
-//	    	data: formData,
-//	    	success: function(result){
-//	    		$('#emailLogTable').DataTable().destroy();
-//	        	$("#emailLogTable").html(result);
-//	        	emailLog.initialiseDataTable();
-//	    		}
-//	    });
-//
-//	},
+	this.listenForcheckStatus = function(){
+		$(document).on('click','.statusCheck', function(e){
+			var recordId = $(e.target).data('reference');
+			var url = $(e.target).data('url');
+			var prevStatus = $(e.target).data('prevstatus');
+		    EmailLog.table.clear();
+		    EmailLog.table.draw();
+		    $('.dataTables_processing', $('#emailLogTable').closest('.dataTables_wrapper')).show();
+			$.ajax({
+		    	url: "ajax/checkEmailStatus.php",
+		        type: 'POST',
+		    	data: {recordId:recordId,
+		    		   url:url,
+		    		   prevStatus:prevStatus},
+		    	success: function(result){
+		    		EmailLog.table.ajax.reload();
+		    	}
+		    });
+		});
+	},
 
-//	this.destroyEmailLog = function(){
-//		$('#emailLogTable').DataTable().destroy();
-//	},
+	this.listenForResendEmail = function(){
+		$(document).on('click','.resendEmail', function(e){
+			var recordId = $(e.target).data('reference');
+			var url = $(e.target).data('url');
+		    EmailLog.table.clear();
+		    EmailLog.table.draw();
+		    $('.dataTables_processing', $('#emailLogTable').closest('.dataTables_wrapper')).show();
+			$.ajax({
+		    	url: "ajax/resendEmail.php",
+		        type: 'POST',
+		    	data: {recordId:recordId,
+		    		   url:url
+		    		   },
+		    	success: function(result){
+		    		EmailLog.table.ajax.reload();
+		    	}
+		    });
+		});
+	},
 
 
 	this.initialiseDateSelect = function(){
@@ -126,24 +147,25 @@ function EmailLog() {
 		}),
 
 		updateStartDate = function() {
-			var emailLog = new EmailLog();
 			console.log('updatedStartDate');
 		    startPicker.setStartRange(startDate);
 		    endPicker.setStartRange(startDate);
 		    endPicker.setMinDate(startDate);
 		    console.log($('#START_DATE').val());
-//		    emailLog.destroyEmailLog();
-//		    emailLog.buildEmailLog();
+		    EmailLog.table.clear();
+		    EmailLog.table.draw();
+		    EmailLog.table.ajax.reload();
 		},
 
 		updateEndDate = function() {
-			var resourceRequest = new ResourceRequest();
 			console.log('updatedEndDate');
 		    startPicker.setEndRange(endDate);
 		    startPicker.setMaxDate(endDate);
 		    endPicker.setEndRange(endDate);
-//		    resourceRequest.destroyEmailLog();
-//		    resourceRequest.buildEmailLog();
+		    EmailLog.table.clear();
+		    EmailLog.table.draw();
+		    EmailLog.table.ajax.reload();
+
 		},
 
 

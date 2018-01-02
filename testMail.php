@@ -82,11 +82,11 @@ $message = '<table width="100%" border="0" cellspacing="0" cellpadding="0">
 
 
 
-// $response = itdq\BlueMail::send_mail(array('rob.daniel@uk.ibm.com'), 'HTML Table?',$message, 'rob_dev@uk.ibm.com');
-// echo "<pre>";
-// var_dump($response);
+$response = itdq\BlueMail::send_mail(array('rob.daniel@uk.ibm.com'), 'Resendable 4',$message, 'rob_dev@uk.ibm.com');
+echo "<pre>";
+var_dump($response);
 
-$person = new personRecord();
+// $person = new personRecord();
 
-$person->sendPesRequest();
+// $person->sendPesRequest();
 

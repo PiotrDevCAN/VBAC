@@ -94,19 +94,38 @@ class BlueMail
             $iteration =0;
             $attempts = 0;
 
-            while (!$statusObject->sent){
+            $statusObjects=array();
+            $statusObjects[] = $statusObject;
+
+            while (!self::checkStatus($statusObjects) && !$statusObject->locked){
                 if($attempts++ > 20){
                     throw new \Exception($attempts . " unsuccessful attempts to send email. Abandoning process");
                 }
                 $iteration = ++$iteration <10 ? $iteration : 9; // wait a little longer each time up till 50 seconds wait. so if they are busy we're not hitting too frequently
-                self::resend($emailLogRecordID,$responseObject->link[1]->href);
-                sleep(5 + $iteration*5);
+                $response = self::resend($emailLogRecordID,$responseObject->link[1]->href);
                 $prevStatus = $status;
-                $status = self::getStatus($emailLogRecordID, $statusUrl, $prevStatus);
+
+                $responseObject = json_decode($response);
+                $statusUrl = $responseObject->link[0]->href;
+                $status = self::getStatus($emailLogRecordID, $statusUrl);
                 $statusObject = json_decode($status);
+                $statusObjects[]=$statusObject;
+                sleep(5 + $iteration*5);
             }
         }
         return array('sendResponse' => $responseObject, 'Status'=>$statusObject);
+    }
+
+    static function checkStatus(array $statusObjects){
+        $status = false;
+        foreach ($statusObjects as $statusObject){
+            print_r($statusObject);
+            if($statusObject->status){
+                $status = true;
+                break;
+            }
+        }
+        return $status;
     }
 
 
@@ -115,7 +134,7 @@ class BlueMail
     static function prelog(array $to, $subject, $message, $data_json)
     {
         $sql  = " INSERT INTO " . $_SESSION['Db2Schema'] . "." . AllItdqTables::$EMAIL_LOG;
-        $sql .= " (TO, SUBJECT, MESSAGE, DATA_JSON ) VALUES ( '" . db2_escape_string(print_r($to,true)) ."','" . db2_escape_string($subject) . "'";
+        $sql .= " (TO, SUBJECT, MESSAGE, DATA_JSON ) VALUES ( '" . db2_escape_string(serialize($to)) ."','" . db2_escape_string($subject) . "'";
         $sql .= " ,'" . db2_escape_string($message) . "','" . db2_escape_string($data_json) . "'); ";
 
         $rs = db2_exec($_SESSION['conn'], $sql);
@@ -173,6 +192,20 @@ class BlueMail
        db2_exec($_SESSION['conn'], $sql);
     }
 
+    static function getEmailDetails($recordID){
+        $sql  = " SELECT * FROM " . $_SESSION['Db2Schema'] . "." . AllItdqTables::$EMAIL_LOG;
+        $sql .= ' WHERE RECORD_ID = ' . db2_escape_string($recordID);
+        $rs = db2_exec($_SESSION['conn'], $sql);
+
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+            throw new \Exception('Unable to read record details for email ' . $recordID);
+        } else {
+            $details = db2_fetch_assoc($rs);
+            return $details;
+        }
+    }
+
     static function getStatus($recordId, $statusUrl, $prevStatus='first')
     {
         $ch = curl_init();
@@ -190,7 +223,9 @@ class BlueMail
 
     static function resend($recordId, $resendUrl)
     {
+        $emailDetails = self::getEmailDetails($recordId);
 
+        $emailLogRecordID = self::prelog(unserialize($emailDetails['TO']), $emailDetails['SUBJECT'], $emailDetails['MESSAGE'], $emailDetails['DATA_JSON']);
 
         $vcapServices = json_decode($_SERVER['VCAP_SERVICES']);
 
@@ -209,9 +244,9 @@ class BlueMail
         curl_setopt($ch, CURLOPT_URL, $resendUrl);
 
         $resp = curl_exec($ch);
+        self::updatelog($emailLogRecordID, $resp);
+        self::getStatus($recordId, $emailDetails['PREV_STATUS']);
         return $resp;
-
-
     }
 
 
