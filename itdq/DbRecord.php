@@ -771,6 +771,20 @@ class DbRecord extends FormClass {
 	    }
 	}
 
+	function htmlHeaderCells(){
+	    ob_start();
+	    $headerCells = null;
+	    foreach ($this  as $property => $value) {
+
+	        if($property == strtoupper($property)){
+	            $headerCells .= "<th>";
+	            $headerCells .= isset($this->headerTitles[$property]) ? $this->headerTitles[$property] : str_replace("_", " ", $property);
+	            $headerCells .= "</th>";
+	        }
+	    }
+	    return $headerCells;
+	}
+
 
 }
 

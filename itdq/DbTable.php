@@ -2132,5 +2132,5 @@ class DbTable
         return $this->tableName;
     }
 
+
 }
-?>
