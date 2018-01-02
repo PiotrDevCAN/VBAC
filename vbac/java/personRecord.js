@@ -6,6 +6,7 @@
 
 function personRecord() {
 
+	var table;
 	var dataTableElements;
 	var currentXmlDoc;
 
@@ -228,7 +229,95 @@ function personRecord() {
 			}
 		});
 
+	},
+
+
+	this.initialisePersonTable = function(){
+	    $.ajax({
+	    	url: "ajax/createHtmlForPersonTable.php",
+	    	type: 'POST',
+	    	success: function(result){
+	    		var Person = new personRecord();
+	    		$('#personDatabaseDiv').html(result);
+	    		Person.initialiseDataTable();
+	    	}
+	    });
+
+	},
+
+	this.initialiseDataTable = function(){
+	    // Setup - add a text input to each footer cell
+	    $('#personTable tfoot th').each( function () {
+	        var title = $(this).text();
+	        $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+	    } );
+		// DataTable
+	    personRecord.table = $('#personTable').DataTable({
+	    	ajax: {
+	            url: 'ajax/populatePersonDatatable.php',
+	            type: 'POST',
+	        }	,
+	        order: [[ 0, "desc" ]],
+	    	autoWidth: false,
+	    	deferRender: true,
+	    	responsive: false,
+	    	// scrollX: true,
+	    	processing: true,
+	    	responsive: true,
+	    	colReorder: true,
+	    	dom: 'Blfrtip',
+	        buttons: [
+	                  'colvis',
+	                  'excelHtml5',
+	                  'csvHtml5',
+	                  'print'
+	              ],
+	    });
+
+
+//	    ResourceRequest.table.columns([0,1,2,3,4,5,6,7,8,9,10,17,18,20,21,22,23,24,25,26]).visible(false,false);
+//	    ResourceRequest.table.columns.adjust().draw(false);
+
+
+
+	    // Apply the search
+	    personRecord.table.columns().every( function () {
+	        var that = this;
+
+	        $( 'input', this.footer() ).on( 'keyup change', function () {
+	            if ( that.search() !== this.value ) {
+	                that
+	                    .search( this.value )
+	                    .draw();
+	            }
+	        } );
+	    } );
+
+
+	},
+
+	this.listenForReportPes = function(){
+		$(document).on('click','#reportPes', function(e){
+			console.log('triggered report PES');
+			personRecord.table.columns().visible(true,false);
+			personRecord.table.columns([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28]).visible(false);
+			personRecord.table.columns([2,3,4,20,21,22,23]).visible(true);
+			personRecord.table.columns.adjust().draw(false);
+			console.log('triggered completed');
+
+			});
+	},
+
+
+	this.listenForReportReset = function(){
+		$(document).on('click','#reportReset', function(e){
+			console.log('triggered report Reset');
+			personRecord.table.columns().visible(true,false);
+			personRecord.table.columns([0,1,2,3,4,5,6,7,8,9,10,12,13,15,16,17,18,19,20,21,22,23,24,25,26,27,28]).visible(true,false);
+			personRecord.table.columns.adjust().draw(false);
+			});
 	}
+
 }
 
 $( document ).ready(function() {

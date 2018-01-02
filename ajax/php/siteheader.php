@@ -10,9 +10,3 @@ include "splClassLoader.php";
 session_start();
 
 include "connect.php";
-
-print_r($_SESSION);
-
-
-
-?>
