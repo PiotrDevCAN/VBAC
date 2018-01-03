@@ -19,7 +19,7 @@ if( getenv( "VCAP_SERVICES" ) )
 
     $conn = db2_connect( $conn_string, "", "" );
 
-    $GLOBALS['ltcuser']['mail'] = 'dummyUser';
+//   $GLOBALS['ltcuser']['mail'] = 'dummyUser';
     if( $conn )
     {
         $_SESSION['conn'] = $conn;
