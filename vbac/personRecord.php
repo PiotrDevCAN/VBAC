@@ -44,8 +44,9 @@ class personRecord extends DbRecord
     protected $OFFBOARDED_DATE;
 
     protected $PES_DATE_REQUESTED;
+    protected $PES_REQUESTOR;
     protected $PES_DATE_RESPONDED;
-    protected $PES_DETAILS;
+    protected $PES_STATUS_DETAILS;
     protected $PES_STATUS;
 
     protected $REVALIDATION_DATE_FIELD;
@@ -90,6 +91,11 @@ class personRecord extends DbRecord
         '/&&requested&&/',
         '/&&functionalMgr&&/',
     );
+
+    public const PES_STATUS_REQUESTED = 'Requested';
+    public const PES_STATUS_CLEARED  = 'PES Cleared';
+    public const PES_STATUS_EXCEPTION = 'Exception';
+    public const PES_STATUS_REJECTED = 'Rejected';
 
 
     function displayBoardingForm($mode){
@@ -243,10 +249,16 @@ class personRecord extends DbRecord
 		<?php
 	$allButtons = null;
 	$submitButton = $mode==FormClass::$modeEDIT ?  $this->formButton('submit','Submit','updateBoarding',null,'Update') :  $this->formButton('submit','Submit','saveBoarding',null,'Submit');
+	$pesButton    = $mode==FormClass::$modeEDIT ?  $this->formButton('button','initiatePes','initiatePes','enabled','Initiate PES') :  $this->formButton('button','initiatePes','initiatePes','disabled','Initiate PES');
   	$allButtons[] = $submitButton;
+  	$allButtons[] = $pesButton;
 	$this->formBlueButtons($allButtons);
 	?>
 	</div>
+	<?php
+	$this->formHiddenInput('requestor',$GLOBALS['ltcuser']['mail'],'requestor');
+	?>
+
 	</form>
     <?php
     }
@@ -282,6 +294,7 @@ class personRecord extends DbRecord
         $message = preg_replace(self::$pesEmailPatterns, $replacements, self::$pesEmailBody);
 
         \itdq\BlueMail::send_mail(array(self::$pesTaskId,'antstark@uk.ibm.com'), 'PES Request - Fred Smith', $message, 'vbacNoReply@uk.ibm.com');
+
     }
 
 

@@ -1406,7 +1406,7 @@ function formTextArea($label, $fieldName, $state = null, $textAreaclass = null, 
     {
         echo "<scan class='button-blue' style='font-size:1.4em'>";
         foreach ($buttonDetails as $button) {
-            echo "<input class='btn " . $button['class'] . "' type='" . $button['type'] . "' name='" . $button['name'] . "' id='" . $button['id'] . "' " . $button['state'] . " value='" . $button['value'] . "'  >";
+            echo "<input class='btn " . $button['class'] . "' type='" . $button['type'] . "' name='" . $button['name'] . "' id='" . $button['id'] . "' " . $button['state'] . " value='" . $button['value'] . "'  >&nbsp;";
         }
         // echo "<input type='submit' name='btnNewProduct' id='btnNewProduct' enabled value='Define New Product' >";
         echo "</scan>";

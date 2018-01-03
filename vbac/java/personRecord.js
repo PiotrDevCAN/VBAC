@@ -223,7 +223,9 @@ function personRecord() {
 			    			$('#savingBoardingDetailsModal  .modal-body').addClass('bg-danger');
 			    			$('#savingBoardingDetailsModal  .modal-body').removeClass('bg-success');
 			    		}
-			    		$('#boardingForm')[0].reset();
+			    		$('#boardingForm :input').attr('disabled',true);
+			    		$('#saveBoarding').attr('disabled',true);
+			    		$('#initiatePes').attr('disabled',false);
 			    	}
 			    });
 			}
@@ -315,6 +317,35 @@ function personRecord() {
 			personRecord.table.columns().visible(true,false);
 			personRecord.table.columns([0,1,2,3,4,5,6,7,8,9,10,12,13,15,16,17,18,19,20,21,22,23,24,25,26,27,28]).visible(true,false);
 			personRecord.table.columns.adjust().draw(false);
+			});
+	},
+
+	this.listenForInitiatePes = function(){
+		$(document).on('click','#initiatePes', function(e){
+			console.log('initiatePes PES');
+			var cnum = $('#person_serial').val();
+		    $.ajax({
+		    	url: "ajax/initiatePes.php",
+		    	data : {cnum:cnum},
+		    	type: 'POST',
+		    	success: function(result){
+		    		console.log(result);
+		    		var resultObj = JSON.parse(result);
+		    		$('#savingBoardingDetailsModal  .modal-body').html(resultObj.messages);
+		    		$('#savingBoardingDetailsModal').modal('show');
+		    		if(resultObj.success==true){
+		    			$('#savingBoardingDetailsModal  .modal-body').addClass('bg-success');
+		    			$('#savingBoardingDetailsModal  .modal-body').removeClass('bg-danger');
+		    		} else {
+		    			$('#savingBoardingDetailsModal  .modal-body').addClass('bg-danger');
+		    			$('#savingBoardingDetailsModal  .modal-body').removeClass('bg-success');
+		    		}
+		    		$('#boardingForm')[0].reset();
+		    		$('#initiatePes').attr('disabled',true);
+		    	}
+		    });
+
+
 			});
 	}
 

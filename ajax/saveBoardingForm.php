@@ -5,15 +5,14 @@ use vbac\allTables;
 
 ob_start();
 
-
-
 try {
     $person = new personRecord();
     $person->setFromArray($_POST);
 
     $table = new personTable(allTables::$PERSON);
     $saveRecordResult = $table->saveRecord($person);
-    echo "Boarding Form Record - Saved.";
+    echo "<br/>Boarding Form Record - Saved.";
+    echo "<br/>Click 'Initiate PES' button to initiate the PES Check Process";
     $success = true;
 } catch (Exception $e) {
     echo $e->getCode();

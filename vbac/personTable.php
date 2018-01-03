@@ -29,6 +29,44 @@ class personTable extends DbTable {
         return $row;
     }
 
+    function setPesRequested($cnum=null, $requestor=null){
+        if(!$cnum){
+            throw new \Exception('No CNUM provided in ' . __METHOD__);
+        }
+        return self::setPesStatus($cnum,personRecord::PES_STATUS_REQUESTED, $requestor);
+    }
+
+    function setPesStatus($cnum=null,$status=null,$requestor=null){
+        if(!$cnum){
+            throw new \Exception('No CNUM provided in ' . __METHOD__);
+        }
+
+        $status = empty($status) ? personRecord::PES_STATUS_REQUESTED : $status;
+
+        switch ($status) {
+            case personRecord::PES_STATUS_REQUESTED:
+                $requestor = empty($requestor) ? 'Unknown' : $requestor;
+                $dateField = 'PES_DATE_REQUESTED';
+                break;
+            default:
+                $dateField = 'PES_DATE_RESPONDED';
+            break;
+        }
+
+
+        $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql .= " SET $dateField = current date, PES_STATUS='" . db2_escape_string($status)  . "' ";
+        $sql .= empty($requestor) ? null : ", PES_REQUESTOR='" . db2_escape_string($requestor) . "' ";
+        $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
+
+        $result = db2_exec($_SESSION['conn'], $sql);
+        if(!$result){
+            DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
+        }
+        return $result;
+
+    }
+
 
 
 }

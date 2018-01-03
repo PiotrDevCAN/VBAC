@@ -22,8 +22,6 @@ $person->displayBoardingForm($mode);
 
 ?>
 </div>
-
-
 </div>
 <?php
 $person->savingBoardingDetailsModal();
@@ -39,6 +37,7 @@ $(document).ready(function() {
     person.listenForSerial();
     person.listenForSaveBoarding();
     person.listenForAccountOrganisation();
+    person.listenForInitiatePes();
 });
 
 $(document).ready(function(){
