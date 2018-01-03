@@ -323,7 +323,8 @@ function personRecord() {
 	this.listenForInitiatePes = function(){
 		$(document).on('click','#initiatePes', function(e){
 			console.log('initiatePes PES');
-			var cnum = $('#person_serial').val();
+			var cnum = $('#person_uid').val();
+			console.log(cnum);
 		    $.ajax({
 		    	url: "ajax/initiatePes.php",
 		    	data : {cnum:cnum},

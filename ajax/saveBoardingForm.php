@@ -11,9 +11,16 @@ try {
 
     $table = new personTable(allTables::$PERSON);
     $saveRecordResult = $table->saveRecord($person);
-    echo "<br/>Boarding Form Record - Saved.";
-    echo "<br/>Click 'Initiate PES' button to initiate the PES Check Process";
-    $success = true;
+
+    if(!$saveRecordResult){
+        echo db2_stmt_error();
+        echo db2_stmt_errormsg();
+        $success = false;
+    } else {
+        echo "<br/>Boarding Form Record - Saved.";
+        echo "<br/>Click 'Initiate PES' button to initiate the PES Check Process";
+        $success = true;
+    }
 } catch (Exception $e) {
     echo $e->getCode();
     echo $e->getMessage();

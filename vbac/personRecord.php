@@ -92,10 +92,10 @@ class personRecord extends DbRecord
         '/&&functionalMgr&&/',
     );
 
-    public const PES_STATUS_REQUESTED = 'Requested';
-    public const PES_STATUS_CLEARED  = 'PES Cleared';
-    public const PES_STATUS_EXCEPTION = 'Exception';
-    public const PES_STATUS_REJECTED = 'Rejected';
+    const PES_STATUS_REQUESTED = 'Requested';
+    const PES_STATUS_CLEARED  = 'PES Cleared';
+    const PES_STATUS_EXCEPTION = 'Exception';
+    const PES_STATUS_REJECTED = 'Rejected';
 
 
     function displayBoardingForm($mode){
