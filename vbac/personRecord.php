@@ -339,43 +339,31 @@ class personRecord extends DbRecord
     				<h3 class="panel-title">PES Status</h3>
   				</div>
   			<div class="panel-body">
-  			     <div class='row'>
-      				<div class='form-group' >
-        				<div class='col-sm-6'>
-          					<input class="form-control" id="psm_requestor" name="psm_requestor" value="" type="text" disabled>
-        			    </div>
-        				<div class='col-sm-6'>
-        				    <input class="form-control" id="psm_requested" name="psm_requested" value="" type="text" disabled>
-        			    </div>
-     				</div>
-     			</div>
      			<div class='row'>
       				<div class='form-group' >
-
-        				<label for='psm_status' class='col-md-2 control-label ceta-label-left'>Status</label>
+        				<label for='psm_status' class='col-md-2 control-label '>Status</label>
         				<div class='col-md-4'>
               				<select class='form-control select' id='psm_status'
                   	          	name='psm_status'
                   	          	required='required'
                   	          	data-tags="true" data-placeholder="Status" data-allow-clear="true"
                   	           >
-            				<option value=''>Status<option>
-            				<option value='one'>one<option>
-            				<option value='two'>two<option>
-
-            				<option value='<?=personRecord::PES_STATUS_CLEARED;?>'><?=personRecord::PES_STATUS_CLEARED?><option>
-            				<option value='<?=personRecord::PES_STATUS_EXCEPTION;?>'><?=personRecord::PES_STATUS_EXCEPTION?><option>
-            				<option value='<?=personRecord::PES_STATUS_REJECTED;?>'><?=personRecord::PES_STATUS_REJECTED?><option>
-            				<option value='<?=personRecord::PES_STATUS_REQUESTED;?>'><?=personRecord::PES_STATUS_REQUESTED?><option>
+            				<option value=''>Status</option>
+            				<option value='<?=personRecord::PES_STATUS_CLEARED;?>'><?=personRecord::PES_STATUS_CLEARED?></option>
+            				<option value='<?=personRecord::PES_STATUS_EXCEPTION;?>'><?=personRecord::PES_STATUS_EXCEPTION?></option>
+            				<option value='<?=personRecord::PES_STATUS_REJECTED;?>'><?=personRecord::PES_STATUS_REJECTED?></option>
+            				<option value='<?=personRecord::PES_STATUS_REQUESTED;?>'><?=personRecord::PES_STATUS_REQUESTED?></option>
                				</select>
             		 </div>
+            	</div>
 
-
-
-
-        				<div class='col-sm-6'>
-        				    <!--  Status_details text here -->
-        			    </div>
+     			<div class='row'>
+      				<div class='form-group' >
+        				<label for='psm_detail' class='col-md-2 control-label '>Detail</label>
+        					<div class='col-md-9'>
+  								<input class="form-control" id="psm_detail" name="psm_detail" value="" type="text" >
+            		 		</div>
+            		</div>
      				</div>
      			</div>
       		</div>
