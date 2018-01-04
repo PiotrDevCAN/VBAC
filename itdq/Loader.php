@@ -99,10 +99,7 @@ class Loader
         }
 
         $sql .= " order by 1 $order ";
-
         Trace::traceVariable($sql, __METHOD__, __LINE__);
-
-        var_dump($sql);
 
         $rs5 = db2_exec($_SESSION['conn'], $sql);
         if (! $rs5) {

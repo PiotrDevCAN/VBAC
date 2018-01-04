@@ -102,7 +102,9 @@ class personRecord extends DbRecord
         $workstreamTable = new staticDataWorkstreamTable(allTables::$STATIC_WORKSTREAMS);
         //$allManagers = array('bob Mgr'=>'bob@email.com','cheryl mgr'=>'cheryl@email.com','cheryl two'=>'cheryl2@email.com');
         $allManagers = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON, " FM_MANAGER_FLAG='Y' ");
-        $allManagers - empty($allManagers)? array('VBAC00001'=>'Dummy Fm') : $allManagers;
+        $allManagers = empty($allManagers)? array('VBAC00001'=>'Dummy Fm') : $allManagers;
+
+        var_dump($allManagers);
 
         $userDetails = $loader->loadIndexed('CNUM','EMAIL_ADDRESS',allTables::$PERSON, " EMAIL_ADDRESS='" . db2_escape_string($GLOBALS['ltcuser']['mail']) . "' ");
         $userCnum = isset($userDetails[$GLOBALS['ltcuser']['mail']]) ? $userDetails[$GLOBALS['ltcuser']['mail']] : false;
@@ -181,7 +183,7 @@ class personRecord extends DbRecord
                 >
                 <option value=''>Select Functional Mgr</option>
                 <?php
-                foreach ($allManagers as $mgrNotesid => $mgrCnum){
+                foreach ($allManagers as $mgrCnum => $mgrNotesid){
                     echo"<option value='" . $mgrCnum . "' ";
                     echo $userCnum==$mgrCnum ? " selected " : null;
                     echo ">" . $mgrNotesid . "</option>";
