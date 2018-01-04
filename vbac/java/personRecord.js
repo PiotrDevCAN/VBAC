@@ -201,7 +201,9 @@ function personRecord() {
 
 			var form = $('#boardingForm');
 			var formValid = form[0].checkValidity();
-			console.log(formValid);
+
+			$("#saveBoarding").addClass('spinning');
+
 			if(formValid){
 				var allDisabledFields = ($("input:disabled"));
 				$(allDisabledFields).attr('disabled',false);
@@ -213,6 +215,7 @@ function personRecord() {
 			    	type: 'POST',
 			        data : formData,
 			    	success: function(result){
+						$("#saveBoarding").removeClass('spinning');
 			    		console.log(result);
 			    		var resultObj = JSON.parse(result);
 			    		$('#savingBoardingDetailsModal  .modal-body').html(resultObj.messages);
@@ -301,22 +304,18 @@ function personRecord() {
 
 	this.listenForReportPes = function(){
 		$(document).on('click','#reportPes', function(e){
-			console.log('triggered report PES');
 			personRecord.table.columns().visible(true,false);
-			personRecord.table.columns([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28]).visible(false);
-			personRecord.table.columns([2,3,4,20,21,22,23]).visible(true);
+			personRecord.table.columns([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29]).visible(false);
+			personRecord.table.columns([2,3,4,21,22,23,24]).visible(true);
 			personRecord.table.columns.adjust().draw(false);
-			console.log('triggered completed');
-
 			});
 	},
 
 
 	this.listenForReportReset = function(){
 		$(document).on('click','#reportReset', function(e){
-			console.log('triggered report Reset');
 			personRecord.table.columns().visible(true,false);
-			personRecord.table.columns([0,1,2,3,4,5,6,7,8,9,10,12,13,15,16,17,18,19,20,21,22,23,24,25,26,27,28]).visible(true,false);
+			personRecord.table.columns([0,1,2,3,4,5,6,7,8,9,10,12,13,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29]).visible(true,false);
 			personRecord.table.columns.adjust().draw(false);
 			});
 	},
@@ -342,8 +341,7 @@ function personRecord() {
 		    			$('#savingBoardingDetailsModal  .modal-body').addClass('bg-danger');
 		    			$('#savingBoardingDetailsModal  .modal-body').removeClass('bg-success');
 		    		}
-		    		$('#boardingForm')[0].reset();
-		    		$('#initiatePes').attr('disabled',true);
+		    		location.reload();
 		    	}
 		    });
 

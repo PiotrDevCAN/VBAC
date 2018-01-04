@@ -1404,12 +1404,12 @@ function formTextArea($label, $fieldName, $state = null, $textAreaclass = null, 
 
     static function formBlueButtons($buttonDetails = null)
     {
-        echo "<scan class='button-blue' style='font-size:1.4em'>";
+        echo "<span class='button-blue' style='font-size:1.4em'>";
         foreach ($buttonDetails as $button) {
             echo "<input class='btn " . $button['class'] . "' type='" . $button['type'] . "' name='" . $button['name'] . "' id='" . $button['id'] . "' " . $button['state'] . " value='" . $button['value'] . "'  >&nbsp;";
         }
         // echo "<input type='submit' name='btnNewProduct' id='btnNewProduct' enabled value='Define New Product' >";
-        echo "</scan>";
+        echo "</span>";
     }
 
     static function formButton($type = null, $name = null, $id = null, $state = null, $value = null,$class='btn-primary')

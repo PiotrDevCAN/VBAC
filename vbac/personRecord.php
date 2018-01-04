@@ -103,9 +103,6 @@ class personRecord extends DbRecord
         //$allManagers = array('bob Mgr'=>'bob@email.com','cheryl mgr'=>'cheryl@email.com','cheryl two'=>'cheryl2@email.com');
         $allManagers = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON, " FM_MANAGER_FLAG='Y' ");
         $allManagers = empty($allManagers)? array('VBAC00001'=>'Dummy Fm') : $allManagers;
-
-        var_dump($allManagers);
-
         $userDetails = $loader->loadIndexed('CNUM','EMAIL_ADDRESS',allTables::$PERSON, " EMAIL_ADDRESS='" . db2_escape_string($GLOBALS['ltcuser']['mail']) . "' ");
         $userCnum = isset($userDetails[$GLOBALS['ltcuser']['mail']]) ? $userDetails[$GLOBALS['ltcuser']['mail']] : false;
         //$allWorkStream = array('Work Stream 1'=>'ws001','Work Stream 2'=>'ws002','Work Stream 3'=>'ws003','Work Stream 4'=>'ws004');
@@ -254,7 +251,7 @@ class personRecord extends DbRecord
 
 		<?php
 	$allButtons = null;
-	$submitButton = $mode==FormClass::$modeEDIT ?  $this->formButton('submit','Submit','updateBoarding',null,'Update') :  $this->formButton('submit','Submit','saveBoarding',null,'Submit');
+	$submitButton = $mode==FormClass::$modeEDIT ?  $this->formButton('submit','Submit','updateBoarding',null,'Update','btn-primary glyphicon glyphicon-refresh') :  $this->formButton('submit','Submit','saveBoarding',null,'Submit','btn-primary glyphicon glyphicon-refresh');
 	$pesButton    = $mode==FormClass::$modeEDIT ?  $this->formButton('button','initiatePes','initiatePes','enabled','Initiate PES') :  $this->formButton('button','initiatePes','initiatePes','disabled','Initiate PES');
   	$allButtons[] = $submitButton;
   	$allButtons[] = $pesButton;
@@ -300,10 +297,10 @@ class personRecord extends DbRecord
 
 
         $now = new \DateTime();
-        $replacements = array($this->FIRST_NAME . " " . $this->LAST_NAME,$this->EMAIL_ADDRESS,$this->COUNTRY,null,$this->ROLE_ON_THE_ACCOUNT,'Ventus',$_SESSION['ssoEmail'],$now->format('Y-m-d H:i:s'),$fmEmail[$this->FM_CNUM]);
+        $replacements = array($this->FIRST_NAME . " " . $this->LAST_NAME,$this->EMAIL_ADDRESS,$this->COUNTRY,null,$this->ROLE_ON_THE_ACCOUNT,'Ventus',$GLOBALS['ltcuser']['mail'],$now->format('Y-m-d H:i:s'),$fmEmail[$this->FM_CNUM]);
         $message = preg_replace(self::$pesEmailPatterns, $replacements, self::$pesEmailBody);
 
-        \itdq\BlueMail::send_mail(array(self::$pesTaskId), 'PES Request - ' . $this->CNUM, $message, 'vbacNoReply@uk.ibm.com');
+        \itdq\BlueMail::send_mail(array(self::$pesTaskId), 'vBAC PES Request - ' . $this->CNUM ." (" . $this->FIRST_NAME . " " . $this->LAST_NAME . ")", $message, 'vbacNoReply@uk.ibm.com');
 
     }
 
