@@ -60,6 +60,9 @@ class personRecord extends DbRecord
 
     protected $person_bio;
 
+    const FIELD_CNUM = 0;
+    const FIELD_PES_STATUS = 25;  // Fields to be edited in the DataTables Reports. Need to know their position in the array $row;
+
 
    // private static $pesTaskId = 'lbgvetpr@uk.ibm.com';
     private static $pesTaskId = 'rob.daniel@uk.ibm.com';

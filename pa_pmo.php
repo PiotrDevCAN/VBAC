@@ -21,4 +21,5 @@ var person = new personRecord();
 person.initialisePersonTable();
 person.listenForReportPes();
 person.listenForReportReset();
+person.listenForEditPesStatus();
 </script>

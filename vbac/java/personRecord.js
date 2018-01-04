@@ -307,29 +307,25 @@ function personRecord() {
 
 	this.listenForReportPes = function(){
 		$(document).on('click','#reportPes', function(e){
-			personRecord.table.columns().visible(true,false);
-			personRecord.table.columns([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]).visible(false);
+			personRecord.table.columns().visible(false,false);
 			personRecord.table.columns([4,5,21,22,23,24,25]).visible(true);
-			personRecord.table.order([21,'desc'],[5,"asc"]);
-			personRecord.table.columns.adjust().draw(false);
+			personRecord.table.order([21,'desc'],[5,"asc"]).draw();
 			});
 	},
 
 	this.listenForReportPerson = function(){
 		$(document).on('click','#reportPerson', function(e){
-			personRecord.table.columns().visible(true,false);
 			personRecord.table.columns([0,1,2,3,4,5,6,7,8,9,10,11,12,13,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29]).visible(true,false);
-			personRecord.table.columns([2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29]).visible(true,false);
-			personRecord.table.columns.adjust().draw(false);
+			personRecord.table.columns([2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29]).visible(true);
+			personRecord.table.columns.draw();
 			});
 	},
 
 
 	this.listenForReportReset = function(){
 		$(document).on('click','#reportReset', function(e){
-			personRecord.table.columns().visible(true,false);
-			personRecord.table.columns([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,29]).visible(true,false);
-			personRecord.table.columns.adjust().draw(false);
+			personRecord.table.columns().visible(true);
+			personRecord.table.order([5,"asc"]).draw();
 			});
 	},
 
@@ -368,6 +364,15 @@ function personRecord() {
 		    	}
 		    });
 		});
+	},
+
+	this.listenForEditPesStatus = function(){
+		$(document).on('click','.editPesStatus', function(e){
+			   console.log(e);
+			   console.log(e.target);
+    		   console.log($(e.target).data());
+
+			});
 	}
 
 }

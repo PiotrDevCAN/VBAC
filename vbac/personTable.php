@@ -26,6 +26,20 @@ class personTable extends DbTable {
     }
 
     function addButtons($row){
+        switch (trim($row[personRecord::FIELD_PES_STATUS])) {
+            case personRecord::PES_STATUS_EXCEPTION:
+            case personRecord::PES_STATUS_REJECTED:
+            case personRecord::PES_STATUS_REQUESTED:
+                $status = $row[personRecord::FIELD_PES_STATUS];
+                $row[personRecord::FIELD_PES_STATUS]  = "<button type='button' class='btn btn-default btn-xs editPesStatus' aria-label='Left Align' data-cnum='" .$row[personRecord::FIELD_CNUM] . "' >";
+                $row[personRecord::FIELD_PES_STATUS] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
+                $row[personRecord::FIELD_PES_STATUS] .= "</button>&nbsp;";
+                $row[personRecord::FIELD_PES_STATUS] .= $status;
+            break;
+            default:
+
+            break;
+        }
         return $row;
     }
 
