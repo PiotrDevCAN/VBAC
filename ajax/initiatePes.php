@@ -14,7 +14,14 @@ try {
     $cnum = $_REQUEST['cnum'];
     $table = new personTable(allTables::$PERSON);
 
-    $personData = $table->getWithPredicate(" CNUM='" . db2_escape_string($_POST['cnum']) . "' ");
+    $personData = $table->getWithPredicate(" CNUM='" . db2_escape_string(trim($_POST['cnum'])) . "' ");
+
+    print_r($_POST);
+
+    var_dump($personData);
+
+
+
     $person = new personRecord();
     $person->setFromArray($personData);
     $person->sendPesRequest();

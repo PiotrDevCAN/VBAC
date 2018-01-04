@@ -218,15 +218,18 @@ function personRecord() {
 						$("#saveBoarding").removeClass('spinning');
 			    		console.log(result);
 			    		var resultObj = JSON.parse(result);
-			    		$('#savingBoardingDetailsModal  .modal-body').html(resultObj.messages);
-			    		$('#savingBoardingDetailsModal').modal('show');
 			    		if(resultObj.success==true){
-			    			$('#savingBoardingDetailsModal  .modal-body').addClass('bg-success');
-			    			$('#savingBoardingDetailsModal  .modal-body').removeClass('bg-danger');
+			    			var message = "<div class=panel-heading><h3 class=panel-title>Success</h3>" + resultObj.messages
+			    			$('#savingBoardingDetailsModal  .panel').html(message);
+			    			$('#savingBoardingDetailsModal  .panel').addClass('panel-success');
+			    			$('#savingBoardingDetailsModal  .panel').removeClass('panel-danger');
 			    		} else {
-			    			$('#savingBoardingDetailsModal  .modal-body').addClass('bg-danger');
-			    			$('#savingBoardingDetailsModal  .modal-body').removeClass('bg-success');
-			    		}
+			    			var message = "<div class=panel-heading><h3 class=panel-title>Error</h3>" + resultObj.messages
+			    			$('#savingBoardingDetailsModal  .panel').html(message);
+			    			$('#savingBoardingDetailsModal  .panel').addClass('panel-danger');
+			    			$('#savingBoardingDetailsModal  .panel').removeClass('panel-success');
+			    		};
+			    		$('#savingBoardingDetailsModal').modal('show');
 			    		$('#boardingForm :input').attr('disabled',true);
 			    		$('#saveBoarding').attr('disabled',true);
 			    		$('#initiatePes').attr('disabled',false);
@@ -332,6 +335,9 @@ function personRecord() {
 	this.listenForInitiatePes = function(){
 		$(document).on('click','#initiatePes', function(e){
 			console.log('initiatePes PES');
+
+			$("#initiatePes").addClass('spinning');
+
 			var cnum = $('#person_uid').val();
 			console.log(cnum);
 		    $.ajax({
@@ -345,19 +351,19 @@ function personRecord() {
 		    			$('#savingBoardingDetailsModal').off('hidden.bs.modal');  // only do this once.
 		    			location.reload();
 	    			});
-		    		$('#savingBoardingDetailsModal  .modal-body').html(resultObj.messages);
-		    		$('#savingBoardingDetailsModal').modal('show');
 		    		if(resultObj.success==true){
-		    			$('#savingBoardingDetailsModal  .modal-body').addClass('bg-success');
-		    			$('#savingBoardingDetailsModal  .modal-body').removeClass('bg-danger');
+		    			var message = "<div class=panel-heading><h3 class=panel-title>Success</h3>" + resultObj.messages
+		    			$('#savingBoardingDetailsModal  .panel').html(message);
+		    			$('#savingBoardingDetailsModal  .panel').addClass('panel-success');
+		    			$('#savingBoardingDetailsModal  .panel').removeClass('panel-danger');
 		    		} else {
-		    			$('#savingBoardingDetailsModal  .modal-body').addClass('bg-danger');
-		    			$('#savingBoardingDetailsModal  .modal-body').removeClass('bg-success');
+		    			var message = "<div class=panel-heading><h3 class=panel-title>Error</h3>" + resultObj.messages
+		    			$('#savingBoardingDetailsModal  .panel').html(message);
+		    			$('#savingBoardingDetailsModal  .panel').addClass('panel-danger');
+		    			$('#savingBoardingDetailsModal  .panel').removeClass('panel-success');
 		    		};
-		    		$('#savingBoardingDetailsModal').on('hidden.bs.modal', function () {
-		    			$('#savingBoardingDetailsModal').off('hidden.bs.modal');
-		    			location.reload();
-	    			});
+		    		$('#savingBoardingDetailsModal').modal('show');
+					$("#initiatePes").removeClass('spinning');
 		    	}
 		    });
 		});

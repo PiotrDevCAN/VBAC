@@ -252,7 +252,7 @@ class personRecord extends DbRecord
 		<?php
 	$allButtons = null;
 	$submitButton = $mode==FormClass::$modeEDIT ?  $this->formButton('submit','Submit','updateBoarding',null,'Update','btn-primary glyphicon glyphicon-refresh') :  $this->formButton('submit','Submit','saveBoarding',null,'Submit','btn-primary glyphicon glyphicon-refresh');
-	$pesButton    = $mode==FormClass::$modeEDIT ?  $this->formButton('button','initiatePes','initiatePes','enabled','Initiate PES') :  $this->formButton('button','initiatePes','initiatePes','disabled','Initiate PES');
+	$pesButton    = $mode==FormClass::$modeEDIT ?  $this->formButton('button','initiatePes','initiatePes','enabled','Initiate PES','btn-primary glyphicon glyphicon-refresh') :  $this->formButton('button','initiatePes','initiatePes','disabled','Initiate PES','btn-primary glyphicon glyphicon-refresh');
   	$allButtons[] = $submitButton;
   	$allButtons[] = $pesButton;
 	$this->formBlueButtons($allButtons);
@@ -279,7 +279,8 @@ class personRecord extends DbRecord
         		<button type="button" class="close" data-dismiss="modal">&times;</button>
         		<h4 class="modal-title">Saving Boarding Details</h4>
       		</div>
-      		<div class="modal-body" ><p>unchanged</p>
+      		<div class="modal-body" >
+      			<div class="panel"></div>
       		</div>
       		<div class="modal-footer">
         		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -295,9 +296,9 @@ class personRecord extends DbRecord
         $loader = new Loader();
         $fmEmail = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON," CNUM='" . db2_escape_string(trim($this->FM_CNUM)) . "' ");
 
+        var_dump($this);
         var_dump($this->FM_CNUM);
         var_dump($fmEmail);
-        var_dump($GLOBALS);
 
         $now = new \DateTime();
         $replacements = array($this->FIRST_NAME . " " . $this->LAST_NAME,
