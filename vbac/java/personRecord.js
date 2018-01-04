@@ -263,7 +263,7 @@ function personRecord() {
 	            url: 'ajax/populatePersonDatatable.php',
 	            type: 'POST',
 	        }	,
-	        order: [[ 0, "desc" ]],
+	        order: [[ 5, "asc" ]],
 	    	autoWidth: false,
 	    	deferRender: true,
 	    	responsive: false,
