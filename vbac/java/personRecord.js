@@ -332,6 +332,10 @@ function personRecord() {
 		    	success: function(result){
 		    		console.log(result);
 		    		var resultObj = JSON.parse(result);
+		    		$('#savingBoardingDetailsModal').on('hidden.bs.modal', function () { // When they close the modal this time, reload the page.
+		    			$('#savingBoardingDetailsModal').off('hidden.bs.modal');  // only do this once.
+		    			location.reload();
+	    			});
 		    		$('#savingBoardingDetailsModal  .modal-body').html(resultObj.messages);
 		    		$('#savingBoardingDetailsModal').modal('show');
 		    		if(resultObj.success==true){
@@ -340,13 +344,14 @@ function personRecord() {
 		    		} else {
 		    			$('#savingBoardingDetailsModal  .modal-body').addClass('bg-danger');
 		    			$('#savingBoardingDetailsModal  .modal-body').removeClass('bg-success');
-		    		}
-		    		location.reload();
+		    		};
+		    		$('#savingBoardingDetailsModal').on('hidden.bs.modal', function () {
+		    			$('#savingBoardingDetailsModal').off('hidden.bs.modal');
+		    			location.reload();
+	    			});
 		    	}
 		    });
-
-
-			});
+		});
 	}
 
 }
