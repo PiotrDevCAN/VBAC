@@ -13,8 +13,7 @@ try {
     $saveRecordResult = $table->saveRecord($person);
 
     if(!$saveRecordResult){
-        echo db2_stmt_error();
-        echo db2_stmt_errormsg();
+        echo "<br/>Record already existed";
         $success = false;
     } else {
         echo "<br/>Boarding Form Record - Saved.";
