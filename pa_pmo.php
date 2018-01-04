@@ -1,4 +1,6 @@
 <?php
+use vbac\personRecord;
+
 ?>
 <div class='container'>
 <h1>PMO Portal</h1>
@@ -14,6 +16,13 @@
 <div id='personDatabaseDiv'>
 </div>
 </div>
+
+<?php
+$person = new personRecord();
+$person->amendPesStatusModal();
+?>
+
+
 
 <script>
 

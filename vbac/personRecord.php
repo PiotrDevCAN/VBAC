@@ -60,8 +60,14 @@ class personRecord extends DbRecord
 
     protected $person_bio;
 
+    // Fields to be edited in the DataTables Reports. Need to know their position in the array $row;
     const FIELD_CNUM = 0;
-    const FIELD_PES_STATUS = 25;  // Fields to be edited in the DataTables Reports. Need to know their position in the array $row;
+    const FIELD_NOTES_ID = 5;
+    const FIELD_PES_DATE_REQUESTED = 21;
+    const FIELD_PES_REQUESTOR = 22;
+    const FIELD_PES_DATE_RESPONDED = 23;
+    const FIELD_PES_STATUS_DETAILS = 24;
+    const FIELD_PES_STATUS = 25;
 
 
    // private static $pesTaskId = 'lbgvetpr@uk.ibm.com';
@@ -292,6 +298,98 @@ class personRecord extends DbRecord
   		</div>
 		</div>
         <?php
+    }
+
+
+    function amendPesStatusModal(){
+        ?>
+    	 <!-- Modal -->
+		<div id="amendPesStatusModal" class="modal fade" role="dialog">
+  		<div class="modal-dialog">
+
+            <!-- Modal content-->
+    		<div class="modal-content">
+      		<div class="modal-header">
+        		<button type="button" class="close" data-dismiss="modal">&times;</button>
+        		<h4 class="modal-title">Amend PES Status</h4>
+      	    </div>
+      		<div class="modal-body" >
+      		<form id='psmForm' class="form-horizontal"  method='post'>
+
+      		<div class="panel panel-default">
+  				<div class="panel-heading">
+    				<h3 class="panel-title">Employee Details</h3>
+  				</div>
+  			<div class="panel-body">
+      			<div class='row'>
+      				<div class='form-group' >
+        				<div class='col-sm-6'>
+          					<input class="form-control" id="psm_notesid" name="psm_notesid" value="" type="text" disabled>
+        			    </div>
+        				<div class='col-sm-6'>
+        				    <input class="form-control" id="psm_cnum" name="psm_cnum" value="" type="text" disabled>
+        			    </div>
+     				</div>
+     			</div>
+     		</div>
+      		</div>
+
+      		<div class="panel panel-default">
+  				<div class="panel-heading">
+    				<h3 class="panel-title">PES Status</h3>
+  				</div>
+  			<div class="panel-body">
+  			     <div class='row'>
+      				<div class='form-group' >
+        				<div class='col-sm-6'>
+          					<input class="form-control" id="psm_requestor" name="psm_requestor" value="" type="text" disabled>
+        			    </div>
+        				<div class='col-sm-6'>
+        				    <input class="form-control" id="psm_requested" name="psm_requested" value="" type="text" disabled>
+        			    </div>
+     				</div>
+     			</div>
+     			<div class='row'>
+      				<div class='form-group' >
+
+        				<label for='psm_status' class='col-md-2 control-label ceta-label-left'>Status</label>
+        				<div class='col-md-4'>
+              				<select class='form-control select' id='psm_status'
+                  	          	name='psm_status'
+                  	          	required='required'
+                  	          	data-tags="true" data-placeholder="Status" data-allow-clear="true"
+                  	           >
+            				<option value=''>Status<option>
+            				<option value='one'>one<option>
+            				<option value='two'>two<option>
+
+            				<option value='<?=personRecord::PES_STATUS_CLEARED;?>'><?=personRecord::PES_STATUS_CLEARED?><option>
+            				<option value='<?=personRecord::PES_STATUS_EXCEPTION;?>'><?=personRecord::PES_STATUS_EXCEPTION?><option>
+            				<option value='<?=personRecord::PES_STATUS_REJECTED;?>'><?=personRecord::PES_STATUS_REJECTED?><option>
+            				<option value='<?=personRecord::PES_STATUS_REQUESTED;?>'><?=personRecord::PES_STATUS_REQUESTED?><option>
+               				</select>
+            		 </div>
+
+
+
+
+        				<div class='col-sm-6'>
+        				    <!--  Status_details text here -->
+        			    </div>
+     				</div>
+     			</div>
+      		</div>
+      		<div class="modal-footer">
+        		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      		</div>
+    		</div>
+    	</form>
+  		</div>
+		</div>
+
+        <?php
+
+
     }
 
 

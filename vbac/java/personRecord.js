@@ -370,7 +370,14 @@ function personRecord() {
 		$(document).on('click','.editPesStatus', function(e){
 			   console.log(e);
 			   console.log(e.target);
-    		   console.log($(e.target).data());
+    		   var cnum = ($(e.target).data('cnum'));
+    		   var notesid = ($(e.target).data('notesid'));
+    		   console.log(cnum);
+    		   console.log(notesid);
+    		   $('#psm_notesid').val(notesid);
+    		   $('#psm_cnum').val(cnum);
+    		   $('#amendPesStatusModal').modal('show');
+    		   console.log($('#amendPesStatusModal'));
 
 			});
 	}
