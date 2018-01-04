@@ -207,6 +207,7 @@ function personRecord() {
 				$(allDisabledFields).attr('disabled',false);
 				var formData = form.serialize();
 				$(allDisabledFields).attr('disabled',true);
+				console.log(formData);
 			    $.ajax({
 			    	url: "ajax/saveBoardingForm.php",
 			    	type: 'POST',

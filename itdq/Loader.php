@@ -102,6 +102,8 @@ class Loader
 
         Trace::traceVariable($sql, __METHOD__, __LINE__);
 
+        var_dump($sql);
+
         $rs5 = db2_exec($_SESSION['conn'], $sql);
         if (! $rs5) {
             DbTable::displayErrorMessage($rs5, __CLASS__, __METHOD__, $sql);

@@ -21,6 +21,7 @@ class personRecord extends DbRecord
     protected $LAST_NAME;
 
     protected $EMAIL_ADDRESS;
+    protected $NOTES_ID;
     protected $LBG_EMAIL;
 
     protected $EMPLOYEE_TYPE;
@@ -57,8 +58,6 @@ class personRecord extends DbRecord
 
     protected $WORK_STREAM;
 
-
-    protected $person_notesid;
     protected $person_bio;
 
 
@@ -99,8 +98,12 @@ class personRecord extends DbRecord
 
 
     function displayBoardingForm($mode){
+        $loader = new Loader();
         $workstreamTable = new staticDataWorkstreamTable(allTables::$STATIC_WORKSTREAMS);
-        $allManagers = array('bob Mgr'=>'bob@email.com','cheryl mgr'=>'cheryl@email.com','cheryl two'=>'cheryl2@email.com');
+        //$allManagers = array('bob Mgr'=>'bob@email.com','cheryl mgr'=>'cheryl@email.com','cheryl two'=>'cheryl2@email.com');
+        $allManagers = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON, " FM_MANAGER_FLAG='Y' ");
+        $userDetails = $loader->loadIndexed('CNUM','EMAIL_ADDRESS',allTables::$PERSON, " EMAIL_ADDRESS='" . db2_escape_string($GLOBALS['ltcuser']['mail']) . "' ");
+        $userCnum = isset($userDetails[$GLOBALS['ltcuser']['mail']]) ? $userDetails[$GLOBALS['ltcuser']['mail']] : false;
         //$allWorkStream = array('Work Stream 1'=>'ws001','Work Stream 2'=>'ws002','Work Stream 3'=>'ws003','Work Stream 4'=>'ws004');
         $allWorkstream = $workstreamTable->getallWorkstream();
         JavaScript::buildSelectArray($allWorkstream, 'workStream');
@@ -109,9 +112,6 @@ class personRecord extends DbRecord
 		<div class='col-sm-2'></div>
 
 		<div class='col-sm-8'>
-
-
-
         <div class="panel panel-default">
   		<div class="panel-heading">
     	<h3 class="panel-title">Employee Details</h3>
@@ -131,7 +131,7 @@ class personRecord extends DbRecord
     <div id='personDetails'  hidden>
         <div class='form-group' >
         <div class='col-sm-6'>
-        <input class='form-control' id='person_notesid' name='person_NOTES_ID' value='' required type='text' disabled='disabled' >
+        <input class='form-control' id='person_notesid' name='NOTES_ID' value='' required type='text' disabled='disabled' >
         </div>
 
         <div class='col-sm-6'>
@@ -179,8 +179,10 @@ class personRecord extends DbRecord
                 >
                 <option value=''>Select Functional Mgr</option>
                 <?php
-                foreach ($allManagers as $mgrName => $mgrEmail){
-                    echo"<option value='" . $mgrEmail . "'>" . $mgrName . "</option>";
+                foreach ($allManagers as $mgrNotesid => $mgrCnum){
+                    echo"<option value='" . $mgrCnum . "' ";
+                    echo $userCnum==$mgrCnum ? " selected " : null;
+                    echo ">" . $mgrNotesid . "</option>";
                 };
                 ?>
             	</select>
