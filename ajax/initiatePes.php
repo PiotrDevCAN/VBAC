@@ -18,8 +18,7 @@ try {
     $person = new personRecord();
     $person->setFromArray($personData);
     $person->sendPesRequest();
-
-    $success = $table->setPesRequested($cnum, $loggedInUser);
+    $success = $person->setPesRequested();
     echo $success ? "PES Check initiated" : "Problem Initiating PES check";
 } catch (Exception $e) {
     echo $e->getCode();

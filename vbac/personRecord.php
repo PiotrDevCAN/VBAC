@@ -295,13 +295,21 @@ class personRecord extends DbRecord
         $loader = new Loader();
         $fmEmail = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON," CNUM='" . db2_escape_string($this->FM_CNUM) . "' ");
 
+        var_dump($fmEmail);
+        var_dump($GLOBALS);
 
         $now = new \DateTime();
-        $replacements = array($this->FIRST_NAME . " " . $this->LAST_NAME,$this->EMAIL_ADDRESS,$this->COUNTRY,null,$this->ROLE_ON_THE_ACCOUNT,'Ventus',$GLOBALS['ltcuser']['mail'],$now->format('Y-m-d H:i:s'),$fmEmail[$this->FM_CNUM]);
+        $replacements = array($this->FIRST_NAME . " " . $this->LAST_NAME,$this->EMAIL_ADDRESS,$this->COUNTRY,null,$this->ROLE_ON_THE_ACCOUNT,'Ventus',$_SESSION['ssoEmail'],$now->format('Y-m-d H:i:s'),$fmEmail[trim($this->FM_CNUM)]);
         $message = preg_replace(self::$pesEmailPatterns, $replacements, self::$pesEmailBody);
 
         \itdq\BlueMail::send_mail(array(self::$pesTaskId), 'vBAC PES Request - ' . $this->CNUM ." (" . $this->FIRST_NAME . " " . $this->LAST_NAME . ")", $message, 'vbacNoReply@uk.ibm.com');
 
+    }
+
+    function setPesRequested(){
+        $table = new personTable(allTables::$PERSON);
+        $success = $table->setPesRequested($this->CNUM, $_SESSION['ssoEmail']);
+        return $success;
     }
 
 

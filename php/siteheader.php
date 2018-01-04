@@ -168,7 +168,8 @@ function do_auth($group = null)
 {
 
 if(stripos($_SERVER['environment'], 'dev')) {
-    $GLOBALS['ltcuser']['mail'] = 'dummy.user@uk.ibm.com';
+    $GLOBALS['ltcuser']['mail'] = $_SERVER['SERVER_ADMIN'];
+    $_SESSION['ssoEmail'] = $_SERVER['SERVER_ADMIN'];
 } else {
     include_once "class/include.php";
     $auth = new Auth();
