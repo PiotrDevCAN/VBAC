@@ -289,11 +289,15 @@ class personRecord extends DbRecord
 
 
     function sendPesRequest(){
+        $loader = new Loader();
+        $fmEmail = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON," CNUM='" . db2_escape_string($this->FM_CNUM) . "' ");
+
+
         $now = new \DateTime();
-        $replacements = array('Rob Daniel','robdaniel@uk.ibm.com','UK','GTS','Cognitive Delivery','Ventus','fred.smith@uk.ibm.com',$now->format('Y-m-d H:i:s'),'mickeyMouse@ibm.com');
+        $replacements = array($this->FIRST_NAME . " " . $this->LAST_NAME,$this->EMAIL_ADDRESS,$this->COUNTRY,null,$this->ROLE_ON_THE_ACCOUNT,'Ventus',$_SESSION['ssoEmail'],$now->format('Y-m-d H:i:s'),$fmEmail[$this->FM_CNUM]);
         $message = preg_replace(self::$pesEmailPatterns, $replacements, self::$pesEmailBody);
 
-        \itdq\BlueMail::send_mail(array(self::$pesTaskId,'antstark@uk.ibm.com'), 'PES Request - Fred Smith', $message, 'vbacNoReply@uk.ibm.com');
+        \itdq\BlueMail::send_mail(array(self::$pesTaskId), 'PES Request - ' . $this->CNUM, $message, 'vbacNoReply@uk.ibm.com');
 
     }
 
