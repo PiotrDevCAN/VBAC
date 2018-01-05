@@ -356,6 +356,7 @@ class personRecord extends DbRecord
                				</select>
             		 </div>
             	</div>
+            	</div>
 
      			<div class='row'>
       				<div class='form-group' >
@@ -370,11 +371,11 @@ class personRecord extends DbRecord
       		<div class="modal-footer">
         		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       		</div>
+      		</form>
     		</div>
-    	</form>
   		</div>
 		</div>
-
+		</div>
         <?php
 
 
