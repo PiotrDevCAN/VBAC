@@ -110,6 +110,7 @@ function personRecord() {
 
 		    			console.log("Name:" + name);
 		    			console.log("Value:" + value);
+		    			console.log(typeof(value));
 
 		    			switch(name){
 		    			case 'preferredidentity':
@@ -138,16 +139,18 @@ function personRecord() {
 		    			case 'preferredfirstname':
 			                   var name =  document.getElementById('person_first_name');
 			                   console.log(name + ":" + value);
+			                   console.log(typeof(value));
 			                   if(typeof(name) !== 'undefined'){
-		                	   		capitalizedName = value[0].toUpperCase() + value.substring(1).toLowerCase();
+			                	   capitalizedName = value[0].toUpperCase() + value.toString().substring(1).toLowerCase();
 		                	   		console.log(capitalizedName);
 		                	   		name.value = capitalizedName ;};
 			                   break;
 		    			case 'hrfirstname':
 			                   var name =  document.getElementById('person_first_name');
 			                   console.log(name.value);
+			                   console.log(typeof(value));
 			                   if(typeof(name) !== 'undefined' && /\S/.test(name.value) ){ // Only use this if we didn't get preferredfirstname
-			                	   capitalizedName = value[0].toUpperCase() + value.substring(1).toLowerCase();
+			                	   capitalizedName = value[0].toUpperCase() + value.toString().substring(1).toLowerCase();
 		                	   		console.log(capitalizedName);
 		                	   		name.value = capitalizedName ;
 		                	   		};
@@ -159,10 +162,10 @@ function personRecord() {
 			                   console.log(name + ":" + value);
 			                   console.log(typeof(value));
 			                   if(typeof(name) !== 'undefined'){
-			                	   		capitalizedName = value.toString().toLowerCase().capitalize
-			                	   		console.log(capitalizedName);
-			                	   		name.value = capitalizedName ;
-			                	   		};
+			                	   capitalizedName = value[0].toUpperCase() + value.toString().substring(1).toLowerCase();
+			                	   console.log(capitalizedName);
+			                	   name.value = capitalizedName ;
+			                	   };
 			                   console.log($(name));
 			                   break;
 		    			case 'ismanager':
