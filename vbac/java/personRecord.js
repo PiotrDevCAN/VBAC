@@ -137,7 +137,7 @@ function personRecord() {
 			                   var name =  document.getElementById('person_first_name');
 			                   console.log(name + ":" + value);
 			                   if(typeof(name) !== 'undefined'){
-		                	   		capitalizedName = value.toLowerCase().capitalize
+		                	   		capitalizedName = value.toString().toLowerCase().capitalize
 		                	   		name.value = capitalizedName ;};
 			                   break;
 		    			case 'sn':
@@ -145,7 +145,7 @@ function personRecord() {
 			                   var name =  document.getElementById('person_last_name');
 			                   console.log(name + ":" + value);
 			                   if(typeof(name) !== 'undefined'){
-			                	   		capitalizedName = value.toLowerCase().capitalize
+			                	   		capitalizedName = value.toString().toLowerCase().capitalize
 			                	   		name.value = capitalizedName ;};
 			                   break;
 		    			case 'ismanager':
