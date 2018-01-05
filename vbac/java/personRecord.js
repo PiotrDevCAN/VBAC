@@ -372,13 +372,19 @@ function personRecord() {
 			   console.log(e.target);
     		   var cnum = ($(e.target).data('cnum'));
     		   var notesid = ($(e.target).data('notesid'));
+    		   var status  = ($(e.target).data('status'));
     		   console.log(cnum);
     		   console.log(notesid);
+    		   console.log(status);
     		   $('#psm_notesid').val(notesid);
     		   $('#psm_cnum').val(cnum);
-    		   $('#amendPesStatusModal').modal('show');
-    		   console.log($('#amendPesStatusModal'));
-
+    		   $('#amendPesStatusModal').on('shown.bs.modal', function (e, status) {
+    			   console.log(e);
+    			   console.log(status);
+        		   $('#psm_status').select2();
+        		   $('#psm_status').select2("val",status);
+    			 })
+      		   $('#amendPesStatusModal').modal('show');
 			});
 	}
 
