@@ -157,6 +157,7 @@ function personRecord() {
 		    			case 'hrfamilyname':
 			                   var name =  document.getElementById('person_last_name');
 			                   console.log(name + ":" + value);
+			                   console.log(typeof(value));
 			                   if(typeof(name) !== 'undefined'){
 			                	   		capitalizedName = value.toString().toLowerCase().capitalize
 			                	   		console.log(capitalizedName);
