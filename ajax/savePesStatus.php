@@ -15,7 +15,6 @@ try {
     $table = new personTable(allTables::$PERSON);
     $updateRecordResult = $table->update($person,false,false);
 
-
     if(!$updateRecordResult){
         echo db2_stmt_error();
         echo db2_stmt_errormsg();

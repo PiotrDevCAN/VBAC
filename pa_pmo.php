@@ -31,4 +31,5 @@ person.initialisePersonTable();
 person.listenForReportPes();
 person.listenForReportReset();
 person.listenForEditPesStatus();
+person.listenForSavePesStatus();
 </script>
