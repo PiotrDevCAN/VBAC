@@ -93,7 +93,8 @@ function personRecord() {
 		console.log(cnum);
 		if(cnum.length == 9){
 		    $.ajax({
-		    	url: "https://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmperson/(uid=" + cnum + ").search/byjson",
+//		    	url: "https://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmperson/(uid=" + cnum + ").search/byjson",
+		    	url: "http://bluepages.ibm.com/BpHttpApisv3/wsapi?byCnum=" + cnum,
 		        type: 'GET',
 		    	success: function(result){
 		    		console.log(result);
