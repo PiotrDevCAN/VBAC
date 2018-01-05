@@ -340,7 +340,7 @@ class personRecord extends DbRecord
   				</div>
   			<div class="panel-body">
      			<div class='row'>
-      				<div class='form-group' >
+      				<div class='form-group required' >
         				<label for='psm_status' class='col-md-2 control-label '>Status</label>
         				<div class='col-md-4'>
               				<select class='form-control select' id='psm_status'
@@ -359,17 +359,23 @@ class personRecord extends DbRecord
             	</div>
 
      			<div class='row'>
-      				<div class='form-group' >
+      				<div class='form-group required' >
         				<label for='psm_detail' class='col-md-2 control-label '>Detail</label>
         					<div class='col-md-9'>
-  								<input class="form-control" id="psm_detail" name="psm_detail" value="" type="text" >
+  								<input class="form-control" id="psm_detail" name="psm_detail" value="" type="text" required >
             		 		</div>
             		</div>
      				</div>
      			</div>
       		</div>
       		<div class="modal-footer">
-        		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      		<?php
+      		$allButtons = null;
+      		$submitButton = $this->formButton('submit','Submit','savePesStatus',null,'Submit','btn-primary');
+      		$allButtons[] = $submitButton;
+      		$this->formBlueButtons($allButtons);
+      		?>
+       		<button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
       		</div>
       		</form>
     		</div>
@@ -385,11 +391,6 @@ class personRecord extends DbRecord
     function sendPesRequest(){
         $loader = new Loader();
         $fmEmail = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON," CNUM='" . db2_escape_string(trim($this->FM_CNUM)) . "' ");
-
-        var_dump($this);
-        var_dump($this->FM_CNUM);
-        var_dump($fmEmail);
-
         $now = new \DateTime();
         $replacements = array($this->FIRST_NAME . " " . $this->LAST_NAME,
                               $this->EMAIL_ADDRESS,

@@ -368,25 +368,46 @@ function personRecord() {
 
 	this.listenForEditPesStatus = function(){
 		$(document).on('click','.editPesStatus', function(e){
-			   console.log(e);
-			   console.log(e.target);
     		   var cnum = ($(e.target).data('cnum'));
     		   var notesid = ($(e.target).data('notesid'));
-    		   var status  = ($(e.target).data('status'));
-    		   console.log(cnum);
-    		   console.log(notesid);
-    		   console.log(status);
+    		   var status  = ($(e.target).data('pesstatus'));
     		   $('#psm_notesid').val(notesid);
     		   $('#psm_cnum').val(cnum);
-    		   $('#amendPesStatusModal').on('shown.bs.modal', function (e, status) {
-    			   console.log(e);
-    			   console.log(status);
+    		   $('#amendPesStatusModal').on('shown.bs.modal', { status: status}, function (e) {
         		   $('#psm_status').select2();
-        		   $('#psm_status').select2("val",status);
+        		   $('#psm_status').val(e.data.status).trigger('change');
+        		   $('#psm_detail').val('');
     			 })
       		   $('#amendPesStatusModal').modal('show');
 			});
+	},
+
+	this.listenForSavePesStatus = function(){
+		$('#psmForm').submit(function(e){
+				var form = document.getElementById('psmForm');
+				var formValid = form.checkValidity();
+				if(formValid){
+					var allDisabledFields = ($("input:disabled"));
+					$(allDisabledFields).attr('disabled',false);
+					var formData = $('#amendPesStatusModal form').serialize();
+					console.log(formData);
+					$(allDisabledFields).attr('disabled',true);
+					$.ajax({
+				    	url: "ajax/savePesStatus.php",
+				    	data : formData,
+				    	type: 'POST',
+				    	success: function(result){
+				    		console.log(result);
+				    		personRecord.table.ajax.reload();
+							$('#amendPesStatusModal').modal('hide');
+				    	}
+				    });
+
+				};
+				return false;
+			});
 	}
+
 
 }
 
