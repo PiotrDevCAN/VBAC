@@ -157,6 +157,10 @@ class personRecord extends DbRecord
         <input id='person_first_name' name='FIRST_NAME' value=''  type='hidden'  required >
         <input id='person_last_name' name='LAST_NAME' value=''  type='hidden'  required >
         <input id='person_phone' name='PHONE_NUMBER' value=''  type='hidden'  required >
+        <input id='person_employee_type' name='EMPLOYEE_TYPE' value=''  type='hidden'  required >
+        <input id='person_ibm_location' name='IBM_BASE_LOCATION' value=''  type='hidden'  required >
+        <input id='person_country' name='COUNTRY' value=''  type='hidden'  required >
+
         </div>
         </div>
 

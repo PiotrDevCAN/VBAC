@@ -91,10 +91,13 @@ function personRecord() {
 
 	this.fetchBluepagesDetailsForCnum = function(cnum){
 		console.log(cnum);
+
+		var urlOptions = "preferredidentity&jobresponsibilities&notesemail&uid&preferredfirstname&hrfirstname&sn&hrfamilyname&ismanager&phonemailnumber";
+
 		if(cnum.length == 9){
 		    $.ajax({
-//		    	url: "https://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmperson/(uid=" + cnum + ").search/byjson",
-		    	url: "http://bluepages.ibm.com/BpHttpApisv3/wsapi?byCnum=" + cnum,
+		    	url: "https://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmperson/(uid=" + cnum + ").search/byjson?" + urlOptions ,
+//		    	url: "http://bluepages.ibm.com/BpHttpApisv3/wsapi?byCnum=" + cnum,
 		        type: 'GET',
 		    	success: function(result){
 		    		console.log(result);
@@ -130,14 +133,20 @@ function personRecord() {
 			                   if(typeof(uid) !== 'undefined'){ uid.value = value;};
 			                   break;
 		    			case 'preferredfirstname':
+		    			case 'hrfirstname':
 			                   var name =  document.getElementById('person_first_name');
 			                   console.log(name + ":" + value);
-			                   if(typeof(name) !== 'undefined'){ name.value = value;};
+			                   if(typeof(name) !== 'undefined'){
+		                	   		capitalizedName = value.toLowerCase().capitalize
+		                	   		name.value = capitalizedName ;};
 			                   break;
 		    			case 'sn':
+		    			case 'hrfamilyname':
 			                   var name =  document.getElementById('person_last_name');
 			                   console.log(name + ":" + value);
-			                   if(typeof(name) !== 'undefined'){ name.value = value ;};
+			                   if(typeof(name) !== 'undefined'){
+			                	   		capitalizedName = value.toLowerCase().capitalize
+			                	   		name.value = capitalizedName ;};
 			                   break;
 		    			case 'ismanager':
 		    				   var isMgr =  document.getElementById('person_is_mgr');
@@ -148,6 +157,21 @@ function personRecord() {
 		    				   var phone =  document.getElementById('person_phone');
 		    				   console.log(phone + ":" + value);
 			                   if(typeof(phone) !== 'undefined'){ phone.value = value ;};
+				               break;
+		    			case 'employeetype':
+		    				   var employeeeType =  document.getElementById('person_employee_type');
+		    				   console.log(employeeeType + ":" + value);
+			                   if(typeof(employeeeType) !== 'undefined'){ employeeeType.value = value ;};
+				               break;
+		    			case 'co':
+		    				   var country =  document.getElementById('person_country');
+		    				   console.log(country + ":" + value);
+			                   if(typeof(country) !== 'undefined'){ country.value = value ;};
+				               break;
+		    			case 'ibmloc':
+		    				   var location =  document.getElementById('person_ibm_location');
+		    				   console.log(location + ":" + value);
+			                   if(typeof(location) !== 'undefined'){ location.value = value ;};
 				               break;
 		    			default:
 		    				// console.log(name + ":" + value);
