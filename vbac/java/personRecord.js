@@ -139,7 +139,7 @@ function personRecord() {
 			                   var name =  document.getElementById('person_first_name');
 			                   console.log(name + ":" + value);
 			                   if(typeof(name) !== 'undefined'){
-		                	   		capitalizedName = value.toString().toLowerCase().capitalize
+		                	   		capitalizedName = value[0].toUpperCase() + value.substring(1).toLowerCase();
 		                	   		console.log(capitalizedName);
 		                	   		name.value = capitalizedName ;};
 			                   break;
@@ -147,7 +147,7 @@ function personRecord() {
 			                   var name =  document.getElementById('person_first_name');
 			                   console.log(name.value);
 			                   if(typeof(name) !== 'undefined' && /\S/.test(name.value) ){ // Only use this if we didn't get preferredfirstname
-		                	   		capitalizedName = value.toString().toLowerCase().capitalize
+			                	   capitalizedName = value[0].toUpperCase() + value.substring(1).toLowerCase();
 		                	   		console.log(capitalizedName);
 		                	   		name.value = capitalizedName ;
 		                	   		};
