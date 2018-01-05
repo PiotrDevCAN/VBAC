@@ -92,7 +92,7 @@ function personRecord() {
 	this.fetchBluepagesDetailsForCnum = function(cnum){
 		console.log(cnum);
 
-		var urlOptions = "preferredidentity&jobresponsibilities&notesemail&uid&preferredfirstname&hrfirstname&sn&hrfamilyname&ismanager&phonemailnumber";
+		var urlOptions = "preferredidentity&jobresponsibilities&notesemail&uid&preferredfirstname&hrfirstname&sn&hrfamilyname&ismanager&phonemailnumber&employeetype&co&ibmloc";
 
 		if(cnum.length == 9){
 		    $.ajax({
@@ -107,6 +107,10 @@ function personRecord() {
 		    			var object = attributes[a];
 		    			var value = object.value;
 		    			var name = object.name;
+
+		    			console.log("Name:" + name);
+		    			console.log("Value:" + value);
+
 		    			switch(name){
 		    			case 'preferredidentity':
 		    				var intranet = document.getElementById('person_intranet');
@@ -119,7 +123,6 @@ function personRecord() {
 		    			case 'notesemail':
 		    				console.log(value[0]);
 		    				console.log(typeof(value[0]));
-
 		    					var Step1 = value[0].replace('CN=','');
 		    					var Step2 = Step1.replace('OU=','');
 		    					var Step3 = Step2.replace('O=','');
@@ -150,27 +153,27 @@ function personRecord() {
 			                   break;
 		    			case 'ismanager':
 		    				   var isMgr =  document.getElementById('person_is_mgr');
-		    				   console.log(isMgr + ":" + value);
+		    				   console.log($(isMgr) + ":" + value);
 			                   if(typeof(isMgr) !== 'undefined'){ isMgr.value = value ;};
 				               break;
 		    			case 'phonemailnumber':
 		    				   var phone =  document.getElementById('person_phone');
-		    				   console.log(phone + ":" + value);
+		    				   console.log($(phone) + ":" + value);
 			                   if(typeof(phone) !== 'undefined'){ phone.value = value ;};
 				               break;
 		    			case 'employeetype':
 		    				   var employeeeType =  document.getElementById('person_employee_type');
-		    				   console.log(employeeeType + ":" + value);
+		    				   console.log($(employeeeType) + ":" + value);
 			                   if(typeof(employeeeType) !== 'undefined'){ employeeeType.value = value ;};
 				               break;
 		    			case 'co':
 		    				   var country =  document.getElementById('person_country');
-		    				   console.log(country + ":" + value);
+		    				   console.log($(country) + ":" + value);
 			                   if(typeof(country) !== 'undefined'){ country.value = value ;};
 				               break;
 		    			case 'ibmloc':
 		    				   var location =  document.getElementById('person_ibm_location');
-		    				   console.log(location + ":" + value);
+		    				   console.log($(location) + ":" + value);
 			                   if(typeof(location) !== 'undefined'){ location.value = value ;};
 				               break;
 		    			default:
