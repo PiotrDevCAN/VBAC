@@ -140,8 +140,10 @@ function personRecord() {
 			                   var name =  document.getElementById('person_first_name');
 			                   console.log(name + ":" + value);
 			                   console.log(typeof(value));
+			                   var firstName = value.toString;
+			                   console.log(typeof(value));
 			                   if(typeof(name) !== 'undefined'){
-			                	   capitalizedName = value[0].toUpperCase() + value.toString().substring(1).toLowerCase();
+			                	   capitalizedName = firstName[0].toUpperCase() + firstName.substring(1).toLowerCase();
 		                	   		console.log(capitalizedName);
 		                	   		name.value = capitalizedName ;};
 			                   break;
@@ -149,11 +151,13 @@ function personRecord() {
 			                   var name =  document.getElementById('person_first_name');
 			                   console.log(name.value);
 			                   console.log(typeof(value));
-			                   if(typeof(name) !== 'undefined' && /\S/.test(name.value) ){ // Only use this if we didn't get preferredfirstname
-			                	   capitalizedName = value[0].toUpperCase() + value.toString().substring(1).toLowerCase();
+			                   var firstName = value.toString;
+			                   console.log(typeof(value));
+			                   if(typeof(name) !== 'undefined'){
+			                	   	capitalizedName = firstName[0].toUpperCase() + firstName.substring(1).toLowerCase();
 		                	   		console.log(capitalizedName);
 		                	   		name.value = capitalizedName ;
-		                	   		};
+		                	   };
 		                	   console.log($(name));
 			                   break;
 		    			case 'sn':
