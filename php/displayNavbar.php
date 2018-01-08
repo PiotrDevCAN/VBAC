@@ -77,10 +77,12 @@ $(document).ready(function () {
     $('.navbarMenuOption').not('<?=$isFm;?><?=$isCdi?><?=$isPmo?><?=$isUser?>').remove();
     $('.navbarMenu').not(':has(li)').remove();
 
-    <?=!empty($isUser) ? '$("#userLevel").html("User");' : null;?>
-    <?=!empty($isFm)   ? '$("#userLevel").html("Func.Mgr.");' : null;?>
-    <?=!empty($isPmo)  ? '$("#userLevel").html("PMO");' : null;?>
-    <?=!empty($isCDI)  ? '$("#userLevel").html("CDI");' : null;?>
+    <?=!empty($isUser) ? '$("#userLevel").html("User");console.log("user");' : null;?>
+    <?=!empty($isFm)   ? '$("#userLevel").html("Func.Mgr.");console.log("fm");' : null;?>
+    <?=!empty($isPmo)  ? '$("#userLevel").html("PMO");console.log("pmo");' : null;?>
+    <?=!empty($isCDI)  ? '$("#userLevel").html("CDI");console.log("cdi");' : null;?>
+
+    console.log($('#userLevel'));
 
 });
 </script>
