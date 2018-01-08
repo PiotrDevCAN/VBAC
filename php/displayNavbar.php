@@ -71,7 +71,6 @@ $(document).ready(function () {
     $('.navbarMenuOption').not('<?=$isFm;?><?=$isCdi?><?=$isPmo?><?=$isUser?>').remove();
     $('.navbarMenu').not(':has(li)').remove();
 
-
     <?=!empty($isUser) ? '$("#userLevel").html("User");' : null;?>
     <?=!empty($isFm)   ? '$("#userLevel").html("Func.Mgr.");' : null;?>
     <?=!empty($isPmo)  ? '$("#userLevel").html("PMO");' : null;?>
