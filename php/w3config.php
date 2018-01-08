@@ -50,7 +50,7 @@ $site = array(
     'csvPrefix' => $_SERVER['environment'],
 
     'cdiBg' => 'ventus_cdi',
-    'pmoBg' => 'pmo_admin',
+    'pmoBg' => 'vbac_pmo',
     'userBg' => null,
     'nullBg' => null,
 
