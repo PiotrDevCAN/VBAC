@@ -49,8 +49,8 @@ $site = array(
     'dirPrefix' => $_SERVER['environment'],
     'csvPrefix' => $_SERVER['environment'],
 
-    'itdqBg' => 'itdq',
-    'adminBg' => 'vbac_admin',
+    'cdiBg' => 'ventus_cdi',
+    'pmoBg' => 'pmo_admin',
     'userBg' => null,
     'nullBg' => null,
 

@@ -1,7 +1,13 @@
 <?php
+use itdq\PlannedOutages;
 use itdq\Navbar;
 use itdq\NavbarMenu;
 use itdq\NavbarOption;
+use vbac\personTable;
+include ('itdq/PlannedOutages.php');
+include ('itdq/DbTable.php');
+$plannedOutages = new PlannedOutages();
+include ('UserComms/responsiveOutages_V2.php');
 
 $navBarImage = ""; //a small image to displayed at the top left of the nav bar
 $navBarBrand = array(lcfirst(strtoupper($_SERVER['environment'])),"index.php");
@@ -48,18 +54,30 @@ $navbar->addMenu($adminMenu);
 $navbar->addMenu($boarding);
 $navbar->addMenu($access);
 
-$outages = new NavbarOption('Planned Outages', 'ppo_PlannedOutages.php');
-
+$outages = new NavbarOption('Planned Outages', 'ppo_PlannedOutages.php','accessCdi accessPmo accessFm accessUser');
 $navbar->addOption($outages);
-
 
 $navbar->createNavbar($page);
 
+$isFm   = personTable::isManager($GLOBALS['ltcuser']['mail'])                 ? ".accessFm" : null;
+$isCdi  = employee_in_group($_SESSION['cdiBg'],  $GLOBALS['ltcuser']['mail']) ? ".accessCdi" : null;
+$isPmo  = employee_in_group($_SESSION['pmoBg'],  $GLOBALS['ltcuser']['mail']) ? ".accessPmo" : null;
+$isUser = ".accessUser";
+
 ?>
+<script>
+$(document).ready(function () {
+    $('li[data-pagename="<?=$page;?>"]').addClass('active').closest('li.dropdown').addClass('active');
+    $('.navbarMenuOption').not('<?=$isFm;?><?=$isCdi?><?=$isPmo?><?=$isUser?>').remove();
+    $('.navbarMenu').not(':has(li)').remove();
 
 
+    <?=!empty($isUser) ? '$("#userLevel").html("User");' : null;?>
+    <?=!empty($isFm)   ? '$("#userLevel").html("Func.Mgr.");' : null;?>
+    <?=!empty($isPmo)  ? '$("#userLevel").html("PMO");' : null;?>
+    <?=!empty($isCDI)  ? '$("#userLevel").html("CDI");' : null;?>
 
-
-<script type="text/javascript">
-  $('li[data-pagename="<?=$page;?>"]').addClass('active').closest('li.dropdown').addClass('active');
+});
 </script>
+
+

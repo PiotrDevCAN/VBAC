@@ -265,7 +265,7 @@ class personRecord extends DbRecord
 		<?php
 	$allButtons = null;
 	$submitButton = $mode==FormClass::$modeEDIT ?  $this->formButton('submit','Submit','updateBoarding',null,'Update','btn-primary glyphicon glyphicon-refresh') :  $this->formButton('submit','Submit','saveBoarding',null,'Submit','btn-primary glyphicon glyphicon-refresh');
-	$pesButton    = $mode==FormClass::$modeEDIT ?  $this->formButton('button','initiatePes','initiatePes','enabled','Initiate PES','btn-primary glyphicon glyphicon-refresh') :  $this->formButton('button','initiatePes','initiatePes','disabled','Initiate PES','btn-primary glyphicon glyphicon-refresh');
+	$pesButton    = $mode==FormClass::$modeEDIT ?  $this->formButton('button','initiatePes','initiatePes','enabled','Initiate PES','btn-primary btnPesInitiate glyphicon glyphicon-refresh') :  $this->formButton('button','initiatePes','initiatePes','disabled','Initiate PES','btn-primary btnPesInitiate glyphicon glyphicon-refresh');
   	$allButtons[] = $submitButton;
   	$allButtons[] = $pesButton;
 	$this->formBlueButtons($allButtons);

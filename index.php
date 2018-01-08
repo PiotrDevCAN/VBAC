@@ -1,6 +1,3 @@
-<?php
-
-?>
 <style type="text/css" class="init">
 body {
 	background: url('./public/img/vBAC2.jpg')
@@ -11,6 +8,8 @@ body {
 	background-size: cover;
 }
 </style>
+
+
 
 <div class="container">
 	<!--  <div class="jumbotron"> -->

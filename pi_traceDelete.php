@@ -5,7 +5,7 @@ use itdq\TraceRecord;
 
 
 $pwd=null;
-do_auth($_SESSION['itdqBg']);
+do_auth($_SESSION['cdiBg']);
 echo "<div class='container'>";
 Trace::pageOpening(__FILE__);
 
@@ -20,7 +20,7 @@ if(isset($_REQUEST['daysToKeep'])){
 echo "<FORM role='form' name='traceDeleteForm' method='post' enctype='application/x-www-form-urlencoded' action='" . $_SERVER['PHP_SELF'] . "' >";
 $traceRecord->displayConfirmDeletionDays();
 echo "</form>";
-  
+
 Trace::pageLoadComplete($_SERVER['PHP_SELF']);
 echo "</div>";
 ?>

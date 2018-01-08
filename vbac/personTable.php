@@ -26,12 +26,24 @@ class personTable extends DbTable {
     }
 
     function addButtons($row){
+
         switch (trim($row[personRecord::FIELD_PES_STATUS])) {
+            case null:
+                $row[personRecord::FIELD_PES_STATUS]  = "<button type='button' class='btn btn-default btn-xs btnPesInitiate' aria-label='Left Align' ";
+                $row[personRecord::FIELD_PES_STATUS] .= " data-cnum='" .trim($row[personRecord::FIELD_CNUM]) . "' ";
+                $row[personRecord::FIELD_PES_STATUS] .= " data-notesid='" .trim($row[personRecord::FIELD_NOTES_ID]) . "' ";
+                $row[personRecord::FIELD_PES_STATUS] .= " data-pesdaterequested='" .trim($row[personRecord::FIELD_PES_DATE_REQUESTED]) . "' ";
+                $row[personRecord::FIELD_PES_STATUS] .= " data-pesrequestor='" .trim($row[personRecord::FIELD_PES_REQUESTOR]) . "' ";
+                $row[personRecord::FIELD_PES_STATUS] .= " data-pesstatus='" .$status . "' ";
+                $row[personRecord::FIELD_PES_STATUS] .= " > ";
+                $row[personRecord::FIELD_PES_STATUS] .= "<span class='glyphicon glyphicon-plane ' aria-hidden='true'></span>";
+                $row[personRecord::FIELD_PES_STATUS] .= "</button>&nbsp;";
+
             case personRecord::PES_STATUS_EXCEPTION:
             case personRecord::PES_STATUS_REJECTED:
             case personRecord::PES_STATUS_REQUESTED:
                 $status = trim($row[personRecord::FIELD_PES_STATUS]);
-                $row[personRecord::FIELD_PES_STATUS]  = "<button type='button' class='btn btn-default btn-xs editPesStatus' aria-label='Left Align' ";
+                $row[personRecord::FIELD_PES_STATUS]  = "<button type='button' class='btn btn-default btn-xs btnPesStatus' aria-label='Left Align' ";
                 $row[personRecord::FIELD_PES_STATUS] .= " data-cnum='" .trim($row[personRecord::FIELD_CNUM]) . "' ";
                 $row[personRecord::FIELD_PES_STATUS] .= " data-notesid='" .trim($row[personRecord::FIELD_NOTES_ID]) . "' ";
                 $row[personRecord::FIELD_PES_STATUS] .= " data-pesdaterequested='" .trim($row[personRecord::FIELD_PES_DATE_REQUESTED]) . "' ";
@@ -90,6 +102,32 @@ class personTable extends DbTable {
            return false;
        }
         return true;
+
+    }
+
+
+    static function isManager($emailAddress){
+        if (empty($emailAddress)) {
+            return false;
+        }
+
+        $sql = " SELECT FM_MANAGER_FLAG FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
+        $sql .= " WHERE UPPER(EMAIL_ADDRESS) = '" . db2_escape_string(strtoupper($emailAddress)) . "' ";
+
+        $resultSet = db2_exec($_SESSION['conn'], $sql);
+
+        if(!$resultSet){
+            DbTable::displayErrorMessage($resultSet, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+
+        $row = db2_fetch_assoc($resultSet);
+
+        $flagValue = strtoupper(substr($row['FM_MANAGER_FLAG'],0));
+
+        return $flagValue=='Y';
+
+
 
     }
 

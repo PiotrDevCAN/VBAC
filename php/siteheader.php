@@ -303,7 +303,8 @@ include ('vbac/java/scripts.html');
 include ('vendor/autoload.php');
 include ('splClassLoader.php');
 include ('connect.php');
-include ('php/templates/navbar.php');
+//include ('php/templates/navbar.php');
+include('displayNavbar.php');
 
 
 

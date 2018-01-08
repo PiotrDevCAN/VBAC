@@ -1,29 +1,4 @@
 
-function surpressMenuOptions(isAdmin, validUser, isItdq){
-
-	surpressAdmin = typeof isAdmin !== 'undefined' ? !isAdmin : true;
-	surpressItdq = typeof isItdq !== 'undefined' ? !isItdq : true;
-	validUser = typeof validUser !== 'undefined' ? validUser : false;
-
-	if(surpressItdq){
-		console.log($('#dropDown_ITDQ_Admin'));
-		$('#dropDown_ITDQ_Admin').remove();
-	}
-
-	if(surpressAdmin){
-		console.log($('#dropDown_REST_Admin'));
-		$('#dropDown_REST_Admin').remove();
-	}
-
-	if(!validUser){
-		$('#dropDown_Manage').remove();
-		$('#welcomeJumotron').html('<p>You have no access to this tool. Please contact <a href=\'mailto:MDBLAKE@uk.ibm.com\'>Michell D Blake</a></p>').css('color','red');
-	}
-
-}
-
-
-
 function loadScript(url, callback)
 {
     // Adding the script tag to the head as suggested before

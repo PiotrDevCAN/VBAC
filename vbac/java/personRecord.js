@@ -379,7 +379,7 @@ function personRecord() {
 	},
 
 	this.listenForInitiatePes = function(){
-		$(document).on('click','#initiatePes', function(e){
+		$(document).on('click','.btnPesInitiate', function(e){
 			console.log('initiatePes PES');
 
 			$("#initiatePes").addClass('spinning');
@@ -416,7 +416,7 @@ function personRecord() {
 	},
 
 	this.listenForEditPesStatus = function(){
-		$(document).on('click','.editPesStatus', function(e){
+		$(document).on('click','.btnPesStatus', function(e){
     		   var cnum = ($(e.target).data('cnum'));
     		   var notesid = ($(e.target).data('notesid'));
     		   var status  = ($(e.target).data('pesstatus'));

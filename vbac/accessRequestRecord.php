@@ -60,18 +60,17 @@ class accessRequestRecord extends DbRecord
         <div class='form-group' >
 		<label class='col-sm-2 label-centre' for='account_type_in_request_type'>Account Type</label>
         <div class='col-sm-3'>
-               <select class='form-control select select2 input-lg' id='account_type'
-                  	          name='ACCOUNT_TYPE'
-                  	          required='required'
-                  	          placeHolder = 'Select Account Type'
-                >
-                <option value=''></option>
-                <?php
-                foreach ($sampleDropDown as $ddId => $ddValue){
-                    ?><option value='<?=$ddId; ?>><?=$ddValue;?></option><?php
-                }
-                ?>
-            	</select>
+			<select class='form-control select select2 input-lg' id='account_type'
+					name = 'ACCOUNT_TYPE'
+					required= 'required'
+					placeHolder= 'Select Account Type' >
+					<option value=''></option>
+					<?php
+					foreach ($sampleDropDown as $ddId => $ddValue) {
+					    ?><option value='<?=$ddId;?>'><?=$ddValue;?></option><?php
+					}
+					?>
+			</select>
         </div>
 
 		<label class='col-sm-3 label-centre' for='order_it_request_number'>Order IT Request Number</label>

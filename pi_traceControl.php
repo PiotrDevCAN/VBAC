@@ -4,16 +4,16 @@ use itdq\TraceControlRecord;
 use itdq\TraceControlList;
 use itdq\FormClass;
 use itdq\AllItdqTables;
-do_auth($_SESSION['itdqBg']);
+do_auth($_SESSION['cdiBg']);
 echo "<div class='container'>";
 $csv = null;
-$traceControlValue = null; 
+$traceControlValue = null;
 
 
 if(isset($_REQUEST['mode'])){
-   
-    if($_REQUEST['mode']=='insert' 
-        &&    
+
+    if($_REQUEST['mode']=='insert'
+        &&
         ((($_REQUEST['TRACE_CONTROL_TYPE'] == TraceControlRecord::CONTROL_TYPE_CLASS_INCLUDE or $_REQUEST['TRACE_CONTROL_TYPE'] == TraceControlRecord::CONTROL_TYPE_CLASS_EXCLUDE) && !empty($_REQUEST['trace_class_name']))
          or
          (($_REQUEST['TRACE_CONTROL_TYPE'] == TraceControlRecord::CONTROL_TYPE_METHOD_INCLUDE or $_REQUEST['TRACE_CONTROL_TYPE'] == TraceControlRecord::CONTROL_TYPE_METHOD_EXCLUDE) && !empty($_REQUEST['trace_method_name']))
