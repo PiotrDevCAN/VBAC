@@ -64,6 +64,12 @@ $isCdi  = employee_in_group($_SESSION['cdiBg'],  $GLOBALS['ltcuser']['mail']) ? 
 $isPmo  = employee_in_group($_SESSION['pmoBg'],  $GLOBALS['ltcuser']['mail']) ? ".accessPmo" : null;
 $isUser = ".accessUser";
 
+var_dump($isFm);
+var_dump($isCdi);
+var_dump($isPmo);
+var_dump($isUser);
+
+
 ?>
 <script>
 $(document).ready(function () {
