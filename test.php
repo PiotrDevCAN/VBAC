@@ -15,7 +15,7 @@ var_dump($isCdi);
 
 var_dump($isPmo);
 
-var_dump($_SESSION);
+
 
 echo "</pre>";
 

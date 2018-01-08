@@ -15,8 +15,8 @@ body {
 	<!--  <div class="jumbotron"> -->
 		<h1 id='welcomeJumotron'>Ventus Boarding & Access Control</h1>
 
-		<button type='button' class='btn btn-default' id='onBoardingBtn'><span class="glyphicon glyphicon-log-in"></span>&nbsp;On Boarding</button>
-		<button type='button' class='btn btn-default' id='offBoardingBtn'><span class="glyphicon glyphicon-log-out"></span>&nbsp;Off Boarding</button>
+		<button type='button' class='btn btn-default accessPmo accessCdi accessFm' id='onBoardingBtn'><span class="glyphicon glyphicon-log-in"></span>&nbsp;On Boarding</button>
+		<button type='button' class='btn btn-default accessPmo accessCdi accessFm' id='offBoardingBtn'><span class="glyphicon glyphicon-log-out"></span>&nbsp;Off Boarding</button>
 	<!-- </div> -->
 </div>
 

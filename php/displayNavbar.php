@@ -69,6 +69,7 @@ $isUser = ".not('.accessUser')";
 $(document).ready(function () {
     $('li[data-pagename="<?=$page;?>"]').addClass('active').closest('li.dropdown').addClass('active');
 
+    $('button')<?=$isFm?><?=$isPmo?><?=$isCdi?><?=$isUser?>.remove();
     $('.navbarMenuOption')<?=$isFm?><?=$isPmo?><?=$isCdi?><?=$isUser?>.remove();
     $('.navbarMenu').not(':has(li)').remove();
 
