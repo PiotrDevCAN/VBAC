@@ -59,16 +59,17 @@ $navbar->addOption($outages);
 
 $navbar->createNavbar($page);
 
-$isFm   = personTable::isManager($GLOBALS['ltcuser']['mail'])                 ? ".accessFm" : null;
-$isCdi  = employee_in_group($_SESSION['cdiBg'],  $GLOBALS['ltcuser']['mail']) ? ".accessCdi" : null;
-$isPmo  = employee_in_group($_SESSION['pmoBg'],  $GLOBALS['ltcuser']['mail']) ? ".accessPmo" : null;
-$isUser = ".accessUser";
+$isFm   = personTable::isManager($GLOBALS['ltcuser']['mail'])                 ? ".not('.accessFm')" : null;
+$isCdi  = employee_in_group($_SESSION['cdiBg'],  $GLOBALS['ltcuser']['mail']) ? ".not('.accessCdi')" : null;
+$isPmo  = employee_in_group($_SESSION['pmoBg'],  $GLOBALS['ltcuser']['mail']) ? ".not('.accessPmo')" : null;
+$isUser = ".not('.accessUser')";
 
 ?>
 <script>
 $(document).ready(function () {
     $('li[data-pagename="<?=$page;?>"]').addClass('active').closest('li.dropdown').addClass('active');
-    $('.navbarMenuOption').not('<?=$isFm;?><?=$isCdi?><?=$isPmo?><?=$isUser?>').remove();
+
+    $('.navbarMenuOption')<?=$isFm?><?=$isPmo?><?=$isCdi?><?=$isUser?>.remove();
     $('.navbarMenu').not(':has(li)').remove();
 
     <?=!empty($isUser) ? '$("#userLevel").html("User");console.log("user");' : null;?>
