@@ -172,9 +172,10 @@ function personRecord() {
 			                   var lname =  document.getElementById('person_last_name');
 			                   console.log(name + ":" + value);
 			                   console.log(typeof(value));
+			                   var lastName = value.toString;
 			                   if(typeof(lname) !== 'undefined'){
-			                	   initialLetter = value.substring(0,1).toUpperCase();
-			                	   restOfName    = value.substring(1).toUpperCase();
+			                	   initialLetter = lastName.substring(0,1).toUpperCase();
+			                	   restOfName    = lastName.substring(1).toUpperCase();
 			                	   capitalizedName = initialLetter + restOfName;
 			                	   console.log(capitalizedName);
 			                	   lname.value = capitalizedName ;

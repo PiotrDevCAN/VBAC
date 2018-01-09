@@ -130,15 +130,15 @@ class personRecord extends DbRecord
 		<div class="form-group">
         <div class="col-sm-6">
 
-        <input class="form-control" id="person_name" name="person_name" value="" required type="text" placeholder='Start typing name' >
+        <input class="form-control" id="person_name" name="person_name" value="" required type="text" placeholder='Start typing name/serial/email' >
 
         </div>
         <div class='col-sm-6'>
-        <input class='form-control' id='person_serial' name='CNUM' value='<?=$this->CNUM?>' required type='text' placeholder='or SerialNum & Country Code (9 digits)' >
+        <input class='form-control' id='person_serial' name='CNUM' value='<?=$this->CNUM?>' required type='text' disabled='disabled' placeholder='Serial Number' >
         </div>
         </div>
 
-    <div id='personDetails'  hidden>
+    <div id='personDetails'  display='hidden'>
         <div class='form-group' >
         <div class='col-sm-6'>
         <input class='form-control' id='person_notesid' name='NOTES_ID' value='' required type='text' disabled='disabled' >
