@@ -16,7 +16,6 @@ var_dump($isCdi);
 var_dump($isPmo);
 
 
-
 echo "</pre>";
 
 phpinfo();
