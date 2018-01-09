@@ -19,6 +19,7 @@ $pageDetails = explode("/", $_SERVER['PHP_SELF']);
 $page = isset($pageDetails[2]) ? $pageDetails[2] : $pageDetails[1];
 
 $navbar = new Navbar($navBarImage, $navBarBrand,$navBarSearch);
+$navbarDivider = new NavbarDivider('accessCdi');
 
 $cdiAdmin       = new NavbarMenu("CDI Admin");
 $trace          = new NavbarOption('View Trace','pi_trace.php','accessCdi');
@@ -37,7 +38,7 @@ $email          = new NavbarOption('Email Log', 'pi_emailLog.php','accessCdi');
 $adminMenu->addOption($pmo);
 $adminMenu->addOption($revalidation);
 $adminMenu->addOption($control);
-$adminMenu->addOption(new NavbarDivider('accessCdi'));
+$adminMenu->addOption( new NavbarDivider('accessCdi'));
 $adminMenu->addOption($email);
 
 $boarding       = new NavbarMenu('Boarding');
