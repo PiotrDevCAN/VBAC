@@ -9,9 +9,8 @@ use vbac\personRecord;
 <div class='container-fluid'>
 <h3>Person Database</h3>
 
-<button id='reportPes' class='btn btn-primary btn-sm'>PES Report</button>
-<button id='reportReset' class='btn btn-primary btn-sm'>Reset</button>
-
+<button id='reportPes' class='btn btn-primary btn-sm accessUser'>PES Report</button>
+<button id='reportReset' class='btn btn-primary btn-sm accessUser'>Reset</button>
 
 <div id='personDatabaseDiv'>
 </div>
