@@ -68,6 +68,11 @@ $isCdi  = employee_in_group($_SESSION['cdiBg'],  $GLOBALS['ltcuser']['mail']) ? 
 $isPmo  = employee_in_group($_SESSION['pmoBg'],  $GLOBALS['ltcuser']['mail']) ? ".not('.accessPmo')" : null;
 $isUser = ".not('.accessUser')";
 
+$isFm    = stripos($_SERVER['environment'], 'dev') ? ".not('.accessFm')"   : $isFm;
+$isCdi   = stripos($_SERVER['environment'], 'dev') ? ".not('.accessCdi')"  : $isCdi;
+$isPmo   = stripos($_SERVER['environment'], 'dev')  ? ".not('.accessPmo')" : $isPmo;
+
+
 ?>
 <script>
 $(document).ready(function () {
