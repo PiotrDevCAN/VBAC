@@ -25,9 +25,11 @@ $adminMenu      = new NavbarMenu('vBac Admin');
 $pmo            = new NavbarOption('Portal', 'pa_pmo.php','accessCdi accessPmo accessFm');
 $revalidation   = new NavbarOption('Revalidation','pa_revalidation.php','accessCdi accessPmo');
 $control        = new NavbarOption('Control', 'pa_control.php','accessCdi accessPmo');
+$emailLog       = new NavbarOption('Email Log', 'pi_emailLog','accessCdi');
 $adminMenu->addOption($pmo);
 $adminMenu->addOption($revalidation);
 $adminMenu->addOption($control);
+$adminMenu->addOption($emailLog);
 
 $boarding       = new NavbarMenu('Boarding');
 $onBoarding     = new NavbarOption('OnBoard','pb_onboard.php','accessCdi accessPmo accessFm');
