@@ -106,10 +106,14 @@ class personRecord extends DbRecord
 
     private static  $lobValue = array('GTS','GBS','IMI','Cloud','Security','Other');
 
-    const PES_STATUS_REQUESTED = 'Requested';
-    const PES_STATUS_CLEARED   = 'PES Cleared';
+
+    const PES_STATUS_CLEARED   = 'Cleared';
+    const PES_STATUS_DECLINED  = 'Declined';
     const PES_STATUS_EXCEPTION = 'Exception';
-    const PES_STATUS_REJECTED  = 'Rejected';
+    const PES_STATUS_FAILED    = 'Failed';
+    const PES_STATUS_INITIATED = 'Initiated';
+    const PES_STATUS_REMOVED   = 'Removed';
+
 
 
     function displayBoardingForm($mode){
@@ -379,9 +383,11 @@ class personRecord extends DbRecord
                   	           >
             				<option value=''>Status</option>
             				<option value='<?=personRecord::PES_STATUS_CLEARED;?>'><?=personRecord::PES_STATUS_CLEARED?></option>
+            				<option value='<?=personRecord::PES_STATUS_DECLINED;?>'><?=personRecord::PES_STATUS_DECLINED?></option>
             				<option value='<?=personRecord::PES_STATUS_EXCEPTION;?>'><?=personRecord::PES_STATUS_EXCEPTION?></option>
-            				<option value='<?=personRecord::PES_STATUS_REJECTED;?>'><?=personRecord::PES_STATUS_REJECTED?></option>
-            				<option value='<?=personRecord::PES_STATUS_REQUESTED;?>'><?=personRecord::PES_STATUS_REQUESTED?></option>
+            				<option value='<?=personRecord::PES_STATUS_FAILED;?>'><?=personRecord::PES_STATUS_FAILED?></option>
+            				<option value='<?=personRecord::PES_STATUS_INITIATED;?>'><?=personRecord::PES_STATUS_INITIATED?></option>
+            				<option value='<?=personRecord::PES_STATUS_REMOVED;?>'><?=personRecord::PES_STATUS_REMOVED?></option>
                				</select>
             		 </div>
             	</div>

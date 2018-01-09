@@ -38,8 +38,10 @@ class personTable extends DbTable {
                 $row[personRecord::FIELD_PES_STATUS] .= "</button>";
                 break;
             case personRecord::PES_STATUS_EXCEPTION:
-            case personRecord::PES_STATUS_REJECTED:
-            case personRecord::PES_STATUS_REQUESTED:
+            case personRecord::PES_STATUS_DECLINED;
+            case personRecord::PES_STATUS_FAILED;
+            case personRecord::PES_STATUS_INITIATED;
+            case personRecord::PES_STATUS_REMOVED;
                 $status = trim($row[personRecord::FIELD_PES_STATUS]);
                 $row[personRecord::FIELD_PES_STATUS]  = "<button type='button' class='btn btn-default btn-xs btnPesStatus' aria-label='Left Align' ";
                 $row[personRecord::FIELD_PES_STATUS] .= " data-cnum='" .trim($row[personRecord::FIELD_CNUM]) . "' ";
@@ -63,7 +65,7 @@ class personTable extends DbTable {
         if(!$cnum){
             throw new \Exception('No CNUM provided in ' . __METHOD__);
         }
-        $result =  self::setPesStatus($cnum,personRecord::PES_STATUS_REQUESTED, $requestor);
+        $result =  self::setPesStatus($cnum,personRecord::PES_STATUS_INITIATED, $requestor);
         return $result;
     }
 
@@ -75,7 +77,7 @@ class personTable extends DbTable {
         $status = empty($status) ? personRecord::PES_STATUS_REQUESTED : $status;
 
         switch ($status) {
-            case personRecord::PES_STATUS_REQUESTED:
+            case personRecord::PES_STATUS_INITIATED:
                 $requestor = empty($requestor) ? 'Unknown' : $requestor;
                 $dateField = 'PES_DATE_REQUESTED';
                 break;
