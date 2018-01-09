@@ -140,15 +140,15 @@ function personRecord() {
 			                   var fname =  document.getElementById('person_first_name');
 			                   console.log(name + ":" + value);
 			                   console.log(typeof(value));
-			                   var firstName = value.toString;
+			                   var firstName = value[0];
 			                   console.log(firstName);
 			                   console.log(typeof(firstName));
 			                   if(typeof(fname) !== 'undefined'){
-//			                	   initialLetter = firstName.substring(0,1).toUpperCase();
-//			                	   restOfName    = firstName.substring(1).toUpperCase();
-//			                	   capitalizedName = initialLetter + restOfName;
-//			                	   console.log(capitalizedName);
-//			                	   fname.value = capitalizedName ;
+			                	   initialLetter = firstName.substring(0,1).toUpperCase();
+			                	   restOfName    = firstName.substring(1).toUpperCase();
+			                	   capitalizedName = initialLetter + restOfName;
+			                	   console.log(capitalizedName);
+			                	   fname.value = capitalizedName ;
 			                   };
 			                   break;
 		    			case 'hrfirstname':
@@ -159,11 +159,11 @@ function personRecord() {
 			                   console.log(firstName);
 			                   console.log(typeof(firstName));
 			                   if(typeof(fname) !== 'undefined'){
-//			                	   	initialLetter = firstName.substring(0,1).toUpperCase();
-//			                	   	restOfName    = firstName.substring(1).toUpperCase();
-//			                	   	capitalizedName = initialLetter + restOfName;
-//		                	   		console.log(capitalizedName);
-//		                	   		fname.value = capitalizedName ;
+			                	   	initialLetter = firstName.substring(0,1).toUpperCase();
+			                	   	restOfName    = firstName.substring(1).toUpperCase();
+			                	   	capitalizedName = initialLetter + restOfName;
+		                	   		console.log(capitalizedName);
+		                	   		fname.value = capitalizedName ;
 		                	   };
 		                	   console.log($(fname));
 			                   break;
@@ -172,15 +172,15 @@ function personRecord() {
 			                   var lname =  document.getElementById('person_last_name');
 			                   console.log(name + ":" + value);
 			                   console.log(typeof(value));
-			                   var lastName = value.toString;
+			                   var lastName = value[0];
 			                   console.log(lastName);
 			                   console.log(typeof(lastName));
 			                   if(typeof(lname) !== 'undefined'){
-			                	 //  initialLetter = lastName.substring(0,1).toUpperCase();
-			                	 //  restOfName    = lastName.substring(1).toUpperCase();
-			                	 //  capitalizedName = initialLetter + restOfName;
-			                	 //  console.log(capitalizedName);
-			                	 //  lname.value = capitalizedName ;
+			                	   initialLetter = lastName.substring(0,1).toUpperCase();
+			                	   restOfName    = lastName.substring(1).toUpperCase();
+			                	   capitalizedName = initialLetter + restOfName;
+			                	   console.log(capitalizedName);
+			                	   lname.value = capitalizedName ;
 			                   };
 			                   console.log($(lname));
 			                   break;
