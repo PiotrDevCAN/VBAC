@@ -8,9 +8,9 @@ namespace itdq;
  */
 class NavbarDivider extends NavbarItem {
 
-    function createItem(){
+    function createItem($classes=null){
         ?>
-        <li lass='divider'></li>
+        <li class="divider navbarMenuOption <?=$classes?>"></li>
         <?php
     }
 }
