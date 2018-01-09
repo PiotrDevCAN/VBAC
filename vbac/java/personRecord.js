@@ -347,7 +347,7 @@ function personRecord() {
 	this.listenForReportPes = function(){
 		$(document).on('click','#reportPes', function(e){
 			personRecord.table.columns().visible(false,false);
-			personRecord.table.columns([4,5,21,22,23,24,25]).visible(true);
+			personRecord.table.columns([5,21,22,23,24,25]).visible(true);
 			personRecord.table.order([21,'desc'],[5,"asc"]).draw();
 			});
 	},

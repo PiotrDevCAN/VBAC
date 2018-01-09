@@ -34,11 +34,11 @@ class personTable extends DbTable {
                 $row[personRecord::FIELD_PES_STATUS] .= " data-notesid='" .trim($row[personRecord::FIELD_NOTES_ID]) . "' ";
                 $row[personRecord::FIELD_PES_STATUS] .= " data-pesdaterequested='" .trim($row[personRecord::FIELD_PES_DATE_REQUESTED]) . "' ";
                 $row[personRecord::FIELD_PES_STATUS] .= " data-pesrequestor='" .trim($row[personRecord::FIELD_PES_REQUESTOR]) . "' ";
-                $row[personRecord::FIELD_PES_STATUS] .= " data-pesstatus='" .$status . "' ";
+                $row[personRecord::FIELD_PES_STATUS] .= " data-pesstatus='null' ";
                 $row[personRecord::FIELD_PES_STATUS] .= " > ";
                 $row[personRecord::FIELD_PES_STATUS] .= "<span class='glyphicon glyphicon-plane ' aria-hidden='true'></span>";
-                $row[personRecord::FIELD_PES_STATUS] .= "</button>&nbsp;";
-
+                $row[personRecord::FIELD_PES_STATUS] .= "</button>";
+                break;
             case personRecord::PES_STATUS_EXCEPTION:
             case personRecord::PES_STATUS_REJECTED:
             case personRecord::PES_STATUS_REQUESTED:
