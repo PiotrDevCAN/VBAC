@@ -100,6 +100,9 @@ class personRecord extends DbRecord
         '/&&functionalMgr&&/',
     );
 
+
+    private static  $lobValue = array('GTS','GBS','IMI','Cloud','Security','Other');
+
     const PES_STATUS_REQUESTED = 'Requested';
     const PES_STATUS_CLEARED  = 'PES Cleared';
     const PES_STATUS_EXCEPTION = 'Exception';
@@ -234,12 +237,18 @@ class personRecord extends DbRecord
 
          </div>
         <div class='col-sm-6'>
-            <div class="radio">
-  				<label><input type="radio" name="LOB" required value='GTS'>GTS</label>
-  				<label><input type="radio" name="LOB" required value='GBS'>GBS</label>
-  				<label><input type="radio" name="LOB" required value='IMI'>IMI</label>
-  				<label><input type="radio" name="LOB" required value='Cloud'>Cloud</label>
-  				<label><input type="radio" name="LOB" required value='Other'>Other</label>
+        	<select class='form-control select select2' id='lob'
+                  	          name='LOB'
+                  	          required
+                  	          placeholder='Select Lob'
+            	>
+                <option value=''>Select Lob</option>
+                <?php
+                foreach (self::$lobValue as $lob) {
+                    ?><option value='<?=$lob?>'><?=$lob?></option><?php
+                }
+                ?>
+            </select>
 			</div>
 
 
@@ -418,7 +427,7 @@ class personRecord extends DbRecord
         $replacements = array($this->FIRST_NAME . " " . $this->LAST_NAME,
                               $this->EMAIL_ADDRESS,
                               $this->COUNTRY,
-                              null,
+                              $this->LOB,
                               $this->ROLE_ON_THE_ACCOUNT,
                               'Ventus',
                               $_SESSION['ssoEmail'],
