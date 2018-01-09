@@ -104,9 +104,9 @@ class personRecord extends DbRecord
     private static  $lobValue = array('GTS','GBS','IMI','Cloud','Security','Other');
 
     const PES_STATUS_REQUESTED = 'Requested';
-    const PES_STATUS_CLEARED  = 'PES Cleared';
+    const PES_STATUS_CLEARED   = 'PES Cleared';
     const PES_STATUS_EXCEPTION = 'Exception';
-    const PES_STATUS_REJECTED = 'Rejected';
+    const PES_STATUS_REJECTED  = 'Rejected';
 
 
     function displayBoardingForm($mode){
@@ -169,7 +169,7 @@ class personRecord extends DbRecord
 
 		<div class='form-group' >
         <div class='col-sm-6'>
-        	<select class='form-control select select2 input-lg' id='person_contractor_id'
+        	<select class='form-control select select2' id='person_contractor_id'
                   	          name='person_contractor_id'
                   	          required='required'
                 >
