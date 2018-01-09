@@ -204,7 +204,6 @@ class personRecord extends DbRecord
                 ?>
             	</select>
         </div>
-
         </div>
 </div>
 </div>

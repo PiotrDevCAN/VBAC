@@ -60,7 +60,7 @@ class accessRequestRecord extends DbRecord
         <div class='form-group' >
 		<label class='col-sm-2 label-centre' for='account_type_in_request_type'>Account Type</label>
         <div class='col-sm-3'>
-			<select class='form-control select select2 input-lg' id='account_type'
+			<select class='form-control select select2' id='account_type'
 					name = 'ACCOUNT_TYPE'
 					required= 'required'
 					placeHolder= 'Select Account Type' >
