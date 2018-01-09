@@ -7,6 +7,7 @@ use vbac\personTable;
 use itdq\NavbarDivider;
 include ('itdq/PlannedOutages.php');
 include ('itdq/DbTable.php');
+$plannedOutagesLabel = "Planned Outages";
 $plannedOutages = new PlannedOutages();
 include ('UserComms/responsiveOutages_V2.php');
 
@@ -58,7 +59,7 @@ $navbar->addMenu($adminMenu);
 $navbar->addMenu($boarding);
 $navbar->addMenu($access);
 
-$outages = new NavbarOption('Planned Outages', 'ppo_PlannedOutages.php','accessCdi accessPmo accessFm accessUser');
+$outages = new NavbarOption($plannedOutagesLabel, 'ppo_PlannedOutages.php','accessCdi accessPmo accessFm accessUser ');
 $navbar->addOption($outages);
 
 $navbar->createNavbar($page);
@@ -73,6 +74,8 @@ $isCdi   = stripos($_SERVER['environment'], 'dev') ? ".not('.accessCdi')"  : $is
 $isPmo   = stripos($_SERVER['environment'], 'dev')  ? ".not('.accessPmo')" : $isPmo;
 
 
+
+$plannedOutagesId = str_replace(" ","_",$plannedOutagesLabel);
 ?>
 <script>
 $(document).ready(function () {
@@ -87,6 +90,9 @@ $(document).ready(function () {
     <?=!empty($isPmo)  ? '$("#userLevel").html("PMO");console.log("pmo");' : null;?>
     <?=!empty($isCdi)  ? '$("#userLevel").html("CDI");console.log("cdi");' : null;?>
 
+    var poContent = $('#<?=$plannedOutagesId?> a').html();
+	var badgedContent = poContent + "&nbsp;" + "<?=$plannedOutages->getBadge();?>";
+	$('#<?=$plannedOutagesId?> a').html(badgedContent);
 });
 </script>
 
