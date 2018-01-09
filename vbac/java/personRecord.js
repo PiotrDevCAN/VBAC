@@ -241,9 +241,8 @@ function personRecord() {
 			var form = $('#boardingForm');
 			var formValid = form[0].checkValidity();
 
-			$("#saveBoarding").addClass('spinning');
-
 			if(formValid){
+				$("#saveBoarding").addClass('spinning');
 				var allDisabledFields = ($("input:disabled"));
 				$(allDisabledFields).attr('disabled',false);
 				var formData = form.serialize();
