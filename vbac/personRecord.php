@@ -230,6 +230,25 @@ class personRecord extends DbRecord
 
     <div class='form-group' >
         <div class='col-sm-6'>
+          <input class="form-control" id="open_seat" name="ROLE_ON_THE_ACCOUNT" value="<?=$this->ROLE_ON_THE_ACCOUNT?>" required type="text" placeholder='Role on account' >
+
+         </div>
+        <div class='col-sm-6'>
+            <div class="radio">
+  				<label><input type="radio" name="LOB" required value='GTS'>GTS</label>
+  				<label><input type="radio" name="LOB" required value='GBS'>GBS</label>
+  				<label><input type="radio" name="LOB" required value='IMI'>IMI</label>
+  				<label><input type="radio" name="LOB" required value='Cloud'>Cloud</label>
+  				<label><input type="radio" name="LOB" required value='Other'>Other</label>
+			</div>
+
+
+        </div>
+     </div>
+
+
+    <div class='form-group' >
+        <div class='col-sm-6'>
             <div class="radio">
   			<label><input type="radio" name="TT_BAU" required class='accountOrganisation' value='T&T'>T&T</label>
   			<label><input type="radio" name="TT_BAU" required class='accountOrganisation' value='BAU'>BAU</label>
