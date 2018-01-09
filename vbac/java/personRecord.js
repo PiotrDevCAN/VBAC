@@ -155,7 +155,7 @@ function personRecord() {
 			                   var fname =  document.getElementById('person_first_name');
 			                   console.log(name.value);
 			                   console.log(typeof(value));
-			                   var firstName = value.toString;
+			                   var firstName = value[0];
 			                   console.log(firstName);
 			                   console.log(typeof(firstName));
 			                   if(typeof(fname) !== 'undefined'){
