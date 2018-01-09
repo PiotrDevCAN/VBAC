@@ -37,7 +37,7 @@ $(document).ready(function() {
     person.listenForSerial();
     person.listenForSaveBoarding();
     person.listenForAccountOrganisation();
-    person.listenForInitiatePes();
+    person.listenForInitiatePesFromBoarding();
 });
 
 $(document).ready(function(){

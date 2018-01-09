@@ -9,8 +9,8 @@ use vbac\personRecord;
 <div class='container-fluid'>
 <h3>Person Database</h3>
 
-<button id='reportPes' class='btn btn-primary btn-sm accessUser'>PES Report</button>
-<button id='reportReset' class='btn btn-primary btn-sm accessUser'>Reset</button>
+<button id='reportPes' class='btn btn-primary btn-sm '>PES Report</button>
+<button id='reportReset' class='btn btn-primary btn-sm '>Reset</button>
 
 <div id='personDatabaseDiv'>
 </div>
@@ -19,6 +19,7 @@ use vbac\personRecord;
 <?php
 $person = new personRecord();
 $person->amendPesStatusModal();
+$person->savingBoardingDetailsModal();
 ?>
 
 
@@ -31,5 +32,5 @@ person.listenForReportPes();
 person.listenForReportReset();
 person.listenForEditPesStatus();
 person.listenForSavePesStatus();
-person.listenForIniatePes();
+person.listenForInitiatePesFromPortal();
 </script>

@@ -368,41 +368,55 @@ function personRecord() {
 			});
 	},
 
-	this.listenForInitiatePes = function(){
+	this.listenForInitiatePesFromBoarding = function(){
 		$(document).on('click','.btnPesInitiate', function(e){
-			console.log('initiatePes PES');
-
+			console.log('initiatePes PES from boarding');
 			$("#initiatePes").addClass('spinning');
-
 			var cnum = $('#person_uid').val();
-			console.log(cnum);
-		    $.ajax({
-		    	url: "ajax/initiatePes.php",
-		    	data : {cnum:cnum},
-		    	type: 'POST',
-		    	success: function(result){
-		    		console.log(result);
-		    		var resultObj = JSON.parse(result);
-		    		$('#savingBoardingDetailsModal').on('hidden.bs.modal', function () { // When they close the modal this time, reload the page.
-		    			$('#savingBoardingDetailsModal').off('hidden.bs.modal');  // only do this once.
-		    			location.reload();
-	    			});
-		    		if(resultObj.success==true){
-		    			var message = "<div class=panel-heading><h3 class=panel-title>Success</h3>" + resultObj.messages
-		    			$('#savingBoardingDetailsModal  .panel').html(message);
-		    			$('#savingBoardingDetailsModal  .panel').addClass('panel-success');
-		    			$('#savingBoardingDetailsModal  .panel').removeClass('panel-danger');
-		    		} else {
-		    			var message = "<div class=panel-heading><h3 class=panel-title>Error</h3>" + resultObj.messages
-		    			$('#savingBoardingDetailsModal  .panel').html(message);
-		    			$('#savingBoardingDetailsModal  .panel').addClass('panel-danger');
-		    			$('#savingBoardingDetailsModal  .panel').removeClass('panel-success');
-		    		};
-		    		$('#savingBoardingDetailsModal').modal('show');
-					$("#initiatePes").removeClass('spinning');
-		    	}
-		    });
+			var person = new personRecord;
+			person.initiatePes(cnum);
 		});
+	},
+
+	this.listenForInitiatePesFromPortal = function(){
+		$(document).on('click','.btnPesInitiate', function(e){
+			console.log('initiatePes PES from Portal');
+			console.log(this);
+			var cnum = $(this).data('cnum');
+			var person = new personRecord;
+			person.initiatePes(cnum);
+		});
+	},
+
+	this.initiatePes = function(cnum){
+		console.log(cnum);
+	    $.ajax({
+	    	url: "ajax/initiatePes.php",
+	    	data : {cnum:cnum},
+	    	type: 'POST',
+	    	success: function(result){
+	    		console.log(result);
+	    		var resultObj = JSON.parse(result);
+	    		$('#savingBoardingDetailsModal').on('hidden.bs.modal', function () { // When they close the modal this time, reload the page.
+	    			$('#savingBoardingDetailsModal').off('hidden.bs.modal');  // only do this once.
+	    			location.reload();
+    			});
+	    		if(resultObj.success==true){
+	    			var message = "<div class=panel-heading><h3 class=panel-title>Success</h3>" + resultObj.messages
+	    			$('#savingBoardingDetailsModal  .panel').html(message);
+	    			$('#savingBoardingDetailsModal  .panel').addClass('panel-success');
+	    			$('#savingBoardingDetailsModal  .panel').removeClass('panel-danger');
+	    		} else {
+	    			var message = "<div class=panel-heading><h3 class=panel-title>Error</h3>" + resultObj.messages
+	    			$('#savingBoardingDetailsModal  .panel').html(message);
+	    			$('#savingBoardingDetailsModal  .panel').addClass('panel-danger');
+	    			$('#savingBoardingDetailsModal  .panel').removeClass('panel-success');
+	    		};
+	    		$('#savingBoardingDetailsModal').modal('show');
+				$("#initiatePes").removeClass('spinning');
+				personRecord.table.ajax.reload();
+	    	}
+	    });
 	},
 
 	this.listenForEditPesStatus = function(){
@@ -422,6 +436,7 @@ function personRecord() {
 	},
 
 	this.listenForSavePesStatus = function(){
+		$(this).attr('disabled',true);
 		$('#psmForm').submit(function(e){
 				var form = document.getElementById('psmForm');
 				var formValid = form.checkValidity();

@@ -29,11 +29,9 @@ class personTable extends DbTable {
 
         switch (trim($row[personRecord::FIELD_PES_STATUS])) {
             case null:
-                $row[personRecord::FIELD_PES_STATUS]  = "<button type='button' class='btn btn-default btn-xs btnPesInitiate' aria-label='Left Align' ";
+                $row[personRecord::FIELD_PES_STATUS]  = "<button type='button' class='btn btn-default btn-xs btnPesInitiate accessRestrict accessPmo accessFm' ";
+                $row[personRecord::FIELD_PES_STATUS]  .= "aria-label='Left Align' ";
                 $row[personRecord::FIELD_PES_STATUS] .= " data-cnum='" .trim($row[personRecord::FIELD_CNUM]) . "' ";
-                $row[personRecord::FIELD_PES_STATUS] .= " data-notesid='" .trim($row[personRecord::FIELD_NOTES_ID]) . "' ";
-                $row[personRecord::FIELD_PES_STATUS] .= " data-pesdaterequested='" .trim($row[personRecord::FIELD_PES_DATE_REQUESTED]) . "' ";
-                $row[personRecord::FIELD_PES_STATUS] .= " data-pesrequestor='" .trim($row[personRecord::FIELD_PES_REQUESTOR]) . "' ";
                 $row[personRecord::FIELD_PES_STATUS] .= " data-pesstatus='null' ";
                 $row[personRecord::FIELD_PES_STATUS] .= " > ";
                 $row[personRecord::FIELD_PES_STATUS] .= "<span class='glyphicon glyphicon-plane ' aria-hidden='true'></span>";
