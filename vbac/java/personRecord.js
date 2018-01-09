@@ -137,47 +137,49 @@ function personRecord() {
 			                   if(typeof(uid) !== 'undefined'){ uid.value = value;};
 			                   break;
 		    			case 'preferredfirstname':
-			                   var name =  document.getElementById('person_first_name');
+			                   var fname =  document.getElementById('person_first_name');
 			                   console.log(name + ":" + value);
 			                   console.log(typeof(value));
 			                   var firstName = value.toString;
 			                   console.log(firstName);
 			                   console.log(typeof(firstName));
-			                   if(typeof(name) !== 'undefined'){
+			                   if(typeof(fname) !== 'undefined'){
 			                	   initialLetter = firstName.substring(0,1).toUpperCase();
 			                	   restOfName    = firstName.substring(1).toUpperCase();
 			                	   capitalizedName = initialLetter + restOfName;
-		                	   		console.log(capitalizedName);
-		                	   		name.value = capitalizedName ;};
+			                	   console.log(capitalizedName);
+			                	   fname.value = capitalizedName ;};
 			                   break;
 		    			case 'hrfirstname':
-			                   var name =  document.getElementById('person_first_name');
+			                   var fname =  document.getElementById('person_first_name');
 			                   console.log(name.value);
 			                   console.log(typeof(value));
 			                   var firstName = value.toString;
 			                   console.log(firstName);
 			                   console.log(typeof(firstName));
 
-			                   if(typeof(name) !== 'undefined'){
+			                   if(typeof(fname) !== 'undefined'){
 			                	   initialLetter = firstName.substring(0,1).toUpperCase();
 			                	   restOfName    = firstName.substring(1).toUpperCase();
 			                	   capitalizedName = initialLetter + restOfName;
 		                	   		console.log(capitalizedName);
-		                	   		name.value = capitalizedName ;
+		                	   		fname.value = capitalizedName ;
 		                	   };
-		                	   console.log($(name));
+		                	   console.log($(fname));
 			                   break;
 		    			case 'sn':
 		    			case 'hrfamilyname':
-			                   var name =  document.getElementById('person_last_name');
+			                   var lname =  document.getElementById('person_last_name');
 			                   console.log(name + ":" + value);
 			                   console.log(typeof(value));
-			                   if(typeof(name) !== 'undefined'){
-			                	   capitalizedName = value[0].toUpperCase() + value.toString().substring(1).toLowerCase();
+			                   if(typeof(lname) !== 'undefined'){
+			                	   initialLetter = value.substring(0,1).toUpperCase();
+			                	   restOfName    = value.substring(1).toUpperCase();
+			                	   capitalizedName = initialLetter + restOfName;
 			                	   console.log(capitalizedName);
-			                	   name.value = capitalizedName ;
+			                	   lname.value = capitalizedName ;
 			                	   };
-			                   console.log($(name));
+			                   console.log($(lname));
 			                   break;
 		    			case 'ismanager':
 		    				   var isMgr =  document.getElementById('person_is_mgr');
