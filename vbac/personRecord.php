@@ -144,17 +144,17 @@ class personRecord extends DbRecord
     <div id='personDetails'  display='hidden'>
         <div class='form-group' >
         <div class='col-sm-6'>
-        <input class='form-control' id='person_notesid' name='NOTES_ID' value='' required type='text' disabled='disabled' >
+        <input class='form-control' id='person_notesid' name='NOTES_ID' value='' required type='text' disabled='disabled' placeholder="Notesid">
         </div>
 
         <div class='col-sm-6'>
-        <input class='form-control' id='person_intranet' name='EMAIL_ADDRESS' value='' required type='text' disabled='disabled'>
+        <input class='form-control' id='person_intranet' name='EMAIL_ADDRESS' value='' required type='text' disabled='disabled' placeholder="Intranet">
         </div>
         </div>
 
         <div class='form-group' >
         <div class='col-sm-12'>
-        <input class='form-control' id='person_bio' name='person_bio' value='' required type='text' disabled='disabled' placeholder="Enter email">
+        <input class='form-control' id='person_bio' name='person_bio' value='' required type='text' disabled='disabled' placeholder="Bio">
         <input id='person_uid' name='person_uid' value='' type='hidden'  required >
         <input id='person_is_mgr' name='FM_MANAGER_FLAG' value=''  type='hidden'  required >
         <input id='person_first_name' name='FIRST_NAME' value=''  type='hidden'  required >
@@ -226,8 +226,6 @@ class personRecord extends DbRecord
   				<label><input type="radio" name="CTB_RTB" required value='RTB'>RTB</label>
   				<label><input type="radio" name="CTB_RTB" required value='Other'>Other</label>
 			</div>
-
-
         </div>
      </div>
 
@@ -249,10 +247,7 @@ class personRecord extends DbRecord
                 }
                 ?>
             </select>
-			</div>
-
-
-        </div>
+		</div>
      </div>
 
 
