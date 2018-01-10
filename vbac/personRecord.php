@@ -81,6 +81,7 @@ class personRecord extends DbRecord
                                     <tr><td colspan="2" style="font-size:16px;padding-bottom:10px"">Please initiate PES check for the following individual:</td></tr>
                                     <tr><th style="background-color:silver;font-size:20px">Name</th><td style="font-size:20px">&&name&&</td></tr>
                                     <tr><th style="background-color:silver;font-size:20px">Email Address</th><td style="font-size:20px">&&email&&</td></tr>
+                                    <tr><th style="background-color:silver;font-size:20px">Notes Id</th><td style="font-size:20px">&&notesid&&</td></tr>
                                     <tr><th style="background-color:silver;font-size:20px">Country working in </th><td style="font-size:20px">&&country&&</td></tr>
                                     <tr><th style="background-color:silver;font-size:20px">LoB</th><td style="font-size:20px">&&lob&&</td></tr>
                                     <tr><th style="background-color:silver;font-size:20px">Role on Project</th><td style="font-size:20px">&&role&&</td></tr>
@@ -94,6 +95,7 @@ class personRecord extends DbRecord
     private static $pesEmailPatterns = array(
         '/&&name&&/',
         '/&&email&&/',
+        '/&&notesid&&/',
         '/&&country&&/',
         '/&&lob&&/',
         '/&&role&&/',
@@ -429,6 +431,7 @@ class personRecord extends DbRecord
         $now = new \DateTime();
         $replacements = array($this->FIRST_NAME . " " . $this->LAST_NAME,
                               $this->EMAIL_ADDRESS,
+                              $this->NOTES_ID,
                               $this->COUNTRY,
                               $this->LOB,
                               $this->ROLE_ON_THE_ACCOUNT,
