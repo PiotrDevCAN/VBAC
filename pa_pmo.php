@@ -3,7 +3,7 @@ use vbac\personRecord;
 
 ?>
 <div class='container'>
-<h1>PMO Portal</h1>
+<h1>vBAC Portal</h1>
 </div>
 
 <div class='container-fluid'>
