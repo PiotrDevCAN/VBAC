@@ -123,7 +123,7 @@ class personTable extends DbTable {
 
         $row = db2_fetch_assoc($resultSet);
 
-        $flagValue = strtoupper(substr($row['FM_MANAGER_FLAG'],0));
+        $flagValue = strtoupper(substr(trim($row['FM_MANAGER_FLAG']),0));
 
         return $flagValue=='Y';
 
