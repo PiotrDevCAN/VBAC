@@ -50,6 +50,7 @@ class personRecord extends DbRecord
     protected $PES_STATUS_DETAILS;
     protected $PES_STATUS;
 
+
     protected $REVALIDATION_DATE_FIELD;
     protected $REVALIDATION_STATUS;
 
@@ -57,6 +58,8 @@ class personRecord extends DbRecord
     protected $CBN_STATUS;
 
     protected $WORK_STREAM;
+    protected $CONTRACTOR_ID_REQUIRED;
+
 
     protected $person_bio;
 
@@ -117,12 +120,16 @@ class personRecord extends DbRecord
     const PES_STATUS_REMOVED   = 'Removed';
 
 
-
     function displayBoardingForm($mode){
         $loader = new Loader();
         $workstreamTable = new staticDataWorkstreamTable(allTables::$STATIC_WORKSTREAMS);
         //$allManagers = array('bob Mgr'=>'bob@email.com','cheryl mgr'=>'cheryl@email.com','cheryl two'=>'cheryl2@email.com');
-        $allManagers = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON, " FM_MANAGER_FLAG='Y' ");
+        $allEmployeeTypes = $loader->load('EMPLOYEE_TYPE',allTables::$PERSON);
+
+        $isFM = personTable::isManager($_SESSION['ssoEmail']);
+        $fmPredicate = $isFM ? " UPPER(EMAIL_ADDRESS)='" . db2_escape_string(trim(strtoupper($_SESSION['ssoEmail']))) . "'  AND UPPER(LEFT(FM_MANAGER_FLAG,1))='Y'  " : " UPPER(LEFT(FM_MANAGER_FLAG,1))='Y' "; // FM Can only board people to themselves.
+        $fmPredicate = $mode==FormClass::$modeEDIT ? "( " . $fmPredicate . " ) OR ( CNUM='" . db2_escape_string($this->FM_CNUM) . "' ) " : $fmPredicate;
+        $allManagers =  $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON, $fmPredicate);
         $allManagers = empty($allManagers)? array('VBAC00001'=>'Dummy Fm') : $allManagers;
         $userDetails = $loader->loadIndexed('CNUM','EMAIL_ADDRESS',allTables::$PERSON, " EMAIL_ADDRESS='" . db2_escape_string($GLOBALS['ltcuser']['mail']) . "' ");
         $userCnum = isset($userDetails[$GLOBALS['ltcuser']['mail']]) ? $userDetails[$GLOBALS['ltcuser']['mail']] : false;
@@ -131,33 +138,36 @@ class personRecord extends DbRecord
         JavaScript::buildSelectArray($allWorkstream, 'workStream');
         ?>
         <form id='boardingForm'  class="form-horizontal" onsubmit="return false;">
-		<div class='col-sm-2'></div>
-
-		<div class='col-sm-8'>
         <div class="panel panel-default">
   		<div class="panel-heading">
     	<h3 class="panel-title">Employee Details</h3>
   		</div>
   		<div class="panel-body">
-		<div class="form-group">
-        <div class="col-sm-6">
+			<div class="form-group">
+        	<div class="col-sm-6">
 
-        <input class="form-control" id="person_name" name="person_name" value="" required type="text" placeholder='Start typing name/serial/email' >
+        <?php
+        $notEditable = $mode==FormClass::$modeEDIT ? ' disabled ' : null;
+        $displayForEdit = $notEditable ? 'hidden' : null;
+        $onlyEditable = $mode==FormClass::$modeEDIT ? 'text' : 'hidden'; // Some fields the user can edit - but not see/set the first time.
+        ?>
+
+        <input class="form-control" id="person_name" name="person_name" value="<?=$this->FIRST_NAME . " " . $this->LAST_NAME?>" required type="text" placeholder='Start typing name/serial/email'  <?=$notEditable?>>
 
         </div>
         <div class='col-sm-6'>
-        <input class='form-control' id='person_serial' name='CNUM' value='<?=$this->CNUM?>' required type='text' disabled='disabled' placeholder='Serial Number' >
+        <input class='form-control' id='person_serial' name='CNUM' value='<?=$this->CNUM?>' required type='text' disabled='disabled' placeholder='Serial Number' <?=$notEditable?> >
         </div>
         </div>
 
-    <div id='personDetails'  display='hidden'>
+    	<div id='personDetails'  display='<?=$displayForEdit?>'>
         <div class='form-group' >
         <div class='col-sm-6'>
-        <input class='form-control' id='person_notesid' name='NOTES_ID' value='' required type='text' disabled='disabled' placeholder="Notesid">
+        <input class='form-control' id='person_notesid' name='NOTES_ID' value='<?=$this->NOTES_ID?>' required type='text' disabled='disabled' placeholder="Notesid" <?=$notEditable?>>
         </div>
 
         <div class='col-sm-6'>
-        <input class='form-control' id='person_intranet' name='EMAIL_ADDRESS' value='' required type='text' disabled='disabled' placeholder="Intranet">
+        <input class='form-control' id='person_intranet' name='EMAIL_ADDRESS' value='<?=$this->EMAIL_ADDRESS?>' required type='text' disabled='disabled' placeholder="Intranet" <?=$notEditable?>>
         </div>
         </div>
 
@@ -165,21 +175,32 @@ class personRecord extends DbRecord
         <div class='col-sm-12'>
         <input class='form-control' id='person_bio' name='person_bio' value='' required type='text' disabled='disabled' placeholder="Bio">
         <input id='person_uid' name='person_uid' value='' type='hidden'  required >
-        <input id='person_is_mgr' name='FM_MANAGER_FLAG' value=''  type='hidden'  required >
-        <input id='person_first_name' name='FIRST_NAME' value=''  type='hidden'  required >
-        <input id='person_last_name' name='LAST_NAME' value=''  type='hidden'  required >
-        <input id='person_phone' name='PHONE_NUMBER' value=''  type='hidden'  required >
-        <input id='person_employee_type' name='EMPLOYEE_TYPE' value=''  type='hidden'  required >
+
+
+    	<div class='form-group' >
+        	<div class='col-sm-6'>
+          	<input id='person_is_mgr' name='FM_MANAGER_FLAG' value='<?=$this->FM_MANAGER_FLAG?>'  type='<?=$onlyEditable?>'  required >
+         	</div>
+
+        <div class='col-sm-6'>
+ 			<input id='person_employee_type' name='EMPLOYEE_TYPE' value='<?=$this->EMPLOYEE_TYPE?>'  type='<?=$onlyEditable?>'  required >
+        </div>
+     </div>
+        <input id='person_first_name' name='FIRST_NAME' value='<?=$this->FIRST_NAME?>'  type='hidden'  required <?=$notEditable?>>
+        <input id='person_last_name' name='LAST_NAME' value='<?=$this->LAST_NAME?>'  type='hidden'  required <?=$notEditable?>>
+
+
         <input id='person_ibm_location' name='IBM_BASE_LOCATION' value=''  type='hidden'  required >
         <input id='person_country' name='COUNTRY' value=''  type='hidden'  required >
 
+        </div>
         </div>
         </div>
 
 		<div class='form-group' >
         <div class='col-sm-6'>
         	<select class='form-control select select2' id='person_contractor_id'
-                  	          name='person_contractor_id'
+                  	          name='CONTRACTOR_ID_REQUIRED'
                   	          required='required'
                 >
             	<option value='no'>No Contractor Id Required</option>
@@ -187,7 +208,7 @@ class personRecord extends DbRecord
             	</select>
        </div>
        </div>
-	</div>
+
 </div>
 </div>
 
@@ -208,6 +229,7 @@ class personRecord extends DbRecord
                 foreach ($allManagers as $mgrCnum => $mgrNotesid){
                     echo"<option value='" . $mgrCnum . "' ";
                     echo $userCnum==$mgrCnum ? " selected " : null;
+                    echo $mgrCnum==$this->FM_CNUM ? " selected " : null;
                     echo ">" . $mgrNotesid . "</option>";
                 };
                 ?>
@@ -229,10 +251,10 @@ class personRecord extends DbRecord
 
          </div>
         <div class='col-sm-6'>
-            <div class="radio">
-  				<label><input type="radio" name="CTB_RTB" required value='CTB'>CTB</label>
-  				<label><input type="radio" name="CTB_RTB" required value='RTB'>RTB</label>
-  				<label><input type="radio" name="CTB_RTB" required value='Other'>Other</label>
+             <div class="radio">
+  				<label><input type="radio" name="CTB_RTB" required value='CTB' <?=substr($this->CTB_RTB,0,3)=='CTB'? 'checked' : null ?>>CTB</label>
+  				<label><input type="radio" name="CTB_RTB" required value='RTB' <?=substr($this->CTB_RTB,0,3)=='RTB'? 'checked' : null ?>>RTB</label>
+  				<label><input type="radio" name="CTB_RTB" required value='Other' <?=substr($this->CTB_RTB,0,5)=='Other'? 'checked' : null ?>>Other</label>
 			</div>
         </div>
      </div>
@@ -251,7 +273,7 @@ class personRecord extends DbRecord
                 <option value=''>Select Lob</option>
                 <?php
                 foreach (self::$lobValue as $lob) {
-                    ?><option value='<?=$lob?>'><?=$lob?></option><?php
+                    ?><option value='<?=$lob?>'  <?=trim($this->LOB)==trim($lob)? ' selected ' : null ?>   ><?=$lob?></option><?php
                 }
                 ?>
             </select>
@@ -262,10 +284,22 @@ class personRecord extends DbRecord
     <div class='form-group' >
         <div class='col-sm-6'>
             <div class="radio">
-  			<label><input type="radio" name="TT_BAU" required class='accountOrganisation' value='T&T'>T&T</label>
-  			<label><input type="radio" name="TT_BAU" required class='accountOrganisation' value='BAU'>BAU</label>
+  			<label><input type="radio" name="TT_BAU" required class='accountOrganisation' value='T&T' <?=substr($this->TT_BAU,0,3)=='T&T'? 'checked' : null ?>>T&T</label>
+  			<label><input type="radio" name="TT_BAU" required class='accountOrganisation' value='BAU' <?=substr($this->TT_BAU,0,3)=='BAU'? 'checked' : null ?>>BAU</label>
 			</div>
         </div>
+
+        <?php
+        if(substr($this->TT_BAU,0,3)=='T&T'){
+            ?>
+            <script>
+            $(document).on('ready', function(){
+            	$(document).click($('.accountOrganisation')[0]);
+            });
+            </script>
+            <?php
+        }
+        ?>
 
         <div class='col-sm-6'>
         	<select class='form-control select select2' id='work_stream'
@@ -296,13 +330,10 @@ class personRecord extends DbRecord
 		<?php
 	$allButtons = null;
 	$submitButton = $mode==FormClass::$modeEDIT ?  $this->formButton('submit','Submit','updateBoarding',null,'Update','btn-primary glyphicon glyphicon-refresh') :  $this->formButton('submit','Submit','saveBoarding',null,'Submit','btn-primary glyphicon glyphicon-refresh');
-	$pesButton    = $mode==FormClass::$modeEDIT ?  $this->formButton('button','initiatePes','initiatePes','enabled','Initiate PES','btn-primary btnPesInitiate glyphicon glyphicon-refresh') :  $this->formButton('button','initiatePes','initiatePes','disabled','Initiate PES','btn-primary btnPesInitiate glyphicon glyphicon-refresh');
+	$pesButton    = $mode==FormClass::$modeEDIT ?  null :  $this->formButton('button','initiatePes','initiatePes','disabled','Initiate PES','btn-primary btnPesInitiate glyphicon glyphicon-refresh');
   	$allButtons[] = $submitButton;
   	$allButtons[] = $pesButton;
 	$this->formBlueButtons($allButtons);
-	?>
-	</div>
-	<?php
 	$this->formHiddenInput('requestor',$GLOBALS['ltcuser']['mail'],'requestor');
 	?>
 
@@ -424,6 +455,40 @@ class personRecord extends DbRecord
 
     }
 
+    function editPersonModal(){
+        ?>
+    	 <!-- Modal -->
+		<div id="editPersonModal" class="modal fade" role="dialog">
+  			<div class="modal-dialog">
+    			<div class="modal-content">
+    			<div class="modal-header">
+	   				<button type="button" class="close" data-dismiss="modal">&times;</button>
+      				<h4 class="modal-title">Edit Person Record</h4>
+        		</div>
+   		    	<div class="modal-body" >
+   		    	</div>
+   		    	<div class='modal-footer'>
+   		    	</div>
+      			</div>
+    		</div>
+  		</div>
+		<?php
+    }
+
+
+    function editPersonModalBody(){
+        ?>
+        <div class='container-fluid'>
+        <?php
+        $this->displayBoardingForm(FormClass::$modeEDIT);
+        ?>
+        </div>
+        <?php
+    }
+
+
+
+
 
     function sendPesRequest(){
         $loader = new Loader();
@@ -450,6 +515,4 @@ class personRecord extends DbRecord
         $success = $table->setPesRequested($this->CNUM, $_SESSION['ssoEmail']);
         return $success;
     }
-
-
 }

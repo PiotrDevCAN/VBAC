@@ -27,6 +27,15 @@ class personTable extends DbTable {
 
     function addButtons($row){
 
+        // Notesid
+        $notesId = trim($row[personRecord::FIELD_NOTES_ID]);
+        $row[personRecord::FIELD_NOTES_ID]  = "<button type='button' class='btn btn-default btn-xs btnEditPerson' aria-label='Left Align' ";
+        $row[personRecord::FIELD_NOTES_ID] .= "data-cnum='" .trim($row[personRecord::FIELD_CNUM]) . "'";
+        $row[personRecord::FIELD_NOTES_ID] .= " > ";
+        $row[personRecord::FIELD_NOTES_ID] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
+        $row[personRecord::FIELD_NOTES_ID] .= " </button> ";
+        $row[personRecord::FIELD_NOTES_ID] .= $notesId;
+
         switch (trim($row[personRecord::FIELD_PES_STATUS])) {
             case null:
                 $row[personRecord::FIELD_PES_STATUS]  = "<button type='button' class='btn btn-default btn-xs btnPesInitiate accessRestrict accessPmo accessFm' ";
@@ -54,6 +63,14 @@ class personTable extends DbTable {
                 $row[personRecord::FIELD_PES_STATUS] .= "</button>&nbsp;";
                 $row[personRecord::FIELD_PES_STATUS] .= $status;
             break;
+            case $row[personRecord::FIELD_NOTES_ID]:
+                $notesId = trim($row[personRecord::FIELD_NOTES_ID]);
+                $row[personRecord::FIELD_NOTES_ID]  = "<button type='button' class='btn btn-default btn-xs btnEditPerson' aria-label='Left Align' ";
+                $row[personRecord::FIELD_NOTES_ID] .= "data-cnum='" .trim($row[personRecord::FIELD_CNUM]) . "'";
+                $row[personRecord::FIELD_NOTES_ID] .= " > ";
+                $row[personRecord::FIELD_NOTES_ID] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
+                $row[personRecord::FIELD_NOTES_ID] .= $notesId;
+                break;
             default:
 
             break;
@@ -107,6 +124,10 @@ class personTable extends DbTable {
 
 
     static function isManager($emailAddress){
+        if(isset($_SESSION['isFm'])) {
+            return $_SESSION['isFm'];
+        }
+
         if (empty($emailAddress)) {
             return false;
         }
@@ -125,7 +146,9 @@ class personTable extends DbTable {
 
         $flagValue = strtoupper(substr(trim($row['FM_MANAGER_FLAG']),0));
 
-        return $flagValue=='Y';
+        $_SESSION['isFm'] = ($flagValue=='Y');
+
+        return $_SESSION['isFm'];
 
 
 

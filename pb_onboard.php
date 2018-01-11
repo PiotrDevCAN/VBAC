@@ -24,16 +24,14 @@ $person->savingBoardingDetailsModal();
 ?>
 <script type="text/javascript">
 $(document).ready(function() {
-//  	$('#tt_bau').select2();
- 	$('#work_stream').select2();
- 	$('#person_fm_mgr').select2();
-//  	$('#account_organisation').select2();
 	var person = new personRecord();
-    person.listenForName();
+    person.initialisePersonFormSelect2();
+	person.listenForName();
     person.listenForSerial();
     person.listenForSaveBoarding();
     person.listenForAccountOrganisation();
     person.listenForInitiatePesFromBoarding();
+
 });
 
 $(document).ready(function(){

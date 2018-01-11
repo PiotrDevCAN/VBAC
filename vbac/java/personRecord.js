@@ -208,6 +208,7 @@ function personRecord() {
 	},
 
 	this.listenForAccountOrganisation = function(){
+		// var workStream is created in PHP in the personRecord class and loaded to javascript using Javascript::buildSelectArray
 		$(document).on('click','.accountOrganisation', function(){
 			var accountOrganisation = $(this).val();
 			var nullFirstEntry  = [''];
@@ -216,6 +217,7 @@ function personRecord() {
 					var workStreamValues = nullFirstEntry.concat(workStream[i+1]);
 				}
 			}
+			console.log($('#work_stream'));
 			$('#work_stream').select2('destroy');
 			$('#work_stream').html('');
 			if(typeof(workStreamValues)!='undefined'){
@@ -419,6 +421,44 @@ function personRecord() {
 	    });
 	},
 
+	this.listenForEditPerson = function(){
+		$(document).on('click','.btnEditPerson', function(e){
+    		   var cnum = ($(e.target).data('cnum'));
+    		   var spinner =  '<div id="overlay"><i class="fa fa-spinner fa-spin spin-big"></i></div>';
+    		   $('#editPersonModal .modal-body').html(spinner);
+    		   $('#editPersonModal').modal('show');
+    		   $.ajax({
+    		    	url: "ajax/getEditPersonModalBody.php",
+    		    	data : {cnum:cnum},
+    		    	type: 'POST',
+    		    	success: function(result){
+    		    		var resultObj = JSON.parse(result);
+    		    		console.log(resultObj);
+       		    		if(!resultObj.messages){
+        		    		$('#editPersonModal .modal-body').html(resultObj.body);
+        		    		var person = new personRecord();
+        		    	    person.initialisePersonFormSelect2();
+        		    		var accountOrganisation = resultObj.accountOrganisation;
+        		    		console.log(accountOrganisation);
+    		    		    console.log($('.accountOrganisation'));
+    		    		    console.log($('.accountOrganisation')[0]);
+        		    		if(accountOrganisation=='T&T'){
+        		    			$('.accountOrganisation')[0].click();
+        		    		    console.log($('.accountOrganisation'));
+        		    		    console.log($('.accountOrganisation')[0]);
+        		    		}
+        		    		if(accountOrganisation=='BAU'){
+        		    			$('.accountOrganisation')[1].click();
+        		    		}
+    		    		} else {
+        		    		$('#editPersonModal .modal-body').html(resultObj.messages);
+    		    		}
+
+    		    	}
+    		    });
+			});
+	},
+
 	this.listenForEditPesStatus = function(){
 		$(document).on('click','.btnPesStatus', function(e){
     		   var cnum = ($(e.target).data('cnum'));
@@ -460,6 +500,11 @@ function personRecord() {
 				};
 				return false;
 			});
+	},
+
+	this.initialisePersonFormSelect2 = function(){
+		console.log($('.select2'));
+	 	$('.select2').select2();
 	}
 
 

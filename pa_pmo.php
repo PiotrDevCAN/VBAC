@@ -20,6 +20,7 @@ use vbac\personRecord;
 $person = new personRecord();
 $person->amendPesStatusModal();
 $person->savingBoardingDetailsModal();
+$person->editPersonModal();
 ?>
 
 
@@ -33,4 +34,6 @@ person.listenForReportReset();
 person.listenForEditPesStatus();
 person.listenForSavePesStatus();
 person.listenForInitiatePesFromPortal();
+person.listenForEditPerson();
+person.listenForAccountOrganisation();
 </script>
