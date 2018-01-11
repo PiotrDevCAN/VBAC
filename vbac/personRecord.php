@@ -265,7 +265,7 @@ class personRecord extends DbRecord
 
          </div>
         <div class='col-sm-6'>
-        	<select class='form-control select select2' id='lob'
+        	   	<select class='form-control select select2' id='lob'
                   	          name='LOB'
                   	          required
                   	          placeholder='Select Lob'
@@ -302,6 +302,7 @@ class personRecord extends DbRecord
         ?>
 
         <div class='col-sm-6'>
+        	<input id='currentWorkstream' value='<?=$this->WORK_STREAM?>' type='hidden'>
         	<select class='form-control select select2' id='work_stream'
                   	          name='WORK_STREAM'
                   	          disabled

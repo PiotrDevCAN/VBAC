@@ -235,6 +235,16 @@ function personRecord() {
 				.attr('disabled',true)
 				.attr('required',false);
 			};
+
+			var currentWorkstream = $('#currentWorkstream').val();
+			console.log(currentWorkstream);
+
+			if(currentWorkstream!=''){
+				console.log('changing to' + currentWorkstream);
+				$('#work_stream').val(currentWorkstream); // Select the option with a value of currentWorkstream
+				$('#work_stream').trigger('change');
+			}
+
 		});
 	},
 
