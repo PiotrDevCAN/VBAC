@@ -150,6 +150,7 @@ class personRecord extends DbRecord
         $notEditable = $mode==FormClass::$modeEDIT ? ' disabled ' : null;
         $displayForEdit = $notEditable ? 'hidden' : null;
         $onlyEditable = $mode==FormClass::$modeEDIT ? 'text' : 'hidden'; // Some fields the user can edit - but not see/set the first time.
+        $hideDivFromEdit = $mode==FormClass::$modeEDIT ? ' style="display: none;"  ' : null; //Some fields we don't show on the edit screen.
         ?>
 
         <input class="form-control" id="person_name" name="person_name" value="<?=$this->FIRST_NAME . " " . $this->LAST_NAME?>" required type="text" placeholder='Start typing name/serial/email'  <?=$notEditable?>>
@@ -172,39 +173,33 @@ class personRecord extends DbRecord
         </div>
 
         <div class='form-group' >
-        <div class='col-sm-12'>
+        <div class='col-sm-12' <?=$hideDivFromEdit?>>
         <input class='form-control' id='person_bio' name='person_bio' value='' required type='text' disabled='disabled' placeholder="Bio">
         <input id='person_uid' name='person_uid' value='' type='hidden'  required >
 
 
-    	<div class='form-group' >
-        	<div class='col-sm-6'>
-          	<input id='person_is_mgr' name='FM_MANAGER_FLAG' value='<?=$this->FM_MANAGER_FLAG?>'  type='<?=$onlyEditable?>'  required >
-         	</div>
+       	<input id='person_is_mgr' name='FM_MANAGER_FLAG' value='<?=$this->FM_MANAGER_FLAG?>'  type='hidden'  required >
+		<input id='person_employee_type' name='EMPLOYEE_TYPE' value='<?=$this->EMPLOYEE_TYPE?>'  type='Hidden'  required >
 
-        <div class='col-sm-6'>
- 			<input id='person_employee_type' name='EMPLOYEE_TYPE' value='<?=$this->EMPLOYEE_TYPE?>'  type='<?=$onlyEditable?>'  required >
-        </div>
-     </div>
         <input id='person_first_name' name='FIRST_NAME' value='<?=$this->FIRST_NAME?>'  type='hidden'  required <?=$notEditable?>>
         <input id='person_last_name' name='LAST_NAME' value='<?=$this->LAST_NAME?>'  type='hidden'  required <?=$notEditable?>>
 
 
-        <input id='person_ibm_location' name='IBM_BASE_LOCATION' value=''  type='hidden'  required >
-        <input id='person_country' name='COUNTRY' value=''  type='hidden'  required >
+        <input id='person_ibm_location' name='IBM_BASE_LOCATION' value='<?=$this->IBM_BASE_LOCATION?>'  type='hidden'  required >
+        <input id='person_country' name='COUNTRY' value='<?=$this->COUNTRY?>'  type='hidden'  required >
 
         </div>
         </div>
         </div>
 
 		<div class='form-group' >
-        <div class='col-sm-6'>
+        <div class='col-sm-6' <?=$hideDivFromEdit?>>
         	<select class='form-control select select2' id='person_contractor_id'
                   	          name='CONTRACTOR_ID_REQUIRED'
                   	          required='required'
                 >
-            	<option value='no'>No Contractor Id Required</option>
-            	<option value='yes'>Contractor Id is Required</option>
+            	<option value='no' <?=strtoupper(substr($this->CONTRACTOR_ID_REQUIRED,0,1))=='N' ? ' selected ' : null;?>>No Contractor Id Required</option>
+            	<option value='yes' <?=strtoupper(substr($this->CONTRACTOR_ID_REQUIRED,0,1))=='Y' ? ' selected ' : null;?>>Contractor Id is Required</option>
             	</select>
        </div>
        </div>
@@ -247,7 +242,7 @@ class personRecord extends DbRecord
 
     <div class='form-group' >
         <div class='col-sm-6'>
-          <input class="form-control" id="open_seat" name="OPEN_SEAT_NUMBER" value="<?=$this->OPEN_SEAT_NUMBER?>" type="text" placeholder='Open Seat' >
+          <input class="form-control" id="open_seat" name="OPEN_SEAT_NUMBER" value="<?=$this->OPEN_SEAT_NUMBER?>" type="text" placeholder='Open Seat' data-toggle='tooltip' title='Open Seat'>
 
          </div>
         <div class='col-sm-6'>
@@ -316,11 +311,11 @@ class personRecord extends DbRecord
 
     <div class='form-group' >
         <div class='col-sm-6'>
-          <input class="form-control" id="start_date" name="START_DATE" value="<?=$this->START_DATE?>" required="required" type="text" placeholder='Start Date' >
+          <input class="form-control" id="start_date" name="START_DATE" value="<?=$this->START_DATE?>" required="required" type="text" placeholder='Start Date' data-toggle='tooltip' title='Start Date'>
            </div>
 
         <div class='col-sm-6'>
-          <input class="form-control" id="end_date" name="PROJECTED_END_DATE" value="<?=$this->PROJECTED_END_DATE?>"  type="text" placeholder='End Date (if known)' >
+          <input class="form-control" id="end_date" name="PROJECTED_END_DATE" value="<?=$this->PROJECTED_END_DATE?>"  type="text" placeholder='End Date (if known)' data-toggle='tooltip' title='End Date'>
 
            </div>
          </div>
