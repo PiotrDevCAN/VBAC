@@ -9,6 +9,7 @@ function personRecord() {
 	var table;
 	var dataTableElements;
 	var currentXmlDoc;
+	var spinner =  '<div id="overlay"><i class="fa fa-spinner fa-spin spin-big"></i></div>';
 
 	this.init = function(){
 		console.log('+++ Function +++ personRecord.init');
@@ -360,8 +361,10 @@ function personRecord() {
 
 	this.listenForReportPes = function(){
 		$(document).on('click','#reportPes', function(e){
+			console.log(e);
 			personRecord.table.columns().visible(false,false);
 			personRecord.table.columns([5,21,22,23,24,25]).visible(true);
+			console.log(personRecord.table);
 			personRecord.table.order([21,'desc'],[5,"asc"]).draw();
 			});
 	},
@@ -373,6 +376,18 @@ function personRecord() {
 			personRecord.table.columns.draw();
 			});
 	},
+
+	this.listenForReportEdit = function(){
+		$(document).on('click','#reportEdit', function(e){
+			console.log(e);
+			personRecord.table.columns().visible(false,false);
+			personRecord.table.columns([0,1,5,9,25]).visible(true);
+			personRecord.table.order([5,'asc']).draw();
+			console.log(personRecord.table);
+			});
+	},
+
+
 
 
 	this.listenForReportReset = function(){
@@ -473,16 +488,43 @@ function personRecord() {
 
 	this.listenForToggleFmFlag = function(){
 		$(document).on('click','.btnSetFmFlag', function(e){
-			console.log('initiatePes PES from Portal');
-			console.log(this);
 			var cnum = $(this).data('cnum');
-			var flag = $(this).data('flag');
+			var notesid = $(this).data('notesid');
+			var flag = $(this).data('fmflag');
+			var message = "<p>For:<b>" + notesid + "</b></p>";
+			    message += "<p>To:<b>" + flag + "</b></p>";
+			    message += "<input id='cFmCnum' value='" + cnum + "' type='hidden' >";
+			    message += "<input id='cFmNotesid' value='" + notesid + "'  type='hidden' >";
+			    message += "<input id='cFmFlag' value='" + flag + "'  type='hidden' >";
 
-
-
-
+			$('#confirmChangeFmFlagModal .modal-body').html(message);
+			$('#confirmChangeFmFlagModal').modal('show');
 		});
 	},
+
+	this.listenForConfirmFmFlag = function(){
+		$(document).on('click','.confirmFmStatusChange', function(e){
+			var formData = $().serialize();
+			$('#confirmChangeFmFlagModal .modal-body').html(personRecord.spinner);
+			console.log(formData);
+ 		    $.ajax({
+		    	url: "ajax/changeFmFlag.php",
+		    	data : {formData},
+		    	type: 'POST',
+		    	success: function(result){
+		    		var resultObj = JSON.parse(result);
+		    		console.log(resultObj);
+  		    		if(!resultObj.messages){
+  		    			$('#confirmChangeFmFlagModal .modal-body').html(resultObj.body);
+		    		} else {
+		    			$('#confirmChangeFmFlagModal .modal-body').html(resultObj.messages);
+		    		}
+		    	}
+		    });
+		});
+	},
+
+
 
 	this.listenForEditPesStatus = function(){
 		$(document).on('click','.btnPesStatus', function(e){

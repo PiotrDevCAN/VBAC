@@ -483,6 +483,36 @@ class personRecord extends DbRecord
         <?php
     }
 
+    function confirmChangeFmFlagModal(){
+        ?>
+    	 <!-- Modal -->
+		<div id="confirmChangeFmFlagModal" class="modal fade" role="dialog">
+  			<div class="modal-dialog">
+    			<div class="modal-content">
+    			<div class="modal-header">
+	   				<button type="button" class="close" data-dismiss="modal">&times;</button>
+      				<h4 class="modal-title">Confirm change of FM Flag</h4>
+        		</div>
+
+   		    	<form id='confirmFmFlagChange'>
+   		    	<div class="modal-body" >
+   		    	</div>
+   		    	<div class='modal-footer'>
+   		    	<?php
+   		    	$allButtons = null;
+      			$submitButton = $this->formButton('submit','Submit','confirmFmStatusChange',null,'Submit','btn-primary');
+      			$allButtons[] = $submitButton;
+      			$this->formBlueButtons($allButtons);
+      			?>
+       			<button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
+   		    	</div>
+   		    	</form>
+      			</div>
+    		</div>
+  		</div>
+		<?php
+    }
+
 
 
 

@@ -10,6 +10,7 @@ use vbac\personRecord;
 <h3>Person Database</h3>
 
 <button id='reportPes' class='btn btn-primary btn-sm '>PES Report</button>
+<button id='reportEdit' class='btn btn-primary btn-sm '>Edit Mode</button>
 <button id='reportReset' class='btn btn-primary btn-sm '>Reset</button>
 
 <div id='personDatabaseDiv'>
@@ -21,21 +22,24 @@ $person = new personRecord();
 $person->amendPesStatusModal();
 $person->savingBoardingDetailsModal();
 $person->editPersonModal();
+$person->confirmChangeFmFlagModal();
 ?>
 
 
 
 <script>
 $(document).ready(function(){
-	console.log('ready');
 	var person = new personRecord();
 	person.initialisePersonTable();
 	person.listenForReportPes();
+	person.listenForReportEdit();
 	person.listenForReportReset();
 	person.listenForEditPesStatus();
 	person.listenForSavePesStatus();
 	person.listenForInitiatePesFromPortal();
 	person.listenForEditPerson();
 	person.listenForAccountOrganisation();
+	person.listenForToggleFmFlag();
+	person.listenForConfirmFmFlag();
 });
 </script>

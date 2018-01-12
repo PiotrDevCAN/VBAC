@@ -26,20 +26,26 @@ class personTable extends DbTable {
     }
 
     function addButtons($row){
+        // save some fields before we change the,
+        $notesId = trim($row[personRecord::FIELD_NOTES_ID]);
+        $cnum = trim($row[personRecord::FIELD_CNUM]);
+        $flag = $row[personRecord::FIELD_FM_FLAG];
+        $status = trim($row[personRecord::FIELD_PES_STATUS]);
         // FM_FLAG
         if($_SESSION['isPmo'] || $_SESSION['isCdi']){
-            $flag = $row[personRecord::FIELD_FM_FLAG];
             if(strtoupper(substr($flag,0,1))=='N' || empty($flag)){
                 $row[personRecord::FIELD_FM_FLAG]  = "<button type='button' class='btn btn-default btn-xs btnSetFmFlag' aria-label='Left Align' ";
-                $row[personRecord::FIELD_FM_FLAG] .= "data-cnum='" .trim($row[personRecord::FIELD_CNUM]) . "'";
-                $row[personRecord::FIELD_FM_FLAG] .= "data-fMFlag='Yes' ";
+                $row[personRecord::FIELD_FM_FLAG] .= "data-cnum='" .$cnum . "' ";
+                $row[personRecord::FIELD_FM_FLAG] .= "data-notesid='" .$notesId . "' ";
+                $row[personRecord::FIELD_FM_FLAG] .= "data-fmflag='Yes' ";
                 $row[personRecord::FIELD_FM_FLAG] .= " > ";
                 $row[personRecord::FIELD_FM_FLAG] .= "<span class='glyphicon glyphicon-ok ' aria-hidden='true'></span>";
                 $row[personRecord::FIELD_FM_FLAG] .= " </button> ";
             } elseif (strtoupper(substr($flag,0,1)=='Y')){
                 $row[personRecord::FIELD_FM_FLAG]  = "<button type='button' class='btn btn-default btn-xs btnSetFmFlag' aria-label='Left Align' ";
-                $row[personRecord::FIELD_FM_FLAG] .= "data-cnum='" .trim($row[personRecord::FIELD_CNUM]) . "'";
-                $row[personRecord::FIELD_FM_FLAG] .= "data-fMFlag='No' ";
+                $row[personRecord::FIELD_FM_FLAG] .= "data-cnum='" .$cnum . "' ";
+                $row[personRecord::FIELD_FM_FLAG] .= "data-notesid='" .$notesId . "' ";
+                $row[personRecord::FIELD_FM_FLAG] .= "data-fmflag='No' ";
                 $row[personRecord::FIELD_FM_FLAG] .= " > ";
                 $row[personRecord::FIELD_FM_FLAG] .= "<span class='glyphicon glyphicon-remove ' aria-hidden='true'></span>";
                 $row[personRecord::FIELD_FM_FLAG] .= " </button> ";
@@ -49,9 +55,9 @@ class personTable extends DbTable {
 
 
         // Notesid
-        $notesId = trim($row[personRecord::FIELD_NOTES_ID]);
+
         $row[personRecord::FIELD_NOTES_ID]  = "<button type='button' class='btn btn-default btn-xs btnEditPerson' aria-label='Left Align' ";
-        $row[personRecord::FIELD_NOTES_ID] .= "data-cnum='" .trim($row[personRecord::FIELD_CNUM]) . "'";
+        $row[personRecord::FIELD_NOTES_ID] .= "data-cnum='" .$cnum . "'";
         $row[personRecord::FIELD_NOTES_ID] .= " > ";
         $row[personRecord::FIELD_NOTES_ID] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
         $row[personRecord::FIELD_NOTES_ID] .= " </button> ";
@@ -61,7 +67,7 @@ class personTable extends DbTable {
             case null:
                 $row[personRecord::FIELD_PES_STATUS]  = "<button type='button' class='btn btn-default btn-xs btnPesInitiate accessRestrict accessPmo accessFm' ";
                 $row[personRecord::FIELD_PES_STATUS]  .= "aria-label='Left Align' ";
-                $row[personRecord::FIELD_PES_STATUS] .= " data-cnum='" .trim($row[personRecord::FIELD_CNUM]) . "' ";
+                $row[personRecord::FIELD_PES_STATUS] .= " data-cnum='" .$cnum . "' ";
                 $row[personRecord::FIELD_PES_STATUS] .= " data-pesstatus='null' ";
                 $row[personRecord::FIELD_PES_STATUS] .= " > ";
                 $row[personRecord::FIELD_PES_STATUS] .= "<span class='glyphicon glyphicon-plane ' aria-hidden='true'></span>";
@@ -72,10 +78,9 @@ class personTable extends DbTable {
             case personRecord::PES_STATUS_FAILED;
             case personRecord::PES_STATUS_INITIATED;
             case personRecord::PES_STATUS_REMOVED;
-                $status = trim($row[personRecord::FIELD_PES_STATUS]);
                 $row[personRecord::FIELD_PES_STATUS]  = "<button type='button' class='btn btn-default btn-xs btnPesStatus' aria-label='Left Align' ";
-                $row[personRecord::FIELD_PES_STATUS] .= " data-cnum='" .trim($row[personRecord::FIELD_CNUM]) . "' ";
-                $row[personRecord::FIELD_PES_STATUS] .= " data-notesid='" .trim($row[personRecord::FIELD_NOTES_ID]) . "' ";
+                $row[personRecord::FIELD_PES_STATUS] .= " data-cnum='" .$cnum . "' ";
+                $row[personRecord::FIELD_PES_STATUS] .= " data-notesid='" . $notesId . "' ";
                 $row[personRecord::FIELD_PES_STATUS] .= " data-pesdaterequested='" .trim($row[personRecord::FIELD_PES_DATE_REQUESTED]) . "' ";
                 $row[personRecord::FIELD_PES_STATUS] .= " data-pesrequestor='" .trim($row[personRecord::FIELD_PES_REQUESTOR]) . "' ";
                 $row[personRecord::FIELD_PES_STATUS] .= " data-pesstatus='" .$status . "' ";
@@ -85,9 +90,8 @@ class personTable extends DbTable {
                 $row[personRecord::FIELD_PES_STATUS] .= $status;
             break;
             case $row[personRecord::FIELD_NOTES_ID]:
-                $notesId = trim($row[personRecord::FIELD_NOTES_ID]);
                 $row[personRecord::FIELD_NOTES_ID]  = "<button type='button' class='btn btn-default btn-xs btnEditPerson' aria-label='Left Align' ";
-                $row[personRecord::FIELD_NOTES_ID] .= "data-cnum='" .trim($row[personRecord::FIELD_CNUM]) . "'";
+                $row[personRecord::FIELD_NOTES_ID] .= "data-cnum='" .$cnum. "'";
                 $row[personRecord::FIELD_NOTES_ID] .= " > ";
                 $row[personRecord::FIELD_NOTES_ID] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
                 $row[personRecord::FIELD_NOTES_ID] .= $notesId;
@@ -141,6 +145,20 @@ class personTable extends DbTable {
        }
         return true;
 
+    }
+
+    function setFmFlag($cnum,$flag){
+        $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql .= " SET FM_MANAGER_FLAG='"  . db2_escape_string($flag) . "' ";
+        $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
+
+        $result = db2_exec($_SESSION['conn'], $sql);
+
+        if(!$result){
+            DbTable::displayErrorMessage($result, __CLASS__,__METHOD__, $sql);
+            return false;
+        }
+        return true;
     }
 
 
