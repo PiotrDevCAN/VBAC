@@ -26,14 +26,15 @@ $person->editPersonModal();
 
 
 <script>
-
-var person = new personRecord();
-person.initialisePersonTable();
-person.listenForReportPes();
-person.listenForReportReset();
-person.listenForEditPesStatus();
-person.listenForSavePesStatus();
-person.listenForInitiatePesFromPortal();
-person.listenForEditPerson();
-person.listenForAccountOrganisation();
+$(document.on('ready',function(){
+	var person = new personRecord();
+	person.initialisePersonTable();
+	person.listenForReportPes();
+	person.listenForReportReset();
+	person.listenForEditPesStatus();
+	person.listenForSavePesStatus();
+	person.listenForInitiatePesFromPortal();
+	person.listenForEditPerson();
+	person.listenForAccountOrganisation();
+});
 </script>
