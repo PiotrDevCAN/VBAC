@@ -71,7 +71,7 @@ $isPmo  = employee_in_group($_SESSION['pmoBg'],  $GLOBALS['ltcuser']['mail']) ? 
 $isUser = ".not('.accessUser')";
 
 // $isCdi   = stripos($_SERVER['environment'], 'dev') ? ".not('.accessCdi')"  : $isCdi;
-// $isPmo   = stripos($_SERVER['environment'], 'dev')  ? ".not('.accessPmo')" : $isPmo;
+$isPmo   = stripos($_SERVER['environment'], 'dev')  ? ".not('.accessPmo')" : $isPmo;
 
 $_SESSION['isFm']   = !empty($isFm)   ? true : false;
 $_SESSION['isCdi']  = !empty($isCdi)  ? true : false;
@@ -81,14 +81,6 @@ $_SESSION['isUser'] = !empty($isUser) ? true : false;
 $plannedOutagesId = str_replace(" ","_",$plannedOutagesLabel);
 ?>
 <script>
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-async function wait() {
-	  await sleep(2000);
-}
-
 
 $('.navbarMenuOption')<?=$isFm?><?=$isPmo?><?=$isCdi?><?=$isUser?>.remove();
 $('.navbarMenu').not(':has(li)').remove();

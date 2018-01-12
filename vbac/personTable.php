@@ -163,29 +163,42 @@ class personTable extends DbTable {
 
 
     static function isManager($emailAddress){
+
+        echo "<br/>" . __FILE__ . __LINE__;
+
         if(isset($_SESSION['isFm'])) {
+            echo "<br/>" . __FILE__ . __LINE__;
             return $_SESSION['isFm'];
         }
 
         if (empty($emailAddress)) {
+            echo "<br/>" . __FILE__ . __LINE__;
             return false;
         }
 
         $sql = " SELECT FM_MANAGER_FLAG FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE UPPER(EMAIL_ADDRESS) = '" . db2_escape_string(strtoupper($emailAddress)) . "' ";
 
+        echo "<br/>" . __FILE__ . __LINE__ . $sql;
+
         $resultSet = db2_exec($_SESSION['conn'], $sql);
 
         if(!$resultSet){
+            echo "<br/>" . __FILE__ . __LINE__;
             DbTable::displayErrorMessage($resultSet, __CLASS__, __METHOD__, $sql);
             return false;
         }
 
         $row = db2_fetch_assoc($resultSet);
+        echo "<br/>" . __FILE__ . __LINE__ . print_r($row,true);
 
         $flagValue = strtoupper(substr(trim($row['FM_MANAGER_FLAG']),0));
 
+        echo "<br/>" . __FILE__ . __LINE__ . var_dump($flagValue);
+
         $_SESSION['isFm'] = ($flagValue=='Y');
+
+        echo "<br/>" . __FILE__ . __LINE__ . var_dump($_SESSION['isFm']);
 
         return $_SESSION['isFm'];
     }
