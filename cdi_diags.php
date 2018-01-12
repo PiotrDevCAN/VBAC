@@ -1,6 +1,11 @@
 <?php
 use vbac\personTable;
 
+echo "<div class='container'>";
+
+
+echo "<h3>cdi_diags</h3>";
+
 unset($_SESSION['isFm']);
 unset($_SESSION['isCdi']);
 unset($_SESSION['isPmo']);
@@ -32,3 +37,4 @@ $_SESSION['isUser'] = !empty($isUser) ? true : false;
 <h3>Session</h3>
 <?=print_r($_SESSION)?>
 </pre>
+</div>
