@@ -166,15 +166,15 @@ class personTable extends DbTable {
 
         echo "<br/>" . __FILE__ . __LINE__;
 
-        if(isset($_SESSION['isFm'])) {
-            echo "<br/>" . __FILE__ . __LINE__;
-            return $_SESSION['isFm'];
-        }
+//         if(isset($_SESSION['isFm'])) {
+//             echo "<br/>" . __FILE__ . __LINE__;
+//             return $_SESSION['isFm'];
+//         }
 
-        if (empty($emailAddress)) {
-            echo "<br/>" . __FILE__ . __LINE__;
-            return false;
-        }
+//         if (empty($emailAddress)) {
+//             echo "<br/>" . __FILE__ . __LINE__;
+//             return false;
+//         }
 
         $sql = " SELECT FM_MANAGER_FLAG FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE UPPER(EMAIL_ADDRESS) = '" . db2_escape_string(strtoupper($emailAddress)) . "' ";

@@ -1,14 +1,17 @@
 <?php
 use vbac\personTable;
 
-do_auth($_SESSION['pmoBg']);
-
 unset($_SESSION['isFm']);
 unset($_SESSION['isCdi']);
 unset($_SESSION['isPmo']);
 unset($_SESSION['isUser']);
 
 $isFm   = personTable::isManager($GLOBALS['ltcuser']['mail'])                 ? ".not('.accessFm')" : null;
+var_dump($isFm);
+var_dump($GLOBALS['ltcuser']['mail']);
+
+
+
 $isCdi  = employee_in_group($_SESSION['cdiBg'],  $GLOBALS['ltcuser']['mail']) ? ".not('.accessCdi')" : null;
 //$isPmo  = employee_in_group($_SESSION['pmoBg'],  $GLOBALS['ltcuser']['mail']) ? ".not('.accessPmo')" : null;
 
