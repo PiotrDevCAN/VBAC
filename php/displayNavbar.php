@@ -70,14 +70,16 @@ $isCdi  = employee_in_group($_SESSION['cdiBg'],  $GLOBALS['ltcuser']['mail']) ? 
 $isPmo  = employee_in_group($_SESSION['pmoBg'],  $GLOBALS['ltcuser']['mail']) ? ".not('.accessPmo')" : null;
 $isUser = ".not('.accessUser')";
 
-$isFm    = stripos($_SERVER['environment'], 'dev') ? ".not('.accessFm')"   : $isFm;
 $isCdi   = stripos($_SERVER['environment'], 'dev') ? ".not('.accessCdi')"  : $isCdi;
 $isPmo   = stripos($_SERVER['environment'], 'dev')  ? ".not('.accessPmo')" : $isPmo;
 
-$_SESSION['isFm'] = $isFm;
-$_SESSION['isCdi'] = $isCdi;
-$_SESSION['isPmo'] = $isPmo;
-$_SESSION['isUser'] = $isUser;
+$_SESSION['isFm']   = !empty($isFm)   ? true : false;
+$_SESSION['isCdi']  = !empty($isCdi)  ? true : false;
+$_SESSION['isPmo']  = !empty($isPmo)  ? true : false;
+$_SESSION['isUser'] = !empty($isUser) ? true : false;
+
+
+
 
 $plannedOutagesId = str_replace(" ","_",$plannedOutagesLabel);
 ?>
