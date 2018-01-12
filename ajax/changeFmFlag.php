@@ -18,7 +18,6 @@ try {
     echo $e->getCode();
     echo $e->getMessage();
 }
-
 $messages = ob_get_clean();
 $response = array('body'=>$body,'messages'=>$messages);
 ob_clean();

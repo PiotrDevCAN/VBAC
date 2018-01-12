@@ -10,7 +10,7 @@ use vbac\personRecord;
 <h3>Person Database</h3>
 
 <button id='reportPes' class='btn btn-primary btn-sm '>PES Report</button>
-<button id='reportEdit' class='btn btn-primary btn-sm '>Edit Mode</button>
+<button id='reportAction' class='btn btn-primary btn-sm '>Action Mode</button>
 <button id='reportReset' class='btn btn-primary btn-sm '>Reset</button>
 
 <div id='personDatabaseDiv'>
@@ -32,7 +32,7 @@ $(document).ready(function(){
 	var person = new personRecord();
 	person.initialisePersonTable();
 	person.listenForReportPes();
-	person.listenForReportEdit();
+	person.listenForReportAction();
 	person.listenForReportReset();
 	person.listenForEditPesStatus();
 	person.listenForSavePesStatus();

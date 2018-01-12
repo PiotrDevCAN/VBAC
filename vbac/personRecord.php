@@ -427,7 +427,7 @@ class personRecord extends DbRecord
       				<div class='form-group required' >
         				<label for='psm_detail' class='col-md-2 control-label '>Detail</label>
         					<div class='col-md-9'>
-  								<input class="form-control" id="psm_detail" name="psm_detail" value="" type="text" required >
+  								<input class="form-control" id="psm_detail" name="psm_detail" value="" type="text"  >
             		 		</div>
             		</div>
      				</div>
@@ -440,6 +440,7 @@ class personRecord extends DbRecord
       		$allButtons[] = $submitButton;
       		$this->formBlueButtons($allButtons);
       		?>
+
        		<button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
       		</div>
       		</form>
@@ -494,7 +495,7 @@ class personRecord extends DbRecord
       				<h4 class="modal-title">Confirm change of FM Flag</h4>
         		</div>
 
-   		    	<form id='confirmFmFlagChange'>
+   		    	<form id='confirmFmFlagChangeForm' class="form-horizontal"  method='post' >
    		    	<div class="modal-body" >
    		    	</div>
    		    	<div class='modal-footer'>

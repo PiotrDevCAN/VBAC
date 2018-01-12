@@ -377,18 +377,13 @@ function personRecord() {
 			});
 	},
 
-	this.listenForReportEdit = function(){
-		$(document).on('click','#reportEdit', function(e){
-			console.log(e);
+	this.listenForReportAction = function(){
+		$(document).on('click','#reportAction', function(e){
 			personRecord.table.columns().visible(false,false);
 			personRecord.table.columns([0,1,5,9,25]).visible(true);
 			personRecord.table.order([5,'asc']).draw();
-			console.log(personRecord.table);
 			});
 	},
-
-
-
 
 	this.listenForReportReset = function(){
 		$(document).on('click','#reportReset', function(e){
@@ -493,36 +488,49 @@ function personRecord() {
 			var flag = $(this).data('fmflag');
 			var message = "<p>For:<b>" + notesid + "</b></p>";
 			    message += "<p>To:<b>" + flag + "</b></p>";
-			    message += "<input id='cFmCnum' value='" + cnum + "' type='hidden' >";
-			    message += "<input id='cFmNotesid' value='" + notesid + "'  type='hidden' >";
-			    message += "<input id='cFmFlag' value='" + flag + "'  type='hidden' >";
+			    message += "<input id='cFmCnum' name='cnum' value='" + cnum + "' type='hidden' >";
+			    message += "<input id='cFmNotesid' name='notesid' value='" + notesid + "'  type='hidden' >";
+			    message += "<input id='cFmFlag' name='flag' value='" + flag + "'  type='hidden' >";
 
 			$('#confirmChangeFmFlagModal .modal-body').html(message);
 			$('#confirmChangeFmFlagModal').modal('show');
+			return false;
 		});
 	},
 
 	this.listenForConfirmFmFlag = function(){
-		$(document).on('click','.confirmFmStatusChange', function(e){
-			var formData = $().serialize();
-			$('#confirmChangeFmFlagModal .modal-body').html(personRecord.spinner);
-			console.log(formData);
- 		    $.ajax({
-		    	url: "ajax/changeFmFlag.php",
-		    	data : {formData},
-		    	type: 'POST',
-		    	success: function(result){
-		    		var resultObj = JSON.parse(result);
-		    		console.log(resultObj);
-  		    		if(!resultObj.messages){
-  		    			$('#confirmChangeFmFlagModal .modal-body').html(resultObj.body);
-		    		} else {
-		    			$('#confirmChangeFmFlagModal .modal-body').html(resultObj.messages);
-		    		}
-		    	}
-		    });
+		console.log('set listener for flag change submit');
+		$('#confirmFmFlagChangeForm').submit(function(e){
+			console.log('submit hit');
+			var form = document.getElementById('confirmFmFlagChangeForm');
+			var formValid = form.checkValidity();
+			if(formValid){
+				var allDisabledFields = ($("input:disabled"));
+				$(allDisabledFields).attr('disabled',false);
+				var formData = $('#confirmFmFlagChangeForm').serialize();
+				console.log(formData);
+				$(allDisabledFields).attr('disabled',true);
+	 		    $.ajax({
+			    	url: "ajax/changeFmFlag.php",
+			    	data : formData,
+			    	type: 'POST',
+			    	success: function(result){
+	  		    		personRecord.table.ajax.reload();
+			    		var resultObj = JSON.parse(result);
+			    		console.log(resultObj);
+	  		    		if(!resultObj.messages){
+	  		    			$('#confirmChangeFmFlagModal .modal-body').html(resultObj.body);
+			    		} else {
+			    			$('#confirmChangeFmFlagModal .modal-body').html(resultObj.messages);
+			    		}
+			    	}
+			    });
+			};
+			return false;
 		});
+
 	},
+
 
 
 
