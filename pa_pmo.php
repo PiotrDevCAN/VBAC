@@ -26,7 +26,8 @@ $person->editPersonModal();
 
 
 <script>
-$(document.on('ready',function(){
+$(document).ready(function(){
+	console.log('ready');
 	var person = new personRecord();
 	person.initialisePersonTable();
 	person.listenForReportPes();
