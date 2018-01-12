@@ -299,6 +299,7 @@ function personRecord() {
 	    	success: function(result){
 	    		var Person = new personRecord();
 	    		$('#personDatabaseDiv').html(result);
+	    		console.log($('#personTable'));
 	    		Person.initialiseDataTable();
 	    	}
 	    });
@@ -312,6 +313,7 @@ function personRecord() {
 	        $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
 	    } );
 		// DataTable
+	    console.log($('#personTable'));
 	    personRecord.table = $('#personTable').DataTable({
 	    	ajax: {
 	            url: 'ajax/populatePersonDatatable.php',
