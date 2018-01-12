@@ -1,6 +1,8 @@
 <?php
 use vbac\personTable;
 
+do_auth($_SESSION['pmoBg']);
+
 unset($_SESSION['isFm']);
 unset($_SESSION['isCdi']);
 unset($_SESSION['isPmo']);

@@ -78,26 +78,36 @@ $_SESSION['isCdi']  = !empty($isCdi)  ? true : false;
 $_SESSION['isPmo']  = !empty($isPmo)  ? true : false;
 $_SESSION['isUser'] = !empty($isUser) ? true : false;
 
-
-
-
 $plannedOutagesId = str_replace(" ","_",$plannedOutagesLabel);
 ?>
 <script>
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function wait() {
+	  await sleep(2000);
+}
+
+
+$('.navbarMenuOption')<?=$isFm?><?=$isPmo?><?=$isCdi?><?=$isUser?>.remove();
+$('.navbarMenu').not(':has(li)').remove();
+
+$('li[data-pagename="<?=$page;?>"]').addClass('active').closest('li.dropdown').addClass('active');
+<?php
+if($page != "index.php" && substr($page,0,3)!='cdi'){
+    ?>
+	var pageAllowed = $('li[data-pagename="<?=$page;?>"]').length;
+	if(pageAllowed==0 ){
+		window.location.replace('index.php');
+		alert("You do not have access to:<?=$page?>");
+	}
+	<?php
+}
+?>
+
 $(document).ready(function () {
-    $('li[data-pagename="<?=$page;?>"]').addClass('active').closest('li.dropdown').addClass('active');
-
-    console.log($('button'));
-    console.log($('button.accessRestrict'));
-    console.log($('button .accessRestrict'));
-
-
     $('button.accessRestrict')<?=$isFm?><?=$isPmo?><?=$isCdi?><?=$isUser?>.remove();
-
-
-
-    $('.navbarMenuOption')<?=$isFm?><?=$isPmo?><?=$isCdi?><?=$isUser?>.remove();
-    $('.navbarMenu').not(':has(li)').remove();
 
     <?=!empty($isUser) ? '$("#userLevel").html("User");console.log("user");' : null;?>
     <?=!empty($isFm)   ? '$("#userLevel").html("Func.Mgr.");console.log("fm");' : null;?>
