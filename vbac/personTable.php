@@ -26,6 +26,27 @@ class personTable extends DbTable {
     }
 
     function addButtons($row){
+        // FM_FLAG
+        if(self::isPmo() || self::isCdi()){
+            $flag = $row[personRecord::FIELD_FM_FLAG];
+            if(strtoupper(substr($flag,0,1))=='N' || empty($flag)){
+                $row[personRecord::FIELD_FM_FLAG]  = "<button type='button' class='btn btn-default btn-xs btnSetFmFlag' aria-label='Left Align' ";
+                $row[personRecord::FIELD_FM_FLAG] .= "data-cnum='" .trim($row[personRecord::FIELD_CNUM]) . "'";
+                $row[personRecord::FIELD_FM_FLAG] .= "data-fMFlag='Yes' ";
+                $row[personRecord::FIELD_FM_FLAG] .= " > ";
+                $row[personRecord::FIELD_FM_FLAG] .= "<span class='glyphicon glyphicon-ok ' aria-hidden='true'></span>";
+                $row[personRecord::FIELD_FM_FLAG] .= " </button> ";
+            } elseif (strtoupper(substr($flag,0,1)=='Y')){
+                $row[personRecord::FIELD_FM_FLAG]  = "<button type='button' class='btn btn-default btn-xs btnSetFmFlag' aria-label='Left Align' ";
+                $row[personRecord::FIELD_FM_FLAG] .= "data-cnum='" .trim($row[personRecord::FIELD_CNUM]) . "'";
+                $row[personRecord::FIELD_FM_FLAG] .= "data-fMFlag='No' ";
+                $row[personRecord::FIELD_FM_FLAG] .= " > ";
+                $row[personRecord::FIELD_FM_FLAG] .= "<span class='glyphicon glyphicon-remove ' aria-hidden='true'></span>";
+                $row[personRecord::FIELD_FM_FLAG] .= " </button> ";
+            }
+            $row[personRecord::FIELD_FM_FLAG] .= $flag;
+        }
+
 
         // Notesid
         $notesId = trim($row[personRecord::FIELD_NOTES_ID]);
@@ -149,11 +170,29 @@ class personTable extends DbTable {
         $_SESSION['isFm'] = ($flagValue=='Y');
 
         return $_SESSION['isFm'];
-
-
-
     }
 
+
+    static function isPmo(){
+        if(isset($_SESSION['isPmo'])) {
+            return $_SESSION['isPmo'];
+        }
+
+        $isPmo = employee_in_group($_SESSION['pmoBg'], $_SESSION['ssoEmail']);
+
+        $_SESSION['isPmo'] = $isPmo;
+        return $_SESSION['isPmo'];
+    }
+
+    static function isCdi(){
+        if(isset($_SESSION['isCdi'])) {
+            return $_SESSION['isCdi'];
+        }
+        $isCdi = employee_in_group($_SESSION['cdiBg'], $_SESSION['ssoEmail']);
+
+        $_SESSION['isCdi'] = $isCdi;
+        return $_SESSION['isCdi'];
+    }
 
 
 

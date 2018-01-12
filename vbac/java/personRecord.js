@@ -469,6 +469,19 @@ function personRecord() {
 			});
 	},
 
+	this.listenForToggleFmFlag = function(){
+		$(document).on('click','.btnSetFmFlag', function(e){
+			console.log('initiatePes PES from Portal');
+			console.log(this);
+			var cnum = $(this).data('cnum');
+			var flag = $(this).data('flag');
+
+
+
+
+		});
+	},
+
 	this.listenForEditPesStatus = function(){
 		$(document).on('click','.btnPesStatus', function(e){
     		   var cnum = ($(e.target).data('cnum'));

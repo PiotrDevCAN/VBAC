@@ -74,7 +74,10 @@ $isFm    = stripos($_SERVER['environment'], 'dev') ? ".not('.accessFm')"   : $is
 $isCdi   = stripos($_SERVER['environment'], 'dev') ? ".not('.accessCdi')"  : $isCdi;
 $isPmo   = stripos($_SERVER['environment'], 'dev')  ? ".not('.accessPmo')" : $isPmo;
 
-
+$_SESSION['isFm'] = $isFm;
+$_SESSION['isCdi'] = $isCdi;
+$_SESSION['isPmo'] = $isPmo;
+$_SESSION['isUser'] = $isUser;
 
 $plannedOutagesId = str_replace(" ","_",$plannedOutagesLabel);
 ?>
