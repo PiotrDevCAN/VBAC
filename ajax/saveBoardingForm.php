@@ -10,9 +10,19 @@ try {
     $person->setFromArray($_POST);
 
     $table = new personTable(allTables::$PERSON);
+
     $saveRecordResult = $table->saveRecord($person);
 
-    if(!$saveRecordResult){
+     if(($saveRecordResult && $_POST['mode']=='Save') || (!$saveRecordResult && $_POST['mode']=='Update')){
+        if($_POST['mode']=='Save'){
+            echo "<br/>Boarding Form Record - Saved.";
+            echo "<br/>Click 'Initiate PES' button to initiate the PES Check Process";
+        }
+        if($_POST['mode']=='Update'){
+            echo "<br/>Boarding Form Record - Updated.";
+        }
+        $success = true;
+    } else {
         $errorCode = db2_stmt_error();
         if(empty($errorCode)){
             echo "<br/>Record already existed";
@@ -20,12 +30,7 @@ try {
             echo db2_stmt_error();
             echo db2_stmt_errormsg();
         }
-
         $success = false;
-    } else {
-        echo "<br/>Boarding Form Record - Saved.";
-        echo "<br/>Click 'Initiate PES' button to initiate the PES Check Process";
-        $success = true;
     }
 } catch (Exception $e) {
     echo $e->getCode();

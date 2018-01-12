@@ -41,5 +41,6 @@ $(document).ready(function(){
 	person.listenForAccountOrganisation();
 	person.listenForToggleFmFlag();
 	person.listenForConfirmFmFlag();
+	person.listenforUpdateBoarding();
 });
 </script>

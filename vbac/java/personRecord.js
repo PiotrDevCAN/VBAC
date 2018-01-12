@@ -251,45 +251,57 @@ function personRecord() {
 
 	this.listenForSaveBoarding = function(){
 		$(document).on('click','#saveBoarding', function(){
-
-			var form = $('#boardingForm');
-			var formValid = form[0].checkValidity();
-
-			if(formValid){
-				$("#saveBoarding").addClass('spinning');
-				var allDisabledFields = ($("input:disabled"));
-				$(allDisabledFields).attr('disabled',false);
-				var formData = form.serialize();
-				$(allDisabledFields).attr('disabled',true);
-				console.log(formData);
-			    $.ajax({
-			    	url: "ajax/saveBoardingForm.php",
-			    	type: 'POST',
-			        data : formData,
-			    	success: function(result){
-						$("#saveBoarding").removeClass('spinning');
-			    		console.log(result);
-			    		var resultObj = JSON.parse(result);
-			    		if(resultObj.success==true){
-			    			var message = "<div class=panel-heading><h3 class=panel-title>Success</h3>" + resultObj.messages
-			    			$('#savingBoardingDetailsModal  .panel').html(message);
-			    			$('#savingBoardingDetailsModal  .panel').addClass('panel-success');
-			    			$('#savingBoardingDetailsModal  .panel').removeClass('panel-danger');
-			    		} else {
-			    			var message = "<div class=panel-heading><h3 class=panel-title>Error</h3>" + resultObj.messages
-			    			$('#savingBoardingDetailsModal  .panel').html(message);
-			    			$('#savingBoardingDetailsModal  .panel').addClass('panel-danger');
-			    			$('#savingBoardingDetailsModal  .panel').removeClass('panel-success');
-			    		};
-			    		$('#savingBoardingDetailsModal').modal('show');
-			    		$('#boardingForm :input').attr('disabled',true);
-			    		$('#saveBoarding').attr('disabled',true);
-			    		$('#initiatePes').attr('disabled',false);
-			    	}
-			    });
-			}
+			var person = new personRecord();
+			person.saveBoarding('Save');
 		});
+	},
 
+	this.listenforUpdateBoarding= function () {
+		$(document).on('click','#updateBoarding', function(){
+			var person = new personRecord();
+			person.saveBoarding('Update');
+		});
+	},
+
+	this.saveBoarding = function(mode){
+		var form = $('#boardingForm');
+		var formValid = form[0].checkValidity();
+		if(formValid){
+			$("#saveBoarding").addClass('spinning');
+			var allDisabledFields = ($("input:disabled"));
+			$(allDisabledFields).attr('disabled',false);
+			var formData = form.serialize();
+			formData += "&mode=" + mode;
+			$(allDisabledFields).attr('disabled',true);
+			console.log(formData);
+		    $.ajax({
+		    	url: "ajax/saveBoardingForm.php",
+		    	type: 'POST',
+		        data : formData,
+		    	success: function(result){
+					$("#saveBoarding").removeClass('spinning');
+		    		console.log(result);
+		    		var resultObj = JSON.parse(result);
+		    		if(resultObj.success==true){
+		    			var message = "<div class=panel-heading><h3 class=panel-title>Success</h3>" + resultObj.messages
+		    			$('#savingBoardingDetailsModal  .panel').html(message);
+		    			$('#savingBoardingDetailsModal  .panel').addClass('panel-success');
+		    			$('#savingBoardingDetailsModal  .panel').removeClass('panel-danger');
+		    		} else {
+		    			var message = "<div class=panel-heading><h3 class=panel-title>Error</h3>" + resultObj.messages
+		    			$('#savingBoardingDetailsModal  .panel').html(message);
+		    			$('#savingBoardingDetailsModal  .panel').addClass('panel-danger');
+		    			$('#savingBoardingDetailsModal  .panel').removeClass('panel-success');
+		    		};
+		    		$('#editPersonModal').modal('hide');
+		    		$('#savingBoardingDetailsModal').modal('show');
+		    		$('#boardingForm :input').attr('disabled',true);
+		    		$('#saveBoarding').attr('disabled',true);
+		    		$('#initiatePes').attr('disabled',false);
+		    		personRecord.table.ajax.reload();
+		    	}
+		    });
+		}
 	},
 
 
