@@ -70,8 +70,8 @@ $isCdi  = employee_in_group($_SESSION['cdiBg'],  $GLOBALS['ltcuser']['mail']) ? 
 $isPmo  = employee_in_group($_SESSION['pmoBg'],  $GLOBALS['ltcuser']['mail']) ? ".not('.accessPmo')" : null;
 $isUser = ".not('.accessUser')";
 
-$isCdi   = stripos($_SERVER['environment'], 'dev') ? ".not('.accessCdi')"  : $isCdi;
-$isPmo   = stripos($_SERVER['environment'], 'dev')  ? ".not('.accessPmo')" : $isPmo;
+// $isCdi   = stripos($_SERVER['environment'], 'dev') ? ".not('.accessCdi')"  : $isCdi;
+// $isPmo   = stripos($_SERVER['environment'], 'dev')  ? ".not('.accessPmo')" : $isPmo;
 
 $_SESSION['isFm']   = !empty($isFm)   ? true : false;
 $_SESSION['isCdi']  = !empty($isCdi)  ? true : false;
@@ -87,7 +87,15 @@ $plannedOutagesId = str_replace(" ","_",$plannedOutagesLabel);
 $(document).ready(function () {
     $('li[data-pagename="<?=$page;?>"]').addClass('active').closest('li.dropdown').addClass('active');
 
+    console.log($('button'));
+    console.log($('button.accessRestrict'));
+    console.log($('button .accessRestrict'));
+
+
     $('button.accessRestrict')<?=$isFm?><?=$isPmo?><?=$isCdi?><?=$isUser?>.remove();
+
+
+
     $('.navbarMenuOption')<?=$isFm?><?=$isPmo?><?=$isCdi?><?=$isUser?>.remove();
     $('.navbarMenu').not(':has(li)').remove();
 
