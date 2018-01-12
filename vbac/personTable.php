@@ -27,7 +27,7 @@ class personTable extends DbTable {
 
     function addButtons($row){
         // FM_FLAG
-        if(self::isPmo() || self::isCdi()){
+        if($_SESSION['isPmo'] || $_SESSION['isCdi']){
             $flag = $row[personRecord::FIELD_FM_FLAG];
             if(strtoupper(substr($flag,0,1))=='N' || empty($flag)){
                 $row[personRecord::FIELD_FM_FLAG]  = "<button type='button' class='btn btn-default btn-xs btnSetFmFlag' aria-label='Left Align' ";
@@ -171,29 +171,5 @@ class personTable extends DbTable {
 
         return $_SESSION['isFm'];
     }
-
-
-    static function isPmo(){
-        if(isset($_SESSION['isPmo'])) {
-            return $_SESSION['isPmo'];
-        }
-
-        $isPmo = employee_in_group($_SESSION['pmoBg'], $_SESSION['ssoEmail']);
-
-        $_SESSION['isPmo'] = $isPmo;
-        return $_SESSION['isPmo'];
-    }
-
-    static function isCdi(){
-        if(isset($_SESSION['isCdi'])) {
-            return $_SESSION['isCdi'];
-        }
-        $isCdi = employee_in_group($_SESSION['cdiBg'], $_SESSION['ssoEmail']);
-
-        $_SESSION['isCdi'] = $isCdi;
-        return $_SESSION['isCdi'];
-    }
-
-
 
 }
