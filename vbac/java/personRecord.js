@@ -298,7 +298,10 @@ function personRecord() {
 		    		$('#boardingForm :input').attr('disabled',true);
 		    		$('#saveBoarding').attr('disabled',true);
 		    		$('#initiatePes').attr('disabled',false);
-		    		personRecord.table.ajax.reload();
+		    		if(personRecord.table!= "undefined") {
+			    		personRecord.table.ajax.reload();
+		    		}
+
 		    	}
 		    });
 		}

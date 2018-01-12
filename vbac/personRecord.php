@@ -59,6 +59,7 @@ class personRecord extends DbRecord
 
     protected $WORK_STREAM;
     protected $CONTRACTOR_ID_REQUIRED;
+    protected $CONTRACTOR_ID;
 
 
     protected $person_bio;
