@@ -493,13 +493,13 @@ function personRecord() {
 			    message += "<input id='cFmFlag' name='flag' value='" + flag + "'  type='hidden' >";
 
 			$('#confirmChangeFmFlagModal .modal-body').html(message);
+			$('#confirmFmStatusChange').attr('disabled',false);
 			$('#confirmChangeFmFlagModal').modal('show');
 			return false;
 		});
 	},
 
 	this.listenForConfirmFmFlag = function(){
-		console.log('set listener for flag change submit');
 		$('#confirmFmFlagChangeForm').submit(function(e){
 			console.log('submit hit');
 			var form = document.getElementById('confirmFmFlagChangeForm');
@@ -508,8 +508,8 @@ function personRecord() {
 				var allDisabledFields = ($("input:disabled"));
 				$(allDisabledFields).attr('disabled',false);
 				var formData = $('#confirmFmFlagChangeForm').serialize();
-				console.log(formData);
 				$(allDisabledFields).attr('disabled',true);
+				$('#confirmFmStatusChange').attr('disabled',true);
 	 		    $.ajax({
 			    	url: "ajax/changeFmFlag.php",
 			    	data : formData,

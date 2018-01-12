@@ -39,7 +39,7 @@ class personTable extends DbTable {
                 $row[personRecord::FIELD_FM_FLAG] .= "data-notesid='" .$notesId . "' ";
                 $row[personRecord::FIELD_FM_FLAG] .= "data-fmflag='Yes' ";
                 $row[personRecord::FIELD_FM_FLAG] .= " > ";
-                $row[personRecord::FIELD_FM_FLAG] .= "<span class='glyphicon glyphicon-ok ' aria-hidden='true'></span>";
+                $row[personRecord::FIELD_FM_FLAG] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
                 $row[personRecord::FIELD_FM_FLAG] .= " </button> ";
             } elseif (strtoupper(substr($flag,0,1)=='Y')){
                 $row[personRecord::FIELD_FM_FLAG]  = "<button type='button' class='btn btn-default btn-xs btnSetFmFlag' aria-label='Left Align' ";
@@ -47,7 +47,7 @@ class personTable extends DbTable {
                 $row[personRecord::FIELD_FM_FLAG] .= "data-notesid='" .$notesId . "' ";
                 $row[personRecord::FIELD_FM_FLAG] .= "data-fmflag='No' ";
                 $row[personRecord::FIELD_FM_FLAG] .= " > ";
-                $row[personRecord::FIELD_FM_FLAG] .= "<span class='glyphicon glyphicon-remove ' aria-hidden='true'></span>";
+                $row[personRecord::FIELD_FM_FLAG] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
                 $row[personRecord::FIELD_FM_FLAG] .= " </button> ";
             }
             $row[personRecord::FIELD_FM_FLAG] .= $flag;
