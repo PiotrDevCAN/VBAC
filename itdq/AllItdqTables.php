@@ -10,6 +10,9 @@ namespace itdq;
  */
 class AllItdqTables
 {
+
+    public static $AUDIT            = 'AUDIT';
+
     public static $DB2_ERRORS       = 'DB2_ERRORS';
 //     public static $DIARY            = 'DIARY';
 
