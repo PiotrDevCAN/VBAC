@@ -1,5 +1,5 @@
 applications:
-- path: .
+- path: ../
   memory: 128M
   instances: 1
   domain: w3ibm.mybluemix.net
