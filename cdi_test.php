@@ -1,5 +1,10 @@
 <?php
+use itdq\AuditTable;
+use itdq\AllItdqTables;
+
 echo "<pre>";
+
+AuditTable::audit("User:" . $_SESSION['ssoEmail'] . " Opening" . __FILE__);
 
 var_Dump($GLOBALS['ltcuser']['mail']);
 
