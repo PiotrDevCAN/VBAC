@@ -192,7 +192,7 @@ class personTable extends DbTable {
         $row = db2_fetch_assoc($resultSet);
         echo "<br/>" . __FILE__ . __LINE__ . print_r($row,true);
 
-        $flagValue = strtoupper(substr(trim($row['FM_MANAGER_FLAG']),0));
+        $flagValue = strtoupper(substr(trim($row['FM_MANAGER_FLAG']),0,1));
 
         echo "<br/>" . __FILE__ . __LINE__ . var_dump($flagValue);
 
