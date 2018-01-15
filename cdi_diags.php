@@ -11,9 +11,13 @@ unset($_SESSION['isCdi']);
 unset($_SESSION['isPmo']);
 unset($_SESSION['isUser']);
 
+echo "call is manager";
+
 $isFm   = personTable::isManager($GLOBALS['ltcuser']['mail'])                 ? ".not('.accessFm')" : null;
 var_dump($isFm);
 var_dump($GLOBALS['ltcuser']['mail']);
+
+echo "is manager over";
 
 
 
