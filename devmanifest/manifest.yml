@@ -3,6 +3,6 @@ applications:
   memory: 128M
   instances: 1
   domain: w3ibm.mybluemix.net
-  name: vBAC-UT
-  host: vBAC-UT
+  name: vBACut
+  host: vBACut
   disk_quota: 1024M
