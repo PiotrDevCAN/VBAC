@@ -8,9 +8,9 @@ $config_openidconnect->client_id['vbac'] = "NjVhM2FkZjQtNmU2Ny00";
 $config_openidconnect->client_secret['vbac'] = "MzJkYjc5YjktNjBhYy00";
 $config_openidconnect->redirect_url['vbac'] = "https://vbac.w3ibm.mybluemix.net/auth/index.php";
 
-$config_openidconnect->client_id['vbac-ut'] = "ZWMwMTNkYTEtYmEzMC00";
-$config_openidconnect->client_secret['vbac-ut'] = "ZWVlYzZjYzktNzUwOS00";
-$config_openidconnect->redirect_url['vbac-ut'] = "https://vbac-ut.w3ibm.mybluemix.net/auth/index.php";
+$config_openidconnect->client_id['vbac_ut'] = "ZWMwMTNkYTEtYmEzMC00";
+$config_openidconnect->client_secret['vbac_ut'] = "ZWVlYzZjYzktNzUwOS00";
+$config_openidconnect->redirect_url['vbac_ut'] = "https://vbac_ut.w3ibm.mybluemix.net/auth/index.php";
 
 // $config_openidconnect->client_id['rob_dev'] = "ZGE0NDYzMTctYmZhNS00";
 // $config_openidconnect->client_secret['rob_dev'] = "ZWFhM2U5MTktNDk4NS00";
