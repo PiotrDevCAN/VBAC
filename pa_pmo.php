@@ -9,9 +9,9 @@ use vbac\personRecord;
 <div class='container-fluid'>
 <h3>Person Database</h3>
 
-<button id='reportPes' class='btn btn-primary btn-sm '>PES Report</button>
+<button id='reportPes'    class='btn btn-primary btn-sm '>PES Report</button>
 <button id='reportAction' class='btn btn-primary btn-sm '>Action Mode</button>
-<button id='reportReset' class='btn btn-primary btn-sm '>Reset</button>
+<button id='reportReset'  class='btn btn-primary btn-sm '>Reset</button>
 
 <div id='personDatabaseDiv'>
 </div>
@@ -24,8 +24,6 @@ $person->savingBoardingDetailsModal();
 $person->editPersonModal();
 $person->confirmChangeFmFlagModal();
 ?>
-
-
 
 <script>
 $(document).ready(function(){

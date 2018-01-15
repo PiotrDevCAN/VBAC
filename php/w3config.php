@@ -10,7 +10,7 @@ $_SESSION['country'] = 'E4'; // Used in Connect.php
 $site = array(
 
     // if not empty will override the site title from menuconf.php
-    'site_title' => 'vBAC : Ventus Boarding&Acces Control', // CHANGE THIS WHEN STARTING NEW APP
+    'site_title' => 'vBAC : Ventus Boarding&Access Control', // CHANGE THIS WHEN STARTING NEW APP
 
     // enable w3 local search
     'local_search' => FALSE,

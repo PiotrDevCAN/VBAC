@@ -8,8 +8,13 @@ class personTable extends DbTable {
     function returnAsArray(){
         $data = array();
 
+        $isFM   = personTable::isManager($_SESSION['ssoEmail']);
+        $myCnum = personTable::myCnum($_SESSION['ssoEmail']);
+
+        $predicate = $isFM ? " UPPER(FM_CNUM)='" . db2_escape_string(trim($myCnum)) . "' " : null; // FM Can only see their own people.
 
         $sql  = " SELECT * FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName ;
+        $sql .= " WHERE 1=1 AND " . $predicate;
 
         $rs = db2_exec($_SESSION['conn'], $sql);
 
@@ -164,12 +169,10 @@ class personTable extends DbTable {
 
     static function isManager($emailAddress){
          if(isset($_SESSION['isFm'])) {
-            echo "<br/>" . __FILE__ . __LINE__;
             return $_SESSION['isFm'];
         }
 
         if (empty($emailAddress)) {
-            echo "<br/>" . __FILE__ . __LINE__;
             return false;
         }
 
@@ -188,5 +191,32 @@ class personTable extends DbTable {
         $_SESSION['isFm'] = ($flagValue=='Y');
         return $_SESSION['isFm'];
     }
+
+    static function myCnum(){
+        if(isset($_SESSION['myCnum'])) {
+           return $_SESSION['myCnum'];
+        }
+
+        if (!isset($_SESSION['ssoEMail'])) {
+            return false;
+        }
+
+        $sql = " SELECT CNUM FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
+        $sql .= " WHERE UPPER(EMAIL_ADDRESS) = '" . db2_escape_string(strtoupper(trim($_SESSION['ssoEMail']))) . "' ";
+
+        $resultSet = db2_exec($_SESSION['conn'], $sql);
+
+        if(!$resultSet){
+            DbTable::displayErrorMessage($resultSet, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+
+        $row = db2_fetch_assoc($resultSet);
+         $myCnum = strtoupper(trim($row['CNUM']));
+         $_SESSION['myCnum'] = $myCnum;
+        return $_SESSION['myCnum'];
+    }
+
+
 
 }
