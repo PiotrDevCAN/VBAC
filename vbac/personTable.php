@@ -194,6 +194,11 @@ class personTable extends DbTable {
 
         $flagValue = strtoupper(substr(trim($row['FM_MANAGER_FLAG']),0,1));
 
+
+        echo "<br/>" . __FILE__ . __LINE__ . trim($row['FM_MANAGER_FLAG']);
+
+        echo "<br/>" . __FILE__ . __LINE__ . substr(trim($row['FM_MANAGER_FLAG']),0,1);
+
         echo "<br/>" . __FILE__ . __LINE__ . var_dump($flagValue);
 
         $_SESSION['isFm'] = ($flagValue=='Y');
