@@ -1,17 +1,18 @@
 <?php
+namespace itdq;
 
 use itdq\DbTable;
 use itdq\AllItdqTables;
 
-class AuditTable {
+class AuditTable extends DbTable {
 
 
     static function audit($statement){
-        if(property_exists('AllItdqTables','AUDIT')){
+        if(property_exists('itdq\AllItdqTables','AUDIT')){
             $sql = " INSERT INTO " . $_SESSION['Db2Schema'] . "." . \itdq\AllItdqTables::$AUDIT;
             $sql . " ('TIMESTAMP','EMAIL_ADDRESS','DATA') ";
             $sql .= " VALUES ";
-            $sql .= " ( CURRENT TIMESTAMP, '" . db2_escape_string($_SESSION['ssoEmail']) . "','" . db2_escape_string($statement) . "' ";
+            $sql .= " ( CURRENT TIMESTAMP, '" . db2_escape_string($_SESSION['ssoEmail']) . "','" . db2_escape_string($statement) . "' )";
 
             $rs = db2_exec($_SESSION['conn'],$sql);
 
