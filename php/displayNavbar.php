@@ -19,7 +19,6 @@ $pageDetails = explode("/", $_SERVER['PHP_SELF']);
 $page = isset($pageDetails[2]) ? $pageDetails[2] : $pageDetails[1];
 
 $navbar = new Navbar($navBarImage, $navBarBrand,$navBarSearch);
-$navbarDivider = new NavbarDivider('accessCdi');
 
 $cdiAdmin       = new NavbarMenu("CDI Admin");
 $trace          = new NavbarOption('View Trace','pi_trace.php','accessCdi');
@@ -31,7 +30,7 @@ $cdiAdmin->addOption($traceDelete);
 
 
 $adminMenu      = new NavbarMenu('vBac Admin');
-$pmo            = new NavbarOption('Portal', 'pa_pmo.php','accessCdi accessPmo accessFm');
+$pmo            = new NavbarOption('Person Portal', 'pa_pmo.php','accessCdi accessPmo accessFm');
 $revalidation   = new NavbarOption('Revalidation','pa_revalidation.php','accessCdi accessPmo');
 $control        = new NavbarOption('Control', 'pa_control.php','accessCdi accessPmo');
 $audit          = new NavbarOption('Audit Report', 'pa_auditListing.php','accessCdi accessPmo');
@@ -75,6 +74,8 @@ $isUser = ".not('.accessUser')";
 
 $isCdi   = stripos($_SERVER['environment'], 'dev') ? ".not('.accessCdi')"  : $isCdi;
 $isPmo   = stripos($_SERVER['environment'], 'dev')  ? ".not('.accessPmo')" : $isPmo;
+
+$isFm = $isPmo ? null : $isFm; // If they are PMO it don't matter if they are FM
 
 $_SESSION['isFm']   = !empty($isFm)   ? true : false;
 $_SESSION['isCdi']  = !empty($isCdi)  ? true : false;
