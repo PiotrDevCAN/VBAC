@@ -5,6 +5,35 @@ use itdq\DbTable;
 
 class personTable extends DbTable {
 
+
+    static function getNextVirtualCnum(){
+        $sql  = " SELECT CNUM FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
+        $sql .= " WHERE CNUM LIKE '%xxx' ";
+        $sql .= " order by CNUM desc ";
+        $sql .= " OPTIMIZE FOR 1 ROW ";
+
+        $rs = db2_exec($_SESSION['conn'], $sql);
+
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+
+        $topRow = db2_fetch_array($rs);
+        if(isset($topRow[0])){
+            $thisCnum = substr($topRow[0],0,6);
+            $next = $thisCnum+1;
+            $nextVirtualCnum = substr('000000' . $next ,-6) . 'xxx';
+        } else {
+            $nextVirtualCnum = '000001xxx';
+        }
+
+
+        return $nextVirtualCnum;
+
+    }
+
+
     function returnAsArray(){
         $data = array();
 

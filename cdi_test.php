@@ -1,26 +1,11 @@
 <?php
 use itdq\AuditTable;
 use itdq\AllItdqTables;
+use itdq\BluePages;
+use vbac\personTable;
 
-echo "<pre>";
+$cnum = personTable::getNextVirtualCnum();
 
-AuditTable::audit("User:" . $_SESSION['ssoEmail'] . " Opening" . __FILE__);
+echo "cnum is";
 
-var_Dump($GLOBALS['ltcuser']['mail']);
-
-$cdi = employee_bluegroups($GLOBALS['ltcuser']['mail']);
-
-
-var_dump($cdi);
-
-$isCdi = employee_in_group($_SESSION['cdiBg'], $GLOBALS['ltcuser']['mail']);
-$isPmo = employee_in_group($_SESSION['pmoBg'], $GLOBALS['ltcuser']['mail']);
-
-var_dump($isCdi);
-
-var_dump($isPmo);
-
-
-echo "</pre>";
-
-phpinfo();
+var_dump($cnum);

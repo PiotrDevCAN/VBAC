@@ -4,13 +4,18 @@ use vbac\personTable;
 use vbac\allTables;
 
 ob_start();
+$person = new personRecord();
+$table = new personTable(allTables::$PERSON);
 
 try {
-    $person = new personRecord();
+
+
+    if(empty($_POST['CNUM']) && $_POST['EMPLOYEE_TYPE']=='Pre-Hire'){
+        echo "Need to create virtual cnum";
+        $cnum = personTable::getNextVirtualCnum();
+        $_POST['CNUM']= $cnum;
+    }
     $person->setFromArray($_POST);
-
-    $table = new personTable(allTables::$PERSON);
-
     $saveRecordResult = $table->saveRecord($person);
 
      if(($saveRecordResult && $_POST['mode']=='Save') || (!$saveRecordResult && $_POST['mode']=='Update')){
@@ -39,6 +44,6 @@ try {
 }
 
 $messages = ob_get_clean();
-$response = array('success'=>$success,'messages'=>$messages,"saveRecord"=>$saveRecordResult);
+$response = array('success'=>$success,'messages'=>$messages,"saveRecord"=>$saveRecordResult,'cnum'=>$_POST['CNUM']);
 ob_clean();
 echo json_encode($response);

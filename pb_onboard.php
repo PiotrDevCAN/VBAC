@@ -8,9 +8,20 @@ set_time_limit(0);
 ?>
 
 <div class='container'>
+<div class='row'>
 <div class='col-sm-2'></div>
 <div class='col-sm-8'>
-<h2>Onboard Individual</h2>
+<h2>Onboard Individual
+<input checked data-size="mini" data-toggle="toggle" type="checkbox" class='toggle' data-width='100' data-on="Boarding" data-off="Pre-Boarding" id='hasBpEntry'>
+</h2>
+</div>
+</div>
+
+
+<div class='row'>
+<div class='col-sm-2'></div>
+<div class='col-sm-8'>
+
 <?php
 $mode = personRecord::$modeDEFINE;
 $person = new personRecord();
@@ -19,13 +30,18 @@ $person->displayBoardingForm($mode);
 </div>
 <div class='col-sm-2'></div>
 </div>
+</div>
 <?php
 $person->savingBoardingDetailsModal();
 ?>
 <script type="text/javascript">
 $(document).ready(function() {
+
+	$('.toggle').bootstrapToggle()
+
 	var person = new personRecord();
     person.initialisePersonFormSelect2();
+    person.listenForHasBpEntry();
 	person.listenForName();
     person.listenForSerial();
     person.listenForSaveBoarding();

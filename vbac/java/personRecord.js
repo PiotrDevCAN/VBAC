@@ -77,6 +77,21 @@ function personRecord() {
 
 	},
 
+	this.listenForHasBpEntry = function(){
+		$(document).on('change','#hasBpEntry', function(){
+			console.log('clicked hasBpEntry');
+			console.log(this);
+			$('#notAnIbmer').toggle();
+			$('#existingIbmer').toggle();
+
+			var currentHeading = $('#employeeResourceHeading').text();
+			var newHeading = currentHeading=='Employee Details' ? 'Resource Details' : 'Employee Details';
+			$('#employeeResourceHeading').text(newHeading);
+		});
+	},
+
+
+
 	this.listenForSerial = function(){
 		$(document).on('keyup change','#person_serial',function(e){
 			var cnum = $(e.target).val();
@@ -283,22 +298,25 @@ function personRecord() {
 		    		console.log(result);
 		    		var resultObj = JSON.parse(result);
 		    		if(resultObj.success==true){
+		    			$('#person_uid').val(resultObj.cnum);
 		    			var message = "<div class=panel-heading><h3 class=panel-title>Success</h3>" + resultObj.messages
 		    			$('#savingBoardingDetailsModal  .panel').html(message);
 		    			$('#savingBoardingDetailsModal  .panel').addClass('panel-success');
 		    			$('#savingBoardingDetailsModal  .panel').removeClass('panel-danger');
+			    		$('#boardingForm :input').attr('disabled',true);
+			    		$('#saveBoarding').attr('disabled',true);
+			    		$('#initiatePes').attr('disabled',false);
 		    		} else {
 		    			var message = "<div class=panel-heading><h3 class=panel-title>Error</h3>" + resultObj.messages
 		    			$('#savingBoardingDetailsModal  .panel').html(message);
 		    			$('#savingBoardingDetailsModal  .panel').addClass('panel-danger');
 		    			$('#savingBoardingDetailsModal  .panel').removeClass('panel-success');
+			    		$('#saveBoarding').attr('disabled',false);
+			    		$('#initiatePes').attr('disabled',true);
 		    		};
 		    		$('#editPersonModal').modal('hide');
 		    		$('#savingBoardingDetailsModal').modal('show');
-		    		$('#boardingForm :input').attr('disabled',true);
-		    		$('#saveBoarding').attr('disabled',true);
-		    		$('#initiatePes').attr('disabled',false);
-		    		if(personRecord.table!= "undefined") {
+		    		if(personRecord.table != "undefined") {
 			    		personRecord.table.ajax.reload();
 		    		}
 

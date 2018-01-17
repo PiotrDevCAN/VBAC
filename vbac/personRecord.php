@@ -126,10 +126,15 @@ class personRecord extends DbRecord
         $loader = new Loader();
         $workstreamTable = new staticDataWorkstreamTable(allTables::$STATIC_WORKSTREAMS);
         //$allManagers = array('bob Mgr'=>'bob@email.com','cheryl mgr'=>'cheryl@email.com','cheryl two'=>'cheryl2@email.com');
-        $allEmployeeTypes = $loader->load('EMPLOYEE_TYPE',allTables::$PERSON);
-        $isFM = personTable::isManager($_SESSION['ssoEmail']);
-        $fmPredicate = $isFM ? " UPPER(EMAIL_ADDRESS)='" . db2_escape_string(trim(strtoupper($_SESSION['ssoEmail']))) . "'  AND UPPER(LEFT(FM_MANAGER_FLAG,1))='Y'  " : " UPPER(LEFT(FM_MANAGER_FLAG,1))='Y' "; // FM Can only board people to themselves.
-        $fmPredicate = $mode==FormClass::$modeEDIT ? "( " . $fmPredicate . " ) OR ( CNUM='" . db2_escape_string($this->FM_CNUM) . "' ) " : $fmPredicate;
+
+        /*
+         * Functional Mgr can board to ANY Functional Mgr Ant Start 16th Jan 2018
+         */
+
+       // $isFM = personTable::isManager($_SESSION['ssoEmail']);
+       // $fmPredicate = $isFM ? " UPPER(EMAIL_ADDRESS)='" . db2_escape_string(trim(strtoupper($_SESSION['ssoEmail']))) . "'  AND UPPER(LEFT(FM_MANAGER_FLAG,1))='Y'  " : " UPPER(LEFT(FM_MANAGER_FLAG,1))='Y' "; // FM Can only board people to themselves.
+       // $fmPredicate = $mode==FormClass::$modeEDIT ? "( " . $fmPredicate . " ) OR ( CNUM='" . db2_escape_string($this->FM_CNUM) . "' ) " : $fmPredicate;
+        $fmPredicate = null;
         $allManagers =  $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON, $fmPredicate);
        //  $allManagers = empty($allManagers)? array('VBAC00001'=>'Dummy Fm') : $allManagers;
         $userDetails = $loader->loadIndexed('CNUM','EMAIL_ADDRESS',allTables::$PERSON, " EMAIL_ADDRESS='" . db2_escape_string($GLOBALS['ltcuser']['mail']) . "' ");
@@ -137,79 +142,130 @@ class personRecord extends DbRecord
         //$allWorkStream = array('Work Stream 1'=>'ws001','Work Stream 2'=>'ws002','Work Stream 3'=>'ws003','Work Stream 4'=>'ws004');
         $allWorkstream = $workstreamTable->getallWorkstream();
         JavaScript::buildSelectArray($allWorkstream, 'workStream');
-        ?>
-        <form id='boardingForm'  class="form-horizontal" onsubmit="return false;">
-        <div class="panel panel-default">
-  		<div class="panel-heading">
-    	<h3 class="panel-title">Employee Details</h3>
-  		</div>
-  		<div class="panel-body">
-			<div class="form-group">
-        	<div class="col-sm-6">
 
-        <?php
         $notEditable = $mode==FormClass::$modeEDIT ? ' disabled ' : null;
         $displayForEdit = $notEditable ? 'hidden' : null;
         $onlyEditable = $mode==FormClass::$modeEDIT ? 'text' : 'hidden'; // Some fields the user can edit - but not see/set the first time.
         $hideDivFromEdit = $mode==FormClass::$modeEDIT ? ' style="display: none;"  ' : null; //Some fields we don't show on the edit screen.
         ?>
-
-        <input class="form-control" id="person_name" name="person_name" value="<?=$this->FIRST_NAME . " " . $this->LAST_NAME?>" required type="text" placeholder='Start typing name/serial/email'  <?=$notEditable?>>
-
-        </div>
-        <div class='col-sm-6'>
-        <input class='form-control' id='person_serial' name='CNUM' value='<?=$this->CNUM?>' required type='text' disabled='disabled' placeholder='Serial Number' <?=$notEditable?> >
-        </div>
-        </div>
-
-    	<div id='personDetails'  display='<?=$displayForEdit?>'>
-        <div class='form-group' >
-        <div class='col-sm-6'>
-        <input class='form-control' id='person_notesid' name='NOTES_ID' value='<?=$this->NOTES_ID?>' required type='text' disabled='disabled' placeholder="Notesid" <?=$notEditable?>>
-        </div>
-
-        <div class='col-sm-6'>
-        <input class='form-control' id='person_intranet' name='EMAIL_ADDRESS' value='<?=$this->EMAIL_ADDRESS?>' required type='text' disabled='disabled' placeholder="Intranet" <?=$notEditable?>>
-        </div>
-        </div>
-
-        <div class='form-group' >
-        <div class='col-sm-12' <?=$hideDivFromEdit?>>
-        <input class='form-control' id='person_bio' name='person_bio' value='' required type='text' disabled='disabled' placeholder="Bio">
-        <input id='person_uid' name='person_uid' value='' type='hidden'  required >
+        <form id='boardingForm'  class="form-horizontal" onsubmit="return false;">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title" id='employeeResourceHeading'>Employee Details</h3>
+			</div>
 
 
-       	<input id='person_is_mgr' name='FM_MANAGER_FLAG' value='<?=$this->FM_MANAGER_FLAG?>'  type='hidden'  required >
-		<input id='person_employee_type' name='EMPLOYEE_TYPE' value='<?=$this->EMPLOYEE_TYPE?>'  type='Hidden'  required >
+		<div class="panel-body">
+			<div id='existingIbmer'>
+				<div class="form-group">
+					<div class="col-sm-6">
+						<input class="form-control" id="person_name" name="person_name"
+							value="<?=$this->FIRST_NAME . " " . $this->LAST_NAME?>" required
+							type="text" placeholder='Start typing name/serial/email'
+							<?=$notEditable?>>
+					</div>
+					<div class='col-sm-6'>
+						<input class='form-control' id='person_serial' name='CNUM'
+							value='<?=$this->CNUM?>' required type='text' disabled='disabled'
+							placeholder='Serial Number' <?=$notEditable?>>
+					</div>
+				</div>
 
-        <input id='person_first_name' name='FIRST_NAME' value='<?=$this->FIRST_NAME?>'  type='hidden'  required <?=$notEditable?>>
-        <input id='person_last_name' name='LAST_NAME' value='<?=$this->LAST_NAME?>'  type='hidden'  required <?=$notEditable?>>
+				<div id='personDetails' display='<?=$displayForEdit?>'>
+					<div class='form-group'>
+						<div class='col-sm-6'>
+							<input class='form-control' id='person_notesid' name='NOTES_ID'
+								value='<?=$this->NOTES_ID?>' required type='text'
+								disabled='disabled' placeholder="Notesid" <?=$notEditable?>>
+						</div>
+
+						<div class='col-sm-6'>
+							<input class='form-control' id='person_intranet'
+								name='EMAIL_ADDRESS' value='<?=$this->EMAIL_ADDRESS?>' required
+								type='text' disabled='disabled' placeholder="Intranet"
+								<?=$notEditable?>>
+						</div>
+					</div>
+
+					<div class='form-group'>
+						<div class='col-sm-12' <?=$hideDivFromEdit?>>
+							<input class='form-control' id='person_bio' name='person_bio'
+								value='' required type='text' disabled='disabled' placeholder="Bio">
+								<input id='person_uid'           name='person_uid'        value='' type='hidden' required>
+								<input id='person_is_mgr'	     name='FM_MANAGER_FLAG'   value='<?=$this->FM_MANAGER_FLAG?>'   type='hidden'  required>
+								<input id='person_employee_type' name='EMPLOYEE_TYPE'     value='<?=$this->EMPLOYEE_TYPE?>'		type='Hidden'  required>
+								<input id='person_first_name'    name='FIRST_NAME'        value='<?=$this->FIRST_NAME?>'        type='hidden'  required <?=$notEditable?>>
+								<input id='person_last_name'     name='LAST_NAME'         value='<?=$this->LAST_NAME?>'         type='hidden'  required <?=$notEditable?>>
+								<input id='person_ibm_location'  name='IBM_BASE_LOCATION' value='<?=$this->IBM_BASE_LOCATION?>'	type='hidden'  required>
+								<input id='person_country'       name='COUNTRY'           value='<?=$this->COUNTRY?>'           type='hidden'  required>
+
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id='notAnIbmer' style='display:none'>
+				<div class="form-group">
+					<div class="col-sm-6">
+						<input class="form-control" id="resource_first_name" name="FIRST_NAME"
+							value="<?=$this->LAST_NAME?>" required
+							type="text" placeholder='First Name'
+							<?=$notEditable?>>
+					</div>
+					<div class="col-sm-6">
+						<input class="form-control" id="resource_last_name" name="LAST_NAME"
+							value="<?=$this->LAST_NAME?>" required
+							type="text" placeholder='Last Name'
+							<?=$notEditable?>>
+					</div>
+				</div>
+
+				<div id='resourceDetails' display='<?=$displayForEdit?>'>
+					<div class='form-group'>
+						<div class='col-sm-6'>
+							<input class='form-control' id='resource_email'
+								name='EMAIL_ADDRESS' value='<?=$this->EMAIL_ADDRESS?>' required
+								type='text' placeholder="Email Address"
+								>
+						</div>
+						<div class='col-sm-6'>
+							<input class='form-control' id='resource_country'
+								name='COUNTRY' value='<?=$this->COUNTRY?>' required
+								type='text' placeholder="Country"
+								>
+						</div>
+					</div>
+
+					<div class='form-group'>
+								<input id='resource_uid'           name='person_uid'        value='<?=$this->CNUM?>'   type='hidden' >
+								<input id='resource_is_mgr'	       name='FM_MANAGER_FLAG'   value='N'               				type='hidden' >
+								<input id='resource_employee_type' name='EMPLOYEE_TYPE'     value='Pre-Hire'						type='hidden' >
+								<input id='resource_ibm_location'  name='IBM_BASE_LOCATION' value='<?=$this->IBM_BASE_LOCATION?>'	type='hidden' >
+
+					</div>
+				</div>
+			</div>
 
 
-        <input id='person_ibm_location' name='IBM_BASE_LOCATION' value='<?=$this->IBM_BASE_LOCATION?>'  type='hidden'  required >
-        <input id='person_country' name='COUNTRY' value='<?=$this->COUNTRY?>'  type='hidden'  required >
+				<div class='form-group'>
+					<div class='col-sm-6' <?=$hideDivFromEdit?>>
+						<select class='form-control select select2'
+							id='person_contractor_id' name='CONTRACTOR_ID_REQUIRED'
+							required='required'>
+							<option value='no'
+								<?=strtoupper(substr($this->CONTRACTOR_ID_REQUIRED,0,1))=='N' ? ' selected ' : null;?>>No
+								Contractor Id Required</option>
+							<option value='yes'
+								<?=strtoupper(substr($this->CONTRACTOR_ID_REQUIRED,0,1))=='Y' ? ' selected ' : null;?>>Contractor
+								Id is Required</option>
+						</select>
+					</div>
+				</div>
+			</div>
+		</div>
 
-        </div>
-        </div>
-        </div>
 
-		<div class='form-group' >
-        <div class='col-sm-6' <?=$hideDivFromEdit?>>
-        	<select class='form-control select select2' id='person_contractor_id'
-                  	          name='CONTRACTOR_ID_REQUIRED'
-                  	          required='required'
-                >
-            	<option value='no' <?=strtoupper(substr($this->CONTRACTOR_ID_REQUIRED,0,1))=='N' ? ' selected ' : null;?>>No Contractor Id Required</option>
-            	<option value='yes' <?=strtoupper(substr($this->CONTRACTOR_ID_REQUIRED,0,1))=='Y' ? ' selected ' : null;?>>Contractor Id is Required</option>
-            	</select>
-       </div>
-       </div>
-
-</div>
-</div>
-
-<div class="panel panel-default">
-  <div class="panel-heading">
+	<div class="panel panel-default">
+  	<div class="panel-heading">
     <h3 class="panel-title">Functional Manager Details</h3>
   </div>
   <div class="panel-body">
@@ -224,8 +280,8 @@ class personRecord extends DbRecord
                 <?php
                 foreach ($allManagers as $mgrCnum => $mgrNotesid){
                     echo"<option value='" . $mgrCnum . "' ";
-                    echo $userCnum==$mgrCnum ? " selected " : null;
-                    echo $mgrCnum==$this->FM_CNUM ? " selected " : null;
+                    echo (($userCnum==$mgrCnum) && empty($this->FM_CNUM)) ? " selected " : null;        // The person using the tool is a Manager - and this is their entry.
+                    echo $mgrCnum==$this->FM_CNUM ? " selected " : null;                                // This is the entry for the person already declared to be the Func Mgr
                     echo ">" . $mgrNotesid . "</option>";
                 };
                 ?>
