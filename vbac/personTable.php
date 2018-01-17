@@ -40,7 +40,7 @@ class personTable extends DbTable {
         $isFM   = personTable::isManager($_SESSION['ssoEmail']);
         $myCnum = personTable::myCnum();
 
-        $predicate = $isFM ? " FM_CNUM='" . db2_escape_string(trim($myCnum)) . "' " : null; // FM Can only see their own people.
+        $predicate = $isFM ? " FM_CNUM='" . db2_escape_string(trim($myCnum)) . "' " : " 1=1 "; // FM Can only see their own people.
 
         $sql  = " SELECT * FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName ;
         $sql .= " WHERE 1=1 AND " . $predicate;
