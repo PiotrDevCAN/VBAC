@@ -47,6 +47,7 @@ $(document).ready(function() {
     person.listenForSaveBoarding();
     person.listenForAccountOrganisation();
     person.listenForInitiatePesFromBoarding();
+    person.listenForLinkToPreBoarded();
 
 });
 

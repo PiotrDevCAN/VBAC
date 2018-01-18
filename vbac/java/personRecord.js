@@ -83,6 +83,7 @@ function personRecord() {
 			console.log(this);
 			$('#notAnIbmer').toggle();
 			$('#existingIbmer').toggle();
+			$('#linkToPreBoarded').toggle();
 
 			var currentHeading = $('#employeeResourceHeading').text();
 			var newHeading = currentHeading=='Employee Details' ? 'Resource Details' : 'Employee Details';
@@ -90,6 +91,76 @@ function personRecord() {
 		});
 	},
 
+	this.listenForLinkToPreBoarded = function(){
+		$(document).on('select2:select','#person_preboarded', function(e){
+			var data = e.params.data;
+			if(data.id!=''){
+				// They have selected an entry
+				console.log(data.id);
+				var allEnabled = $('form :enabled');
+				console.log(allEnabled);
+				$(allEnabled).attr('disabled',true);
+				$("#saveBoarding").addClass('spinning');
+				$.ajax({
+			    	url: "ajax/prePopulateFromLink.php",
+			    	type: 'POST',
+			        data : {cnum:data.id},
+			    	success: function(result){
+						$("#saveBoarding").removeClass('spinning');
+			    		console.log(result);
+			    		var resultObj = JSON.parse(result);
+			    		if(resultObj.success==true){
+			    			console.log(resultObj.data);
+			    			console.log(resultObj.data.CTB_RTB.trim());
+
+			    			   var $radios = $('input:radio[name=CTB_RTB]');
+			    			   $($radios).attr('disabled',false);
+			    			   var button =  $radios.filter('[value=' + resultObj.data.CTB_RTB.trim() + ']');
+			    			   $(button).prop('checked',true);
+			    			   $(button).trigger('click');
+
+			    			   var $radios = $('.accountOrganisation');
+			    			   $($radios).attr('disabled',false);
+			    			   var button = $radios.filter("[value='" + resultObj.data.TT_BAU.trim() + "']");
+			    			   $(button).prop('checked',true);
+			    			   $(button).trigger('click');
+
+			    			   $('#FM_CNUM').val(resultObj.data.FM_CNUM.trim()).trigger('change');
+			    			   $('#FM_CNUM').attr('disabled',false);
+
+			    			   var openSeatNumber = resultObj.data.OPEN_SEAT_NUMBER;
+			    			   if(openSeatNumber){
+				    			   $('#open_seat').val(openSeatNumber.trim());
+			    			   }
+			    			   $('#open_seat').attr('disabled',false);
+
+			    			   $('#lob').val(resultObj.data.LOB.trim()).trigger('change');
+			    			   $('#lob').attr('disabled',false);
+
+			    			   var workStream = resultObj.data.WORK_STREAM;
+			    			   if(workStream){
+			    				   $('#work_stream').val(workStream.trim()).trigger('change');
+			    			   }
+
+
+			    			   var roleOnAccount = resultObj.data.ROLE_ON_THE_ACCOUNT;
+			    			   if(roleOnAccount){
+			    				   $('#role_on_account').val(roleOnAccount.trim());
+			    			   }
+			    			   $('#role_on_account').attr('disabled',false);
+
+
+
+			    		} else {
+
+			    		};
+			    	}
+			    });
+
+
+			};
+		});
+	},
 
 
 	this.listenForSerial = function(){

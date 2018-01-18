@@ -246,6 +246,47 @@ class personTable extends DbTable {
         return $_SESSION['myCnum'];
     }
 
+    static function optionsForPreBoarded(){
+        $availPreBoPredicate  = " CNUM LIKE '%xxx' AND PES_STATUS not like '%xxx' AND PES_STATUS not in (";
+        $availPreBoPredicate .= " '" . personRecord::PES_STATUS_REMOVED . "' "; // Pre-boarded who haven't been boarded
+        $availPreBoPredicate .= ",'" . personRecord::PES_STATUS_FAILED ."' ";
+        $availPreBoPredicate .= " )";
+
+        $sql =  " SELECT FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, CNUM  FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
+        $sql .= " WHERE " . $availPreBoPredicate;
+        $sql .- " ORDER BY FIRST_NAME, LAST_NAME ";
+
+        $rs = db2_exec($_SESSION['conn'], $sql);
+
+        if (!$rs){
+            DbTable::displayErrorMessage($rs,__CLASS__ , __METHOD__ , $sql);
+            return false;
+        }
+        $options = array();
+        while(($row=db2_fetch_assoc($rs))==true){
+            $option = "<option value='" . trim($row['CNUM']) ."'>" . trim($row['FIRST_NAME']) ." " . $row['LAST_NAME']  . " (" . $row['EMAIL_ADDRESS'] .") " . "</option>";
+            $options[] = $option;
+        }
+
+        return $options;
+
+    }
+
+    static function dataFromPreBoarder($cnum){
+        $sql = " SELECT CTB_RTB,TT_BAU, WORK_STREAM, PES_DATE_REQUESTED, PES_DATE_RESPONDED, PES_REQUESTOR,  PES_STATUS, PES_STATUS_DETAILS, FM_CNUM, CONTRACTOR_ID_REQUIRED, CONTRACTOR_ID, LOB, OPEN_SEAT_NUMBER, ROLE_ON_THE_ACCOUNT, START_DATE, PROJECTED_END_DATE  ";
+        $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
+        $sql .= " WHERE CNUM='" . db2_escape_string(trim($cnum)) . "' ";
+        $sql .= " OPTIMIZE for 1 row ";
+        $rs = db2_exec($_SESSION['conn'], $sql);
+
+        if (!$rs){
+            DbTable::displayErrorMessage($rs,__CLASS__ , __METHOD__ , $sql);
+            return false;
+        }
+        $data = db2_fetch_assoc($rs);
+        return $data;
+    }
+
 
 
 }

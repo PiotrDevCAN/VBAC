@@ -147,6 +147,16 @@ class personRecord extends DbRecord
         $displayForEdit = $notEditable ? 'hidden' : null;
         $onlyEditable = $mode==FormClass::$modeEDIT ? 'text' : 'hidden'; // Some fields the user can edit - but not see/set the first time.
         $hideDivFromEdit = $mode==FormClass::$modeEDIT ? ' style="display: none;"  ' : null; //Some fields we don't show on the edit screen.
+
+//         $availPreBoPredicate  = " CNUM LIKE '%xxx' AND PES_STATUS not like '%xxx' AND PES_STATUS not in (";
+//         $availPreBoPredicate .= " '" . personRecord::PES_STATUS_REMOVED . "' "; // Pre-boarded who haven't been boarded
+//         $availPreBoPredicate .= ",'" . personRecord::PES_STATUS_DECLINED ."' ";
+//         $availPreBoPredicate .= ",'" . personRecord::PES_STATUS_FAILED ."' ";
+//         $availPreBoPredicate .= " )";
+//         $availableFromPreBoarding = $loader->loadIndexed("EMAIL_ADDRESS","CNUM", allTables::$PERSON, $availPreBoPredicate);
+        $availableFromPreBoarding = personTable::optionsForPreBoarded();
+        $preBoardersAvailable = count($availableFromPreBoarding) > 0 ? null : " disabled='disabled' ";
+
         ?>
         <form id='boardingForm'  class="form-horizontal" onsubmit="return false;">
 		<div class="panel panel-default">
@@ -259,7 +269,22 @@ class personRecord extends DbRecord
 								Id is Required</option>
 						</select>
 					</div>
-				</div>
+
+        			<div class="col-sm-6" id='linkToPreBoarded'>
+        				<select class='form-control select select2' id='person_preboarded'
+                  	          name='person_preboarded'
+                  	          <?=$preBoardersAvailable?>
+                  	          placeholder='Was pre-boarded as:'
+               			 >
+                		<option value=''>Link to Pre-Boarded</option>
+                		<?php
+                        foreach ($availableFromPreBoarding as $option){
+                            echo $option;
+                        };
+                        ?>
+            			</select>
+        			</div>
+        		</div>
 			</div>
 		</div>
 
@@ -296,7 +321,6 @@ class personRecord extends DbRecord
     <h3 class="panel-title">Role Details</h3>
   </div>
   <div class="panel-body">
-
     <div class='form-group' >
         <div class='col-sm-6'>
           <input class="form-control" id="open_seat" name="OPEN_SEAT_NUMBER" value="<?=$this->OPEN_SEAT_NUMBER?>" type="text" placeholder='Open Seat' data-toggle='tooltip' title='Open Seat'>
@@ -313,7 +337,7 @@ class personRecord extends DbRecord
 
     <div class='form-group' >
         <div class='col-sm-6'>
-          <input class="form-control" id="open_seat" name="ROLE_ON_THE_ACCOUNT" value="<?=$this->ROLE_ON_THE_ACCOUNT?>" required type="text" placeholder='Role on account' >
+          <input class="form-control" id="role_on_account" name="ROLE_ON_THE_ACCOUNT" value="<?=$this->ROLE_ON_THE_ACCOUNT?>" required type="text" placeholder='Role on account' >
 
          </div>
         <div class='col-sm-6'>
