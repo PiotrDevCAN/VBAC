@@ -3,7 +3,7 @@ use itdq\Loader;
 use itdq\BluePages;
 
 ob_start();
-
+set_time_limit(0);
 $loader = new Loader();
 $allCnum = $loader->load('CNUM',"CNUM4BP");
 
@@ -16,10 +16,7 @@ $justNotesid = "&notesid";
 echo "<div class='container-fluid'>";
 ob_start();
 foreach ($chunkedCnum as $key => $cnumList){
-    set_time_limit(20);
     $jsonObjects[$key] = BluePages::getDetailsFromCnumSlapMulti($cnumList, $detailsFromBp);
-    set_time_limit(20);
-
     foreach ($jsonObjects[$key]->search->entry as $bpEntry){
         $serial = substr($bpEntry->dn,4,9);
 
