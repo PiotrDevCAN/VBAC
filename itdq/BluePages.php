@@ -591,6 +591,25 @@ class BluePages {
 			return FALSE;
 		}
 	}
+
+	static function lookupLocations($locations){
+	        set_time_limit(120);
+	        //$urlTemplate = "http://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmperson/(|";
+	        $urlTemplate = "http://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmworklocation/(|";
+
+	        foreach ($locations as $loc){
+	            $urlTemplate .= "(workloc=" . trim($loc) . ")";
+	        }
+	        $urlTemplate .= ").list/byJson?";
+
+	    $ch = curl_init ( $urlTemplate );
+	    curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, true );
+	    $curlReturn = curl_exec ( $ch );
+	    $jsonObject = json_decode($curlReturn);
+	    return $jsonObject;
+	}
+
+
 }
 
 ?>
