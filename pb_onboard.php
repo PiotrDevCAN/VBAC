@@ -69,10 +69,10 @@ $(document).ready(function(){
     },
     startPicker = new Pikaday({
     	firstDay:1,
-		disableDayFn: function(date){
-		    // Disable weekend
-		    return date.getDay() === 0 || date.getDay() === 6;
-		},
+// 		disableDayFn: function(date){
+// 		    // Disable weekend
+// 		    return date.getDay() === 0 || date.getDay() === 6;
+// 		},
         field: document.getElementById('start_date'),
         format: 'D MMM YYYY',
         showTime: false,
@@ -88,10 +88,10 @@ $(document).ready(function(){
     }),
     endPicker = new Pikaday({
     	firstDay:1,
-		disableDayFn: function(date){
-		    // Disable weekend
-		    return date.getDay() === 0 || date.getDay() === 6;
-		},
+// 		disableDayFn: function(date){
+// 		    // Disable weekend
+// 		    return date.getDay() === 0 || date.getDay() === 6;
+// 		},
         field: document.getElementById('end_date'),
         format: 'D MMM YYYY',
         showTime: false,

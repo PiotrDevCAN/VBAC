@@ -399,15 +399,21 @@ class personRecord extends DbRecord
           <input class="form-control" id="end_date" name="PROJECTED_END_DATE" value="<?=$this->PROJECTED_END_DATE?>"  type="text" placeholder='End Date (if known)' data-toggle='tooltip' title='End Date'>
 
            </div>
-         </div>
-         </div>
-         </div>
+     </div>
+     </div>
+     </div>
+
+     <input id='pes_date_requested'   name='PES_DATE_REQUESTED'     value='<?=$this->PES_DATE_REQUESTED?>'		type='Hidden'  >
+	 <input id='pes_date_responded'   name='PES_DATE_RESPONDED'     value='<?=$this->PES_DATE_RESPONDED?>'      type='hidden'  >
+	 <input id='pes_requestor'        name='PES_REQUESTOR'          value='<?=$this->PES_REQUESTOR?>'           type='hidden'  >
+	 <input id='pes_status'           name='PES_STATUS'             value='<?=$this->PES_STATUS?>'              type='hidden'  >
+	 <input id='pes_status_details'   name='PES_STATUS_DETAILS'     value='<?=$this->PES_STATUS_DETAILS?>'      type='hidden'  >
 
 
 		<?php
 	$allButtons = null;
-	$submitButton = $mode==FormClass::$modeEDIT ?  $this->formButton('submit','Submit','updateBoarding',null,'Update','btn-primary glyphicon glyphicon-refresh') :  $this->formButton('submit','Submit','saveBoarding',null,'Submit','btn-primary glyphicon glyphicon-refresh');
-	$pesButton    = $mode==FormClass::$modeEDIT ?  null :  $this->formButton('button','initiatePes','initiatePes','disabled','Initiate PES','btn-primary btnPesInitiate glyphicon glyphicon-refresh');
+	$submitButton = $mode==FormClass::$modeEDIT ?  $this->formButton('submit','Submit','updateBoarding',null,'Update','btn-primary glyphicon glyphicon-refresh') :  $this->formButton('submit','Submit','saveBoarding',null,'Save','btn-primary glyphicon glyphicon-refresh');
+	$pesButton    = $mode==FormClass::$modeEDIT ?  null :  $this->formButton('button','initiatePes','initiatePes','disabled','Save & PES','btn-primary btnPesInitiate glyphicon glyphicon-refresh');
   	$allButtons[] = $submitButton;
   	$allButtons[] = $pesButton;
 	$this->formBlueButtons($allButtons);

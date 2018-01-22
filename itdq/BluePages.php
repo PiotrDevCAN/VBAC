@@ -14,7 +14,7 @@ class BluePages {
 
 
 
-	static function getDetailsFromCnumSlapMulti($cnumArray){
+	static function getDetailsFromCnumSlapMulti($cnumArray,$parms="&uid&dept&div&cr&notesId&mail&managerSerialNumber&managerCountryCode&notesEmail&isManager"){
 	    $startTime = microtime(true);
 	    set_time_limit(120);
 	    $urlTemplate = "http://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmperson/(|";
@@ -22,7 +22,7 @@ class BluePages {
 	    foreach ($cnumArray as $cnum){
 	        $urlTemplate .= "(UID=" . trim($cnum) . ")";
 	    }
-	    $urlTemplate .= ").list/byJson?&uid&dept&div&c&managerSerialNumber&managerCountryCode&notesEmail&isManager&notesId&mail ";
+	    $urlTemplate .= ").list/byJson?" . trim($parms);
 	    //	    $urlTemplate .= ").list/byxml?&uid&callupName&dept&div&c&managerSerialNumber&managerCountryCode&jobResponsibilities&hrFirstname&ventureName&glTeamLead&notesEmail&notesShortName&notesMailDomain&mail&preferredFirstName&hrPreferredName&givenName&hrCompanyCode&workLoc";
 
 	    /*
@@ -31,7 +31,7 @@ class BluePages {
 	     */
 
 
-	    echo $urlTemplate;
+// 	    echo $urlTemplate;
 
 
 	    $ch = curl_init ( $urlTemplate );
@@ -40,9 +40,6 @@ class BluePages {
 	    $curlReturn = curl_exec ( $ch );
 	    $lookupTime = (float)(microtime(true) - $startTime);
 	    echo "<br/>Bluepages Lookup Elapsed Time:$lookupTime";
-
-// 	    var_dump($curlReturn);
-
 
 	    //$xml = simplexml_load_string($curlReturn);
 	    $jsonObject = json_decode($curlReturn);

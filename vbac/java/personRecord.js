@@ -64,7 +64,6 @@ function personRecord() {
 	},
 
 	this.listenForOnBoarding = function() {
-		console.log('listening');
 		$(document).on('click','#onBoardingBtn', function(){
 			window.open('pb_onboard.php', '_self');
 		});
@@ -150,13 +149,51 @@ function personRecord() {
 			    			   $('#role_on_account').attr('disabled',false);
 
 
+			    			   var sDate = resultObj.data.START_DATE;
+			    			   console.log(sDate);
+			    			   if(sDate){
+			    				   var startDate = new Pikaday({ field: document.getElementById('start_date') });
+			    				   startDate.setDate(sDate);
+			    			   }
+			    			   $('#start_date').attr('disabled',false);
 
-			    		} else {
+			    			   var eDate = resultObj.data.PROJECTED_END_DATE;
+			    			   console.log(eDate);
+			    			   if(eDate){
+			    				   var endDate = new Pikaday({ field: document.getElementById('end_date') });
+			    				   endDate.setDate(eDate);
+			    			   }
+			    			   $('#end_date').attr('disabled',false);
 
-			    		};
-			    	}
+			    			   var pesDateReq = resultObj.data.PES_DATE_REQUESTED;
+			    			   if(pesDateReq){
+			    				   $('#pes_date_requested').val(pesDateReq.trim());
+			    			   }
+
+			    			   var pesDateResp = resultObj.data.PES_DATE_RESPONDED;
+			    			   if(pesDateResp){
+			    				   $('#pes_date_responded').val(pesDateResp.trim());
+			    			   }
+
+			    			   var pesRequestor = resultObj.data.PES_REQUESTOR;
+			    			   if(pesRequestor){
+			    				   $('#pes_requestor').val(pesRequestor.trim());
+			    			   }
+
+			    			   var pesStatus = resultObj.data.PES_STATUS;
+			    			   if(pesStatus){
+			    				   $('#pes_status').val(pesStatus.trim());
+			    			   }
+
+			    			   var pesStatusDet = resultObj.data.PES_STATUS_DETAILS;
+			    			   if(pesStatusDet){
+			    				   $('#pes_status_details').val(pesStatusDet.trim());
+			    			   }
+
+			    			   $(allEnabled).attr('disabled',false); // open up the fields we'd disabled.
+				    		};
+			    		}
 			    });
-
 
 			};
 		});
@@ -336,7 +373,9 @@ function personRecord() {
 	},
 
 	this.listenForSaveBoarding = function(){
+		console.log($('#saveBoarding'));
 		$(document).on('click','#saveBoarding', function(){
+			console.log('caught SaveBoarding');
 			var person = new personRecord();
 			person.saveBoarding('Save');
 		});
