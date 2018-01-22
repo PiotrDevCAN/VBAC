@@ -7,7 +7,7 @@ ob_start();
 $loader = new Loader();
 $allCnum = $loader->load('CNUM',"CNUM4BP");
 
-$chunkedCnum = array_chunk($allCnum, 500);
+$chunkedCnum = array_chunk($allCnum, 250);
 $detailsFromBp = "&manager&worklocation&employeetype&notesid";
 $justNotesid = "&notesid";
 
