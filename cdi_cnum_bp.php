@@ -11,10 +11,7 @@ $chunkedCnum = array_chunk($allCnum, 500);
 $detailsFromBp = "&manager&worklocation&employeetype&notesid";
 $justNotesid = "&notesid";
 
-$employeetype = '';
-$worklocation = '';
-$manager = '';
-$notesid = '';
+
 
 echo "<div class='container-fluid'>";
 ob_start();
@@ -25,6 +22,12 @@ foreach ($chunkedCnum as $key => $cnumList){
 
     foreach ($jsonObjects[$key]->search->entry as $bpEntry){
         $serial = substr($bpEntry->dn,4,9);
+
+        $employeetype = 'xxxxxxxxxxxxxxxxx';
+        $worklocation = 'xxxxxxxxxxxxxxxxx';
+        $manager = 'xxxxxxxxxxxxxxxxx';
+        $notesid = 'xxxxxxxxxxxxxxxxx';
+
         foreach ($bpEntry->attribute as $details){
             $name = trim($details->name);
             $$name = trim($details->value[0]);
@@ -87,6 +90,11 @@ echo "<tbody>";
 foreach ($jsonObjects as $key => $jsonObject){
     foreach ($jsonObject->search->entry as $bpEntry){
         $serial = substr($bpEntry->dn,4,9);
+        $worklocation = 'xxxxxxxxxxxxxxxxx';
+        $notesid = 'xxxxxxxxxxxxxxxxx';
+        $manager = 'xxxxxxxxxxxxxxxxx';
+
+
         echo "<tr><td>" . $serial . "</td>";
         foreach ($bpEntry->attribute as $details){
                 $name = $details->name;
