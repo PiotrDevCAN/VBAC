@@ -254,7 +254,7 @@ class personTable extends DbTable {
 
         $sql =  " SELECT FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, CNUM  FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE " . $availPreBoPredicate;
-        $sql .- " ORDER BY FIRST_NAME, LAST_NAME ";
+        $sql .= " ORDER BY FIRST_NAME, LAST_NAME ";
 
         $rs = db2_exec($_SESSION['conn'], $sql);
 
