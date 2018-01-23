@@ -96,7 +96,7 @@ dropdown-menu > li > a {
 	padding-top:10px;
 }
 
-.glyphicon.spinning {
+.btn.spinning {
     animation: spin 1s infinite linear;
     -webkit-animation: spin2 1s infinite linear;
 }

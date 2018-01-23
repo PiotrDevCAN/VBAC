@@ -84,6 +84,16 @@ function personRecord() {
 			$('#existingIbmer').toggle();
 			$('#linkToPreBoarded').toggle();
 
+			if($('#notAnIbmer').is(":visible")){
+				$('#notAnIbmer :input').attr('required',true);
+				$('#existingIbmer :input').attr('required',false);
+			} else {
+				$('#notAnIbmer :input').attr('required',false);
+				$('#existingIbmer :input').attr('required',true);
+			}
+
+
+
 			var currentHeading = $('#employeeResourceHeading').text();
 			var newHeading = currentHeading=='Employee Details' ? 'Resource Details' : 'Employee Details';
 			$('#employeeResourceHeading').text(newHeading);
@@ -215,6 +225,7 @@ function personRecord() {
 
 	this.fetchBluepagesDetailsForCnum = function(cnum){
 		console.log(cnum);
+ 	   $('#saveBoarding').attr('disabled',true);
 
 		var urlOptions = "preferredidentity&jobresponsibilities&notesemail&uid&preferredfirstname&hrfirstname&sn&hrfamilyname&ismanager&phonemailnumber&employeetype&co&ibmloc";
 
@@ -232,11 +243,6 @@ function personRecord() {
 		    			var object = attributes[a];
 		    			var value = object.value;
 		    			var name = object.name;
-
-		    			console.log("Name:" + name);
-		    			console.log("Value:" + value);
-		    			console.log(typeof(value));
-
 		    			switch(name){
 		    			case 'preferredidentity':
 		    				var intranet = document.getElementById('person_intranet');
@@ -292,11 +298,6 @@ function personRecord() {
 		    				   console.log($(isMgr) + ":" + value);
 			                   if(typeof(isMgr) !== 'undefined'){ isMgr.value = value ;};
 				               break;
-		    			case 'phonemailnumber':
-		    				   var phone =  document.getElementById('person_phone');
-		    				   console.log($(phone) + ":" + value);
-			                   if(typeof(phone) !== 'undefined'){ phone.value = value ;};
-				               break;
 		    			case 'employeetype':
 		    				   var employeeeType =  document.getElementById('person_employee_type');
 		    				   console.log($(employeeeType) + ":" + value);
@@ -316,6 +317,7 @@ function personRecord() {
 		    				// console.log(name + ":" + value);
 		    			}
 		    		}
+		    	   $('#saveBoarding').attr('disabled',false);
                    $('#personDetails').show();
                    $('#person_name').val($('#person_first_name').val() + " " + $('#person_last_name').val()).attr('disable',true);
 
@@ -330,6 +332,28 @@ function personRecord() {
 		};
 
 	},
+
+	this.listenForCtbRtb = function(){
+		$(document).on('click','.ctbRtb', function(){
+			var ctbRtb = $(this).val();
+			$('#cioAlignment').select2('destroy');
+			if(ctbRtb=='CTB'){
+				$('#cioAlignment').select2({
+					placeholder:"Select CIO Alignment",
+					})
+					.attr('disabled',false)
+					.attr('required',true);
+			} else {
+				$('#cioAlignment').select2({
+					placeholder:"Not required",
+					})
+					.attr('disabled',true)
+					.attr('required',false);
+			}
+		});
+	},
+
+
 
 	this.listenForAccountOrganisation = function(){
 		// var workStream is created in PHP in the personRecord class and loaded to javascript using Javascript::buildSelectArray
@@ -389,6 +413,7 @@ function personRecord() {
 	},
 
 	this.saveBoarding = function(mode){
+		console.log('saveBoarding mode:' + mode);
 		var form = $('#boardingForm');
 		var formValid = form[0].checkValidity();
 		if(formValid){
@@ -432,6 +457,9 @@ function personRecord() {
 
 		    	}
 		    });
+		} else {
+			console.log('invalid fields follow');
+			console.log($(form).find( ":invalid" ));
 		}
 	},
 

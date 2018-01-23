@@ -60,6 +60,7 @@ class personRecord extends DbRecord
     protected $WORK_STREAM;
     protected $CONTRACTOR_ID_REQUIRED;
     protected $CONTRACTOR_ID;
+    protected $CIO_ALIGNMENT;
 
 
     protected $person_bio;
@@ -79,6 +80,7 @@ class personRecord extends DbRecord
 
     public static $employeeTypeMapping = array('A'=>'Regular','B'=>'Contractor','C'=>'Contractor','I'=>'Regular','L'=>'Regular','O'=>'Regular','P'=>'Regular','V'=>'Contractor','X'=>'Regular');
 
+    public static $cio = array('Commercial','Cyber', 'Digital','Divestment','GOFE','IT 4 IT','Insurance','Retail & CS','Sandbox','TRP');
 
    // private static $pesTaskId = 'lbgvetpr@uk.ibm.com';
     private static $pesTaskId = 'rob.daniel@uk.ibm.com';
@@ -219,13 +221,13 @@ class personRecord extends DbRecord
 				<div class="form-group">
 					<div class="col-sm-6">
 						<input class="form-control" id="resource_first_name" name="FIRST_NAME"
-							value="<?=$this->LAST_NAME?>" required
+							value="<?=$this->LAST_NAME?>"
 							type="text" placeholder='First Name'
 							<?=$notEditable?>>
 					</div>
 					<div class="col-sm-6">
 						<input class="form-control" id="resource_last_name" name="LAST_NAME"
-							value="<?=$this->LAST_NAME?>" required
+							value="<?=$this->LAST_NAME?>"
 							type="text" placeholder='Last Name'
 							<?=$notEditable?>>
 					</div>
@@ -235,20 +237,20 @@ class personRecord extends DbRecord
 					<div class='form-group'>
 						<div class='col-sm-6'>
 							<input class='form-control' id='resource_email'
-								name='EMAIL_ADDRESS' value='<?=$this->EMAIL_ADDRESS?>' required
+								name='EMAIL_ADDRESS' value='<?=$this->EMAIL_ADDRESS?>'
 								type='text' placeholder="Email Address"
 								>
 						</div>
 						<div class='col-sm-6'>
 							<input class='form-control' id='resource_country'
-								name='COUNTRY' value='<?=$this->COUNTRY?>' required
+								name='COUNTRY' value='<?=$this->COUNTRY?>'
 								type='text' placeholder="Country"
 								>
 						</div>
 					</div>
 
 					<div class='form-group'>
-								<input id='resource_uid'           name='person_uid'        value='<?=$this->CNUM?>'   type='hidden' >
+								<input id='resource_uid'           name='person_uid'        value='<?=$this->CNUM?>'   				type='hidden' >
 								<input id='resource_is_mgr'	       name='FM_MANAGER_FLAG'   value='N'               				type='hidden' >
 								<input id='resource_employee_type' name='EMPLOYEE_TYPE'     value='Pre-Hire'						type='hidden' >
 								<input id='resource_ibm_location'  name='IBM_BASE_LOCATION' value='<?=$this->IBM_BASE_LOCATION?>'	type='hidden' >
@@ -326,22 +328,16 @@ class personRecord extends DbRecord
     <div class='form-group' >
         <div class='col-sm-6'>
           <input class="form-control" id="open_seat" name="OPEN_SEAT_NUMBER" value="<?=$this->OPEN_SEAT_NUMBER?>" type="text" placeholder='Open Seat' data-toggle='tooltip' title='Open Seat'>
-
-         </div>
-        <div class='col-sm-6'>
-             <div class="radio">
-  				<label><input type="radio" name="CTB_RTB" required value='CTB' <?=substr($this->CTB_RTB,0,3)=='CTB'? 'checked' : null ?>>CTB</label>
-  				<label><input type="radio" name="CTB_RTB" required value='RTB' <?=substr($this->CTB_RTB,0,3)=='RTB'? 'checked' : null ?>>RTB</label>
-  				<label><input type="radio" name="CTB_RTB" required value='Other' <?=substr($this->CTB_RTB,0,5)=='Other'? 'checked' : null ?>>Other</label>
-			</div>
         </div>
-     </div>
-
-    <div class='form-group' >
         <div class='col-sm-6'>
           <input class="form-control" id="role_on_account" name="ROLE_ON_THE_ACCOUNT" value="<?=$this->ROLE_ON_THE_ACCOUNT?>" required type="text" placeholder='Role on account' >
+       </div>
+    </div>
 
-         </div>
+
+
+    <div class='form-group' >
+
         <div class='col-sm-6'>
         	   	<select class='form-control select select2' id='lob'
                   	          name='LOB'
@@ -357,6 +353,32 @@ class personRecord extends DbRecord
             </select>
 		</div>
      </div>
+
+         <div class='form-group' id='selectCioAllignment'>
+         <div class='col-sm-6'>
+             <div class="radio">
+  				<label><input type="radio" name="CTB_RTB" required class='ctbRtb' value='CTB' <?=substr($this->CTB_RTB,0,3)=='CTB'? 'checked' : null ?>>CTB</label>
+  				<label><input type="radio" name="CTB_RTB" required class='ctbRtb' value='RTB' <?=substr($this->CTB_RTB,0,3)=='RTB'? 'checked' : null ?>>RTB</label>
+  				<label><input type="radio" name="CTB_RTB" required class='ctbRtb' value='Other' <?=substr($this->CTB_RTB,0,5)=='Other'? 'checked' : null ?>>Other</label>
+			</div>
+        </div>
+        <div class='col-sm-6'>
+           	<select class='form-control select select2' id='cioAlignment'
+                  	          name='CIO_ALIGNMENT'
+                  	          disabled
+                  	          placeholder='Select CTB/RTB/Other'
+            	>
+                <option value=''>Select CTB/RTB/Other</option>
+                <?php
+                foreach (self::$cio as $cioValue) {
+                    ?><option value='<?=$cioValue?>'  <?=trim($this->CIO_ALIGNMENT)==trim($cioValue)? ' selected ' : null ?>   ><?=$cioValue?></option><?php
+                }
+                ?>
+            </select>
+            </div>
+	</div>
+
+
 
 
     <div class='form-group' >
@@ -414,8 +436,8 @@ class personRecord extends DbRecord
 
 		<?php
 	$allButtons = null;
-	$submitButton = $mode==FormClass::$modeEDIT ?  $this->formButton('submit','Submit','updateBoarding',null,'Update','btn-primary glyphicon glyphicon-refresh') :  $this->formButton('submit','Submit','saveBoarding',null,'Save','btn-primary glyphicon glyphicon-refresh');
-	$pesButton    = $mode==FormClass::$modeEDIT ?  null :  $this->formButton('button','initiatePes','initiatePes','disabled','Save & PES','btn-primary btnPesInitiate glyphicon glyphicon-refresh');
+	$submitButton = $mode==FormClass::$modeEDIT ?  $this->formButton('submit','Submit','updateBoarding','disabled','Update','btn btn-primary') :  $this->formButton('submit','Submit','saveBoarding','disabled','Save','btn btn-primary');
+	$pesButton    = $mode==FormClass::$modeEDIT ?  null :  $this->formButton('button','initiatePes','initiatePes','disabled','Initiate PES','btn btn-primary btnPesInitiate');
   	$allButtons[] = $submitButton;
   	$allButtons[] = $pesButton;
 	$this->formBlueButtons($allButtons);
