@@ -18,7 +18,7 @@ class BluePages {
 	    $startTime = microtime(true);
 	    set_time_limit(120);
 	   //  $urlTemplate = "https://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmperson/(|";
-	    $urlTemplate =  "api/bluepages.php?ibmperson/(|";
+	    $urlTemplate = $_SERVER['SERVER_NAME'] . "/api/bluepages.php?ibmperson/(|";
 
 	    foreach ($cnumArray as $cnum){
 	        $urlTemplate .= "(UID=" . trim($cnum) . ")";
