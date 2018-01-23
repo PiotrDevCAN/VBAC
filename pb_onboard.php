@@ -46,6 +46,7 @@ $(document).ready(function() {
     person.listenForSerial();
     person.listenForSaveBoarding();
     person.listenForAccountOrganisation();
+    person.listenForCtbRtb();
     person.listenForInitiatePesFromBoarding();
     person.listenForLinkToPreBoarded();
 

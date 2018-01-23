@@ -331,6 +331,28 @@ function personRecord() {
 
 	},
 
+	this.listenForCtbRtb = function(){
+		$(document).on('click','.ctbRtb', function(){
+			var ctbRtb = $(this).val();
+			$('#cioAlignment').select2('destroy');
+			if(ctbRtb=='CTB'){
+				$('#cioAlignment').select2({
+					placeholder:"Select CIO Alignment",
+					})
+					.attr('disabled',false)
+					.attr('required',true);
+			} else {
+				$('#cioAlignment').select2({
+					placeholder:"Not required",
+					})
+					.attr('disabled',true)
+					.attr('required',false);
+			}
+		});
+	},
+
+
+
 	this.listenForAccountOrganisation = function(){
 		// var workStream is created in PHP in the personRecord class and loaded to javascript using Javascript::buildSelectArray
 		$(document).on('click','.accountOrganisation', function(){
