@@ -57,6 +57,9 @@ $site = array(
     'email' => false,
     'emailId' => 'DoNotReply_vbac@uk.ibm.com',
 
+    'auditLife' => '13 months',
+    'auditDetailsLife' => '1 month',
+
     'SITE_NAME' => $_SERVER['environment'],
     'iconDirectory' => 'ICON'
 
