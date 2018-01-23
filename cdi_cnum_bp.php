@@ -157,7 +157,7 @@ echo "</div>";
 
 ?>
 <div class='container'>
-<?=// $messages;?>
+<?=$messages;?>
 <?php
 echo "<br/>Have displayed all the data.";
 echo "<br/>Memory Usage : " . memory_get_usage(true);
