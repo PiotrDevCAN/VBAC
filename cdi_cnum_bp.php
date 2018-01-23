@@ -36,10 +36,6 @@ foreach ($chunkedCnum as $key => $cnumList){
     echo "<br/>Memory Usage : " . memory_get_usage(true)/1024 . "Kb";
     echo "<br/>Memory Peak : " .  memory_get_peak_usage(true)/1024 . "Kb";
 
-
-    die('here');
-
-
     foreach ($jsonObjects[$key]->search->entry as $bpEntry){
         $serial = substr($bpEntry->dn,4,9);
 
