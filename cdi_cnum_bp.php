@@ -21,6 +21,21 @@ echo "<br/>Memory Usage : " . memory_get_usage(true)/1024 . "Kb";
 echo "<br/>Memory Peak : " .  memory_get_peak_usage(true)/1024 . "Kb";
 
 
+die('here');
+
+$loader = new Loader();
+$allCnum = $loader->load('CNUM',"CNUM4BP");
+
+$chunkedCnum = array_chunk($allCnum, 250);
+$detailsFromBp = "&manager&worklocation&employeetype&notesid";
+$justNotesid = "&notesid";
+
+
+
+
+
+
+
 foreach ($chunkedCnum as $key => $cnumList){
     $jsonObjects[$key] = BluePages::getDetailsFromCnumSlapMulti($cnumList, $detailsFromBp);
     foreach ($jsonObjects[$key]->search->entry as $bpEntry){
