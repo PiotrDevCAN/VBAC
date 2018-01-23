@@ -32,13 +32,13 @@ function auditRecord() {
 
 	this.initialiseDataTable = function(){
 	    // Setup - add a text input to each footer cell
-	    $('#personTable tfoot th').each( function () {
+	    $('#auditTable tfoot th').each( function () {
 	        var title = $(this).text();
 	        $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
 	    } );
 		// DataTable
 	    console.log($('#audit'));
-	    personRecord.table = $('#auditTable').DataTable({
+	    auditRecord.table = $('#auditTable').DataTable({
 	    	ajax: {
 	            url: 'ajax/populateAuditDatatable.php',
 	            type: 'POST',

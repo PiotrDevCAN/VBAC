@@ -24,7 +24,7 @@ class AuditTable extends DbTable {
         }
     }
 
-    static function removeExpired($auditLifeSpan,$detailsLifeSpan){
+    static function removeExpired($auditLifeSpan=null,$detailsLifeSpan=null){
         if(property_exists('itdq\AllItdqTables','AUDIT')){
             $auditLifeSpan = empty($auditLifeSpan) ? $_SESSION['AuditLife'] : $auditLifeSpan;
             $detailsLifeSpan = empty($detailsLifeSpan) ? $_SESSION['AuditDetailsLife'] : $detailsLifeSpan;
