@@ -26,7 +26,7 @@ try {
     } else {
         echo "<br/>PES Status set to : " . $_POST['psm_status'];
         echo "<br/>Detail : " . $_POST['psm_detail'];
-        AuditTable::audit("PES Status set to : " . $_POST['psm_status'] . " Detail :" . $_POST['psm_detail'],AuditTable::RECORD_TYPE_AUDIT);
+        AuditTable::audit("PES Status set for:" . $_POST['psm_cnum'] . " To : " . $_POST['psm_status'] . " Detail :" . $_POST['psm_detail'],AuditTable::RECORD_TYPE_AUDIT);
 
         $success = true;
     }
