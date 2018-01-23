@@ -156,34 +156,9 @@ echo "</div>";
 
 
 ?>
-<div class='container'>
-<?php // $messages;?>
-<?php
-// echo "<br/>Have displayed all the data.";
-// echo "<br/>Memory Usage : " . memory_get_usage(true);
-// echo "<br/>Memory Peak : " .  memory_get_peak_usage(true);
-
-// echo "<br/>Memory Usage : " . memory_get_usage(true)/1024 . "Kb";
-// echo "<br/>Memory Peak : " .  memory_get_peak_usage(true)/1024 . " Kb";
-
-// echo "<br/>Memory Usage : " . memory_get_usage(true)/1024/1024 . "Mb";
-// echo "<br/>Memory Peak : " .  memory_get_peak_usage(true)/1024/1024 . " Mb";
-
-?>
-
-</div>
-
-
-
-
-
-
 
 <script type="text/javascript">
-
-
 var table;
-
 
 $(document).ready(function() {
 
