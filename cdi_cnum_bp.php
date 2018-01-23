@@ -62,9 +62,6 @@ echo "<br/>Loaded the people from BP and worked out who the missing managers are
 echo "<br/>Memory Usage : " . memory_get_usage(true)/1024 . "Kb";
 echo "<br/>Memory Peak : " .  memory_get_peak_usage(true)/1024 . "Kb";
 
-die('here');
-
-
 foreach ($chunkedManagers as $key => $missingMgrs){
     $missingMgrNotesids[] = BluePages::getDetailsFromCnumSlapMulti($missingMgrs, $detailsFromBp);
 }
