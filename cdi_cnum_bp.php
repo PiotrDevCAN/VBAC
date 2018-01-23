@@ -4,14 +4,6 @@ use itdq\BluePages;
 
 ob_start();
 set_time_limit(0);
-$loader = new Loader();
-$allCnum = $loader->load('CNUM',"CNUM4BP");
-
-$chunkedCnum = array_chunk($allCnum, 250);
-$detailsFromBp = "&manager&worklocation&employeetype&notesid";
-$justNotesid = "&notesid";
-
-
 
 echo "<div class='container-fluid'>";
 ob_start();
@@ -26,13 +18,15 @@ die('here');
 $loader = new Loader();
 $allCnum = $loader->load('CNUM',"CNUM4BP");
 
+echo "<br/>Loaded CNUM from DB2";
+echo "<br/>Memory Usage : " . memory_get_usage(true)/1024 . "Kb";
+echo "<br/>Memory Peak : " .  memory_get_peak_usage(true)/1024 . "Kb";
+
+
+
 $chunkedCnum = array_chunk($allCnum, 250);
 $detailsFromBp = "&manager&worklocation&employeetype&notesid";
 $justNotesid = "&notesid";
-
-
-
-
 
 
 
