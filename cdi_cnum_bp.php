@@ -15,6 +15,12 @@ $justNotesid = "&notesid";
 
 echo "<div class='container-fluid'>";
 ob_start();
+
+echo "<br/>About to start";
+echo "<br/>Memory Usage : " . memory_get_usage(true)/1024 . "Kb";
+echo "<br/>Memory Peak : " .  memory_get_peak_usage(true)/1024 . "Kb";
+
+
 foreach ($chunkedCnum as $key => $cnumList){
     $jsonObjects[$key] = BluePages::getDetailsFromCnumSlapMulti($cnumList, $detailsFromBp);
     foreach ($jsonObjects[$key]->search->entry as $bpEntry){
@@ -39,9 +45,19 @@ foreach ($chunkedCnum as $key => $cnumList){
 $missingManagers = array_diff($managers, $allCnum);
 $chunkedManagers = array_chunk($missingManagers,500);
 
+echo "<br/>Loaded the people from BP and worked out who the missing managers are";
+echo "<br/>Memory Usage : " . memory_get_usage(true)/1024 . "Kb";
+echo "<br/>Memory Peak : " .  memory_get_peak_usage(true)/1024 . "Kb";
+
+die('here');
+
+
 foreach ($chunkedManagers as $key => $missingMgrs){
     $missingMgrNotesids[] = BluePages::getDetailsFromCnumSlapMulti($missingMgrs, $detailsFromBp);
 }
+echo "<br/>Got the details for the missing managers";
+echo "<br/>Memory Usage : " . memory_get_usage(true)/1024 . "Kb";
+echo "<br/>Memory Peak : " .  memory_get_peak_usage(true)/1024 . "Kb";
 
 foreach ($missingMgrNotesids as $missingMgrNotesid ) {
     foreach ($missingMgrNotesid->search->entry as $bpEntry){
@@ -53,6 +69,9 @@ foreach ($missingMgrNotesids as $missingMgrNotesid ) {
         $notesIdLookup[$serial] = str_replace(array('CN=','OU=','O='),array('','',''),$notesid);
     }
 }
+echo "<br/>Built the list of Notesids";
+echo "<br/>Memory Usage : " . memory_get_usage(true)/1024 . "Kb";
+echo "<br/>Memory Peak : " .  memory_get_peak_usage(true)/1024 . "Kb";
 
 // Lookup locations now.
 
@@ -64,6 +83,10 @@ $allLocations = $json->search->entry;
 $workloc = '';
 $c = '';
 $l = '';
+echo "<br/>Got all the locations";
+echo "<br/>Memory Usage : " . memory_get_usage(true)/1024 . "Kb";
+echo "<br/>Memory Peak : " .  memory_get_peak_usage(true)/1024 . "Kb";
+
 
 $allLocationDetails = array();
 foreach ($allLocations as $location){
@@ -78,8 +101,11 @@ foreach ($allLocations as $location){
     $allLocationDetails[$workloc] = array('country'=>$c,'city'=>$l,'address'=>$address1);
 }
 
+echo "<br/>Got all the location details";
+echo "<br/>Memory Usage : " . memory_get_usage(true)/1024 . "Kb";
+echo "<br/>Memory Peak : " .  memory_get_peak_usage(true)/1024 . "Kb";
 
-ob_clean();
+$messages = ob_get_clean();
 
 echo "<table id='bpDetails' class='table table-striped table-bordered compact' ><thead><th>Serial</th><th>Notes Id</th><th>Manager</th><th>Manager Notesid</th><th>Employee Type</th><th>Work Location</th><th>Address</th></thead>";
 echo "<tbody>";
@@ -120,7 +146,31 @@ echo "</tbody>";
 echo "<tfoot><th>Serial</th><th>Notes Id</th><th>Manager</th><th>Manager Notesid</th><th>Employee Type</th><th>Work Location</th><th>Address</th></tfoot>";
 echo "</table>";
 echo "</div>";
+
+
+
 ?>
+<div class='container'>
+<?=$messages;?>
+<?php
+echo "<br/>Have displayed all the data.";
+echo "<br/>Memory Usage : " . memory_get_usage(true);
+echo "<br/>Memory Peak : " .  memory_get_peak_usage(true);
+
+echo "<br/>Memory Usage : " . memory_get_usage(true)/1024 . "Kb";
+echo "<br/>Memory Peak : " .  memory_get_peak_usage(true)/1024 . " Kb";
+
+echo "<br/>Memory Usage : " . memory_get_usage(true)/1024/1024 . "Mb";
+echo "<br/>Memory Peak : " .  memory_get_peak_usage(true)/1024/1024 . " Mb";
+
+?>
+
+</div>
+
+
+
+
+
 
 
 <script type="text/javascript">
