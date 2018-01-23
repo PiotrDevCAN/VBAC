@@ -596,7 +596,8 @@ class BluePages {
 	static function lookupLocations($locations){
 	        set_time_limit(120);
 	        //$urlTemplate = "http://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmperson/(|";
-	        $urlTemplate = "http://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmworklocation/(|";
+	        //$urlTemplate = "http://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmworklocation/(|";
+	        $urlTemplate = $_SERVER['SERVER_NAME'] . "/api/bluepages.php?ibmworklocation/(|";
 
 	        foreach ($locations as $loc){
 	            $urlTemplate .= "(workloc=" . trim($loc) . ")";
