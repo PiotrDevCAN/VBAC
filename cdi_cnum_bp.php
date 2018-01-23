@@ -48,6 +48,9 @@ foreach ($chunkedCnum as $key => $cnumList){
         $managerSerial = substr($manager,4,9);
         $managers[$managerSerial] = $managerSerial;
         $worklocations[substr($worklocation,8,3)] = substr($worklocation,8,3);
+        if(isset($allCnum[$serial])){
+            unset($allCnum[$serial]);
+        }
     }
 }
 
@@ -116,6 +119,13 @@ $messages = ob_get_clean();
 echo "<table id='bpDetails' class='table table-striped table-bordered compact' ><thead><th>Serial</th><th>Notes Id</th><th>Manager</th><th>Manager Notesid</th><th>Employee Type</th><th>Work Location</th><th>Address</th></thead>";
 echo "<tbody>";
 
+foreach ($allCnum as $serial) {
+    echo "<tr><td>$serial</td><td>Not in bp</td><td>Not in bp</td><td>Not in bp</td><td>Not in bp</td><td>Not in bp</td><td>Not in bp</td></tr>";
+}
+
+
+
+
 foreach ($jsonObjects as $key => $jsonObject){
     foreach ($jsonObject->search->entry as $bpEntry){
         $serial = substr($bpEntry->dn,4,9);
@@ -152,9 +162,6 @@ echo "</tbody>";
 echo "<tfoot><th>Serial</th><th>Notes Id</th><th>Manager</th><th>Manager Notesid</th><th>Employee Type</th><th>Work Location</th><th>Address</th></tfoot>";
 echo "</table>";
 echo "</div>";
-
-
-
 ?>
 
 <script type="text/javascript">
