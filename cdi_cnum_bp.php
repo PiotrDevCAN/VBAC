@@ -120,7 +120,7 @@ echo "<table id='bpDetails' class='table table-striped table-bordered compact' >
 echo "<tbody>";
 
 foreach ($allCnum as $serial) {
-    echo "<tr><td>$serial</td><td>Not in bp</td><td>Not in bp</td><td>Not in bp</td><td>Not in bp</td><td>Not in bp</td><td>Not in bp</td></tr>";
+    echo "<tr><td>$serial</td><td>Not in bp</td><td>Not in bp</td><td>Not in bp</td><td>Z</td><td>Not in bp</td><td>Not in bp</td></tr>";
 }
 
 
