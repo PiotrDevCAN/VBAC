@@ -17,8 +17,8 @@ class BluePages {
 	static function getDetailsFromCnumSlapMulti($cnumArray,$parms="&uid&dept&div&cr&notesId&mail&managerSerialNumber&managerCountryCode&notesEmail&isManager"){
 	    $startTime = microtime(true);
 	    set_time_limit(120);
-	    $urlTemplate = "https://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmperson/(|";
-	   //  $urlTemplate = $_SERVER['SERVER_NAME'] . "/api/bluepages.php?ibmperson/(|";
+	   //  $urlTemplate = "https://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmperson/(|";
+	    $urlTemplate = $_SERVER['SERVER_NAME'] . "/api/bluepages.php?ibmperson/(|";
 
 	    foreach ($cnumArray as $cnum){
 	        $urlTemplate .= "(UID=" . trim($cnum) . ")";
