@@ -221,13 +221,13 @@ class personRecord extends DbRecord
 				<div class="form-group">
 					<div class="col-sm-6">
 						<input class="form-control" id="resource_first_name" name="FIRST_NAME"
-							value="<?=$this->LAST_NAME?>" required
+							value="<?=$this->LAST_NAME?>"
 							type="text" placeholder='First Name'
 							<?=$notEditable?>>
 					</div>
 					<div class="col-sm-6">
 						<input class="form-control" id="resource_last_name" name="LAST_NAME"
-							value="<?=$this->LAST_NAME?>" required
+							value="<?=$this->LAST_NAME?>"
 							type="text" placeholder='Last Name'
 							<?=$notEditable?>>
 					</div>
@@ -237,20 +237,20 @@ class personRecord extends DbRecord
 					<div class='form-group'>
 						<div class='col-sm-6'>
 							<input class='form-control' id='resource_email'
-								name='EMAIL_ADDRESS' value='<?=$this->EMAIL_ADDRESS?>' required
+								name='EMAIL_ADDRESS' value='<?=$this->EMAIL_ADDRESS?>'
 								type='text' placeholder="Email Address"
 								>
 						</div>
 						<div class='col-sm-6'>
 							<input class='form-control' id='resource_country'
-								name='COUNTRY' value='<?=$this->COUNTRY?>' required
+								name='COUNTRY' value='<?=$this->COUNTRY?>'
 								type='text' placeholder="Country"
 								>
 						</div>
 					</div>
 
 					<div class='form-group'>
-								<input id='resource_uid'           name='person_uid'        value='<?=$this->CNUM?>'   type='hidden' >
+								<input id='resource_uid'           name='person_uid'        value='<?=$this->CNUM?>'   				type='hidden' >
 								<input id='resource_is_mgr'	       name='FM_MANAGER_FLAG'   value='N'               				type='hidden' >
 								<input id='resource_employee_type' name='EMPLOYEE_TYPE'     value='Pre-Hire'						type='hidden' >
 								<input id='resource_ibm_location'  name='IBM_BASE_LOCATION' value='<?=$this->IBM_BASE_LOCATION?>'	type='hidden' >
@@ -436,8 +436,8 @@ class personRecord extends DbRecord
 
 		<?php
 	$allButtons = null;
-	$submitButton = $mode==FormClass::$modeEDIT ?  $this->formButton('submit','Submit','updateBoarding',null,'Update','btn-primary glyphicon glyphicon-refresh') :  $this->formButton('submit','Submit','saveBoarding',null,'Save','btn-primary');
-	$pesButton    = $mode==FormClass::$modeEDIT ?  null :  $this->formButton('button','initiatePes','initiatePes','disabled','Initiate PES','btn-primary btnPesInitiate');
+	$submitButton = $mode==FormClass::$modeEDIT ?  $this->formButton('submit','Submit','updateBoarding','disabled','Update','btn btn-primary') :  $this->formButton('submit','Submit','saveBoarding','disabled','Save','btn btn-primary');
+	$pesButton    = $mode==FormClass::$modeEDIT ?  null :  $this->formButton('button','initiatePes','initiatePes','disabled','Initiate PES','btn btn-primary btnPesInitiate');
   	$allButtons[] = $submitButton;
   	$allButtons[] = $pesButton;
 	$this->formBlueButtons($allButtons);
