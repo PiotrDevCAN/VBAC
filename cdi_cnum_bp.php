@@ -12,9 +12,6 @@ echo "<br/>About to start";
 echo "<br/>Memory Usage : " . memory_get_usage(true)/1024 . "Kb";
 echo "<br/>Memory Peak : " .  memory_get_peak_usage(true)/1024 . "Kb";
 
-
-die('here');
-
 $loader = new Loader();
 $allCnum = $loader->load('CNUM',"CNUM4BP");
 
@@ -22,6 +19,8 @@ echo "<br/>Loaded CNUM from DB2";
 echo "<br/>Memory Usage : " . memory_get_usage(true)/1024 . "Kb";
 echo "<br/>Memory Peak : " .  memory_get_peak_usage(true)/1024 . "Kb";
 
+
+die('here');
 
 
 $chunkedCnum = array_chunk($allCnum, 250);
