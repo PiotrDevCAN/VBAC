@@ -19,10 +19,6 @@ echo "<br/>Loaded CNUM from DB2";
 echo "<br/>Memory Usage : " . memory_get_usage(true)/1024 . "Kb";
 echo "<br/>Memory Peak : " .  memory_get_peak_usage(true)/1024 . "Kb";
 
-
-
-
-
 $chunkedCnum = array_chunk($allCnum, 250);
 $detailsFromBp = "&manager&worklocation&employeetype&notesid";
 $justNotesid = "&notesid";
@@ -163,15 +159,15 @@ echo "</div>";
 <div class='container'>
 <?=// $messages;?>
 <?php
-// echo "<br/>Have displayed all the data.";
-// echo "<br/>Memory Usage : " . memory_get_usage(true);
-// echo "<br/>Memory Peak : " .  memory_get_peak_usage(true);
+echo "<br/>Have displayed all the data.";
+echo "<br/>Memory Usage : " . memory_get_usage(true);
+echo "<br/>Memory Peak : " .  memory_get_peak_usage(true);
 
-// echo "<br/>Memory Usage : " . memory_get_usage(true)/1024 . "Kb";
-// echo "<br/>Memory Peak : " .  memory_get_peak_usage(true)/1024 . " Kb";
+echo "<br/>Memory Usage : " . memory_get_usage(true)/1024 . "Kb";
+echo "<br/>Memory Peak : " .  memory_get_peak_usage(true)/1024 . " Kb";
 
-// echo "<br/>Memory Usage : " . memory_get_usage(true)/1024/1024 . "Mb";
-// echo "<br/>Memory Peak : " .  memory_get_peak_usage(true)/1024/1024 . " Mb";
+echo "<br/>Memory Usage : " . memory_get_usage(true)/1024/1024 . "Mb";
+echo "<br/>Memory Peak : " .  memory_get_peak_usage(true)/1024/1024 . " Mb";
 
 ?>
 
