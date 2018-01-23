@@ -17,7 +17,8 @@ class BluePages {
 	static function getDetailsFromCnumSlapMulti($cnumArray,$parms="&uid&dept&div&cr&notesId&mail&managerSerialNumber&managerCountryCode&notesEmail&isManager"){
 	    $startTime = microtime(true);
 	    set_time_limit(120);
-	    $urlTemplate = "http://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmperson/(|";
+	   //  $urlTemplate = "https://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmperson/(|";
+	    $urlTemplate = $_SERVER['SERVER_NAME'] . "/api/bluepages.php?ibmperson/(|";
 
 	    foreach ($cnumArray as $cnum){
 	        $urlTemplate .= "(UID=" . trim($cnum) . ")";
@@ -591,6 +592,26 @@ class BluePages {
 			return FALSE;
 		}
 	}
+
+	static function lookupLocations($locations){
+	        set_time_limit(120);
+	        //$urlTemplate = "http://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmperson/(|";
+	        //$urlTemplate = "http://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmworklocation/(|";
+	        $urlTemplate = $_SERVER['SERVER_NAME'] . "/api/bluepages.php?ibmworklocation/(|";
+
+	        foreach ($locations as $loc){
+	            $urlTemplate .= "(workloc=" . trim($loc) . ")";
+	        }
+	        $urlTemplate .= ").list/byJson?";
+
+	    $ch = curl_init ( $urlTemplate );
+	    curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, true );
+	    $curlReturn = curl_exec ( $ch );
+	    $jsonObject = json_decode($curlReturn);
+	    return $jsonObject;
+	}
+
+
 }
 
 ?>
