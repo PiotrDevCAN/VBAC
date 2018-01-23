@@ -77,6 +77,8 @@ class personRecord extends DbRecord
     const FIELD_PES_STATUS_DETAILS = 24;
     const FIELD_PES_STATUS = 25;
 
+    public static $employeeTypeMapping = array('A'=>'Regular','B'=>'Contractor','C'=>'Contractor','I'=>'Regular','L'=>'Regular','O'=>'Regular','P'=>'Regular','V'=>'Contractor','X'=>'Regular');
+
 
    // private static $pesTaskId = 'lbgvetpr@uk.ibm.com';
     private static $pesTaskId = 'rob.daniel@uk.ibm.com';
