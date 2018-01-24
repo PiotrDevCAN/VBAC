@@ -87,6 +87,7 @@ function personRecord() {
 			if($('#notAnIbmer').is(":visible")){
 				$('#notAnIbmer :input').attr('required',true);
 				$('#existingIbmer :input').attr('required',false);
+				$('#saveBoarding').attr('disabled',false);
 			} else {
 				$('#notAnIbmer :input').attr('required',false);
 				$('#existingIbmer :input').attr('required',true);
@@ -451,6 +452,7 @@ function personRecord() {
 		    		};
 		    		$('#editPersonModal').modal('hide');
 		    		$('#savingBoardingDetailsModal').modal('show');
+		    		console.log(personRecord.table);
 		    		if(personRecord.table != "undefined") {
 			    		personRecord.table.ajax.reload();
 		    		}
