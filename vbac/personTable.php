@@ -2,6 +2,7 @@
 namespace vbac;
 
 use itdq\DbTable;
+use itdq\AuditTable;
 
 class personTable extends DbTable {
 
@@ -192,6 +193,8 @@ class personTable extends DbTable {
             DbTable::displayErrorMessage($result, __CLASS__,__METHOD__, $sql);
             return false;
         }
+        AuditTable::audit("Set FM_MANAGER_FLAG to $flag for $cnum",AuditTable::RECORD_TYPE_AUDIT);
+
         return true;
     }
 
