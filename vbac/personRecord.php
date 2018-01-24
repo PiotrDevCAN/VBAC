@@ -78,6 +78,9 @@ class personRecord extends DbRecord
     const FIELD_PES_STATUS_DETAILS = 24;
     const FIELD_PES_STATUS = 25;
 
+    const REVALIDATED_FOUND = 'found';
+    const REVALIDATED_LEAVER = 'leaver';
+
     public static $employeeTypeMapping = array('A'=>'Regular','B'=>'Contractor','C'=>'Contractor','I'=>'Regular','L'=>'Regular','O'=>'Regular','P'=>'Regular','V'=>'Contractor','X'=>'Regular');
 
     public static $cio = array('Commercial','Cyber', 'Digital','Divestment','GOFE','IT 4 IT','Insurance','Retail & CS','Sandbox','TRP');

@@ -18,6 +18,10 @@ body {
 		<button type='button' class='btn btn-default accessRestrict accessPmo accessCdi accessFm' id='onBoardingBtn'><span class="glyphicon glyphicon-log-in"></span>&nbsp;On Boarding</button>
 		<button type='button' class='btn btn-default accessRestrict accessPmo accessCdi accessFm' id='offBoardingBtn'><span class="glyphicon glyphicon-log-out"></span>&nbsp;Off Boarding</button>
 	<!-- </div> -->
+	<div>
+	<p>IMPORTANT NOTE: Personal information (such as sensitive financial or medical data and any information identifiable to an individual) other than business contact information [indicated as mandatory on this system, which is] necessary to provide support SHOULD NOT be entered into this system.</p>
+	</div>
+
 </div>
 
 <script>
