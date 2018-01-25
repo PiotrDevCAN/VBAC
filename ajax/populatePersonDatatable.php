@@ -6,7 +6,7 @@ use vbac\allTables;
 set_time_limit(0);
 ob_start();
 
-session_start();
+// session_start();
 
 $personTable = new personTable(allTables::$PERSON);
 $data = $personTable->returnAsArray();
