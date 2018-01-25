@@ -11,7 +11,7 @@ session_start();
 $personTable = new personTable(allTables::$PERSON);
 $data = $personTable->returnAsArray();
 
-$dataJsonAble = json_encode($ersonTable->returnAsArray());
+$dataJsonAble = json_encode($personTable->returnAsArray());
 
 $messages = ob_get_clean();
 
