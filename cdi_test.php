@@ -2,6 +2,7 @@
 
 use itdq\Loader;
 use vbac\allTables;
+use vbac\personTable;
 
 $personTable = new personTable(allTables::$PERSON);
 $data = $personTable->returnAsArray();
