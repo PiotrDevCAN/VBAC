@@ -11,9 +11,15 @@ session_start();
 $personTable = new personTable(allTables::$PERSON);
 $data = $personTable->returnAsArray();
 
+$dataJsonAble = json_encode($ersonTable->returnAsArray());
+
 $messages = ob_get_clean();
 
-$response = array("data"=>$data,'messages'=>$messages);
+if(!$dataJsonAble) {
+    $response = array("data"=>$data,'messages'=>$messages);
+} else {
+    $response = array("data"=>'error','messages'=>$messages);
 
+}
 ob_clean();
 echo json_encode($response);
