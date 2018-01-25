@@ -2,8 +2,13 @@
 namespace vbac;
 
 use itdq\DbTable;
+use itdq\AuditTable;
 
 class personTable extends DbTable {
+
+    private $preparedRevalidationStmt;
+    private $preparedRevalidationLeaverStmt;
+    private $preparedUpdateBluepagesFields;
 
 
     static function getNextVirtualCnum(){
@@ -192,6 +197,8 @@ class personTable extends DbTable {
             DbTable::displayErrorMessage($result, __CLASS__,__METHOD__, $sql);
             return false;
         }
+        AuditTable::audit("Set FM_MANAGER_FLAG to $flag for $cnum",AuditTable::RECORD_TYPE_AUDIT);
+
         return true;
     }
 
@@ -287,6 +294,70 @@ class personTable extends DbTable {
         return $data;
     }
 
+    private function prepareRevalidationStmt(){
+        if(empty($this->preparedRevalidationStmt)){
+            $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+            $sql .= " SET NOTES_ID=?, EMAIL_ADDRESS = ?,  REVALIDATION_STATUS='" . personRecord::REVALIDATED_FOUND . "' , REVALIDATION_DATE_FIELD = current date ";
+            $sql .= " WHERE CNUM=? ";
+
+            $this->preparedRevalidationStmt = db2_prepare($_SESSION['conn'], $sql);
+
+            if(!$this->preparedRevalidationStmt){
+                DbTable::displayErrorMessage($this->preparedRevalidationStmt, __CLASS__, __METHOD__, $sql);
+                return false;
+            }
+        }
+        return $this->preparedRevalidationStmt;
+    }
+
+    private function prepareRevalidationLeaverStmt(){
+        if(empty($this->preparedRevalidationLeaverStmt)){
+            $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+            $sql .= " SET REVALIDATION_STATUS='" . personRecord::REVALIDATED_LEAVER . "', REVALIDATION_DATE_FIELD = current date ";
+            $sql .= " WHERE CNUM=?  AND ( REVALIDATION_STATUS is null or REVALIDATION_STATUS != '" . personRecord::REVALIDATED_LEAVER . "' )";
+
+            echo "<br/>$sql";
+
+
+            $this->preparedRevalidationLeaverStmt = db2_prepare($_SESSION['conn'], $sql);
+
+            if(!$this->preparedRevalidationLeaverStmt){
+                DbTable::displayErrorMessage($this->preparedRevalidationLeaverStmt, __CLASS__, __METHOD__, $sql);
+                return false;
+            }
+        }
+        return $this->preparedRevalidationLeaverStmt;
+    }
+
+    function confirmRevalidation($notesId,$email,$cnum){
+        $preparedStmt = $this->prepareRevalidationStmt();
+        $data = array(trim($notesId),trim($email),trim($cnum));
+
+        var_dump($data);
+
+        $rs = db2_execute($preparedStmt,$data);
+
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, "prepared: revalidationStmt");
+            return false;
+        }
+        return true;
+    }
+
+
+    function flagLeaver($cnum){
+        $preparedStmt = $this->prepareRevalidationLeaverStmt();
+        $data = array(trim($cnum));
+
+        $rs = db2_execute($preparedStmt,$data);
+
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, "prepared: revalidationLeaverStmt");
+            return false;
+        }
+        AuditTable::audit("Revalidation has found leaver: $cnum ",AuditTable::RECORD_TYPE_AUDIT);
+        return true;
+    }
 
 
 }

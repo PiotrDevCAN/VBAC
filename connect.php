@@ -23,17 +23,17 @@ if( getenv( "VCAP_SERVICES" ) )
     if( $conn )
     {
         $_SESSION['conn'] = $conn;
-        $schema = isset($_SESSION['Db2Schema']) ? $_SESSION['Db2Schema'] : 'VBAC';
-        $schema = 'VBAC';
-        $Statement = "SET CURRENT SCHEMA='$schema';";
-        $rs = db2_exec($conn, $Statement);
+//         $schema = isset($_SESSION['Db2Schema']) ? $_SESSION['Db2Schema'] : 'VBAC';
+//         $schema = 'VBAC';
+//         $Statement = "SET CURRENT SCHEMA='$schema';";
+//         $rs = db2_exec($conn, $Statement);
 
-        if (! $rs) {
-            echo "<br/>" . $Statement . "<br/>";
-            echo "<BR>" . db2_stmt_errormsg() . "<BR>";
-            echo "<BR>" . db2_stmt_error() . "<BR>";
-            exit("Set current schema failed");
-        }
+//         if (! $rs) {
+//             echo "<br/>" . $Statement . "<br/>";
+//             echo "<BR>" . db2_stmt_errormsg() . "<BR>";
+//             echo "<BR>" . db2_stmt_error() . "<BR>";
+//             exit("Set current schema failed");
+//         }
         db2_autocommit($conn, TRUE); // This is how it was on the Wintel Box - so the code has no/few commit points.
     }
     else

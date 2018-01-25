@@ -1,11 +1,25 @@
 <?php
-use itdq\AuditTable;
-use itdq\AllItdqTables;
-use itdq\BluePages;
-use vbac\personTable;
 
-$cnum = personTable::getNextVirtualCnum();
+use itdq\Loader;
+use vbac\allTables;
 
-echo "cnum is";
 
-var_dump($cnum);
+$CO = 'GB';
+
+$loader = new Loader();
+$countryName = $loader->loadIndexed('COUNTRY_NAME','COUNTRY_CODE',allTables::$STATIC_COUNTRY_CODES, " COUNTRY_CODE='" . db2_escape_string(trim($CO)) . "' ");
+
+var_dump($countryName);
+
+var_dump(isset($countryName[$CO]));
+
+
+$CO = 'XX';
+
+$loader = new Loader();
+$countryName = $loader->loadIndexed('COUNTRY_NAME','COUNTRY_CODE',allTables::$STATIC_COUNTRY_CODES, " COUNTRY_CODE='" . db2_escape_string(trim($CO)) . "' ");
+
+var_dump($countryName);
+var_dump(isset($countryName[$CO]));
+
+
