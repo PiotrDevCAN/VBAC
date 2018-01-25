@@ -7,9 +7,15 @@ set_include_path("./" . PATH_SEPARATOR . "../" . PATH_SEPARATOR . "../../" . PAT
 
 include "../php/w3config.php";
 
+$_SESSION['Db2Schema'] = $_SERVER['environment'];
+
 
 include "vendor/autoload.php";
 include "splClassLoader.php";
 session_start();
 
 include "connect.php";
+
+
+var_dump($_SESSION);
+var_dump($_SERVER);
