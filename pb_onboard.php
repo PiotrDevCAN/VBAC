@@ -1,6 +1,8 @@
 <?php
 use vbac\personRecord;
 use itdq\FormClass;
+use itdq\Loader;
+use vbac\allTables;
 
 set_time_limit(0);
 
@@ -33,7 +35,10 @@ $person->displayBoardingForm($mode);
 </div>
 <?php
 $person->savingBoardingDetailsModal();
+$loader = new Loader();
+$countryCodes = $loader->loadIndexed('COUNTRY_NAME','COUNTRY_CODE',allTables::$STATIC_COUNTRY_CODES);
 ?>
+
 <script type="text/javascript">
 $(document).ready(function() {
 

@@ -21,6 +21,7 @@ try {
         AuditTable::audit("Pre boarding:<b>" . $cnum . "</b>",AuditTable::RECORD_TYPE_AUDIT);
     }
     $person->setFromArray($_POST);
+    $person->convertCountryCodeToName();
     $saveRecordResult = $table->saveRecord($person);
     AuditTable::audit("Saved Boarding Record:<B>" . $_POST['CNUM'] . "</b>Mode:<b>" . $_POST['mode'],AuditTable::RECORD_TYPE_AUDIT);
     AuditTable::audit("Saved Record:<pre>". print_r($person,true) . "</pre>", AuditTable::RECORD_TYPE_DETAILS);

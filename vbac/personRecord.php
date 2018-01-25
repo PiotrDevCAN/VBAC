@@ -5,6 +5,8 @@ use itdq\DbRecord;
 use itdq\FormClass;
 use itdq\Loader;
 use itdq\JavaScript;
+use itdq\DbTable;
+use vbac\allTables;
 
 
 /**
@@ -143,6 +145,8 @@ class personRecord extends DbRecord
        // $fmPredicate = $mode==FormClass::$modeEDIT ? "( " . $fmPredicate . " ) OR ( CNUM='" . db2_escape_string($this->FM_CNUM) . "' ) " : $fmPredicate;
         $fmPredicate = null;
         $allManagers =  $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON, $fmPredicate);
+        $countryCodes = $loader->loadIndexed('COUNTRY_NAME','COUNTRY_CODE',allTables::$STATIC_COUNTRY_CODES);
+
        //  $allManagers = empty($allManagers)? array('VBAC00001'=>'Dummy Fm') : $allManagers;
         $userDetails = $loader->loadIndexed('CNUM','EMAIL_ADDRESS',allTables::$PERSON, " EMAIL_ADDRESS='" . db2_escape_string($GLOBALS['ltcuser']['mail']) . "' ");
         $userCnum = isset($userDetails[$GLOBALS['ltcuser']['mail']]) ? $userDetails[$GLOBALS['ltcuser']['mail']] : false;
@@ -151,7 +155,7 @@ class personRecord extends DbRecord
         JavaScript::buildSelectArray($allWorkstream, 'workStream');
 
         $notEditable = $mode==FormClass::$modeEDIT ? ' disabled ' : null;
-        $displayForEdit = $notEditable ? 'hidden' : null;
+        $displayForEdit = $notEditable ? 'hidden' : 'inline' ;
         $onlyEditable = $mode==FormClass::$modeEDIT ? 'text' : 'hidden'; // Some fields the user can edit - but not see/set the first time.
         $hideDivFromEdit = $mode==FormClass::$modeEDIT ? ' style="display: none;"  ' : null; //Some fields we don't show on the edit screen.
 
@@ -236,7 +240,7 @@ class personRecord extends DbRecord
 					</div>
 				</div>
 
-				<div id='resourceDetails' display='<?=$displayForEdit?>'>
+				<div id='resourceDetails' style="display:<?=$displayForEdit?>">
 					<div class='form-group'>
 						<div class='col-sm-6'>
 							<input class='form-control' id='resource_email'
@@ -245,14 +249,22 @@ class personRecord extends DbRecord
 								>
 						</div>
 						<div class='col-sm-6'>
-							<input class='form-control' id='resource_country'
-								name='COUNTRY' value='<?=$this->COUNTRY?>'
-								type='text' placeholder="Country"
-								>
+        				<select class='form-control select select2 ' id='resource_country'
+                  	          name='resource_country'
+                  	          placeholder='Country working in:'
+               			 >
+                		<option value=''>Country working in</option>
+                		<?php
+                        foreach ($countryCodes as $countryName){
+                            echo "<option value='$countryName'>$countryName</option>";
+                        };
+                        ?>
+            			</select>
+
 						</div>
 					</div>
 
-					<div class='form-group'>
+					<div class='form-group' style='display:none'>
 								<input id='resource_uid'           name='person_uid'        value='<?=$this->CNUM?>'   				type='hidden' >
 								<input id='resource_is_mgr'	       name='FM_MANAGER_FLAG'   value='N'               				type='hidden' >
 								<input id='resource_employee_type' name='EMPLOYEE_TYPE'     value='Pre-Hire'						type='hidden' >
@@ -286,7 +298,7 @@ class personRecord extends DbRecord
                 		<option value=''>Link to Pre-Boarded</option>
                 		<?php
                         foreach ($availableFromPreBoarding as $option){
-                            echo $option;
+                            echo "<option value='$option'>$option</option>";
                         };
                         ?>
             			</select>
@@ -627,6 +639,13 @@ class personRecord extends DbRecord
 		<?php
     }
 
+    function convertCountryCodeToName(){
+        if(strlen($this->COUNTRY = 2)){
+            $loader = new Loader();
+            $countryName = $loader->loadIndexed('COUNTRY_NAME','COUNTRY_CODE',allTables::$STATIC_COUNTRY_CODES, " COUNTRY_CODE='" . db2_escape_string(trim($this->COUNTRY)) . "' ");
+            $this->COUNTRY = isset($countryName[$this->COUNTRY]) ? $countryName[$this->COUNTRY] : $this->COUNTRY;
+        }
+    }
 
 
 

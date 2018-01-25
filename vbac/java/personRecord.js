@@ -88,6 +88,8 @@ function personRecord() {
 				$('#notAnIbmer :input').attr('required',true);
 				$('#existingIbmer :input').attr('required',false);
 				$('#saveBoarding').attr('disabled',false);
+				$('#resource_country').select2('destroy');
+				$('#resource_country').select2();
 			} else {
 				$('#notAnIbmer :input').attr('required',false);
 				$('#existingIbmer :input').attr('required',true);
@@ -111,6 +113,7 @@ function personRecord() {
 				console.log(allEnabled);
 				$(allEnabled).attr('disabled',true);
 				$("#saveBoarding").addClass('spinning');
+				$('#initiatePes').hide();
 				$.ajax({
 			    	url: "ajax/prePopulateFromLink.php",
 			    	type: 'POST',
