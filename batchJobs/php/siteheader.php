@@ -12,5 +12,4 @@ include "splClassLoader.php";
 
 include "connect.php";
 
-var_dump($_SESSION);
-var_dump($_SERVER);
+$_SESSION['ssoEmail'] = 'Scheduled Job';
