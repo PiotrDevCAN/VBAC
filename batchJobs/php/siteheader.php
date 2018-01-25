@@ -5,6 +5,9 @@ error_reporting(E_ALL);
 date_default_timezone_set('UTC');
 set_include_path("./" . PATH_SEPARATOR . "../" . PATH_SEPARATOR . "../../" . PATH_SEPARATOR . "../../../" . PATH_SEPARATOR);
 
+include "../php/w3config.php";
+
+
 include "vendor/autoload.php";
 include "splClassLoader.php";
 session_start();
