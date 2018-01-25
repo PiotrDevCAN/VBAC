@@ -11,15 +11,17 @@ ob_start();
 $personTable = new personTable(allTables::$PERSON);
 $data = $personTable->returnAsArray();
 
-$dataJsonAble = json_encode($personTable->returnAsArray());
+$dataJsonAble = json_encode($data);
+
+var_dump($dataJsonAble);
 
 $messages = ob_get_clean();
 
-if(!$dataJsonAble) {
-    $response = array("data"=>$data,'messages'=>$messages);
-} else {
+// if(!$dataJsonAble) {
+//     $response = array("data"=>$data,'messages'=>$messages);
+// } else {
     $response = array("data"=>'error','messages'=>$messages);
 
-}
+// }
 ob_clean();
 echo json_encode($response);
