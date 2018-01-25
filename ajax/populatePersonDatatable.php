@@ -11,6 +11,9 @@ ob_start();
 $personTable = new personTable(allTables::$PERSON);
 $data = $personTable->returnAsArray();
 
+var_dump($data);
+
+
 $dataJsonAble = json_encode($data);
 
 var_dump($dataJsonAble);
