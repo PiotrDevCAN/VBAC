@@ -13,7 +13,7 @@ class personTable extends DbTable {
 
     static function getNextVirtualCnum(){
         $sql  = " SELECT CNUM FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
-        $sql .= " WHERE CNUM LIKE '%xxx' ";
+        $sql .= " WHERE CNUM LIKE '%XXX' ";
         $sql .= " order by CNUM desc ";
         $sql .= " OPTIMIZE FOR 1 ROW ";
 
@@ -28,9 +28,9 @@ class personTable extends DbTable {
         if(isset($topRow[0])){
             $thisCnum = substr($topRow[0],1,6);
             $next = $thisCnum+1;
-            $nextVirtualCnum = 'V' . substr('000000' . $next ,5) . 'xxx';
+            $nextVirtualCnum = 'V' . substr('000000' . $next ,5) . 'XXX';
         } else {
-            $nextVirtualCnum = 'V00001xxx';
+            $nextVirtualCnum = 'V00001XXX';
         }
 
 
@@ -69,7 +69,7 @@ class personTable extends DbTable {
         $notesId = trim($row[personRecord::FIELD_NOTES_ID]);
         $cnum = trim($row[personRecord::FIELD_CNUM]);
         $flag = $row[personRecord::FIELD_FM_FLAG];
-        $status = trim($row[personRecord::FIELD_PES_STATUS]);
+        $status = empty(trim($row[personRecord::FIELD_PES_STATUS])) ? personRecord::PES_STATUS_NOT_REQUESTED : trim($row[personRecord::FIELD_PES_STATUS]) ;
         // FM_FLAG
         if($_SESSION['isPmo'] || $_SESSION['isCdi']){
             if(strtoupper(substr($flag,0,1))=='N' || empty($flag)){
@@ -102,15 +102,17 @@ class personTable extends DbTable {
         $row[personRecord::FIELD_NOTES_ID] .= " </button> ";
         $row[personRecord::FIELD_NOTES_ID] .= $notesId;
 
-        switch (trim($row[personRecord::FIELD_PES_STATUS])) {
+        switch ($status) {
+            case personRecord::PES_STATUS_NOT_REQUESTED:
             case null:
                 $row[personRecord::FIELD_PES_STATUS]  = "<button type='button' class='btn btn-default btn-xs btnPesInitiate accessRestrict accessPmo accessFm' ";
                 $row[personRecord::FIELD_PES_STATUS]  .= "aria-label='Left Align' ";
                 $row[personRecord::FIELD_PES_STATUS] .= " data-cnum='" .$cnum . "' ";
-                $row[personRecord::FIELD_PES_STATUS] .= " data-pesstatus='null' ";
+                $row[personRecord::FIELD_PES_STATUS] .= " data-pesstatus='$status' ";
                 $row[personRecord::FIELD_PES_STATUS] .= " > ";
                 $row[personRecord::FIELD_PES_STATUS] .= "<span class='glyphicon glyphicon-plane ' aria-hidden='true'></span>";
-                $row[personRecord::FIELD_PES_STATUS] .= "</button>";
+                $row[personRecord::FIELD_PES_STATUS] .= "</button>&nbsp;";
+                $row[personRecord::FIELD_PES_STATUS] .= $status;
                 break;
             case personRecord::PES_STATUS_EXCEPTION:
             case personRecord::PES_STATUS_DECLINED;
