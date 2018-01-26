@@ -2,24 +2,31 @@
 
 use itdq\Loader;
 use vbac\allTables;
+use vbac\personTable;
+
+$personTable = new personTable(allTables::$PERSON);
+$data = $personTable->returnAsArray();
+
+var_dump($data);
 
 
-$CO = 'GB';
 
-$loader = new Loader();
-$countryName = $loader->loadIndexed('COUNTRY_NAME','COUNTRY_CODE',allTables::$STATIC_COUNTRY_CODES, " COUNTRY_CODE='" . db2_escape_string(trim($CO)) . "' ");
+// $CO = 'GB';
 
-var_dump($countryName);
+// $loader = new Loader();
+// $countryName = $loader->loadIndexed('COUNTRY_NAME','COUNTRY_CODE',allTables::$STATIC_COUNTRY_CODES, " COUNTRY_CODE='" . db2_escape_string(trim($CO)) . "' ");
 
-var_dump(isset($countryName[$CO]));
+// var_dump($countryName);
+
+// var_dump(isset($countryName[$CO]));
 
 
-$CO = 'XX';
+// $CO = 'XX';
 
-$loader = new Loader();
-$countryName = $loader->loadIndexed('COUNTRY_NAME','COUNTRY_CODE',allTables::$STATIC_COUNTRY_CODES, " COUNTRY_CODE='" . db2_escape_string(trim($CO)) . "' ");
+// $loader = new Loader();
+// $countryName = $loader->loadIndexed('COUNTRY_NAME','COUNTRY_CODE',allTables::$STATIC_COUNTRY_CODES, " COUNTRY_CODE='" . db2_escape_string(trim($CO)) . "' ");
 
-var_dump($countryName);
-var_dump(isset($countryName[$CO]));
+// var_dump($countryName);
+// var_dump(isset($countryName[$CO]));
 
 
