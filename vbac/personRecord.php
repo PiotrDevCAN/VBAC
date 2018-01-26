@@ -85,7 +85,7 @@ class personRecord extends DbRecord
 
     public static $employeeTypeMapping = array('A'=>'Regular','B'=>'Contractor','C'=>'Contractor','I'=>'Regular','L'=>'Regular','O'=>'Regular','P'=>'Regular','V'=>'Contractor','X'=>'Regular');
 
-    public static $cio = array('Commercial','Cyber', 'Digital','Divestment','GOFE','IT 4 IT','Insurance','Retail & CS','Sandbox','TRP');
+    public static $cio = array('Commercial','Cyber', 'Digital','Divestment','GOFE','IT 4 IT','Insurance','Retail','Sandbox','TRP');
 
    // private static $pesTaskId = 'lbgvetpr@uk.ibm.com';
     private static $pesTaskId = 'rob.daniel@uk.ibm.com';
