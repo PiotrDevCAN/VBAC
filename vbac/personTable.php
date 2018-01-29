@@ -256,12 +256,14 @@ class personTable extends DbTable {
     }
 
     static function optionsForPreBoarded(){
-        $availPreBoPredicate  = " CNUM LIKE '%xxx' AND PES_STATUS not like '%xxx' AND PES_STATUS not in (";
+        $availPreBoPredicate  = " ( CNUM LIKE '%xxx' or CNUM LIKE '%XXX' or CNUM LIKE '%999' ";
+        $availPreBoPredicate .= " AND (PES_STATUS not like '%xxx' or PES_STATUS not like '%XXX' or PES_STATUS not like '%999' ) ";
+        $availPreBoPredicate .= " AND PES_STATUS not in (";
         $availPreBoPredicate .= " '" . personRecord::PES_STATUS_REMOVED . "' "; // Pre-boarded who haven't been boarded
         $availPreBoPredicate .= ",'" . personRecord::PES_STATUS_FAILED ."' ";
         $availPreBoPredicate .= " )";
 
-        $sql =  " SELECT FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, CNUM  FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
+        $sql =  " SELECT distinct FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, CNUM  FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE " . $availPreBoPredicate;
         $sql .= " ORDER BY FIRST_NAME, LAST_NAME ";
 
