@@ -127,31 +127,78 @@ function personRecord() {
 			    		var resultObj = JSON.parse(result);
 			    		if(resultObj.success==true){
 			    			console.log(resultObj.data);
-			    			console.log(resultObj.data.CTB_RTB.trim());
+			    			console.log(resultObj.data.CTB_RTB);
+
+			    			   $(allEnabled).attr('disabled',false);
+
+			    			   console.log(allEnabled);
 
 			    			   var $radios = $('input:radio[name=CTB_RTB]');
 			    			   $($radios).attr('disabled',false);
-			    			   var button =  $radios.filter('[value=' + resultObj.data.CTB_RTB.trim() + ']');
-			    			   $(button).prop('checked',true);
-			    			   $(button).trigger('click');
+
+			    			   if(resultObj.data.CTB_RTB != null){
+				    			   var button =  $radios.filter('[value=' + resultObj.data.CTB_RTB.trim() + ']');
+				    			   $(button).prop('checked',true);
+				    			   $(button).trigger('click');
+			    			   }
 
 			    			   var $radios = $('.accountOrganisation');
 			    			   $($radios).attr('disabled',false);
-			    			   var button = $radios.filter("[value='" + resultObj.data.TT_BAU.trim() + "']");
-			    			   $(button).prop('checked',true);
-			    			   $(button).trigger('click');
 
-			    			   $('#FM_CNUM').val(resultObj.data.FM_CNUM.trim()).trigger('change');
-			    			   $('#FM_CNUM').attr('disabled',false);
-
-			    			   var openSeatNumber = resultObj.data.OPEN_SEAT_NUMBER;
-			    			   if(openSeatNumber){
-				    			   $('#open_seat').val(openSeatNumber.trim());
+			    			   if(resultObj.data.TT_BAU != null){
+				    			   var button = $radios.filter("[value='" + resultObj.data.TT_BAU.trim() + "']");
+				    			   $(button).prop('checked',true);
+				    			   $(button).trigger('click');
 			    			   }
-			    			   $('#open_seat').attr('disabled',false);
 
-			    			   $('#lob').val(resultObj.data.LOB.trim()).trigger('change');
-			    			   $('#lob').attr('disabled',false);
+			    			   console.log($('#person_contractor_id_required'));
+			    			   console.log(resultObj.data.CONTRACTOR_ID_REQUIRED);
+
+			    			   if(resultObj.data.CONTRACTOR_ID_REQUIRED != null){
+			    				   if(resultObj.data.CONTRACTOR_ID_REQUIRED.trim().toUpperCase().substring(0,1)=='Y'){
+			    					   var contractorIdReq = 'yes';
+			    				   } else {
+			    					   var contractorIdReq = 'no';
+			    				   }
+			    			   }else {
+			    				   var contractorIdReq = 'no';
+			    			   }
+				    		   $('#person_contractor_id_required').attr('disabled',false);
+			    			   $('#person_contractor_id_required').val(contractorIdReq).trigger('change');
+
+
+			    			   console.log($('#person_contractor_id_required'));
+
+
+			    			   if(resultObj.data.FM_CNUM != null){
+				    			   $('#FM_CNUM').attr('disabled',false);
+			    				   $('#FM_CNUM').val(resultObj.data.FM_CNUM.trim()).trigger('change');
+			    			   }
+
+			    			   if(resultObj.data.OPEN_SEAT_NUMBER != null ){
+				    			   var openSeatNumber = resultObj.data.OPEN_SEAT_NUMBER;
+				    			   $('#open_seat').attr('disabled',false);
+				    			   if(openSeatNumber){
+					    			   $('#open_seat').val(openSeatNumber.trim());
+				    			   }
+			    			   }
+
+			    			   if(resultObj.data.CIO_ALIGNMENT != null ){
+				    			   var cioAlignment = resultObj.data.CIO_ALIGNMENT.trim();
+				    			   $('#cioAlignment').attr('disabled',false);
+				    			   if(cioAlignment){
+				    				   console.log(cioAlignment);
+				    				   console.log( $('#cioAlignment'));
+					    			   $('#cioAlignment').val(cioAlignment).trigger('change');
+				    			   }
+			    			   }
+
+
+
+			    			   if(resultObj.data.LOB != null){
+				    			   $('#lob').attr('disabled',false);
+			    				   $('#lob').val(resultObj.data.LOB.trim()).trigger('change');
+			    			   }
 
 			    			   var workStream = resultObj.data.WORK_STREAM;
 			    			   if(workStream){

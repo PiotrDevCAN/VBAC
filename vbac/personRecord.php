@@ -144,7 +144,7 @@ class personRecord extends DbRecord
        // $isFM = personTable::isManager($_SESSION['ssoEmail']);
        // $fmPredicate = $isFM ? " UPPER(EMAIL_ADDRESS)='" . db2_escape_string(trim(strtoupper($_SESSION['ssoEmail']))) . "'  AND UPPER(LEFT(FM_MANAGER_FLAG,1))='Y'  " : " UPPER(LEFT(FM_MANAGER_FLAG,1))='Y' "; // FM Can only board people to themselves.
        // $fmPredicate = $mode==FormClass::$modeEDIT ? "( " . $fmPredicate . " ) OR ( CNUM='" . db2_escape_string($this->FM_CNUM) . "' ) " : $fmPredicate;
-        $fmPredicate = null;
+        $fmPredicate = " UPPER(LEFT(FM_MANAGER_FLAG,1))='Y'  ";
         $allManagers =  $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON, $fmPredicate);
         $countryCodes = $loader->loadIndexed('COUNTRY_NAME','COUNTRY_CODE',allTables::$STATIC_COUNTRY_CODES);
 
@@ -282,10 +282,11 @@ class personRecord extends DbRecord
 				<div class='form-group'>
 					<div class='col-sm-6' <?=$hideDivFromEdit?>>
 						<select class='form-control select select2'
-							id='person_contractor_id' name='CONTRACTOR_ID_REQUIRED'
+							id='person_contractor_id_required' name='CONTRACTOR_ID_REQUIRED'
 							required='required'>
+							<option value=''>Is Contractor ID Required?</option>
 							<option value='no'
-								<?=strtoupper(substr($this->CONTRACTOR_ID_REQUIRED,0,1))=='N' ? ' selected ' : null;?>>No
+							<?=(strtoupper(substr($this->CONTRACTOR_ID_REQUIRED,0,1))=='N' or empty($this->CONTRACTOR_ID_REQUIRED)) ? ' selected ' : null;?>>No
 								Contractor Id Required</option>
 							<option value='yes'
 								<?=strtoupper(substr($this->CONTRACTOR_ID_REQUIRED,0,1))=='Y' ? ' selected ' : null;?>>Contractor

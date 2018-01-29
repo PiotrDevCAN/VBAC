@@ -283,7 +283,9 @@ class personTable extends DbTable {
     }
 
     static function dataFromPreBoarder($cnum){
-        $sql = " SELECT CTB_RTB,TT_BAU, WORK_STREAM, PES_DATE_REQUESTED, PES_DATE_RESPONDED, PES_REQUESTOR,  PES_STATUS, PES_STATUS_DETAILS, FM_CNUM, CONTRACTOR_ID_REQUIRED, CONTRACTOR_ID, LOB, OPEN_SEAT_NUMBER, ROLE_ON_THE_ACCOUNT, START_DATE, PROJECTED_END_DATE  ";
+        $sql = " SELECT CTB_RTB,TT_BAU, WORK_STREAM, PES_DATE_REQUESTED, PES_DATE_RESPONDED, PES_REQUESTOR,  PES_STATUS, PES_STATUS_DETAILS, FM_CNUM ";
+        $sql .= " , CONTRACTOR_ID_REQUIRED, CONTRACTOR_ID, LOB, OPEN_SEAT_NUMBER, ROLE_ON_THE_ACCOUNT ";
+        $sql .= " , START_DATE, PROJECTED_END_DATE, CIO_ALIGNMENT  ";
         $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE CNUM='" . db2_escape_string(trim($cnum)) . "' ";
         $sql .= " OPTIMIZE for 1 row ";
