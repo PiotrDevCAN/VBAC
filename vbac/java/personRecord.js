@@ -82,6 +82,9 @@ function personRecord() {
 	this.listenForHasBpEntry = function(){
 		$(document).on('change','#hasBpEntry', function(){
 			console.log('clicked hasBpEntry');
+
+			console.log($('#hasBpEntry').is(':checked'));
+
 			console.log(this);
 			$('#notAnIbmer').toggle();
 			$('#existingIbmer').toggle();
@@ -468,8 +471,7 @@ function personRecord() {
 
 	this.saveBoarding = function(mode){
 		console.log('saveBoarding mode:' + mode);
-		var swtch = $('#hasBpEntry').val();
-		console.log(swtch);
+		var ibmer = $('#hasBpEntry').is(':checked');
 		var form = $('#boardingForm');
 		var formValid = form[0].checkValidity();
 		if(formValid){
@@ -478,7 +480,7 @@ function personRecord() {
 			var allDisabledFields = ($("input:disabled"));
 			$(allDisabledFields).attr('disabled',false);
 			var formData = form.serialize();
-			formData += "&mode=" + mode + "&swtch=" + swtch;
+			formData += "&mode=" + mode + "&boarding=" + ibmer;
 			$(allDisabledFields).attr('disabled',true);
 			console.log(formData);
 		    $.ajax({
