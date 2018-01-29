@@ -644,7 +644,7 @@ class personRecord extends DbRecord
     }
 
     function convertCountryCodeToName(){
-        if(strlen($this->COUNTRY = 2)){
+        if(strlen($this->COUNTRY)== 2){
             $loader = new Loader();
             $countryName = $loader->loadIndexed('COUNTRY_NAME','COUNTRY_CODE',allTables::$STATIC_COUNTRY_CODES, " COUNTRY_CODE='" . db2_escape_string(trim($this->COUNTRY)) . "' ");
             $this->COUNTRY = isset($countryName[$this->COUNTRY]) ? $countryName[$this->COUNTRY] : $this->COUNTRY;
