@@ -15,7 +15,7 @@ $table = new personTable(allTables::$PERSON);
 $boardingIbmer = $_POST['boarding']== 'true' ? true:false;
 
 try {
-    if(!$boardingIbmer){
+    if(!$boardingIbmer && $_POST['mode']!='Update'){
         //echo "Need to create virtual cnum";
         $cnum = personTable::getNextVirtualCnum();
         $_POST['CNUM']= $cnum;
@@ -45,10 +45,28 @@ try {
             echo "<br/>Boarding Form Record - Updated.";
         }
         $success = true;
+        // Do we need to update a PRE-BOARDING record ?
+        if(!empty($_POST['person_preboarded'])){
+            $preBoarder = new personRecord();
+            $preBoarder->setFromArray(array('CNUM'=>$_POST['person_preboarded']));
+            $preBoarderData = $table->getFromDb($preBoarder);
+            $preBoarderData['PES_STATUS_DETAILS'] = 'Boarded as ' . $_POST['CNUM'];
+            $preBoarder->setFromArray($preBoarderData);
+            $table->save($preBoarder);
+        }
+
+
+
+
+
+
+
+
+
     } else {
         $errorCode = db2_stmt_error();
         if(empty($errorCode)){
-            echo "<br/>Record already existed";
+            echo "<br/>Error Trying to save record, no DB2 Stmt Error";
         } else {
             echo db2_stmt_error();
             echo db2_stmt_errormsg();
