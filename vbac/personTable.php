@@ -13,7 +13,7 @@ class personTable extends DbTable {
 
     static function getNextVirtualCnum(){
         $sql  = " SELECT CNUM FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
-        $sql .= " WHERE CNUM LIKE '%XXX' ";
+        $sql .= " WHERE CNUM LIKE '%XXX' or CNUM LIKE '%xxx' or CNUM LIKE '%999' ";
         $sql .= " order by CNUM desc ";
         $sql .= " OPTIMIZE FOR 1 ROW ";
 
@@ -26,7 +26,7 @@ class personTable extends DbTable {
 
         $topRow = db2_fetch_array($rs);
         if(isset($topRow[0])){
-            $thisCnum = substr($topRow[0],1,6);
+            $thisCnum = substr($topRow[0],1,5);
             $next = $thisCnum+1;
             $nextVirtualCnum = 'V' . substr('000000' . $next ,5) . 'XXX';
         } else {
@@ -256,12 +256,14 @@ class personTable extends DbTable {
     }
 
     static function optionsForPreBoarded(){
-        $availPreBoPredicate  = " CNUM LIKE '%xxx' AND PES_STATUS not like '%xxx' AND PES_STATUS not in (";
+        $availPreBoPredicate  = " ( CNUM LIKE '%xxx' or CNUM LIKE '%XXX' or CNUM LIKE '%999' ) ";
+        $availPreBoPredicate .= " AND (PES_STATUS not like '%xxx' or PES_STATUS not like '%XXX' or PES_STATUS not like '%999' ) ";
+        $availPreBoPredicate .= " AND PES_STATUS not in (";
         $availPreBoPredicate .= " '" . personRecord::PES_STATUS_REMOVED . "' "; // Pre-boarded who haven't been boarded
         $availPreBoPredicate .= ",'" . personRecord::PES_STATUS_FAILED ."' ";
         $availPreBoPredicate .= " )";
 
-        $sql =  " SELECT FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, CNUM  FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
+        $sql =  " SELECT distinct FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, CNUM  FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE " . $availPreBoPredicate;
         $sql .= " ORDER BY FIRST_NAME, LAST_NAME ";
 
@@ -276,7 +278,6 @@ class personTable extends DbTable {
             $option = "<option value='" . trim($row['CNUM']) ."'>" . trim($row['FIRST_NAME']) ." " . $row['LAST_NAME']  . " (" . $row['EMAIL_ADDRESS'] .") " . "</option>";
             $options[] = $option;
         }
-
         return $options;
 
     }

@@ -14,12 +14,19 @@ $table = new personTable(allTables::$PERSON);
 
 
 try {
-    if(empty($_POST['CNUM']) && $_POST['EMPLOYEE_TYPE']=='Pre-Hire'){
+    if($_POST['swtch']=='on'){
         //echo "Need to create virtual cnum";
         $cnum = personTable::getNextVirtualCnum();
         $_POST['CNUM']= $cnum;
         // And put their name in the NOTES_ID as that's the field we display as their identity.
-        $_POST['NOTES_ID'] = $_POST['FIRST_NAME'] . " " . $_POST['LAST_NAME'];
+        // And copy over their fields into the standard fields.
+        $_POST['NOTES_ID'] = $_POST['resFIRST_NAME'] . " " . $_POST['resLAST_NAME'];
+        $_POST['FIRST_NAME'] = $_POST['resFIRST_NAME'];
+        $_POST['LAST_NAME'] = $_POST['resLAST_NAME'];
+        $_POST['COUNTRY'] = $_POST['resCOUNTRY'];
+        $_POST['EMAIL_ADDRESS'] = $_POST['resEMAIL_ADDRESS'];
+        $_POST['EMPLOYEE_TYPE'] = $_POST['resEMPLOYEE_TYPE'];
+        $_POST['PES_STATUS'] = $_POST['resPES_STATUS'];
         AuditTable::audit("Pre boarding:<b>" . $cnum . "</b>",AuditTable::RECORD_TYPE_AUDIT);
     }
     $person->setFromArray($_POST);
@@ -56,6 +63,6 @@ try {
 }
 
 $messages = ob_get_clean();
-$response = array('success'=>$success,'messages'=>$messages,"saveRecord"=>$saveRecordResult,'cnum'=>$_POST['CNUM']);
+$response = array('success'=>$success,'messages'=>$messages,"saveRecord"=>$saveRecordResult,'cnum'=>$_POST['CNUM'], 'post'=>print_r($_POST,true));
 ob_clean();
 echo json_encode($response);

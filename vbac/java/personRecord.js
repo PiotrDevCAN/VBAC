@@ -421,6 +421,8 @@ function personRecord() {
 
 	this.saveBoarding = function(mode){
 		console.log('saveBoarding mode:' + mode);
+		var swtch = $('#hasBpEntry').val();
+		console.log(swtch);
 		var form = $('#boardingForm');
 		var formValid = form[0].checkValidity();
 		if(formValid){
@@ -429,7 +431,7 @@ function personRecord() {
 			var allDisabledFields = ($("input:disabled"));
 			$(allDisabledFields).attr('disabled',false);
 			var formData = form.serialize();
-			formData += "&mode=" + mode;
+			formData += "&mode=" + mode + "&swtch=" + swtch;
 			$(allDisabledFields).attr('disabled',true);
 			console.log(formData);
 		    $.ajax({
