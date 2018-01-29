@@ -257,7 +257,7 @@ class personTable extends DbTable {
 
     static function optionsForPreBoarded(){
         $availPreBoPredicate  = " ( CNUM LIKE '%xxx' or CNUM LIKE '%XXX' or CNUM LIKE '%999' ) ";
-        $availPreBoPredicate .= " AND (PES_STATUS_DETAILS not like 'Boarded as%' ) ";
+        $availPreBoPredicate .= " AND ((PES_STATUS_DETAILS not like 'Boarded as%' )  or ( PES_STATUS_DETAILS is null)) ";
         $availPreBoPredicate .= " AND PES_STATUS not in (";
         $availPreBoPredicate .= " '" . personRecord::PES_STATUS_REMOVED . "' "; // Pre-boarded who haven't been boarded
         $availPreBoPredicate .= ",'" . personRecord::PES_STATUS_FAILED ."' ";

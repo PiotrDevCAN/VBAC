@@ -510,8 +510,8 @@ function personRecord() {
 		    		};
 		    		$('#editPersonModal').modal('hide');
 		    		$('#savingBoardingDetailsModal').modal('show');
-		    		console.log(personRecord.table);
-		    		if(personRecord.table != "undefined") {
+		    		console.log(typeOf(personRecord.table));
+		    		if(typeOf(personRecord.table) != "undefined") {
 			    		personRecord.table.ajax.reload();
 		    		}
 

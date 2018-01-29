@@ -50,19 +50,11 @@ try {
             $preBoarder = new personRecord();
             $preBoarder->setFromArray(array('CNUM'=>$_POST['person_preboarded']));
             $preBoarderData = $table->getFromDb($preBoarder);
-            $preBoarderData['PES_STATUS_DETAILS'] = 'Boarded as ' . $_POST['CNUM'];
+            $pesStatus = $preBoarderData['PES_STATUS_DETAILS'];
+            $preBoarderData['PES_STATUS_DETAILS'] = 'Boarded as ' . $_POST['CNUM'] . ":" . $_POST['NOTES_ID'] . " Status was:" . $pesStatus;
             $preBoarder->setFromArray($preBoarderData);
-            $table->save($preBoarder);
+            $table->saveRecord($preBoarder);
         }
-
-
-
-
-
-
-
-
-
     } else {
         $errorCode = db2_stmt_error();
         if(empty($errorCode)){
