@@ -18,6 +18,8 @@ try {
         //echo "Need to create virtual cnum";
         $cnum = personTable::getNextVirtualCnum();
         $_POST['CNUM']= $cnum;
+        // And put their name in the NOTES_ID as that's the field we display as their identity.
+        $_POST['NOTES_ID'] = $_POST['FIRST_NAME'] . " " . $_POST['LAST_NAME'];
         AuditTable::audit("Pre boarding:<b>" . $cnum . "</b>",AuditTable::RECORD_TYPE_AUDIT);
     }
     $person->setFromArray($_POST);

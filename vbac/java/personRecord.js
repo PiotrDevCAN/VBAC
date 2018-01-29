@@ -10,6 +10,9 @@ function personRecord() {
 	var dataTableElements;
 	var currentXmlDoc;
 	var spinner =  '<div id="overlay"><i class="fa fa-spinner fa-spin spin-big"></i></div>';
+	var boardingFormEnabledInputs;
+
+
 
 	this.init = function(){
 		console.log('+++ Function +++ personRecord.init');
@@ -422,6 +425,7 @@ function personRecord() {
 		var formValid = form[0].checkValidity();
 		if(formValid){
 			$("#saveBoarding").addClass('spinning');
+			personRecord.boardingFormEnabledInputs = ($("input:enabled"));
 			var allDisabledFields = ($("input:disabled"));
 			$(allDisabledFields).attr('disabled',false);
 			var formData = form.serialize();
@@ -599,7 +603,13 @@ function personRecord() {
 	    		var resultObj = JSON.parse(result);
 	    		$('#savingBoardingDetailsModal').on('hidden.bs.modal', function () { // When they close the modal this time, reload the page.
 	    			$('#savingBoardingDetailsModal').off('hidden.bs.modal');  // only do this once.
-	    			location.reload();
+	    			var boardingForm = $('#boardingForm');
+
+	    			console.log(boardingForm);
+
+
+	    			// location.reload();
+
     			});
 	    		if(resultObj.success==true){
 	    			var message = "<div class=panel-heading><h3 class=panel-title>Success</h3>" + resultObj.messages
@@ -615,6 +625,7 @@ function personRecord() {
 	    		$('#savingBoardingDetailsModal').modal('show');
 				$("#initiatePes").removeClass('spinning');
 				personRecord.table.ajax.reload();
+
 	    	}
 	    });
 	},

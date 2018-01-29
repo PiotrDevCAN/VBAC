@@ -123,6 +123,7 @@ class personRecord extends DbRecord
     private static  $lobValue = array('GTS','GBS','IMI','Cloud','Security','Other');
 
 
+    const PES_STATUS_NOT_REQUESTED = 'Not Requested';
     const PES_STATUS_CLEARED   = 'Cleared';
     const PES_STATUS_DECLINED  = 'Declined';
     const PES_STATUS_EXCEPTION = 'Exception';
@@ -167,6 +168,7 @@ class personRecord extends DbRecord
 //         $availableFromPreBoarding = $loader->loadIndexed("EMAIL_ADDRESS","CNUM", allTables::$PERSON, $availPreBoPredicate);
         $availableFromPreBoarding = personTable::optionsForPreBoarded();
         $preBoardersAvailable = count($availableFromPreBoarding) > 0 ? null : " disabled='disabled' ";
+        $pesStatus = empty($this->PES_STATUS) ? personRecord::PES_STATUS_NOT_REQUESTED : $this->PES_STATUS;
 
         ?>
         <form id='boardingForm'  class="form-horizontal" onsubmit="return false;">
@@ -219,6 +221,7 @@ class personRecord extends DbRecord
 								<input id='person_last_name'     name='LAST_NAME'         value='<?=$this->LAST_NAME?>'         type='hidden'  required <?=$notEditable?>>
 								<input id='person_ibm_location'  name='IBM_BASE_LOCATION' value='<?=$this->IBM_BASE_LOCATION?>'	type='hidden'  required>
 								<input id='person_country'       name='COUNTRY'           value='<?=$this->COUNTRY?>'           type='hidden'  required>
+								<input id='person_pes_status'    name='PES_STATUS'        value='<?=$pesStatus?>'               type='hidden'  required <?=$notEditable?>>
 
 						</div>
 					</div>
@@ -269,6 +272,7 @@ class personRecord extends DbRecord
 								<input id='resource_is_mgr'	       name='FM_MANAGER_FLAG'   value='N'               				type='hidden' >
 								<input id='resource_employee_type' name='EMPLOYEE_TYPE'     value='Pre-Hire'						type='hidden' >
 								<input id='resource_ibm_location'  name='IBM_BASE_LOCATION' value='<?=$this->IBM_BASE_LOCATION?>'	type='hidden' >
+								<input id='resource_pes_status'    name='PES_STATUS'        value='<?=$pesStatus?>'                 type='hidden'  <?$notEditable?>>
 
 					</div>
 				</div>
@@ -652,18 +656,34 @@ class personRecord extends DbRecord
 
     function sendPesRequest(){
         $loader = new Loader();
-        $fmEmail = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON," CNUM='" . db2_escape_string(trim($this->FM_CNUM)) . "' ");
+
+        if(!empty($this->FM_CNUM)){
+            $fmEmailArray = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON," CNUM='" . db2_escape_string(trim($this->FM_CNUM)) . "' ");
+            $fmEmail = isset($fmEmailArray[trim($this->FM_CNUM)]) ? $fmEmailArray[trim($this->FM_CNUM)] : $this->FM_CNUM;
+        } else {
+            $fmEmail = 'Unknown';
+        }
+        $firstName = !empty($this->FIRST_NAME) ? $this->FIRST_NAME : "firstName";
+        $lastName  = !empty($this->LAST_NAME) ? $this->LAST_NAME : "lastName";
+        $emailAddress = !empty($this->EMAIL_ADDRESS) ? $this->EMAIL_ADDRESS : "emailAddress";
+        $notesId = !empty($this->NOTES_ID) ? $this->NOTES_ID : "notesId";
+        $country = !empty($this->COUNTRY) ? $this->COUNTRY : "country";
+        $lob = !empty($this->LOB) ? $this->LOB : "lob";
+        $role = !empty($this->ROLE_ON_THE_ACCOUNT) ? $this->ROLE_ON_THE_ACCOUNT : "role";
+
+
+
         $now = new \DateTime();
-        $replacements = array($this->FIRST_NAME . " " . $this->LAST_NAME,
-                              $this->EMAIL_ADDRESS,
-                              $this->NOTES_ID,
-                              $this->COUNTRY,
-                              $this->LOB,
-                              $this->ROLE_ON_THE_ACCOUNT,
+        $replacements = array($firstName . " " . $lastName,
+                              $emailAddress,
+                              $notesId,
+                              $country,
+                              $lob,
+                              $role,
                               'Ventus',
                               $_SESSION['ssoEmail'],
                               $now->format('Y-m-d H:i:s'),
-                              $fmEmail[trim($this->FM_CNUM)]);
+                              $fmEmail);
         $message = preg_replace(self::$pesEmailPatterns, $replacements, self::$pesEmailBody);
 
         \itdq\BlueMail::send_mail(array(self::$pesTaskId), 'vBAC PES Request - ' . $this->CNUM ." (" . $this->FIRST_NAME . " " . $this->LAST_NAME . ")", $message, 'vbacNoReply@uk.ibm.com');
