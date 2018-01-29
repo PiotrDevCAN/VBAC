@@ -302,7 +302,7 @@ class personRecord extends DbRecord
                 		<option value=''>Link to Pre-Boarded</option>
                 		<?php
                         foreach ($availableFromPreBoarding as $option){
-                            echo "<option value='$option'>$option</option>";
+                            echo $option;
                         };
                         ?>
             			</select>
