@@ -88,7 +88,8 @@ class personRecord extends DbRecord
     public static $cio = array('Commercial','Cyber', 'Digital','Divestment','GOFE','IT 4 IT','Insurance','Retail','Sandbox','TRP');
 
    // private static $pesTaskId = 'lbgvetpr@uk.ibm.com';
-    private static $pesTaskId = 'rob.daniel@uk.ibm.com';
+   //  private static $pesTaskId = 'rob.daniel@uk.ibm.com';
+    private static $pesTaskId = 'rob.daniel@uk.ibm.com, carrabooth@uk.ibm.com';
     private static $pesEmailBody = '<table width="100%" border="0" cellspacing="0" cellpadding="0">
                              <tr><td align="center">
                                 <table width="50%">
@@ -144,7 +145,7 @@ class personRecord extends DbRecord
        // $isFM = personTable::isManager($_SESSION['ssoEmail']);
        // $fmPredicate = $isFM ? " UPPER(EMAIL_ADDRESS)='" . db2_escape_string(trim(strtoupper($_SESSION['ssoEmail']))) . "'  AND UPPER(LEFT(FM_MANAGER_FLAG,1))='Y'  " : " UPPER(LEFT(FM_MANAGER_FLAG,1))='Y' "; // FM Can only board people to themselves.
        // $fmPredicate = $mode==FormClass::$modeEDIT ? "( " . $fmPredicate . " ) OR ( CNUM='" . db2_escape_string($this->FM_CNUM) . "' ) " : $fmPredicate;
-        $fmPredicate = null;
+        $fmPredicate = " UPPER(LEFT(FM_MANAGER_FLAG,1))='Y'  ";
         $allManagers =  $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON, $fmPredicate);
         $countryCodes = $loader->loadIndexed('COUNTRY_NAME','COUNTRY_CODE',allTables::$STATIC_COUNTRY_CODES);
 
@@ -282,10 +283,11 @@ class personRecord extends DbRecord
 				<div class='form-group'>
 					<div class='col-sm-6' <?=$hideDivFromEdit?>>
 						<select class='form-control select select2'
-							id='person_contractor_id' name='CONTRACTOR_ID_REQUIRED'
+							id='person_contractor_id_required' name='CONTRACTOR_ID_REQUIRED'
 							required='required'>
+							<option value=''>Is Contractor ID Required?</option>
 							<option value='no'
-								<?=strtoupper(substr($this->CONTRACTOR_ID_REQUIRED,0,1))=='N' ? ' selected ' : null;?>>No
+							<?=(strtoupper(substr($this->CONTRACTOR_ID_REQUIRED,0,1))=='N' or empty($this->CONTRACTOR_ID_REQUIRED)) ? ' selected ' : null;?>>No
 								Contractor Id Required</option>
 							<option value='yes'
 								<?=strtoupper(substr($this->CONTRACTOR_ID_REQUIRED,0,1))=='Y' ? ' selected ' : null;?>>Contractor
@@ -455,7 +457,7 @@ class personRecord extends DbRecord
 
 		<?php
 	$allButtons = null;
-	$submitButton = $mode==FormClass::$modeEDIT ?  $this->formButton('submit','Submit','updateBoarding','disabled','Update','btn btn-primary') :  $this->formButton('submit','Submit','saveBoarding','disabled','Save','btn btn-primary');
+	$submitButton = $mode==FormClass::$modeEDIT ?  $this->formButton('submit','Submit','updateBoarding',null,'Update','btn btn-primary') :  $this->formButton('submit','Submit','saveBoarding','disabled','Save','btn btn-primary');
 	$pesButton    = $mode==FormClass::$modeEDIT ?  null :  $this->formButton('button','initiatePes','initiatePes','disabled','Initiate PES','btn btn-primary btnPesInitiate');
   	$allButtons[] = $submitButton;
   	$allButtons[] = $pesButton;

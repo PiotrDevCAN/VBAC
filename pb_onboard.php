@@ -35,8 +35,8 @@ $person->displayBoardingForm($mode);
 </div>
 <?php
 $person->savingBoardingDetailsModal();
-$loader = new Loader();
-$countryCodes = $loader->loadIndexed('COUNTRY_NAME','COUNTRY_CODE',allTables::$STATIC_COUNTRY_CODES);
+// $loader = new Loader();
+// $countryCodes = $loader->loadIndexed('COUNTRY_NAME','COUNTRY_CODE',allTables::$STATIC_COUNTRY_CODES);
 ?>
 
 <script type="text/javascript">

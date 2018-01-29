@@ -12,9 +12,10 @@ AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_POST,
 $person = new personRecord();
 $table = new personTable(allTables::$PERSON);
 
+$boardingIbmer = $_POST['boarding']== 'true' ? true:false;
 
 try {
-    if($_POST['swtch']=='on'){
+    if(!$boardingIbmer && $_POST['mode']!='Update'){
         //echo "Need to create virtual cnum";
         $cnum = personTable::getNextVirtualCnum();
         $_POST['CNUM']= $cnum;
@@ -32,7 +33,7 @@ try {
     $person->setFromArray($_POST);
     $person->convertCountryCodeToName();
     $saveRecordResult = $table->saveRecord($person);
-    AuditTable::audit("Saved Boarding Record:<B>" . $_POST['CNUM'] . "</b>Mode:<b>" . $_POST['mode'],AuditTable::RECORD_TYPE_AUDIT);
+    AuditTable::audit("Saved Boarding Record:<B>" . $_POST['CNUM'] .":" . $_POST['NOTES_ID'] .  "</b>Mode:<b>" . $_POST['mode'],AuditTable::RECORD_TYPE_AUDIT);
     AuditTable::audit("Saved Record:<pre>". print_r($person,true) . "</pre>", AuditTable::RECORD_TYPE_DETAILS);
 
      if(($saveRecordResult && $_POST['mode']=='Save') || (!$saveRecordResult && $_POST['mode']=='Update')){
@@ -44,10 +45,20 @@ try {
             echo "<br/>Boarding Form Record - Updated.";
         }
         $success = true;
+        // Do we need to update a PRE-BOARDING record ?
+        if(!empty($_POST['person_preboarded'])){
+            $preBoarder = new personRecord();
+            $preBoarder->setFromArray(array('CNUM'=>$_POST['person_preboarded']));
+            $preBoarderData = $table->getFromDb($preBoarder);
+            $pesStatus = $preBoarderData['PES_STATUS_DETAILS'];
+            $preBoarderData['PES_STATUS_DETAILS'] = 'Boarded as ' . $_POST['CNUM'] . ":" . $_POST['NOTES_ID'] . " Status was:" . $pesStatus;
+            $preBoarder->setFromArray($preBoarderData);
+            $table->saveRecord($preBoarder);
+        }
     } else {
         $errorCode = db2_stmt_error();
         if(empty($errorCode)){
-            echo "<br/>Record already existed";
+            echo "<br/>Error Trying to save record, no DB2 Stmt Error";
         } else {
             echo db2_stmt_error();
             echo db2_stmt_errormsg();
@@ -63,6 +74,6 @@ try {
 }
 
 $messages = ob_get_clean();
-$response = array('success'=>$success,'messages'=>$messages,"saveRecord"=>$saveRecordResult,'cnum'=>$_POST['CNUM'], 'post'=>print_r($_POST,true));
+$response = array('boarding'=>$_POST['boarding'], 'boardingIbmer'=>$boardingIbmer, 'success'=>$success,'messages'=>$messages,"saveRecord"=>$saveRecordResult,'cnum'=>$_POST['CNUM'], 'post'=>print_r($_POST,true));
 ob_clean();
 echo json_encode($response);

@@ -28,7 +28,7 @@ class personTable extends DbTable {
         if(isset($topRow[0])){
             $thisCnum = substr($topRow[0],1,5);
             $next = $thisCnum+1;
-            $nextVirtualCnum = 'V' . substr('000000' . $next ,5) . 'XXX';
+            $nextVirtualCnum = 'V' . substr('000000' . $next ,-5) . 'XXX';
         } else {
             $nextVirtualCnum = 'V00001XXX';
         }
@@ -257,7 +257,7 @@ class personTable extends DbTable {
 
     static function optionsForPreBoarded(){
         $availPreBoPredicate  = " ( CNUM LIKE '%xxx' or CNUM LIKE '%XXX' or CNUM LIKE '%999' ) ";
-        $availPreBoPredicate .= " AND (PES_STATUS not like '%xxx' or PES_STATUS not like '%XXX' or PES_STATUS not like '%999' ) ";
+        $availPreBoPredicate .= " AND ((PES_STATUS_DETAILS not like 'Boarded as%' )  or ( PES_STATUS_DETAILS is null)) ";
         $availPreBoPredicate .= " AND PES_STATUS not in (";
         $availPreBoPredicate .= " '" . personRecord::PES_STATUS_REMOVED . "' "; // Pre-boarded who haven't been boarded
         $availPreBoPredicate .= ",'" . personRecord::PES_STATUS_FAILED ."' ";
@@ -283,7 +283,9 @@ class personTable extends DbTable {
     }
 
     static function dataFromPreBoarder($cnum){
-        $sql = " SELECT CTB_RTB,TT_BAU, WORK_STREAM, PES_DATE_REQUESTED, PES_DATE_RESPONDED, PES_REQUESTOR,  PES_STATUS, PES_STATUS_DETAILS, FM_CNUM, CONTRACTOR_ID_REQUIRED, CONTRACTOR_ID, LOB, OPEN_SEAT_NUMBER, ROLE_ON_THE_ACCOUNT, START_DATE, PROJECTED_END_DATE  ";
+        $sql = " SELECT CTB_RTB,TT_BAU, WORK_STREAM, PES_DATE_REQUESTED, PES_DATE_RESPONDED, PES_REQUESTOR,  PES_STATUS, PES_STATUS_DETAILS, FM_CNUM ";
+        $sql .= " , CONTRACTOR_ID_REQUIRED, CONTRACTOR_ID, LOB, OPEN_SEAT_NUMBER, ROLE_ON_THE_ACCOUNT ";
+        $sql .= " , START_DATE, PROJECTED_END_DATE, CIO_ALIGNMENT  ";
         $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE CNUM='" . db2_escape_string(trim($cnum)) . "' ";
         $sql .= " OPTIMIZE for 1 row ";

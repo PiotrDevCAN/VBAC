@@ -11,7 +11,7 @@ ini_set('display_startup_errors',1);
 try {
     $table = new personTable(allTables::$PERSON);
     $personData = $table->getWithPredicate(" CNUM='" . db2_escape_string(trim($_POST['cnum'])) . "' ");
-    echo "<pre>" . print_r($personData,true) . "</pre><br/>";
+
     $person = new personRecord();
     $person->setFromArray($personData);
     $person->sendPesRequest();
@@ -24,6 +24,12 @@ try {
 }
 
 $messages = ob_get_clean();
-$response = array('success'=>$success,'messages'=>$messages);
+ob_start();
+echo "<pre>" . print_r($personData,true) . "</pre><br/>";
+$diags = ob_get_clean();
+
+
+
+$response = array('success'=>$success,'messages'=>$messages,'diags'=>$diags);
 ob_clean();
 echo json_encode($response);
