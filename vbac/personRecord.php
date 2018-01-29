@@ -230,13 +230,13 @@ class personRecord extends DbRecord
 			<div id='notAnIbmer' style='display:none'>
 				<div class="form-group">
 					<div class="col-sm-6">
-						<input class="form-control" id="resource_first_name" name="FIRST_NAME"
+						<input class="form-control" id="resource_first_name" name="resFIRST_NAME"
 							value="<?=$this->LAST_NAME?>"
 							type="text" placeholder='First Name'
 							<?=$notEditable?>>
 					</div>
 					<div class="col-sm-6">
-						<input class="form-control" id="resource_last_name" name="LAST_NAME"
+						<input class="form-control" id="resource_last_name" name="resLAST_NAME"
 							value="<?=$this->LAST_NAME?>"
 							type="text" placeholder='Last Name'
 							<?=$notEditable?>>
@@ -247,13 +247,13 @@ class personRecord extends DbRecord
 					<div class='form-group'>
 						<div class='col-sm-6'>
 							<input class='form-control' id='resource_email'
-								name='EMAIL_ADDRESS' value='<?=$this->EMAIL_ADDRESS?>'
+								name='resEMAIL_ADDRESS' value='<?=$this->EMAIL_ADDRESS?>'
 								type='text' placeholder="Email Address"
 								>
 						</div>
 						<div class='col-sm-6'>
         				<select class='form-control select select2 ' id='resource_country'
-                  	          name='resource_country'
+                  	          name='resCOUNTRY'
                   	          placeholder='Country working in:'
                			 >
                 		<option value=''>Country working in</option>
@@ -268,11 +268,11 @@ class personRecord extends DbRecord
 					</div>
 
 					<div class='form-group' style='display:none'>
-								<input id='resource_uid'           name='person_uid'        value='<?=$this->CNUM?>'   				type='hidden' >
-								<input id='resource_is_mgr'	       name='FM_MANAGER_FLAG'   value='N'               				type='hidden' >
-								<input id='resource_employee_type' name='EMPLOYEE_TYPE'     value='Pre-Hire'						type='hidden' >
-								<input id='resource_ibm_location'  name='IBM_BASE_LOCATION' value='<?=$this->IBM_BASE_LOCATION?>'	type='hidden' >
-								<input id='resource_pes_status'    name='PES_STATUS'        value='<?=$pesStatus?>'                 type='hidden'  <?$notEditable?>>
+								<input id='resource_uid'           name='resperson_uid'        value='<?=$this->CNUM?>'   				type='hidden' >
+								<input id='resource_is_mgr'	       name='resFM_MANAGER_FLAG'   value='N'               				type='hidden' >
+								<input id='resource_employee_type' name='resEMPLOYEE_TYPE'     value='Pre-Hire'						type='hidden' >
+								<input id='resource_ibm_location'  name='resIBM_BASE_LOCATION' value='<?=$this->IBM_BASE_LOCATION?>'	type='hidden' >
+								<input id='resource_pes_status'    name='resPES_STATUS'        value='<?=$pesStatus?>'                 type='hidden'  <?$notEditable?>>
 
 					</div>
 				</div>

@@ -26,7 +26,7 @@ class personTable extends DbTable {
 
         $topRow = db2_fetch_array($rs);
         if(isset($topRow[0])){
-            $thisCnum = substr($topRow[0],1,6);
+            $thisCnum = substr($topRow[0],1,5);
             $next = $thisCnum+1;
             $nextVirtualCnum = 'V' . substr('000000' . $next ,5) . 'XXX';
         } else {
