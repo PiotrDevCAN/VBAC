@@ -697,16 +697,23 @@ function personRecord() {
         		    		var person = new personRecord();
         		    	    person.initialisePersonFormSelect2();
         		    		var accountOrganisation = resultObj.accountOrganisation;
-        		    		console.log(accountOrganisation);
-    		    		    console.log($('.accountOrganisation'));
-    		    		    console.log($('.accountOrganisation')[0]);
         		    		if(accountOrganisation=='T&T'){
         		    			$('.accountOrganisation')[0].click();
-        		    		    console.log($('.accountOrganisation'));
-        		    		    console.log($('.accountOrganisation')[0]);
         		    		}
         		    		if(accountOrganisation=='BAU'){
         		    			$('.accountOrganisation')[1].click();
+        		    		}
+        		    		var ctbRtb = resultObj.ctbRtb;
+        		    		switch(ctbRtb){
+        		    		case 'CTB':
+        		    			$('.ctbRtb')[0].click();
+        		    			break;
+        		    		case 'RTB':
+        		    			$('.ctbRtb')[1].click();
+        		    			break;
+        		    		default:
+        		    			$('.ctbRtb')[2].click();
+        		    			break;
         		    		}
     		    		} else {
         		    		$('#editPersonModal .modal-body').html(resultObj.messages);
