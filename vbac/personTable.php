@@ -57,7 +57,8 @@ class personTable extends DbTable {
             return false;
         } else {
             while(($row=db2_fetch_array($rs))==true){
-                 $rowWithButtonsAdded = $this->addButtons($row);
+                 // Only editable, if they're not a "pre-Boarder" who has now been boarded.
+                 $rowWithButtonsAdded =(substr($row[personRecord::FIELD_PES_STATUS_DETAILS],0,7)=='Boarded') ? $row : $this->addButtons($row);
                  $data[] = $rowWithButtonsAdded;
             }
         }
@@ -103,44 +104,43 @@ class personTable extends DbTable {
         $row[personRecord::FIELD_NOTES_ID] .= $notesId;
 
         switch ($status) {
-            case personRecord::PES_STATUS_NOT_REQUESTED:
-            case null:
-                $row[personRecord::FIELD_PES_STATUS]  = "<button type='button' class='btn btn-default btn-xs btnPesInitiate accessRestrict accessPmo accessFm' ";
-                $row[personRecord::FIELD_PES_STATUS]  .= "aria-label='Left Align' ";
-                $row[personRecord::FIELD_PES_STATUS] .= " data-cnum='" .$cnum . "' ";
-                $row[personRecord::FIELD_PES_STATUS] .= " data-pesstatus='$status' ";
-                $row[personRecord::FIELD_PES_STATUS] .= " > ";
-                $row[personRecord::FIELD_PES_STATUS] .= "<span class='glyphicon glyphicon-plane ' aria-hidden='true'></span>";
-                $row[personRecord::FIELD_PES_STATUS] .= "</button>&nbsp;";
-                $row[personRecord::FIELD_PES_STATUS] .= $status;
-                break;
-            case personRecord::PES_STATUS_EXCEPTION:
-            case personRecord::PES_STATUS_DECLINED;
-            case personRecord::PES_STATUS_FAILED;
-            case personRecord::PES_STATUS_INITIATED;
-            case personRecord::PES_STATUS_REMOVED;
-                $row[personRecord::FIELD_PES_STATUS]  = "<button type='button' class='btn btn-default btn-xs btnPesStatus' aria-label='Left Align' ";
-                $row[personRecord::FIELD_PES_STATUS] .= " data-cnum='" .$cnum . "' ";
-                $row[personRecord::FIELD_PES_STATUS] .= " data-notesid='" . $notesId . "' ";
-                $row[personRecord::FIELD_PES_STATUS] .= " data-pesdaterequested='" .trim($row[personRecord::FIELD_PES_DATE_REQUESTED]) . "' ";
-                $row[personRecord::FIELD_PES_STATUS] .= " data-pesrequestor='" .trim($row[personRecord::FIELD_PES_REQUESTOR]) . "' ";
-                $row[personRecord::FIELD_PES_STATUS] .= " data-pesstatus='" .$status . "' ";
-                $row[personRecord::FIELD_PES_STATUS] .= " > ";
-                $row[personRecord::FIELD_PES_STATUS] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
-                $row[personRecord::FIELD_PES_STATUS] .= "</button>&nbsp;";
-                $row[personRecord::FIELD_PES_STATUS] .= $status;
-            break;
+             case personRecord::PES_STATUS_NOT_REQUESTED:
+             case null:
+                 $row[personRecord::FIELD_PES_STATUS]  = "<button type='button' class='btn btn-default btn-xs btnPesInitiate accessRestrict accessPmo accessFm' ";
+                 $row[personRecord::FIELD_PES_STATUS]  .= "aria-label='Left Align' ";
+                 $row[personRecord::FIELD_PES_STATUS] .= " data-cnum='" .$cnum . "' ";
+                 $row[personRecord::FIELD_PES_STATUS] .= " data-pesstatus='$status' ";
+                 $row[personRecord::FIELD_PES_STATUS] .= " > ";
+                 $row[personRecord::FIELD_PES_STATUS] .= "<span class='glyphicon glyphicon-plane ' aria-hidden='true'></span>";
+                 $row[personRecord::FIELD_PES_STATUS] .= "</button>&nbsp;";
+                 $row[personRecord::FIELD_PES_STATUS] .= $status;
+                 break;
+             case personRecord::PES_STATUS_EXCEPTION:
+             case personRecord::PES_STATUS_DECLINED;
+             case personRecord::PES_STATUS_FAILED;
+             case personRecord::PES_STATUS_INITIATED;
+             case personRecord::PES_STATUS_REMOVED;
+                 $row[personRecord::FIELD_PES_STATUS]  = "<button type='button' class='btn btn-default btn-xs btnPesStatus' aria-label='Left Align' ";
+                 $row[personRecord::FIELD_PES_STATUS] .= " data-cnum='" .$cnum . "' ";
+                 $row[personRecord::FIELD_PES_STATUS] .= " data-notesid='" . $notesId . "' ";
+                 $row[personRecord::FIELD_PES_STATUS] .= " data-pesdaterequested='" .trim($row[personRecord::FIELD_PES_DATE_REQUESTED]) . "' ";
+                 $row[personRecord::FIELD_PES_STATUS] .= " data-pesrequestor='" .trim($row[personRecord::FIELD_PES_REQUESTOR]) . "' ";
+                 $row[personRecord::FIELD_PES_STATUS] .= " data-pesstatus='" .$status . "' ";
+                 $row[personRecord::FIELD_PES_STATUS] .= " > ";
+                 $row[personRecord::FIELD_PES_STATUS] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
+                 $row[personRecord::FIELD_PES_STATUS] .= "</button>&nbsp;";
+                 $row[personRecord::FIELD_PES_STATUS] .= $status;
+                 break;
             case $row[personRecord::FIELD_NOTES_ID]:
-                $row[personRecord::FIELD_NOTES_ID]  = "<button type='button' class='btn btn-default btn-xs btnEditPerson' aria-label='Left Align' ";
-                $row[personRecord::FIELD_NOTES_ID] .= "data-cnum='" .$cnum. "'";
-                $row[personRecord::FIELD_NOTES_ID] .= " > ";
-                $row[personRecord::FIELD_NOTES_ID] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
-                $row[personRecord::FIELD_NOTES_ID] .= $notesId;
-                break;
-            default:
-
-            break;
-        }
+                 $row[personRecord::FIELD_NOTES_ID]  = "<button type='button' class='btn btn-default btn-xs btnEditPerson' aria-label='Left Align' ";
+                 $row[personRecord::FIELD_NOTES_ID] .= "data-cnum='" .$cnum. "'";
+                 $row[personRecord::FIELD_NOTES_ID] .= " > ";
+                 $row[personRecord::FIELD_NOTES_ID] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
+                 $row[personRecord::FIELD_NOTES_ID] .= $notesId;
+                 break;
+             default:
+                  break;
+           }
         return $row;
     }
 
