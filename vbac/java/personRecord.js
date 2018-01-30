@@ -464,6 +464,7 @@ function personRecord() {
 
 	this.listenforUpdateBoarding= function () {
 		$(document).on('click','#updateBoarding', function(){
+			$('#updateBoarding').addClass('spinning');
 			var person = new personRecord();
 			person.saveBoarding('Update');
 		});
@@ -489,6 +490,7 @@ function personRecord() {
 		        data : formData,
 		    	success: function(result){
 					$("#saveBoarding").removeClass('spinning');
+					$('#updateBoarding').removeClass('spinning');
 		    		console.log(result);
 		    		var resultObj = JSON.parse(result);
 		    		if(resultObj.success==true){

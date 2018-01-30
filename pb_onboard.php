@@ -83,6 +83,7 @@ $(document).ready(function(){
         format: 'D MMM YYYY',
         showTime: false,
         onSelect: function() {
+        	console.log('onSelect for startPicker');
             console.log(this.getMoment().format('Do MMMM YYYY'));
             var db2Value = this.getMoment().format('YYYY-MM-DD')
             console.log(db2Value);
@@ -102,6 +103,7 @@ $(document).ready(function(){
         format: 'D MMM YYYY',
         showTime: false,
         onSelect: function() {
+        	console.log('onSelect for endPicker');
             console.log(this.getMoment().format('Do MMMM YYYY'));
             var db2Value = this.getMoment().format('YYYY-MM-DD')
             console.log(db2Value);
