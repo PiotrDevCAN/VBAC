@@ -127,12 +127,7 @@ function personRecord() {
 			    		var resultObj = JSON.parse(result);
 			    		if(resultObj.success==true){
 			    			console.log(resultObj.data);
-			    			console.log(resultObj.data.CTB_RTB);
-
 			    			   $(allEnabled).attr('disabled',false);
-
-			    			   console.log(allEnabled);
-
 			    			   var $radios = $('input:radio[name=CTB_RTB]');
 			    			   $($radios).attr('disabled',false);
 
@@ -151,9 +146,6 @@ function personRecord() {
 				    			   $(button).trigger('click');
 			    			   }
 
-			    			   console.log($('#person_contractor_id_required'));
-			    			   console.log(resultObj.data.CONTRACTOR_ID_REQUIRED);
-
 			    			   if(resultObj.data.CONTRACTOR_ID_REQUIRED != null){
 			    				   if(resultObj.data.CONTRACTOR_ID_REQUIRED.trim().toUpperCase().substring(0,1)=='Y'){
 			    					   var contractorIdReq = 'yes';
@@ -165,10 +157,6 @@ function personRecord() {
 			    			   }
 				    		   $('#person_contractor_id_required').attr('disabled',false);
 			    			   $('#person_contractor_id_required').val(contractorIdReq).trigger('change');
-
-
-			    			   console.log($('#person_contractor_id_required'));
-
 
 			    			   if(resultObj.data.FM_CNUM != null){
 				    			   $('#FM_CNUM').attr('disabled',false);
@@ -193,8 +181,6 @@ function personRecord() {
 				    			   }
 			    			   }
 
-
-
 			    			   if(resultObj.data.LOB != null){
 				    			   $('#lob').attr('disabled',false);
 			    				   $('#lob').val(resultObj.data.LOB.trim()).trigger('change');
@@ -214,20 +200,16 @@ function personRecord() {
 
 
 			    			   var sDate = resultObj.data.START_DATE;
-			    			   console.log(sDate);
-			    			   if(sDate){
-			    				   var startDate = new Pikaday({ field: document.getElementById('start_date') });
-			    				   startDate.setDate(sDate);
-			    			   }
 			    			   $('#start_date').attr('disabled',false);
+			    			   if(sDate){
+			    				   startPicker.setDate(sDate);
+			    			   }
 
 			    			   var eDate = resultObj.data.PROJECTED_END_DATE;
-			    			   console.log(eDate);
-			    			   if(eDate){
-			    				   var endDate = new Pikaday({ field: document.getElementById('end_date') });
-			    				   endDate.setDate(eDate);
-			    			   }
 			    			   $('#end_date').attr('disabled',false);
+			    			   if(eDate){
+			    				   endPikcer.setDate(eDate);
+			    			   }
 
 			    			   var pesDateReq = resultObj.data.PES_DATE_REQUESTED;
 			    			   if(pesDateReq){
@@ -696,6 +678,7 @@ function personRecord() {
         		    		$('#editPersonModal .modal-body').html(resultObj.body);
         		    		var person = new personRecord();
         		    	    person.initialisePersonFormSelect2();
+        		    	    $('#person_intranet').attr('disabled',false);
         		    		var accountOrganisation = resultObj.accountOrganisation;
         		    		if(accountOrganisation=='T&T'){
         		    			$('.accountOrganisation')[0].click();

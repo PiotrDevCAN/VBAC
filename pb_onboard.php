@@ -40,6 +40,11 @@ $person->savingBoardingDetailsModal();
 ?>
 
 <script type="text/javascript">
+var startDate,endDate;
+var startPicker, endPicker;
+
+
+
 $(document).ready(function() {
 
 	$('.toggle').bootstrapToggle()
@@ -59,13 +64,14 @@ $(document).ready(function() {
 
 $(document).ready(function(){
 
-	var startDate,
-    	endDate,
     updateStartDate = function() {
-		console.log('updatedStartDate');
+		console.log('updateStartDate');
+		console.log(startPicker);
+		console.log(startDate);
         startPicker.setStartRange(startDate);
         endPicker.setStartRange(startDate);
         endPicker.setMinDate(startDate);
+		console.log('updateStartDate');
     },
     updateEndDate = function() {
 		console.log('updatedEndDate');
@@ -84,6 +90,7 @@ $(document).ready(function(){
         showTime: false,
         onSelect: function() {
         	console.log('onSelect for startPicker');
+        	console.log(this);
             console.log(this.getMoment().format('Do MMMM YYYY'));
             var db2Value = this.getMoment().format('YYYY-MM-DD')
             console.log(db2Value);
@@ -114,6 +121,9 @@ $(document).ready(function(){
     }),
     _startDate = startPicker.getDate(),
     _endDate = endPicker.getDate();
+
+    console.log(startDate);
+    console.log(_startDate);
 
     if (_startDate) {
         startDate = _startDate;

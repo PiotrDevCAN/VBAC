@@ -208,7 +208,7 @@ class personRecord extends DbRecord
 							<input class='form-control' id='person_intranet'
 								name='EMAIL_ADDRESS' value='<?=$this->EMAIL_ADDRESS?>'
 								type='text' disabled='disabled' placeholder="Intranet"
-								<?=$notEditable?>>
+								>
 						</div>
 					</div>
 
@@ -282,7 +282,7 @@ class personRecord extends DbRecord
 
 
 				<div class='form-group'>
-					<div class='col-sm-6' <?=$hideDivFromEdit?>>
+					<div class='col-sm-6' >
 						<select class='form-control select select2'
 							id='person_contractor_id_required' name='CONTRACTOR_ID_REQUIRED'
 							>

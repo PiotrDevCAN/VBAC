@@ -61,7 +61,10 @@ try {
     } else {
         $errorCode = db2_stmt_error();
         if(empty($errorCode)){
-            echo "<br/>Error Trying to save record, no DB2 Stmt Error";
+            echo db2_stmt_error();
+            echo db2_stmt_errormsg();
+            echo "<br/>Error Trying to save record, no DB2 Stmt Error!!<br/>";
+            echo $table->lastUpdateSql();
         } else {
             echo db2_stmt_error();
             echo db2_stmt_errormsg();
