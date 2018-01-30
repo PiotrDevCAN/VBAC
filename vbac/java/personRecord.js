@@ -100,9 +100,6 @@ function personRecord() {
 				$('#notAnIbmer :input').attr('required',false);
 				$('#existingIbmer :input').attr('required',true);
 			}
-
-
-
 			var currentHeading = $('#employeeResourceHeading').text();
 			var newHeading = currentHeading=='Employee Details' ? 'Resource Details' : 'Employee Details';
 			$('#employeeResourceHeading').text(newHeading);
@@ -464,6 +461,7 @@ function personRecord() {
 
 	this.listenforUpdateBoarding= function () {
 		$(document).on('click','#updateBoarding', function(){
+			$('#updateBoarding').addClass('spinning');
 			var person = new personRecord();
 			person.saveBoarding('Update');
 		});
@@ -489,6 +487,7 @@ function personRecord() {
 		        data : formData,
 		    	success: function(result){
 					$("#saveBoarding").removeClass('spinning');
+					$('#updateBoarding').removeClass('spinning');
 		    		console.log(result);
 		    		var resultObj = JSON.parse(result);
 		    		if(resultObj.success==true){
@@ -510,8 +509,8 @@ function personRecord() {
 		    		};
 		    		$('#editPersonModal').modal('hide');
 		    		$('#savingBoardingDetailsModal').modal('show');
-		    		console.log(typeOf(personRecord.table));
-		    		if(typeOf(personRecord.table) != "undefined") {
+		    		console.log(typeof(personRecord.table));
+		    		if(typeof(personRecord.table) != "undefined") {
 			    		personRecord.table.ajax.reload();
 		    		}
 
@@ -594,7 +593,7 @@ function personRecord() {
 		$(document).on('click','#reportPes', function(e){
 			console.log(e);
 			personRecord.table.columns().visible(false,false);
-			personRecord.table.columns([5,21,22,23,24,25]).visible(true);
+			personRecord.table.columns([5,21,22,23,24,25,34]).visible(true);
 			console.log(personRecord.table);
 			personRecord.table.order([21,'desc'],[5,"asc"]).draw();
 			});
@@ -602,8 +601,8 @@ function personRecord() {
 
 	this.listenForReportPerson = function(){
 		$(document).on('click','#reportPerson', function(e){
-			personRecord.table.columns([0,1,2,3,4,5,6,7,8,9,10,11,12,13,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29]).visible(true,false);
-			personRecord.table.columns([2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29]).visible(true);
+			personRecord.table.columns([0,1,2,3,4,5,6,7,8,9,10,11,12,13,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34]).visible(true,false);
+			personRecord.table.columns([2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,24]).visible(true);
 			personRecord.table.columns.draw();
 			});
 	},

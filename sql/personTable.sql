@@ -33,8 +33,9 @@ CREATE TABLE "VBAC_UT"."PERSON" (
 		"CBN_STATUS" CHAR(10),
 		"WORK_STREAM" CHAR(150),
 		"CONTRACTOR_ID_REQUIRED" CHAR(3),
-		"CONTRACTOR_ID" CHAR(10)
-		"CIO_ALIGNMENT" CHAR(30)
+		"CONTRACTOR_ID" CHAR(10),
+		"CIO_ALIGNMENT" CHAR(30),
+		"PRE_BOARDED" CHAR(9)
 	)
 	DATA CAPTURE NONE;
 
@@ -44,16 +45,16 @@ ALTER TABLE "VBAC_UT"."PERSON" ADD CONSTRAINT "SQL171213120532360" PRIMARY KEY
 
 
 alter table "ROB_DEV".PERSON
-	 alter column "PES_STATUS_DETAILS"
-	 SET DATA TYPE varchar(200);
+	 add  column "PRE_BOARDED"
+	   char(9);
 
 alter table "VBAC_UT".PERSON
-	 alter column "PES_STATUS_DETAILS"
-	 SET DATA TYPE varchar(200);
+	 add column "PRE_BOARDED"
+	   char(9);
 
 alter table "VBAC".PERSON
-	 alter column "PES_STATUS_DETAILS"
-	 SET DATA TYPE varchar(200);
+	 add column "PRE_BOARDED"
+	    char(9);
 
 
 

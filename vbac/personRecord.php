@@ -63,6 +63,7 @@ class personRecord extends DbRecord
     protected $CONTRACTOR_ID_REQUIRED;
     protected $CONTRACTOR_ID;
     protected $CIO_ALIGNMENT;
+    protected $PRE_BOARDED;
 
 
     protected $person_bio;
@@ -167,8 +168,8 @@ class personRecord extends DbRecord
 //         $availPreBoPredicate .= ",'" . personRecord::PES_STATUS_FAILED ."' ";
 //         $availPreBoPredicate .= " )";
 //         $availableFromPreBoarding = $loader->loadIndexed("EMAIL_ADDRESS","CNUM", allTables::$PERSON, $availPreBoPredicate);
-        $availableFromPreBoarding = personTable::optionsForPreBoarded();
-        $preBoardersAvailable = count($availableFromPreBoarding) > 0 ? null : " disabled='disabled' ";
+        $availableFromPreBoarding = personTable::optionsForPreBoarded($this->PRE_BOARDED);
+        $preBoardersAvailable = count($availableFromPreBoarding) > 1 ? null : " disabled='disabled' ";
         $pesStatus = empty($this->PES_STATUS) ? personRecord::PES_STATUS_NOT_REQUESTED : $this->PES_STATUS;
 
         ?>
@@ -184,7 +185,7 @@ class personRecord extends DbRecord
 				<div class="form-group">
 					<div class="col-sm-6">
 						<input class="form-control" id="person_name" name="person_name"
-							value="<?=$this->FIRST_NAME . " " . $this->LAST_NAME?>" required
+							value="<?=$this->FIRST_NAME . " " . $this->LAST_NAME?>"
 							type="text" placeholder='Start typing name/serial/email'
 							<?=$notEditable?>>
 					</div>
@@ -199,13 +200,13 @@ class personRecord extends DbRecord
 					<div class='form-group'>
 						<div class='col-sm-6'>
 							<input class='form-control' id='person_notesid' name='NOTES_ID'
-								value='<?=$this->NOTES_ID?>' required type='text'
+								value='<?=$this->NOTES_ID?>'  type='text'
 								disabled='disabled' placeholder="Notesid" <?=$notEditable?>>
 						</div>
 
 						<div class='col-sm-6'>
 							<input class='form-control' id='person_intranet'
-								name='EMAIL_ADDRESS' value='<?=$this->EMAIL_ADDRESS?>' required
+								name='EMAIL_ADDRESS' value='<?=$this->EMAIL_ADDRESS?>'
 								type='text' disabled='disabled' placeholder="Intranet"
 								<?=$notEditable?>>
 						</div>
@@ -216,13 +217,13 @@ class personRecord extends DbRecord
 							<input class='form-control' id='person_bio' name='person_bio'
 								value='' required type='text' disabled='disabled' placeholder="Bio">
 								<input id='person_uid'           name='person_uid'        value='' type='hidden' required>
-								<input id='person_is_mgr'	     name='FM_MANAGER_FLAG'   value='<?=$this->FM_MANAGER_FLAG?>'   type='hidden'  required>
-								<input id='person_employee_type' name='EMPLOYEE_TYPE'     value='<?=$this->EMPLOYEE_TYPE?>'		type='Hidden'  required>
-								<input id='person_first_name'    name='FIRST_NAME'        value='<?=$this->FIRST_NAME?>'        type='hidden'  required <?=$notEditable?>>
-								<input id='person_last_name'     name='LAST_NAME'         value='<?=$this->LAST_NAME?>'         type='hidden'  required <?=$notEditable?>>
-								<input id='person_ibm_location'  name='IBM_BASE_LOCATION' value='<?=$this->IBM_BASE_LOCATION?>'	type='hidden'  required>
-								<input id='person_country'       name='COUNTRY'           value='<?=$this->COUNTRY?>'           type='hidden'  required>
-								<input id='person_pes_status'    name='PES_STATUS'        value='<?=$pesStatus?>'               type='hidden'  required <?=$notEditable?>>
+								<input id='person_is_mgr'	     name='FM_MANAGER_FLAG'   value='<?=$this->FM_MANAGER_FLAG?>'   type='hidden'  >
+								<input id='person_employee_type' name='EMPLOYEE_TYPE'     value='<?=$this->EMPLOYEE_TYPE?>'		type='Hidden'  >
+								<input id='person_first_name'    name='FIRST_NAME'        value='<?=$this->FIRST_NAME?>'        type='hidden'   <?=$notEditable?>>
+								<input id='person_last_name'     name='LAST_NAME'         value='<?=$this->LAST_NAME?>'         type='hidden'   <?=$notEditable?>>
+								<input id='person_ibm_location'  name='IBM_BASE_LOCATION' value='<?=$this->IBM_BASE_LOCATION?>'	type='hidden'  >
+								<input id='person_country'       name='COUNTRY'           value='<?=$this->COUNTRY?>'           type='hidden'  >
+								<input id='person_pes_status'    name='PES_STATUS'        value='<?=$pesStatus?>'               type='hidden'   <?=$notEditable?>>
 
 						</div>
 					</div>
@@ -284,7 +285,7 @@ class personRecord extends DbRecord
 					<div class='col-sm-6' <?=$hideDivFromEdit?>>
 						<select class='form-control select select2'
 							id='person_contractor_id_required' name='CONTRACTOR_ID_REQUIRED'
-							required='required'>
+							>
 							<option value=''>Is Contractor ID Required?</option>
 							<option value='no'
 							<?=(strtoupper(substr($this->CONTRACTOR_ID_REQUIRED,0,1))=='N' or empty($this->CONTRACTOR_ID_REQUIRED)) ? ' selected ' : null;?>>No
@@ -299,6 +300,7 @@ class personRecord extends DbRecord
         				<select class='form-control select select2' id='person_preboarded'
                   	          name='person_preboarded'
                   	          <?=$preBoardersAvailable?>
+                  	          <?=$notEditable?>
                   	          placeholder='Was pre-boarded as:'
                			 >
                 		<option value=''>Link to Pre-Boarded</option>
@@ -351,7 +353,7 @@ class personRecord extends DbRecord
           <input class="form-control" id="open_seat" name="OPEN_SEAT_NUMBER" value="<?=$this->OPEN_SEAT_NUMBER?>" type="text" placeholder='Open Seat' data-toggle='tooltip' title='Open Seat'>
         </div>
         <div class='col-sm-6'>
-          <input class="form-control" id="role_on_account" name="ROLE_ON_THE_ACCOUNT" value="<?=$this->ROLE_ON_THE_ACCOUNT?>" required type="text" placeholder='Role on account' >
+          <input class="form-control" id="role_on_account" name="ROLE_ON_THE_ACCOUNT" value="<?=$this->ROLE_ON_THE_ACCOUNT?>" type="text" placeholder='Role on account' >
        </div>
     </div>
 
@@ -362,7 +364,6 @@ class personRecord extends DbRecord
         <div class='col-sm-6'>
         	   	<select class='form-control select select2' id='lob'
                   	          name='LOB'
-                  	          required
                   	          placeholder='Select Lob'
             	>
                 <option value=''>Select Lob</option>
@@ -378,9 +379,9 @@ class personRecord extends DbRecord
          <div class='form-group' id='selectCioAllignment'>
          <div class='col-sm-6'>
              <div class="radio">
-  				<label><input type="radio" name="CTB_RTB" required class='ctbRtb' value='CTB' <?=substr($this->CTB_RTB,0,3)=='CTB'? 'checked' : null ?>>CTB</label>
-  				<label><input type="radio" name="CTB_RTB" required class='ctbRtb' value='RTB' <?=substr($this->CTB_RTB,0,3)=='RTB'? 'checked' : null ?>>RTB</label>
-  				<label><input type="radio" name="CTB_RTB" required class='ctbRtb' value='Other' <?=substr($this->CTB_RTB,0,5)=='Other'? 'checked' : null ?>>Other</label>
+  				<label><input type="radio" name="CTB_RTB"  class='ctbRtb' value='CTB' <?=substr($this->CTB_RTB,0,3)=='CTB'? 'checked' : null ?>>CTB</label>
+  				<label><input type="radio" name="CTB_RTB"  class='ctbRtb' value='RTB' <?=substr($this->CTB_RTB,0,3)=='RTB'? 'checked' : null ?>>RTB</label>
+  				<label><input type="radio" name="CTB_RTB"  class='ctbRtb' value='Other' <?=substr($this->CTB_RTB,0,5)=='Other'? 'checked' : null ?>>Other</label>
 			</div>
         </div>
         <div class='col-sm-6'>
@@ -405,8 +406,8 @@ class personRecord extends DbRecord
     <div class='form-group' >
         <div class='col-sm-6'>
             <div class="radio">
-  			<label><input type="radio" name="TT_BAU" required class='accountOrganisation' value='T&T' <?=substr($this->TT_BAU,0,3)=='T&T'? 'checked' : null ?>>T&T</label>
-  			<label><input type="radio" name="TT_BAU" required class='accountOrganisation' value='BAU' <?=substr($this->TT_BAU,0,3)=='BAU'? 'checked' : null ?>>BAU</label>
+  			<label><input type="radio" name="TT_BAU"  class='accountOrganisation' value='T&T' <?=substr($this->TT_BAU,0,3)=='T&T'? 'checked' : null ?>>T&T</label>
+  			<label><input type="radio" name="TT_BAU"  class='accountOrganisation' value='BAU' <?=substr($this->TT_BAU,0,3)=='BAU'? 'checked' : null ?>>BAU</label>
 			</div>
         </div>
 
@@ -437,7 +438,7 @@ class personRecord extends DbRecord
 
     <div class='form-group' >
         <div class='col-sm-6'>
-          <input class="form-control" id="start_date" name="START_DATE" value="<?=$this->START_DATE?>" required="required" type="text" placeholder='Start Date' data-toggle='tooltip' title='Start Date'>
+          <input class="form-control" id="start_date" name="START_DATE" value="<?=$this->START_DATE?>" type="text" placeholder='Start Date' data-toggle='tooltip' title='Start Date'>
            </div>
 
         <div class='col-sm-6'>

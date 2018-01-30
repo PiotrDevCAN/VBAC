@@ -37,6 +37,7 @@ $(document).ready(function(){
 	person.listenForInitiatePesFromPortal();
 	person.listenForEditPerson();
 	person.listenForAccountOrganisation();
+    person.listenForCtbRtb();
 	person.listenForToggleFmFlag();
 	person.listenForConfirmFmFlag();
 	person.listenforUpdateBoarding();

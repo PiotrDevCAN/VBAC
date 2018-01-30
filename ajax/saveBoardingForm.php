@@ -30,6 +30,9 @@ try {
         $_POST['PES_STATUS'] = $_POST['resPES_STATUS'];
         AuditTable::audit("Pre boarding:<b>" . $cnum . "</b>",AuditTable::RECORD_TYPE_AUDIT);
     }
+
+    $_POST['PRE_BOARDED'] = !empty($_POST['person_preboarded']) ? $_POST['person_preboarded']  : null;  // Save the link to the pre-boarded person
+
     $person->setFromArray($_POST);
     $person->convertCountryCodeToName();
     $saveRecordResult = $table->saveRecord($person);
