@@ -169,7 +169,7 @@ class personRecord extends DbRecord
 //         $availPreBoPredicate .= " )";
 //         $availableFromPreBoarding = $loader->loadIndexed("EMAIL_ADDRESS","CNUM", allTables::$PERSON, $availPreBoPredicate);
         $availableFromPreBoarding = personTable::optionsForPreBoarded($this->PRE_BOARDED);
-        $preBoardersAvailable = count($availableFromPreBoarding) > 0 ? null : " disabled='disabled' ";
+        $preBoardersAvailable = count($availableFromPreBoarding) > 1 ? null : " disabled='disabled' ";
         $pesStatus = empty($this->PES_STATUS) ? personRecord::PES_STATUS_NOT_REQUESTED : $this->PES_STATUS;
 
         ?>
@@ -300,6 +300,7 @@ class personRecord extends DbRecord
         				<select class='form-control select select2' id='person_preboarded'
                   	          name='person_preboarded'
                   	          <?=$preBoardersAvailable?>
+                  	          <?=$notEditable?>
                   	          placeholder='Was pre-boarded as:'
                			 >
                 		<option value=''>Link to Pre-Boarded</option>

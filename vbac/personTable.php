@@ -256,12 +256,17 @@ class personTable extends DbTable {
     }
 
     static function optionsForPreBoarded($preBoarded=null){
-        $availPreBoPredicate  = " ( CNUM LIKE '%xxx' or CNUM LIKE '%XXX' or CNUM LIKE '%999' ) ";
-        $availPreBoPredicate .= " AND ((PES_STATUS_DETAILS not like 'Boarded as%' )  or ( PES_STATUS_DETAILS is null)) ";
-        $availPreBoPredicate .= " AND PES_STATUS not in (";
-        $availPreBoPredicate .= " '" . personRecord::PES_STATUS_REMOVED . "' "; // Pre-boarded who haven't been boarded
-        $availPreBoPredicate .= ",'" . personRecord::PES_STATUS_FAILED ."' ";
-        $availPreBoPredicate .= " )";
+
+        if(empty($preBoarded)){
+            $availPreBoPredicate  = " ( CNUM LIKE '%xxx' or CNUM LIKE '%XXX' or CNUM LIKE '%999' ) ";
+            $availPreBoPredicate .= " AND ((PES_STATUS_DETAILS not like 'Boarded as%' )  or ( PES_STATUS_DETAILS is null)) ";
+            $availPreBoPredicate .= " AND PES_STATUS not in (";
+            $availPreBoPredicate .= " '" . personRecord::PES_STATUS_REMOVED . "' "; // Pre-boarded who haven't been boarded
+            $availPreBoPredicate .= ",'" . personRecord::PES_STATUS_FAILED ."' ";
+            $availPreBoPredicate .= " )";
+        } else {
+            $availPreBoPredicate  = " ( CNUM = '" . db2_escape_string($preBoarded) . "' ) ";
+        }
 
         $sql =  " SELECT distinct FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, CNUM  FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE " . $availPreBoPredicate;
@@ -275,8 +280,9 @@ class personTable extends DbTable {
         }
         $options = array();
         while(($row=db2_fetch_assoc($rs))==true){
-            $option  = "<option value='" . trim($row['CNUM']) ."'>" . trim($row['FIRST_NAME']) ." " . $row['LAST_NAME']  . " (" . $row['EMAIL_ADDRESS'] .") ";
+            $option  = "<option value='" . trim($row['CNUM']) ."'";
             $option .= trim($row['CNUM']) == trim($preBoarded) ? ' selected ' : null;
+            $option .= " >" . trim($row['FIRST_NAME']) ." " . trim($row['LAST_NAME'])  . " (" . trim($row['EMAIL_ADDRESS']) .") ";
             $option .=  "</option>";
             $options[] = $option;
         }
