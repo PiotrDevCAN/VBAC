@@ -255,7 +255,7 @@ class personTable extends DbTable {
         return $_SESSION['myCnum'];
     }
 
-    static function optionsForPreBoarded(){
+    static function optionsForPreBoarded($preBoarded=null){
         $availPreBoPredicate  = " ( CNUM LIKE '%xxx' or CNUM LIKE '%XXX' or CNUM LIKE '%999' ) ";
         $availPreBoPredicate .= " AND ((PES_STATUS_DETAILS not like 'Boarded as%' )  or ( PES_STATUS_DETAILS is null)) ";
         $availPreBoPredicate .= " AND PES_STATUS not in (";
@@ -275,7 +275,9 @@ class personTable extends DbTable {
         }
         $options = array();
         while(($row=db2_fetch_assoc($rs))==true){
-            $option = "<option value='" . trim($row['CNUM']) ."'>" . trim($row['FIRST_NAME']) ." " . $row['LAST_NAME']  . " (" . $row['EMAIL_ADDRESS'] .") " . "</option>";
+            $option  = "<option value='" . trim($row['CNUM']) ."'>" . trim($row['FIRST_NAME']) ." " . $row['LAST_NAME']  . " (" . $row['EMAIL_ADDRESS'] .") ";
+            $option .= trim($row['CNUM']) == trim($preBoarded) ? ' selected ' : null;
+            $option .=  "</option>";
             $options[] = $option;
         }
         return $options;

@@ -168,7 +168,7 @@ class personRecord extends DbRecord
 //         $availPreBoPredicate .= ",'" . personRecord::PES_STATUS_FAILED ."' ";
 //         $availPreBoPredicate .= " )";
 //         $availableFromPreBoarding = $loader->loadIndexed("EMAIL_ADDRESS","CNUM", allTables::$PERSON, $availPreBoPredicate);
-        $availableFromPreBoarding = personTable::optionsForPreBoarded($this->person);
+        $availableFromPreBoarding = personTable::optionsForPreBoarded($this->PRE_BOARDED);
         $preBoardersAvailable = count($availableFromPreBoarding) > 0 ? null : " disabled='disabled' ";
         $pesStatus = empty($this->PES_STATUS) ? personRecord::PES_STATUS_NOT_REQUESTED : $this->PES_STATUS;
 
