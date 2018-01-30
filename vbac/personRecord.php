@@ -63,6 +63,7 @@ class personRecord extends DbRecord
     protected $CONTRACTOR_ID_REQUIRED;
     protected $CONTRACTOR_ID;
     protected $CIO_ALIGNMENT;
+    protected $PRE_BOARDED;
 
 
     protected $person_bio;
@@ -167,7 +168,7 @@ class personRecord extends DbRecord
 //         $availPreBoPredicate .= ",'" . personRecord::PES_STATUS_FAILED ."' ";
 //         $availPreBoPredicate .= " )";
 //         $availableFromPreBoarding = $loader->loadIndexed("EMAIL_ADDRESS","CNUM", allTables::$PERSON, $availPreBoPredicate);
-        $availableFromPreBoarding = personTable::optionsForPreBoarded();
+        $availableFromPreBoarding = personTable::optionsForPreBoarded($this->person);
         $preBoardersAvailable = count($availableFromPreBoarding) > 0 ? null : " disabled='disabled' ";
         $pesStatus = empty($this->PES_STATUS) ? personRecord::PES_STATUS_NOT_REQUESTED : $this->PES_STATUS;
 
