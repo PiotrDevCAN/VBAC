@@ -443,6 +443,7 @@ function personRecord() {
 
 	this.listenforUpdateBoarding= function () {
 		$(document).on('click','#updateBoarding', function(){
+			var form = $('#boardingForm');
 			var formValid = form[0].checkValidity();
 			if(formValid){
 				$('#updateBoarding').addClass('spinning');
