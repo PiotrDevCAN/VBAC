@@ -283,16 +283,9 @@ class personRecord extends DbRecord
 
 				<div class='form-group'>
 					<div class='col-sm-6' >
-						<select class='form-control select select2'
-							id='person_contractor_id_required' name='CONTRACTOR_ID_REQUIRED'
-							>
-							<option value=''>Is Contractor ID Required?</option>
-							<option value='no'
-							<?=(strtoupper(substr($this->CONTRACTOR_ID_REQUIRED,0,1))=='N' or empty($this->CONTRACTOR_ID_REQUIRED)) ? ' selected ' : null;?>>No
-								Contractor Id Required</option>
-							<option value='yes'
-								<?=strtoupper(substr($this->CONTRACTOR_ID_REQUIRED,0,1))=='Y' ? ' selected ' : null;?>>Contractor
-								Id is Required</option>
+						<select class='form-control select select2'	id='person_contractor_id_required'  name='CONTRACTOR_ID_REQUIRED' >
+							<option value='no' <?=(strtoupper(substr($this->CONTRACTOR_ID_REQUIRED,0,1))=='N' or empty($this->CONTRACTOR_ID_REQUIRED)) ? ' selected ' : null;?>>NO Contractor Id Required</option>
+							<option value='yes' <?=strtoupper(substr($this->CONTRACTOR_ID_REQUIRED,0,1))=='Y' ? ' selected ' : null;?>>Contractor Id is Required</option>
 						</select>
 					</div>
 
@@ -350,7 +343,7 @@ class personRecord extends DbRecord
   <div class="panel-body">
     <div class='form-group' >
         <div class='col-sm-6'>
-          <input class="form-control" id="open_seat" name="OPEN_SEAT_NUMBER" value="<?=$this->OPEN_SEAT_NUMBER?>" type="text" placeholder='Open Seat' data-toggle='tooltip' title='Open Seat'>
+          <input class="form-control" id="open_seat" name="OPEN_SEAT_NUMBER"  required value="<?=$this->OPEN_SEAT_NUMBER?>" type="text" placeholder='Open Seat' data-toggle='tooltip' title='Open Seat'>
         </div>
         <div class='col-sm-6'>
           <input class="form-control" id="role_on_account" name="ROLE_ON_THE_ACCOUNT" value="<?=$this->ROLE_ON_THE_ACCOUNT?>" type="text" placeholder='Role on account' >
