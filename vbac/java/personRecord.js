@@ -443,9 +443,13 @@ function personRecord() {
 
 	this.listenforUpdateBoarding= function () {
 		$(document).on('click','#updateBoarding', function(){
-			$('#updateBoarding').addClass('spinning');
-			var person = new personRecord();
-			person.saveBoarding('Update');
+			var formValid = form[0].checkValidity();
+			if(formValid){
+				$('#updateBoarding').addClass('spinning');
+				var person = new personRecord();
+				person.saveBoarding('Update');
+			}
+			return false;
 		});
 	},
 
