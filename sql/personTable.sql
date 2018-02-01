@@ -89,3 +89,13 @@ ALTER TABLE "VBAC"."STATIC_COUNTRY_CODES" ADD CONSTRAINT "SQL171210532360" PRIMA
        WHERE ct.CNUM IN (SELECT cs.CNUM
                        FROM VBAC_UT.TEMP_CNUM_2_FMCNUM cs)
 
+
+ update VBAC_UT.PERSON
+  set FIRST_NAME ='Con', LAST_NAME='Kearns', EMAIL_ADDRESS = 'ckearns@vmware.com'
+  where email_address = 'ckearns@cmware.com';
+ update VBAC.PERSON
+  set FIRST_NAME ='Con', LAST_NAME='Kearns', EMAIL_ADDRESS = 'ckearns@vmware.com'
+  where email_address = 'ckearns@cmware.com';
+   update ROB_DEV.PERSON
+  set FIRST_NAME ='Con', LAST_NAME='Kearns', EMAIL_ADDRESS = 'ckearns@vmware.com'
+  where email_address = 'ckearns@cmware.com';

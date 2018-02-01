@@ -535,8 +535,58 @@ function personRecord() {
 	    personRecord.table = $('#personTable').DataTable({
 	    	ajax: {
 	            url: 'ajax/populatePersonDatatable.php',
+	       //     url: 'ajax/test.php',
 	            type: 'POST',
 	        }	,
+//	        CNUM         0
+//	        Email        4
+//	        Notes ID     5
+//	        fm_cnum		 8
+//	        PES status   25
+
+	        "columns": [
+	                    { "data": "CNUM" , "defaultContent": "" },
+	                    { "data": "OPEN_SEAT_NUMBER"
+	                     ,"defaultContent": ""
+	                     ,"visible" : false },
+	                    { "data": "FIRST_NAME"
+	                     ,"defaultContent": "<i>unknown</i>" },
+	                    { "data": "LAST_NAME", "defaultContent": "<i>unknown</i>" },
+	                    { "data": "EMAIL_ADDRESS", "defaultContent": "<i>unknown</i>" },
+	                    { "data": "NOTES_ID", "defaultContent": "<i>unknown</i>" },
+	                    { "data": "LBG_EMAIL", "defaultContent": "<i>unknown</i>" },
+	                    { "data": "EMPLOYEE_TYPE", "defaultContent": "" },
+	                    { "data": "FM_CNUM", "defaultContent": "" },
+	                    { "data": "FM_MANAGER_FLAG", "defaultContent": "" },
+	                    { "data": "CTB_RTB", "defaultContent": "" },
+	                    { "data": "TT_BAU", "defaultContent": "" },
+	                    { "data": "LOB", "defaultContent": "" },
+	                    { "data": "ROLE_ON_THE_ACCOUNT", "defaultContent": "" },
+	                    { "data": "ROLE_TECHNOLOGY", "defaultContent": "" },
+	                    { "data": "START_DATE", "defaultContent": "" },
+	                    { "data": "PROJECTED_END_DATE", "defaultContent": "" },
+	                    { "data": "COUNTRY", "defaultContent": ""},
+	                    { "data": "IBM_BASE_LOCATION", "defaultContent": "" },
+	                    { "data": "LBG_LOCATION" , "defaultContent": ""},
+	                    { "data": "OFFBOARDED_DATE" , "defaultContent": ""},
+	                    { "data": "PES_DATE_REQUESTED" , "defaultContent": ""},
+	                    { "data": "PES_REQUESTOR", "defaultContent": "" },
+	                    { "data": "PES_DATE_RESPONDED", "defaultContent": "" },
+	                    { "data": "PES_STATUS_DETAILS", "defaultContent": "" },
+	                    { "data": "PES_STATUS", "defaultContent": "" },
+	                    { "data": "REVALIDATION_DATE_FIELD", "defaultContent": "" },
+	                    { "data": "REVALIDATION_STATUS", "defaultContent": "" },
+	                    { "data": "CBN_DATE_FIELD", "defaultContent": "" },
+	                    { "data": "CBN_STATUS", "defaultContent": "" },
+	                    { "data": "WORK_STREAM", "defaultContent": "" },
+	                    { "data": "CONTRACTOR_ID_REQUIRED" , "defaultContent": ""},
+	                    { "data": "CONTRACTOR_ID", "defaultContent": "" },
+	                    { "data": "CIO_ALIGNMENT", "defaultContent": "" },
+	                    { "data": "PRE_BOARDED", "defaultContent": "" }
+	                ],
+	        colReorder: {
+	            order: [ 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34]
+	        },
 	        order: [[ 5, "asc" ]],
 	    	autoWidth: false,
 	    	deferRender: true,
@@ -544,8 +594,8 @@ function personRecord() {
 	    	// scrollX: true,
 	    	processing: true,
 	    	responsive: true,
-	    	colReorder: true,
 	    	dom: 'Blfrtip',
+//	    	colReorder: true,
 	        buttons: [
 	                  'colvis',
 	                  'excelHtml5',
@@ -558,7 +608,8 @@ function personRecord() {
 //	    ResourceRequest.table.columns([0,1,2,3,4,5,6,7,8,9,10,17,18,20,21,22,23,24,25,26]).visible(false,false);
 //	    ResourceRequest.table.columns.adjust().draw(false);
 
-
+	    // Reorder
+//	    personRecord.table .colReorder.order( [ 5, 4, 3, 2, 1, 0 ,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34 ] );
 
 	    // Apply the search
 	    personRecord.table.columns().every( function () {
@@ -602,10 +653,24 @@ function personRecord() {
 			});
 	},
 
+	this.listenForReportRevalidation = function(){
+		$(document).on('click','#reportRevalidation', function(e){
+			personRecord.table.columns().visible(false,false);
+			personRecord.table.columns([5,7,8,15,16,26,27]).visible(true);
+			personRecord.table.order([5,'asc']).draw();
+			});
+	},
+
 	this.listenForReportReset = function(){
 		$(document).on('click','#reportReset', function(e){
 			personRecord.table.columns().visible(true);
 			personRecord.table.order([5,"asc"]).draw();
+			});
+	},
+
+	this.listenForReportReload = function(){
+		$(document).on('click','#reportReload', function(e){
+			personRecord.table.ajax.reload();
 			});
 	},
 

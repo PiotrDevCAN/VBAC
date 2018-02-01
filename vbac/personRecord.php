@@ -68,6 +68,9 @@ class personRecord extends DbRecord
 
     protected $person_bio;
 
+
+
+
     // Fields to be edited in the DataTables Reports. Need to know their position in the array $row;
     const FIELD_CNUM = 0;
     const FIELD_NOTES_ID = 5;
@@ -83,6 +86,7 @@ class personRecord extends DbRecord
 
     const REVALIDATED_FOUND = 'found';
     const REVALIDATED_LEAVER = 'leaver';
+    const REVALIDATED_PREBOARDER = 'preboarder';
 
     public static $employeeTypeMapping = array('A'=>'Regular','B'=>'Contractor','C'=>'Contractor','I'=>'Regular','L'=>'Regular','O'=>'Regular','P'=>'Regular','V'=>'Contractor','X'=>'Regular');
 
@@ -125,6 +129,8 @@ class personRecord extends DbRecord
     private static  $lobValue = array('GTS','GBS','IMI','Cloud','Security','Other');
 
 
+
+
     const PES_STATUS_NOT_REQUESTED = 'Not Requested';
     const PES_STATUS_CLEARED   = 'Cleared';
     const PES_STATUS_DECLINED  = 'Declined';
@@ -132,6 +138,22 @@ class personRecord extends DbRecord
     const PES_STATUS_FAILED    = 'Failed';
     const PES_STATUS_INITIATED = 'Initiated';
     const PES_STATUS_REMOVED   = 'Removed';
+
+
+//     function htmlHeaderCells(){
+//         $headerCols = array('Notesid','Fm Cnum','Pes Status','Revalidation Status','Email','CNUM');
+//         foreach ($headerCols  as $column) {
+//             $headerCells .= "<th>";
+//             $headerCells .= $column;
+//             $headerCells .= "</th>";
+//         }
+
+// //        $headerCells = "<th>Name</th><th>Position</th><th>Office</th><th>Extn.</th><th>Start date</th><th>Salary</th>";
+//         return $headerCells;
+//     }
+
+
+
 
 
     function displayBoardingForm($mode){

@@ -48,11 +48,12 @@ class AuditTable extends DbTable {
 
 
 
-    static function returnAsArray($fromTimestamp=null,$toTimestamp = null){
+    static function returnAsArray($fromTimestamp=null,$toTimestamp = null, $predicate=null){
         $sql  = " SELECT * FROM " . $_SESSION['Db2Schema'] . "." . AllItdqTables::$AUDIT;
         $sql .= " WHERE 1=1 ";
         $sql .= !empty($fromTimestamp) ? " AND 'TIMESTAMP'>= '" . db2_escape_string($fromTimestamp) . "' " : null;
         $sql .= !empty($toTimestamp)   ? " AND 'TIMESTAMP'<= '" . db2_escape_string($toTimestamp) . "' " : null;
+        $sql .= !empty($predicate)   ? " AND $predicate " : null;
 
         $rs = db2_exec($_SESSION['conn'],$sql);
 

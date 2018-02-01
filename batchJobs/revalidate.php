@@ -14,11 +14,19 @@ set_time_limit(60);
 $personTable = new personTable(allTables::$PERSON);
 
 $loader = new Loader();
-$activeIbmErsPredicate = "   (( REVALIDATION_STATUS is null or REVALIDATION_STATUS =  '" . personRecord::REVALIDATED_FOUND . "') and CNUM NOT LIKE '%xxx' ) ";
+
+$personTable->flagPreboarders();
+db2_commit($_SESSION['conn']);
+
+
+$preBoardersPredicate = "   ( REVALIDATION_STATUS =  '" . personRecord::REVALIDATED_PREBOARDER . "') ";
+$allPreboarders = $loader->load('CNUM',allTables::$PERSON, $preBoardersPredicate ); //
+AuditTable::audit("Revalidation will ignore " . count($allPreboarders) . " pre-boarders.",AuditTable::RECORD_TYPE_DETAILS);
+$allPreboarders= null; // free up some storage
+
+$activeIbmErsPredicate = "   ( REVALIDATION_STATUS is null or REVALIDATION_STATUS =  '" . personRecord::REVALIDATED_FOUND . "') ";
 $allNonLeavers = $loader->load('CNUM',allTables::$PERSON, $activeIbmErsPredicate ); //
-
-AuditTable::audit("Revalidation to check " . count($allNonLeavers) . " non-leavers.",AuditTable::RECORD_TYPE_DETAILS);
-
+AuditTable::audit("Revalidation will check " . count($allNonLeavers) . " non-leavers.",AuditTable::RECORD_TYPE_DETAILS);
 
 $chunkedCnum = array_chunk($allNonLeavers, 400);
 $detailsFromBp = "&notesid&mail";
@@ -27,6 +35,7 @@ $bpEntries = array();
 foreach ($chunkedCnum as $key => $cnumList){
     $bpEntries[$key] = BluePages::getDetailsFromCnumSlapMulti($cnumList, $detailsFromBp);
     foreach ($bpEntries[$key]->search->entry as $bpEntry){
+        set_time_limit(20);
         $serial = substr($bpEntry->dn,4,9);
         $mail        = ''; // Clear out previous value
         $notesid      = ''; // Clear out previous value
@@ -40,7 +49,10 @@ foreach ($chunkedCnum as $key => $cnumList){
     }
 }
 
+AuditTable::audit("Revalidation found " . count($allNonLeavers) . " non-leavers.",AuditTable::RECORD_TYPE_DETAILS);
+
 foreach ($allNonLeavers as $cnum){
+    set_time_limit(10);
     $personTable->flagLeaver($cnum);
 }
 

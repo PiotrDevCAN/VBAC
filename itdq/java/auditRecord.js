@@ -37,7 +37,6 @@ function auditRecord() {
 	        $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
 	    } );
 		// DataTable
-	    console.log($('#audit'));
 	    auditRecord.table = $('#auditTable').DataTable({
 	    	ajax: {
 	            url: 'ajax/populateAuditDatatable.php',
@@ -60,6 +59,67 @@ function auditRecord() {
 	              ],
 	    });
 
+
+	    // Apply the search
+	    auditRecord.table.columns().every( function () {
+	        var that = this;
+
+	        $( 'input', this.footer() ).on( 'keyup change', function () {
+	            if ( that.search() !== this.value ) {
+	                that
+	                    .search( this.value )
+	                    .draw();
+	            }
+	        } );
+	    } );
+
+
+	},
+
+
+	this.initialiseRevalidationAuditTable = function(){
+		console.log('initialiseRevalidationAuditTable');
+	    $.ajax({
+	    	url: "ajax/createHtmlForAuditTable.php",
+	    	type: 'POST',
+	    	success: function(result){
+	    		var Audit = new auditRecord();
+	    		$('#revalidationAuditDiv').html(result);
+	    		Audit.initialiseRevalidationTable();
+	    	}
+	    });
+
+	},
+
+	this.initialiseRevalidationTable = function(){
+	    // Setup - add a text input to each footer cell
+	    $('#auditTable tfoot th').each( function () {
+	        var title = $(this).text();
+	        $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+	    } );
+		// DataTable
+	    auditRecord.table = $('#auditTable').DataTable({
+	    	ajax: {
+	            url: 'ajax/populateAuditDatatable.php',
+	            data : { type : 'revalidation'},
+	            type: 'POST',
+	        }	,
+	        order: [[ 0, "desc" ]],
+	    	autoWidth: false,
+	    	deferRender: true,
+	    	responsive: false,
+	    	// scrollX: true,
+	    	processing: true,
+	    	responsive: true,
+	    	colReorder: true,
+	    	dom: 'Blfrtip',
+	        buttons: [
+	                  'colvis',
+	                  'excelHtml5',
+	                  'csvHtml5',
+	                  'print'
+	              ],
+	    });
 
 	    // Apply the search
 	    auditRecord.table.columns().every( function () {
