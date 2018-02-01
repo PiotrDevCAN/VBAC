@@ -207,7 +207,7 @@ class personRecord extends DbRecord
 				<div class="form-group">
 					<div class="col-sm-6">
 						<input class="form-control" id="person_name" name="person_name"
-							value="<?=$this->FIRST_NAME . " " . $this->LAST_NAME?>"
+							value="<?=trim($this->FIRST_NAME . " " . $this->LAST_NAME)?>"
 							type="text" placeholder='Start typing name/serial/email'
 							<?=$notEditable?>>
 					</div>
