@@ -68,6 +68,9 @@ class personRecord extends DbRecord
 
     protected $person_bio;
 
+
+
+
     // Fields to be edited in the DataTables Reports. Need to know their position in the array $row;
     const FIELD_CNUM = 0;
     const FIELD_NOTES_ID = 5;
@@ -83,6 +86,7 @@ class personRecord extends DbRecord
 
     const REVALIDATED_FOUND = 'found';
     const REVALIDATED_LEAVER = 'leaver';
+    const REVALIDATED_PREBOARDER = 'preboarder';
 
     public static $employeeTypeMapping = array('A'=>'Regular','B'=>'Contractor','C'=>'Contractor','I'=>'Regular','L'=>'Regular','O'=>'Regular','P'=>'Regular','V'=>'Contractor','X'=>'Regular');
 
@@ -90,7 +94,7 @@ class personRecord extends DbRecord
 
    // private static $pesTaskId = 'lbgvetpr@uk.ibm.com';
    //  private static $pesTaskId = 'rob.daniel@uk.ibm.com';
-    private static $pesTaskId = 'rob.daniel@uk.ibm.com, carrabooth@uk.ibm.com';
+    private static $pesTaskId    = array('rob.daniel@uk.ibm.com', 'carrabooth@uk.ibm.com');
     private static $pesEmailBody = '<table width="100%" border="0" cellspacing="0" cellpadding="0">
                              <tr><td align="center">
                                 <table width="50%">
@@ -125,6 +129,8 @@ class personRecord extends DbRecord
     private static  $lobValue = array('GTS','GBS','IMI','Cloud','Security','Other');
 
 
+
+
     const PES_STATUS_NOT_REQUESTED = 'Not Requested';
     const PES_STATUS_CLEARED   = 'Cleared';
     const PES_STATUS_DECLINED  = 'Declined';
@@ -132,6 +138,46 @@ class personRecord extends DbRecord
     const PES_STATUS_FAILED    = 'Failed';
     const PES_STATUS_INITIATED = 'Initiated';
     const PES_STATUS_REMOVED   = 'Removed';
+
+
+//     function htmlHeaderCells(){
+//         $headerCols = array('Notesid','Fm Cnum','Pes Status','Revalidation Status','Email','CNUM');
+//         foreach ($headerCols  as $column) {
+//             $headerCells .= "<th>";
+//             $headerCells .= $column;
+//             $headerCells .= "</th>";
+//         }
+
+// //        $headerCells = "<th>Name</th><th>Position</th><th>Office</th><th>Extn.</th><th>Start date</th><th>Salary</th>";
+//         return $headerCells;
+//     }
+
+
+    static function loadKnownCnum($predicate=null){
+        $sql = " SELECT CNUM FROM " . $_SESSION['Db2Schema'] . "." .  allTables::$PERSON;
+
+        $rs = db2_exec($_SESSION['conn'], $sql);
+
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+
+        ?><script type="text/javascript">
+        var knownCnum = [];
+        <?php
+
+        while(($row=db2_fetch_assoc($rs))==true){
+            ?>knownCnum.push("<?=trim($row['CNUM']);?>");
+            <?php
+        }
+        ?>console.log(knownCnum);<?php
+        ?></script><?php
+
+    }
+
+
+
 
 
     function displayBoardingForm($mode){
@@ -171,6 +217,7 @@ class personRecord extends DbRecord
         $availableFromPreBoarding = personTable::optionsForPreBoarded($this->PRE_BOARDED);
         $preBoardersAvailable = count($availableFromPreBoarding) > 1 ? null : " disabled='disabled' ";
         $pesStatus = empty($this->PES_STATUS) ? personRecord::PES_STATUS_NOT_REQUESTED : $this->PES_STATUS;
+        $pesStatusDetails = $this->PES_STATUS_DETAILS;
 
         ?>
         <form id='boardingForm'  class="form-horizontal" onsubmit="return false;">
@@ -185,7 +232,7 @@ class personRecord extends DbRecord
 				<div class="form-group">
 					<div class="col-sm-6">
 						<input class="form-control" id="person_name" name="person_name"
-							value="<?=$this->FIRST_NAME . " " . $this->LAST_NAME?>"
+							value="<?=trim($this->FIRST_NAME . " " . $this->LAST_NAME)?>"
 							type="text" placeholder='Start typing name/serial/email'
 							<?=$notEditable?>>
 					</div>
@@ -208,7 +255,7 @@ class personRecord extends DbRecord
 							<input class='form-control' id='person_intranet'
 								name='EMAIL_ADDRESS' value='<?=$this->EMAIL_ADDRESS?>'
 								type='text' disabled='disabled' placeholder="Intranet"
-								<?=$notEditable?>>
+								>
 						</div>
 					</div>
 
@@ -275,6 +322,8 @@ class personRecord extends DbRecord
 								<input id='resource_employee_type' name='resEMPLOYEE_TYPE'     value='Pre-Hire'						type='hidden' >
 								<input id='resource_ibm_location'  name='resIBM_BASE_LOCATION' value='<?=$this->IBM_BASE_LOCATION?>'	type='hidden' >
 								<input id='resource_pes_status'    name='resPES_STATUS'        value='<?=$pesStatus?>'                 type='hidden'  <?$notEditable?>>
+								<input id='resource_pes_status_details'    name='resPES_STATUS_DETAILS'        value='<?=$pesStatusDetails?>'                 type='hidden'  <?$notEditable?>>
+
 
 					</div>
 				</div>
@@ -282,17 +331,10 @@ class personRecord extends DbRecord
 
 
 				<div class='form-group'>
-					<div class='col-sm-6' <?=$hideDivFromEdit?>>
-						<select class='form-control select select2'
-							id='person_contractor_id_required' name='CONTRACTOR_ID_REQUIRED'
-							>
-							<option value=''>Is Contractor ID Required?</option>
-							<option value='no'
-							<?=(strtoupper(substr($this->CONTRACTOR_ID_REQUIRED,0,1))=='N' or empty($this->CONTRACTOR_ID_REQUIRED)) ? ' selected ' : null;?>>No
-								Contractor Id Required</option>
-							<option value='yes'
-								<?=strtoupper(substr($this->CONTRACTOR_ID_REQUIRED,0,1))=='Y' ? ' selected ' : null;?>>Contractor
-								Id is Required</option>
+					<div class='col-sm-6' >
+						<select class='form-control select select2'	id='person_contractor_id_required'  name='CONTRACTOR_ID_REQUIRED' >
+							<option value='no' <?=(strtoupper(substr($this->CONTRACTOR_ID_REQUIRED,0,1))=='N' or empty($this->CONTRACTOR_ID_REQUIRED)) ? ' selected ' : null;?>>NO LBG CTID is required</option>
+							<option value='yes' <?=strtoupper(substr($this->CONTRACTOR_ID_REQUIRED,0,1))=='Y' ? ' selected ' : null;?>>LBG CTID  is Required</option>
 						</select>
 					</div>
 
@@ -350,10 +392,10 @@ class personRecord extends DbRecord
   <div class="panel-body">
     <div class='form-group' >
         <div class='col-sm-6'>
-          <input class="form-control" id="open_seat" name="OPEN_SEAT_NUMBER" value="<?=$this->OPEN_SEAT_NUMBER?>" type="text" placeholder='Open Seat' data-toggle='tooltip' title='Open Seat'>
+          <input class="form-control" id="open_seat" name="OPEN_SEAT_NUMBER"  required maxlength='12' value="<?=$this->OPEN_SEAT_NUMBER?>" type="text" placeholder='Open Seat' data-toggle='tooltip' title='Open Seat' max=12 >
         </div>
         <div class='col-sm-6'>
-          <input class="form-control" id="role_on_account" name="ROLE_ON_THE_ACCOUNT" value="<?=$this->ROLE_ON_THE_ACCOUNT?>" type="text" placeholder='Role on account' >
+          <input class="form-control" id="role_on_account" name="ROLE_ON_THE_ACCOUNT" maxlength='120' value="<?=$this->ROLE_ON_THE_ACCOUNT?>" type="text" placeholder='Role on account' >
        </div>
     </div>
 
@@ -689,7 +731,7 @@ class personRecord extends DbRecord
                               $fmEmail);
         $message = preg_replace(self::$pesEmailPatterns, $replacements, self::$pesEmailBody);
 
-        \itdq\BlueMail::send_mail(array(self::$pesTaskId), 'vBAC PES Request - ' . $this->CNUM ." (" . $this->FIRST_NAME . " " . $this->LAST_NAME . ")", $message, 'vbacNoReply@uk.ibm.com');
+        \itdq\BlueMail::send_mail(self::$pesTaskId, 'vBAC PES Request - ' . $this->CNUM ." (" . $this->FIRST_NAME . " " . $this->LAST_NAME . ")", $message, 'vbacNoReply@uk.ibm.com');
 
     }
 

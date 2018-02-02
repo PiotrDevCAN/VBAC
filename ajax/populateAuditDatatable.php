@@ -8,8 +8,17 @@ ob_start();
 
 session_start();
 
+$type = isset($_POST['type']) ? $_POST['type'] : null;
+switch ($type){
+    case 'revalidation':
+        $predicate =" DATA like 'Revalidation %' " ;
+        break;
+    default:
+        $predicate = null;
+}
+
 $auditTable = new AuditTable(AllItdqTables::$AUDIT);
-$data = $auditTable->returnAsArray();
+$data = $auditTable->returnAsArray(null,null,$predicate);
 
 $messages = ob_get_clean();
 

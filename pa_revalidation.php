@@ -1,5 +1,22 @@
 <?php
 ?>
 <div class='container'>
-<h1>Revalidation</h1>
+<h1>Revalidation Audit</h1>
 </div>
+
+
+<div class='container-fluid'>
+
+
+<div id='revalidationAuditDiv'>
+</div>
+</div>
+
+
+<script>
+$(document).ready(function(){
+	var audit = new auditRecord();
+	audit.initialiseRevalidationAuditTable();
+
+});
+</script>

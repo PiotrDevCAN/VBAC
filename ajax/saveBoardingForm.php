@@ -27,7 +27,8 @@ try {
         $_POST['COUNTRY'] = $_POST['resCOUNTRY'];
         $_POST['EMAIL_ADDRESS'] = $_POST['resEMAIL_ADDRESS'];
         $_POST['EMPLOYEE_TYPE'] = $_POST['resEMPLOYEE_TYPE'];
-        $_POST['PES_STATUS'] = $_POST['resPES_STATUS'];
+//         $_POST['PES_STATUS'] = $_POST['resPES_STATUS'];
+//         $_POST['PES_STATUS_DETAILS'] = $_POST['resPES_STATUS_DETAILS'];
         AuditTable::audit("Pre boarding:<b>" . $cnum . "</b>",AuditTable::RECORD_TYPE_AUDIT);
     }
 
@@ -59,15 +60,8 @@ try {
             $table->saveRecord($preBoarder);
         }
     } else {
-        $errorCode = db2_stmt_error();
-        if(empty($errorCode)){
-            echo "<br/>Error Trying to save record, no DB2 Stmt Error";
-        } else {
-            echo db2_stmt_error();
-            echo db2_stmt_errormsg();
-            AuditTable::audit("Db2 Error in " . __FILE__ . " Code:<b>" . db2_stmt_error() . "</b> Msg:<b>" . db2_stmt_errormsg() . "</b>", AuditTable::RECORD_TYPE_DETAILS);
-        }
-        $success = false;
+       AuditTable::audit("Db2 Error in " . __FILE__ . " $_POST:" . print_r($_POST,true) , AuditTable::RECORD_TYPE_DETAILS);
+       $success = false;
     }
 } catch (Exception $e) {
     echo $e->getCode();

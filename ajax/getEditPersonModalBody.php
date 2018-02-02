@@ -31,6 +31,6 @@ try {
 }
 
 $messages = ob_get_clean();
-$response = array('body'=>$body,'success'=>$success,'messages'=>$messages,'data'=>print_r($personData,true),'accountOrganisation'=>$personData['TT_BAU']);
+$response = array('body'=>$body,'success'=>$success,'messages'=>$messages,'data'=>print_r($personData,true),'accountOrganisation'=>$personData['TT_BAU'],'ctbRtb'=>$personData['CTB_RTB']);
 ob_clean();
 echo json_encode($response);

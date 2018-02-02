@@ -24,9 +24,11 @@ $cdiAdmin       = new NavbarMenu("CDI Admin");
 $trace          = new NavbarOption('View Trace','pi_trace.php','accessCdi');
 $traceControl   = new NavbarOption('Trace Control','pi_traceControl.php','accessCdi');
 $traceDelete    = new NavbarOption('Trace Deletion', 'pi_traceDelete.php','accessCdi');
+$revalidation   = new NavbarOption('Batch Reval','batchJobs/revalidate.php','accessCdi');
 $cdiAdmin->addOption($trace);
 $cdiAdmin->addOption($traceControl);
 $cdiAdmin->addOption($traceDelete);
+$cdiAdmin->addOption($revalidation);
 
 
 $adminMenu      = new NavbarMenu('vBac Admin');

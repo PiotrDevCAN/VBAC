@@ -3,12 +3,15 @@ namespace vbac;
 
 use itdq\DbTable;
 use itdq\AuditTable;
+use itdq\Loader;
 
 class personTable extends DbTable {
 
     private $preparedRevalidationStmt;
     private $preparedRevalidationLeaverStmt;
     private $preparedUpdateBluepagesFields;
+
+    private $allNotesIdByCnum;
 
 
     static function getNextVirtualCnum(){
@@ -40,6 +43,10 @@ class personTable extends DbTable {
 
 
     function returnAsArray(){
+        $loader = new Loader();
+        $this->allNotesIdByCnum = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON);
+
+
         $data = array();
 
         $isFM   = personTable::isManager($_SESSION['ssoEmail']);
@@ -56,91 +63,99 @@ class personTable extends DbTable {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         } else {
-            while(($row=db2_fetch_array($rs))==true){
-                 $rowWithButtonsAdded = $this->addButtons($row);
-                 $data[] = $rowWithButtonsAdded;
+            while(($row=db2_fetch_assoc($rs))==true){
+                 // Only editable, if they're not a "pre-Boarder" who has now been boarded.
+                $preparedRow = $this->prepareFields($row);
+                $rowWithButtonsAdded =(substr($row['PES_STATUS_DETAILS'],0,7)=='Boarded') ? $preparedRow : $this->addButtons($preparedRow);
+                $data[] = $rowWithButtonsAdded;
             }
         }
         return $data;
     }
 
+    function  prepareFields($row){
+        $preparedRow = array_filter(array_map('trim', $row));
+        $fmNotesid = isset($this->allNotesIdByCnum[trim($row['FM_CNUM'])]) ? $this->allNotesIdByCnum[trim($row['FM_CNUM'])]  :  trim($row['FM_CNUM']);
+        $preparedRow['FM_CNUM'] = $fmNotesid;
+        return $preparedRow;
+    }
+
     function addButtons($row){
         // save some fields before we change the,
-        $notesId = trim($row[personRecord::FIELD_NOTES_ID]);
-        $cnum = trim($row[personRecord::FIELD_CNUM]);
-        $flag = $row[personRecord::FIELD_FM_FLAG];
-        $status = empty(trim($row[personRecord::FIELD_PES_STATUS])) ? personRecord::PES_STATUS_NOT_REQUESTED : trim($row[personRecord::FIELD_PES_STATUS]) ;
+        $notesId = trim($row['NOTES_ID']);
+        $cnum = trim($row['CNUM']);
+        $flag = $row['FM_FLAG'];
+        $status = empty(trim($row['PES_STATUS'])) ? personRecord::PES_STATUS_NOT_REQUESTED : trim($row['PES_STATUS']) ;
         // FM_FLAG
         if($_SESSION['isPmo'] || $_SESSION['isCdi']){
             if(strtoupper(substr($flag,0,1))=='N' || empty($flag)){
-                $row[personRecord::FIELD_FM_FLAG]  = "<button type='button' class='btn btn-default btn-xs btnSetFmFlag' aria-label='Left Align' ";
-                $row[personRecord::FIELD_FM_FLAG] .= "data-cnum='" .$cnum . "' ";
-                $row[personRecord::FIELD_FM_FLAG] .= "data-notesid='" .$notesId . "' ";
-                $row[personRecord::FIELD_FM_FLAG] .= "data-fmflag='Yes' ";
-                $row[personRecord::FIELD_FM_FLAG] .= " > ";
-                $row[personRecord::FIELD_FM_FLAG] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
-                $row[personRecord::FIELD_FM_FLAG] .= " </button> ";
+                $row['FM_FLAG']  = "<button type='button' class='btn btn-default btn-xs btnSetFmFlag' aria-label='Left Align' ";
+                $row['FM_FLAG'] .= "data-cnum='" .$cnum . "' ";
+                $row['FM_FLAG'] .= "data-notesid='" .$notesId . "' ";
+                $row['FM_FLAG'] .= "data-fmflag='Yes' ";
+                $row['FM_FLAG'] .= " > ";
+                $row['FM_FLAG'] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
+                $row['FM_FLAG'] .= " </button> ";
             } elseif (strtoupper(substr($flag,0,1)=='Y')){
-                $row[personRecord::FIELD_FM_FLAG]  = "<button type='button' class='btn btn-default btn-xs btnSetFmFlag' aria-label='Left Align' ";
-                $row[personRecord::FIELD_FM_FLAG] .= "data-cnum='" .$cnum . "' ";
-                $row[personRecord::FIELD_FM_FLAG] .= "data-notesid='" .$notesId . "' ";
-                $row[personRecord::FIELD_FM_FLAG] .= "data-fmflag='No' ";
-                $row[personRecord::FIELD_FM_FLAG] .= " > ";
-                $row[personRecord::FIELD_FM_FLAG] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
-                $row[personRecord::FIELD_FM_FLAG] .= " </button> ";
+                $row['FM_FLAG']  = "<button type='button' class='btn btn-default btn-xs btnSetFmFlag' aria-label='Left Align' ";
+                $row['FM_FLAG'] .= "data-cnum='" .$cnum . "' ";
+                $row['FM_FLAG'] .= "data-notesid='" .$notesId . "' ";
+                $row['FM_FLAG'] .= "data-fmflag='No' ";
+                $row['FM_FLAG'] .= " > ";
+                $row['FM_FLAG'] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
+                $row['FM_FLAG'] .= " </button> ";
             }
-            $row[personRecord::FIELD_FM_FLAG] .= $flag;
+            $row['FM_FLAG'] .= $flag;
         }
 
 
         // Notesid
 
-        $row[personRecord::FIELD_NOTES_ID]  = "<button type='button' class='btn btn-default btn-xs btnEditPerson' aria-label='Left Align' ";
-        $row[personRecord::FIELD_NOTES_ID] .= "data-cnum='" .$cnum . "'";
-        $row[personRecord::FIELD_NOTES_ID] .= " > ";
-        $row[personRecord::FIELD_NOTES_ID] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
-        $row[personRecord::FIELD_NOTES_ID] .= " </button> ";
-        $row[personRecord::FIELD_NOTES_ID] .= $notesId;
+        $row['NOTES_ID']  = "<button type='button' class='btn btn-default btn-xs btnEditPerson' aria-label='Left Align' ";
+        $row['NOTES_ID'] .= "data-cnum='" .$cnum . "'";
+        $row['NOTES_ID'] .= " > ";
+        $row['NOTES_ID'] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
+        $row['NOTES_ID'] .= " </button> ";
+        $row['NOTES_ID'] .= $notesId;
 
         switch ($status) {
-            case personRecord::PES_STATUS_NOT_REQUESTED:
-            case null:
-                $row[personRecord::FIELD_PES_STATUS]  = "<button type='button' class='btn btn-default btn-xs btnPesInitiate accessRestrict accessPmo accessFm' ";
-                $row[personRecord::FIELD_PES_STATUS]  .= "aria-label='Left Align' ";
-                $row[personRecord::FIELD_PES_STATUS] .= " data-cnum='" .$cnum . "' ";
-                $row[personRecord::FIELD_PES_STATUS] .= " data-pesstatus='$status' ";
-                $row[personRecord::FIELD_PES_STATUS] .= " > ";
-                $row[personRecord::FIELD_PES_STATUS] .= "<span class='glyphicon glyphicon-plane ' aria-hidden='true'></span>";
-                $row[personRecord::FIELD_PES_STATUS] .= "</button>&nbsp;";
-                $row[personRecord::FIELD_PES_STATUS] .= $status;
-                break;
-            case personRecord::PES_STATUS_EXCEPTION:
-            case personRecord::PES_STATUS_DECLINED;
-            case personRecord::PES_STATUS_FAILED;
-            case personRecord::PES_STATUS_INITIATED;
-            case personRecord::PES_STATUS_REMOVED;
-                $row[personRecord::FIELD_PES_STATUS]  = "<button type='button' class='btn btn-default btn-xs btnPesStatus' aria-label='Left Align' ";
-                $row[personRecord::FIELD_PES_STATUS] .= " data-cnum='" .$cnum . "' ";
-                $row[personRecord::FIELD_PES_STATUS] .= " data-notesid='" . $notesId . "' ";
-                $row[personRecord::FIELD_PES_STATUS] .= " data-pesdaterequested='" .trim($row[personRecord::FIELD_PES_DATE_REQUESTED]) . "' ";
-                $row[personRecord::FIELD_PES_STATUS] .= " data-pesrequestor='" .trim($row[personRecord::FIELD_PES_REQUESTOR]) . "' ";
-                $row[personRecord::FIELD_PES_STATUS] .= " data-pesstatus='" .$status . "' ";
-                $row[personRecord::FIELD_PES_STATUS] .= " > ";
-                $row[personRecord::FIELD_PES_STATUS] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
-                $row[personRecord::FIELD_PES_STATUS] .= "</button>&nbsp;";
-                $row[personRecord::FIELD_PES_STATUS] .= $status;
-            break;
-            case $row[personRecord::FIELD_NOTES_ID]:
-                $row[personRecord::FIELD_NOTES_ID]  = "<button type='button' class='btn btn-default btn-xs btnEditPerson' aria-label='Left Align' ";
-                $row[personRecord::FIELD_NOTES_ID] .= "data-cnum='" .$cnum. "'";
-                $row[personRecord::FIELD_NOTES_ID] .= " > ";
-                $row[personRecord::FIELD_NOTES_ID] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
-                $row[personRecord::FIELD_NOTES_ID] .= $notesId;
-                break;
-            default:
-
-            break;
-        }
+             case personRecord::PES_STATUS_NOT_REQUESTED:
+             case null:
+                 $row['PES_STATUS']  = "<button type='button' class='btn btn-default btn-xs btnPesInitiate accessRestrict accessPmo accessFm' ";
+                 $row['PES_STATUS']  .= "aria-label='Left Align' ";
+                 $row['PES_STATUS'] .= " data-cnum='" .$cnum . "' ";
+                 $row['PES_STATUS'] .= " data-pesstatus='$status' ";
+                 $row['PES_STATUS'] .= " > ";
+                 $row['PES_STATUS'] .= "<span class='glyphicon glyphicon-plane ' aria-hidden='true'></span>";
+                 $row['PES_STATUS'] .= "</button>&nbsp;";
+                 $row['PES_STATUS'] .= $status;
+                 break;
+             case personRecord::PES_STATUS_EXCEPTION:
+             case personRecord::PES_STATUS_DECLINED;
+             case personRecord::PES_STATUS_FAILED;
+             case personRecord::PES_STATUS_INITIATED;
+             case personRecord::PES_STATUS_REMOVED;
+                 $row['PES_STATUS']  = "<button type='button' class='btn btn-default btn-xs btnPesStatus' aria-label='Left Align' ";
+                 $row['PES_STATUS'] .= " data-cnum='" .$cnum . "' ";
+                 $row['PES_STATUS'] .= " data-notesid='" . $notesId . "' ";
+                 $row['PES_STATUS'] .= " data-pesdaterequested='" .trim($row['PES_DATE_REQUESTED']) . "' ";
+                 $row['PES_STATUS'] .= " data-pesrequestor='" .trim($row['PES_REQUESTOR']) . "' ";
+                 $row['PES_STATUS'] .= " data-pesstatus='" .$status . "' ";
+                 $row['PES_STATUS'] .= " > ";
+                 $row['PES_STATUS'] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
+                 $row['PES_STATUS'] .= "</button>&nbsp;";
+                 $row['PES_STATUS'] .= $status;
+                 break;
+            case $row['NOTES_ID']:
+                 $row['NOTES_ID']  = "<button type='button' class='btn btn-default btn-xs btnEditPerson' aria-label='Left Align' ";
+                 $row['NOTES_ID'] .= "data-cnum='" .$cnum. "'";
+                 $row['NOTES_ID'] .= " > ";
+                 $row['NOTES_ID'] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
+                 $row['NOTES_ID'] .= $notesId;
+                 break;
+             default:
+                  break;
+           }
         return $row;
     }
 
@@ -346,8 +361,6 @@ class personTable extends DbTable {
         $preparedStmt = $this->prepareRevalidationStmt();
         $data = array(trim($notesId),trim($email),trim($cnum));
 
-        var_dump($data);
-
         $rs = db2_execute($preparedStmt,$data);
 
         if(!$rs){
@@ -361,7 +374,6 @@ class personTable extends DbTable {
     function flagLeaver($cnum){
         $preparedStmt = $this->prepareRevalidationLeaverStmt();
         $data = array(trim($cnum));
-
         $rs = db2_execute($preparedStmt,$data);
 
         if(!$rs){
@@ -371,6 +383,23 @@ class personTable extends DbTable {
         AuditTable::audit("Revalidation has found leaver: $cnum ",AuditTable::RECORD_TYPE_AUDIT);
         return true;
     }
+
+    function flagPreboarders (){
+        $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql .= " SET REVALIDATION_STATUS='" . personRecord::REVALIDATED_PREBOARDER . "', REVALIDATION_DATE_FIELD = current date ";
+        $sql .= " WHERE (CNUM like '%999' or CNUM like '%xxx' or CNUM like '%XXX' )  AND ( REVALIDATION_STATUS is null )";
+
+        $rs = db2_exec($_SESSION['conn'],$sql);
+
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+        AuditTable::audit("Revalidation has flagged Pre-Boarders",AuditTable::RECORD_TYPE_AUDIT);
+        return true;
+    }
+
+
 
 
 }
