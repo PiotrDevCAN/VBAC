@@ -26,6 +26,7 @@ set_time_limit(0);
 
 <?php
 $mode = personRecord::$modeDEFINE;
+personRecord::loadKnownCnum();
 $person = new personRecord();
 $person->displayBoardingForm($mode);
 ?>

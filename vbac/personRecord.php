@@ -153,6 +153,30 @@ class personRecord extends DbRecord
 //     }
 
 
+    static function loadKnownCnum($predicate=null){
+        $sql = " SELECT CNUM FROM " . $_SESSION['Db2Schema'] . "." .  allTables::$PERSON;
+
+        $rs = db2_exec($_SESSION['conn'], $sql);
+
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+
+        ?><script type="text/javascript">
+        var knownCnum = [];
+        <?php
+
+        while(($row=db2_fetch_assoc($rs))==true){
+            ?>knownCnum.push("<?=trim($row['CNUM']);?>");
+            <?php
+        }
+        ?>console.log(knownCnum);<?php
+        ?></script><?php
+
+    }
+
+
 
 
 

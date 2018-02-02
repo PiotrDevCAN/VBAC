@@ -27,6 +27,26 @@ function personRecord() {
                 //The handler for clicking a person in the drop-down.
                 onclick: function(person) {
              	   console.log(person);
+
+                   var uid = document.getElementById('person_serial');
+                   if(typeof(uid) !== 'undefined'){ uid.value = person['uid'];};
+                   $('#person_serial').attr('disabled','disabled');
+
+          		    var newCnum = person['uid'];
+             		console.log(newCnum);
+             		var allreadyExists = ($.inArray(newCnum, knownCnum) >= 0 );
+             		console.log(allreadyExists);
+             		if(allreadyExists){ // comes back with Position in array(true) or false is it's NOT in the array.
+             			$('#saveBoarding').attr('disabled',true);
+             			$('#person_name').css("background-color","LightPink");
+             			alert('Person already defined to VBAC');
+             			return false;
+             		} else {
+             			$('#person_name').css("background-color","LightGreen");
+             		}
+
+
+
              	   var intranet = document.getElementById('person_intranet');
                    if(typeof(intranet) !== 'undefined'){ intranet.value = person['email'];};
 
@@ -36,9 +56,7 @@ function personRecord() {
                    var bio =  document.getElementById('person_bio');
                    if(typeof(bio) !== 'undefined'){ bio.value = person['bio'];};
 
-                   var uid = document.getElementById('person_serial');
-                   if(typeof(uid) !== 'undefined'){ uid.value = person['uid'];};
-                   $('#person_serial').attr('disabled','disabled');
+
 
                    var personObj = new personRecord();
                    personObj.fetchBluepagesDetailsForCnum(person['uid']);
