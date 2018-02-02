@@ -743,6 +743,7 @@ function personRecord() {
 	    		};
 	    		$('#savingBoardingDetailsModal').modal('show');
 				$("#initiatePes").removeClass('spinning');
+				$('#initiatePes').attr('disabled',true);
 				personRecord.table.ajax.reload();
 
 	    	}
