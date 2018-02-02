@@ -94,7 +94,7 @@ class personRecord extends DbRecord
 
    // private static $pesTaskId = 'lbgvetpr@uk.ibm.com';
    //  private static $pesTaskId = 'rob.daniel@uk.ibm.com';
-    private static $pesTaskId = 'rob.daniel@uk.ibm.com, carrabooth@uk.ibm.com';
+    private static $pesTaskId    = array('rob.daniel@uk.ibm.com', 'carrabooth@uk.ibm.com');
     private static $pesEmailBody = '<table width="100%" border="0" cellspacing="0" cellpadding="0">
                              <tr><td align="center">
                                 <table width="50%">
@@ -728,7 +728,7 @@ class personRecord extends DbRecord
                               $fmEmail);
         $message = preg_replace(self::$pesEmailPatterns, $replacements, self::$pesEmailBody);
 
-        \itdq\BlueMail::send_mail(array(self::$pesTaskId), 'vBAC PES Request - ' . $this->CNUM ." (" . $this->FIRST_NAME . " " . $this->LAST_NAME . ")", $message, 'vbacNoReply@uk.ibm.com');
+        \itdq\BlueMail::send_mail(self::$pesTaskId, 'vBAC PES Request - ' . $this->CNUM ." (" . $this->FIRST_NAME . " " . $this->LAST_NAME . ")", $message, 'vbacNoReply@uk.ibm.com');
 
     }
 
