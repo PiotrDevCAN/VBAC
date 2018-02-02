@@ -505,7 +505,7 @@ function personRecord() {
 			    		$('#saveBoarding').attr('disabled',true);
 			    		$('#initiatePes').attr('disabled',false);
 		    		} else {
-		    			var message = "<div class=panel-heading><h3 class=panel-title>Error</h3>" + resultObj.messages
+		    			var message = "<div class=panel-heading><h3 class=panel-title>Error : Please inform vBAC Support</h3>" + resultObj.messages
 		    			$('#savingBoardingDetailsModal  .panel').html(message);
 		    			$('#savingBoardingDetailsModal  .panel').addClass('panel-danger');
 		    			$('#savingBoardingDetailsModal  .panel').removeClass('panel-success');

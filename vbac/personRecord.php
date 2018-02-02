@@ -217,6 +217,7 @@ class personRecord extends DbRecord
         $availableFromPreBoarding = personTable::optionsForPreBoarded($this->PRE_BOARDED);
         $preBoardersAvailable = count($availableFromPreBoarding) > 1 ? null : " disabled='disabled' ";
         $pesStatus = empty($this->PES_STATUS) ? personRecord::PES_STATUS_NOT_REQUESTED : $this->PES_STATUS;
+        $pesStatusDetails = $this->PES_STATUS_DETAILS;
 
         ?>
         <form id='boardingForm'  class="form-horizontal" onsubmit="return false;">
@@ -321,6 +322,8 @@ class personRecord extends DbRecord
 								<input id='resource_employee_type' name='resEMPLOYEE_TYPE'     value='Pre-Hire'						type='hidden' >
 								<input id='resource_ibm_location'  name='resIBM_BASE_LOCATION' value='<?=$this->IBM_BASE_LOCATION?>'	type='hidden' >
 								<input id='resource_pes_status'    name='resPES_STATUS'        value='<?=$pesStatus?>'                 type='hidden'  <?$notEditable?>>
+								<input id='resource_pes_status_details'    name='resPES_STATUS_DETAILS'        value='<?=$pesStatusDetails?>'                 type='hidden'  <?$notEditable?>>
+
 
 					</div>
 				</div>
@@ -389,10 +392,10 @@ class personRecord extends DbRecord
   <div class="panel-body">
     <div class='form-group' >
         <div class='col-sm-6'>
-          <input class="form-control" id="open_seat" name="OPEN_SEAT_NUMBER"  required value="<?=$this->OPEN_SEAT_NUMBER?>" type="text" placeholder='Open Seat' data-toggle='tooltip' title='Open Seat'>
+          <input class="form-control" id="open_seat" name="OPEN_SEAT_NUMBER"  required maxlength='12' value="<?=$this->OPEN_SEAT_NUMBER?>" type="text" placeholder='Open Seat' data-toggle='tooltip' title='Open Seat' max=12 >
         </div>
         <div class='col-sm-6'>
-          <input class="form-control" id="role_on_account" name="ROLE_ON_THE_ACCOUNT" value="<?=$this->ROLE_ON_THE_ACCOUNT?>" type="text" placeholder='Role on account' >
+          <input class="form-control" id="role_on_account" name="ROLE_ON_THE_ACCOUNT" maxlength='120' value="<?=$this->ROLE_ON_THE_ACCOUNT?>" type="text" placeholder='Role on account' >
        </div>
     </div>
 
