@@ -226,7 +226,7 @@ function personRecord() {
 			    			   var eDate = resultObj.data.PROJECTED_END_DATE;
 			    			   $('#end_date').attr('disabled',false);
 			    			   if(eDate){
-			    				   endPikcer.setDate(eDate);
+			    				   endPicker.setDate(eDate);
 			    			   }
 
 			    			   var pesDateReq = resultObj.data.PES_DATE_REQUESTED;
