@@ -219,6 +219,9 @@ class personRecord extends DbRecord
         $pesStatus = empty($this->PES_STATUS) ? personRecord::PES_STATUS_NOT_REQUESTED : $this->PES_STATUS;
         $pesStatusDetails = $this->PES_STATUS_DETAILS;
 
+        $startDate = \DateTime::createFromFormat('Y-m-d', $this->START_DATE);
+        $endDate = \DateTime::createFromFormat('Y-m-d', $this->PROJECTED_END_DATE);
+
         ?>
         <form id='boardingForm'  class="form-horizontal" onsubmit="return false;">
     <div class="panel panel-default">
@@ -480,12 +483,12 @@ class personRecord extends DbRecord
 
     <div class='form-group' >
         <div class='col-sm-6'>
-          <input class="form-control" id="start_date" value="<?=$this->START_DATE?>" type="text" placeholder='Start Date' data-toggle='tooltip' title='Start Date'>
+          <input class="form-control" id="start_date" value="<?=is_object($startDate) ?  $startDate->format('d M Y') : null?>" type="text" placeholder='Start Date' data-toggle='tooltip' title='Start Date'>
           <input class="form-control" id="start_date_db2" name="START_DATE" value="<?=$this->START_DATE?>" type="hidden" >
            </div>
 
         <div class='col-sm-6'>
-          <input class="form-control" id="end_date"  value="<?=$this->PROJECTED_END_DATE?>"  type="text" placeholder='End Date (if known)' data-toggle='tooltip' title='End Date'>
+          <input class="form-control" id="end_date"  value="<?=is_object($endDate) ? $endDate->format('d M Y') : null?>"  type="text" placeholder='End Date (if known)' data-toggle='tooltip' title='End Date'>
 		  <input class="form-control" id="enb_date_db2" name="PROJECTED_END_DATE" value="<?=$this->PROJECTED_END_DATE?>" type="hidden" >
            </div>
      </div>

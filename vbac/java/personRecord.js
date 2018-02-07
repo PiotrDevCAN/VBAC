@@ -800,6 +800,7 @@ function personRecord() {
                       $('.ctbRtb')[2].click();
                       break;
                     }
+                    person.initialiseStartEndDate();
                 } else {
                     $('#editPersonModal .modal-body').html(resultObj.messages);
                 }
