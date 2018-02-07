@@ -83,6 +83,7 @@ class personTable extends DbTable {
     function addButtons($row){
         // save some fields before we change the,
         $notesId = trim($row['NOTES_ID']);
+        $email   = trim($row['EMAIL_ADDRESS']);
         $cnum = trim($row['CNUM']);
         $flag = $row['FM_MANAGER_FLAG'];
         $status = empty(trim($row['PES_STATUS'])) ? personRecord::PES_STATUS_NOT_REQUESTED : trim($row['PES_STATUS']) ;
@@ -138,6 +139,7 @@ class personTable extends DbTable {
                  $row['PES_STATUS']  = "<button type='button' class='btn btn-default btn-xs btnPesStatus' aria-label='Left Align' ";
                  $row['PES_STATUS'] .= " data-cnum='" .$cnum . "' ";
                  $row['PES_STATUS'] .= " data-notesid='" . $notesId . "' ";
+                 $row['PES_STATUS'] .= " data-email='" . $email . "' ";
                  $row['PES_STATUS'] .= " data-pesdaterequested='" .trim($row['PES_DATE_REQUESTED']) . "' ";
                  $row['PES_STATUS'] .= " data-pesrequestor='" .trim($row['PES_REQUESTOR']) . "' ";
                  $row['PES_STATUS'] .= " data-pesstatus='" .$status . "' ";

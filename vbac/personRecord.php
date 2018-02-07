@@ -221,154 +221,154 @@ class personRecord extends DbRecord
 
         ?>
         <form id='boardingForm'  class="form-horizontal" onsubmit="return false;">
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h3 class="panel-title" id='employeeResourceHeading'>Employee Details</h3>
-			</div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title" id='employeeResourceHeading'>Employee Details</h3>
+      </div>
 
 
-		<div class="panel-body">
-			<div id='existingIbmer'>
-				<div class="form-group">
-					<div class="col-sm-6">
-						<input class="form-control" id="person_name" name="person_name"
-							value="<?=trim($this->FIRST_NAME . " " . $this->LAST_NAME)?>"
-							type="text" placeholder='Start typing name/serial/email'
-							<?=$notEditable?>>
-					</div>
-					<div class='col-sm-6'>
-						<input class='form-control' id='person_serial' name='CNUM'
-							value='<?=$this->CNUM?>' required type='text' disabled='disabled'
-							placeholder='Serial Number' <?=$notEditable?>>
-					</div>
-				</div>
+    <div class="panel-body">
+      <div id='existingIbmer'>
+        <div class="form-group">
+          <div class="col-sm-6">
+            <input class="form-control" id="person_name" name="person_name"
+              value="<?=trim($this->FIRST_NAME . " " . $this->LAST_NAME)?>"
+              type="text" placeholder='Start typing name/serial/email'
+              <?=$notEditable?>>
+          </div>
+          <div class='col-sm-6'>
+            <input class='form-control' id='person_serial' name='CNUM'
+              value='<?=$this->CNUM?>' required type='text' disabled='disabled'
+              placeholder='Serial Number' <?=$notEditable?>>
+          </div>
+        </div>
 
-				<div id='personDetails' display='<?=$displayForEdit?>'>
-					<div class='form-group'>
-						<div class='col-sm-6'>
-							<input class='form-control' id='person_notesid' name='NOTES_ID'
-								value='<?=$this->NOTES_ID?>'  type='text'
-								disabled='disabled' placeholder="Notesid" <?=$notEditable?>>
-						</div>
+        <div id='personDetails' display='<?=$displayForEdit?>'>
+          <div class='form-group'>
+            <div class='col-sm-6'>
+              <input class='form-control' id='person_notesid' name='NOTES_ID'
+                value='<?=$this->NOTES_ID?>'  type='text'
+                disabled='disabled' placeholder="Notesid" <?=$notEditable?>>
+            </div>
 
-						<div class='col-sm-6'>
-							<input class='form-control' id='person_intranet'
-								name='EMAIL_ADDRESS' value='<?=$this->EMAIL_ADDRESS?>'
-								type='text' disabled='disabled' placeholder="Intranet"
-								>
-						</div>
-					</div>
+            <div class='col-sm-6'>
+              <input class='form-control' id='person_intranet'
+                name='EMAIL_ADDRESS' value='<?=$this->EMAIL_ADDRESS?>'
+                type='text' disabled='disabled' placeholder="Intranet"
+                >
+            </div>
+          </div>
 
-					<div class='form-group'>
-						<div class='col-sm-12' <?=$hideDivFromEdit?>>
-							<input class='form-control' id='person_bio' name='person_bio'
-								value='' required type='text' disabled='disabled' placeholder="Bio">
-								<input id='person_uid'           name='person_uid'        value='' type='hidden' required>
-								<input id='person_is_mgr'	     name='FM_MANAGER_FLAG'   value='<?=$this->FM_MANAGER_FLAG?>'   type='hidden'  >
-								<input id='person_employee_type' name='EMPLOYEE_TYPE'     value='<?=$this->EMPLOYEE_TYPE?>'		type='Hidden'  >
-								<input id='person_first_name'    name='FIRST_NAME'        value='<?=$this->FIRST_NAME?>'        type='hidden'   <?=$notEditable?>>
-								<input id='person_last_name'     name='LAST_NAME'         value='<?=$this->LAST_NAME?>'         type='hidden'   <?=$notEditable?>>
-								<input id='person_ibm_location'  name='IBM_BASE_LOCATION' value='<?=$this->IBM_BASE_LOCATION?>'	type='hidden'  >
-								<input id='person_country'       name='COUNTRY'           value='<?=$this->COUNTRY?>'           type='hidden'  >
-								<input id='person_pes_status'    name='PES_STATUS'        value='<?=$pesStatus?>'               type='hidden'   <?=$notEditable?>>
+          <div class='form-group'>
+            <div class='col-sm-12' <?=$hideDivFromEdit?>>
+              <input class='form-control' id='person_bio' name='person_bio'
+                value='' required type='text' disabled='disabled' placeholder="Bio">
+                <input id='person_uid'           name='person_uid'        value='' type='hidden' required>
+                <input id='person_is_mgr'	     name='FM_MANAGER_FLAG'   value='<?=$this->FM_MANAGER_FLAG?>'   type='hidden'  >
+                <input id='person_employee_type' name='EMPLOYEE_TYPE'     value='<?=$this->EMPLOYEE_TYPE?>'		type='Hidden'  >
+                <input id='person_first_name'    name='FIRST_NAME'        value='<?=$this->FIRST_NAME?>'        type='hidden'   <?=$notEditable?>>
+                <input id='person_last_name'     name='LAST_NAME'         value='<?=$this->LAST_NAME?>'         type='hidden'   <?=$notEditable?>>
+                <input id='person_ibm_location'  name='IBM_BASE_LOCATION' value='<?=$this->IBM_BASE_LOCATION?>'	type='hidden'  >
+                <input id='person_country'       name='COUNTRY'           value='<?=$this->COUNTRY?>'           type='hidden'  >
+                <input id='person_pes_status'    name='PES_STATUS'        value='<?=$pesStatus?>'               type='hidden'   <?=$notEditable?>>
 
-						</div>
-					</div>
-				</div>
-			</div>
-			<div id='notAnIbmer' style='display:none'>
-				<div class="form-group">
-					<div class="col-sm-6">
-						<input class="form-control" id="resource_first_name" name="resFIRST_NAME"
-							value="<?=$this->LAST_NAME?>"
-							type="text" placeholder='First Name'
-							<?=$notEditable?>>
-					</div>
-					<div class="col-sm-6">
-						<input class="form-control" id="resource_last_name" name="resLAST_NAME"
-							value="<?=$this->LAST_NAME?>"
-							type="text" placeholder='Last Name'
-							<?=$notEditable?>>
-					</div>
-				</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='notAnIbmer' style='display:none'>
+        <div class="form-group">
+          <div class="col-sm-6">
+            <input class="form-control" id="resource_first_name" name="resFIRST_NAME"
+              value="<?=$this->LAST_NAME?>"
+              type="text" placeholder='First Name'
+              <?=$notEditable?>>
+          </div>
+          <div class="col-sm-6">
+            <input class="form-control" id="resource_last_name" name="resLAST_NAME"
+              value="<?=$this->LAST_NAME?>"
+              type="text" placeholder='Last Name'
+              <?=$notEditable?>>
+          </div>
+        </div>
 
-				<div id='resourceDetails' style="display:<?=$displayForEdit?>">
-					<div class='form-group'>
-						<div class='col-sm-6'>
-							<input class='form-control' id='resource_email'
-								name='resEMAIL_ADDRESS' value='<?=$this->EMAIL_ADDRESS?>'
-								type='text' placeholder="Email Address"
-								>
-						</div>
-						<div class='col-sm-6'>
-        				<select class='form-control select select2 ' id='resource_country'
-                  	          name='resCOUNTRY'
-                  	          placeholder='Country working in:'
-               			 >
-                		<option value=''>Country working in</option>
-                		<?php
+        <div id='resourceDetails' style="display:<?=$displayForEdit?>">
+          <div class='form-group'>
+            <div class='col-sm-6'>
+              <input class='form-control' id='resource_email'
+                name='resEMAIL_ADDRESS' value='<?=$this->EMAIL_ADDRESS?>'
+                type='text' placeholder="Email Address"
+                >
+            </div>
+            <div class='col-sm-6'>
+                <select class='form-control select select2 ' id='resource_country'
+                              name='resCOUNTRY'
+                              placeholder='Country working in:'
+                      >
+                    <option value=''>Country working in</option>
+                    <?php
                         foreach ($countryCodes as $countryName){
                             echo "<option value='$countryName'>$countryName</option>";
                         };
                         ?>
-            			</select>
+                  </select>
 
-						</div>
-					</div>
+            </div>
+          </div>
 
-					<div class='form-group' style='display:none'>
-								<input id='resource_uid'           name='resperson_uid'        value='<?=$this->CNUM?>'   				type='hidden' >
-								<input id='resource_is_mgr'	       name='resFM_MANAGER_FLAG'   value='N'               				type='hidden' >
-								<input id='resource_employee_type' name='resEMPLOYEE_TYPE'     value='Pre-Hire'						type='hidden' >
-								<input id='resource_ibm_location'  name='resIBM_BASE_LOCATION' value='<?=$this->IBM_BASE_LOCATION?>'	type='hidden' >
-								<input id='resource_pes_status'    name='resPES_STATUS'        value='<?=$pesStatus?>'                 type='hidden'  <?$notEditable?>>
-								<input id='resource_pes_status_details'    name='resPES_STATUS_DETAILS'        value='<?=$pesStatusDetails?>'                 type='hidden'  <?$notEditable?>>
-
-
-					</div>
-				</div>
-			</div>
+          <div class='form-group' style='display:none'>
+                <input id='resource_uid'           name='resperson_uid'        value='<?=$this->CNUM?>'   				type='hidden' >
+                <input id='resource_is_mgr'	       name='resFM_MANAGER_FLAG'   value='N'               				type='hidden' >
+                <input id='resource_employee_type' name='resEMPLOYEE_TYPE'     value='Pre-Hire'						type='hidden' >
+                <input id='resource_ibm_location'  name='resIBM_BASE_LOCATION' value='<?=$this->IBM_BASE_LOCATION?>'	type='hidden' >
+                <input id='resource_pes_status'    name='resPES_STATUS'        value='<?=$pesStatus?>'                 type='hidden'  <?$notEditable?>>
+                <input id='resource_pes_status_details'    name='resPES_STATUS_DETAILS'        value='<?=$pesStatusDetails?>'                 type='hidden'  <?$notEditable?>>
 
 
-				<div class='form-group'>
-					<div class='col-sm-6' >
-						<select class='form-control select select2'	id='person_contractor_id_required'  name='CONTRACTOR_ID_REQUIRED' >
-							<option value='no' <?=(strtoupper(substr($this->CONTRACTOR_ID_REQUIRED,0,1))=='N' or empty($this->CONTRACTOR_ID_REQUIRED)) ? ' selected ' : null;?>>NO LBG CTID is required</option>
-							<option value='yes' <?=strtoupper(substr($this->CONTRACTOR_ID_REQUIRED,0,1))=='Y' ? ' selected ' : null;?>>LBG CTID  is Required</option>
-						</select>
-					</div>
+          </div>
+        </div>
+      </div>
 
-        			<div class="col-sm-6" id='linkToPreBoarded'>
-        				<select class='form-control select select2' id='person_preboarded'
-                  	          name='person_preboarded'
-                  	          <?=$preBoardersAvailable?>
-                  	          <?=$notEditable?>
-                  	          placeholder='Was pre-boarded as:'
-               			 >
-                		<option value=''>Link to Pre-Boarded</option>
-                		<?php
+
+        <div class='form-group'>
+          <div class='col-sm-6' >
+            <select class='form-control select select2'	id='person_contractor_id_required'  name='CONTRACTOR_ID_REQUIRED' >
+              <option value='no' <?=(strtoupper(substr($this->CONTRACTOR_ID_REQUIRED,0,1))=='N' or empty($this->CONTRACTOR_ID_REQUIRED)) ? ' selected ' : null;?>>NO LBG CTID is required</option>
+              <option value='yes' <?=strtoupper(substr($this->CONTRACTOR_ID_REQUIRED,0,1))=='Y' ? ' selected ' : null;?>>LBG CTID  is Required</option>
+            </select>
+          </div>
+
+              <div class="col-sm-6" id='linkToPreBoarded'>
+                <select class='form-control select select2' id='person_preboarded'
+                              name='person_preboarded'
+                              <?=$preBoardersAvailable?>
+                              <?=$notEditable?>
+                              placeholder='Was pre-boarded as:'
+                      >
+                    <option value=''>Link to Pre-Boarded</option>
+                    <?php
                         foreach ($availableFromPreBoarding as $option){
                             echo $option;
                         };
                         ?>
-            			</select>
-        			</div>
-        		</div>
-			</div>
-		</div>
+                  </select>
+              </div>
+            </div>
+      </div>
+    </div>
 
 
-	<div class="panel panel-default">
-  	<div class="panel-heading">
+  <div class="panel panel-default">
+    <div class="panel-heading">
     <h3 class="panel-title">Functional Manager Details</h3>
   </div>
   <div class="panel-body">
         <div class="form-group">
         <div class="col-sm-6">
-        	<select class='form-control select select2' id='FM_CNUM'
-                  	          name='FM_CNUM'
-                  	          required='required'
-                  	          placeholder='Select functional manager'
+          <select class='form-control select select2' id='FM_CNUM'
+                              name='FM_CNUM'
+                              required='required'
+                              placeholder='Select functional manager'
                 >
                 <option value=''>Select Functional Mgr</option>
                 <?php
@@ -379,7 +379,7 @@ class personRecord extends DbRecord
                     echo ">" . $mgrNotesid . "</option>";
                 };
                 ?>
-            	</select>
+              </select>
         </div>
         </div>
 </div>
@@ -404,10 +404,10 @@ class personRecord extends DbRecord
     <div class='form-group' >
 
         <div class='col-sm-6'>
-        	   	<select class='form-control select select2' id='lob'
-                  	          name='LOB'
-                  	          placeholder='Select Lob'
-            	>
+               <select class='form-control select select2' id='lob'
+                              name='LOB'
+                              placeholder='Select Lob'
+              >
                 <option value=''>Select Lob</option>
                 <?php
                 foreach (self::$lobValue as $lob) {
@@ -415,23 +415,23 @@ class personRecord extends DbRecord
                 }
                 ?>
             </select>
-		</div>
+    </div>
      </div>
 
          <div class='form-group' id='selectCioAllignment'>
          <div class='col-sm-6'>
              <div class="radio">
-  				<label><input type="radio" name="CTB_RTB"  class='ctbRtb' value='CTB' <?=substr($this->CTB_RTB,0,3)=='CTB'? 'checked' : null ?>>CTB</label>
-  				<label><input type="radio" name="CTB_RTB"  class='ctbRtb' value='RTB' <?=substr($this->CTB_RTB,0,3)=='RTB'? 'checked' : null ?>>RTB</label>
-  				<label><input type="radio" name="CTB_RTB"  class='ctbRtb' value='Other' <?=substr($this->CTB_RTB,0,5)=='Other'? 'checked' : null ?>>Other</label>
-			</div>
+          <label><input type="radio" name="CTB_RTB"  class='ctbRtb' value='CTB' <?=substr($this->CTB_RTB,0,3)=='CTB'? 'checked' : null ?>>CTB</label>
+          <label><input type="radio" name="CTB_RTB"  class='ctbRtb' value='RTB' <?=substr($this->CTB_RTB,0,3)=='RTB'? 'checked' : null ?>>RTB</label>
+          <label><input type="radio" name="CTB_RTB"  class='ctbRtb' value='Other' <?=substr($this->CTB_RTB,0,5)=='Other'? 'checked' : null ?>>Other</label>
+      </div>
         </div>
         <div class='col-sm-6'>
-           	<select class='form-control select select2' id='cioAlignment'
-                  	          name='CIO_ALIGNMENT'
-                  	          disabled
-                  	          placeholder='Select CTB/RTB/Other'
-            	>
+             <select class='form-control select select2' id='cioAlignment'
+                              name='CIO_ALIGNMENT'
+                              disabled
+                              placeholder='Select CTB/RTB/Other'
+              >
                 <option value=''>Select CTB/RTB/Other</option>
                 <?php
                 foreach (self::$cio as $cioValue) {
@@ -440,7 +440,7 @@ class personRecord extends DbRecord
                 ?>
             </select>
             </div>
-	</div>
+  </div>
 
 
 
@@ -448,9 +448,9 @@ class personRecord extends DbRecord
     <div class='form-group' >
         <div class='col-sm-6'>
             <div class="radio">
-  			<label><input type="radio" name="TT_BAU"  class='accountOrganisation' value='T&T' <?=substr($this->TT_BAU,0,3)=='T&T'? 'checked' : null ?>>T&T</label>
-  			<label><input type="radio" name="TT_BAU"  class='accountOrganisation' value='BAU' <?=substr($this->TT_BAU,0,3)=='BAU'? 'checked' : null ?>>BAU</label>
-			</div>
+        <label><input type="radio" name="TT_BAU"  class='accountOrganisation' value='T&T' <?=substr($this->TT_BAU,0,3)=='T&T'? 'checked' : null ?>>T&T</label>
+        <label><input type="radio" name="TT_BAU"  class='accountOrganisation' value='BAU' <?=substr($this->TT_BAU,0,3)=='BAU'? 'checked' : null ?>>BAU</label>
+      </div>
         </div>
 
         <?php
@@ -458,7 +458,7 @@ class personRecord extends DbRecord
             ?>
             <script>
             $(document).on('ready', function(){
-            	$(document).click($('.accountOrganisation')[0]);
+              $(document).click($('.accountOrganisation')[0]);
             });
             </script>
             <?php
@@ -466,16 +466,16 @@ class personRecord extends DbRecord
         ?>
 
         <div class='col-sm-6'>
-        	<input id='currentWorkstream' value='<?=$this->WORK_STREAM?>' type='hidden'>
-        	<select class='form-control select select2' id='work_stream'
-                  	          name='WORK_STREAM'
-                  	          disabled
-                  	          placeholder='Select T&T/BAU First'
+          <input id='currentWorkstream' value='<?=$this->WORK_STREAM?>' type='hidden'>
+          <select class='form-control select select2' id='work_stream'
+                              name='WORK_STREAM'
+                              disabled
+                              placeholder='Select T&T/BAU First'
             >
                 <option value=''>Select T&T/BAU First</option>
             </select>
 
-		</div>
+    </div>
     </div>
 
     <div class='form-group' >
@@ -492,136 +492,145 @@ class personRecord extends DbRecord
      </div>
 
      <input id='pes_date_requested'   name='PES_DATE_REQUESTED'     value='<?=$this->PES_DATE_REQUESTED?>'		type='Hidden'  >
-	 <input id='pes_date_responded'   name='PES_DATE_RESPONDED'     value='<?=$this->PES_DATE_RESPONDED?>'      type='hidden'  >
-	 <input id='pes_requestor'        name='PES_REQUESTOR'          value='<?=$this->PES_REQUESTOR?>'           type='hidden'  >
-	 <input id='pes_status'           name='PES_STATUS'             value='<?=$this->PES_STATUS?>'              type='hidden'  >
-	 <input id='pes_status_details'   name='PES_STATUS_DETAILS'     value='<?=$this->PES_STATUS_DETAILS?>'      type='hidden'  >
+   <input id='pes_date_responded'   name='PES_DATE_RESPONDED'     value='<?=$this->PES_DATE_RESPONDED?>'      type='hidden'  >
+   <input id='pes_requestor'        name='PES_REQUESTOR'          value='<?=$this->PES_REQUESTOR?>'           type='hidden'  >
+   <input id='pes_status'           name='PES_STATUS'             value='<?=$this->PES_STATUS?>'              type='hidden'  >
+   <input id='pes_status_details'   name='PES_STATUS_DETAILS'     value='<?=$this->PES_STATUS_DETAILS?>'      type='hidden'  >
 
 
-		<?php
-	$allButtons = null;
-	$submitButton = $mode==FormClass::$modeEDIT ?  $this->formButton('submit','Submit','updateBoarding',null,'Update','btn btn-primary') :  $this->formButton('submit','Submit','saveBoarding','disabled','Save','btn btn-primary');
-	$pesButton    = $mode==FormClass::$modeEDIT ?  null :  $this->formButton('button','initiatePes','initiatePes','disabled','Initiate PES','btn btn-primary btnPesInitiate');
-  	$allButtons[] = $submitButton;
-  	$allButtons[] = $pesButton;
-	$this->formBlueButtons($allButtons);
-	$this->formHiddenInput('requestor',$GLOBALS['ltcuser']['mail'],'requestor');
-	?>
+    <?php
+  $allButtons = null;
+  $submitButton = $mode==FormClass::$modeEDIT ?  $this->formButton('submit','Submit','updateBoarding',null,'Update','btn btn-primary') :  $this->formButton('submit','Submit','saveBoarding','disabled','Save','btn btn-primary');
+  $pesButton    = $mode==FormClass::$modeEDIT ?  null :  $this->formButton('button','initiatePes','initiatePes','disabled','Initiate PES','btn btn-primary btnPesInitiate');
+    $allButtons[] = $submitButton;
+    $allButtons[] = $pesButton;
+  $this->formBlueButtons($allButtons);
+  $this->formHiddenInput('requestor',$GLOBALS['ltcuser']['mail'],'requestor');
+  ?>
 
-	</form>
+  </form>
     <?php
     }
 
 
     function savingBoardingDetailsModal(){
         ?>
-    	 <!-- Modal -->
-		<div id="savingBoardingDetailsModal" class="modal fade" role="dialog">
-  		<div class="modal-dialog">
+       <!-- Modal -->
+    <div id="savingBoardingDetailsModal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
 
             <!-- Modal content-->
-    		<div class="modal-content">
-      		<div class="modal-header">
-        		<button type="button" class="close" data-dismiss="modal">&times;</button>
-        		<h4 class="modal-title">Saving Boarding Details</h4>
-      		</div>
-      		<div class="modal-body" >
-      			<div class="panel"></div>
-      		</div>
-      		<div class="modal-footer">
-        		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      		</div>
-    		</div>
-  		</div>
-		</div>
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Saving Boarding Details</h4>
+          </div>
+          <div class="modal-body" >
+            <div class="panel"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
         <?php
     }
 
 
     function amendPesStatusModal(){
+        $now = new \DateTime();
         ?>
-    	 <!-- Modal -->
-		<div id="amendPesStatusModal" class="modal fade" role="dialog">
-  		<div class="modal-dialog">
+       <!-- Modal -->
+    <div id="amendPesStatusModal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
 
             <!-- Modal content-->
-    		<div class="modal-content">
-      		<div class="modal-header">
-        		<button type="button" class="close" data-dismiss="modal">&times;</button>
-        		<h4 class="modal-title">Amend PES Status</h4>
-      	    </div>
-      		<div class="modal-body" >
-      		<form id='psmForm' class="form-horizontal"  method='post'>
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Amend PES Status</h4>
+            </div>
+          <div class="modal-body" >
+          <form id='psmForm' class="form-horizontal"  method='post'>
 
-      		<div class="panel panel-default">
-  				<div class="panel-heading">
-    				<h3 class="panel-title">Employee Details</h3>
-  				</div>
-  			<div class="panel-body">
-      			<div class='row'>
-      				<div class='form-group' >
-        				<div class='col-sm-6'>
-          					<input class="form-control" id="psm_notesid" name="psm_notesid" value="" type="text" disabled>
-        			    </div>
-        				<div class='col-sm-6'>
-        				    <input class="form-control" id="psm_cnum" name="psm_cnum" value="" type="text" disabled>
-        			    </div>
-     				</div>
-     			</div>
-     		</div>
-      		</div>
+          <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Employee Details</h3>
+          </div>
+        <div class="panel-body">
+            <div class='row'>
+              <div class='form-group' >
+                <div class='col-sm-6'>
+                    <input class="form-control" id="psm_notesid" name="psm_notesid" value="" type="text" disabled>
+                  </div>
+                <div class='col-sm-6'>
+                    <input class="form-control" id="psm_cnum" name="psm_cnum" value="" type="text" disabled>
+                  </div>
+             </div>
+           </div>
+         </div>
+          </div>
 
-      		<div class="panel panel-default">
-  				<div class="panel-heading">
-    				<h3 class="panel-title">PES Status</h3>
-  				</div>
-  			<div class="panel-body">
-     			<div class='row'>
-      				<div class='form-group required' >
-        				<label for='psm_status' class='col-md-2 control-label '>Status</label>
-        				<div class='col-md-4'>
-              				<select class='form-control select' id='psm_status'
-                  	          	name='psm_status'
-                  	          	required='required'
-                  	          	data-tags="true" data-placeholder="Status" data-allow-clear="true"
-                  	           >
-            				<option value=''>Status</option>
-            				<option value='<?=personRecord::PES_STATUS_CLEARED;?>'><?=personRecord::PES_STATUS_CLEARED?></option>
-            				<option value='<?=personRecord::PES_STATUS_DECLINED;?>'><?=personRecord::PES_STATUS_DECLINED?></option>
-            				<option value='<?=personRecord::PES_STATUS_EXCEPTION;?>'><?=personRecord::PES_STATUS_EXCEPTION?></option>
-            				<option value='<?=personRecord::PES_STATUS_FAILED;?>'><?=personRecord::PES_STATUS_FAILED?></option>
-            				<option value='<?=personRecord::PES_STATUS_INITIATED;?>'><?=personRecord::PES_STATUS_INITIATED?></option>
-            				<option value='<?=personRecord::PES_STATUS_REMOVED;?>'><?=personRecord::PES_STATUS_REMOVED?></option>
-               				</select>
-            		 </div>
-            	</div>
-            	</div>
+          <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">PES Status</h3>
+          </div>
+        <div class="panel-body">
+           <div class='row'>
+              <div class='form-group required' >
+                <label for='psm_status' class='col-md-2 control-label '>Status</label>
+                <div class='col-md-4'>
+                      <select class='form-control select' id='psm_status'
+                                name='psm_status'
+                                required='required'
+                                data-tags="true" data-placeholder="Status" data-allow-clear="true"
+                               >
+                    <option value=''>Status</option>
+                    <option value='<?=personRecord::PES_STATUS_CLEARED;?>'><?=personRecord::PES_STATUS_CLEARED?></option>
+                    <option value='<?=personRecord::PES_STATUS_DECLINED;?>'><?=personRecord::PES_STATUS_DECLINED?></option>
+                    <option value='<?=personRecord::PES_STATUS_EXCEPTION;?>'><?=personRecord::PES_STATUS_EXCEPTION?></option>
+                    <option value='<?=personRecord::PES_STATUS_FAILED;?>'><?=personRecord::PES_STATUS_FAILED?></option>
+                    <option value='<?=personRecord::PES_STATUS_INITIATED;?>'><?=personRecord::PES_STATUS_INITIATED?></option>
+                    <option value='<?=personRecord::PES_STATUS_REMOVED;?>'><?=personRecord::PES_STATUS_REMOVED?></option>
+                       </select>
+                 </div>
+                 <label for='ped_dsate' class='col-md-1 control-label '>Date</label>
+                 <div class='col-md-3'>
+                  <input class="form-control" id="pes_date" value="<?=$now->format('d M Y')?>" type="text" placeholder='Pes Status Changed' data-toggle='tooltip' title='PES Date Responded'>
+                  <input class="form-control" id="pes_date_db2" name="PES_DATE_RESPONDED" type='hidden' >
+                 </div>
 
-     			<div class='row'>
-      				<div class='form-group required' >
-        				<label for='psm_detail' class='col-md-2 control-label '>Detail</label>
-        					<div class='col-md-9'>
-  								<input class="form-control" id="psm_detail" name="psm_detail" value="" type="text"  >
-            		 		</div>
-            		</div>
-     				</div>
-     			</div>
-      		</div>
-      		<div class="modal-footer">
-      		<?php
-      		$allButtons = null;
-      		$submitButton = $this->formButton('submit','Submit','savePesStatus',null,'Submit','btn-primary');
-      		$allButtons[] = $submitButton;
-      		$this->formBlueButtons($allButtons);
-      		?>
 
-       		<button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
-      		</div>
-      		</form>
-    		</div>
-  		</div>
-		</div>
-		</div>
+
+              </div>
+              </div>
+
+           <div class='row'>
+              <div class='form-group required' >
+                <label for='psm_detail' class='col-md-2 control-label '>Detail</label>
+                  <div class='col-md-8' id='pesDateDiv'>
+                  <input class="form-control" id="psm_detail" name="psm_detail" value="" type="text"  >
+                     </div>
+                </div>
+             </div>
+           </div>
+          </div>
+          <div class="modal-footer">
+          <?php
+          $allButtons = null;
+          $submitButton = $this->formButton('submit','Submit','savePesStatus',null,'Submit','btn-primary');
+          $allButtons[] = $submitButton;
+          $this->formBlueButtons($allButtons);
+          ?>
+
+           <button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
+          </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    </div>
         <?php
 
 
@@ -629,22 +638,22 @@ class personRecord extends DbRecord
 
     function editPersonModal(){
         ?>
-    	 <!-- Modal -->
-		<div id="editPersonModal" class="modal fade" role="dialog">
-  			<div class="modal-dialog">
-    			<div class="modal-content">
-    			<div class="modal-header">
-	   				<button type="button" class="close" data-dismiss="modal">&times;</button>
-      				<h4 class="modal-title">Edit Person Record</h4>
-        		</div>
-   		    	<div class="modal-body" >
-   		    	</div>
-   		    	<div class='modal-footer'>
-   		    	</div>
-      			</div>
-    		</div>
-  		</div>
-		<?php
+       <!-- Modal -->
+    <div id="editPersonModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+          <div class="modal-header">
+             <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Edit Person Record</h4>
+            </div>
+             <div class="modal-body" >
+             </div>
+             <div class='modal-footer'>
+             </div>
+            </div>
+        </div>
+      </div>
+    <?php
     }
 
 
@@ -660,32 +669,32 @@ class personRecord extends DbRecord
 
     function confirmChangeFmFlagModal(){
         ?>
-    	 <!-- Modal -->
-		<div id="confirmChangeFmFlagModal" class="modal fade" role="dialog">
-  			<div class="modal-dialog">
-    			<div class="modal-content">
-    			<div class="modal-header">
-	   				<button type="button" class="close" data-dismiss="modal">&times;</button>
-      				<h4 class="modal-title">Confirm change of FM Flag</h4>
-        		</div>
+       <!-- Modal -->
+    <div id="confirmChangeFmFlagModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+          <div class="modal-header">
+             <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Confirm change of FM Flag</h4>
+            </div>
 
-   		    	<form id='confirmFmFlagChangeForm' class="form-horizontal"  method='post' >
-   		    	<div class="modal-body" >
-   		    	</div>
-   		    	<div class='modal-footer'>
-   		    	<?php
-   		    	$allButtons = null;
-      			$submitButton = $this->formButton('submit','Submit','confirmFmStatusChange',null,'Submit','btn-primary');
-      			$allButtons[] = $submitButton;
-      			$this->formBlueButtons($allButtons);
-      			?>
-       			<button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
-   		    	</div>
-   		    	</form>
-      			</div>
-    		</div>
-  		</div>
-		<?php
+             <form id='confirmFmFlagChangeForm' class="form-horizontal"  method='post' >
+             <div class="modal-body" >
+             </div>
+             <div class='modal-footer'>
+             <?php
+             $allButtons = null;
+            $submitButton = $this->formButton('submit','Submit','confirmFmStatusChange',null,'Submit','btn-primary');
+            $allButtons[] = $submitButton;
+            $this->formBlueButtons($allButtons);
+            ?>
+             <button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
+             </div>
+             </form>
+            </div>
+        </div>
+      </div>
+    <?php
     }
 
     function convertCountryCodeToName(){
