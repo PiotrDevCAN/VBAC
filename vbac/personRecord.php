@@ -74,7 +74,7 @@ class personRecord extends DbRecord
     // Fields to be edited in the DataTables Reports. Need to know their position in the array $row;
     const FIELD_CNUM = 0;
     const FIELD_NOTES_ID = 5;
-    const FIELD_FM_FLAG = 9;
+    const FIELD_FM_MANAGER_FLAG = 9;
     const FIELD_LOB = 12;
     const FIELD_ROLE_ON_THE_ACCOUNT = 13;
     const FIELD_COUNTRY = 17;

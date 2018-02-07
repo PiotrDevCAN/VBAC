@@ -84,28 +84,28 @@ class personTable extends DbTable {
         // save some fields before we change the,
         $notesId = trim($row['NOTES_ID']);
         $cnum = trim($row['CNUM']);
-        $flag = $row['FM_FLAG'];
+        $flag = $row['FM_MANAGER_FLAG'];
         $status = empty(trim($row['PES_STATUS'])) ? personRecord::PES_STATUS_NOT_REQUESTED : trim($row['PES_STATUS']) ;
-        // FM_FLAG
+        // FM_MANAGER_FLAG
         if($_SESSION['isPmo'] || $_SESSION['isCdi']){
             if(strtoupper(substr($flag,0,1))=='N' || empty($flag)){
-                $row['FM_FLAG']  = "<button type='button' class='btn btn-default btn-xs btnSetFmFlag' aria-label='Left Align' ";
-                $row['FM_FLAG'] .= "data-cnum='" .$cnum . "' ";
-                $row['FM_FLAG'] .= "data-notesid='" .$notesId . "' ";
-                $row['FM_FLAG'] .= "data-fmflag='Yes' ";
-                $row['FM_FLAG'] .= " > ";
-                $row['FM_FLAG'] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
-                $row['FM_FLAG'] .= " </button> ";
+                $row['FM_MANAGER_FLAG']  = "<button type='button' class='btn btn-default btn-xs btnSetFmFlag' aria-label='Left Align' ";
+                $row['FM_MANAGER_FLAG'] .= "data-cnum='" .$cnum . "' ";
+                $row['FM_MANAGER_FLAG'] .= "data-notesid='" .$notesId . "' ";
+                $row['FM_MANAGER_FLAG'] .= "data-fmflag='Yes' ";
+                $row['FM_MANAGER_FLAG'] .= " > ";
+                $row['FM_MANAGER_FLAG'] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
+                $row['FM_MANAGER_FLAG'] .= " </button> ";
             } elseif (strtoupper(substr($flag,0,1)=='Y')){
-                $row['FM_FLAG']  = "<button type='button' class='btn btn-default btn-xs btnSetFmFlag' aria-label='Left Align' ";
-                $row['FM_FLAG'] .= "data-cnum='" .$cnum . "' ";
-                $row['FM_FLAG'] .= "data-notesid='" .$notesId . "' ";
-                $row['FM_FLAG'] .= "data-fmflag='No' ";
-                $row['FM_FLAG'] .= " > ";
-                $row['FM_FLAG'] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
-                $row['FM_FLAG'] .= " </button> ";
+                $row['FM_MANAGER_FLAG']  = "<button type='button' class='btn btn-default btn-xs btnSetFmFlag' aria-label='Left Align' ";
+                $row['FM_MANAGER_FLAG'] .= "data-cnum='" .$cnum . "' ";
+                $row['FM_MANAGER_FLAG'] .= "data-notesid='" .$notesId . "' ";
+                $row['FM_MANAGER_FLAG'] .= "data-fmflag='No' ";
+                $row['FM_MANAGER_FLAG'] .= " > ";
+                $row['FM_MANAGER_FLAG'] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
+                $row['FM_MANAGER_FLAG'] .= " </button> ";
             }
-            $row['FM_FLAG'] .= $flag;
+            $row['FM_MANAGER_FLAG'] .= $flag;
         }
 
 
