@@ -12,7 +12,8 @@ use vbac\personRecord;
 <button id='reportPes'    class='btn btn-primary btn-sm '>PES Report</button>
 <button id='reportAction' class='btn btn-primary btn-sm '>Action Mode</button>
 <button id='reportRevalidation' class='btn btn-primary btn-sm '>Revalidation Report</button>
-<button id='reportReset'  class='btn btn-primary btn-sm '>Reset Columns</button>
+<button id='reportReset'  class='btn btn-primary btn-sm '>Reset</button>
+<button id='reportAll'  class='btn btn-primary btn-sm '>Show all Columns</button>
 <button id='reportReload'  class='btn btn-primary btn-sm '>Reload Data</button>
 
 <div id='personDatabaseDiv'>
@@ -36,6 +37,7 @@ $(document).ready(function(){
 	person.listenForReportRevalidation();
 	person.listenForReportReset();
 	person.listenForReportReload();
+	person.listenForReportAll();
 	person.listenForEditPesStatus();
 	person.listenForSavePesStatus();
 	person.listenForInitiatePesFromPortal();

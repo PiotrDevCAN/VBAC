@@ -564,11 +564,8 @@ function personRecord() {
 
 	        "columns": [
 	                    { "data": "CNUM" , "defaultContent": "" },
-	                    { "data": "OPEN_SEAT_NUMBER"
-	                     ,"defaultContent": ""
-	                     ,"visible" : false },
-	                    { "data": "FIRST_NAME"
-	                     ,"defaultContent": "<i>unknown</i>" },
+	                    { "data": "OPEN_SEAT_NUMBER" ,"defaultContent": "" },
+	                    { "data": "FIRST_NAME"       ,"defaultContent": "<i>unknown</i>"},
 	                    { "data": "LAST_NAME", "defaultContent": "<i>unknown</i>" },
 	                    { "data": "EMAIL_ADDRESS", "defaultContent": "<i>unknown</i>" },
 	                    { "data": "NOTES_ID", "defaultContent": "<i>unknown</i>" },
@@ -602,9 +599,12 @@ function personRecord() {
 	                    { "data": "CIO_ALIGNMENT", "defaultContent": "" },
 	                    { "data": "PRE_BOARDED", "defaultContent": "" }
 	                ],
-	        colReorder: {
-	            order: [ 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34]
-	        },
+	        columnDefs: [
+	                       { "visible": false, "targets": [1,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,26,27,28,29,30,31,32,33,34] }
+	                ] ,
+//	        colReorder: {
+//	            order: [ 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34]
+//	        },
 	        order: [[ 5, "asc" ]],
 	    	autoWidth: false,
 	    	deferRender: true,
@@ -621,7 +621,6 @@ function personRecord() {
 	                  'print'
 	              ],
 	    });
-
 
 //	    ResourceRequest.table.columns([0,1,2,3,4,5,6,7,8,9,10,17,18,20,21,22,23,24,25,26]).visible(false,false);
 //	    ResourceRequest.table.columns.adjust().draw(false);
@@ -641,6 +640,10 @@ function personRecord() {
 	            }
 	        } );
 	    } );
+
+
+//	    personRecord.table.columns([0,1,2,3,4,25]).visible(true);
+
 
 
 	},
@@ -681,10 +684,20 @@ function personRecord() {
 
 	this.listenForReportReset = function(){
 		$(document).on('click','#reportReset', function(e){
+			personRecord.table.columns().visible(false,false);
+			personRecord.table.columns([0,1,2,3,4,25]).visible(true);
+			personRecord.table.order([5,"asc"]).draw();
+			});
+	},
+
+
+	this.listenForReportAll = function(){
+		$(document).on('click','#reportAll', function(e){
 			personRecord.table.columns().visible(true);
 			personRecord.table.order([5,"asc"]).draw();
 			});
 	},
+
 
 	this.listenForReportReload = function(){
 		$(document).on('click','#reportReload', function(e){
