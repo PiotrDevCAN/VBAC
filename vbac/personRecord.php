@@ -480,12 +480,13 @@ class personRecord extends DbRecord
 
     <div class='form-group' >
         <div class='col-sm-6'>
-          <input class="form-control" id="start_date" name="START_DATE" value="<?=$this->START_DATE?>" type="text" placeholder='Start Date' data-toggle='tooltip' title='Start Date'>
+          <input class="form-control" id="start_date" value="<?=$this->START_DATE?>" type="text" placeholder='Start Date' data-toggle='tooltip' title='Start Date'>
+          <input class="form-control" id="start_date_db2" name="START_DATE" value="<?=$this->START_DATE?>" type="hidden" >
            </div>
 
         <div class='col-sm-6'>
-          <input class="form-control" id="end_date" name="PROJECTED_END_DATE" value="<?=$this->PROJECTED_END_DATE?>"  type="text" placeholder='End Date (if known)' data-toggle='tooltip' title='End Date'>
-
+          <input class="form-control" id="end_date"  value="<?=$this->PROJECTED_END_DATE?>"  type="text" placeholder='End Date (if known)' data-toggle='tooltip' title='End Date'>
+		  <input class="form-control" id="enb_date_db2" name="PROJECTED_END_DATE" value="<?=$this->PROJECTED_END_DATE?>" type="hidden" >
            </div>
      </div>
      </div>

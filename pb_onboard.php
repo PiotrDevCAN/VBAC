@@ -52,6 +52,7 @@ $(document).ready(function() {
 
 	var person = new personRecord();
     person.initialisePersonFormSelect2();
+    person.initialiseStartEndDate();
     person.listenForHasBpEntry();
 	person.listenForName();
     person.listenForSerial();
@@ -62,84 +63,6 @@ $(document).ready(function() {
     person.listenForLinkToPreBoarded();
 
 });
-
-$(document).ready(function(){
-
-    updateStartDate = function() {
-		console.log('updateStartDate');
-		console.log(startPicker);
-		console.log(startDate);
-        startPicker.setStartRange(startDate);
-        endPicker.setStartRange(startDate);
-        endPicker.setMinDate(startDate);
-		console.log('updateStartDate');
-    },
-    updateEndDate = function() {
-		console.log('updatedEndDate');
-        startPicker.setEndRange(endDate);
-        startPicker.setMaxDate(endDate);
-        endPicker.setEndRange(endDate);
-    },
-    startPicker = new Pikaday({
-    	firstDay:1,
-// 		disableDayFn: function(date){
-// 		    // Disable weekend
-// 		    return date.getDay() === 0 || date.getDay() === 6;
-// 		},
-        field: document.getElementById('start_date'),
-        format: 'D MMM YYYY',
-        showTime: false,
-        onSelect: function() {
-        	console.log('onSelect for startPicker');
-        	console.log(this);
-            console.log(this.getMoment().format('Do MMMM YYYY'));
-            var db2Value = this.getMoment().format('YYYY-MM-DD')
-            console.log(db2Value);
-            jQuery('#start_date').val(db2Value);
-            startDate = this.getDate();
-            console.log(startDate);
-            updateStartDate();
-        }
-    }),
-    endPicker = new Pikaday({
-    	firstDay:1,
-// 		disableDayFn: function(date){
-// 		    // Disable weekend
-// 		    return date.getDay() === 0 || date.getDay() === 6;
-// 		},
-        field: document.getElementById('end_date'),
-        format: 'D MMM YYYY',
-        showTime: false,
-        onSelect: function() {
-        	console.log('onSelect for endPicker');
-            console.log(this.getMoment().format('Do MMMM YYYY'));
-            var db2Value = this.getMoment().format('YYYY-MM-DD')
-            console.log(db2Value);
-            jQuery('#end_date').val(db2Value);
-            endDate = this.getDate();
-            updateEndDate();
-        }
-    }),
-    _startDate = startPicker.getDate(),
-    _endDate = endPicker.getDate();
-
-    console.log(startDate);
-    console.log(_startDate);
-
-    if (_startDate) {
-        startDate = _startDate;
-        updateStartDate();
-    }
-
-    if (_endDate) {
-        endDate = _endDate;
-        updateEndDate();
-    }
-});
-
-
-
-
 
 </script>
 
