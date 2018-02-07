@@ -192,7 +192,7 @@ class personRecord extends DbRecord
        // $isFM = personTable::isManager($_SESSION['ssoEmail']);
        // $fmPredicate = $isFM ? " UPPER(EMAIL_ADDRESS)='" . db2_escape_string(trim(strtoupper($_SESSION['ssoEmail']))) . "'  AND UPPER(LEFT(FM_MANAGER_FLAG,1))='Y'  " : " UPPER(LEFT(FM_MANAGER_FLAG,1))='Y' "; // FM Can only board people to themselves.
        // $fmPredicate = $mode==FormClass::$modeEDIT ? "( " . $fmPredicate . " ) OR ( CNUM='" . db2_escape_string($this->FM_CNUM) . "' ) " : $fmPredicate;
-        $fmPredicate = " UPPER(LEFT(FM_MANAGER_FLAG,1))='Y'  ";
+        $fmPredicate = " UPPER(LEFT(FM_MANAGER_FLAG,1))='Y' AND PES_STATUS in ('" . personRecord::PES_STATUS_CLEARED . "','" . personRecord::PES_STATUS_EXCEPTION . "')  ";
         $allManagers =  $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON, $fmPredicate);
         $countryCodes = $loader->loadIndexed('COUNTRY_NAME','COUNTRY_CODE',allTables::$STATIC_COUNTRY_CODES);
 
