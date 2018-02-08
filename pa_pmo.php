@@ -9,7 +9,6 @@ use vbac\personRecord;
 <div class='container-fluid'>
 <h3>Person Database</h3>
 
-
 <button id='reportAction' 		class='btn btn-primary btn-sm '>Action Mode</button>
 <button id='reportOffboarding' 	class='btn btn-primary btn-sm '>Offboarding Report</button>
 <button id='reportPes'    		class='btn btn-primary btn-sm '>PES Report</button>
@@ -27,6 +26,7 @@ $person = new personRecord();
 $person->amendPesStatusModal();
 $person->savingBoardingDetailsModal();
 $person->editPersonModal();
+$person->portalReportSaveModal();
 $person->confirmChangeFmFlagModal();
 $person->confirmOffboardingModal();
 ?>
@@ -42,6 +42,8 @@ $(document).ready(function(){
 	person.listenForReportReset();
 	person.listenForReportReload();
 	person.listenForReportAll();
+	person.listenForReportSave();
+	person.listenForReportSaveConfirm();
 	person.listenForEditPesStatus();
 	person.listenForSavePesStatus();
 	person.listenForInitiatePesFromPortal();

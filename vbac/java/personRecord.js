@@ -1069,6 +1069,35 @@ function personRecord() {
       });
   },
 
+
+  this.listenForReportSave = function(){
+	  $(document).on('click','#reportSave', function(e){
+		  var settings = personRecord.table.columns().visible().join(', ');
+		  $('#saveReportModal').modal('show');
+		  var searchBar = [];
+		  $('#personTable tfoot th').each( function () {
+			  var inputField = $(this).children()[0]
+			  var placeHolder = $(inputField).attr('placeholder');
+			  var searchValue = $(inputField).val();
+			  var searchObject = {placeHolder:placeHolder , value:searchValue };
+			  searchBar.push(searchObject);
+		  });
+		  var settingsJson = {settings:settings, searchBar:searchBar};
+		  $('#reportSettings').val(JSON.stringify(settingsJson));
+	  });
+  },
+
+  this.listenForReportSaveConfirm = function(){
+	  $(document).on('click','#reportSaveConfirm', function(e){
+		  $('#saveReportModal').modal('hide');
+		  var form =  $('#reportSaveForm').serialize();
+		  console.log(form);
+
+	  });
+  },
+
+
+
   this.initialisePersonFormSelect2 = function(){
     console.log($('.select2'));
      $('.select2').select2();
