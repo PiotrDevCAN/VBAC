@@ -9,10 +9,8 @@ AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_POST,
 
 try {
 
-    $now = new DateTime();
-
     $person = new personRecord();
-    $person->setFromArray(array('CNUM'=>$_POST['psm_cnum'],'PES_STATUS'=>$_POST['psm_status'],'PES_STATUS_DETAILS'=>$_POST['psm_detail'],'PES_DATE_RESPONDED'=>$now->format('Y-m-d')));
+    $person->setFromArray(array('CNUM'=>$_POST['psm_cnum'],'PES_STATUS'=>$_POST['psm_status'],'PES_STATUS_DETAILS'=>$_POST['psm_detail'],'PES_DATE_RESPONDED'=>$_POST['PES_DATE_RESPONDED']));
 
     $table = new personTable(allTables::$PERSON);
     $updateRecordResult = $table->update($person,false,false);
@@ -26,8 +24,7 @@ try {
     } else {
         echo "<br/>PES Status set to : " . $_POST['psm_status'];
         echo "<br/>Detail : " . $_POST['psm_detail'];
-        AuditTable::audit("PES Status set for:" . $_POST['psm_cnum'] . " To : " . $_POST['psm_status'] . " Detail :" . $_POST['psm_detail'],AuditTable::RECORD_TYPE_AUDIT);
-
+        AuditTable::audit("PES Status set for:" . $_POST['psm_cnum'] ." To : " . $_POST['psm_status'] . " Detail :" . $_POST['psm_detail'] . "Date : " . $_POST['PES_DATE_RESPONDED'],AuditTable::RECORD_TYPE_AUDIT);
         $success = true;
     }
 } catch (Exception $e) {

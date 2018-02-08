@@ -83,29 +83,30 @@ class personTable extends DbTable {
     function addButtons($row){
         // save some fields before we change the,
         $notesId = trim($row['NOTES_ID']);
+        $email   = trim($row['EMAIL_ADDRESS']);
         $cnum = trim($row['CNUM']);
-        $flag = $row['FM_FLAG'];
+        $flag = $row['FM_MANAGER_FLAG'];
         $status = empty(trim($row['PES_STATUS'])) ? personRecord::PES_STATUS_NOT_REQUESTED : trim($row['PES_STATUS']) ;
-        // FM_FLAG
+        // FM_MANAGER_FLAG
         if($_SESSION['isPmo'] || $_SESSION['isCdi']){
             if(strtoupper(substr($flag,0,1))=='N' || empty($flag)){
-                $row['FM_FLAG']  = "<button type='button' class='btn btn-default btn-xs btnSetFmFlag' aria-label='Left Align' ";
-                $row['FM_FLAG'] .= "data-cnum='" .$cnum . "' ";
-                $row['FM_FLAG'] .= "data-notesid='" .$notesId . "' ";
-                $row['FM_FLAG'] .= "data-fmflag='Yes' ";
-                $row['FM_FLAG'] .= " > ";
-                $row['FM_FLAG'] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
-                $row['FM_FLAG'] .= " </button> ";
+                $row['FM_MANAGER_FLAG']  = "<button type='button' class='btn btn-default btn-xs btnSetFmFlag' aria-label='Left Align' ";
+                $row['FM_MANAGER_FLAG'] .= "data-cnum='" .$cnum . "' ";
+                $row['FM_MANAGER_FLAG'] .= "data-notesid='" .$notesId . "' ";
+                $row['FM_MANAGER_FLAG'] .= "data-fmflag='Yes' ";
+                $row['FM_MANAGER_FLAG'] .= " > ";
+                $row['FM_MANAGER_FLAG'] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
+                $row['FM_MANAGER_FLAG'] .= " </button> ";
             } elseif (strtoupper(substr($flag,0,1)=='Y')){
-                $row['FM_FLAG']  = "<button type='button' class='btn btn-default btn-xs btnSetFmFlag' aria-label='Left Align' ";
-                $row['FM_FLAG'] .= "data-cnum='" .$cnum . "' ";
-                $row['FM_FLAG'] .= "data-notesid='" .$notesId . "' ";
-                $row['FM_FLAG'] .= "data-fmflag='No' ";
-                $row['FM_FLAG'] .= " > ";
-                $row['FM_FLAG'] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
-                $row['FM_FLAG'] .= " </button> ";
+                $row['FM_MANAGER_FLAG']  = "<button type='button' class='btn btn-default btn-xs btnSetFmFlag' aria-label='Left Align' ";
+                $row['FM_MANAGER_FLAG'] .= "data-cnum='" .$cnum . "' ";
+                $row['FM_MANAGER_FLAG'] .= "data-notesid='" .$notesId . "' ";
+                $row['FM_MANAGER_FLAG'] .= "data-fmflag='No' ";
+                $row['FM_MANAGER_FLAG'] .= " > ";
+                $row['FM_MANAGER_FLAG'] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
+                $row['FM_MANAGER_FLAG'] .= " </button> ";
             }
-            $row['FM_FLAG'] .= $flag;
+            $row['FM_MANAGER_FLAG'] .= $flag;
         }
 
 
@@ -130,6 +131,7 @@ class personTable extends DbTable {
                  $row['PES_STATUS'] .= "</button>&nbsp;";
                  $row['PES_STATUS'] .= $status;
                  break;
+             case personRecord::PES_STATUS_CLEARED:
              case personRecord::PES_STATUS_EXCEPTION:
              case personRecord::PES_STATUS_DECLINED;
              case personRecord::PES_STATUS_FAILED;
@@ -138,6 +140,7 @@ class personTable extends DbTable {
                  $row['PES_STATUS']  = "<button type='button' class='btn btn-default btn-xs btnPesStatus' aria-label='Left Align' ";
                  $row['PES_STATUS'] .= " data-cnum='" .$cnum . "' ";
                  $row['PES_STATUS'] .= " data-notesid='" . $notesId . "' ";
+                 $row['PES_STATUS'] .= " data-email='" . $email . "' ";
                  $row['PES_STATUS'] .= " data-pesdaterequested='" .trim($row['PES_DATE_REQUESTED']) . "' ";
                  $row['PES_STATUS'] .= " data-pesrequestor='" .trim($row['PES_REQUESTOR']) . "' ";
                  $row['PES_STATUS'] .= " data-pesstatus='" .$status . "' ";
@@ -275,9 +278,9 @@ class personTable extends DbTable {
         if(empty($preBoarded)){
             $availPreBoPredicate  = " ( CNUM LIKE '%xxx' or CNUM LIKE '%XXX' or CNUM LIKE '%999' ) ";
             $availPreBoPredicate .= " AND ((PES_STATUS_DETAILS not like 'Boarded as%' )  or ( PES_STATUS_DETAILS is null)) ";
-            $availPreBoPredicate .= " AND PES_STATUS not in (";
-            $availPreBoPredicate .= " '" . personRecord::PES_STATUS_REMOVED . "' "; // Pre-boarded who haven't been boarded
-            $availPreBoPredicate .= ",'" . personRecord::PES_STATUS_FAILED ."' ";
+            $availPreBoPredicate .= " AND PES_STATUS in (";
+            $availPreBoPredicate .= " '" . personRecord::PES_STATUS_CLEARED . "' "; // Pre-boarded who haven't been boarded
+            $availPreBoPredicate .= ",'" . personRecord::PES_STATUS_EXCEPTION ."' ";
             $availPreBoPredicate .= " )";
         } else {
             $availPreBoPredicate  = " ( CNUM = '" . db2_escape_string($preBoarded) . "' ) ";
