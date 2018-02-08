@@ -119,46 +119,48 @@ class personTable extends DbTable {
         $row['NOTES_ID'] .= " </button> ";
         $row['NOTES_ID'] .= $notesId;
 
-        switch ($status) {
-             case personRecord::PES_STATUS_NOT_REQUESTED:
-             case null:
-                 $row['PES_STATUS']  = "<button type='button' class='btn btn-default btn-xs btnPesInitiate accessRestrict accessPmo accessFm' ";
-                 $row['PES_STATUS']  .= "aria-label='Left Align' ";
-                 $row['PES_STATUS'] .= " data-cnum='" .$cnum . "' ";
-                 $row['PES_STATUS'] .= " data-pesstatus='$status' ";
-                 $row['PES_STATUS'] .= " > ";
-                 $row['PES_STATUS'] .= "<span class='glyPesInitiate glyphicon glyphicon-plane ' aria-hidden='true'></span>";
-                 $row['PES_STATUS'] .= "</button>&nbsp;";
-                 $row['PES_STATUS'] .= $status;
-                 break;
-             case personRecord::PES_STATUS_CLEARED:
-             case personRecord::PES_STATUS_EXCEPTION:
-             case personRecord::PES_STATUS_DECLINED;
-             case personRecord::PES_STATUS_FAILED;
-             case personRecord::PES_STATUS_INITIATED;
-             case personRecord::PES_STATUS_REMOVED;
-                 $row['PES_STATUS']  = "<button type='button' class='btn btn-default btn-xs btnPesStatus' aria-label='Left Align' ";
-                 $row['PES_STATUS'] .= " data-cnum='" .$cnum . "' ";
-                 $row['PES_STATUS'] .= " data-notesid='" . $notesId . "' ";
-                 $row['PES_STATUS'] .= " data-email='" . $email . "' ";
-                 $row['PES_STATUS'] .= " data-pesdaterequested='" .trim($row['PES_DATE_REQUESTED']) . "' ";
-                 $row['PES_STATUS'] .= " data-pesrequestor='" .trim($row['PES_REQUESTOR']) . "' ";
-                 $row['PES_STATUS'] .= " data-pesstatus='" .$status . "' ";
-                 $row['PES_STATUS'] .= " > ";
-                 $row['PES_STATUS'] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
-                 $row['PES_STATUS'] .= "</button>&nbsp;";
-                 $row['PES_STATUS'] .= $status;
-                 break;
-            case $row['NOTES_ID']:
-                 $row['NOTES_ID']  = "<button type='button' class='btn btn-default btn-xs btnEditPerson' aria-label='Left Align' ";
-                 $row['NOTES_ID'] .= "data-cnum='" .$cnum. "'";
-                 $row['NOTES_ID'] .= " > ";
-                 $row['NOTES_ID'] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
-                 $row['NOTES_ID'] .= $notesId;
-                 break;
-             default:
-                  break;
-           }
+       if($_SESSION['isPes']){
+            switch ($status) {
+                 case personRecord::PES_STATUS_NOT_REQUESTED:
+                case null:
+                    $row['PES_STATUS']  = "<button type='button' class='btn btn-default btn-xs btnPesInitiate accessRestrict accessPmo accessFm' ";
+                    $row['PES_STATUS']  .= "aria-label='Left Align' ";
+                    $row['PES_STATUS'] .= " data-cnum='" .$cnum . "' ";
+                    $row['PES_STATUS'] .= " data-pesstatus='$status' ";
+                    $row['PES_STATUS'] .= " > ";
+                    $row['PES_STATUS'] .= "<span class='glyPesInitiate glyphicon glyphicon-plane ' aria-hidden='true'></span>";
+                    $row['PES_STATUS'] .= "</button>&nbsp;";
+                    $row['PES_STATUS'] .= $status;
+                    break;
+                case personRecord::PES_STATUS_CLEARED:
+                case personRecord::PES_STATUS_EXCEPTION:
+                case personRecord::PES_STATUS_DECLINED;
+                case personRecord::PES_STATUS_FAILED;
+                case personRecord::PES_STATUS_INITIATED;
+                case personRecord::PES_STATUS_REMOVED;
+                    $row['PES_STATUS']  = "<button type='button' class='btn btn-default btn-xs btnPesStatus' aria-label='Left Align' ";
+                    $row['PES_STATUS'] .= " data-cnum='" .$cnum . "' ";
+                    $row['PES_STATUS'] .= " data-notesid='" . $notesId . "' ";
+                    $row['PES_STATUS'] .= " data-email='" . $email . "' ";
+                    $row['PES_STATUS'] .= " data-pesdaterequested='" .trim($row['PES_DATE_REQUESTED']) . "' ";
+                    $row['PES_STATUS'] .= " data-pesrequestor='" .trim($row['PES_REQUESTOR']) . "' ";
+                    $row['PES_STATUS'] .= " data-pesstatus='" .$status . "' ";
+                    $row['PES_STATUS'] .= " > ";
+                    $row['PES_STATUS'] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
+                    $row['PES_STATUS'] .= "</button>&nbsp;";
+                    $row['PES_STATUS'] .= $status;
+                    break;
+                case $row['NOTES_ID']:
+                    $row['NOTES_ID']  = "<button type='button' class='btn btn-default btn-xs btnEditPerson' aria-label='Left Align' ";
+                    $row['NOTES_ID'] .= "data-cnum='" .$cnum. "'";
+                    $row['NOTES_ID'] .= " > ";
+                    $row['NOTES_ID'] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
+                    $row['NOTES_ID'] .= $notesId;
+                    break;
+                default:
+                    break;
+            }
+        }
         return $row;
     }
 
@@ -194,7 +196,7 @@ class personTable extends DbTable {
 
         try {
             $result = db2_exec($_SESSION['conn'], $sql);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             var_dump($e);
         }
 
