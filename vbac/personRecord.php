@@ -424,9 +424,9 @@ class personRecord extends DbRecord
          <div class='form-group' id='selectCioAllignment'>
          <div class='col-sm-6'>
              <div class="radio">
-          <label><input type="radio" name="CTB_RTB"  class='ctbRtb' value='CTB' <?=substr($this->CTB_RTB,0,3)=='CTB'? 'checked' : null ?>>CTB</label>
-          <label><input type="radio" name="CTB_RTB"  class='ctbRtb' value='RTB' <?=substr($this->CTB_RTB,0,3)=='RTB'? 'checked' : null ?>>RTB</label>
-          <label><input type="radio" name="CTB_RTB"  class='ctbRtb' value='Other' <?=substr($this->CTB_RTB,0,5)=='Other'? 'checked' : null ?>>Other</label>
+          <label><input type="radio" name="CTB_RTB"  class='ctbRtb' value='CTB' required  <?=substr($this->CTB_RTB,0,3)=='CTB'? 'checked' : null ?>>CTB</label>
+          <label><input type="radio" name="CTB_RTB"  class='ctbRtb' value='RTB' required <?=substr($this->CTB_RTB,0,3)=='RTB'? 'checked' : null ?>>RTB</label>
+          <label><input type="radio" name="CTB_RTB"  class='ctbRtb' value='Other' required <?=substr($this->CTB_RTB,0,5)=='Other'? 'checked' : null ?>>Other</label>
       </div>
         </div>
         <div class='col-sm-6'>
@@ -451,8 +451,8 @@ class personRecord extends DbRecord
     <div class='form-group' >
         <div class='col-sm-6'>
             <div class="radio">
-        <label><input type="radio" name="TT_BAU"  class='accountOrganisation' value='T&T' <?=substr($this->TT_BAU,0,3)=='T&T'? 'checked' : null ?>>T&T</label>
-        <label><input type="radio" name="TT_BAU"  class='accountOrganisation' value='BAU' <?=substr($this->TT_BAU,0,3)=='BAU'? 'checked' : null ?>>BAU</label>
+        <label><input type="radio" name="TT_BAU"  class='accountOrganisation' value='T&T' required <?=substr($this->TT_BAU,0,3)=='T&T'? 'checked' : null ?>>T&T</label>
+        <label><input type="radio" name="TT_BAU"  class='accountOrganisation' value='BAU' required <?=substr($this->TT_BAU,0,3)=='BAU'? 'checked' : null ?>>BAU</label>
       </div>
         </div>
 
