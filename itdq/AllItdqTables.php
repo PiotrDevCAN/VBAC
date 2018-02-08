@@ -18,8 +18,8 @@ class AllItdqTables
 
     public static $EMAIL_LOG        = 'EMAIL_LOG';
 
-//     public static $TRACE            = 'TRACE';
-//     public static $TRACE_CONTROL    = 'TRACE_CONTROL';
+    public static $TRACE            = 'TRACE';
+    public static $TRACE_CONTROL    = 'TRACE_CONTROL';
 }
 
 ?>

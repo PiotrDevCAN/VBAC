@@ -51,6 +51,7 @@ $site = array(
 
     'cdiBg' => 'ventus_cdi',
     'pmoBg' => 'vbac_pmo',
+    'pesBg' => 'vbac_pes',
     'userBg' => null,
     'nullBg' => null,
 
