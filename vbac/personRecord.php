@@ -879,6 +879,51 @@ class personRecord extends DbRecord
     <?php
     }
 
+    function portalReportSaveModal(){
+        ?>
+       <!-- Modal -->
+    <div id="saveReportModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+          <div class="modal-header">
+             <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Save Report</h4>
+            </div>
+             <div class="modal-body" >
+              <form id='reportSaveForm' class="form-horizontal"  method='post'>
+
+              <div class='row'>
+              <div class='form-group required' >
+                <label for='psm_detail' class='col-md-2 control-label '>Report Name</label>
+                  <div class='col-md-8' id='reportNameDiv'>
+                  <input class="form-control" id="reportName" name="REPORT_NAME" value="" type="text" >
+                  </div>
+
+                  <input type='hidden' id='reportSettings' name='SETTINGS'>
+                  <input type='hidden' id='reportCreator' name='EMAIL_ADDRESS' value='<?=$GLOBALS['ltcuser']['mail']?>'>
+
+                </div>
+             </div>
+             </form>
+             </div>
+             <div class='modal-footer'>
+             <?php
+            $allButtons = null;
+            $submitButton = $this->formButton('submit','Submit','reportSaveConfirm',null,'Submit','btn-primary');
+            $allButtons[] = $submitButton;
+            $this->formBlueButtons($allButtons);
+            ?>
+           <button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
+
+
+
+             </div>
+            </div>
+        </div>
+      </div>
+    <?php
+    }
+
     function editPersonModal(){
         ?>
        <!-- Modal -->
