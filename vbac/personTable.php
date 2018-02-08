@@ -131,6 +131,7 @@ class personTable extends DbTable {
                  $row['PES_STATUS'] .= "</button>&nbsp;";
                  $row['PES_STATUS'] .= $status;
                  break;
+             case personRecord::PES_STATUS_CLEARED:
              case personRecord::PES_STATUS_EXCEPTION:
              case personRecord::PES_STATUS_DECLINED;
              case personRecord::PES_STATUS_FAILED;
