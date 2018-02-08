@@ -127,7 +127,7 @@ class personTable extends DbTable {
                  $row['PES_STATUS'] .= " data-cnum='" .$cnum . "' ";
                  $row['PES_STATUS'] .= " data-pesstatus='$status' ";
                  $row['PES_STATUS'] .= " > ";
-                 $row['PES_STATUS'] .= "<span class='glyphicon glyphicon-plane ' aria-hidden='true'></span>";
+                 $row['PES_STATUS'] .= "<span class='glyPesInitiate glyphicon glyphicon-plane ' aria-hidden='true'></span>";
                  $row['PES_STATUS'] .= "</button>&nbsp;";
                  $row['PES_STATUS'] .= $status;
                  break;

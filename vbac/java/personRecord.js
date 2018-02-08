@@ -708,7 +708,7 @@ function personRecord() {
   this.listenForInitiatePesFromBoarding = function(){
     $(document).on('click','.btnPesInitiate', function(e){
       console.log('initiatePes PES from boarding');
-      $("#initiatePes").addClass('spinning');
+      $(".btnPesInitiate").addClass('spinning');
       var cnum = $('#person_uid').val();
       var person = new personRecord;
       person.initiatePes(cnum);
@@ -718,6 +718,7 @@ function personRecord() {
   this.listenForInitiatePesFromPortal = function(){
     $(document).on('click','.btnPesInitiate', function(e){
       console.log('initiatePes PES from Portal');
+      $(".btnPesInitiate").addClass('spinning');
       console.log(this);
       var cnum = $(this).data('cnum');
       var person = new personRecord;
@@ -756,6 +757,7 @@ function personRecord() {
           };
           $('#savingBoardingDetailsModal').modal('show');
         $("#initiatePes").removeClass('spinning');
+        $(".btnPesInitiate").removeClass('spinning');
         $('#initiatePes').attr('disabled',true);
         personRecord.table.ajax.reload();
 

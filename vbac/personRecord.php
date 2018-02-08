@@ -334,12 +334,6 @@ class personRecord extends DbRecord
 
 
         <div class='form-group'>
-          <div class='col-sm-6' >
-            <select class='form-control select select2'	id='person_contractor_id_required'  name='CONTRACTOR_ID_REQUIRED' <?=$notEditable?>>
-              <option value='no' <?=(strtoupper(substr($this->CONTRACTOR_ID_REQUIRED,0,1))=='N' or empty($this->CONTRACTOR_ID_REQUIRED)) ? ' selected ' : null;?>>NO LBG CTID is required</option>
-              <option value='yes' <?=strtoupper(substr($this->CONTRACTOR_ID_REQUIRED,0,1))=='Y' ? ' selected ' : null;?>>LBG CTID  is Required</option>
-            </select>
-          </div>
 
               <div class="col-sm-6" id='linkToPreBoarded'>
                 <select class='form-control select select2' id='person_preboarded'
