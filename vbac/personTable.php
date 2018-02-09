@@ -112,17 +112,15 @@ class personTable extends DbTable {
 
         // Notesid
 
-        $row['NOTES_ID']  = "<button type='button' class='btn btn-default btn-xs btnEditPerson' aria-label='Left Align' ";
-        $row['NOTES_ID'] .= "data-cnum='" .$cnum . "'";
-        $row['NOTES_ID'] .= " > ";
-        $row['NOTES_ID'] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
-        $row['NOTES_ID'] .= " </button> ";
-        $row['NOTES_ID'] .= $notesId;
-
-       if($_SESSION['isPes']){
-            switch ($status) {
-                 case personRecord::PES_STATUS_NOT_REQUESTED:
-                case null:
+//         $row['NOTES_ID']  = "<button type='button' class='btn btn-default btn-xs btnEditPerson' aria-label='Left Align' ";
+//         $row['NOTES_ID'] .= "data-cnum='" .$cnum . "'";
+//         $row['NOTES_ID'] .= " > ";
+//         $row['NOTES_ID'] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
+//         $row['NOTES_ID'] .= " </button> ";
+//         $row['NOTES_ID'] .= $notesId;
+        if($_SESSION['isPes'] || $_SESSION['isPmo'] || $_SESSION['isFm'] || $_SESSION['isCdi']){
+            switch (true) {
+                case $status == personRecord::PES_STATUS_NOT_REQUESTED:
                     $row['PES_STATUS']  = "<button type='button' class='btn btn-default btn-xs btnPesInitiate accessRestrict accessPmo accessFm' ";
                     $row['PES_STATUS']  .= "aria-label='Left Align' ";
                     $row['PES_STATUS'] .= " data-cnum='" .$cnum . "' ";
@@ -132,12 +130,12 @@ class personTable extends DbTable {
                     $row['PES_STATUS'] .= "</button>&nbsp;";
                     $row['PES_STATUS'] .= $status;
                     break;
-                case personRecord::PES_STATUS_CLEARED:
-                case personRecord::PES_STATUS_EXCEPTION:
-                case personRecord::PES_STATUS_DECLINED;
-                case personRecord::PES_STATUS_FAILED;
-                case personRecord::PES_STATUS_INITIATED;
-                case personRecord::PES_STATUS_REMOVED;
+                case $status == personRecord::PES_STATUS_CLEARED && $_SESSION['isPes'] :
+                case $status == personRecord::PES_STATUS_EXCEPTION && $_SESSION['isPes'] :
+                case $status == personRecord::PES_STATUS_DECLINED && $_SESSION['isPes'] ;
+                case $status == personRecord::PES_STATUS_FAILED && $_SESSION['isPes'] ;
+                case $status == personRecord::PES_STATUS_INITIATED && $_SESSION['isPes'] ;
+                case $status == personRecord::PES_STATUS_REMOVED && $_SESSION['isPes'] ;
                     $row['PES_STATUS']  = "<button type='button' class='btn btn-default btn-xs btnPesStatus' aria-label='Left Align' ";
                     $row['PES_STATUS'] .= " data-cnum='" .$cnum . "' ";
                     $row['PES_STATUS'] .= " data-notesid='" . $notesId . "' ";
@@ -150,7 +148,7 @@ class personTable extends DbTable {
                     $row['PES_STATUS'] .= "</button>&nbsp;";
                     $row['PES_STATUS'] .= $status;
                     break;
-                case $row['NOTES_ID']:
+                case $status == $row['NOTES_ID']:
                     $row['NOTES_ID']  = "<button type='button' class='btn btn-default btn-xs btnEditPerson' aria-label='Left Align' ";
                     $row['NOTES_ID'] .= "data-cnum='" .$cnum. "'";
                     $row['NOTES_ID'] .= " > ";
