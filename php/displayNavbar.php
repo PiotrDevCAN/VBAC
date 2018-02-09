@@ -77,6 +77,7 @@ $isUser = ".not('.accessUser')";
 
 $isCdi   = stripos($_SERVER['environment'], 'dev') ? ".not('.accessCdi')"  : $isCdi;
 $isPmo   = stripos($_SERVER['environment'], 'dev')  ? ".not('.accessPmo')" : $isPmo;
+$isPes   = stripos($_SERVER['environment'], 'dev')  ? ".not('.accessPes')" : $isPes;
 
 $isFm = $isPmo ? null : $isFm; // If they are PMO it don't matter if they are FM
 
