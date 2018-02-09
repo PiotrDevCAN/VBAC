@@ -53,8 +53,8 @@ $boarding->addOption($offBoarding);
 
 
 $access         = new NavbarMenu('Access');
-$request        = new NavbarOption('Request', 'pc_accesssRequest.php','accessCdi accessPmo accessFm accessUser');
-$iamAdmin       = new NavbarOption('IAM Admin', 'pc_iamAdmin.php','accessCdi accessPmo accessFm accessUser');
+$request        = new NavbarOption('Request', 'pc_accessRequest.php','accessCdi accessPmo accessFm accessUser');
+$iamAdmin       = new NavbarOption('IAM Admin', 'pc_iamAdmin.php','accessCdi accessPmo');
 $access->addOption($request);
 $access->addOption($iamAdmin);
 
