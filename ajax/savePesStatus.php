@@ -14,6 +14,10 @@ try {
 
     $table = new personTable(allTables::$PERSON);
     $updateRecordResult = $table->update($person,false,false);
+
+    $personData = $table->getRecord($person);
+    $person->setFromArray($personData);
+
     AuditTable::audit("Saved Person <pre>" . print_r($person,true) . "</pre>", AuditTable::RECORD_TYPE_DETAILS);
 
     if(!$updateRecordResult){
@@ -27,11 +31,7 @@ try {
         AuditTable::audit("PES Status set to : " . $_POST['psm_status'] . " Detail :" . $_POST['psm_detail'] . "Date : " . $_POST['PES_DATE_RESPONDED'],AuditTable::RECORD_TYPE_AUDIT);
 
         $emailResponse = $person->sendPesStatusChangedEmail();
-
-        if(!$emailResponse){
-            var_dump($person);
-        }
-
+        $notificationStatus = $emailResponse ? 'Email sent' : 'No email sent';
         $success = true;
     }
 } catch (Exception $e) {
@@ -42,6 +42,6 @@ try {
 }
 
 $messages = ob_get_clean();
-$response = array('success'=>$success,'messages'=>$messages,"updateRecord"=>$updateRecordResult, "emailResponse"=>$emailResponse);
+$response = array('success'=>$success,'messages'=>$messages,"updateRecord"=>$updateRecordResult, "emailResponse"=>$notificationStatus);
 ob_clean();
 echo json_encode($response);
