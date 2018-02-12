@@ -26,6 +26,12 @@ try {
         echo "<br/>Detail : " . $_POST['psm_detail'];
         AuditTable::audit("PES Status set to : " . $_POST['psm_status'] . " Detail :" . $_POST['psm_detail'] . "Date : " . $_POST['PES_DATE_RESPONDED'],AuditTable::RECORD_TYPE_AUDIT);
 
+        $emailResponse = $person->sendPesStatusChangedEmail();
+
+        if(!$emailResponse){
+            var_dump($person);
+        }
+
         $success = true;
     }
 } catch (Exception $e) {
@@ -36,6 +42,6 @@ try {
 }
 
 $messages = ob_get_clean();
-$response = array('success'=>$success,'messages'=>$messages,"updateRecord"=>$updateRecordResult);
+$response = array('success'=>$success,'messages'=>$messages,"updateRecord"=>$updateRecordResult, "emailResponse"=>$emailResponse);
 ob_clean();
 echo json_encode($response);

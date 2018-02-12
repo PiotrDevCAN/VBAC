@@ -121,6 +121,7 @@ class personTable extends DbTable {
                     $row['PES_STATUS'] .= "</button>&nbsp;";
                     $row['PES_STATUS'] .= $status;
                     break;
+                case $status == personRecord::PES_STATUS_CLEARED_PERSONAL && $_SESSION['isPes'] :
                 case $status == personRecord::PES_STATUS_CLEARED && $_SESSION['isPes'] :
                 case $status == personRecord::PES_STATUS_EXCEPTION && $_SESSION['isPes'] :
                 case $status == personRecord::PES_STATUS_DECLINED && $_SESSION['isPes'] ;

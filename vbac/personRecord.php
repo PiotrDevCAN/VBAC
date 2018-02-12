@@ -126,6 +126,34 @@ class personRecord extends DbRecord
     );
 
 
+    private static $pesStatusChangeEmailBody = '<table width="100%" border="0" cellspacing="0" cellpadding="0">
+                             <tr><td align="center">
+                                <table width="50%">
+                                    <tr><td colspan="2" style="font-size:16px;padding-bottom:10px"">Please Note the<b>PES STATUS</b> has changed for the following individual:</td></tr>
+                                    <tr><th style="background-color:silver;font-size:16px">Name</th><td style="font-size:20px">&&name&&</td></tr>
+                                    <tr><th style="background-color:silver;font-size:16px">Email Address</th><td style="font-size:20px">&&email&&</td></tr>
+                                    <tr><th style="background-color:silver;font-size:16px">Notes Id</th><td style="font-size:20px">&&notesid&&</td></tr>
+
+                                    <tr><th style="background-color:SkyBlue;font-size:18px">Status Is</th><td style="font-size:18px">&&statusIs&&</td></tr>
+
+                                    <tr><th style="background-color:WhiteSmoke;font-size:16px">Changed By</th><td style="font-size:16px">&&changeor&&</td></tr>
+                                    <tr><th style="background-color:WhiteSmoke;font-size:16px">Changed Timestamp</th><td style="font-size:16px">&&changed&&</td></tr>
+                                    <tr><th style="background-color:WhiteSmoke;font-size:16px">Functional Mgr</th><td style="font-size:16px">&&functionalMgr&&</td></tr>
+                                </table>
+                            </td></tr>
+                            </table>';
+    private static $pesStatusChangeEmailPatterns = array(
+        '/&&name&&/',
+        '/&&email&&/',
+        '/&&notesid&&/',
+        '/&&StatusIs&&/',
+        '/&&changeor&&/',
+        '/&&changed&&/',
+        '/&&functionalMgr&&/',
+    );
+
+
+
     private static  $lobValue = array('GTS','GBS','IMI','Cloud','Security','Other');
 
 
@@ -133,6 +161,7 @@ class personRecord extends DbRecord
 
     const PES_STATUS_NOT_REQUESTED = 'Not Requested';
     const PES_STATUS_CLEARED   = 'Cleared';
+    const PES_STATUS_CLEARED_PERSONAL   = 'Cleared - Personal Reference';
     const PES_STATUS_DECLINED  = 'Declined';
     const PES_STATUS_EXCEPTION = 'Exception';
     const PES_STATUS_FAILED    = 'Failed';
@@ -192,7 +221,7 @@ class personRecord extends DbRecord
        // $isFM = personTable::isManager($_SESSION['ssoEmail']);
        // $fmPredicate = $isFM ? " UPPER(EMAIL_ADDRESS)='" . db2_escape_string(trim(strtoupper($_SESSION['ssoEmail']))) . "'  AND UPPER(LEFT(FM_MANAGER_FLAG,1))='Y'  " : " UPPER(LEFT(FM_MANAGER_FLAG,1))='Y' "; // FM Can only board people to themselves.
        // $fmPredicate = $mode==FormClass::$modeEDIT ? "( " . $fmPredicate . " ) OR ( CNUM='" . db2_escape_string($this->FM_CNUM) . "' ) " : $fmPredicate;
-        $fmPredicate = " UPPER(LEFT(FM_MANAGER_FLAG,1))='Y' AND PES_STATUS in ('" . personRecord::PES_STATUS_CLEARED . "','" . personRecord::PES_STATUS_EXCEPTION . "')  ";
+        $fmPredicate = " UPPER(LEFT(FM_MANAGER_FLAG,1))='Y' AND PES_STATUS in ('" . personRecord::PES_STATUS_CLEARED . "','" . personRecord::PES_STATUS_CLEARED_PERSONAL . "''" . personRecord::PES_STATUS_EXCEPTION . "')  ";
         $allManagers =  $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON, $fmPredicate);
         $countryCodes = $loader->loadIndexed('COUNTRY_NAME','COUNTRY_CODE',allTables::$STATIC_COUNTRY_CODES);
 
@@ -585,6 +614,7 @@ class personRecord extends DbRecord
                                 data-tags="true" data-placeholder="Status" data-allow-clear="true"
                                >
                     <option value=''>Status</option>
+                    <option value='<?=personRecord::PES_STATUS_CLEARED_PERSONAL;?>'><?=personRecord::PES_STATUS_CLEARED_PERSONAL?></option>
                     <option value='<?=personRecord::PES_STATUS_CLEARED;?>'><?=personRecord::PES_STATUS_CLEARED?></option>
                     <option value='<?=personRecord::PES_STATUS_DECLINED;?>'><?=personRecord::PES_STATUS_DECLINED?></option>
                     <option value='<?=personRecord::PES_STATUS_EXCEPTION;?>'><?=personRecord::PES_STATUS_EXCEPTION?></option>
@@ -741,6 +771,38 @@ class personRecord extends DbRecord
         \itdq\BlueMail::send_mail(self::$pesTaskId, 'vBAC PES Request - ' . $this->CNUM ." (" . $this->FIRST_NAME . " " . $this->LAST_NAME . ")", $message, 'vbacNoReply@uk.ibm.com');
 
     }
+
+    function sendPesStatusChangedEmail(){
+        $loader = new Loader();
+
+        if(!empty($this->FM_CNUM)){
+            $fmEmailArray = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON," CNUM='" . db2_escape_string(trim($this->FM_CNUM)) . "' ");
+            $fmEmail = isset($fmEmailArray[trim($this->FM_CNUM)]) ? $fmEmailArray[trim($this->FM_CNUM)] : $this->FM_CNUM;
+        } else {
+            return false;
+        }
+        $firstName = !empty($this->FIRST_NAME) ? $this->FIRST_NAME : "firstName";
+        $lastName  = !empty($this->LAST_NAME) ? $this->LAST_NAME : "lastName";
+        $emailAddress = !empty($this->EMAIL_ADDRESS) ? $this->EMAIL_ADDRESS : "emailAddress";
+        $notesId = !empty($this->NOTES_ID) ? $this->NOTES_ID : "notesId";
+        $statusIs = !empty($this->PES_STATUS) ? $this->PES_STATUS : "unknown";
+
+        $now = new \DateTime();
+        $replacements = array($firstName . " " . $lastName,
+            $emailAddress,
+            $notesId,
+            $statusIs,
+            $_SESSION['ssoEmail'],
+            $now->format('Y-m-d H:i:s'),
+            $fmEmail);
+        $message = preg_replace(self::$pesStatusChangeEmailPatterns, $replacements, self::$pesStatusChangeEmailBody);
+
+        $response = \itdq\BlueMail::send_mail(array($fmEmail), 'vBAC PES Status Change - ' . $this->CNUM ." (" . $this->FIRST_NAME . " " . $this->LAST_NAME . ")", $message, 'vbacNoReply@uk.ibm.com');
+
+        return $response;
+    }
+
+
 
     function setPesRequested(){
         $table = new personTable(allTables::$PERSON);
