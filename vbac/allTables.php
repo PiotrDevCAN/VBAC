@@ -10,10 +10,14 @@ namespace vbac;
  */
 class allTables
 {
+    public static $ASSET_REQUESTS     = 'ASSET_REQUESTS';
+
     public static $DB2_ERRORS         = 'DB2_ERRORS';
 
     public static $PERSON             = 'PERSON';
     public static $PERSON_PORTAL_REPORTS = 'PERSON_PORTAL_REPORTS';
+
+    public static $REQUESTABLE_ASSET_LIST = 'REQUESTABLE_ASSET_LIST';
 
     public static $STATIC_COUNTRY_CODES = 'STATIC_COUNTRY_CODES';
     public static $STATIC_DOMAINS     = 'STATIC_DOMAINS';

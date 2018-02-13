@@ -36,12 +36,15 @@ $pmo            = new NavbarOption('Person Portal', 'pa_pmo.php','accessCdi acce
 $revalidation   = new NavbarOption('Revalidation','pa_revalidation.php','accessCdi accessPmo');
 $control        = new NavbarOption('Control', 'pa_control.php','accessCdi accessPmo');
 $audit          = new NavbarOption('Audit Report', 'pa_auditListing.php','accessCdi accessPmo');
+$requestableAssets  = new NavbarOption('Requestable Assets', 'pa_requestableAssets.php','accessCdi accessPmo');
+
 
 $email          = new NavbarOption('Email Log', 'pi_emailLog.php','accessCdi');
 $adminMenu->addOption($pmo);
 $adminMenu->addOption($revalidation);
 $adminMenu->addOption($control);
 $adminMenu->addOption($audit);
+$adminMenu->addOption($requestableAssets);
 $adminMenu->addOption( new NavbarDivider('accessCdi'));
 $adminMenu->addOption($email);
 
