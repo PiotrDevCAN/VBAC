@@ -106,86 +106,25 @@ function EmailLog() {
 	},
 
 
-	this.initialiseDateSelect = function(){
-		var startDate,
-		endDate,
+	  this.initialiseDateSelect = function(){
 
-		startPicker = new Pikaday({
-			firstDay:1,
-			disableDayFn: function(date){
-			    // Disable all but Monday
-			    return date.getDay() === 0 || date.getDay() === 2 || date.getDay() === 3 || date.getDay() === 4 || date.getDay() === 5 || date.getDay() === 6;
-			},
-			field: document.getElementById('InputSTART_DATE'),
-			format: 'D MMM YYYY',
-			showTime: false,
-			onSelect: function() {
-				console.log(this.getMoment().format('Do MMMM YYYY'));
-				var db2Value = this.getMoment().format('YYYY-MM-DD')
-				console.log(db2Value);
-				jQuery('#START_DATE').val(db2Value);
-				startDate = this.getDate();
-				console.log(startDate);
-				updateStartDate();
-			}
-		}),
-		endPicker = new Pikaday({
-			firstDay:1,
-			disableDayFn: function(date){
-				// Disable all but Monday
-				return date.getDay() === 0 || date.getDay() === 1 || date.getDay() === 2 || date.getDay() === 3 || date.getDay() === 4 || date.getDay() === 6;
-			},
-			field: document.getElementById('InputEND_DATE'),
-			format: 'D MMM YYYY',
-			showTime: false,
-			onSelect: function() {
-				var db2Value = this.getMoment().format('YYYY-MM-DD')
-				jQuery('#END_DATE').val(db2Value);
-				endDate = this.getDate();
-				updateEndDate();
-			}
-		}),
+	      $('#InputSTART_DATE').datepicker({ dateFormat: 'dd M yy',
+				   altField: '#START_DATE',
+				   altFormat: 'yy-mm-dd' ,
+				   maxDate: 0,
+			       onSelect: function( selectedDate ) {
+			            $( "#end_date" ).datepicker( "option", "minDate", selectedDate );}
+	      	});
 
-		updateStartDate = function() {
-			console.log('updatedStartDate');
-		    startPicker.setStartRange(startDate);
-		    endPicker.setStartRange(startDate);
-		    endPicker.setMinDate(startDate);
-		    console.log($('#START_DATE').val());
-		    EmailLog.table.clear();
-		    EmailLog.table.draw();
-		    EmailLog.table.ajax.reload();
-		},
+	      var startDate = $('#InputSTART_DATE').datepicker('getDate');
 
-		updateEndDate = function() {
-			console.log('updatedEndDate');
-		    startPicker.setEndRange(endDate);
-		    startPicker.setMaxDate(endDate);
-		    endPicker.setEndRange(endDate);
-		    EmailLog.table.clear();
-		    EmailLog.table.draw();
-		    EmailLog.table.ajax.reload();
-
-		},
-
-
-	_startDate = startPicker.getDate(),
-	_endDate = endPicker.getDate();
-
-	if (_startDate) {
-	    startDate = _startDate;
-	    this.updateStartDate();
-	}
-
-	if (_endDate) {
-	    endDate = _endDate;
-	    this.updateEndDate();
-	}
-
-
-	}
-
-
+	      $('#InputEND_DATE').datepicker({ dateFormat: 'dd M yy',
+				   altField: '#END_DATE',
+				   altFormat: 'yy-mm-dd',
+				   minDate: startDate,
+				   maxDate: 0}
+				  );
+	  }
 
 }
 

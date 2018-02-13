@@ -904,6 +904,7 @@ function personRecord() {
   this.listenForSavePesStatus = function(){
     $(this).attr('disabled',true);
     $('#psmForm').submit(function(e){
+    	$('#savePesStatus').attr('disabled',true);
         var form = document.getElementById('psmForm');
         var formValid = form.checkValidity();
         if(formValid){
@@ -918,6 +919,7 @@ function personRecord() {
               type: 'POST',
               success: function(result){
                 console.log(result);
+                $('#savePesStatus').attr('disabled',false);
                 personRecord.table.ajax.reload();
               $('#amendPesStatusModal').modal('hide');
               }
