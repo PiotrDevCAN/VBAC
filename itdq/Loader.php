@@ -107,9 +107,8 @@ class Loader
         }
 
         while (($row = db2_fetch_both($rs5)) == true) {
-            $array[trim($row[$key])] = trim(trim($row[$value]));
+            $array[utf8_encode(trim($row[$key]))] = utf8_encode(trim($row[$value]));
         }
-
         Trace::traceVariable($array, __METHOD__, __LINE__);
         return $array;
     }

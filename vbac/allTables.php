@@ -22,6 +22,7 @@ class allTables
     public static $STATIC_COUNTRY_CODES = 'STATIC_COUNTRY_CODES';
     public static $STATIC_DOMAINS     = 'STATIC_DOMAINS';
     public static $STATIC_GROUPS      = 'STATIC_GROUPS';
+    public static $STATIC_LOCATIONS   = 'STATIC_LOCATIONS';
     public static $STATIC_ROLES       = 'STATIC_ROLES';
     public static $STATIC_WORKSTREAMS = 'STATIC_WORKSTREAMS';
 

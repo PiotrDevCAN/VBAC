@@ -272,6 +272,22 @@ class personTable extends DbTable {
 
     }
 
+    function saveCtid($cnum,$ctid){
+        $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql .= " SET CONTRACTOR_ID='"  . db2_escape_string($ctid) . "' ";
+        $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
+
+        $result = db2_exec($_SESSION['conn'], $sql);
+
+        if(!$result){
+            DbTable::displayErrorMessage($result, __CLASS__,__METHOD__, $sql);
+            return false;
+        }
+        AuditTable::audit("Set CONTRACTOR_ID to $ctid for $cnum",AuditTable::RECORD_TYPE_AUDIT);
+
+        return true;
+    }
+
     function setFmFlag($cnum,$flag){
         $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET FM_MANAGER_FLAG='"  . db2_escape_string($flag) . "' ";
@@ -338,6 +354,43 @@ class personTable extends DbTable {
         $_SESSION['myCnum'] = $myCnum;
         return $_SESSION['myCnum'];
     }
+
+    static function getCnumFromEmail($emailAddress){
+        $sql = " SELECT CNUM FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
+        $sql .= " WHERE UPPER(EMAIL_ADDRESS) = '" . db2_escape_string(strtoupper(trim($emailAddress))) . "' ";
+
+        $resultSet = db2_exec($_SESSION['conn'], $sql);
+
+        echo $sql;
+        return $sql;
+
+        if(!$resultSet){
+            DbTable::displayErrorMessage($resultSet, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+
+        $row = db2_fetch_assoc($resultSet);
+        $cnum = strtoupper(trim($row['CNUM']));
+        return $cnum;
+    }
+
+
+    static function getCnumFromNotesid($notesid){
+        $sql = " SELECT CNUM FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
+        $sql .= " WHERE UPPER(NOTES_ID) = '" . db2_escape_string(strtoupper(trim($notesid))) . "' ";
+
+        $resultSet = db2_exec($_SESSION['conn'], $sql);
+
+        if(!$resultSet){
+            DbTable::displayErrorMessage($resultSet, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+
+        $row = db2_fetch_assoc($resultSet);
+        $cnum = strtoupper(trim($row['CNUM']));
+        return $cnum;
+    }
+
 
     static function optionsForPreBoarded($preBoarded=null){
 

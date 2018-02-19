@@ -238,5 +238,34 @@ class JavaScript {
 	}
 
 
+	static function buildObjectFromLoadIndexedPair($data, $objectName){
+	    ?><script type="text/javascript" charset="utf-8">
+
+	    var <?=$objectName?> = {};
+	    <?php
+	    foreach ($data as $key => $value) {
+	        $string = $objectName . "['" . trim($key) . "']='" . trim($value) . "';
+";
+	        echo $string;
+	    }
+	    ?>
+	    </script><?php
+	}
+
+	static function buildArrayOfObjectsFromArrayOfRows($data, $arrayName, $objectName){
+	    ?><script type="text/javascript" charset="utf-8">
+
+	    var <?=$objectName?> = {};
+	    <?php
+	    foreach ($data as $key => $value) {
+	        $string = $objectName . "['" . trim($key) . "']='" . trim($value) . "';
+";
+	        echo $string;
+	    }
+	    ?>
+	    console.log(<?=$objectName?>);
+	    </script><?php
+	}
+
 
 }?>

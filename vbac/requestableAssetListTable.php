@@ -5,8 +5,7 @@ use itdq\DbTable;
 
 class requestableAssetListTable extends DbTable {
 
-
-    function returnAsArray($excludeDeleted=true){
+    function returnAsArray($excludeDeleted=true,$withButtons=true){
         $data = array();
 
         $predicate = $excludeDeleted ? " AND LISTING_ENTRY_REMOVED is null " : null;
@@ -28,7 +27,7 @@ class requestableAssetListTable extends DbTable {
                 $row['RECORD_DATE_ISSUED_TO_IBM']       = trim($row['RECORD_DATE_ISSUED_TO_IBM'])=='1'  ? 'Yes' : 'No';
                 $row['RECORD_DATE_ISSUED_TO_USER']      = trim($row['RECORD_DATE_ISSUED_TO_USER'])=='1' ? 'Yes' : 'No';
                 $row['RECORD_DATE_RETURNED']            = trim($row['RECORD_DATE_RETURNED'])=='1'       ? 'Yes' : 'No';
-                $rowWithButtonsAdded=  $this->addButtons($row);
+                $rowWithButtonsAdded = $withButtons ?  $this->addButtons($row) : $row ;
                 $data[] = $rowWithButtonsAdded;
             }
         }

@@ -55,12 +55,13 @@ $boarding->addOption($onBoarding);
 $boarding->addOption($offBoarding);
 
 
-$access         = new NavbarMenu('Access');
-$request        = new NavbarOption('Request', 'pc_accessRequest.php','accessCdi accessPmo accessFm accessUser');
+$access         = new NavbarMenu('Access/Assets');
+$requestAssets  = new NavbarOption('Request Assets', 'pc_assetRequest.php','accessCdi accessPmo accessFm accessUser');
+$requestAccess  = new NavbarOption('Request Access', 'pc_accessRequest.php','accessCdi accessPmo accessFm accessUser');
 $iamAdmin       = new NavbarOption('IAM Admin', 'pc_iamAdmin.php','accessCdi accessPmo');
-$access->addOption($request);
+$access->addOption($requestAssets);
+$access->addOption($requestAccess);
 $access->addOption($iamAdmin);
-
 
 $navbar->addMenu($cdiAdmin);
 $navbar->addMenu($adminMenu);
