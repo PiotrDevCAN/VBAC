@@ -115,11 +115,11 @@ class personRecord extends DbRecord
     private static $pesEmailBody = 'Please initiate PES check for the following individual:\n
                                     Name : &&name&&\n
                                     Email Address : &&email&&\n\r
-                                    <b>Notes Id</b> : &&notesid&&
-                                    Country working in : &&country&&\n\r
+                                    Notes Id : &&notesid&&
+                                    Country working in : &&country&&/n/r
                                     LoB : &&lob&&
                                     Role on Project : &&role&&
-\n\r\n\r
+/n/r
                                     Contract : &&contract&&
                                     Requested By : &&requestor&&
                                     Requested Timestamp : &&requested&&
