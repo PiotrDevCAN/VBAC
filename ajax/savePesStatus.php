@@ -28,8 +28,8 @@ try {
     } else {
         echo "<br/>PES Status set to : " . $_POST['psm_status'];
         echo "<br/>Detail : " . $_POST['psm_detail'];
-        AuditTable::audit("PES Status set to : " . $_POST['psm_status'] . " Detail :" . $_POST['psm_detail'] . "Date : " . $_POST['PES_DATE_RESPONDED'],AuditTable::RECORD_TYPE_AUDIT);
 
+        AuditTable::audit("PES Status set for:" . $_POST['psm_cnum'] ." To : " . $_POST['psm_status'] . " Detail :" . $_POST['psm_detail'] . "Date : " . $_POST['PES_DATE_RESPONDED'],AuditTable::RECORD_TYPE_AUDIT);
         $emailResponse = $person->sendPesStatusChangedEmail();
         $notificationStatus = $emailResponse ? 'Email sent' : 'No email sent';
         $success = true;
