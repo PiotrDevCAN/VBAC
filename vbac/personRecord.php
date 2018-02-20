@@ -92,7 +92,7 @@ class personRecord extends DbRecord
 
     public static $cio = array('Commercial','Cyber', 'Digital','Divestment','GOFE','IT 4 IT','Insurance','Retail','Sandbox','TRP');
 
-    private static $pesTaskId = array('lbgvetpr@uk.ibm.com','rob.daniel@uk.ibm.com','lbgrep@uk.ibm.com'); // Only first entry will be used as the "contact" in the PES status emails.
+    private static $pesTaskId = array('lbgvetpr@uk.ibm.com','rob.daniel@uk.ibm.com'); // Only first entry will be used as the "contact" in the PES status emails.
     //private static $pesTaskId = 'rob.daniel@uk.ibm.com';
     //private static $pesTaskId    = array('rob.daniel@uk.ibm.com', 'carrabooth@uk.ibm.com');
 //     private static $pesEmailBody = '<table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -113,13 +113,13 @@ class personRecord extends DbRecord
 //                             </td></tr>
 //                             </table>';
     private static $pesEmailBody = 'Please initiate PES check for the following individual:\n
-                                    Name : &&name&&\n
-                                    Email Address : &&email&&\n\r
+                                    Name : &&name&&
+                                    Email Address : &&email&&
                                     Notes Id : &&notesid&&
-                                    Country working in : &&country&&/n/r
+                                    Country working in : &&country&&
                                     LoB : &&lob&&
                                     Role on Project : &&role&&
-/n/r
+
                                     Contract : &&contract&&
                                     Requested By : &&requestor&&
                                     Requested Timestamp : &&requested&&
@@ -791,7 +791,7 @@ class personRecord extends DbRecord
                               $fmEmail);
         $message = preg_replace(self::$pesEmailPatterns, $replacements, self::$pesEmailBody);
 
-        \itdq\BlueMail::send_mail(self::$pesTaskId, 'vBAC PES Request - ' . $this->CNUM ." (" . $this->FIRST_NAME . " " . $this->LAST_NAME . ")", $message, 'vbacNoReply@uk.ibm.com');
+        \itdq\BlueMail::send_mail(self::$pesTaskId, 'vBAC PES Request - ' . $this->CNUM ." (" . trim($this->FIRST_NAME) . " " . trim($this->LAST_NAME) . ")", $message, 'vbacNoReply@uk.ibm.com');
 
     }
 
