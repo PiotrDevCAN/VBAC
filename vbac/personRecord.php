@@ -92,7 +92,7 @@ class personRecord extends DbRecord
 
     public static $cio = array('Commercial','Cyber', 'Digital','Divestment','GOFE','IT 4 IT','Insurance','Retail','Sandbox','TRP');
 
-    private static $pesTaskId = array('lbgvetpr@uk.ibm.com'); // Only first entry will be used as the "contact" in the PES status emails.
+    private static $pesTaskId = array('lbgvetpr@uk.ibm.com','rob.daniel@uk.ibm.com'); // Only first entry will be used as the "contact" in the PES status emails.
     //private static $pesTaskId = 'rob.daniel@uk.ibm.com';
     //private static $pesTaskId    = array('rob.daniel@uk.ibm.com', 'carrabooth@uk.ibm.com');
     private static $pesEmailBody = '<table width="100%" border="0" cellspacing="0" cellpadding="0">
