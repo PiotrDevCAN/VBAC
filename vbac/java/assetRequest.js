@@ -3,6 +3,9 @@
  *
  *
  */
+var selectedAssets = [];
+
+
 function assetRequest() {
 	var table;
 
@@ -99,6 +102,62 @@ function assetRequest() {
 		  }
 
 	  });
+  },
+
+  this.listenForSaveAssetRequest = function(){
+	  $(document).on('click','#saveAssetRequest', function(){
+		  $.each($('.requestableAsset:checked'),function(key,value){
+			  var AssetRequest = new assetRequest();
+			  AssetRequest.checkAllPreReqs();
+		  });
+	  });
+  },
+
+  this.listenForAddPrereq = function(){
+	  $(document).on('click','#addPreReq', function(){
+		  console.log('they want to add the prereq');
+		  var preReqTitle =  $('#prereqAssetTitle').html();
+		  var preReqElement = $('.requestableAsset').filter('*[data-asset="'+preReqTitle+'"]');
+		  $(preReqElement).prop('checked',true);
+		  $('#missingPrereqModal').modal('hide');
+	  });
+  },
+
+  this.listenForNewPrereq = function(){
+	  $('#missingPrereqModal').on('hidden.bs.modal', function (e) {
+		  var AssetRequest = new assetRequest();
+		  AssetRequest.checkAllPreReqs();
+	  });
+  }
+
+  this.checkAllPreReqs = function(){
+	  $.each($('.requestableAsset:checked'),function(key,value){
+		  var AssetRequest = new assetRequest();
+		  AssetRequest.checkPrereqIsChecked(this);
+	  });
+  },
+
+  this.checkPrereqIsChecked = function(checkedElement){
+	  console.log('checking prereq for ');
+	  console.log(checkedElement);
+	  var asset  = $(checkedElement).data('asset');
+	  var preReq = $(checkedElement).data('prereq');
+	  var requestee = $('#requesteeName').val();
+	  console.log(asset + ' has a prereq of ' + preReq);
+	  if(preReq){
+		  console.log('filter:' + '*[data-asset="'+preReq+'"]' );
+		  var isPreReqChecked = $('.requestableAsset:checked').filter('*[data-asset="'+preReq+'"]');
+		  console.log(isPreReqChecked.length);
+		  if(isPreReqChecked.length==0){
+			  console.log('pre req not selected')
+			  $('#requestedAssetTitle').html(asset);
+			  $('#prereqAssetTitle').html(preReq);
+			  $('#requesteeNotesid').html(requestee);
+			  $('#missingPrereqModal').modal('show');
+		  };
+	  }
+
+
   },
 
   this.recordCtidOnForm = function(email_address, ctid ){

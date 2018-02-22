@@ -49,16 +49,14 @@ class assetRequestRecord extends DbRecord {
         $myManagersCnum  = $loader->loadIndexed('FM_CNUM','CNUM',allTables::$PERSON);
         $managersNotesid = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON);
 
-        $ctId = $loader->loadIndexed('CONTRACTOR_ID','CNUM',allTables::$PERSON);
-        JavaScript::buildObjectFromLoadIndexedPair($ctId,'cnum2ctid');
-
         ?>
-        <div id='hideTillEducationConfirmed' style='display: none;'>
         <form id='assetRequestForm'  class="form-horizontal"
         	onsubmit="return false;">
+        <div id='hideTillEducationConfirmed' style='display: none;'>
+
 		<div class="panel panel-primary">
 		<div class="panel-heading">
-			<h3 class="panel-title" id='requestableAssetListTitle'>Asset Request</h3>
+			<h3 class="panel-title">Asset Request</h3>
 		</div>
 
 		<div class="panel-body">
@@ -137,9 +135,15 @@ class assetRequestRecord extends DbRecord {
             ?>
         </div>
         </div>
-        </form>
         </div>
+        </form>
         <?php
+    }
+
+    function createJsCtidLookup(){
+        $loader = new Loader();
+        $ctId = $loader->loadIndexed('CONTRACTOR_ID','CNUM',allTables::$PERSON);
+        JavaScript::buildObjectFromLoadIndexedPair($ctId,'cnum2ctid');
     }
 
     function educationModal(){
@@ -226,6 +230,34 @@ class assetRequestRecord extends DbRecord {
         </div>
         <?php
     }
+
+    function missingPrereqModal(){
+        ?>
+        <!-- Modal -->
+		<div id="missingPrereqModal" class="modal fade" role="dialog">
+  			<div class="modal-dialog">
+	        <!-- Modal content-->
+    		<div class="modal-content">
+      			<div class="modal-header">
+        		   <h4 class="modal-title">Missing Pre-Req</h4>
+      			</div>
+      			<div class="modal-body" >
+      				<p><center>You have requested Asset : <b><span id='requestedAssetTitle'></span></b></center></p>
+      				<p><center>However, this asset has a pre-req of : <b><span id='prereqAssetTitle'></span></b> which you have <b>NOT</b> selected.</p>
+      				<p><center>If <b><span id='requesteeNotesid'></span></b> already has that asset, then simply close this window, and continue</center>
+
+      			</div>
+      			<div class="modal-footer">
+      		  		<button type="button" class="btn btn-success" id='addPreReq'>Add Asset to request</button>
+      		  		<button type="button" class="btn btn-warning" id='doNotAddPreReq'  data-dismiss="modal" >Asset already acquired</button>
+      			</div>
+    		</div>
+  			</div>
+		</div>
+        <?php
+    }
+
+
 
     function buildLocationOptions(){
         $loader = new Loader();

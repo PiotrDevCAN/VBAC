@@ -4,20 +4,14 @@ use vbac\assetRequestRecord;
 use vbac\personTable;
 
 set_time_limit(0);
+ob_start();
 ?>
-
 <div class='container'>
 <div class='row'>
-<!-- <div class='col-sm-2'></div> -->
-<!-- <div class='col-sm-8'> -->
 <h2>Asset Request</h2>
 </div>
-<!-- </div> -->
-
 
 <div class='row'>
-<!-- <div class='col-sm-2'></div> -->
-<!-- <div class='col-sm-8'> -->
 <?php
 $mode = assetRequestRecord::$modeDEFINE;
 $assetRequest = new assetRequestRecord();
@@ -29,15 +23,15 @@ if(!$myCnum){
 }
 $assetRequest->education();
 ?>
-<!-- </div> -->
-<!-- <div class='col-sm-2'></div> -->
-<!-- </div> -->
 </div>
 <?php
 $assetRequest->educationModal();
-$assetRequest->ctIdRequiredModal()
-?>
+$assetRequest->ctIdRequiredModal();
+$assetRequest->missingPrereqModal();
 
+ob_flush();
+$assetRequest->createJsCtidLookup();
+?>
 
 <script type="text/javascript">
 <?php
@@ -65,6 +59,9 @@ if($myCnum) {
      	AssetRequest.listenForSelectRequestee();
      	AssetRequest.listenForEnteringCtid();
      	AssetRequest.listenForSelectLocation();
+     	AssetRequest.listenForSaveAssetRequest();
+     	AssetRequest.listenForAddPrereq();
+     	AssetRequest.listenForNewPrereq();
      	AssetRequest.countCharsInTextarea();
     });
     <?php
