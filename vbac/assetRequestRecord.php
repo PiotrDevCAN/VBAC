@@ -249,7 +249,7 @@ class assetRequestRecord extends DbRecord {
       			</div>
       			<div class="modal-footer">
       		  		<button type="button" class="btn btn-success" id='addPreReq'>Add Asset to request</button>
-      		  		<button type="button" class="btn btn-warning" id='doNotAddPreReq'  data-dismiss="modal" >Asset already acquired</button>
+      		  		<button type="button" class="btn btn-warning" id='ignorePreReq'>Asset already acquired</button>
       			</div>
     		</div>
   			</div>

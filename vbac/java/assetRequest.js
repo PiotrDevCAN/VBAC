@@ -167,16 +167,6 @@ function assetRequest() {
 		  }
 	  };
 	  console.log('we looked for a missing prereq and found' + prereqElement);
-
-//
-//	  if(prereqElement){
-//		  console.log('so will return selectAsset for processing' + selectedAsset);
-//		  return selectedAsset;
-//	  } else {
-//		  console.log('so will return selectAsset for processing' + false);
-//		  return false;
-//	  }
-
 	  return prereqElement ? selectedAsset : false;
 
 
@@ -198,10 +188,6 @@ function assetRequest() {
 		  var preReqTitle =  $('#prereqAssetTitle').html();
 		  var preReqElement = $('.requestableAsset').filter('*[data-asset="'+preReqTitle+'"]');
 		  $(preReqElement).prop('checked',true);
-
-		  console.log(preReqTitle);
-		  console.log(preReqElement);
-
 		  $('#missingPrereqModal').modal('hide');
 	  });
   },
@@ -210,8 +196,8 @@ function assetRequest() {
 	  $(document).on('click','#ignorePreReq', function(){
 		  console.log('they want to ignore the prereq');
 		  var preReqTitle =  $('#prereqAssetTitle').html();
-		  var preReqElement = $('.requestableAsset').filter('*[data-asset="'+preReqTitle+'"]');
-		  $(preReqElement).data('ignore','Yes');
+		  var preReqElement = $('.requestableAsset').filter('*[data-asset="'+preReqTitle+'"]')[0];
+		  $(preReqElement).attr('data-ignore', 'Yes')
 		  $('#missingPrereqModal').modal('hide');
 	  });
   },
