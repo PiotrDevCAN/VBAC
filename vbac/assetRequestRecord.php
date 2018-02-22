@@ -302,6 +302,7 @@ class assetRequestRecord extends DbRecord {
             	data-onshore='<?=trim($requestableAsset['APPLICABLE_ONSHORE'])?>'
             	data-offshore='<?=trim($requestableAsset['APPLICABLE_OFFSHORE'])?>'
             	data-default='<?=trim($requestableAsset['APPLICABLE_ONSHORE'])?>'
+            	data-ignore='<?=empty(trim($requestableAsset['ASSET_PREREQUISITE'])) ? 'Yes': 'No'?>'
             >
             <label class='form-check-label' for='person-<?=$personId?>-asset-<?=$assetId?>'><?=trim($requestableAsset['ASSET_TITLE'])?></label>
         	<?php

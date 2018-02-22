@@ -61,7 +61,8 @@ if($myCnum) {
      	AssetRequest.listenForSelectLocation();
      	AssetRequest.listenForSaveAssetRequest();
      	AssetRequest.listenForAddPrereq();
-     	AssetRequest.listenForNewPrereq();
+     	AssetRequest.listenForIgnorePrereq();
+     	AssetRequest.listenForClosingPrereqModal();
      	AssetRequest.countCharsInTextarea();
     });
     <?php

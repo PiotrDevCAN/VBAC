@@ -104,13 +104,92 @@ function assetRequest() {
 	  });
   },
 
+  this.saveAssetRequestRecords = function(){
+	  console.log('would save all the records now');
+  }
+
   this.listenForSaveAssetRequest = function(){
 	  $(document).on('click','#saveAssetRequest', function(){
-		  $.each($('.requestableAsset:checked'),function(key,value){
-			  var AssetRequest = new assetRequest();
-			  AssetRequest.checkAllPreReqs();
-		  });
+		  console.log('they want to save');
+		  var AssetRequest = new assetRequest();
+		  var assetMissingPrereq = AssetRequest.checkForAssetMissingPrereq();
+		  console.log('do we have an assetmissingprereq?');
+		  console.log(assetMissingPrereq);
+		  if(assetMissingPrereq){
+			  AssetRequest.promptForMissingPrereq(assetMissingPrereq);
+		  } else {
+			  console.log('we can save now');
+			  AssetRequest.saveAssetRequestRecords();
+		  }
+		  console.log('were done processing the save request');
 	  });
+
+  },
+
+  this.checkForAssetMissingPrereq = function() {
+	  console.log('going to look for an checked element without its pre req');
+	  var prereqElement = false;
+	  var selectedAssetsToInspect = $('.requestableAsset:checked').not('*[data-ignore="Yes"]');
+
+	  console.log(selectedAssetsToInspect);
+
+
+	  for(i=0;i<selectedAssetsToInspect.length;i++){
+		  var selectedAsset = selectedAssetsToInspect[i];
+
+		  console.log(selectedAsset);
+
+		  var asset = $(selectedAsset).data('asset');
+		  var preReq = $(selectedAsset).data('prereq');
+
+
+		  console.log('asset:' + asset);
+		  console.log('preReq:' + preReq);
+		  /*
+		   * Basically. Get all the checked requestable assets
+		   * then filter for the asset named 'preReq'.
+		   *
+		   * If the list we get back is empty - then we know the pre-req is not amongst the checked assets, so prompt the user how they
+		   * want to handle it.
+		   *
+		   */
+		  var isPreReqAmongstTheChecked = $('.requestableAsset:checked').filter('*[data-asset="'+preReq+'"]');
+		  console.log(isPreReqAmongstTheChecked)
+		  if(isPreReqAmongstTheChecked.length==0){
+			  /*
+			   * Seek the pre-req amongst all the requestableAssets that we've not been told to ignore.
+			   * If it turns up - prompt for it.
+			   * If it doesn't then carry one, we've been told to ignore it.
+			   */
+			  var prereqElement = $('.requestableAsset').not('*[data-ignore="Yes"]').filter('*[data-asset="'+preReq+'"]')[0];
+			  console.log(prereqElement);
+			  break;
+		  }
+	  };
+	  console.log('we looked for a missing prereq and found' + prereqElement);
+
+//
+//	  if(prereqElement){
+//		  console.log('so will return selectAsset for processing' + selectedAsset);
+//		  return selectedAsset;
+//	  } else {
+//		  console.log('so will return selectAsset for processing' + false);
+//		  return false;
+//	  }
+
+	  return prereqElement ? selectedAsset : false;
+
+
+  },
+
+  this.promptForMissingPrereq  = function(element){
+	  var asset = $(element).data('asset');
+	  var preReq = $(element).data('prereq');
+	  var requestee = $('#requesteeName').val();
+	  $('#requestedAssetTitle').html(asset);
+	  $('#prereqAssetTitle').html(preReq);
+	  $('#requesteeNotesid').html(requestee);
+	  $('#missingPrereqModal').modal('show');
   },
 
   this.listenForAddPrereq = function(){
@@ -119,46 +198,59 @@ function assetRequest() {
 		  var preReqTitle =  $('#prereqAssetTitle').html();
 		  var preReqElement = $('.requestableAsset').filter('*[data-asset="'+preReqTitle+'"]');
 		  $(preReqElement).prop('checked',true);
+
+		  console.log(preReqTitle);
+		  console.log(preReqElement);
+
 		  $('#missingPrereqModal').modal('hide');
 	  });
   },
 
-  this.listenForNewPrereq = function(){
+  this.listenForIgnorePrereq = function(){
+	  $(document).on('click','#ignorePreReq', function(){
+		  console.log('they want to ignore the prereq');
+		  var preReqTitle =  $('#prereqAssetTitle').html();
+		  var preReqElement = $('.requestableAsset').filter('*[data-asset="'+preReqTitle+'"]');
+		  $(preReqElement).data('ignore','Yes');
+		  $('#missingPrereqModal').modal('hide');
+	  });
+  },
+
+  this.listenForClosingPrereqModal = function(){
 	  $('#missingPrereqModal').on('hidden.bs.modal', function (e) {
 		  var AssetRequest = new assetRequest();
-		  AssetRequest.checkAllPreReqs();
-	  });
-  }
-
-  this.checkAllPreReqs = function(){
-	  $.each($('.requestableAsset:checked'),function(key,value){
-		  var AssetRequest = new assetRequest();
-		  AssetRequest.checkPrereqIsChecked(this);
+		  var assetMissingPrereq = AssetRequest.checkForAssetMissingPrereq();
+		  if(assetMissingPrereq){
+			  AssetRequest.promptForMissingPrereq(assetMissingPrereq);
+		  } else {
+			  console.log('we can save now');
+			  AssetRequest.saveAssetRequestRecords();
+		  }
 	  });
   },
 
-  this.checkPrereqIsChecked = function(checkedElement){
-	  console.log('checking prereq for ');
-	  console.log(checkedElement);
-	  var asset  = $(checkedElement).data('asset');
-	  var preReq = $(checkedElement).data('prereq');
-	  var requestee = $('#requesteeName').val();
-	  console.log(asset + ' has a prereq of ' + preReq);
-	  if(preReq){
-		  console.log('filter:' + '*[data-asset="'+preReq+'"]' );
-		  var isPreReqChecked = $('.requestableAsset:checked').filter('*[data-asset="'+preReq+'"]');
-		  console.log(isPreReqChecked.length);
-		  if(isPreReqChecked.length==0){
-			  console.log('pre req not selected')
-			  $('#requestedAssetTitle').html(asset);
-			  $('#prereqAssetTitle').html(preReq);
-			  $('#requesteeNotesid').html(requestee);
-			  $('#missingPrereqModal').modal('show');
-		  };
-	  }
-
-
-  },
+//  this.checkPrereqIsChecked = function(checkedElement){
+//	  console.log('checking prereq for ');
+//	  console.log(checkedElement);
+//	  var asset  = $(checkedElement).data('asset');
+//	  var preReq = $(checkedElement).data('prereq');
+//	  var requestee = $('#requesteeName').val();
+//	  console.log(asset + ' has a prereq of ' + preReq);
+//	  if(preReq){
+//		  console.log('filter:' + '*[data-asset="'+preReq+'"]' );
+//		  var isPreReqChecked = $('.requestableAsset:checked').filter('*[data-asset="'+preReq+'"]');
+//		  console.log(isPreReqChecked.length);
+//		  if(isPreReqChecked.length==0){
+//			  console.log('pre req not selected')
+//			  $('#requestedAssetTitle').html(asset);
+//			  $('#prereqAssetTitle').html(preReq);
+//			  $('#requesteeNotesid').html(requestee);
+//			  $('#missingPrereqModal').modal('show');
+//		  };
+//	  }
+//
+//
+//  },
 
   this.recordCtidOnForm = function(email_address, ctid ){
 	  console.log(ctid);
