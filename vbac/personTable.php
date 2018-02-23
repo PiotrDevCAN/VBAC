@@ -355,6 +355,34 @@ class personTable extends DbTable {
         return $_SESSION['myCnum'];
     }
 
+    static function myManagersCnum(){
+        if(isset($_SESSION['myManagersCnum'])) {
+            return $_SESSION['myManagersCnum'];
+        }
+
+        if (!isset($_SESSION['ssoEmail'])) {
+            return false;
+        }
+
+        $sql = " SELECT FM_CNUM FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
+        $sql .= " WHERE UPPER(EMAIL_ADDRESS) = '" . db2_escape_string(strtoupper(trim($_SESSION['ssoEmail']))) . "' ";
+
+        $resultSet = db2_exec($_SESSION['conn'], $sql);
+
+        if(!$resultSet){
+            DbTable::displayErrorMessage($resultSet, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+
+        $row = db2_fetch_assoc($resultSet);
+        $myManagersCnum = strtoupper(trim($row['FM_CNUM']));
+        $_SESSION['myManagersCnum'] = $myManagersCnum;
+        return $_SESSION['myManagersCnum'];
+    }
+
+
+
+
     static function getCnumFromEmail($emailAddress){
         $sql = " SELECT CNUM FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE UPPER(EMAIL_ADDRESS) = '" . db2_escape_string(strtoupper(trim($emailAddress))) . "' ";

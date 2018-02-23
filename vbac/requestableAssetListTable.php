@@ -12,6 +12,7 @@ class requestableAssetListTable extends DbTable {
 
         $sql  = " SELECT * FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName ;
         $sql .= " WHERE 1=1 " . $predicate;
+        $sql .= " ORDER BY ASSET_TITLE ";
 
         $rs = db2_exec($_SESSION['conn'], $sql);
 

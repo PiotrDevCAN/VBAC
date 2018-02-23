@@ -43,6 +43,10 @@ if($myCnum) {
         	width:'100%',
       		placeholder: 'Request For:',
     		allowClear: true});
+    	$('#approvingManager').select2({
+        	width:'100%',
+      		placeholder: 'Approving Manager:',
+    		allowClear: true});
     	$('.locationFor').select2({
         	width:'100%',
       		placeholder: 'Location',
@@ -59,6 +63,7 @@ if($myCnum) {
      	AssetRequest.listenForSelectRequestee();
      	AssetRequest.listenForEnteringCtid();
      	AssetRequest.listenForSelectLocation();
+     	AssetRequest.listenForSelectAsset();
      	AssetRequest.listenForSaveAssetRequest();
      	AssetRequest.listenForAddPrereq();
      	AssetRequest.listenForIgnorePrereq();

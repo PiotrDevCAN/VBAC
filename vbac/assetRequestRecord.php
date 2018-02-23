@@ -24,11 +24,12 @@ class assetRequestRecord extends DbRecord {
     function displayForm(){
         $loader = new Loader();
         $myCnum = personTable::myCnum();
+        $myManagersCnum = personTable::myManagersCnum();
         $isFm   = personTable::isManager($GLOBALS['ltcuser']['mail']);
         $isPmo  = $_SESSION['isPmo'];
 
-//         $isFm   = false;
-//         $isPmo = false;
+         $isFm  = true;
+         $isPmo = false;
 
         switch (true){
             case $isPmo:
@@ -46,8 +47,8 @@ class assetRequestRecord extends DbRecord {
         $selectableNotesId = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON,$predicate);
         $selectableEmailAddress = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON,$predicate);
 
-        $myManagersCnum  = $loader->loadIndexed('FM_CNUM','CNUM',allTables::$PERSON);
-        $managersNotesid = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON);
+        $approvingMgrPredicate = " FM_MANAGER_FLAG ='Yes' ";
+        $approvingMgrs = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON,$approvingMgrPredicate)
 
         ?>
         <form id='assetRequestForm'  class="form-horizontal"
@@ -83,11 +84,19 @@ class assetRequestRecord extends DbRecord {
                         ?>
             	</select>
             	</div>
-            	<div class='col-sm-8' id='allCtidHereDiv'>
+        	</div>
+		<div id='requestDetailsDiv'>
+        	<div class="panel panel-info">
+				<div class="panel-heading">
+					<h3 class="panel-title">Request Details</h3>
+				</div>
+
+				<div class='form-group '>
+				  	<div class='col-sm-8' id='allCtidHereDiv'>
             	  	<input class="form-control input-sm" id='ctidConfirmation' name='ctidConfirmation' value=''  type='hidden' disabled required >
             	   	<select class='form-control select select2 locationFor '
-                			  id='locationFor'
-                              name='locationFor'
+                			  id='person-1-location'
+                              name='person-1-location'
                               disabled=true
                      >
                      <?php
@@ -96,36 +105,58 @@ class assetRequestRecord extends DbRecord {
                      ?>
                     </select>
             	</div>
-        	</div>
-
-		<div id='requestDetailsDiv'>
-        	<div class="panel panel-info">
-				<div class="panel-heading">
-					<h3 class="panel-title">Request Details</h3>
-				</div>
+            	</div>
 				<div class="panel-body">
-<!-- 					<div class='form-group required'> -->
-<!--         			<div class='col-sm-12'> -->
-<!--                 	<select class='form-control select select2 locationFor ' -->
-<!--                 			  id='locationFor' -->
-<!--                               name='locationFor' -->
-<!--                               disabled=true -->
-<!--                      > -->
-                     <?php
-//                      $options = $this->buildLocationOptions();
-//                      echo $options;
-//                      ?>
-<!--                     </select> -->
-<!--             	</div> -->
-<!-- 				</div> -->
 				<?php
 				$this->addRequestableAssetDetails();
 				?>
+
+
 			</div>
 		</div>
-
        	</div>
+        	<div class='form-group required'>
+        		<div class='col-sm-4'>
+                <select class='form-control select select2 '
+                			  id='approvingManager'
+                              name='approvingManager'
+                      >
+                    <option value=''></option>
+                    <?php
+                    foreach ($approvingMgrs as $cnum => $notesId){
+                            $displayedName = !empty(trim($notesId)) ?  trim($notesId) : $selectableEmailAddress[$cnum];
+                            $selected = null;
+                            if(!$isFm && (trim($cnum)==$myManagersCnum)){
+                                /*
+                                 * The user is NOT a manager, and this entry is their Mgr
+                                 *
+                                 * Stops users who are managers having the drop down default to THEIR mgr, when it should default to them.
+                                 * JS code will remove the entry in this list, if they pick themselves as the Requestee.
+                                 *
+                                 */
+                                $selected = " selected ";
+                            } elseif ($isFm && (trim($cnum)==$myCnum)){
+                                /*
+                                 * They ARE an FM and this is their entry, so select it by default.
+                                 * If the requestee becomes themselves, we'll remove the entry from the dropdown.
+                                 */
+                                $selected = " selected ";
+                            }
+                            ?><option value='<?=trim($cnum);?>'<?=$selected?>'><?=$displayedName?></option><?php
+                        };
+                        ?>
+            	</select>
+            	</div>
+            	<div class='col-sm-8' >
+            	</div>
+        		</div>
+
+
         <div class='panel-footer'>
+
+
+
+
         	<?php
             $allButtons = null;
             $submitButton =   $this->formButton('submit','Submit','saveAssetRequest',null,'Save','btn btn-primary');
@@ -293,10 +324,10 @@ class assetRequestRecord extends DbRecord {
 
             $assetHtmlName = strtolower ( str_replace (" ", "-", trim($requestableAsset['ASSET_TITLE'])));
             ?>
-            <div class='col-sm-3'>
+            <div class='col-sm-3 selectableThing'>
             <input class='form-check-input requestableAsset' type='checkbox'
                 id='person-<?=$personId?>-asset-<?=$assetId?>'
-                name='<?=$assetHtmlName.$assetId?>'
+                name='person-<?=$personId?>-asset-<?=$assetId?>-<?=$assetHtmlName?>'
                 data-asset='<?=trim($requestableAsset['ASSET_TITLE'])?>'
             	data-prereq='<?=trim($requestableAsset['ASSET_PREREQUISITE'])?>'
             	data-onshore='<?=trim($requestableAsset['APPLICABLE_ONSHORE'])?>'
@@ -307,7 +338,7 @@ class assetRequestRecord extends DbRecord {
             <label class='form-check-label' for='person-<?=$personId?>-asset-<?=$assetId?>'><?=trim($requestableAsset['ASSET_TITLE'])?></label>
         	<?php
         	if($requestableAsset['BUSINESS_JUSTIFICATION_REQUIRED']=='Yes'){
-        	   ?><textarea class='form-control' rows='2' style='min-width: 100%' id='person-<?=$personId?>-asset-Justification<?=$assetId;?>' name='assetJustification<?=$assetId?>' placeholder='Business Justification' min='50' max='255' ></textarea><span disabled>50 chars required</span><?php
+        	   ?><textarea class='form-control justification' rows='2' style='min-width: 100%' id='person-<?=$personId?>-asset-<?=$assetId?>-Justification' name='person-<?=$personId?>-asset-<?=$assetId?>-Justification' placeholder='Business Justification' min='50' max='255' ></textarea><span disabled>50 chars required</span><?php
         	}
         	?>
         	</div>
@@ -317,4 +348,5 @@ class assetRequestRecord extends DbRecord {
             }
         }
     }
+
 }

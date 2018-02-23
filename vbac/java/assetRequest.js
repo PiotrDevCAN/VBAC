@@ -40,13 +40,7 @@ function assetRequest() {
 		    var data = e.params.data;
 		    console.log(data);
 		    var cnum_id = data.id.trim();
-		    var ctid_id = cnum2ctid[cnum_id].trim();
-
-//		    console.log(cnum_id);
-//		    console.log(ctid_id);
-//		    console.log(ctid_id.length);
-//		    console.log(typeof(ctid_id));
-
+		    var ctid_id = cnum2ctid[cnum_id];
 		    if(!ctid_id){
 		    	$('#requesteeName').val(data.text);
 		    	$('#obtainCtid').modal('show');
@@ -54,8 +48,13 @@ function assetRequest() {
 				  AssetRequest.recordCtidOnForm(data.text, ctid_id);
 				//  AssetRequest.cloneRequestDetails(data.text, ctid_id);
 		    }
-		    $('#locationFor').attr('disabled',false);
-
+		    $('.locationFor').attr('disabled',false);
+		    console.log(cnum_id);
+		    console.log($("#approvingManager option"));
+		    console.log($("#approvingManager option[value='001399866']"));
+		    console.log("#approvingManager option[value='"+cnum_id+"']");
+		    console.log($("#approvingManager option[value='"+cnum_id+"']"));
+		    $("#approvingManager option[value='"+cnum_id+"']").remove();
 		});
   },
 
@@ -73,6 +72,19 @@ function assetRequest() {
 		    	console.log('offshore');
 		    	AssetRequest.checkAssetsForShore('off');
 		    }
+		});
+  },
+
+
+  this.listenForSelectAsset = function(){
+	  $(document).on('click','.requestableAsset', function (e) {
+		  console.log(this);
+		  console.log($(this).closest('.selectableThing'));
+		  console.log($(this).closest('.selectableThing').find('.justification'));
+
+		  var justificationState = $(this).is(':checked') ? true : false;
+		  $(this).closest('.selectableThing').find('.justification').attr('required',justificationState);
+		  console.log($(this).closest('.selectable').find('.justification'));
 		});
   },
 
@@ -106,11 +118,35 @@ function assetRequest() {
 
   this.saveAssetRequestRecords = function(){
 	  console.log('would save all the records now');
+	  $('#saveAssetRequest').removeClass('spinning');
+
+      var form = document.getElementById('assetRequestForm');
+      var formValid = form.checkValidity();
+      if(formValid){
+        var allDisabledFields = ($("input:disabled"));
+        $(allDisabledFields).attr('disabled',false);
+        var formData = $('#assetRequestForm').serialize();
+        $(allDisabledFields).attr('disabled',true);
+           $.ajax({
+            url: "ajax/saveAssetRequestRecords.php",
+            data : formData,
+            type: 'POST',
+            success: function(result){
+            	var resultObj = JSON.parse(result);
+            	console.log(resultObj);
+            }
+          });
+      }
+
+
+	  $('#saveAssetRequest').attr('disabled',false);
   }
 
   this.listenForSaveAssetRequest = function(){
 	  $(document).on('click','#saveAssetRequest', function(){
 		  console.log('they want to save');
+		  $('#saveAssetRequest').addClass('spinning');
+		  $('#saveAssetRequest').attr('disabled',true);
 		  var AssetRequest = new assetRequest();
 		  var assetMissingPrereq = AssetRequest.checkForAssetMissingPrereq();
 		  console.log('do we have an assetmissingprereq?');
@@ -127,24 +163,12 @@ function assetRequest() {
   },
 
   this.checkForAssetMissingPrereq = function() {
-	  console.log('going to look for an checked element without its pre req');
 	  var prereqElement = false;
 	  var selectedAssetsToInspect = $('.requestableAsset:checked').not('*[data-ignore="Yes"]');
-
-	  console.log(selectedAssetsToInspect);
-
-
 	  for(i=0;i<selectedAssetsToInspect.length;i++){
 		  var selectedAsset = selectedAssetsToInspect[i];
-
-		  console.log(selectedAsset);
-
 		  var asset = $(selectedAsset).data('asset');
 		  var preReq = $(selectedAsset).data('prereq');
-
-
-		  console.log('asset:' + asset);
-		  console.log('preReq:' + preReq);
 		  /*
 		   * Basically. Get all the checked requestable assets
 		   * then filter for the asset named 'preReq'.
@@ -154,7 +178,6 @@ function assetRequest() {
 		   *
 		   */
 		  var isPreReqAmongstTheChecked = $('.requestableAsset:checked').filter('*[data-asset="'+preReq+'"]');
-		  console.log(isPreReqAmongstTheChecked)
 		  if(isPreReqAmongstTheChecked.length==0){
 			  /*
 			   * Seek the pre-req amongst all the requestableAssets that we've not been told to ignore.
@@ -166,7 +189,6 @@ function assetRequest() {
 			  break;
 		  }
 	  };
-	  console.log('we looked for a missing prereq and found' + prereqElement);
 	  return prereqElement ? selectedAsset : false;
 
 
@@ -188,6 +210,7 @@ function assetRequest() {
 		  var preReqTitle =  $('#prereqAssetTitle').html();
 		  var preReqElement = $('.requestableAsset').filter('*[data-asset="'+preReqTitle+'"]');
 		  $(preReqElement).prop('checked',true);
+		  $(preReqElement).trigger('click');
 		  $('#missingPrereqModal').modal('hide');
 	  });
   },
@@ -214,29 +237,6 @@ function assetRequest() {
 		  }
 	  });
   },
-
-//  this.checkPrereqIsChecked = function(checkedElement){
-//	  console.log('checking prereq for ');
-//	  console.log(checkedElement);
-//	  var asset  = $(checkedElement).data('asset');
-//	  var preReq = $(checkedElement).data('prereq');
-//	  var requestee = $('#requesteeName').val();
-//	  console.log(asset + ' has a prereq of ' + preReq);
-//	  if(preReq){
-//		  console.log('filter:' + '*[data-asset="'+preReq+'"]' );
-//		  var isPreReqChecked = $('.requestableAsset:checked').filter('*[data-asset="'+preReq+'"]');
-//		  console.log(isPreReqChecked.length);
-//		  if(isPreReqChecked.length==0){
-//			  console.log('pre req not selected')
-//			  $('#requestedAssetTitle').html(asset);
-//			  $('#prereqAssetTitle').html(preReq);
-//			  $('#requesteeNotesid').html(requestee);
-//			  $('#missingPrereqModal').modal('show');
-//		  };
-//	  }
-//
-//
-//  },
 
   this.recordCtidOnForm = function(email_address, ctid ){
 	  console.log(ctid);
