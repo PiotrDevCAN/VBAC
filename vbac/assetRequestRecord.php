@@ -8,18 +8,31 @@ use itdq\JavaScript;
 
 class assetRequestRecord extends DbRecord {
 
-    protected $assetTitle;
-    protected $cnum;
-    protected $businessJustification;
-    protected $preReqRequest;
-    protected $requestor_email;
-    protected $requested;
-    protected $approver_email;
-    protected $approved;
-    protected $educationConfirmed;
-    protected $status;
-    protected $orderItNumber;
-    protected $orderItStatus;
+    protected $REQUEST_REFERENCE;
+    protected $CNUM;
+    protected $ASSET_TITLE;
+    protected $USER_LOCATION;
+    protected $PRIMARY_UID;
+    protected $SECONDARY_UID;
+    protected $DATE_ISSUED_TO_IBM;
+    protected $DATE_ISSUED_TO_USER;
+    protected $DATE_RETURNED;
+    protected $BUSINESS_JUSTIFICATION;
+    protected $PRE_REQ_REQUEST;
+    protected $REQUESTOR_EMAIL;
+    protected $REQUESTED;
+    protected $APPROVER_EMAIL;
+    protected $APPROVED;
+    protected $EDUCATION_CONFIRMATION;
+    protected $STATUS;
+    protected $ORDERIT_GROUP_REF;
+    protected $ORDERIT_NUMBER;
+    protected $ORDERIT_STATUS;
+
+    public static $STATUS_CREATED           = 'Created';
+    public static $STATUS_APPROVED          = 'Approved';
+    public static $STATUS_RAISED_ORDERIT    = 'OrderIt';
+    public static $STATUS_RETURNED          = 'Returned';
 
     function displayForm(){
         $loader = new Loader();
@@ -74,6 +87,7 @@ class assetRequestRecord extends DbRecord {
                 <select class='form-control select select2 '
                 			  id='requestees'
                               name='requestee'
+
                       >
                     <option value=''></option>
                     <?php
@@ -322,7 +336,7 @@ class assetRequestRecord extends DbRecord {
                 ?><div class='form-group bg-info row' ><?php
             }
 
-            $assetHtmlName = strtolower ( str_replace (" ", "-", trim($requestableAsset['ASSET_TITLE'])));
+            $assetHtmlName = trim($requestableAsset['ASSET_TITLE']);
             ?>
             <div class='col-sm-3 selectableThing'>
             <input class='form-check-input requestableAsset' type='checkbox'
@@ -338,7 +352,7 @@ class assetRequestRecord extends DbRecord {
             <label class='form-check-label' for='person-<?=$personId?>-asset-<?=$assetId?>'><?=trim($requestableAsset['ASSET_TITLE'])?></label>
         	<?php
         	if($requestableAsset['BUSINESS_JUSTIFICATION_REQUIRED']=='Yes'){
-        	   ?><textarea class='form-control justification' rows='2' style='min-width: 100%' id='person-<?=$personId?>-asset-<?=$assetId?>-Justification' name='person-<?=$personId?>-asset-<?=$assetId?>-Justification' placeholder='Business Justification' min='50' max='255' ></textarea><span disabled>50 chars required</span><?php
+        	   ?><textarea class='form-control justification' rows='2' style='min-width: 100%' id='person-<?=$personId?>-justification-<?=$assetId?>' name='person-<?=$personId?>-justification-<?=$assetId?>' placeholder='Business Justification' min='50' max='255' ></textarea><span disabled>50 chars required</span><?php
         	}
         	?>
         	</div>

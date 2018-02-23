@@ -85,6 +85,15 @@ function assetRequest() {
 		  var justificationState = $(this).is(':checked') ? true : false;
 		  $(this).closest('.selectableThing').find('.justification').attr('required',justificationState);
 		  console.log($(this).closest('.selectable').find('.justification'));
+
+
+		  var AssetRequest = new assetRequest();
+		  var assetMissingPrereq = AssetRequest.checkForAssetMissingPrereq();
+		  console.log('do we have an assetmissingprereq?');
+		  console.log(assetMissingPrereq);
+		  if(assetMissingPrereq){
+			  AssetRequest.promptForMissingPrereq(assetMissingPrereq);
+		  };
 		});
   },
 
@@ -118,28 +127,24 @@ function assetRequest() {
 
   this.saveAssetRequestRecords = function(){
 	  console.log('would save all the records now');
-	  $('#saveAssetRequest').removeClass('spinning');
+      var allDisabledFields = ($("input:disabled"));
+      $(allDisabledFields).attr('disabled',false);
+      var formData = $('#assetRequestForm').serialize();
 
-      var form = document.getElementById('assetRequestForm');
-      var formValid = form.checkValidity();
-      if(formValid){
-        var allDisabledFields = ($("input:disabled"));
-        $(allDisabledFields).attr('disabled',false);
-        var formData = $('#assetRequestForm').serialize();
-        $(allDisabledFields).attr('disabled',true);
-           $.ajax({
-            url: "ajax/saveAssetRequestRecords.php",
-            data : formData,
-            type: 'POST',
-            success: function(result){
-            	var resultObj = JSON.parse(result);
-            	console.log(resultObj);
+      console.log(formData);
+
+      $(allDisabledFields).attr('disabled',true);
+
+      $.ajax({
+    	  url: "ajax/saveAssetRequestRecords.php",
+          data : formData,
+          type: 'POST',
+          success: function(result){
+        	  var resultObj = JSON.parse(result);
+        	  console.log(resultObj);
             }
-          });
-      }
-
-
-	  $('#saveAssetRequest').attr('disabled',false);
+         });
+	  $('#saveAssetRequest').attr('disabled',false).removeClass('spinning');
   }
 
   this.listenForSaveAssetRequest = function(){
@@ -147,16 +152,19 @@ function assetRequest() {
 		  console.log('they want to save');
 		  $('#saveAssetRequest').addClass('spinning');
 		  $('#saveAssetRequest').attr('disabled',true);
-		  var AssetRequest = new assetRequest();
-		  var assetMissingPrereq = AssetRequest.checkForAssetMissingPrereq();
-		  console.log('do we have an assetmissingprereq?');
-		  console.log(assetMissingPrereq);
-		  if(assetMissingPrereq){
-			  AssetRequest.promptForMissingPrereq(assetMissingPrereq);
-		  } else {
-			  console.log('we can save now');
-			  AssetRequest.saveAssetRequestRecords();
-		  }
+		  console.log('is form valid ?');
+	      var form = document.getElementById('assetRequestForm');
+	      console.log(form);
+	      var formValid = form.checkValidity();
+	      console.log(formValid);
+	      if(formValid){
+	    	  console.log('valid');
+//	    	  var AssetRequest = new assetRequest();
+	    	  AssetRequest.saveAssetRequestRecords();
+	      } else {
+			  $('#saveAssetRequest').removeClass('spinning');
+			  $('#saveAssetRequest').attr('disabled',false);
+	      }
 		  console.log('were done processing the save request');
 	  });
 
@@ -181,7 +189,7 @@ function assetRequest() {
 		  if(isPreReqAmongstTheChecked.length==0){
 			  /*
 			   * Seek the pre-req amongst all the requestableAssets that we've not been told to ignore.
-			   * If it turns up - prompt for it.
+			   * If it turns up - return it from this Function and stop looking.
 			   * If it doesn't then carry one, we've been told to ignore it.
 			   */
 			  var prereqElement = $('.requestableAsset').not('*[data-ignore="Yes"]').filter('*[data-asset="'+preReq+'"]')[0];
@@ -209,7 +217,7 @@ function assetRequest() {
 		  console.log('they want to add the prereq');
 		  var preReqTitle =  $('#prereqAssetTitle').html();
 		  var preReqElement = $('.requestableAsset').filter('*[data-asset="'+preReqTitle+'"]');
-		  $(preReqElement).prop('checked',true);
+//		  $(preReqElement).prop('checked',true);
 		  $(preReqElement).trigger('click');
 		  $('#missingPrereqModal').modal('hide');
 	  });
@@ -231,9 +239,6 @@ function assetRequest() {
 		  var assetMissingPrereq = AssetRequest.checkForAssetMissingPrereq();
 		  if(assetMissingPrereq){
 			  AssetRequest.promptForMissingPrereq(assetMissingPrereq);
-		  } else {
-			  console.log('we can save now');
-			  AssetRequest.saveAssetRequestRecords();
 		  }
 	  });
   },
@@ -322,8 +327,8 @@ function assetRequest() {
   }
 }
 
+var AssetRequest = new assetRequest();
 
 $( document ).ready(function() {
-	var AssetRequest = new assetRequest();
 	AssetRequest.init();
 });

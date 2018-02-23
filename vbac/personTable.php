@@ -388,10 +388,6 @@ class personTable extends DbTable {
         $sql .= " WHERE UPPER(EMAIL_ADDRESS) = '" . db2_escape_string(strtoupper(trim($emailAddress))) . "' ";
 
         $resultSet = db2_exec($_SESSION['conn'], $sql);
-
-        echo $sql;
-        return $sql;
-
         if(!$resultSet){
             DbTable::displayErrorMessage($resultSet, __CLASS__, __METHOD__, $sql);
             return false;
@@ -400,6 +396,21 @@ class personTable extends DbTable {
         $row = db2_fetch_assoc($resultSet);
         $cnum = strtoupper(trim($row['CNUM']));
         return $cnum;
+    }
+
+    static function getEmailFromCnum($cnum){
+        $sql = " SELECT EMAIL_ADDRESS FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
+        $sql .= " WHERE CNUM = '" . db2_escape_string(strtoupper(trim($cnum))) . "' ";
+
+        $resultSet = db2_exec($_SESSION['conn'], $sql);
+        if(!$resultSet){
+            DbTable::displayErrorMessage($resultSet, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+
+        $row = db2_fetch_assoc($resultSet);
+        $email = trim($row['EMAIL_ADDRESS']);
+        return $email;
     }
 
 
