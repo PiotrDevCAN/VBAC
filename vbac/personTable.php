@@ -65,8 +65,7 @@ class personTable extends DbTable {
         } else {
             while(($row=db2_fetch_assoc($rs))==true){
                  // Only editable, if they're not a "pre-Boarder" who has now been boarded.
-                $cleanRow = array_map('utf8_encode', $row);
-                $preparedRow = $this->prepareFields($cleanRow);
+                $preparedRow = $this->prepareFields($row);
                 $rowWithButtonsAdded =(substr($row['PES_STATUS_DETAILS'],0,7)=='Boarded') ? $preparedRow : $this->addButtons($preparedRow);
                 $data[] = $rowWithButtonsAdded;
             }
