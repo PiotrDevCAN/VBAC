@@ -352,7 +352,7 @@ class assetRequestRecord extends DbRecord {
             <label class='form-check-label' for='person-<?=$personId?>-asset-<?=$assetId?>'><?=trim($requestableAsset['ASSET_TITLE'])?></label>
         	<?php
         	if($requestableAsset['BUSINESS_JUSTIFICATION_REQUIRED']=='Yes'){
-        	   ?><textarea class='form-control justification' rows='2' style='min-width: 100%' id='person-<?=$personId?>-justification-<?=$assetId?>' name='person-<?=$personId?>-justification-<?=$assetId?>' placeholder='Business Justification' min='50' max='255' ></textarea><span disabled>50 chars required</span><?php
+        	   ?><textarea class='form-control justification' rows='2' style='min-width: 100%' id='person-<?=$personId?>-justification-<?=$assetId?>' name='person-<?=$personId?>-justification-<?=$assetId?>' placeholder='<?=trim(urldecode($requestableAsset['PROMPT']));?>' min='50' max='255' ' ></textarea><span disabled>50 chars required</span><?php
         	}
         	?>
         	</div>
