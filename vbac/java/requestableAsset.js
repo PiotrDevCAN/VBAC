@@ -35,7 +35,7 @@ function requestableAsset() {
               type: 'POST',
           }	,
         columnDefs: [
-                      { "visible": false, "targets": [6,7,8,9,10,12,13,14] }
+                      { "visible": false, "targets": [6,7,8,9,10,12,13,14,15] }
           ] ,
           "columns": [
                       { "data": "ASSET_TITLE" , "defaultContent": "" },
@@ -59,6 +59,9 @@ function requestableAsset() {
 
                       { "data": "LISTING_ENTRY_REMOVED", "defaultContent": "" },
                       { "data": "LISTING_ENTRY_REMOVED_BY", "defaultContent": "" },
+
+                      { "data": "PROMPT", "defaultContent": "" },
+
                       ],
         order: [[ 0, "asc" ]],
         autoWidth: false,
@@ -120,11 +123,8 @@ function requestableAsset() {
 		    if(formValid){
 		      $("#saveRequestableAsset").addClass('spinning');
 		      var formData = form.serialize();
-
 		      var inputData = $('input').serialize();
 		      console.log(inputData);
-
-
 		      formData += "&mode=" + mode ;
 		      console.log(formData);
 		        $.ajax({
@@ -177,6 +177,19 @@ function requestableAsset() {
 		        $(this).data('dteret')   == 'Yes' ? $('#RecordDateReturned').bootstrapToggle('on') : $('#RecordDateReturned').bootstrapToggle('off');
 		        $(this).data('onshore')   == 'Yes' ? $('#applicableOnShore').bootstrapToggle('on') : $('#applicableOnShore').bootstrapToggle('off');
 		        $(this).data('offshore')   == 'Yes' ? $('#applicableOffShore').bootstrapToggle('on') : $('#applicableOffShore').bootstrapToggle('off');
+		        $(this).data('just')   == 'Yes' ? $('#businessJustification').bootstrapToggle('on') : $('#businessJustification').bootstrapToggle('off');
+		        $(this).data('just')   == 'Yes' ? $('#promptDiv').show() : $('#promptDiv').hide();
+		        $(this).data('just')   == 'Yes' ? $('#prompt').attr('required',true) : $('#prompt').attr('required',false);
+
+		        var promptnat = $(this).data('prompt');
+		        var promptdec = decodeURIComponent(promptnat);
+		        var promptenc = encodeURIComponent(promptnat);
+		        console.log(promptnat );
+		        console.log(promptdec);
+		        console.log(promptenc);
+
+
+		        $('#prompt').val(promptnat);
 		        $('#asset_primary_uid_title').val($(this).data('uidpri'));
 		        $('#asset_secondary_uid_title').val($(this).data('uidsec'));
 		        $('#asset_title').val($(this).data('asset'));
@@ -185,6 +198,16 @@ function requestableAsset() {
 
 		     });
 	  },
+
+	  this.listenForJustificationButton = function(){
+		  console.log('set listener for justification')
+		  $(document).on('change','#businessJustification', function(){
+		        $('#promptDiv').toggle();
+		        $('#prompt').attr('required') ? $('#prompt').attr('required',false) : $('#prompt').attr('required',true);
+		     });
+	  },
+
+
 
 	  this.listenForDeleteButton = function() {
 		  $(document).on('click','.btnDeleteAsset', function(){

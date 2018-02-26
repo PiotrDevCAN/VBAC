@@ -35,6 +35,12 @@ insert into "ROB_DEV"."REQUESTABLE_ASSET_LIST" ("ASSET_TITLE","APPLICABLE_ONSHOR
 values ('CT ID',1,1,'Rob.daniel@uk.ibm.com', current timestamp);
 
 
+alter table "ROB_DEV"."REQUESTABLE_ASSET_LIST"
+ add column "PROMPT"
+ 	  varchar(255) null ;
+
+
+
 
 
 

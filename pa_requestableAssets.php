@@ -35,5 +35,6 @@ $( document ).ready(function() {
 	    RequestableAsset.listenForSaveRequestableAsset();
 	    RequestableAsset.listenForEditButton();
 	    RequestableAsset.listenForDeleteButton();
+	    RequestableAsset.listenForJustificationButton();
 });
 </script>

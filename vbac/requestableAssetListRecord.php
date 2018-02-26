@@ -22,6 +22,7 @@ class requestableAssetListRecord extends DbRecord
     protected $LISTING_ENTRY_CREATED_BY;
     protected $LISTING_ENTRY_REMOVED;
     protected $LISTING_ENTRY_REMOVED_BY;
+    protected $PROMPT;
 
 
 
@@ -68,6 +69,7 @@ class requestableAssetListRecord extends DbRecord
                   		</select>
 						</div>
 					</div>
+
 <!-- Primary & Secondary UID -->
 					<div class="form-group">
 						<div class="col-sm-6">
@@ -96,12 +98,22 @@ class requestableAssetListRecord extends DbRecord
 						<input checked='checked' data-toggle="toggle" type="checkbox" class='toggle' data-width='250' data-on="Applicable Offshore" data-off="Not applicable Offshore" id='applicableOffShore' name='APPLICABLE_OFFSHORE' value='1' data-onstyle='success' data-offstyle='warning'>
 						</div>
 						<div class='col-sm-3'>
-						<input  data-toggle="toggle" type="checkbox" class='toggle' data-width='250' data-on="Business Justification Required" data-off="No Business Justification Required" id='businessJustification' name='BUSINESS_JUSTIFICATION_REQUIRED' value='1' data-onstyle='success' data-offstyle='warning'>
+						<input  data-toggle="toggle" type="checkbox" class='toggle' data-width='250' data-on="Further Details Required" data-off="No Further Details Required" id='businessJustification' name='BUSINESS_JUSTIFICATION_REQUIRED' value='1' data-onstyle='success' data-offstyle='warning'>
 						</div>
 						<div class='col-sm-3'>
 						<input  data-toggle="toggle" type="checkbox" class='toggle' data-width='250' data-on="Request by Default" data-off="Do not request by default" id='requestByDefault' name='REQUEST_BY_DEFAULT' value='1' data-onstyle='success' data-offstyle='warning'>
 						</div>
 					</div>
+
+<!-- Business Justification Prompt -->
+					<div class="form-group required" style='display: none' id='promptDiv'>
+						<div class="col-sm-6 col-sm-offset-6">
+						<textarea class='form-control' rows='2' style='min-width: 100%' id='prompt' name='PROMPT' placeholder='User prompt when further details are requested' min='50' max='255' ></textarea>
+						</div>
+					</div>
+
+
+
 <!-- Record Dates  -->
 					<div class="form-group">
 						<div class="col-sm-3">

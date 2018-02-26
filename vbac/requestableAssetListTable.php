@@ -56,6 +56,7 @@ class requestableAssetListTable extends DbTable {
             $row['LISTING_ENTRY_CREATED'] .= "data-dtetousr='" .trim($row['RECORD_DATE_ISSUED_TO_USER']) . "' ";
             $row['LISTING_ENTRY_CREATED'] .= "data-dteret='" .trim($row['RECORD_DATE_RETURNED']) . "' ";
             $row['LISTING_ENTRY_CREATED'] .= "data-just='" .trim($row['BUSINESS_JUSTIFICATION_REQUIRED']) . "' ";
+            $row['LISTING_ENTRY_CREATED'] .= "data-prompt='" . urldecode(trim($row['PROMPT'])) . "' ";
 
             $row['LISTING_ENTRY_CREATED'] .= " > ";
             $row['LISTING_ENTRY_CREATED'] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
