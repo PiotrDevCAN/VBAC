@@ -25,7 +25,8 @@ $assetRequest->education();
 ?>
 </div>
 <?php
-$assetRequest->educationModal();
+$assetRequest->education();
+$assetRequest->confirmEducationModal();
 $assetRequest->ctIdRequiredModal();
 $assetRequest->missingPrereqModal();
 
@@ -57,7 +58,7 @@ if($myCnum) {
 //     		    }
 	    });
      	var AssetRequest = new assetRequest();
-     	AssetRequest.showEducationConfirmationModal();
+     	AssetRequest.showEducationConfirmationModal(); // been tweaked to use the Requestees NOTESID
      	AssetRequest.listenForEducationConfirmation();
      	AssetRequest.listenForNoEducation();
      	AssetRequest.listenForSelectRequestee();

@@ -15,21 +15,28 @@ function assetRequest() {
   },
 
   this.showEducationConfirmationModal = function(){
-	  $('#confirmEducationModal').modal('show');
-
+	  $(document).on('select2:select','#requestees', function (e) {
+		  var data = e.params.data;
+		  console.log(data);
+		  $('#educationNotesid').html(data.text);
+		  $('#confirmEducationModal').modal('show');
+	  });
   },
 
   this.listenForEducationConfirmation = function(){
 	  $(document).on('click','#confirmedEducation', function(){
 	        $('#confirmEducationModal').modal('hide');
 	        $('#hideTillEducationConfirmed').show();
-	        $('#educationConfirmed').attr('checked',true);
+	        $('#person-1-educationConfirmed').attr('checked',true);
+	        $('#saveAssetRequest').attr('disabled',false);
 	  });
   },
 
   this.listenForNoEducation = function(){
 	  $(document).on('click','#noEducation', function(){
+		  	$('#saveAssetRequest').attr('disabled',false);
 	        $('#confirmEducationModal').modal('hide');
+	        $('#hideTillEducationConfirmed').hide();
 	        $('#doTheEducation').show();
 	  });
   },

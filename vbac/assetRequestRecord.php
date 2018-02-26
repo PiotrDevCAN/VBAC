@@ -66,7 +66,7 @@ class assetRequestRecord extends DbRecord {
         ?>
         <form id='assetRequestForm'  class="form-horizontal"
         	onsubmit="return false;">
-        <div id='hideTillEducationConfirmed' style='display: none;'>
+        <div id='hideTillEducationConfirmed' style='display: inline;'>
 
 		<div class="panel panel-primary">
 		<div class="panel-heading">
@@ -74,14 +74,6 @@ class assetRequestRecord extends DbRecord {
 		</div>
 
 		<div class="panel-body">
-        	<div class='form-group required'>
-        		<div class='col-sm-6'>
-        		<label for='educationConfirmed'>Education Confirmed</label>
-        		<input type='checkbox' id='educationConfirmed' name='EDUCATION_CONFIRMED' value='Yes' disabled >
-        		</div>
-        		<div class='col-sm-6'>
-        		</div>
-        	</div>
         	<div class='form-group required'>
         		<div class='col-sm-4'>
                 <select class='form-control select select2 '
@@ -104,7 +96,6 @@ class assetRequestRecord extends DbRecord {
 				<div class="panel-heading">
 					<h3 class="panel-title">Request Details</h3>
 				</div>
-
 				<div class='form-group '>
 				  	<div class='col-sm-8' id='allCtidHereDiv'>
             	  	<input class="form-control input-sm" id='ctidConfirmation' name='ctidConfirmation' value=''  type='hidden' disabled required >
@@ -118,7 +109,13 @@ class assetRequestRecord extends DbRecord {
                      echo $options;
                      ?>
                     </select>
-            	</div>
+            		</div>
+            		<div class='form-group required'>
+        			<div class='col-sm-4'>
+        			<label for='educationConfirmed'>Education Confirmed</label>
+        			<input type='checkbox' id='person-1-educationConfirmed' name='EDUCATION_CONFIRMED' value='Yes' disabled >
+        			</div>
+        			</div>
             	</div>
 				<div class="panel-body">
 				<?php
@@ -173,7 +170,7 @@ class assetRequestRecord extends DbRecord {
 
         	<?php
             $allButtons = null;
-            $submitButton =   $this->formButton('submit','Submit','saveAssetRequest',null,'Save','btn btn-primary');
+            $submitButton =   $this->formButton('submit','Submit','saveAssetRequest','disabled','Save','btn btn-primary');
             $allButtons[] = $submitButton;
             $this->formBlueButtons($allButtons);
             $this->formHiddenInput('requestor',$GLOBALS['ltcuser']['mail'],'requestor');
@@ -191,7 +188,7 @@ class assetRequestRecord extends DbRecord {
         JavaScript::buildObjectFromLoadIndexedPair($ctId,'cnum2ctid');
     }
 
-    function educationModal(){
+    function confirmEducationModal(){
         ?>
         <!-- Modal -->
 		<div id="confirmEducationModal" class="modal fade" role="dialog">
@@ -202,13 +199,13 @@ class assetRequestRecord extends DbRecord {
         		   <h4 class="modal-title">Security Education Confirmation</h4>
       			</div>
       			<div class="modal-body" >
-      				<p><center>Please confirm you have successfully completed the mandatory Aurora Security Education Modules for IBMers before continuing</center></p>
+      				<p><center>Please confirm <b><span id='educationNotesid'></span></b> has successfully completed the mandatory Aurora Security Education Modules for IBMers before continuing</center></p>
       				<p><center>Contact Aurora Central PMO/UK/IBM for details of these self paced online courses.</center></p>
 					<p><center>Please note a false declaration of completion constitutes a breach of IBM Business Conduct Guidelines and may lead to disciplinary action.</center></p>
       			</div>
       			<div class="modal-footer">
-      		  		<button type="button" class="btn btn-success" id='confirmedEducation'>I have completed the Education</button>
-      		  		<button type="button" class="btn btn-danger" id='noEducation'>I have NOT completed the Education</button>
+      		  		<button type="button" class="btn btn-success" id='confirmedEducation'>They have completed the Education</button>
+      		  		<button type="button" class="btn btn-danger" id='noEducation'>They have NOT completed the Education</button>
       			</div>
     		</div>
   			</div>
