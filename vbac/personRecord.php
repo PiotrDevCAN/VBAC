@@ -7,6 +7,8 @@ use itdq\Loader;
 use itdq\JavaScript;
 use itdq\DbTable;
 use vbac\allTables;
+use itdq\AuditTable;
+use itdq\AuditRecord;
 
 
 /**
@@ -834,8 +836,19 @@ class personRecord extends DbRecord
 
             break;
         }
+        
+        AuditTable::audit(print_r($pattern,true),AuditTable::RECORD_TYPE_DETAILS);
+        AuditTable::audit(print_r($replacements,true),AuditTable::RECORD_TYPE_DETAILS);
+        AuditTable::audit(print_r($emailBody,true),AuditTable::RECORD_TYPE_DETAILS); 
+        
+        
         $message = preg_replace($pattern, $replacements, $emailBody);
+        
+        AuditTable::audit(print_r($message,true),AuditTable::RECORD_TYPE_DETAILS);
+        
         $response = \itdq\BlueMail::send_mail($to, 'vBAC PES Status Change',$message, self::$pesTaskId[0]);
+        
+        
         return $response;
     }
 
