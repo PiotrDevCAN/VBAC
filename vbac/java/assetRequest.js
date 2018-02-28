@@ -282,7 +282,7 @@ function assetRequest() {
   this.initialiseLocationSelect2 = function(ctid){
   	$('#locationFor'+ctid).select2({
     	width:'100%',
-  		placeholder: 'Location',
+  		placeholder: 'Approved Location',
 		allowClear: true,
 		ajax: {
 		    url: '/ajax/select2Locations.php',

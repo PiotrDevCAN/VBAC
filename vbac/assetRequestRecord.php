@@ -112,7 +112,7 @@ class assetRequestRecord extends DbRecord {
             		</div>
             		<div class='form-group required'>
         			<div class='col-sm-4'>
-        			<label for='educationConfirmed'>Education Confirmed</label>
+        			<label for='educationConfirmed'>Security Education</label>
         			<input type='checkbox' id='person-1-educationConfirmed' name='EDUCATION_CONFIRMED' value='Yes' disabled >
         			</div>
         			</div>
