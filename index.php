@@ -1,3 +1,6 @@
+<?php
+use vbac\personRecord;
+?>
 <style type="text/css" class="init">
 body {
 	background: url('./public/img/vBAC2.jpg')
@@ -21,6 +24,7 @@ body {
 	<div>
 	<p>IMPORTANT NOTE: Personal information or personal sensitive information (such as financial or medical data) or any information identifiable to an individual other than IBM business contact information [indicated as mandatory in this system], SHOULD NOT be entered into this system.</p>
 	</div>
+	
 
 </div>
 

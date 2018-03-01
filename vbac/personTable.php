@@ -12,8 +12,8 @@ class personTable extends DbTable {
     private $preparedUpdateBluepagesFields;
 
     private $allNotesIdByCnum;
-
-
+    
+    
     static function getNextVirtualCnum(){
         $sql  = " SELECT CNUM FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE CNUM LIKE '%XXX' or CNUM LIKE '%xxx' or CNUM LIKE '%999' ";
@@ -153,6 +153,19 @@ class personTable extends DbTable {
             $row['NOTES_ID'] .= " </button> ";
             $row['NOTES_ID'] .= $notesId;
         }
+        
+        
+        if(  ($_SESSION['isPmo'] || $_SESSION['isCdi']) && ($row['REVALIDATION_STATUS']==personRecord::REVALIDATED_OFFBOARDING))  {
+            $revalidationStatus = trim($row['REVALIDATION_STATUS']);
+            $row['REVALIDATION_STATUS']  = "<button type='button' class='btn btn-default btn-xs btnOffboarded' aria-label='Left Align' ";
+            $row['REVALIDATION_STATUS'] .= "data-cnum='" .$cnum . "'";
+            $row['REVALIDATION_STATUS'] .= " > ";
+            $row['REVALIDATION_STATUS'] .= "<span class='glyphicon glyphicon-log-out ' aria-hidden='true'></span>";
+            $row['REVALIDATION_STATUS'] .= " </button> ";
+            $row['REVALIDATION_STATUS'] .= $revalidationStatus;
+        }
+        
+        
         return $row;
     }
 
@@ -339,7 +352,7 @@ class personTable extends DbTable {
         if(empty($this->preparedRevalidationLeaverStmt)){
             $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
             $sql .= " SET REVALIDATION_STATUS='" . personRecord::REVALIDATED_LEAVER . "', REVALIDATION_DATE_FIELD = current date ";
-            $sql .= " WHERE CNUM=?  AND ( REVALIDATION_STATUS is null or REVALIDATION_STATUS != '" . personRecord::REVALIDATED_LEAVER . "' )";
+            $sql .= " WHERE CNUM=?  AND ( REVALIDATION_STATUS is null or REVALIDATION_STATUS not in ('" . personRecord::REVALIDATED_LEAVER . "','" . personRecord::REVALIDATED_OFFBOARDED . "','" . personRecord::REVALIDATED_OFFBOARDING . "') )";
 
             echo "<br/>$sql";
 
@@ -394,6 +407,42 @@ class personTable extends DbTable {
         }
         AuditTable::audit("Revalidation has flagged Pre-Boarders",AuditTable::RECORD_TYPE_AUDIT);
         return true;
+    }
+    
+    function flagOffboarding ($cnum){      
+        if(!empty($cnum)){
+            $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+            $sql .= " SET REVALIDATION_STATUS='" . personRecord::REVALIDATED_OFFBOARDING . "', REVALIDATION_DATE_FIELD = current date ";
+            $sql .= " WHERE CNUM = '" . db2_escape_string($cnum) . "'";
+            
+            $rs = db2_exec($_SESSION['conn'],$sql);
+            
+            if(!$rs){
+                DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+                return false;
+            }
+            AuditTable::audit("CNUM: $cnum  has been flagged as :" . personRecord::REVALIDATED_OFFBOARDING,AuditTable::RECORD_TYPE_AUDIT);
+            return true;
+        }
+
+    }
+    
+    function flagOffboarded ($cnum){
+        if(!empty($cnum)){
+            $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+            $sql .= " SET REVALIDATION_STATUS='" . personRecord::REVALIDATED_OFFBOARDED . "', REVALIDATION_DATE_FIELD = current date ";
+            $sql .= " WHERE CNUM = '" . db2_escape_string($cnum) . "'";
+            
+            $rs = db2_exec($_SESSION['conn'],$sql);
+            
+            if(!$rs){
+                DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+                return false;
+            }
+            AuditTable::audit("CNUM: $cnum  has been flagged as :" . personRecord::REVALIDATED_OFFBOARDED,AuditTable::RECORD_TYPE_AUDIT);
+            return true;
+        }
+        
     }
 
 

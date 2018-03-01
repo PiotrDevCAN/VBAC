@@ -92,10 +92,49 @@ function personRecord() {
 
   this.listenForOffBoarding = function(){
     $(document).on('click','#offBoardingBtn', function(){
-       window.open('pb_offboard.php', '_self');
+        window.open('pb_offboard.php', '_self');
+    	// $('#selectOffboarderModal').modal('show');
+    	
     });
-
+    
+    $('#selectOffboarderModal').on('shown.bs.modal',function(){
+ 	   $.ajax({
+		   url: "ajax/populateSelectOffboarder.php",
+	       type: 'GET',	      
+	       success: function(result){
+	    	   
+	       }
+	   });
+    	
+    })
+    
+    
   },
+  
+  
+  
+  
+  this.populateSelectOffboarderModal = function(){
+	  
+  }
+  
+  
+  this.listenForOffBoardingCompleted = function(){
+	$(document).on('click','.btnOffboarded', function(e){	
+	   console.log(this);
+		var data = $(this).data();	
+		console.log(data);	   
+	   $.ajax({
+		   url: "ajax/completeOffboarding.php",
+	       type: 'POST',
+	       data : {cnum:data.cnum},
+	       success: function(result){
+	    	   personRecord.table.ajax.reload();
+	       }
+	   });
+	});	  
+  }
+  
 
   this.listenForHasBpEntry = function(){
     $(document).on('change','#hasBpEntry', function(){
@@ -498,9 +537,18 @@ function personRecord() {
             if(resultObj.success==true){
               $('#person_uid').val(resultObj.cnum);
               var message = "<div class=panel-heading><h3 class=panel-title>Success</h3>" + resultObj.messages
+              message += resultObj.offboarding ? "<br/><h4>Offboarding has been initiated</h4></br>" : '';
               $('#savingBoardingDetailsModal  .panel').html(message);
-              $('#savingBoardingDetailsModal  .panel').addClass('panel-success');
-              $('#savingBoardingDetailsModal  .panel').removeClass('panel-danger');
+              
+              if(resultObj.offboarding){
+                  $('#savingBoardingDetailsModal  .panel').removeClass('panel-success');
+                  $('#savingBoardingDetailsModal  .panel').removeClass('panel-danger');
+                  $('#savingBoardingDetailsModal  .panel').addClass('panel-warning');
+              } else {
+                  $('#savingBoardingDetailsModal  .panel').addClass('panel-success');
+                  $('#savingBoardingDetailsModal  .panel').removeClass('panel-danger');   
+                  $('#savingBoardingDetailsModal  .panel').removeClass('panel-warning');
+              }
               $('#boardingForm :input').attr('disabled',true);
               $('#saveBoarding').attr('disabled',true);
               $('#initiatePes').attr('disabled',false);
@@ -509,6 +557,7 @@ function personRecord() {
               $('#savingBoardingDetailsModal  .panel').html(message);
               $('#savingBoardingDetailsModal  .panel').addClass('panel-danger');
               $('#savingBoardingDetailsModal  .panel').removeClass('panel-success');
+              $('#savingBoardingDetailsModal  .panel').removeClass('panel-warning');
               $('#saveBoarding').attr('disabled',false);
               $('#initiatePes').attr('disabled',true);
             };
@@ -535,7 +584,6 @@ function personRecord() {
         success: function(result){
           var Person = new personRecord();
           $('#personDatabaseDiv').html(result);
-          console.log($('#personTable'));
           Person.initialiseDataTable();
         }
       });
@@ -546,10 +594,9 @@ function personRecord() {
       // Setup - add a text input to each footer cell
       $('#personTable tfoot th').each( function () {
           var title = $(this).text();
-          $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+          $(this).html( '<input type="text" id="footer'+ title + '" placeholder="Search '+title+'" />' );
       } );
     // DataTable
-      console.log($('#personTable'));
       personRecord.table = $('#personTable').DataTable({
         ajax: {
               url: 'ajax/populatePersonDatatable.php',
@@ -640,8 +687,7 @@ function personRecord() {
               }
           } );
       } );
-
-
+      
 //	    personRecord.table.columns([0,1,2,3,4,25]).visible(true);
 
 
@@ -650,11 +696,12 @@ function personRecord() {
 
   this.listenForReportPes = function(){
     $(document).on('click','#reportPes', function(e){
-      console.log(e);
-      personRecord.table.columns().visible(false,false);
-      personRecord.table.columns([5,21,22,23,24,25,34]).visible(true);
-      console.log(personRecord.table);
-      personRecord.table.order([21,'desc'],[5,"asc"]).draw();
+    	$('#portalTitle').text('Person Portal - PES Report');
+    	$.fn.dataTableExt.afnFiltering.pop();
+    	personRecord.table.columns().visible(false,false);
+    	personRecord.table.columns([5,21,22,23,24,25,34]).visible(true);
+    	console.log(personRecord.table);
+    	personRecord.table.order([21,'desc'],[5,"asc"]).draw();
       });
   },
 
@@ -668,40 +715,86 @@ function personRecord() {
 
   this.listenForReportAction = function(){
     $(document).on('click','#reportAction', function(e){
-      personRecord.table.columns().visible(false,false);
-      personRecord.table.columns([0,1,5,9,25]).visible(true);
-      personRecord.table.order([5,'asc']).draw();
+    	$('#portalTitle').text('Person Portal - Action Mode');
+    	$.fn.dataTableExt.afnFiltering.pop();
+    	personRecord.table.columns().visible(false,false);
+    	personRecord.table.columns([0,1,5,9,25]).visible(true);
+    	personRecord.table.order([5,'asc']).draw();
       });
   },
 
   this.listenForReportRevalidation = function(){
     $(document).on('click','#reportRevalidation', function(e){
-      personRecord.table.columns().visible(false,false);
-      personRecord.table.columns([5,7,8,15,16,26,27]).visible(true);
-      personRecord.table.order([5,'asc']).draw();
-      });
+    	$('#portalTitle').text('Person Portal - Revalidation Report');
+    	$.fn.dataTableExt.afnFiltering.pop();
+    	personRecord.table.columns().visible(false,false);
+    	personRecord.table.columns([5,7,8,15,16,26,27]).visible(true);
+    	personRecord.table.search('').order([5,'asc']).draw();
+    });
   },
 
+  this.listenForReportOffboarding = function(){
+	    $(document).on('click','#reportOffboarding', function(e){
+	    	$('#portalTitle').text('Person Portal - Offboarding Report');
+	    	$.fn.dataTableExt.afnFiltering.pop();
+	        $.fn.dataTableExt.afnFiltering.push(
+	    		    function(oSettings, aData, iDataIndex){
+	    		    	
+	    		    	var dat = new Date();
+	    		    	dat.setDate(dat.getDate() +31);
+    		    	
+	    		    	var month = "00".concat(dat.getMonth()+1).substr(-2);
+	    		    	var day   = "00".concat(dat.getDate()).substr(-2);	    		    	  
+	    		    	var thirtyDaysHence = dat.getFullYear() + "-" + month + "-" + day;
+	    		        var dateEnd = thirtyDaysHence;
+	    		        // aData represents the table structure as an array of columns, so the script access the date value 
+	    		        // in the first column of the table via aData[0]
+	    		        var evalDate= aData[16];
+	    		        var revalidationStatus = aData[27];
+	    		        
+	    		        if (evalDate != '' && evalDate != '2000-01-01' &&  evalDate <= dateEnd && (revalidationStatus != 'preboarder' && revalidationStatus != 'offboarded')) { 
+	    		            return true;
+	    		        }
+	    		        else {	    		        	
+	    		            return false;
+	    		        }
+	    		});
+	    	
+	      personRecord.table.columns().visible(false,false);
+	      personRecord.table.columns([5,7,8,15,16,26,27]).visible(true);
+	      personRecord.table.order([27,'desc'],[26,'desc'],[5,'asc']);
+	      personRecord.table.draw();
+//	      $.fn.dataTableExt.afnFiltering.pop(); - if we pop off here - then when we sort on a column all the rows are back.      
+	      });
+	  },
+  
   this.listenForReportReset = function(){
     $(document).on('click','#reportReset', function(e){
-      personRecord.table.columns().visible(false,false);
-      personRecord.table.columns([0,1,2,3,4,25]).visible(true);
-      personRecord.table.order([5,"asc"]).draw();
-      });
+    	$('#portalTitle').text('Person Portal');
+    	$.fn.dataTableExt.afnFiltering.pop();
+    	personRecord.table.columns().visible(false,false);
+    	personRecord.table.columns([0,1,2,3,4,25]).visible(true);
+    	personRecord.table.search('').order([5,"asc"]).draw();
+    });
   },
 
 
   this.listenForReportAll = function(){
     $(document).on('click','#reportAll', function(e){
-      personRecord.table.columns().visible(true);
-      personRecord.table.order([5,"asc"]).draw();
+    	$('#portalTitle').text('Person Portal - All Columns');
+    	$.fn.dataTableExt.afnFiltering.pop();
+    	personRecord.table.columns().visible(true);
+    	personRecord.table.columns().search('');
+    	personRecord.table.order([5,"asc"]).draw();
       });
   },
 
 
   this.listenForReportReload = function(){
     $(document).on('click','#reportReload', function(e){
-      personRecord.table.ajax.reload();
+    	$('#portalTitle').text('Person Portal');
+    	$.fn.dataTableExt.afnFiltering.pop();
+    	personRecord.table.ajax.reload();
       });
   },
 
@@ -717,12 +810,13 @@ function personRecord() {
 
   this.listenForInitiatePesFromPortal = function(){
     $(document).on('click','.btnPesInitiate', function(e){
-      console.log('initiatePes PES from Portal');
-      $(".btnPesInitiate").addClass('spinning');
-      console.log(this);
-      var cnum = $(this).data('cnum');
-      var person = new personRecord;
-      person.initiatePes(cnum);
+    	$('#portalTitle').text('Person Portal - PES Report');
+    	console.log('initiatePes PES from Portal');
+    	$(".btnPesInitiate").addClass('spinning');
+    	console.log(this);
+    	var cnum = $(this).data('cnum');
+    	var person = new personRecord;
+    	person.initiatePes(cnum);
     });
   },
 
