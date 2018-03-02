@@ -13,6 +13,7 @@ class personTable extends DbTable {
 
     private $allNotesIdByCnum;
     
+    private $thirtyDaysHence;
     
     static function getNextVirtualCnum(){
         $sql  = " SELECT CNUM FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
@@ -46,7 +47,10 @@ class personTable extends DbTable {
         $loader = new Loader();
         $this->allNotesIdByCnum = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON);
 
+        $this->thirtyDaysHence = new \DateTime();
+        $this->thirtyDaysHence->add(new \DateInterval('P31D'));
 
+        
         $data = array();
 
         $isFM   = personTable::isManager($_SESSION['ssoEmail']);
@@ -85,8 +89,11 @@ class personTable extends DbTable {
         $notesId = trim($row['NOTES_ID']);
         $email   = trim($row['EMAIL_ADDRESS']);
         $cnum = trim($row['CNUM']);
-        $flag = $row['FM_MANAGER_FLAG'];
+        $flag = isset($row['FM_MANAGER_FLAG']) ? $row['FM_MANAGER_FLAG'] : null ;
         $status = empty(trim($row['PES_STATUS'])) ? personRecord::PES_STATUS_NOT_REQUESTED : trim($row['PES_STATUS']) ;
+        $projectedEndDateObj = !empty($row['PROJECTED_END_DATE']) ? \DateTime::createFromFormat('Y-m-d', $row['PROJECTED_END_DATE']) : false;
+        $potentialForOffboarding = $projectedEndDateObj ? $projectedEndDateObj <= $this->thirtyDaysHence : false;
+        
         // FM_MANAGER_FLAG
         if($_SESSION['isPmo'] || $_SESSION['isCdi']){
             if(strtoupper(substr($flag,0,1))=='N' || empty($flag)){
@@ -164,6 +171,17 @@ class personTable extends DbTable {
             $row['REVALIDATION_STATUS'] .= " </button> ";
             $row['REVALIDATION_STATUS'] .= $revalidationStatus;
         }
+        
+        if( $potentialForOffboarding && ($_SESSION['isFm'] || $_SESSION['isPmo'] || $_SESSION['isCdi']) && ($row['REVALIDATION_STATUS']==personRecord::REVALIDATED_FOUND))  {
+           $revalidationStatus = trim($row['REVALIDATION_STATUS']);
+            $row['REVALIDATION_STATUS']  = "<button type='button' class='btn btn-default btn-xs btnOffboarding' aria-label='Left Align' ";
+            $row['REVALIDATION_STATUS'] .= "data-cnum='" .$cnum . "'";
+            $row['REVALIDATION_STATUS'] .= " > ";
+            $row['REVALIDATION_STATUS'] .= "<span class='glyphicon glyphicon-log-out ' aria-hidden='true'></span>";
+            $row['REVALIDATION_STATUS'] .= " </button> ";
+            $row['REVALIDATION_STATUS'] .= $revalidationStatus;
+         }
+        
         
         
         return $row;

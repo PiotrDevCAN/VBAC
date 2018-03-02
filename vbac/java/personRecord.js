@@ -135,6 +135,38 @@ function personRecord() {
 	});	  
   }
   
+  this.listenForBtnOffboarding = function(){
+		$(document).on('click','.btnOffboarding', function(e){	
+		   console.log(this);
+			var data = $(this).data();	
+			console.log(data);	   
+		   $.ajax({
+			   url: "ajax/initiateOffboardingFromPortal.php",
+		       type: 'POST',
+		       data : {cnum:data.cnum},
+		       success: function(result){
+		           console.log(result);
+		           var resultObj = JSON.parse(result);
+		           if(resultObj.initiated==true){
+		        	   var message = "<div class=panel-heading><h3 class=panel-title>Success</h3>";
+		               message += "<br/><h4>Offboarding has been initiated</h4></br>";
+		               $('#confirmOffboardingModal  .panel').html(message);
+		               $('#confirmOffboardingModal  .panel').addClass('panel-success');
+		               $('#confirmOffboardingModal  .panel').removeClass('panel-danger');
+		             } else {
+			           var message = "<div class=panel-heading><h3 class=panel-title>Success</h3>";
+			           message += "<br/><h4>Offboarding has <b>NOT</b> been initiated</h4></br>";   
+		               $('#confirmOffboardingModal  .panel').html(message);
+		               $('#confirmOffboardingModal  .panel').addClass('panel-danger');
+		               $('#confirmOffboardingModal  .panel').removeClass('panel-success');
+		             };
+                	 $('#confirmOffboardingModal').modal('show');	
+  		    	   personRecord.table.ajax.reload();                	 
+		       }		    	   
+		   });
+		});	  
+  },
+  
 
   this.listenForHasBpEntry = function(){
     $(document).on('change','#hasBpEntry', function(){
@@ -600,8 +632,7 @@ function personRecord() {
       personRecord.table = $('#personTable').DataTable({
         ajax: {
               url: 'ajax/populatePersonDatatable.php',
-         //     url: 'ajax/test.php',
-              type: 'POST',
+              type: 'GET',
           }	,
 //	        CNUM         0
 //	        Email        4
@@ -653,14 +684,14 @@ function personRecord() {
 //	            order: [ 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34]
 //	        },
           order: [[ 5, "asc" ]],
-        autoWidth: false,
-        deferRender: true,
-        responsive: false,
-        // scrollX: true,
-        processing: true,
-        responsive: true,
-        dom: 'Blfrtip',
-//	    	colReorder: true,
+          autoWidth: false,
+          deferRender: true,
+          responsive: false,
+          // scrollX: true,
+          processing: true,
+          responsive: true,
+          dom: 'Blfrtip',
+//	      colReorder: true,
           buttons: [
                     'colvis',
                     'excelHtml5',
@@ -668,13 +699,6 @@ function personRecord() {
                     'print'
                 ],
       });
-
-//	    ResourceRequest.table.columns([0,1,2,3,4,5,6,7,8,9,10,17,18,20,21,22,23,24,25,26]).visible(false,false);
-//	    ResourceRequest.table.columns.adjust().draw(false);
-
-      // Reorder
-//	    personRecord.table .colReorder.order( [ 5, 4, 3, 2, 1, 0 ,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34 ] );
-
       // Apply the search
       personRecord.table.columns().every( function () {
           var that = this;
@@ -687,11 +711,6 @@ function personRecord() {
               }
           } );
       } );
-      
-//	    personRecord.table.columns([0,1,2,3,4,25]).visible(true);
-
-
-
   },
 
   this.listenForReportPes = function(){
@@ -739,7 +758,6 @@ function personRecord() {
 	    	$.fn.dataTableExt.afnFiltering.pop();
 	        $.fn.dataTableExt.afnFiltering.push(
 	    		    function(oSettings, aData, iDataIndex){
-	    		    	
 	    		    	var dat = new Date();
 	    		    	dat.setDate(dat.getDate() +31);
     		    	
@@ -752,7 +770,7 @@ function personRecord() {
 	    		        var evalDate= aData[16];
 	    		        var revalidationStatus = aData[27];
 	    		        
-	    		        if (evalDate != '' && evalDate != '2000-01-01' &&  evalDate <= dateEnd && (revalidationStatus != 'preboarder' && revalidationStatus != 'offboarded')) { 
+	    		        if (evalDate != '' && evalDate != '2000-01-01' &&  evalDate <= dateEnd && (revalidationStatus.trim() != 'preboarder' && revalidationStatus.trim() != 'offboarded')) { 
 	    		            return true;
 	    		        }
 	    		        else {	    		        	
@@ -761,9 +779,12 @@ function personRecord() {
 	    		});
 	    	
 	      personRecord.table.columns().visible(false,false);
-	      personRecord.table.columns([5,7,8,15,16,26,27]).visible(true);
-	      personRecord.table.order([27,'desc'],[26,'desc'],[5,'asc']);
+	      personRecord.table.columns([5,8,10,11,16,27]).visible(true);
+	      personRecord.table.order([16,'desc'],[5,'asc']);
+               
 	      personRecord.table.draw();
+	      
+//	      personRecord.table.column(27).data().each().function(){console.log(this)});
 //	      $.fn.dataTableExt.afnFiltering.pop(); - if we pop off here - then when we sort on a column all the rows are back.      
 	      });
 	  },

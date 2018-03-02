@@ -28,6 +28,7 @@ $person->amendPesStatusModal();
 $person->savingBoardingDetailsModal();
 $person->editPersonModal();
 $person->confirmChangeFmFlagModal();
+$person->confirmOffboardingModal();
 ?>
 
 <script>
@@ -51,5 +52,6 @@ $(document).ready(function(){
 	person.listenForConfirmFmFlag();
 	person.listenforUpdateBoarding();
 	person.listenForOffBoardingCompleted();
+	person.listenForBtnOffboarding();
 });
 </script>
