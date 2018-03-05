@@ -332,6 +332,8 @@ function assetRequest() {
 		  });
 	  }
   }
+  
+ 
 }
 
 var AssetRequest = new assetRequest();

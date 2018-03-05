@@ -22,10 +22,10 @@ class assetRequestRecord extends DbRecord {
     protected $REQUESTOR_EMAIL;
     protected $REQUESTED;
     protected $APPROVER_EMAIL;
-    protected $APPROVED;
+    protected $APPROVED_DATE;
     protected $EDUCATION_CONFIRMATION;
     protected $STATUS;
-    protected $ORDERIT_GROUP_REF;
+    protected $ORDERIT_VBAC_REF;
     protected $ORDERIT_NUMBER;
     protected $ORDERIT_STATUS;
 

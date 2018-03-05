@@ -23,6 +23,7 @@ class requestableAssetListRecord extends DbRecord
     protected $LISTING_ENTRY_REMOVED;
     protected $LISTING_ENTRY_REMOVED_BY;
     protected $PROMPT;
+    protected $ORDER_IT_GROUP;
 
 
 

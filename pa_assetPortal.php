@@ -3,7 +3,7 @@
 
 ?>
 <div class='container'>
-<h1>Asset Requuest Portal</h1>
+<h1>Asset Request Portal</h1>
 </div>
 
 <div class='container-fluid'>
@@ -22,9 +22,8 @@
 
 <script>
 $(document).ready(function(){
-	var AssetRequests = new assetRequests();
-	AssetRequests.initialiseAssetPortalDatatable();
-
+	var AssetPortal = new assetPortal();
+	AssetPortal.initialiseAssetRequestPortal();
 });
 
 </script>
