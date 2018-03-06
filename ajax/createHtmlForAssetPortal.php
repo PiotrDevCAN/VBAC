@@ -1,9 +1,9 @@
 <?php
 use vbac\assetRequestRecord;
+use vbac\assetRequestsTable;
 
 ob_start();
-$assetRequest = new assetRequestRecord();
-$headerCells = $assetRequest->htmlHeaderCells();
+$headerCells = assetRequestsTable::portalHeaderCells();
 
 ob_clean();
 ?>

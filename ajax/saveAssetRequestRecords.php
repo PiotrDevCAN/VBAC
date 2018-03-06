@@ -53,6 +53,6 @@ foreach ($_POST as $key => $value){
     }
 }
 
-$response = array('result'=>'success','post'=>$post);
+$response = array('result'=>'success','post'=>$post,'approvingMgrEmail'=>$approvingMgrEmail);
 ob_clean();
 echo json_encode($response);

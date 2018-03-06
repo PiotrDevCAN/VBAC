@@ -29,6 +29,7 @@ $assetRequest->education();
 $assetRequest->confirmEducationModal();
 $assetRequest->ctIdRequiredModal();
 $assetRequest->missingPrereqModal();
+$assetRequest->saveFeedbackModal();
 
 ob_flush();
 $assetRequest->createJsCtidLookup();

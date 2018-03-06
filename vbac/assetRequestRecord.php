@@ -187,6 +187,28 @@ class assetRequestRecord extends DbRecord {
         $ctId = $loader->loadIndexed('CONTRACTOR_ID','CNUM',allTables::$PERSON);
         JavaScript::buildObjectFromLoadIndexedPair($ctId,'cnum2ctid');
     }
+    
+    function saveFeedbackModal(){
+        ?>
+        <!-- Modal -->
+		<div id="saveFeedbackModal" class="modal fade" role="dialog">
+  			<div class="modal-dialog">
+	        <!-- Modal content-->
+    		<div class="modal-content">
+      			<div class="modal-header">
+        		   <h4 class="modal-title">Asset Request Creation</h4>
+      			</div>
+      			<div class="modal-body" >
+      			</div>
+      			<div class="modal-footer">
+      				<button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
+      			</div>
+    		</div>
+  			</div>
+		</div>
+        <?php
+    }
+    
 
     function confirmEducationModal(){
         ?>

@@ -2,12 +2,11 @@
 use vbac\assetRequestsTable;
 use vbac\allTables;
 use vbac\personTable;
-
+use itdq\Loader;
 
 set_time_limit(0);
 ob_start();
 
-session_start();
 
 $loader = new Loader();
 
@@ -29,7 +28,7 @@ switch (true) {
             $myPeopleListed .= db2_escape_string($personCnum) . "','"; 
         }        
         $myPeopleListed .= "'";        
-        $predicate .= " CNUM in ('". db2_escape($myCnum) . "'," . $myPeopleListed . ") or lower(Approver_email='" . db2_escape_string($myEmail) . "') ";    
+        $predicate .= " AR.CNUM in ('". db2_escape($myCnum) . "'," . $myPeopleListed . ") or lower(Approver_email='" . db2_escape_string($myEmail) . "') ";    
     break;
     case $_SESSION['isCdi']:
     case $_SESSION['isPmo']:
@@ -37,15 +36,15 @@ switch (true) {
     break;
     default:
         $myCnum = personTable::myCnum();
-        $predicate .= " CNUM = '". db2_escape($myCnum) . "' ";
+        $predicate .= " AR.CNUM = '". db2_escape($myCnum) . "' ";
     break;
 }
 
-$data = assetRequestsTable::returnAsArray($predicate);
+$data = assetRequestsTable::returnForPortal($predicate);
 
 $messages = ob_get_clean();
 
-$response = array("data"=>$data,'messages'=>$messages, 'predicate'=>$predicate);
+$response = array("data"=>$data,'messages'=>$messages, 'predicate'=>$predicate,'sql'=>$sql);
 
 ob_clean();
 echo json_encode($response);

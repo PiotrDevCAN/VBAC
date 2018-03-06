@@ -149,6 +149,8 @@ function assetRequest() {
           success: function(result){
         	  var resultObj = JSON.parse(result);
         	  console.log(resultObj);
+        	 //  $('#saveFeedbackModal .modal-body').hmtl('Requests Created');
+        	  $('#saveFeedbackModal').modal('show');
             }
          });
 	  $('#saveAssetRequest').attr('disabled',false).removeClass('spinning');
@@ -157,8 +159,17 @@ function assetRequest() {
   this.listenForSaveAssetRequest = function(){
 	  $(document).on('click','#saveAssetRequest', function(){
 		  console.log('they want to save');
+		  console.log($('#saveAssetRequest'));
+		  
+		  console.log($('.btn'));
+		  console.log($('.btn.spinning'));	  
+		  
 		  $('#saveAssetRequest').addClass('spinning');
+		  
+		  console.log($('.btn.spinning'));	
+		  
 		  $('#saveAssetRequest').attr('disabled',true);
+		  console.log($('#saveAssetRequest'));
 		  console.log('is form valid ?');
 	      var form = document.getElementById('assetRequestForm');
 	      console.log(form);
@@ -169,6 +180,7 @@ function assetRequest() {
 //	    	  var AssetRequest = new assetRequest();
 	    	  AssetRequest.saveAssetRequestRecords();
 	      } else {
+	    	  alert('Please complete form');
 			  $('#saveAssetRequest').removeClass('spinning');
 			  $('#saveAssetRequest').attr('disabled',false);
 	      }
