@@ -3,19 +3,21 @@ use vbac\personRecord;
 
 ?>
 <div class='container'>
-<h1>Person Portal</h1>
+<h1 id='portalTitle'>Person Portal</h1>
 </div>
 
 <div class='container-fluid'>
 <h3>Person Database</h3>
 
-<button id='reportPes'    class='btn btn-primary btn-sm '>PES Report</button>
-<button id='reportAction' class='btn btn-primary btn-sm '>Action Mode</button>
-<button id='reportRevalidation' class='btn btn-primary btn-sm '>Revalidation Report</button>
-<button id='reportReset'  class='btn btn-primary btn-sm '>Reset</button>
-<button id='reportAll'  class='btn btn-primary btn-sm '>Show all Columns</button>
-<button id='reportReload'  class='btn btn-primary btn-sm '>Reload Data</button>
 
+<button id='reportAction' 		class='btn btn-primary btn-sm '>Action Mode</button>
+<button id='reportOffboarding' 	class='btn btn-primary btn-sm '>Offboarding Report</button>
+<button id='reportPes'    		class='btn btn-primary btn-sm '>PES Report</button>
+<button id='reportRevalidation' class='btn btn-primary btn-sm '>Revalidation Report</button>
+<button id='reportAll'  		class='btn btn-primary btn-sm '>Show all Columns</button>
+&nbsp;
+<button id='reportReload'  		class='btn btn-warning btn-sm '>Reload Data</button>
+<button id='reportReset'  		class='btn btn-warning btn-sm '>Reset</button>
 <div id='personDatabaseDiv'>
 </div>
 </div>
@@ -26,6 +28,7 @@ $person->amendPesStatusModal();
 $person->savingBoardingDetailsModal();
 $person->editPersonModal();
 $person->confirmChangeFmFlagModal();
+$person->confirmOffboardingModal();
 ?>
 
 <script>
@@ -35,6 +38,7 @@ $(document).ready(function(){
 	person.listenForReportPes();
 	person.listenForReportAction();
 	person.listenForReportRevalidation();
+	person.listenForReportOffboarding();
 	person.listenForReportReset();
 	person.listenForReportReload();
 	person.listenForReportAll();
@@ -47,5 +51,7 @@ $(document).ready(function(){
 	person.listenForToggleFmFlag();
 	person.listenForConfirmFmFlag();
 	person.listenforUpdateBoarding();
+	person.listenForOffBoardingCompleted();
+	person.listenForBtnOffboarding();
 });
 </script>

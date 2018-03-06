@@ -8,8 +8,8 @@ use itdq\JavaScript;
 use itdq\DbTable;
 use vbac\allTables;
 use itdq\AuditTable;
-use itdq\AuditRecord;
-
+use DateTime;
+use DateInterval;
 
 /**
  *
@@ -89,12 +89,15 @@ class personRecord extends DbRecord
     const REVALIDATED_FOUND = 'found';
     const REVALIDATED_LEAVER = 'leaver';
     const REVALIDATED_PREBOARDER = 'preboarder';
+    const REVALIDATED_OFFBOARDING = 'offboarding';
+    const REVALIDATED_OFFBOARDED = 'offboarded';
 
     public static $employeeTypeMapping = array('A'=>'Regular','B'=>'Contractor','C'=>'Contractor','I'=>'Regular','L'=>'Regular','O'=>'Regular','P'=>'Regular','V'=>'Contractor','X'=>'Regular');
 
-    public static $cio = array('Commercial','Cyber', 'Digital','Divestment','GOFE','IT 4 IT','Insurance','Retail','Sandbox','TRP');
+    public static $cio = array('Commercial','Cross CIO Leadership','Cyber', 'Digital','Divestment','GOFE','IT 4 IT','Insurance','Retail','Sandbox','TRP','tbc');
 
     private static $pesTaskId = array('lbgvetpr@uk.ibm.com','rob.daniel@uk.ibm.com'); // Only first entry will be used as the "contact" in the PES status emails.
+    private static $pmoTaskId = array('rob.daniel@uk.ibm.com');
     //private static $pesTaskId = 'rob.daniel@uk.ibm.com';
     //private static $pesTaskId    = array('rob.daniel@uk.ibm.com', 'carrabooth@uk.ibm.com');
 //     private static $pesEmailBody = '<table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -179,7 +182,40 @@ class personRecord extends DbRecord
                                               <br/>Many Thanks for your cooperation,';
     private static $pesClearedEmailPattern = array('/&&candidate&&/','/&&effectiveDate&&/','/&&taskid&&/');
 
+    private static $offboardingEmail = 'Please initiate OFFBOARDING for the following individual:\n
+                                    Name : &&name&&
+                                    Serial: &&cnum&&
+                                    Email Address : &&email&&
+                                    Notes Id : &&notesid&&
 
+                                    Projected End Date : &&projectedEndDate&&
+    
+                                    Country working in : &&country&&
+                                    LoB : &&lob&&
+                                    Employee Type:&&type&&
+                                    Functional Mgr: &&functionalMgr&&'
+    
+    
+    ;
+    
+                                       
+    private static $offboardingEmailPattern = array(
+        '/&&name&&/',
+        '/&&cnum&&/',
+        '/&&email&&/',
+        '/&&notesid&&/',
+        '/&&projectedEndDate&&/',
+        '/&&country&&/',
+        '/&&lob&&/',
+        '/&&type&&/',
+        '/&&functionalMgr&&/',
+    );
+    
+    
+    
+    
+    
+    
 
     private static  $lobValue = array('GTS','GBS','IMI','Cloud','Security','Other');
 
@@ -208,6 +244,14 @@ class personRecord extends DbRecord
 //         return $headerCells;
 //     }
 
+    
+    function __construct($pwd=null){
+        $this->headerTitles['FM_CNUM'] = 'FUNCTIONAL MGR';
+        parent::__construct();
+    }
+    
+    
+
 
     static function loadKnownCnum($predicate=null){
         $sql = " SELECT CNUM FROM " . $_SESSION['Db2Schema'] . "." .  allTables::$PERSON;
@@ -231,11 +275,32 @@ class personRecord extends DbRecord
         ?></script><?php
 
     }
-
-
-
-
-
+    
+    function checkIfTimeToInitiateOffboarding(){
+        if(!empty($this->PROJECTED_END_DATE)){
+            $projectedEndDate = DateTime::createFromFormat('Y-m-d', $this->PROJECTED_END_DATE);
+            
+            $offboardingDate = new \DateTime();
+            $offboardThreshold = new \DateInterval('P30D');
+            $offboardingDate->add($offboardThreshold);
+            
+            return $projectedEndDate <= $offboardingDate;
+        } else {
+            return false;
+        }
+    }
+    
+    function initiateOffboarding(){
+        
+        $mailAccount = empty($this->NOTES_ID) ? $this->EMAIL_ADDRESS : $this->NOTES_ID;
+        
+        AuditTable::audit("Prior to Offboarding for Cnum:" . $this->CNUM . " Revalidation Status:" . $this->REVALIDATION_STATUS . " Revalidation Date:" . $this->REVALIDATION_DATE_FIELD . " Updater:" . $_SESSION['ssoEmail'],AuditTable::RECORD_TYPE_DETAILS);
+        AuditTable::audit("Initiated Offboarding for Cnum:" . $this->CNUM . " Id:" . $mailAccount . " Projected End Date:" . $this->PROJECTED_END_DATE,AuditTable::RECORD_TYPE_AUDIT);
+        $personTable = new personTable(allTables::$PERSON);
+        $personTable->flagOffboarding($this->CNUM);
+        $this->sendOffboardingNotification();
+    }
+    
     function displayBoardingForm($mode){
         $loader = new Loader();
         $workstreamTable = new staticDataWorkstreamTable(allTables::$STATIC_WORKSTREAMS);
@@ -539,7 +604,7 @@ class personRecord extends DbRecord
 
         <div class='col-sm-6'>
           <input class="form-control" id="end_date"  value="<?=is_object($endDate) ? $endDate->format('d M Y') : null?>"  type="text" placeholder='End Date (if known)' data-toggle='tooltip' title='End Date'>
-		  <input class="form-control" id="enb_date_db2" name="PROJECTED_END_DATE" value="<?=$this->PROJECTED_END_DATE?>" type="hidden" >
+		  <input class="form-control" id="end_date_db2" name="PROJECTED_END_DATE" value="<?=$this->PROJECTED_END_DATE?>" type="hidden" >
            </div>
      </div>
      </div>
@@ -565,7 +630,7 @@ class personRecord extends DbRecord
   </form>
     <?php
     }
-
+    
 
     function savingBoardingDetailsModal(){
         ?>
@@ -690,6 +755,28 @@ class personRecord extends DbRecord
 
 
     }
+    
+    function confirmOffboardingModal(){
+        ?>
+       <!-- Modal -->
+    <div id="confirmOffboardingModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+          <div class="modal-header">
+             <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Offboarding</h4>
+            </div>
+             <div class="modal-body" >
+               <div class="panel"></div>
+             </div>
+             <div class='modal-footer'>
+             </div>
+            </div>
+        </div>
+      </div>
+    <?php
+    }
+    
 
     function editPersonModal(){
         ?>
@@ -751,6 +838,39 @@ class personRecord extends DbRecord
       </div>
     <?php
     }
+    
+    function selectOffboarderModal(){
+        ?>
+       <!-- Modal -->
+    <div id="selectOffboarderModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+          <div class="modal-header">
+             <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Select Offboarder Modal</h4>
+            </div>
+
+             <form id='selectOffboarderForm' class="form-horizontal"  method='post' >
+             <div class="modal-body" >
+             </div>
+             <div class='modal-footer'>
+             <?php
+             $allButtons = null;
+             $submitButton = $this->formButton('submit','Submit','initiateOffboarding',null,'Initiate Offboarding','btn-primary');
+             $allButtons[] = $submitButton;
+             $this->formBlueButtons($allButtons);
+            ?>
+             <button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
+             </div>
+             </form>
+            </div>
+        </div>
+      </div>
+    <?php
+    }
+    
+    
+    
 
     function convertCountryCodeToName(){
         if(strlen($this->COUNTRY)== 2){
@@ -859,4 +979,42 @@ class personRecord extends DbRecord
         $success = $table->setPesRequested($this->CNUM, $_SESSION['ssoEmail']);
         return $success;
     }
+    
+    
+    function sendOffboardingNotification(){        
+        $loader = new Loader();
+        
+        if(!empty($this->FM_CNUM)){
+            $fmEmailArray = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON," CNUM='" . db2_escape_string(trim($this->FM_CNUM)) . "' ");
+            $fmEmail = isset($fmEmailArray[trim($this->FM_CNUM)]) ? $fmEmailArray[trim($this->FM_CNUM)] : $this->FM_CNUM;
+        } else {
+            $fmEmail = 'Unknown';
+        }
+        $firstName = !empty($this->FIRST_NAME) ? $this->FIRST_NAME : "firstName";
+        $lastName  = !empty($this->LAST_NAME) ? $this->LAST_NAME : "lastName";
+        $cnum  = !empty($this->CNUM) ? $this->CNUM : "serial  missing from vBAC";
+        $emailAddress = !empty($this->EMAIL_ADDRESS) ? $this->EMAIL_ADDRESS : "emailAddress  missing from vBAC";
+        $notesId = !empty($this->NOTES_ID) ? $this->NOTES_ID : "notesId  missing from vBAC";
+        $country = !empty($this->COUNTRY) ? $this->COUNTRY : "county  missing from vBAC";
+        $lob     = !empty($this->LOB) ? $this->LOB : "lob  missing from vBAC";
+        $type    = !empty($this->EMPLOYEE_TYPE) ? $this->EMPLOYEE_TYPE : "employee type missing from vBAC";
+        $projectedEndDate = !empty($this->PROJECTED_END_DATE) ? $this->PROJECTED_END_DATE : "projected_end_date";
+        
+        $now = new \DateTime();
+        $replacements = array($firstName . " " . $lastName,
+            $cnum,
+            $emailAddress,
+            $notesId,
+            $projectedEndDate,
+            $country,
+            $lob,
+            $type,
+            $fmEmail);
+        $message = preg_replace(self::$offboardingEmailPattern, $replacements, self::$offboardingEmail);
+        
+        \itdq\BlueMail::send_mail(self::$pmoTaskId, 'vBAC Offboarding Request - ' . $this->CNUM ." (" . trim($this->FIRST_NAME) . " " . trim($this->LAST_NAME) . ")", $message, 'vbacNoReply@uk.ibm.com');
+        
+        
+        
+    }    
 }
