@@ -30,8 +30,20 @@ try {
         echo "<br/>Detail : " . $_POST['psm_detail'];
 
         AuditTable::audit("PES Status set for:" . $_POST['psm_cnum'] ." To : " . $_POST['psm_status'] . " Detail :" . $_POST['psm_detail'] . "Date : " . $_POST['PES_DATE_RESPONDED'],AuditTable::RECORD_TYPE_AUDIT);
-        $emailResponse = $person->sendPesStatusChangedEmail();
-        $notificationStatus = $emailResponse ? 'Email sent' : 'No email sent';
+       
+        switch ($_POST['psm_status']) {
+            case personRecord::PES_STATUS_REMOVED:
+                $notificationStatus = 'Email not applicable';
+                 break;            
+            default:
+                $emailResponse = $person->sendPesStatusChangedEmail();     
+                $notificationStatus = $emailResponse ? 'Email sent' : 'No email sent';
+            break;
+        }
+        
+        
+
+        
         $success = true;
     }
 } catch (Exception $e) {
