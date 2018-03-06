@@ -29,6 +29,9 @@ $requestableAssetListRecord->displayForm(FormClass::$modeDEFINE);
 
 <script>
 $( document ).ready(function() {
+	
+//	$('[data-toggle="tooltip"]').tooltip();
+	
 	var RequestableAsset = new requestableAsset();
 	    RequestableAsset.initialiseTable();
 	    RequestableAsset.initialiseSelect2();

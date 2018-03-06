@@ -1,12 +1,17 @@
 <?php
 
-$projectedEndDate = DateTime::createFromFormat('Y-m-d', '2018-12-31');
+$string =  " Hello World this is a string";
 
+var_dump($string);
 
-var_dump($projectedEndDate);
+$encoded = urlencode($string);
 
+var_dump($encoded);
 
-$projectedEndDate = DateTime::createFromFormat('Y-m-d', '2018-31-12');
+$raw = rawurlencode($string);
 
+var_dump($raw);
 
-var_dump($projectedEndDate);
+$decodeRaw = urldecode($raw);
+
+var_dump($decodeRaw);

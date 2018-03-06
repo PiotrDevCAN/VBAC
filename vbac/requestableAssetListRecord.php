@@ -85,10 +85,20 @@ class requestableAssetListRecord extends DbRecord
 								type="text" placeholder='Secondary UID title for Asset'
 						        >
 						</div>
+					</div>
 
-
-
-
+<!-- Order IT Group -->
+					<div class="form-group">
+						<div class="col-sm-6">
+							<input class="form-control" id="order_it_group" name="ORDER_IT_GROUP"
+								value="<?=trim($this->ORDER_IT_GROUP)?>"
+								type="number" placeholder='Order IT Grouping Number'
+								data-toggle="tooltip" 
+								data-placement="right"
+								title='Requests for Assets with the Same Order IT Grouping Number may be grouped together, in the same "batch", when creating Order IT requests'
+						        >
+						</div>
+						<div class='col-sm-6'></div>
 					</div>
 <!-- Applicable On Shore/Off Shore Business Justification  -->
 					<div class="form-group">

@@ -20,14 +20,17 @@ $assetRequestTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
 
 $assetRequests = array();
 foreach ($_POST as $key => $value){
+    $decodedKey = urldecode($key);
     $split=array();
-    $isAssetRequest = preg_match('/person-([\d]+)-asset-([\d]+)-([\D]+)/', $key, $split);
+    $isAssetRequest = preg_match('/person-([\d]+)-asset-([\d]+)-([\D]+)/', $decodedKey, $split);
     if($isAssetRequest && $value=='on') {
         $personId = $split[1];
         $assetId  = $split[2];
         $assetTitle = $split[3];
         $justification = !isset($_POST['person-'.$personId.'-justification-'.$assetId]) ? null : $_POST['person-'.$personId.'-justification-'.$assetId];
 
+        var_dump($assetTitle);
+        
         $assetRequest = array(
             'CNUM'=>$_POST['requestee']
             ,'ASSET_TITLE'=>$assetTitle
@@ -40,6 +43,9 @@ foreach ($_POST as $key => $value){
             ,'EDUCATION_CONFIRMED'=>$educationConfirmed
             ,'STATUS'=>$status
             );
+        
+        print_r($assetRequest);
+        
         try {
             $assetRequestRecord = new assetRequestRecord();
             $assetRequestRecord->setFromArray($assetRequest);
@@ -52,6 +58,8 @@ foreach ($_POST as $key => $value){
         }
     }
 }
+
+$messages = ob_get_clean();
 
 $response = array('result'=>'success','post'=>$post,'approvingMgrEmail'=>$approvingMgrEmail);
 ob_clean();

@@ -18,7 +18,9 @@ class assetRequestsTable extends DbTable{
     
     static function portalHeaderCells(){
         $headerCells = null;
+       // $widths = array(5,5,5,5,10,10,10,10,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
          foreach (self::$portalHeaderCells as $key => $value) {
+//                 $width = 'width="' . $widths[$key] . '"';
                 $headerCells .= "<th>";
                 $headerCells .= str_replace("_", " ", $value);
                 $headerCells .= "</th>";
@@ -28,8 +30,8 @@ class assetRequestsTable extends DbTable{
 
     static function returnForPortal($predicate=null){
         $sql  = " SELECT ";
-//         $sql .= " concat('000000',AR.REQUEST_REFERNCE) as car,"
-        $sql .= " AR.REQUEST_REFERENCE as ar_reference, ";
+//        $sql .= " concat('000000',AR.REQUEST_REFERNCE) as car,";
+        $sql .= " AR.REQUEST_REFERENCE as reference, ";
         $sql .= " P.CONTRACTOR_ID as CT_ID, P.EMAIL_ADDRESS, P.NOTES_ID, AR.ASSET_TITLE as ASSET, STATUS, ";
         $sql .= " BUSINESS_JUSTIFICATION as JUSTIFICATION, REQUESTOR_EMAIL as REQUESTOR_EMAIL, REQUESTED as REQUESTED_DATE,  ";
         $sql .= " APPROVER_EMAIL, APPROVED as APPROVED_DATE, ";
@@ -43,10 +45,7 @@ class assetRequestsTable extends DbTable{
         $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$REQUESTABLE_ASSET_LIST . " as RAL ";
         $sql .= " ON TRIM(RAL.ASSET_TITLE) = TRIM(AR.ASSET_TITLE) ";
         $sql .= " WHERE 1=1 ";
-        $sql .= $predicate;
-        
-        die($sql);
-        
+        $sql .= $predicate;  
 
         $rs = db2_exec($_SESSION['conn'],$sql);
 
@@ -57,7 +56,7 @@ class assetRequestsTable extends DbTable{
         $data = array();
 
         while(($row=db2_fetch_assoc($rs))==true){
-            $row['PERSON'] = $row['EMAIL_ADDRESS'] . "<br/>" . $row['NOTES_ID'];
+            $row['PERSON'] = $row['NOTES_ID'];
             unset($row['EMAIL_ADDRESS']);
             unset($row['NOTES_ID']);
                        
