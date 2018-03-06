@@ -72,7 +72,7 @@ function assetRequest() {
 		    console.log(data);
 		    var location = data.text.trim();
 		    console.log(location)
-		    if(location=='All of UK,Any'){
+		    if(location=='All of UK,UK'){
 		    	console.log('onshore');
 		    	AssetRequest.checkAssetsForShore('on');
 		    } else {

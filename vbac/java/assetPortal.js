@@ -36,7 +36,7 @@ function assetPortal() {
               url: 'ajax/populateAssetRequestPortal.php',
               type: 'POST',
           }	,
-          "columns": [
+          columns: [
                       { "data": "REFERENCE" , "defaultContent": "" },
                       { "data": "CT_ID" ,"defaultContent": "<i>no ctid</i>" },
                       { "data": "PERSON" ,"defaultContent": "" },
@@ -57,11 +57,11 @@ function assetPortal() {
                       { "data": "ORDERIT_STATUS" , "defaultContent": ""},
                       { "data": "ORDERIT_CLASS" , "defaultContent": ""}
                   ],
-//          columnDefs: [
-//                         { "visible": false, "targets": [8,9,10,11,12,13,14,15,16,17] }
-//                  ] ,
+          columnDefs: [
+                         { visible: false, targets: [8,9,10,11,12,13,14,15,16,17,18] }
+                  ] ,
           order: [[ 5, "asc" ]],
-          autoWidth: false,
+          autoWidth: true,
           deferRender: true,
           responsive: false,
           // scrollX: true,
@@ -84,6 +84,7 @@ function assetPortal() {
               if ( that.search() !== this.value ) {
                   that
                       .search( this.value )
+                      .adjust()
                       .draw();
               }
           } );
