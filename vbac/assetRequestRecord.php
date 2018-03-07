@@ -31,7 +31,9 @@ class assetRequestRecord extends DbRecord {
 
     public static $STATUS_CREATED           = 'Created';
     public static $STATUS_APPROVED          = 'Approved';
-    public static $STATUS_RAISED_ORDERIT    = 'OrderIt';
+    public static $STATUS_EXPORTED          = 'Exported';
+    public static $STATUS_RAISED_ORDERIT    = 'Raised';
+    public static $STATUS_PROVISIONED       = 'Provisioned';
     public static $STATUS_RETURNED          = 'Returned';
 
     function displayForm(){

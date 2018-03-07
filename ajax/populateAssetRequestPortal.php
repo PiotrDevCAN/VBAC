@@ -3,6 +3,7 @@ use vbac\assetRequestsTable;
 use vbac\allTables;
 use vbac\personTable;
 use itdq\Loader;
+use vbac\assetRequestRecord;
 
 set_time_limit(0);
 ob_start();
@@ -31,8 +32,9 @@ switch (true) {
         $predicate .= " AR.CNUM in ('". db2_escape($myCnum) . "'," . $myPeopleListed . ") or lower(Approver_email='" . db2_escape_string($myEmail) . "') ";    
     break;
     case $_SESSION['isCdi']:
+        break;
     case $_SESSION['isPmo']:
-    ;
+        $predicate .= " AND STATUS IN('" . assetRequestRecord::$STATUS_APPROVED . "') ";
     break;
     default:
         $myCnum = personTable::myCnum();

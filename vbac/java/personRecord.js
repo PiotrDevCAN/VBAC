@@ -637,6 +637,7 @@ function personRecord() {
         success: function(result){
           var Person = new personRecord();
           $('#personDatabaseDiv').html(result);
+          $('#assetRequestsDatatablesDiv').html(result);
           Person.initialiseDataTable();
         }
       });

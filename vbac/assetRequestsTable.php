@@ -74,5 +74,65 @@ class assetRequestsTable extends DbTable{
         return $data;
 
     }
+    
+    private function getNextVarb(){
+        $sql  = " INSERT INTO " . $_SESSION['Db2Schema'] . "." . allTables::$ORDER_IT_VARB_TRACKER;
+        $sql .= " ( CREATED_BY ) VALUES ('" . db2_escape_string($GLOBALS['ltcuser']['mail']) . "' )" ;
+        
+        $rs = db2_exec($_SESSION['conn'], $sql);
+        
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+        
+        $varbRef = db2_last_insert_id($_SESSION ['conn']);
+        
+        $nextVarb = 'vARB' . substr('000000' . $varbRef ,-5);
+        return $nextVarb;      
+    }
+    
+    
+    function getRowsForOrderIt($orderItGroup){        
+        $nextVarb = $this->getNextVarb();   
+        
+        $commitState  = db2_autocommit($_SESSION['conn']);
+        
+        $sql =  "UPDATE ";
+        $sql .= " (SELECT REQUEST_REFERENCE FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR ";
+        $sql .= "  LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$REQUESTABLE_ASSET_LIST . " AS RAL ";
+        $sql .= "  ON RAL.ASSET_TITLE = AR.ASSET_TITLE ";
+        $sql .= "   WHERE ORDERIT_VARB_REF is null and RAL.ORDER_IT_GROUP = '" . db2_escape_string($orderItGroup) . "' ";
+        $sql .= "   ORDER BY REQUEST_REFERENCE asc ";
+        $sql .= "   FETCH FIRST 20 ROWS ONLY) ";
+        $sql .= " SET ORDERIT_VARB_REF = '$nextVarb' ";
+        
+                
+        $rs = db2_exec($_SESSION['conn'],$sql);
+        
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+        }
+        
+        db2_commit($_SESSION['conn']);
+        
+        $sql = " SELECT * ";
+        $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS;
+        $sql .= " WHERE ORDER_VBAC_REF = '" . $nextVarb . "' ";
+        
+        $data = array();
+        
+        while(($row=db2_fetch_assoc($rs))==true){            
+            $data[] = $row;
+        }
+        
+        return $data;
+    }
+    
+    
+    function exportForOrderIT($orderItGroup = 0){
+        $rows = $this->getRowsForOrderIt($orderItGroup);
+        return $rows;
+    }
 
 }

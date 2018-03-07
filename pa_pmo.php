@@ -17,7 +17,7 @@ use vbac\personRecord;
 &nbsp;
 <button id='reportReload'  		class='btn btn-warning btn-sm '>Reload Data</button>
 <button id='reportReset'  		class='btn btn-warning btn-sm '>Reset</button>
-<div id='personDatabaseDiv'>
+<div id='personDatabaseDiv' class='portalDiv'>
 </div>
 </div>
 

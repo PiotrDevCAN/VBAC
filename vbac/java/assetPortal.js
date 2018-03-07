@@ -89,7 +89,33 @@ function assetPortal() {
               }
           } );
       } );
+  },
+  
+  this.listenForReportReset = function(){
+	    $(document).on('click','#reportReset', function(e){
+	    	$('#portalTitle').text('Asset Request Portal');
+	    	$.fn.dataTableExt.afnFiltering.pop();
+	    	assetPortal.table.columns().visible(false,false);
+	    	assetPortal.table.columns([0,1,2,3,4,5,6,7]).visible(true);
+	    	assetPortal.table.search('').order([0,"asc"]).draw();
+	    });
+  },  
+  
+  this.listenForReportReload = function(){
+	    $(document).on('click','#reportReload', function(e){
+	    	$('#portalTitle').text('Asset Request Portal');
+	    	$.fn.dataTableExt.afnFiltering.pop();
+	    	assetPortal.table.ajax.reload();
+	      });
+  },
+  
+  this.listenForExportButton = function(){
+	  $(document).on('click','#exportForOrderIt', function(e){
+		 alert('export');
+	  });
   }
+  
+  
 
 };
 
