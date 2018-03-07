@@ -281,9 +281,9 @@ class personRecord extends DbRecord
         if(!empty($this->PROJECTED_END_DATE)){
             $projectedEndDate = DateTime::createFromFormat('Y-m-d', $this->PROJECTED_END_DATE);
             
-//             $offboardingDate = new \DateTime();
-//             $offboardThreshold = new \DateInterval('P30D');
-//             $offboardingDate->add($offboardThreshold);
+            $offboardingDate = new \DateTime();
+            $offboardThreshold = new \DateInterval('P30D');
+            $offboardingDate->add($offboardThreshold);
             
             return $projectedEndDate <= $offboardingDate;
         } else {
