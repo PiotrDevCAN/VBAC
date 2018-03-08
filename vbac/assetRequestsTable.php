@@ -92,11 +92,27 @@ class assetRequestsTable extends DbTable{
         return $nextVarb;      
     }
     
-    
-    function getRequestsForOrderIt($orderItGroup, $tempFile){    
+    private function eligibleForOrderItPredicate($orderItType=0){
+        /*
+         *   ORDERIT_VARB_REF is null - Has not previously been exported.
+         *   ORDER_IT_NUMBER is null  - Hasn't already been raised by the individual
+         *   RAL.ORDER_IT_TYPE = '" . db2_escape_string($orderItGroup) . "'  - the ASSET_TITLE has a TYPE that matches the type we're processing
+         *   AR.STATUS='" . assetRequestRecord::$STATUS_APPROVED . "'  - It's approved for processing
+         *   
+         *   '" . db2_escape_string($orderItType) . "' == 1  - It's a TYPE1 - ie it doesn't need a CT ID
+         *   or P.CONTRACTOR_ID is not null                  - It's not a TYPE 1 - so it does need a CT ID, so CONTRACTOR ID can't be empty.
+         *   
+         *           
+         */
+        $predicate  = "";
+        $predicate .= "   AND ORDERIT_VARB_REF is null and ORDERIT_NUMBER is null and RAL.ORDER_IT_TYPE = '" . db2_escape_string($orderItType) . "' AND AR.STATUS='" . assetRequestRecord::$STATUS_APPROVED . "' ";
+        $predicate .= "   AND ('" . db2_escape_string($orderItType) . "' = '1' or P.CONTRACTOR_ID is not null)";
         
-//        $tempFile = tmpfile();
-//         fwrite($temp, "writing to tempfile");
+        return $predicate;
+    }
+    
+    
+    function getRequestsForOrderIt($orderItType, $tempFile){    
         
         
         $nextVarb = $this->getNextVarb();   
@@ -109,8 +125,10 @@ class assetRequestsTable extends DbTable{
         $sql .= " (SELECT REQUEST_REFERENCE FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR ";
         $sql .= "  LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$REQUESTABLE_ASSET_LIST . " AS RAL ";
         $sql .= "  ON RAL.ASSET_TITLE = AR.ASSET_TITLE ";
-        $sql .= "   WHERE ORDERIT_VARB_REF is null and RAL.ORDER_IT_TYPE = '" . db2_escape_string($orderItGroup) . "' AND AR.STATUS='" . assetRequestRecord::$STATUS_APPROVED . "' ";
-        $sql .= "   AND ('" . db2_escape_string($orderItType) . "' == 1 or P.CONTRACTOR_ID is not null)";
+        $sql .= "  LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
+        $sql .= "  ON AR.CNUM = P.CNUM ";    
+        $sql .= "   WHERE 1=1 ";
+        $sql .= $this->eligibleForOrderItPredicate($orderItType);
         $sql .= "   ORDER BY REQUEST_REFERENCE asc ";
         $sql .= "   FETCH FIRST 20 ROWS ONLY) ";
     
@@ -124,7 +142,7 @@ class assetRequestsTable extends DbTable{
         $sql = " SELECT ORDERIT_VARB_REF, REQUEST_REFERENCE, ";
         $sql .= " P.CONTRACTOR_ID as CT_ID, ";
         $sql .= " ASSET_TITLE, ";
-        $sql .= " CASE when P.NOTES_ID is null then P.EMAIL_ADDRESS else P.NOTES_ID end as IDENTITY, ";
+        $sql .= " CASE when P.EMAIL_ADDRESS is null then P.NOTES_ID else P.EMAIL_ADDRESS end as IDENTITY, ";
         $sql .= " case when BUSINESS_JUSTIFICATION is null then 'N/A' else BUSINESS_JUSTIFICATION end as JUSTIFICATION, ";
         $sql .= " STATUS,  USER_LOCATION, REQUESTOR_EMAIL, REQUESTED,  APPROVER_EMAIL, APPROVED, current timestamp as EXPORTED ";
         $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
@@ -134,6 +152,7 @@ class assetRequestsTable extends DbTable{
         $sql .= " ORDER BY ASSET_TITLE, REQUEST_REFERENCE desc";
   
         $data = array();
+        $data[] = "";
         $data[] = '"VARB","REQUEST","CT ID","ASSET TITLE","EMAIL","JUSTIFICATION","STATUS","LOCATION","REQUESTOR","REQUESTED","APPROVER","APPROVED","EXPORTED"';
         
         $rs2 = db2_exec($_SESSION['conn'],$sql);    
@@ -173,8 +192,8 @@ class assetRequestsTable extends DbTable{
         $sql .= " ON RAL.ASSET_TITLE = AR.ASSET_TITLE ";
         $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql .= " ON AR.CNUM = P.CNUM "; 
-        $sql .= " WHERE ORDERIT_VARB_REF is null and RAL.ORDER_IT_TYPE = '" . db2_escape_string($orderItType) . "' AND AR.STATUS='" . assetRequestRecord::$STATUS_APPROVED . "' ";
-        $sql .= " AND ('" . db2_escape_string($orderItType) . "' != 1 or P.CONTRACTOR_ID is not null)"
+        $sql .= " WHERE 1=1 ";
+        $sql .= $this->eligibleForOrderItPredicate($orderItType);
         
         $rs = db2_exec($_SESSION['conn'],$sql);
         if(!$rs){
@@ -183,8 +202,7 @@ class assetRequestsTable extends DbTable{
         }
         
         $row = db2_fetch_assoc($rs);
-        return $row['REQUESTS'];
-        
+        return $row['REQUESTS'];        
     }
 
 }
