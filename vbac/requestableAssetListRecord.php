@@ -23,7 +23,7 @@ class requestableAssetListRecord extends DbRecord
     protected $LISTING_ENTRY_REMOVED;
     protected $LISTING_ENTRY_REMOVED_BY;
     protected $PROMPT;
-    protected $ORDER_IT_GROUP;
+    protected $ORDER_IT_TYPE;
 
 
 
@@ -90,8 +90,8 @@ class requestableAssetListRecord extends DbRecord
 <!-- Order IT Group -->
 					<div class="form-group">
 						<div class="col-sm-6">
-							<input class="form-control" id="order_it_group" name="ORDER_IT_GROUP"
-								value="<?=trim($this->ORDER_IT_GROUP)?>"
+							<input class="form-control" id="ORDER_IT_TYPE" name="ORDER_IT_TYPE"
+								value="<?=trim($this->ORDER_IT_TYPE)?>"
 								type="number" placeholder='Order IT Grouping Number'
 								data-toggle="tooltip" 
 								data-placement="right"

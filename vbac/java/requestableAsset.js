@@ -61,7 +61,7 @@ function requestableAsset() {
                       { "data": "LISTING_ENTRY_REMOVED_BY", "defaultContent": "" },
 
                       { "data": "PROMPT", "defaultContent": "" },
-                      { "data": "ORDER_IT_GROUP", "defaultContent": "" },
+                      { "data": "ORDER_IT_TYPE", "defaultContent": "" },
 
                       ],
         order: [[ 0, "asc" ]],

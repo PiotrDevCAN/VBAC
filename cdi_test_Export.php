@@ -5,15 +5,29 @@ use vbac\allTables;
 use itdq\Loader;
 
 $loader = new Loader();
-$allOrderItGroups = $loader->load('ORDER_IT_GROUP',allTables::$REQUESTABLE_ASSET_LIST);
+$allOrderItTypes = $loader->load('ORDER_IT_TYPE',allTables::$REQUESTABLE_ASSET_LIST);
 
 $assetRequestTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
+$tempFile = tmpfile();
 
 
-foreach ($allOrderItGroups as $orderItGroup){
-    $rows = $assetRequestTable->getRowsForOrderIt($orderItGroup);   
-    echo "<h4>Order IT Group : $orderItGroup" . "</h4>";
-    echo "<pre>";    
-    var_dump($rows);
-    echo "</pre>";
+foreach ($allOrderItTypes as $orderItType){    
+    
+   $totalRequestsForType = 0; 
+   $outstandingRequestsForType = 0;
+
+   while(($outstandingRequestsForType = $assetRequestTable->countApprovedForOrderItType($orderItType)) > 0){
+        $totalRequestsForType += $outstandingRequestsForType;
+        $fileOfRequests = $assetRequestTable->getRequestsForOrderIt($orderItType, $tempFile);       
+   }
+   echo "<h5>Total requests for Order IT Type " . $orderItType . " :" . $totalRequestsForType;
 }
+
+fseek($tempFile, 0);
+
+while(($row=fgets($tempFile))){
+    echo "<br/>" . $row;
+}
+
+fclose($tempFile);
+

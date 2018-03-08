@@ -55,7 +55,7 @@ function assetPortal() {
                       { "data": "ORDERIT_VBAC_REF", "defaultContent": ""},
                       { "data": "ORDERIT_NUMBER", "defaultContent": "" },
                       { "data": "ORDERIT_STATUS" , "defaultContent": ""},
-                      { "data": "ORDERIT_CLASS" , "defaultContent": ""}
+                      { "data": "ORDERIT_TYPE" , "defaultContent": ""}
                   ],
           columnDefs: [
                          { visible: false, targets: [8,9,10,11,12,13,14,15,16,17,18] }
