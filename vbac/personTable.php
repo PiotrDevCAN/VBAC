@@ -93,6 +93,7 @@ class personTable extends DbTable {
         $status = empty(trim($row['PES_STATUS'])) ? personRecord::PES_STATUS_NOT_REQUESTED : trim($row['PES_STATUS']) ;
         $projectedEndDateObj = !empty($row['PROJECTED_END_DATE']) ? \DateTime::createFromFormat('Y-m-d', $row['PROJECTED_END_DATE']) : false;
         $potentialForOffboarding = $projectedEndDateObj ? $projectedEndDateObj <= $this->thirtyDaysHence : false;
+        $potentialForOffboarding = $potentialForOffboarding || $row['REVALIDATION_STATUS']==personRecord::REVALIDATED_LEAVER ? true : false;  // Any leaver - has potential to be offboarded
         
         // FM_MANAGER_FLAG
         if($_SESSION['isPmo'] || $_SESSION['isCdi']){
@@ -161,9 +162,9 @@ class personTable extends DbTable {
             $row['NOTES_ID'] .= $notesId;
         }
         
+        $revalidationStatus = trim($row['REVALIDATION_STATUS']);
         
-        if(  ($_SESSION['isPmo'] || $_SESSION['isCdi']) && ($row['REVALIDATION_STATUS']==personRecord::REVALIDATED_OFFBOARDING))  {
-            $revalidationStatus = trim($row['REVALIDATION_STATUS']);
+        if(  ($_SESSION['isPmo'] || $_SESSION['isCdi']) && ($revalidationStatus==personRecord::REVALIDATED_OFFBOARDING))  {
             $row['REVALIDATION_STATUS']  = "<button type='button' class='btn btn-default btn-xs btnOffboarded' aria-label='Left Align' ";
             $row['REVALIDATION_STATUS'] .= "data-cnum='" .$cnum . "'";
             $row['REVALIDATION_STATUS'] .= " > ";
@@ -172,8 +173,7 @@ class personTable extends DbTable {
             $row['REVALIDATION_STATUS'] .= $revalidationStatus;
         }
         
-        if( $potentialForOffboarding && ($_SESSION['isFm'] || $_SESSION['isPmo'] || $_SESSION['isCdi']) && ($row['REVALIDATION_STATUS']==personRecord::REVALIDATED_FOUND))  {
-           $revalidationStatus = trim($row['REVALIDATION_STATUS']);
+        if( $potentialForOffboarding && ($_SESSION['isPmo'] || $_SESSION['isCdi']) && $revalidationStatus!=personRecord::REVALIDATED_OFFBOARDING )  {           
             $row['REVALIDATION_STATUS']  = "<button type='button' class='btn btn-default btn-xs btnOffboarding' aria-label='Left Align' ";
             $row['REVALIDATION_STATUS'] .= "data-cnum='" .$cnum . "'";
             $row['REVALIDATION_STATUS'] .= " > ";
