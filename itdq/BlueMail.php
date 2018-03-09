@@ -11,13 +11,12 @@ use itdq\AllItdqTables;
 class BlueMail
 {
 
-    function requestPesChecking(){
-
-    }
-
     static function send_mail(array $to, $subject, $message, $replyto, array $cc=array(), array $bcc=array()
-        , $asynchronous = true)
+        , $asynchronous = true
+        , array $attachments=array())
     {
+        
+        // $attachments=array('filename'=>'filename.txt','content_type'=>'text/plain','data'=>'base64 encoded data here')
         $emailLogRecordID = null;
 
         $recipients = array();
@@ -50,8 +49,20 @@ class BlueMail
         if($bccRecipients){
             $data['bcc'] = $bccRecipients;
         }
+        
+        if($attachments){
+            foreach ($attachments as $attachment){
+                $data['attachments'][] = array('attachment'=>$attachment);
+            }            
+        }
+        
 
         $data_json = json_encode($data);
+        
+        
+        var_dump($data_json);
+        
+        
 
         if(isset(AllItdqTables::$EMAIL_LOG)){
             $emailLogRecordID = self::prelog($to, $subject, $message, $data_json);

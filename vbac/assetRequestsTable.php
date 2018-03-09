@@ -112,7 +112,7 @@ class assetRequestsTable extends DbTable{
     }
     
     
-    function getRequestsForOrderIt($orderItType, $tempFile){    
+    function getRequestsForOrderIt($orderItType){    
         
         
         $nextVarb = $this->getNextVarb();   
@@ -167,15 +167,17 @@ class assetRequestsTable extends DbTable{
             $data[] = '"' . implode('","',$trimmedData) . '" ';
         }
         
-        
+        $base64Encoded = '';
         foreach ($data as $request){
-            fwrite($tempFile, $request. "\n\r");
+            $base64Encoded .= base64_encode($request . "\n\r");            
         }
         
         db2_commit($_SESSION['conn']);
         db2_autocommit($_SESSION['conn'],$commitState);
  
-        return $tempFile;
+       return $base64Encoded;
+        
+//         return $data;
     }
     
     

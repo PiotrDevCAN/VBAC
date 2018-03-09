@@ -26,15 +26,15 @@
 <script>
 $(document).ready(function(){
 
-	var person = new personRecord();
-	person.initialisePersonTable();
+// 	var person = new personRecord();
+// 	person.initialisePersonTable();
 
 	
 	var AssetPortal = new assetPortal();
 	AssetPortal.initialiseAssetRequestPortal();
-// 	AssetPortal.listenForExportButton();
-// 	AssetPortal.listenForReportReset();
-// 	AssetPortal.listenForReportReload();
+ 	AssetPortal.listenForExportButton();
+ 	AssetPortal.listenForReportReset();
+ 	AssetPortal.listenForReportReload();
 });
 
 </script>
