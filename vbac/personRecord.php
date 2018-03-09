@@ -1031,7 +1031,7 @@ class personRecord extends DbRecord
             $fmEmail);
         $message = preg_replace(self::$warnPmoDateChangePattern, $replacements, self::$warnPmoDateChange);
         
-        \itdq\BlueMail::send_mail(self::$pmoTaskId, 'vBAC Project Enddate Change - ' . $this->CNUM ." (" . trim($this->FIRST_NAME) . " " . trim($this->LAST_NAME) . ")", $message, 'vbacNoReply@uk.ibm.com');
+        \itdq\BlueMail::send_mail(self::$pmoTaskId, 'vBAC Projected End Date Change - ' . $this->CNUM ." (" . trim($this->FIRST_NAME) . " " . trim($this->LAST_NAME) . ")", $message, 'vbacNoReply@uk.ibm.com');
         
         
         
