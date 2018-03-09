@@ -10,6 +10,8 @@ $allOrderItTypes = $loader->load('ORDER_IT_TYPE',allTables::$REQUESTABLE_ASSET_L
 
 $assetRequestTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
 
+$base64EncodedData = '';
+
 foreach ($allOrderItTypes as $orderItType){    
     
    $totalRequestsForType = 0; 
@@ -22,10 +24,12 @@ foreach ($allOrderItTypes as $orderItType){
    echo "<h5>Total requests for Order IT Type " . $orderItType . " :" . $totalRequestsForType;
 }
 
-var_dump($base64EncodedData);
-
-$sendResponse = BlueMail::send_mail(array('robdaniel@uk.ibm.com'), 'orderit export', 'Find attached CSV not',
-    'robdaniel@uk.ibm.com',array(),array(),true);
+// if(empty($base64EncodedData)){
+//     echo "No requests found to export";
+//     exit('No requests');
+// }
+$sendResponse = BlueMail::send_mail(array('rob.daniel@uk.ibm.com'), 'orderit export', 'Find attached CSV',
+    'rob.daniel@uk.ibm.com',array(),array(),true,array('filename'=>'test.txt','content_type'=>'text/plain','data'=>"VGhpcyBpcyBhIGJhc2U2NCBlbmNvZGVkIHRleHQ="));
 
 // array('filename'=>'export.csv','content_type'=>'text/csv','data'=>$base64EncodedData));
 

@@ -176,8 +176,6 @@ class assetRequestsTable extends DbTable{
         db2_autocommit($_SESSION['conn'],$commitState);
  
        return $base64Encoded;
-        
-//         return $data;
     }
     
     

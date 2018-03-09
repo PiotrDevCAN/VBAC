@@ -59,8 +59,11 @@ class BlueMail
 
         $data_json = json_encode($data);
         
+        echo "<pre>";
         
         var_dump($data_json);
+        
+        echo "</pre>";
         
         
 

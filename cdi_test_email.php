@@ -3,8 +3,8 @@
 
 use itdq\BlueMail;
 
-$sendResponse = BlueMail::send_mail(array('robdaniel@uk.ibm.com'), 'test email', 'test email',
-    'robdaniel@uk.ibm.com');
+$sendResponse = BlueMail::send_mail(array('rob.daniel@uk.ibm.com'), 'test email', 'test email',
+    'rob.daniel@uk.ibm.com');
 
 
 echo "<pre>";
