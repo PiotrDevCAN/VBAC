@@ -9,6 +9,7 @@ class personTable extends DbTable {
 
     private $preparedRevalidationStmt;
     private $preparedRevalidationLeaverStmt;
+    private $preparedLeaverProjectedEndDateStmt;
     private $preparedUpdateBluepagesFields;
 
     private $allNotesIdByCnum;
@@ -76,6 +77,41 @@ class personTable extends DbTable {
         }
         return $data;
     }
+    
+    
+    function findDirtyData($autoClear=false){
+       
+        $sql  = " SELECT * FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName ;
+        $sql .= " ORDER BY CNUM ";
+        
+        $rs = db2_exec($_SESSION['conn'], $sql);
+        
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+            return false;
+        } else {
+            while(($row=db2_fetch_assoc($rs))==true){
+                $jsonEncodable = json_encode($row); 
+                if(!$jsonEncodable){
+                    echo "<hr/><br/>Dirty Date Found in record for : " . $row['CNUM'];
+                    foreach ($row as $key => $value) { 
+                        $jsonEncodableField = json_encode($value);
+                        if(!$jsonEncodableField){
+                            echo "Column: $key Value: $value";                           
+                            if($autoClear && !$jsonEncodable){
+                                $row[$key] = null;
+                                $personRecord = new personRecord();
+                                $personRecord->setFromArray($row);
+                                $this->saveRecord($personRecord);
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+   }
+    
 
     function  prepareFields($row){
         $preparedRow = array_filter(array_map('trim', $row));
@@ -92,7 +128,13 @@ class personTable extends DbTable {
         $flag = isset($row['FM_MANAGER_FLAG']) ? $row['FM_MANAGER_FLAG'] : null ;
         $status = empty(trim($row['PES_STATUS'])) ? personRecord::PES_STATUS_NOT_REQUESTED : trim($row['PES_STATUS']) ;
         $projectedEndDateObj = !empty($row['PROJECTED_END_DATE']) ? \DateTime::createFromFormat('Y-m-d', $row['PROJECTED_END_DATE']) : false;
-        $potentialForOffboarding = $projectedEndDateObj ? $projectedEndDateObj <= $this->thirtyDaysHence : false;
+        $potentialForOffboarding = $projectedEndDateObj ? $projectedEndDateObj <= $this->thirtyDaysHence : false; // Thirty day rule.
+        $potentialForOffboarding = $potentialForOffboarding || $row['REVALIDATION_STATUS']==personRecord::REVALIDATED_LEAVER ? true : $potentialForOffboarding;  // Any leaver - has potential to be offboarded
+        $potentialForOffboarding = $row['REVALIDATION_STATUS']==personRecord::REVALIDATED_OFFBOARDED ? false : $potentialForOffboarding;
+        $revalidationStatus = trim($row['REVALIDATION_STATUS']);
+        
+        
+        
         
         // FM_MANAGER_FLAG
         if($_SESSION['isPmo'] || $_SESSION['isCdi']){
@@ -152,7 +194,7 @@ class personTable extends DbTable {
             }
         }
 
-        if($_SESSION['isPes'] || $_SESSION['isPmo'] || $_SESSION['isFm'] || $_SESSION['isCdi'])  {
+        if(($_SESSION['isPes'] || $_SESSION['isPmo'] || $_SESSION['isFm'] || $_SESSION['isCdi']) && ($revalidationStatus!=personRecord::REVALIDATED_OFFBOARDED))  {
             $row['NOTES_ID']  = "<button type='button' class='btn btn-default btn-xs btnEditPerson' aria-label='Left Align' ";
             $row['NOTES_ID'] .= "data-cnum='" .$cnum . "'";
             $row['NOTES_ID'] .= " > ";
@@ -161,9 +203,9 @@ class personTable extends DbTable {
             $row['NOTES_ID'] .= $notesId;
         }
         
+       
         
-        if(  ($_SESSION['isPmo'] || $_SESSION['isCdi']) && ($row['REVALIDATION_STATUS']==personRecord::REVALIDATED_OFFBOARDING))  {
-            $revalidationStatus = trim($row['REVALIDATION_STATUS']);
+        if(  ($_SESSION['isPmo'] || $_SESSION['isCdi']) && ($revalidationStatus==personRecord::REVALIDATED_OFFBOARDING))  {
             $row['REVALIDATION_STATUS']  = "<button type='button' class='btn btn-default btn-xs btnOffboarded' aria-label='Left Align' ";
             $row['REVALIDATION_STATUS'] .= "data-cnum='" .$cnum . "'";
             $row['REVALIDATION_STATUS'] .= " > ";
@@ -172,8 +214,7 @@ class personTable extends DbTable {
             $row['REVALIDATION_STATUS'] .= $revalidationStatus;
         }
         
-        if( $potentialForOffboarding && ($_SESSION['isFm'] || $_SESSION['isPmo'] || $_SESSION['isCdi']) && ($row['REVALIDATION_STATUS']==personRecord::REVALIDATED_FOUND))  {
-           $revalidationStatus = trim($row['REVALIDATION_STATUS']);
+        if( $potentialForOffboarding && ($_SESSION['isPmo'] || $_SESSION['isCdi']) && $revalidationStatus!=personRecord::REVALIDATED_OFFBOARDING )  {           
             $row['REVALIDATION_STATUS']  = "<button type='button' class='btn btn-default btn-xs btnOffboarding' aria-label='Left Align' ";
             $row['REVALIDATION_STATUS'] .= "data-cnum='" .$cnum . "'";
             $row['REVALIDATION_STATUS'] .= " > ";
@@ -365,15 +406,30 @@ class personTable extends DbTable {
         }
         return $this->preparedRevalidationStmt;
     }
+    
+    private function prepareLeaverProjectedEndDateStmt(){
+        if(empty($this->preparedLeaverProjectedEndDateStmt)){
+            $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+            $sql .= " SET PROJECTED_END_DATE = current date ";
+            $sql .= " WHERE CNUM=? AND PROJECTED_END_DATE is null ";
+            
+            $this->preparedLeaverProjectedEndDateStmt = db2_prepare($_SESSION['conn'], $sql);
+            
+            if(!$this->preparedLeaverProjectedEndDateStmt){
+                DbTable::displayErrorMessage($this->preparedLeaverProjectedEndDateStmt, __CLASS__, __METHOD__, $sql);
+                return false;
+            }
+        }
+        return $this->preparedLeaverProjectedEndDateStmt;
+    }
+    
+    
 
     private function prepareRevalidationLeaverStmt(){
         if(empty($this->preparedRevalidationLeaverStmt)){
             $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
             $sql .= " SET REVALIDATION_STATUS='" . personRecord::REVALIDATED_LEAVER . "', REVALIDATION_DATE_FIELD = current date ";
             $sql .= " WHERE CNUM=?  AND ( REVALIDATION_STATUS is null or REVALIDATION_STATUS not in ('" . personRecord::REVALIDATED_LEAVER . "','" . personRecord::REVALIDATED_OFFBOARDED . "','" . personRecord::REVALIDATED_OFFBOARDING . "') )";
-
-            echo "<br/>$sql";
-
 
             $this->preparedRevalidationLeaverStmt = db2_prepare($_SESSION['conn'], $sql);
 
@@ -384,6 +440,7 @@ class personTable extends DbTable {
         }
         return $this->preparedRevalidationLeaverStmt;
     }
+    
 
     function confirmRevalidation($notesId,$email,$cnum){
         $preparedStmt = $this->prepareRevalidationStmt();
@@ -408,7 +465,17 @@ class personTable extends DbTable {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, "prepared: revalidationLeaverStmt");
             return false;
         }
-        AuditTable::audit("Revalidation has found leaver: $cnum ",AuditTable::RECORD_TYPE_AUDIT);
+        
+        $preparedStmt = $this->prepareLeaverProjectedEndDateStmt();
+        $data = array(trim($cnum));
+        $rs = db2_execute($preparedStmt,$data);
+        
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, "prepared: leaverProjectedEndDateStmt");
+            return false;
+        }       
+        
+        AuditTable::audit("Revalidation has found leaver: $cnum      ",AuditTable::RECORD_TYPE_AUDIT);
         return true;
     }
 

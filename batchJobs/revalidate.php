@@ -18,6 +18,10 @@ $loader = new Loader();
 $personTable->flagPreboarders();
 db2_commit($_SESSION['conn']);
 
+$offboarders = " ( REVALIDATION_STATUS like  'offboard%') ";
+$allOffboarders = $loader->load('CNUM',allTables::$PERSON, $offboarders ); //
+AuditTable::audit("Revalidation will ignore " . count($offboarders) . " offboarding/ed.",AuditTable::RECORD_TYPE_DETAILS);
+$allOffboarders= null; // free up some storage
 
 $preBoardersPredicate = "   ( REVALIDATION_STATUS =  '" . personRecord::REVALIDATED_PREBOARDER . "') ";
 $allPreboarders = $loader->load('CNUM',allTables::$PERSON, $preBoardersPredicate ); //
@@ -26,7 +30,7 @@ $allPreboarders= null; // free up some storage
 
 $activeIbmErsPredicate = "   ( REVALIDATION_STATUS is null or REVALIDATION_STATUS =  '" . personRecord::REVALIDATED_FOUND . "') ";
 $allNonLeavers = $loader->load('CNUM',allTables::$PERSON, $activeIbmErsPredicate ); //
-AuditTable::audit("Revalidation will check " . count($allNonLeavers) . " non-leavers.",AuditTable::RECORD_TYPE_DETAILS);
+AuditTable::audit("Revalidation will check " . count($allNonLeavers) . " people currently flagged as found.",AuditTable::RECORD_TYPE_DETAILS);
 
 $chunkedCnum = array_chunk($allNonLeavers, 400);
 $detailsFromBp = "&notesid&mail";
@@ -49,7 +53,8 @@ foreach ($chunkedCnum as $key => $cnumList){
     }
 }
 
-AuditTable::audit("Revalidation found " . count($allNonLeavers) . " non-leavers.",AuditTable::RECORD_TYPE_DETAILS);
+// At this stage, anyone still in the $allNonLeavers array - has NOT been found in BP and so is now a leaver and needs to be flagged as such.
+AuditTable::audit("Revalidation found " . count($allNonLeavers) . " leavers.",AuditTable::RECORD_TYPE_DETAILS);
 
 foreach ($allNonLeavers as $cnum){
     set_time_limit(10);

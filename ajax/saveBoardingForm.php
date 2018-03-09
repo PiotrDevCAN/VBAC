@@ -41,8 +41,8 @@ try {
     AuditTable::audit("Saved Record:<pre>". print_r($person,true) . "</pre>", AuditTable::RECORD_TYPE_DETAILS);
     AuditTable::audit("PROJECTED_END_DATE:<pre>". print_r($_POST['PROJECTED_END_DATE'],true) . "</pre>", AuditTable::RECORD_TYPE_DETAILS);
     
-    $timeToInitiateOffboarding = $person->checkIfTimeToInitiateOffboarding();
-    $timeToInitiateOffboarding ? $person->initiateOffboarding() : null;
+    $timeToWarnPmo = $person->checkIfTimeToWarnPmo();
+    $timeToWarnPmo ? $person->sendOffboardingWarning() : null;
 
      if(($saveRecordResult && $_POST['mode']=='Save') || (!$saveRecordResult && $_POST['mode']=='Update')){
         if($_POST['mode']=='Save'){
@@ -75,6 +75,6 @@ try {
 }
 
 $messages = ob_get_clean();
-$response = array('boarding'=>$_POST['boarding'], 'boardingIbmer'=>$boardingIbmer, 'success'=>$success,'messages'=>$messages,"saveRecord"=>$saveRecordResult,'cnum'=>$_POST['CNUM'], 'post'=>print_r($_POST,true),'offboarding'=>print_r($timeToInitiateOffboarding,true));
+$response = array('boarding'=>$_POST['boarding'], 'boardingIbmer'=>$boardingIbmer, 'success'=>$success,'messages'=>$messages,"saveRecord"=>$saveRecordResult,'cnum'=>$_POST['CNUM'], 'post'=>print_r($_POST,true),'sendWarning'=>print_r($timeToWarnPmo,true));
 ob_clean();
 echo json_encode($response);
