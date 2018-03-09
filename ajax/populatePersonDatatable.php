@@ -17,9 +17,12 @@ $messages = ob_get_clean();
 
 if($dataJsonAble) {
      $response = array("data"=>$data,'messages'=>$messages);
- } else {
-    $response = array("data"=>'error, data can\'t be JSON ENcoded, look for special chars','messages'=>$messages);
-
+ } else {     
+    $personTable->findDirtyData();
+    $dirtyDetails = ob_get_clean();      
+    ob_clean();
+    echo $dirtyDetails;
+    exit();
  }
 ob_clean();
 echo json_encode($response);

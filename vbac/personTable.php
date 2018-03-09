@@ -77,6 +77,41 @@ class personTable extends DbTable {
         }
         return $data;
     }
+    
+    
+    function findDirtyData($autoClear=false){
+       
+        $sql  = " SELECT * FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName ;
+        $sql .= " ORDER BY CNUM ";
+        
+        $rs = db2_exec($_SESSION['conn'], $sql);
+        
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+            return false;
+        } else {
+            while(($row=db2_fetch_assoc($rs))==true){
+                $jsonEncodable = json_encode($row); 
+                if(!$jsonEncodable){
+                    echo "<hr/><br/>Dirty Date Found in record for : " . $row['CNUM'];
+                    foreach ($row as $key => $value) { 
+                        $jsonEncodableField = json_encode($value);
+                        if(!$jsonEncodableField){
+                            echo "Column: $key Value: $value";                           
+                            if($autoClear && !$jsonEncodable){
+                                $row[$key] = null;
+                                $personRecord = new personRecord();
+                                $personRecord->setFromArray($row);
+                                $this->saveRecord($personRecord);
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+   }
+    
 
     function  prepareFields($row){
         $preparedRow = array_filter(array_map('trim', $row));
