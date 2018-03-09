@@ -773,7 +773,7 @@ function personRecord() {
 	    		        if (evalDate != '' && evalDate != '2000-01-01' &&  evalDate <= dateEnd && (revalidationStatus.trim() != 'preboarder' && revalidationStatus.trim() != 'offboarded')) { 
 	    		            return true;
 	    		        }
-	    		        else if(revalidationStatus.trim() == 'leaver'){
+	    		        else if(revalidationStatus.trim() == 'leaver' || revalidationStatus.trim() == 'offboarding'  ){
 	    		        	return true;
 	    		        	
 	    		        } else {	    		        	
