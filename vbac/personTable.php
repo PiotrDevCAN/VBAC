@@ -203,9 +203,7 @@ class personTable extends DbTable {
             $row['NOTES_ID'] .= $notesId;
         }
         
-       
-        
-        if(  ($_SESSION['isPmo'] || $_SESSION['isCdi']) && ($revalidationStatus==personRecord::REVALIDATED_OFFBOARDING))  {
+        if( ($_SESSION['isPmo'] || $_SESSION['isCdi']) && ($revalidationStatus==personRecord::REVALIDATED_OFFBOARDING))  {
             $row['REVALIDATION_STATUS']  = "<button type='button' class='btn btn-default btn-xs btnOffboarded' aria-label='Left Align' ";
             $row['REVALIDATION_STATUS'] .= "data-cnum='" .$cnum . "'";
             $row['REVALIDATION_STATUS'] .= " > ";
