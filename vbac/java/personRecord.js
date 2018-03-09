@@ -747,7 +747,7 @@ function personRecord() {
     	$('#portalTitle').text('Person Portal - Revalidation Report');
     	$.fn.dataTableExt.afnFiltering.pop();
     	personRecord.table.columns().visible(false,false);
-    	personRecord.table.columns([5,7,8,15,16,26,27]).visible(true);
+    	personRecord.table.columns([5,8,15,16,26,27]).visible(true);
     	personRecord.table.search('').order([5,'asc']).draw();
     });
   },
@@ -782,8 +782,8 @@ function personRecord() {
 	    		});
 	    	
 	      personRecord.table.columns().visible(false,false);
-	      personRecord.table.columns([5,8,10,11,16,27]).visible(true);
-	      personRecord.table.order([16,'desc'],[5,'asc']);
+	      personRecord.table.columns([5,8,11,12,16,27]).visible(true);
+	      personRecord.table.order([16,'asc'],[5,'asc']);
                
 	      personRecord.table.draw();
 	      

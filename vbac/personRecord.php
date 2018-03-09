@@ -212,6 +212,34 @@ class personRecord extends DbRecord
         '/&&functionalMgr&&/',
     );
     
+    private static $warnPmoDateChange = 'Please consider OFFBOARDING the following individual:
+                                    Name : &&name&&
+                                    Serial: &&cnum&&
+                                    Email Address : &&email&&
+                                    Notes Id : &&notesid&&
+        
+                                    Projected End Date : &&projectedEndDate&&
+        
+                                    Country working in : &&country&&
+                                    LoB : &&lob&&
+                                    Employee Type:&&type&&
+                                    Functional Mgr: &&functionalMgr&&'
+        
+        
+        ;
+        
+        
+        private static $warnPmoDateChangePattern = array(
+            '/&&name&&/',
+            '/&&cnum&&/',
+            '/&&email&&/',
+            '/&&notesid&&/',
+            '/&&projectedEndDate&&/',
+            '/&&country&&/',
+            '/&&lob&&/',
+            '/&&type&&/',
+            '/&&functionalMgr&&/',
+        );
     
     
     
@@ -277,13 +305,13 @@ class personRecord extends DbRecord
 
     }
     
-    function checkIfTimeToInitiateOffboarding(){
+    function checkIfTimeToWarnPmo(){
         if(!empty($this->PROJECTED_END_DATE)){
             $projectedEndDate = DateTime::createFromFormat('Y-m-d', $this->PROJECTED_END_DATE);
             
             $offboardingDate = new \DateTime();
-            $offboardThreshold = new \DateInterval('P30D');
-            $offboardingDate->add($offboardThreshold);
+       //    $offboardThreshold = new \DateInterval('P30D');
+       //    $offboardingDate->add($offboardThreshold);
             
             return $projectedEndDate <= $offboardingDate;
         } else {
@@ -299,7 +327,6 @@ class personRecord extends DbRecord
         AuditTable::audit("Initiated Offboarding for Cnum:" . $this->CNUM . " Id:" . $mailAccount . " Projected End Date:" . $this->PROJECTED_END_DATE,AuditTable::RECORD_TYPE_AUDIT);
         $personTable = new personTable(allTables::$PERSON);
         $personTable->flagOffboarding($this->CNUM);
-        $this->sendOffboardingNotification();
     }
     
     function displayBoardingForm($mode){
@@ -973,7 +1000,7 @@ class personRecord extends DbRecord
     }
     
     
-    function sendOffboardingNotification(){        
+    function sendOffboardingWarning(){        
         $loader = new Loader();
         
         if(!empty($this->FM_CNUM)){
@@ -1002,9 +1029,9 @@ class personRecord extends DbRecord
             $lob,
             $type,
             $fmEmail);
-        $message = preg_replace(self::$offboardingEmailPattern, $replacements, self::$offboardingEmail);
+        $message = preg_replace(self::$warnPmoDateChangePattern, $replacements, self::$warnPmoDateChange);
         
-        \itdq\BlueMail::send_mail(self::$pmoTaskId, 'vBAC Offboarding Request - ' . $this->CNUM ." (" . trim($this->FIRST_NAME) . " " . trim($this->LAST_NAME) . ")", $message, 'vbacNoReply@uk.ibm.com');
+        \itdq\BlueMail::send_mail(self::$pmoTaskId, 'vBAC Project Enddate Change - ' . $this->CNUM ." (" . trim($this->FIRST_NAME) . " " . trim($this->LAST_NAME) . ")", $message, 'vbacNoReply@uk.ibm.com');
         
         
         
