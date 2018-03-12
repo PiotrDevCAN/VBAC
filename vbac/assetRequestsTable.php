@@ -38,8 +38,8 @@ class assetRequestsTable extends DbTable{
         $sql .= " BUSINESS_JUSTIFICATION as JUSTIFICATION, REQUESTOR_EMAIL as REQUESTOR_EMAIL, REQUESTED as REQUESTED_DATE,  ";
         $sql .= " APPROVER_EMAIL, APPROVED as APPROVED_DATE, ";
         $sql .= " USER_LOCATION as LOCATION, ";
-        $sql .= " PRIMARY_UID, SECONDARY_UID, DATE_ISSUED_TO_IBM, DATE_ISSUED_TO_USER, DATE_RETURNED, EDUCATION_CONFIRMED ";
-        $sql .= " ORDERIT_GROUP_REF, ORDERIT_NUMBER, ORDERIT_STATUS, ";
+        $sql .= " PRIMARY_UID, SECONDARY_UID, DATE_ISSUED_TO_IBM, DATE_ISSUED_TO_USER, DATE_RETURNED, EDUCATION_CONFIRMED,  ";
+        $sql .= " ORDERIT_VARB_REF, ORDERIT_NUMBER, ORDERIT_STATUS, ";
         $sql .= " RAL.ORDER_IT_TYPE as ORDERIT_TYPE ";
         $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
         $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
@@ -58,6 +58,7 @@ class assetRequestsTable extends DbTable{
         $data = array();
 
         while(($row=db2_fetch_assoc($rs))==true){
+            
             $row['PERSON'] = $row['NOTES_ID'];
             unset($row['EMAIL_ADDRESS']);
             unset($row['NOTES_ID']);
@@ -69,6 +70,8 @@ class assetRequestsTable extends DbTable{
             $row['REQUESTOR'] = $row['REQUESTOR_EMAIL'] . "<br/><small>" . $row['REQUESTED_DATE'] . "</small>";
             unset($row['REQUESTOR_EMAIL']);
             unset($row['REQUESTOR_DATE']);
+           
+            $row['STATUS'] .= trim($row['ORDERIT_VARB_REF']) != null ? " (" . trim($row['ORDERIT_VARB_REF']) . ") " : null;
             
             $data[] = $row;
         }
@@ -115,7 +118,7 @@ class assetRequestsTable extends DbTable{
     }
     
     
-    function getRequestsForOrderIt($orderItType){    
+    function getRequestsForOrderIt($orderItType, $first=false){    
         
         
         $nextVarb = $this->getNextVarb();   
@@ -150,7 +153,7 @@ class assetRequestsTable extends DbTable{
         $sql .= " ASSET_TITLE, ";
         $sql .= " CASE when P.EMAIL_ADDRESS is null then P.NOTES_ID else P.EMAIL_ADDRESS end as IDENTITY, ";
         $sql .= " case when BUSINESS_JUSTIFICATION is null then 'N/A' else BUSINESS_JUSTIFICATION end as JUSTIFICATION, ";
-        $sql .= " STATUS,  USER_LOCATION, REQUESTOR_EMAIL, REQUESTED,  APPROVER_EMAIL, APPROVED, current timestamp as EXPORTED ";
+        $sql .= " STATUS,  USER_LOCATION, REQUESTOR_EMAIL, date(REQUESTED) as REQUESTED,  APPROVER_EMAIL, DATE(APPROVED) as APPROVED, current date as EXPORTED ";
         $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
         $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql .= " ON AR.CNUM = P.CNUM ";      
@@ -159,7 +162,7 @@ class assetRequestsTable extends DbTable{
   
         $data = array();
 //         $data[] = "";
-        $data[] = '"VARB","REQUEST","CT ID","CTB/RTB","TT/BAU","LOB","ASSET TITLE","EMAIL","JUSTIFICATION","STATUS","LOCATION","REQUESTOR","REQUESTED","APPROVER","APPROVED","EXPORTED"';
+        $data[] = $first ? '"VARB","REQUEST","CT ID","CTB/RTB","TT/BAU","LOB","ASSET TITLE","EMAIL","JUSTIFICATION","STATUS","LOCATION","REQUESTOR","REQUESTED","APPROVER","APPROVED","EXPORTED"' : null;
         
         $rs2 = db2_exec($_SESSION['conn'],$sql);    
         if(!$rs2){
@@ -178,12 +181,12 @@ class assetRequestsTable extends DbTable{
             $requestData .= $request . "\n";            
         }
         
-        $base64Encoded = base64_encode($requestData);        
+//         $base64Encoded = base64_encode($requestData);        
         
         db2_commit($_SESSION['conn']);
         db2_autocommit($_SESSION['conn'],$commitState);
  
-       return $base64Encoded;
+        return $requestData;
     }
     
     
@@ -212,5 +215,29 @@ class assetRequestsTable extends DbTable{
         $row = db2_fetch_assoc($rs);
         return $row['REQUESTS'];        
     }
+    
+    
+    function exportResultsModal(){
+        ?>
+       <!-- Modal -->
+    <div id="exportResultsModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+          <div class="modal-header">
+             <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Export Results</h4>
+            </div>
+             <div class="modal-body" >
+             </div>
+             <div class='modal-footer'>
+             <button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
+             </div>
+             </form>
+            </div>
+        </div>
+      </div>
+    <?php
+    }
+    
 
 }

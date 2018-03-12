@@ -84,7 +84,6 @@ function assetPortal() {
               if ( that.search() !== this.value ) {
                   that
                       .search( this.value )
-                      .adjust()
                       .draw();
               }
           } );
@@ -111,13 +110,20 @@ function assetPortal() {
   
   this.listenForExportButton = function(){
 	  $(document).on('click','#exportForOrderIt', function(e){
+		  $('#exportForOrderIt').addClass('spinning');
+		  $('#exportForOrderIt').attr('disabled',true);
 	      $.ajax({
 		        url: "ajax/exportForOrderIt.php",
 		        type: 'GET',
 		        success: function(result){
 		        	console.log(result);
-		        	$('#exportResponse modal-body').html(result);
-		        	$('#exportResponse').modal('show');
+		        	var resultObj = JSON.parse(result);
+			    	assetPortal.table.ajax.reload();
+		        	$('#exportResultsModal .modal-body').html(resultObj.messages);
+		        	$('#exportResultsModal').modal('show');
+		  		    $('#exportForOrderIt').removeClass('spinning');
+				    $('#exportForOrderIt').attr('disabled',false);
+
 		        }
 	      });		 
 	  });

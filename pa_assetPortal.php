@@ -1,4 +1,7 @@
 <?php
+use vbac\assetRequestsTable;
+use vbac\allTables;
+
 ?>
 <div class='container'>
 <h1 id='portalTitle'>Asset Request Portal</h1>
@@ -18,6 +21,9 @@
 
 
 <?php
+
+$assetTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
+$assetTable->exportResultsModal();
 
 
 

@@ -4,14 +4,17 @@ use vbac\allTables;
 use itdq\Loader;
 use itdq\BlueMail;
 
+
+ob_start();
 $now = new DateTime();
 $loader = new Loader();
 $allOrderItTypes = $loader->load('ORDER_IT_TYPE',allTables::$REQUESTABLE_ASSET_LIST);
 
 $assetRequestTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
 
-$base64EncodedData = '';
+$requestData = '';
 $varbsCovered = array();
+$first = true;
 
 foreach ($allOrderItTypes as $orderItType){
     
@@ -20,8 +23,9 @@ foreach ($allOrderItTypes as $orderItType){
     
     while(($outstandingRequestsForType = $assetRequestTable->countApprovedForOrderItType($orderItType)) > 0){
         $totalRequestsForType += $outstandingRequestsForType;
-        $base64EncodedData = $assetRequestTable->getRequestsForOrderIt($orderItType);
+        $requestData .= $assetRequestTable->getRequestsForOrderIt($orderItType,$first);
         $varbsCovered[] = $assetRequestTable->currentVarb;
+        $first = false;
     }
     echo "<h5>Total requests for Order IT Type " . $orderItType . " :" . $totalRequestsForType;
 }
@@ -32,8 +36,13 @@ foreach ($allOrderItTypes as $orderItType){
 // $dummy = 'VGhpcyBpcyBhIGJhc2U2NCBlbmNvZGVkIHRleHQ=';
 
 $varbRange = $varbsCovered[0];
-$varbRange .= count($varbsCovered) > 1 ? $varbsCovered[count($varbsCovered)-1] : null;
+$varbRange .= count($varbsCovered) > 1 ? " => " . $varbsCovered[count($varbsCovered)-1] : null;
 $csvName = "varbForOrderIt_" . $now->format('Y-m-d h:i:s') . ".csv";
+
+
+$base64EncodedData = base64_encode($requestData);
+
+
 
 if(empty($base64EncodedData)){
     $messages = ob_get_clean();
