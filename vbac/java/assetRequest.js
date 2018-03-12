@@ -122,26 +122,18 @@ function assetRequest() {
 		           	      ctid:ctid},
 		          success: function(result){
 		        	  console.log(result);
-		          }
+	    			  console.log('record required');
+	    			  AssetRequest.recordCtidOnForm(requestee, 'Required');
+		    		  },
 		      });
-		  }	else {
-			  console.log('record required');
-			  AssetRequest.recordCtidOnForm(requestee, 'Required');
-		  }
-
+		  };
 	  });
   },
 
   this.saveAssetRequestRecords = function(){
 	  console.log('would save all the records now');
-      var allDisabledFields = ($("input:disabled"));
-      $(allDisabledFields).attr('disabled',false);
       var formData = $('#assetRequestForm').serialize();
-
       console.log(formData);
-
-      $(allDisabledFields).attr('disabled',true);
-
       $.ajax({
     	  url: "ajax/saveAssetRequestRecords.php",
           data : formData,
@@ -149,27 +141,24 @@ function assetRequest() {
           success: function(result){
         	  var resultObj = JSON.parse(result);
         	  console.log(resultObj);
-        	 //  $('#saveFeedbackModal .modal-body').hmtl('Requests Created');
+        	  var assetRequests = resultObj.requests;    	  
+        	  $('#saveFeedbackModal .modal-body').html("<h3>Requests Created</h3>" + assetRequests);
         	  $('#saveFeedbackModal').modal('show');
-            }
+       	  
+            },
+          complete : function(xhr, status){
+    		  $('#saveAssetRequest').removeClass('spinning');
+    		  $('#saveAssetRequest').attr('disabled',false);        	  
+          	}
          });
-	  $('#saveAssetRequest').attr('disabled',false).removeClass('spinning');
   }
 
   this.listenForSaveAssetRequest = function(){
 	  $(document).on('click','#saveAssetRequest', function(){
-		  console.log('they want to save');
-		  console.log($('#saveAssetRequest'));
-		  
-		  console.log($('.btn'));
-		  console.log($('.btn.spinning'));	  
-		  
-		  $('#saveAssetRequest').addClass('spinning');
-		  
-		  console.log($('.btn.spinning'));	
-		  
+		  console.log('they want to save');		  
+		  $('#saveAssetRequest').addClass('spinning'); 
 		  $('#saveAssetRequest').attr('disabled',true);
-		  console.log($('#saveAssetRequest'));
+
 		  console.log('is form valid ?');
 	      var form = document.getElementById('assetRequestForm');
 	      console.log(form);
@@ -181,10 +170,11 @@ function assetRequest() {
 	    	  AssetRequest.saveAssetRequestRecords();
 	      } else {
 	    	  alert('Please complete form');
-			  $('#saveAssetRequest').removeClass('spinning');
-			  $('#saveAssetRequest').attr('disabled',false);
+    		  $('#saveAssetRequest').removeClass('spinning');
+    		  $('#saveAssetRequest').attr('disabled',false);	    	  
 	      }
-		  console.log('were done processing the save request');
+		  console.log('we\'ve initiated the physical save');
+
 	  });
 
   },

@@ -29,7 +29,7 @@ foreach ($_POST as $key => $value){
         $assetTitle = $split[3];
         $justification = !isset($_POST['person-'.$personId.'-justification-'.$assetId]) ? null : $_POST['person-'.$personId.'-justification-'.$assetId];
 
-        var_dump($assetTitle);
+        $email = $_POST[$_POST['requestee']];
         
         $assetRequest = array(
             'CNUM'=>$_POST['requestee']
@@ -44,12 +44,13 @@ foreach ($_POST as $key => $value){
             ,'STATUS'=>$status
             );
         
-        print_r($assetRequest);
-        
         try {
             $assetRequestRecord = new assetRequestRecord();
             $assetRequestRecord->setFromArray($assetRequest);
             $assetRequestTable->saveRecord($assetRequestRecord);
+            $requestDetails = "<br/>Request :<strong>" .$assetRequestTable->lastId();
+            $requestDetails .= "</strong> Requestee: <strong>" .  $email . "</strong> Asset:<em>" . $assetTitle . "</em>";
+            $assetRequests[] = $requestDetails;
         } catch (Exception $e) {
             $messages = ob_get_clean();
             $response = array('result'=>'failed','post'=>$post,'messages'=>$messages);
@@ -61,6 +62,6 @@ foreach ($_POST as $key => $value){
 
 $messages = ob_get_clean();
 
-$response = array('result'=>'success','post'=>$post,'approvingMgrEmail'=>$approvingMgrEmail);
+$response = array('result'=>'success','requests'=>$assetRequests, 'post'=>$post,'approvingMgrEmail'=>$approvingMgrEmail);
 ob_clean();
 echo json_encode($response);

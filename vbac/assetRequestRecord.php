@@ -134,7 +134,9 @@ class assetRequestRecord extends DbRecord {
                 			  id='approvingManager'
                               name='approvingManager'
                       >
-                    <option value=''></option>
+                    <option value=''>
+                    <?=var_dump($isFm)?>                    
+                    </option>
                     <?php
                     foreach ($approvingMgrs as $cnum => $notesId){
                             $displayedName = !empty(trim($notesId)) ?  trim($notesId) : $selectableEmailAddress[$cnum];
@@ -155,7 +157,7 @@ class assetRequestRecord extends DbRecord {
                                  */
                                 $selected = " selected ";
                             }
-                            ?><option value='<?=trim($cnum);?>'<?=$selected?>'><?=$displayedName?></option><?php
+                            ?><option value='<?=trim($cnum);?><?=$selected?>'><?=$displayedName?></option><?php
                         };
                         ?>
             	</select>
@@ -180,8 +182,14 @@ class assetRequestRecord extends DbRecord {
         </div>
         </div>
         </div>
+        <?php 
+		foreach ($selectableNotesId as $cnum => $notesId){
+		    $displayedName = !empty(trim($notesId)) ?  trim($notesId) : $selectableEmailAddress[$cnum];
+		    ?><input type='hidden' name='<?=trim($cnum);?>' value='<?=$displayedName?>'/><?php
+        };
+        ?>
         </form>
-        <?php
+		<?php 
     }
 
     function createJsCtidLookup(){
