@@ -322,6 +322,27 @@ class assetRequestRecord extends DbRecord {
 		</div>
         <?php
     }
+    
+    
+    function exportResponseModal(){
+        ?>
+        <!-- Modal -->
+		<div id="exportResponse" class="modal fade" role="dialog">
+  			<div class="modal-dialog">
+	        <!-- Modal content-->
+    		<div class="modal-content">
+      			<div class="modal-header">
+        		   <h4 class="modal-title">Export Responde</h4>
+      			</div>
+      			<div class="modal-body" >
+        		<div class='modal-footer'>
+      		  		<button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
+      			</div>
+        </div>
+        </div>
+        </div>
+        <?php
+    }
 
 
 

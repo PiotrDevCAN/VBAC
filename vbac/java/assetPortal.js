@@ -111,7 +111,15 @@ function assetPortal() {
   
   this.listenForExportButton = function(){
 	  $(document).on('click','#exportForOrderIt', function(e){
-		 alert('export');
+	      $.ajax({
+		        url: "ajax/exportForOrderIt.php",
+		        type: 'GET',
+		        success: function(result){
+		        	console.log(result);
+		        	$('#exportResponse modal-body').html(result);
+		        	$('#exportResponse').modal('show');
+		        }
+	      });		 
 	  });
   }
   

@@ -7,6 +7,8 @@ use itdq\DbRecord;
 
 class assetRequestsTable extends DbTable{
     
+    public $currentVarb;
+    
     private static $portalHeaderCells = array('REFERENCE','CT_ID','PERSON','ASSET','STATUS','JUSTIFICATION','REQUESTOR','APPROVER',
         'LOCATION','PRIMARY_UID','SECONDARY_UID','DATE_ISSUED_TO_IBM','DATE_ISSUED_TO_USER','DATE_RETURNED',
         'EDUCATION_CONFIRMED','ORDERIT_GROUP_REF','ORDERIT_NUMBER','ORDERIT_STATUS','ORDERIT_TYPE');
@@ -77,7 +79,7 @@ class assetRequestsTable extends DbTable{
     
     private function getNextVarb(){
         $sql  = " INSERT INTO " . $_SESSION['Db2Schema'] . "." . allTables::$ORDER_IT_VARB_TRACKER;
-        $sql .= " ( CREATED_BY ) VALUES ('" . db2_escape_string($GLOBALS['ltcuser']['mail']) . "' )" ;
+        $sql .= " ( CREATED_BY ) VALUES ('" . db2_escape_string($_SESSION['ssoEmail']) . "' )" ;
         
         $rs = db2_exec($_SESSION['conn'], $sql);
         
@@ -89,6 +91,7 @@ class assetRequestsTable extends DbTable{
         $varbRef = db2_last_insert_id($_SESSION ['conn']);
         
         $nextVarb = 'vARB' . substr('000000' . $varbRef ,-5);
+        $this->currentVarb = $nextVarb;
         return $nextVarb;      
     }
     
@@ -120,7 +123,7 @@ class assetRequestsTable extends DbTable{
         $commitState  = db2_autocommit($_SESSION['conn'],DB2_AUTOCOMMIT_OFF);
         
         $sql =  "UPDATE " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS ;
-        $sql .= " SET ORDERIT_VARB_REF = '$nextVarb', ORDERIT_STATUS='" . assetRequestRecord::$STATUS_EXPORTED . "' ";
+        $sql .= " SET ORDERIT_VARB_REF = '$nextVarb', STATUS='" . assetRequestRecord::$STATUS_EXPORTED . "' ";
         $sql .= " WHERE REQUEST_REFERENCE in ";
         $sql .= " (SELECT REQUEST_REFERENCE FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR ";
         $sql .= "  LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$REQUESTABLE_ASSET_LIST . " AS RAL ";
@@ -141,6 +144,9 @@ class assetRequestsTable extends DbTable{
        
         $sql = " SELECT ORDERIT_VARB_REF, REQUEST_REFERENCE, ";
         $sql .= " P.CONTRACTOR_ID as CT_ID, ";
+        $sql .= " P.CTB_RTB as CTB_RTB, ";
+        $sql .= " P.TT_BAU as TT_BAU, ";
+        $sql .= " P.LOB as LOB, ";
         $sql .= " ASSET_TITLE, ";
         $sql .= " CASE when P.EMAIL_ADDRESS is null then P.NOTES_ID else P.EMAIL_ADDRESS end as IDENTITY, ";
         $sql .= " case when BUSINESS_JUSTIFICATION is null then 'N/A' else BUSINESS_JUSTIFICATION end as JUSTIFICATION, ";
@@ -152,8 +158,8 @@ class assetRequestsTable extends DbTable{
         $sql .= " ORDER BY ASSET_TITLE, REQUEST_REFERENCE desc";
   
         $data = array();
-        $data[] = "";
-        $data[] = '"VARB","REQUEST","CT ID","ASSET TITLE","EMAIL","JUSTIFICATION","STATUS","LOCATION","REQUESTOR","REQUESTED","APPROVER","APPROVED","EXPORTED"';
+//         $data[] = "";
+        $data[] = '"VARB","REQUEST","CT ID","CTB/RTB","TT/BAU","LOB","ASSET TITLE","EMAIL","JUSTIFICATION","STATUS","LOCATION","REQUESTOR","REQUESTED","APPROVER","APPROVED","EXPORTED"';
         
         $rs2 = db2_exec($_SESSION['conn'],$sql);    
         if(!$rs2){
@@ -167,10 +173,12 @@ class assetRequestsTable extends DbTable{
             $data[] = '"' . implode('","',$trimmedData) . '" ';
         }
         
-        $base64Encoded = '';
+        $requestData = '';        
         foreach ($data as $request){
-            $base64Encoded .= base64_encode($request . "\n\r");            
+            $requestData .= $request . "\n";            
         }
+        
+        $base64Encoded = base64_encode($requestData);        
         
         db2_commit($_SESSION['conn']);
         db2_autocommit($_SESSION['conn'],$commitState);
@@ -194,7 +202,7 @@ class assetRequestsTable extends DbTable{
         $sql .= " ON AR.CNUM = P.CNUM "; 
         $sql .= " WHERE 1=1 ";
         $sql .= $this->eligibleForOrderItPredicate($orderItType);
-        
+       
         $rs = db2_exec($_SESSION['conn'],$sql);
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
