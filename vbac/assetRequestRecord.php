@@ -271,7 +271,7 @@ class assetRequestRecord extends DbRecord {
         <?php
     }
 
-    function education(){
+    function doTheEducationModal(){
         ?>
         <div id='doTheEducation' style='display: none;'>
         <div class="panel panel-danger">

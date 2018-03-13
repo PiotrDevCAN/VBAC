@@ -21,11 +21,11 @@ if(!$myCnum){
 } else {
     $assetRequest->displayForm($mode);
 }
-$assetRequest->education();
+// $assetRequest->education();
 ?>
 </div>
 <?php
-// $assetRequest->doTheEducationModal();
+$assetRequest->doTheEducationModal();
 $assetRequest->confirmEducationModal();
 $assetRequest->ctIdRequiredModal();
 $assetRequest->missingPrereqModal();
