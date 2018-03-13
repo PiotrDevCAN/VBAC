@@ -239,5 +239,28 @@ class assetRequestsTable extends DbTable{
     <?php
     }
     
+    
+    function mapVarbToOrderIt(){
+        ?>
+       <!-- Modal -->
+    <div id="mapVarbToOrderItModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+          <div class="modal-header">
+             <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Map vARB to OrderIt</h4>
+            </div>
+             <div class="modal-body" >
+             </div>
+             <div class='modal-footer'>
+             <button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
+             </div>
+             </form>
+            </div>
+        </div>
+      </div>
+    <?php
+    }
+    
 
 }

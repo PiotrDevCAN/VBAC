@@ -50,7 +50,7 @@ if(empty($base64EncodedData)){
     $response = array('success'=>false,'messages'=>$messages,'post'=>print_r($_POST,true));
     echo json_encode($response);
 } else {
-    $sendResponse = BlueMail::send_mail(array('rob.daniel@uk.ibm.com'), 'vBac Orderit Export: ' . $varbRange, 'Find attached CSV or Asset Request Details ready for Order IT',
+    $sendResponse = BlueMail::send_mail(array('rob.daniel@uk.ibm.com'), 'vBac Orderit Export: ' . $varbRange, 'Find attached CSV of Asset Request Details ready for Order IT',
         'rob.daniel@uk.ibm.com',array(),array(),true,array(array('filename'=>$csvName,'content_type'=>'text/plain','data'=>$base64EncodedData)));
 
     $messages = ob_get_clean();

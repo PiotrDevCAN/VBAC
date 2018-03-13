@@ -35,6 +35,7 @@ ob_flush();
 $assetRequest->createJsCtidLookup();
 ?>
 
+</div>
 <script type="text/javascript">
 <?php
 if($myCnum) {
@@ -67,6 +68,7 @@ if($myCnum) {
      	AssetRequest.listenForSelectLocation();
      	AssetRequest.listenForSelectAsset();
      	AssetRequest.listenForSaveAssetRequest();
+     	AssetRequest.listenForClosingSaveFeedbackModal();
      	AssetRequest.listenForAddPrereq();
      	AssetRequest.listenForIgnorePrereq();
      	AssetRequest.listenForClosingPrereqModal();

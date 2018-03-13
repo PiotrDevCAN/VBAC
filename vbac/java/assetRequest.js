@@ -143,13 +143,10 @@ function assetRequest() {
         	  console.log(resultObj);
         	  var assetRequests = resultObj.requests;    	  
         	  $('#saveFeedbackModal .modal-body').html("<h3>Requests Created</h3>" + assetRequests);
-        	  $('#saveFeedbackModal').modal('show');
-       	  
+        	  $('#saveFeedbackModal').modal('show');       	  
             },
           complete : function(xhr, status){
-    		  $('#saveAssetRequest').removeClass('spinning');
-    		  $('#saveAssetRequest').attr('disabled',false);        	  
-          	}
+         	}
          });
   }
 
@@ -171,7 +168,7 @@ function assetRequest() {
 	      } else {
 	    	  alert('Please complete form');
     		  $('#saveAssetRequest').removeClass('spinning');
-    		  $('#saveAssetRequest').attr('disabled',false);	    	  
+    		  $('#saveAssetRequest').attr('disabled',false);	
 	      }
 		  console.log('we\'ve initiated the physical save');
 
@@ -251,6 +248,13 @@ function assetRequest() {
 		  }
 	  });
   },
+  
+  this.listenForClosingSaveFeedbackModal = function(){
+	  $('#saveFeedbackModal').on('hidden.bs.modal', function (e) {
+		  location.reload();
+	  });
+  },
+  
 
   this.recordCtidOnForm = function(email_address, ctid ){
 	  console.log(ctid);
@@ -334,7 +338,6 @@ function assetRequest() {
 		  });
 	  }
   }
-  
  
 }
 

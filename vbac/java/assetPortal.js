@@ -129,6 +129,27 @@ function assetPortal() {
 	  });
   }
   
+  this.listenForMapVarbButton = function(){
+	  $(document).on('click','#mapVarbToOrderIt', function(e){
+		  $('#mapVarbToOrderIt').addClass('spinning');
+		  $('#mapVarbToOrderIt').attr('disabled',true);
+	      $.ajax({
+		        url: "ajax/prepareForMapVarbToOrderIT.php",
+		        type: 'GET',
+		        success: function(result){
+		        	console.log(result);
+		        	var resultObj = JSON.parse(result);
+			    	assetPortal.table.ajax.reload();
+		        	$('#mapVarbToOrderItModal .modal-body').html(resultObj.body);
+		        	$('#mapVarbToOrderItModal').modal('show');
+		  		    $('#mapVarbToOrderIt').removeClass('spinning');
+				    $('#mapVarbToOrderIt').attr('disabled',false);
+
+		        }
+	      });		 
+	  });
+  }
+  
   
 
 };

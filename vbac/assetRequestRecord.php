@@ -22,8 +22,8 @@ class assetRequestRecord extends DbRecord {
     protected $REQUESTOR_EMAIL;
     protected $REQUESTED;
     protected $APPROVER_EMAIL;
-    protected $APPROVED_DATE;
-    protected $EDUCATION_CONFIRMATION;
+    protected $APPROVED;
+    protected $EDUCATION_CONFIRMED;
     protected $STATUS;
     protected $ORDERIT_VBAC_REF;
     protected $ORDERIT_NUMBER;
@@ -68,7 +68,7 @@ class assetRequestRecord extends DbRecord {
         ?>
         <form id='assetRequestForm'  class="form-horizontal"
         	onsubmit="return false;">
-        <div id='hideTillEducationConfirmed' style='display: inline;'>
+        <div id='hideTillEducationConfirmed' style='display: inline'>
 
 		<div class="panel panel-primary">
 		<div class="panel-heading">
@@ -133,14 +133,15 @@ class assetRequestRecord extends DbRecord {
                 <select class='form-control select select2 '
                 			  id='approvingManager'
                               name='approvingManager'
+                              required
                       >
-                    <option value=''>
-                    <?=var_dump($isFm)?>                    
+                    <option value=''>                                     
                     </option>
                     <?php
                     foreach ($approvingMgrs as $cnum => $notesId){
                             $displayedName = !empty(trim($notesId)) ?  trim($notesId) : $selectableEmailAddress[$cnum];
                             $selected = null;
+                            
                             if(!$isFm && (trim($cnum)==$myManagersCnum)){
                                 /*
                                  * The user is NOT a manager, and this entry is their Mgr
@@ -157,7 +158,7 @@ class assetRequestRecord extends DbRecord {
                                  */
                                 $selected = " selected ";
                             }
-                            ?><option value='<?=trim($cnum);?><?=$selected?>'><?=$displayedName?></option><?php
+                            ?><option value='<?=trim($cnum);?>'<?=$selected?>><?=$displayedName?></option><?php
                         };
                         ?>
             	</select>
@@ -168,10 +169,6 @@ class assetRequestRecord extends DbRecord {
 
 
         <div class='panel-footer'>
-
-
-
-
         	<?php
             $allButtons = null;
             $submitButton =   $this->formButton('submit','Submit','saveAssetRequest','disabled','Save','btn btn-primary');
@@ -180,14 +177,15 @@ class assetRequestRecord extends DbRecord {
             $this->formHiddenInput('requestor',$GLOBALS['ltcuser']['mail'],'requestor');
             ?>
         </div>
-        </div>
-        </div>
+        </div> <!--  Panel     -->
+        </div> <!--  Container -->
         <?php 
 		foreach ($selectableNotesId as $cnum => $notesId){
 		    $displayedName = !empty(trim($notesId)) ?  trim($notesId) : $selectableEmailAddress[$cnum];
 		    ?><input type='hidden' name='<?=trim($cnum);?>' value='<?=$displayedName?>'/><?php
         };
         ?>
+        </div>
         </form>
 		<?php 
     }
@@ -211,7 +209,9 @@ class assetRequestRecord extends DbRecord {
       			<div class="modal-body" >
       			</div>
       			<div class="modal-footer">
+      				<p class="text-center">When you close this modal, please allow time for the page to refresh before attempting to create another request</p>      				
       				<button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
+      				
       			</div>
     		</div>
   			</div>
