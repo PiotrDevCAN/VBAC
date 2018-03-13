@@ -6,7 +6,7 @@ use vbac\personTable;
 set_time_limit(0);
 ob_start();
 ?>
-<div class='container'>
+<div class='container greyablePage'>
 <div class='row'>
 <h2>Asset Request</h2>
 </div>
@@ -25,7 +25,7 @@ $assetRequest->education();
 ?>
 </div>
 <?php
-$assetRequest->education();
+// $assetRequest->doTheEducationModal();
 $assetRequest->confirmEducationModal();
 $assetRequest->ctIdRequiredModal();
 $assetRequest->missingPrereqModal();

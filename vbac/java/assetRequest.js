@@ -141,8 +141,8 @@ function assetRequest() {
           success: function(result){
         	  var resultObj = JSON.parse(result);
         	  console.log(resultObj);
-        	  var assetRequests = resultObj.requests;    	  
-        	  $('#saveFeedbackModal .modal-body').html("<h3>Requests Created</h3>" + assetRequests);
+        	  var assetRequests = resultObj.requests;   
+        	  $('#saveFeedbackModal .modal-body').html("<h3>Requests Created</h3>" + assetRequests);        	  
         	  $('#saveFeedbackModal').modal('show');       	  
             },
           complete : function(xhr, status){
@@ -251,6 +251,7 @@ function assetRequest() {
   
   this.listenForClosingSaveFeedbackModal = function(){
 	  $('#saveFeedbackModal').on('hidden.bs.modal', function (e) {
+		  $('.greyablePage').addClass('overlay');
 		  location.reload();
 	  });
   },

@@ -45,6 +45,7 @@ foreach ($_POST as $key => $value){
             ,'APPROVED'=>$approved
             ,'EDUCATION_CONFIRMED'=>$educationConfirmed
             ,'STATUS'=>$status
+            ,'ORDERIT_NUMBER'=>$_POST['ORDERIT_NUMBER']
             );
 
         

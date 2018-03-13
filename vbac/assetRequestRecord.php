@@ -130,6 +130,7 @@ class assetRequestRecord extends DbRecord {
        	</div>
         	<div class='form-group required'>
         		<div class='col-sm-4'>
+        		<label for='approvingManager'>Approving Manager</label>
                 <select class='form-control select select2 '
                 			  id='approvingManager'
                               name='approvingManager'
@@ -163,8 +164,16 @@ class assetRequestRecord extends DbRecord {
                         ?>
             	</select>
             	</div>
-            	<div class='col-sm-8' >
+            	<div class='col-sm-4' >
+            	<label for='orderItNumber'>Order IT Number (If already created)</label>
+            	<input type="number" name='ORDERIT_NUMBER' id=orderItNumber' placeholder="Order IT Number" min="999999" max="9999999" class='form-control' >
+            	
             	</div>
+            	<div class='col-sm-4' >
+            	
+            	</div>
+            	
+            	
         		</div>
 
 
