@@ -81,6 +81,7 @@ class assetRequestRecord extends DbRecord {
                 <select class='form-control select select2 '
                 			  id='requestees'
                               name='requestee'
+                              required
 
                       >
                     <option value=''></option>
@@ -105,6 +106,7 @@ class assetRequestRecord extends DbRecord {
                 			  id='person-1-location'
                               name='person-1-location'
                               disabled=true
+                              required
                      >
                      <?php
                      $options = $this->buildLocationOptions();
