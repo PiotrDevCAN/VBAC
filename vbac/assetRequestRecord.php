@@ -25,7 +25,7 @@ class assetRequestRecord extends DbRecord {
     protected $APPROVED;
     protected $EDUCATION_CONFIRMED;
     protected $STATUS;
-    protected $ORDERIT_VBAC_REF;
+    protected $ORDERIT_VARB_REF;
     protected $ORDERIT_NUMBER;
     protected $ORDERIT_STATUS;
 
@@ -35,7 +35,16 @@ class assetRequestRecord extends DbRecord {
     public static $STATUS_RAISED_ORDERIT    = 'Raised';
     public static $STATUS_PROVISIONED       = 'Provisioned';
     public static $STATUS_RETURNED          = 'Returned';
-
+    
+    public static $STATUS_ORDERIT_YET       = 'yet to be Raised';
+    public static $STATUS_ORDERIT_PENDING   = 'Pending Approval';
+    public static $STATUS_ORDERIT_APPROVED  = 'Approved';
+    public static $STATUS_ORDERIT_REJECTED  = 'Rejected';
+    
+    
+    
+    
+    
     function displayForm(){
         $loader = new Loader();
         $myCnum = personTable::myCnum();

@@ -1,17 +1,21 @@
 <?php
 
-$string =  " Hello World this is a string";
+$sql = " SELECT distinct ORDERIT_VARB_REF ";
+$sql .= " FROM " . $_SESSION['Db2Schema'] . "." . "ASSET_REQUESTS";
+$sql .= " WHERE ORDERIT_VARB_REF is not null and ORDERIT_NUMBER is null and STATUS = 'Exported' ";
 
-var_dump($string);
+$rs = db2_exec($_SESSION['conn'], $sql);
 
-$encoded = urlencode($string);
+if(!$rs){
+    DbTable::displayErrorMessage($rs,__CLASS__, __METHOD__, $sql);
+    return false;
+}
 
-var_dump($encoded);
 
-$raw = rawurlencode($string);
+while(($row=db2_fetch_assoc($rs))==true){
+    var_dump($row);
+    $data[]=$row['ORDERIT_VARB_REF'];
+}
 
-var_dump($raw);
 
-$decodeRaw = urldecode($raw);
-
-var_dump($decodeRaw);
+var_dump($data);

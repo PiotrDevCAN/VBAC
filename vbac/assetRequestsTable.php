@@ -3,6 +3,7 @@ namespace vbac;
 
 use itdq\DbTable;
 use itdq\DbRecord;
+use itdq\FormClass;
 
 
 class assetRequestsTable extends DbTable{
@@ -11,7 +12,7 @@ class assetRequestsTable extends DbTable{
     
     private static $portalHeaderCells = array('REFERENCE','CT_ID','PERSON','ASSET','STATUS','JUSTIFICATION','REQUESTOR','APPROVER',
         'LOCATION','PRIMARY_UID','SECONDARY_UID','DATE_ISSUED_TO_IBM','DATE_ISSUED_TO_USER','DATE_RETURNED',
-        'EDUCATION_CONFIRMED','ORDERIT_GROUP_REF','ORDERIT_NUMBER','ORDERIT_STATUS','ORDERIT_TYPE');
+        'EDUCATION_CONFIRMED','ORDERIT_VARB_REF','ORDERIT_NUMBER','ORDERIT_STATUS','ORDERIT_TYPE');
     
 
 //     function saveRecord(assetRequestRecord $record, $populatedColumns, $nullColumns, $commit){
@@ -240,11 +241,11 @@ class assetRequestsTable extends DbTable{
     }
     
     
-    function mapVarbToOrderIt(){
+    function mapVarbToOrderItModal(){
         ?>
        <!-- Modal -->
     <div id="mapVarbToOrderItModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
           <div class="modal-content">
           <div class="modal-header">
              <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -253,14 +254,171 @@ class assetRequestsTable extends DbTable{
              <div class="modal-body" >
              </div>
              <div class='modal-footer'>
+             <?php
+                $form = new FormClass();
+                $allButtons = null;
+                $submitButton =   $form->formButton('submit','Submit','saveMapVarbToOrderIT','enabled','Save','btn btn-primary');
+                $allButtons[] = $submitButton;
+                $form->formBlueButtons($allButtons);
+                $form->formHiddenInput('mapper',$GLOBALS['ltcuser']['mail'],'mapper');
+            ?>             
              <button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
              </div>
-             </form>
             </div>
         </div>
       </div>
     <?php
     }
+    
+    function mapVarbToOrderITForm(){
+        $unmappedVarb = $this->getUnmappedVarb();     
+        ?>
+        <form id='mapVarbToOrderItForm'  class="form-horizontal"
+        	onsubmit="return false;">
+
+		<div class="panel panel-primary">
+		<div class="panel-heading">
+			<h3 class="panel-title">Map VARB to Order IT</h3>
+		</div>
+
+		<div class="panel-body">
+        	<div class='form-group required'>
+        		<div class='col-sm-5'>
+                <select class='form-control select select2 '
+                			  id='unmappedVarb'
+                              name='unmappedVarb'
+                              required
+                      >
+                    <option value=''></option>
+                    <?php
+                    foreach ($unmappedVarb as $varb){                            
+                            ?><option value='<?=trim($varb);?>'><?=$varb?></option><?php
+                        };
+                        ?>
+				</select>
+            	</div>
+         		<div class='col-sm-2 align-middle'>
+         		<h4 class='text-center align-middle'>Maps to Order IT</h4>
+         		</div>           	
+         		<div class='col-sm-5'>
+        			<input type="number" name='ORDERIT_NUMBER' id=orderItNumber' placeholder="Order IT Number" min="999999" max="9999999" class='form-control' required >
+         		</div>            	
+            	
+            	
+            	
+        	</div>
+        	<div class='form-group required'>
+        	<div class='col-sm-12'>
+        		<table class='table table-striped table-bordered ' cellspacing='0' width='90%' id='requestsWithinVarb'>
+        		<thead><tr><th>Included</th><th>Reference</th><th>Person</th><th>Asset Title</th></tr></thead>
+        		<tbody>
+        		</tbody>
+        		</table>
+        	</div>
+        </div>
+        </div>
+        <div class='panel-footer'>        
+        </div>
+        </div>
+        </form>
+    	<?php 
+    }    
+        
+        
+    function getUnmappedVarb(){
+        $sql = " SELECT distinct ORDERIT_VARB_REF ";
+        $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql .= " WHERE ORDERIT_VARB_REF is not null and ORDERIT_NUMBER is null and STATUS = 'Exported' ";
+        $sql .= " ORDER BY ORDERIT_VARB_REF asc ";
+        
+        $rs = db2_exec($_SESSION['conn'], $sql);
+        
+        if(!$rs){
+            DbTable::displayErrorMessage($rs,__CLASS__, __METHOD__, $sql);
+            return false;
+        }
+        
+        
+        while(($row=db2_fetch_assoc($rs))==true){
+            $data[]=$row['ORDERIT_VARB_REF'];
+        }
+        return $data;       
+    
+    }
+    
+    function getAssetRequestsForVarb($varb){
+        $sql = " SELECT REQUEST_REFERENCE as REFERENCE, P.EMAIL_ADDRESS as PERSON, ASSET_TITLE as ASSET, AR.CNUM ";
+        $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName . " as AR ";
+        $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
+        $sql .= " ON AR.CNUM = P.CNUM ";
+        $sql .= " WHERE ORDERIT_VARB_REF='" . db2_escape_string($varb) . "' ";
+        
+        $rs = db2_exec($_SESSION['conn'], $sql);
+        
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+        
+        $data = array();
+        while(($row=db2_fetch_assoc($rs))==true){
+            $row['INCLUDED'] = "<input type='checkbox' name='request[]' value='" . $row['REFERENCE'] . "' checked />";
+            unset($row['CNUM']);            
+            $data[] = $row;
+        }
+    
+        return $data;
+    }
+    
+    function saveVarbToOrderItMapping($orderIt, $varb, array $request){
+        
+        $requestList = "'" . implode("','", $request) . "'";
+        
+        $autoCommit = db2_autocommit($_SESSION['conn'],DB2_AUTOCOMMIT_OFF);
+        
+        $sql  = " UPDATE ";
+        $sql .= $_SESSION['Db2Schema'] . "." . $this->tableName ;
+        $sql .= " SET ORDERIT_NUMBER='" . db2_escape_string($orderIt) . "' ";
+        $sql .= ",STATUS='" . assetRequestRecord::$STATUS_RAISED_ORDERIT . "' ";
+        $sql .= ",ORDERIT_STATUS='" . assetRequestRecord::$STATUS_ORDERIT_APPROVED . "' ";
+        $sql .= " WHERE ORDERIT_VARB_REF='" . db2_escape_string($varb) . "' and STATUS='" . assetRequestRecord::$STATUS_EXPORTED . "' ";
+        $sql .= " AND REQUEST_REFERENCE in (" . $requestList . ") " ;
+        
+        
+        echo $sql;
+        
+        $rs = db2_exec($_SESSION['conn'], $sql);
+        
+        if(!$rs){
+            DbTable::displayErrorMessage($rs,__CLASS__, __METHOD__, $sql);
+            return false;
+        }
+        
+        $sql  = " UPDATE ";
+        $sql .= $_SESSION['Db2Schema'] . "." . $this->tableName ;
+        $sql .= " SET STATUS='" . assetRequestRecord::$STATUS_APPROVED . "' ";
+        $sql .= ", ORDERIT_VARB_REF = null ";
+        $sql .= ", ORDERIT_STATUS = '" . assetRequestRecord::$STATUS_ORDERIT_YET . "' ";
+        $sql .= ", ORDERIT_NUMBER = null ";
+        $sql .= " WHERE ORDERIT_VARB_REF='" . db2_escape_string($varb) . "' and STATUS='" . assetRequestRecord::$STATUS_EXPORTED . "' ";
+        
+        
+        echo $sql;
+        
+        $rs = db2_exec($_SESSION['conn'], $sql);
+        
+        if(!$rs){
+            DbTable::displayErrorMessage($rs,__CLASS__, __METHOD__, $sql);
+            return false;
+        }
+        
+        db2_commit($_SESSION['conn']);
+        
+        db2_autocommit($_SESSION['conn'],$autoCommit);
+        
+        return true;
+    }
+        
     
 
 }

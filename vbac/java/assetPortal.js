@@ -5,6 +5,7 @@
 
 function assetPortal() {
 	var table;
+	var varbRequestTable;
 
   this.init = function(){
     console.log('+++ Function +++ assetPortal.init');
@@ -24,8 +25,10 @@ function assetPortal() {
   },
   
   
-  this.initialiseAssetRequestDataTable = function(){
-	     // Setup - add a text input to each footer cell
+  this.initialiseAssetRequestDataTable = function(showAll){  
+	showAll = typeof(showAll) == 'undefined'  ? false : showAll;
+	  
+	// Setup - add a text input to each footer cell
     $('#assetPortalTable tfoot th').each( function () {
           var title = $(this).text();
           $(this).html( '<input type="text" id="footer'+ title + '" placeholder="Search '+title+'" />' );
@@ -35,6 +38,7 @@ function assetPortal() {
         ajax: {
               url: 'ajax/populateAssetRequestPortal.php',
               type: 'POST',
+              data: {showAll:showAll}
           }	,
           columns: [
                       { "data": "REFERENCE" , "defaultContent": "" },
@@ -52,7 +56,7 @@ function assetPortal() {
                       { "data": "DATE_ISSUED_TO_USER", "defaultContent": "" },
                       { "data": "DATE_RETURNED", "defaultContent": "" },
                       { "data": "EDUCATION_CONFIRMATION", "defaultContent": "" },                  
-                      { "data": "ORDERIT_VBAC_REF", "defaultContent": ""},
+                      { "data": "ORDERIT_VARB_REF", "defaultContent": ""},
                       { "data": "ORDERIT_NUMBER", "defaultContent": "" },
                       { "data": "ORDERIT_STATUS" , "defaultContent": ""},
                       { "data": "ORDERIT_TYPE" , "defaultContent": ""}
@@ -67,6 +71,9 @@ function assetPortal() {
           // scrollX: true,
           processing: true,
           responsive: true,
+          language: {
+        	    "emptyTable": "No Asset Requests to show"
+          		},   
           dom: 'Blfrtip',
 //	      colReorder: true,
           buttons: [
@@ -86,8 +93,8 @@ function assetPortal() {
                       .search( this.value )
                       .draw();
               }
-          } );
-      } );
+          });
+     });
   },
   
   this.listenForReportReset = function(){
@@ -108,6 +115,23 @@ function assetPortal() {
 	      });
   },
   
+  this.listenForReportShowAll = function(){
+	  $(document).on('click','#reportShowAll', function(e){
+		  assetPortal.table.destroy();
+		  AssetPortal.initialiseAssetRequestDataTable(true);
+		  $('#portalTitle').text('Asset Request Portal - Show All');
+	  });
+},
+
+	this.listenForReportShowExportable = function(){
+		$(document).on('click','#reportShowExportable', function(e){
+			assetPortal.table.destroy();
+			AssetPortal.initialiseAssetRequestDataTable(false);
+			$('#portalTitle').text('Asset Request Portal - Show Exportable Requests');
+	  });
+},
+  
+  
   this.listenForExportButton = function(){
 	  $(document).on('click','#exportForOrderIt', function(e){
 		  $('#exportForOrderIt').addClass('spinning');
@@ -123,7 +147,6 @@ function assetPortal() {
 		        	$('#exportResultsModal').modal('show');
 		  		    $('#exportForOrderIt').removeClass('spinning');
 				    $('#exportForOrderIt').attr('disabled',false);
-
 		        }
 	      });		 
 	  });
@@ -139,19 +162,96 @@ function assetPortal() {
 		        success: function(result){
 		        	console.log(result);
 		        	var resultObj = JSON.parse(result);
-			    	assetPortal.table.ajax.reload();
-		        	$('#mapVarbToOrderItModal .modal-body').html(resultObj.body);
+			    	// assetPortal.table.ajax.reload();
+		        	$('#mapVarbToOrderItModal .modal-body').html(resultObj.form);
 		        	$('#mapVarbToOrderItModal').modal('show');
 		  		    $('#mapVarbToOrderIt').removeClass('spinning');
 				    $('#mapVarbToOrderIt').attr('disabled',false);
-
 		        }
 	      });		 
 	  });
   }
   
-  
+  this.listenForSaveMapping = function(){
+	  $(document).on('click','#saveMapVarbToOrderIT', function(e){
+		  
+		 
+		  
+		  
+		  var formData = $('#mapVarbToOrderItForm').serialize();		  
+	      $.ajax({
+		        url: "ajax/saveVarbToOrderItMapping.php",
+		        type: 'POST',
+		        data: formData,  
+		        success: function(result){
+		        	console.log(result);
+		        	var resultObj = JSON.parse(result);
+		        	$('#mapVarbToOrderItModal .modal-body').html('');
+		        	$('#mapVarbToOrderItModal').modal('hide');
 
+		        }
+	      });
+		  
+		  
+	  });
+},
+  
+  
+  
+  
+  this.listenForMapVarbModalShown = function(){
+	  $('#mapVarbToOrderItModal').on('shown.bs.modal',function(){
+			$('#unmappedVarb').select2({
+		         placeholder:"Select VARB Reference",
+		         });
+			AssetPortal.populateRequestTableForVarb();
+			AssetPortal.listenForVarbSelectedForMapping();
+		  
+	  });
+  }
+  
+  
+  this.listenForVarbSelectedForMapping = function(){
+	  console.log('setup listener');
+	  $('#unmappedVarb').off('select2:select.varb').on('select2:select.varb', function (e) {
+		  assetPortal.varbRequestTable.ajax.reload();
+		});
+  }
+  
+  this.populateRequestTableForVarb = function(){ 
+	  assetPortal.varbRequestTable = $('#requestsWithinVarb').DataTable({
+	          ajax: {
+	              url: 'ajax/populateRequestTableForVarb.php',
+	              type: 'POST',
+	              data: function ( d ) {
+	            	  var varb = $('#unmappedVarb').find(':selected').val();
+	            	  var varbObject = { 'varb' : varb };
+	            	  return varbObject; }	        		
+	          		}	,
+	          columns: [
+	                      { "data": "INCLUDED" , "defaultContent": "", "width":"10%" },
+	                      { "data": "REFERENCE" ,"defaultContent": "", "width":"10%" },
+	                      { "data": "PERSON" ,"defaultContent": "", "width":"40%" },
+	                      { "data": "ASSET","defaultContent": "", "width":"40%"}
+	                  ],
+	
+	          autoWidth: false,
+	          deferRender: true,
+	          responsive: false,
+	          processing: true,
+	          responsive: true,
+	          pageLength: 20,
+	          order: [[ 1, "asc" ]],
+	          language: {
+	        	    "emptyTable": "Please select VARB"
+	          		},   
+	          dom: 'Bfrtip',
+//		      colReorder: true,
+	          buttons: [
+	                    'csvHtml5'
+	                ],
+	      });  
+  	}
 };
 
 
