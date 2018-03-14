@@ -160,7 +160,6 @@ function assetPortal() {
 		        url: "ajax/prepareForMapVarbToOrderIT.php",
 		        type: 'GET',
 		        success: function(result){
-		        	console.log(result);
 		        	var resultObj = JSON.parse(result);
 			    	// assetPortal.table.ajax.reload();
 		        	$('#mapVarbToOrderItModal .modal-body').html(resultObj.form);

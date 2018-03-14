@@ -59,6 +59,29 @@ class assetRequestsTable extends DbTable{
         $data = array();
 
         while(($row=db2_fetch_assoc($rs))==true){
+                          
+            $statusWithVarb = trim($row['ORDERIT_VARB_REF']) != null ? $row['STATUS'] . " (" . trim($row['ORDERIT_VARB_REF']) . ") " : $row['STATUS'];
+            
+            $approveButton  = "<button type='button' class='btn btn-default btn-xs btnApproveAssetRequest' aria-label='Left Align' ";
+            $approveButton .= "data-reference='" .$row['REFERENCE'] . "' ";
+            $approveButton .= " > ";
+            $approveButton .= "<span class='glyphicon glyphicon-ok-circle ' aria-hidden='true'></span>";
+            $approveButton .= " </button> ";
+            
+            $rejectButton  = "<button type='button' class='btn btn-default btn-xs btnRejectAssetRequest' aria-label='Left Align' ";
+            $rejectButton .= "data-reference='" .$row['REFERENCE'] . "' ";
+            $rejectButton .= " > ";
+            $rejectButton .= "<span class='glyphicon glyphicon-remove-circle ' aria-hidden='true'></span>";
+            $rejectButton .= " </button> ";
+            
+            $pmoOrFm = ($_SESSION['isFm'] || $_SESSION['isPmo']);            
+            $notTheirOwnRecord = ( trim(strtolower($row['EMAIL_ADDRESS'])) != trim(strtolower($_SESSION['ssoEmail'])));               
+            
+            $allowedtoApproveReject = ( $pmoOrFm && $notTheirOwnRecord);           
+            
+            $row['STATUS'] = $allowedtoApproveReject ? $approveButton . $rejectButton . $statusWithVarb : $statusWithVarb;
+        
+           
             
             $row['PERSON'] = $row['NOTES_ID'];
             unset($row['EMAIL_ADDRESS']);
@@ -72,7 +95,9 @@ class assetRequestsTable extends DbTable{
             unset($row['REQUESTOR_EMAIL']);
             unset($row['REQUESTOR_DATE']);
            
-            $row['STATUS'] .= trim($row['ORDERIT_VARB_REF']) != null ? " (" . trim($row['ORDERIT_VARB_REF']) . ") " : null;
+
+            
+
             
             $data[] = $row;
         }
@@ -380,7 +405,7 @@ class assetRequestsTable extends DbTable{
         $sql .= $_SESSION['Db2Schema'] . "." . $this->tableName ;
         $sql .= " SET ORDERIT_NUMBER='" . db2_escape_string($orderIt) . "' ";
         $sql .= ",STATUS='" . assetRequestRecord::$STATUS_RAISED_ORDERIT . "' ";
-        $sql .= ",ORDERIT_STATUS='" . assetRequestRecord::$STATUS_ORDERIT_APPROVED . "' ";
+        $sql .= ",ORDERIT_STATUS='" . assetRequestRecord::$STATUS_ORDERIT_RAISED . "' ";
         $sql .= " WHERE ORDERIT_VARB_REF='" . db2_escape_string($varb) . "' and STATUS='" . assetRequestRecord::$STATUS_EXPORTED . "' ";
         $sql .= " AND REQUEST_REFERENCE in (" . $requestList . ") " ;
         

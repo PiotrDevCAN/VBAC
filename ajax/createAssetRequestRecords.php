@@ -22,6 +22,8 @@ $approved = $autoApproved ? $requested : null;
 
 $educationConfirmed = !empty($_POST['EDUCATION_CONFIRMED']) ? $_POST['EDUCATION_CONFIRMED'] : 'No';
 
+$orderItStatus = empty($_POST['ORDERIT_NUMBER']) ? assetRequestRecord::$STATUS_ORDERIT_YET : assetRequestRecord::$STATUS_ORDERIT_RAISED;
+
 foreach ($_POST as $key => $value){
     $decodedKey = urldecode($key);
     $split=array();
@@ -46,6 +48,7 @@ foreach ($_POST as $key => $value){
             ,'EDUCATION_CONFIRMED'=>$educationConfirmed
             ,'STATUS'=>$status
             ,'ORDERIT_NUMBER'=>$_POST['ORDERIT_NUMBER']
+            ,'ORDERIT_STATUS'=>$orderItStatus
             );
 
         

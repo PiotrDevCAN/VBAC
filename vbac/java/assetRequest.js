@@ -135,7 +135,7 @@ function assetRequest() {
       var formData = $('#assetRequestForm').serialize();
       console.log(formData);
       $.ajax({
-    	  url: "ajax/saveAssetRequestRecords.php",
+    	  url: "ajax/createAssetRequestRecords.php",
           data : formData,
           type: 'POST',
           success: function(result){

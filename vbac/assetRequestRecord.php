@@ -29,22 +29,18 @@ class assetRequestRecord extends DbRecord {
     protected $ORDERIT_NUMBER;
     protected $ORDERIT_STATUS;
 
-    public static $STATUS_CREATED           = 'Created';
-    public static $STATUS_APPROVED          = 'Approved';
+    public static $STATUS_CREATED           = 'Created in vBAC';
+    public static $STATUS_APPROVED          = 'Approved for Order IT';
     public static $STATUS_EXPORTED          = 'Exported';
-    public static $STATUS_RAISED_ORDERIT    = 'Raised';
-    public static $STATUS_PROVISIONED       = 'Provisioned';
-    public static $STATUS_RETURNED          = 'Returned';
+    public static $STATUS_RAISED_ORDERIT    = 'Raised in Order IT';
+    public static $STATUS_PROVISIONED       = 'Provisioned by Order IT';
+    public static $STATUS_RETURNED          = 'Returned to LBG';
     
-    public static $STATUS_ORDERIT_YET       = 'yet to be Raised';
-    public static $STATUS_ORDERIT_PENDING   = 'Pending Approval';
-    public static $STATUS_ORDERIT_APPROVED  = 'Approved';
-    public static $STATUS_ORDERIT_REJECTED  = 'Rejected';
-    
-    
-    
-    
-    
+    public static $STATUS_ORDERIT_YET       = 'Yet to be raised';
+    public static $STATUS_ORDERIT_RAISED    = 'Raised in Order IT';
+    public static $STATUS_ORDERIT_APPROVED  = 'Approved in Order IT';
+    public static $STATUS_ORDERIT_REJECTED  = 'Rejected by LBG';
+     
     function displayForm(){
         $loader = new Loader();
         $myCnum = personTable::myCnum();
