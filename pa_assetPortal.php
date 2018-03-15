@@ -28,6 +28,7 @@ use vbac\personTable;
 $assetTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
 $assetTable->exportResultsModal();
 $assetTable->mapVarbToOrderItModal();
+$assetTable->approveRejectModal();
 
 $_SESSION['isPmo'] = true;
 $_SESSION['isCdi']  = false;
@@ -64,6 +65,10 @@ $(document).ready(function(){
  	AssetPortal.listenForReportShowAll();
  	AssetPortal.listenForReportShowExportable();
  	AssetPortal.listenForSaveMapping();
+ 	AssetPortal.listenForAssetRequestApprove();
+ 	AssetPortal.listenForAssetRequestReject();
+ 	AssetPortal.listenForAssetRequestApproveRejectToggle();
+ 	AssetPortal.listenForAssetRequestApproveRejectConfirm();
 });
 
 </script>

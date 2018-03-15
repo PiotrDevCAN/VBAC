@@ -23,6 +23,7 @@ $approved = $autoApproved ? $requested : null;
 $educationConfirmed = !empty($_POST['EDUCATION_CONFIRMED']) ? $_POST['EDUCATION_CONFIRMED'] : 'No';
 
 $orderItStatus = empty($_POST['ORDERIT_NUMBER']) ? assetRequestRecord::$STATUS_ORDERIT_YET : assetRequestRecord::$STATUS_ORDERIT_RAISED;
+$userCreated   = empty($_POST['ORDERIT_NUMBER']) ? assetRequestRecord::$CREATED_PMO : assetRequestRecord::$CREATED_USER;
 
 foreach ($_POST as $key => $value){
     $decodedKey = urldecode($key);
@@ -49,6 +50,7 @@ foreach ($_POST as $key => $value){
             ,'STATUS'=>$status
             ,'ORDERIT_NUMBER'=>$_POST['ORDERIT_NUMBER']
             ,'ORDERIT_STATUS'=>$orderItStatus
+            ,'USER_CREATED' => $userCreated
             );
 
         
@@ -62,7 +64,7 @@ foreach ($_POST as $key => $value){
             $assetRequestTable->saveRecord($assetRequestRecord);
             $requestDetails = $status == assetRequestRecord::$STATUS_APPROVED ? "<div class='bg-success'>" : "<div class='bg-warning'>" ;
             $requestDetails .= "<br/>Request :<strong>" .$assetRequestTable->lastId();
-            $requestDetails .= "</strong> Requestee: <strong>" .  $email . "</strong> Asset:<em>" . $assetTitle . "</em>";
+            $requestDetails .= "</strong><br/>Requestee: <strong>" .  $email . "</strong> Asset:<em>" . $assetTitle . "</em>";
             $requestDetails .= $status==assetRequestRecord::$STATUS_APPROVED ? 'Status: <b>' . $status . "</b>" : ' Status: <b>Approval Required</b>';
             $assetRequests[] = $requestDetails;
         } catch (Exception $e) {

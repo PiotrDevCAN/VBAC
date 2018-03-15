@@ -12,7 +12,7 @@ class assetRequestsTable extends DbTable{
     
     private static $portalHeaderCells = array('REFERENCE','CT_ID','PERSON','ASSET','STATUS','JUSTIFICATION','REQUESTOR','APPROVER',
         'LOCATION','PRIMARY_UID','SECONDARY_UID','DATE_ISSUED_TO_IBM','DATE_ISSUED_TO_USER','DATE_RETURNED',
-        'EDUCATION_CONFIRMED','ORDERIT_VARB_REF','ORDERIT_NUMBER','ORDERIT_STATUS','ORDERIT_TYPE');
+        'EDUCATION_CONFIRMED','ORDERIT_VARB_REF','ORDERIT_NUMBER','ORDERIT_STATUS','ORDERIT_TYPE', 'COMMENT');
     
 
 //     function saveRecord(assetRequestRecord $record, $populatedColumns, $nullColumns, $commit){
@@ -42,6 +42,7 @@ class assetRequestsTable extends DbTable{
         $sql .= " PRIMARY_UID, SECONDARY_UID, DATE_ISSUED_TO_IBM, DATE_ISSUED_TO_USER, DATE_RETURNED, EDUCATION_CONFIRMED,  ";
         $sql .= " ORDERIT_VARB_REF, ORDERIT_NUMBER, ORDERIT_STATUS, ";
         $sql .= " RAL.ORDER_IT_TYPE as ORDERIT_TYPE ";
+        $sql .= " , COMMENT ";
         $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
         $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql .= " ON AR.CNUM = P.CNUM ";      
@@ -60,28 +61,50 @@ class assetRequestsTable extends DbTable{
 
         while(($row=db2_fetch_assoc($rs))==true){
                           
-            $statusWithVarb = trim($row['ORDERIT_VARB_REF']) != null ? $row['STATUS'] . " (" . trim($row['ORDERIT_VARB_REF']) . ") " : $row['STATUS'];
+            $status = trim($row['STATUS']);
+            $statusWithVarb = trim($row['ORDERIT_VARB_REF']) != null ? $status . " (" . trim($row['ORDERIT_VARB_REF']) . ") " : $status;
             
-            $approveButton  = "<button type='button' class='btn btn-default btn-xs btnApproveAssetRequest' aria-label='Left Align' ";
-            $approveButton .= "data-reference='" .$row['REFERENCE'] . "' ";
+            $approveButton  = "<button type='button' class='btn btn-default btn-xs btnAssetRequestApprove btn-success' aria-label='Left Align' ";
+            $approveButton .= "data-reference='" .trim($row['REFERENCE']) . "' ";
+            $approveButton .= "data-requestee='" .trim($row['EMAIL_ADDRESS']) . "' ";
+            $approveButton .= "data-asset='"     .trim($row['ASSET']) . "' ";
+            $approveButton .= "data-toggle='tooltip' data-placement='top' title='Approve the request'";
             $approveButton .= " > ";
-            $approveButton .= "<span class='glyphicon glyphicon-ok-circle ' aria-hidden='true'></span>";
+            $approveButton .= "<span class='glyphicon glyphicon-ok ' aria-hidden='true'></span>";
             $approveButton .= " </button> ";
             
-            $rejectButton  = "<button type='button' class='btn btn-default btn-xs btnRejectAssetRequest' aria-label='Left Align' ";
-            $rejectButton .= "data-reference='" .$row['REFERENCE'] . "' ";
+            $rejectButton  = "<button type='button' class='btn btn-default btn-xs btnAssetRequestReject btn-danger' aria-label='Left Align' ";
+            $rejectButton .= "data-reference='" .trim($row['REFERENCE']) . "' ";
+            $rejectButton .= "data-requestee='" .trim($row['EMAIL_ADDRESS']) . "' ";
+            $rejectButton .= "data-asset='"     .trim($row['ASSET']) . "' ";
+            $rejectButton .= "data-toggle='tooltip' data-placement='top' title='Reject the request'";
             $rejectButton .= " > ";
-            $rejectButton .= "<span class='glyphicon glyphicon-remove-circle ' aria-hidden='true'></span>";
+            $rejectButton .= "<span class='glyphicon glyphicon-remove ' aria-hidden='true'></span>";
             $rejectButton .= " </button> ";
             
             $pmoOrFm = ($_SESSION['isFm'] || $_SESSION['isPmo']);            
             $notTheirOwnRecord = ( trim(strtolower($row['EMAIL_ADDRESS'])) != trim(strtolower($_SESSION['ssoEmail'])));               
             
-            $allowedtoApproveReject = ( $pmoOrFm && $notTheirOwnRecord);           
+            $allowedtoApproveReject = ( $pmoOrFm && $notTheirOwnRecord);      
             
-            $row['STATUS'] = $allowedtoApproveReject ? $approveButton . $rejectButton . $statusWithVarb : $statusWithVarb;
-        
-           
+            
+            switch (true) {
+                case $status == assetRequestRecord::$STATUS_APPROVED:
+                    $button = $rejectButton;
+                break;
+                case $status == assetRequestRecord::$STATUS_CREATED:
+                    $button = $rejectButton . $approveButton;
+                    break;
+                case $status == assetRequestRecord::$STATUS_REJECTED:
+                    $button = $approveButton;
+                    break;
+                default:
+                    $button = null;
+                break;
+            }
+          
+     
+            $row['STATUS'] = $allowedtoApproveReject ? $button . $statusWithVarb : $statusWithVarb;
             
             $row['PERSON'] = $row['NOTES_ID'];
             unset($row['EMAIL_ADDRESS']);
@@ -241,6 +264,81 @@ class assetRequestsTable extends DbTable{
         $row = db2_fetch_assoc($rs);
         return $row['REQUESTS'];        
     }
+    
+    function approveRejectModal(){
+        ?>
+       <!-- Modal -->
+    <div id="approveRejectModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+          <div class="modal-header">
+             <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Approve/Reject</h4>
+          </div>
+          <div class="modal-body" >
+          
+          	<form class="form-horizontal" role="form" id='assetRequestApproveRejectForm' onSubmit='return false;' >
+                  <div class="form-group">
+                    <label  class="col-sm-2 control-label"
+                              for="approveRejectRequestReference">Reference</label>
+                    <div class="col-sm-10">
+        				<input class='form-control' id='approveRejectRequestReference' name='approveRejectRequestReference'
+                				value=''
+                				type='text' disabled 
+                		>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label"
+                          for="approveRejectRequestee" >Requestee</label>
+                    <div class="col-sm-10">
+       					<input class='form-control' id='approveRejectRequestee'  name='approveRejectRequestee'
+                			   value=''
+                			   type='text' disabled 
+                			>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label"
+                          for="approveRejectAssetTitle" >Asset</label>
+                    <div class="col-sm-10">
+          				<input class='form-control' id='approveRejectAssetTitle' name='approveRejectAssetTitle'
+                			value=''
+                			type='text' disabled
+                			>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+						<input  data-toggle="toggle" type="checkbox" class='toggle' data-width='250' data-on="<?=assetRequestRecord::$STATUS_APPROVED?>" data-off="<?=assetRequestRecord::$STATUS_REJECTED?>" id='assetRequestApprovalToggle' name='assetRequestApproval' value='Yes' data-onstyle='success' data-offstyle='warning'>
+                    </div>
+                  </div>                  
+                  
+                  <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+						 <textarea class='form-control justification' rows='4' style='min-width: 100%' id='approveRejectRequestComment' name='approveRejectRequestComment' placeholder='Please provide comment if rejecting' min='0' max='500' ' ></textarea><span disabled>500 characters max</span>
+                    </div>
+                  </div>  
+                </form>
+          </div>
+          <div class='modal-footer'>
+          		<?php 
+                $form = new FormClass();
+                $allButtons = null;
+                $confirmButton =  $form->formButton('submit','Submit','assetRequestApproveRejectConfirm',null,'Confirm','btn btn-primary');
+                $allButtons[] = $confirmButton;
+                $form->formBlueButtons($allButtons);
+                $form->formHiddenInput('assetRequestApproverRejector',$_SESSION['ssoEmail'],'assetRequestApproverRejector');
+                ?>
+	      		<button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
+          	</div>
+          </form>
+          </div>
+        </div>
+      </div>
+    <?php
+    }
+    
     
     
     function exportResultsModal(){
@@ -441,6 +539,46 @@ class assetRequestsTable extends DbTable{
         
         db2_autocommit($_SESSION['conn'],$autoCommit);
         
+        return true;
+    }
+    
+    
+    static function setStatus($reference, $status, $comment=null){
+        
+        var_dump($comment);
+        
+        
+        if(!empty($comment)){        
+            $now = new \DateTime();
+            $sql = " SELECT COMMENT FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' ";
+            $rs = db2_exec($_SESSION['conn'], $sql);
+           
+            if(!$rs){
+                DbTable::displayErrorMessage($rs, __CLASS__,__METHOD__, $sql);
+                return false;
+            }
+        
+            $row = db2_fetch_assoc($rs);
+            $existingComment = isset($row['COMMENT']) ?  trim($row['COMMENT']) : null;
+            
+            $newComment = "<b>" . $now->format('Y-m-d H:i') . "</b>:" . trim($comment) . "<br/>" . $existingComment;     
+        } else {
+            $newComment = trim($comment);
+        }
+        
+        $sql  = " UPDATE ";
+        $sql .= $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS;
+        $sql .= " SET STATUS='" . db2_escape_string($status) . "' ";
+        $sql .= !empty($newComment) ? ", COMMENT='" . db2_escape_string(substr($newComment,0,500)) . "' " : null;
+        $sql .= " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' ";
+        
+        $rs = db2_exec($_SESSION['conn'], $sql);
+        
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__,__METHOD__, $sql);
+            return false;
+        }
+       
         return true;
     }
         

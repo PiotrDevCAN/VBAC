@@ -37,7 +37,7 @@ switch (true) {
         break;
     case $_SESSION['isPmo']:
         echo "is PMO";
-        $predicate .= $showAll ? null : " AND STATUS IN('" . assetRequestRecord::$STATUS_APPROVED . "') AND ORDERIT_NUMBER is NULL "; 
+        $predicate .= $showAll ? null : " AND STATUS IN('" . assetRequestRecord::$STATUS_APPROVED . "') AND ORDERIT_NUMBER is NULL AND USER_CREATED='" . assetRequestRecord::$CREATED_PMO . "' "; 
         break;
     default:
         echo "is default";

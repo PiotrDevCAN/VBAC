@@ -46,7 +46,7 @@ function assetPortal() {
                       { "data": "PERSON" ,"defaultContent": "" },
                       { "data": "ASSET","defaultContent": "<i>unknown</i>"},
                       { "data": "STATUS", "defaultContent": "" },
-                      { "data": "JUSTIFICATION", "defaultContent": "" },
+                      { "data": "JUSTIFICATION", "defaultContent": "" },                   
                       { "data": "REQUESTOR", "defaultContent": "" },
                       { "data": "APPROVER", "defaultContent": "" },                                           
                       { "data": "USER_LOCATION", "defaultContent": "<i>unknown</i>" },
@@ -59,10 +59,11 @@ function assetPortal() {
                       { "data": "ORDERIT_VARB_REF", "defaultContent": ""},
                       { "data": "ORDERIT_NUMBER", "defaultContent": "" },
                       { "data": "ORDERIT_STATUS" , "defaultContent": ""},
-                      { "data": "ORDERIT_TYPE" , "defaultContent": ""}
+                      { "data": "ORDERIT_TYPE" , "defaultContent": ""},
+                      { "data": "COMMENT" , "defaultContent": ""}
                   ],
           columnDefs: [
-                         { visible: false, targets: [8,9,10,11,12,13,14,15,16,17,18] }
+                         { visible: false, targets: [8,9,10,11,12,13,14,15,16,17,18,19] }
                   ] ,
           order: [[ 5, "asc" ]],
           autoWidth: true,
@@ -172,11 +173,7 @@ function assetPortal() {
   }
   
   this.listenForSaveMapping = function(){
-	  $(document).on('click','#saveMapVarbToOrderIT', function(e){
-		  
-		 
-		  
-		  
+	  $(document).on('click','#saveMapVarbToOrderIT', function(e){ 
 		  var formData = $('#mapVarbToOrderItForm').serialize();		  
 	      $.ajax({
 		        url: "ajax/saveVarbToOrderItMapping.php",
@@ -216,6 +213,84 @@ function assetPortal() {
 		  assetPortal.varbRequestTable.ajax.reload();
 		});
   }
+  
+  this.listenForAssetRequestApprove  = function(){
+	    $(document).on('click','.btnAssetRequestApprove', function(e){
+	    	$('#approveRejectRequestReference').val($(e.target).data('reference'));
+	    	$('#approveRejectRequestee').val($(e.target).data('requestee'));    	 	
+	    	$('#approveRejectAssetTitle').val($(e.target).data('asset'));   
+	    	$('#assetRequestApprovalToggle').prop('checked',true).change();
+	    	
+	    	$('#approveRejectRequestComment').val('').attr('required',false);	    	
+	    	$('#approveRejectModal').modal('show');
+	    });
+}, 
+
+
+this.listenForAssetRequestReject  = function(){
+    $(document).on('click','.btnAssetRequestReject', function(e){    	
+    	$('#approveRejectRequestReference').val($(e.target).data('reference'));
+    	$('#approveRejectRequestee').val($(e.target).data('requestee'));    	 	
+    	$('#approveRejectAssetTitle').val($(e.target).data('asset'));    	
+    	$('#assetRequestApprovalToggle').prop('checked',false).change();
+    	
+    	console.log($('#assetRequestApprovalToggle'));
+    	
+    	$('#approveRejectRequestComment').val('').attr('required',true);
+    	
+    	$('#approveRejectModal').modal('show');    	
+
+    });
+},
+
+
+
+this.listenForAssetRequestApproveRejectConfirm  = function(){
+    $(document).on('click','#assetRequestApproveRejectConfirm', function(e){  
+	      var form = document.getElementById('assetRequestApproveRejectForm');
+	      var formValid = form.checkValidity();
+	      if(formValid){
+	    	  $('#approveRejectModal').modal('hide');  
+	          	var allDisabledFields = ($("#assetRequestApproveRejectForm input:disabled"));
+	          	$(allDisabledFields).attr('disabled',false);	          		
+	          	var reference = $('#approveRejectRequestReference').val();
+	          	var comment = $('#approveRejectRequestComment').val();
+	          	
+	          	var approveReject = $('#assetRequestApprovalToggle').is(':checked' );
+	          	var status = approveReject ? 'Approved for Order IT' : 'Rejected in vBAC';
+
+		         $(allDisabledFields).attr('disabled',true);
+	          	
+	          	$.ajax({
+			        url: "ajax/updateAssetRequestStatus.php",
+			        type: 'POST',
+			        data: {reference: reference,
+			        	   status : status,
+			        	   comment : comment },  
+			        success: function(result){
+			        	console.log(result);
+			        	var resultObj = JSON.parse(result);
+			        	$('#approveRejectModal').modal('hide');  
+			        	assetPortal.table.ajax.reload();
+			        }
+		      });
+	      	    	  
+	      } else {
+	    	  alert('Please complete justification');
+	      }
+    });
+},
+
+
+this.listenForAssetRequestApproveRejectToggle  = function(){
+    $(document).off('change.varb').on('change.varb','#assetRequestApprovalToggle', function(e){    
+    	var comment = $('#assetRequestApprovalComment');    	
+    	comment.prop("required", !comment.prop("required"));
+    	
+    });
+},
+  
+  
   
   this.populateRequestTableForVarb = function(){ 
 	  assetPortal.varbRequestTable = $('#requestsWithinVarb').DataTable({
