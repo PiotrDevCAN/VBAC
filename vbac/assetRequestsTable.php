@@ -544,10 +544,7 @@ class assetRequestsTable extends DbTable{
     
     
     static function setStatus($reference, $status, $comment=null){
-        
-        var_dump($comment);
-        
-        
+       
         if(!empty($comment)){        
             $now = new \DateTime();
             $sql = " SELECT COMMENT FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' ";
@@ -570,6 +567,7 @@ class assetRequestsTable extends DbTable{
         $sql .= $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS;
         $sql .= " SET STATUS='" . db2_escape_string($status) . "' ";
         $sql .= !empty($newComment) ? ", COMMENT='" . db2_escape_string(substr($newComment,0,500)) . "' " : null;
+        $sql .= trim($status)==assetRequestRecord::$STATUS_APPROVED ? ", APPROVER_EMAIL='" . $_SESSION['ssoEmail'] . "' , APPROVED = current timestamp " : null;
         $sql .= " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' ";
         
         $rs = db2_exec($_SESSION['conn'], $sql);
