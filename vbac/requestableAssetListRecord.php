@@ -96,6 +96,7 @@ class requestableAssetListRecord extends DbRecord
 								data-toggle="tooltip" 
 								data-placement="right"
 								title='Requests for Assets with the Same Order IT Grouping Number may be grouped together, in the same "batch", when creating Order IT requests'
+								min=1
 						        >
 						</div>
 						<div class='col-sm-6'></div>
