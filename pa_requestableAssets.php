@@ -4,7 +4,7 @@ use itdq\FormClass;
 
 ?>
 
-<div class='container'>
+<div class='container greyablePage'>
 <h1>Requestable Assets</h1>
 </div>
 

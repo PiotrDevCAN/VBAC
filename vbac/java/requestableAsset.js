@@ -97,13 +97,13 @@ function requestableAsset() {
   this.initialiseSelect2 = function(){
 	  $('#asset_prerequisite').select2({
 		  placeholder: "Select a pre-requisite asset(if appro.)",
-		  allowClear: true,
-		  ajax: {
-			    url: 'ajax/possiblePrerequisiteAssets.php',
-			    dataType: 'json',
-			    data:{assetTitle: 'Dummy',
-			    	  assetPrereq: 'CT ID'}
-			  }
+//		  allowClear: true,
+//		  ajax: {
+//			    url: 'ajax/possiblePrerequisiteAssets.php',
+//			    dataType: 'json',
+//			    data:{assetTitle: 'Dummy',
+//			    	  assetPrereq: 'CT ID'}
+//			  }
 	  });
   },
 
@@ -139,29 +139,10 @@ function requestableAsset() {
 		        	  var resultObj = JSON.parse(result);
 		        	  if(resultObj.success==true){
 		        		  $('#requestableAssetListForm')[0].reset();
-//		        		  $('#person_uid').val(resultObj.cnum);
-//		        		  var message = "<div class=panel-heading><h3 class=panel-title>Success</h3>" + resultObj.messages
-//		        		  $('#savingBoardingDetailsModal  .panel').html(message);
-//		        		  $('#savingBoardingDetailsModal  .panel').addClass('panel-success');
-//		        		  $('#savingBoardingDetailsModal  .panel').removeClass('panel-danger');
-//		        		  $('#boardingForm :input').attr('disabled',true);
-//		        		  $('#saveBoarding').attr('disabled',true);
-//		        		  $('#initiatePes').attr('disabled',false);
-		        	  } else {
-		        		  //		              var message = "<div class=panel-heading><h3 class=panel-title>Error : Please inform vBAC Support</h3>" + resultObj.messages
-//		              	$('#savingBoardingDetailsModal  .panel').html(message);
-//		              	$('#savingBoardingDetailsModal  .panel').addClass('panel-danger');
-//		              	$('#savingBoardingDetailsModal  .panel').removeClass('panel-success');
-//		              	$('#saveBoarding').attr('disabled',false);
-//		              	$('#initiatePes').attr('disabled',true);
-		        	  };
-//		              $('#savingBoardingDetailsModal').modal('show');
-		    	      $('#saveRequestableAsset').attr('disabled',false);
-		    	      $('#saveRequestableAsset').val('Save');
+		        	  } 
 		        	  console.log(typeof(requestableAsset.table));
-		        	  if(typeof(requestableAsset.table) != "undefined") {
-		        		  requestableAsset.table.ajax.reload();
-		        	  }
+		        	  $('.greyablePage').addClass('overlay');
+		    		  location.reload();
 		          }
 		        });
 		    } else {
@@ -185,18 +166,21 @@ function requestableAsset() {
 		        var promptnat = $(this).data('prompt');
 		        var promptdec = decodeURIComponent(promptnat);
 		        var promptenc = encodeURIComponent(promptnat);
-		        console.log(promptnat );
-		        console.log(promptdec);
-		        console.log(promptenc);
-
+		        var type      =  $(this).data('type');
 
 		        $('#prompt').val(promptnat);
 		        $('#asset_primary_uid_title').val($(this).data('uidpri'));
 		        $('#asset_secondary_uid_title').val($(this).data('uidsec'));
 		        $('#asset_title').val($(this).data('asset'));
 		        $('#saveRequestableAsset').val('Update');
-		        console.log($('#asset_title'));
-
+		        $('#ORDER_IT_TYPE').val(type);
+		        
+		        var prereq = $(this).data('prereq')
+		        
+		        console.log(prereq);
+		        
+		        $('option[value="' + prereq + '"]').prop('selected', true).trigger('change');
+		        
 		     });
 	  },
 
