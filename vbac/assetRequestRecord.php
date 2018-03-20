@@ -111,6 +111,7 @@ class assetRequestRecord extends DbRecord {
 				<div class="panel-heading">
 					<h3 class="panel-title">Request Details</h3>
 				</div>
+				<div class='panel-body'>
 				<div class='form-group '>
 				  	<div class='col-sm-8' id='allCtidHereDiv'>
             	  	<input class="form-control input-sm" id='ctidConfirmation' name='ctidConfirmation' value=''  type='hidden' disabled required >
@@ -133,7 +134,6 @@ class assetRequestRecord extends DbRecord {
         			</div>
         			</div>
             	</div>
-				<div class="panel-body">
 				<?php
 				$this->addRequestableAssetDetails();
 				?>
