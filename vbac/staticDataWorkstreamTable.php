@@ -9,6 +9,7 @@ class staticDataWorkstreamTable extends staticDataTable {
 
     function getallWorkstream(){
         $sql = " SELECT * FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql .= " ORDER BY WORKSTREAM ";
         $resultSet = db2_exec($_SESSION['conn'], $sql);
 
         $allWorkstream = null;
