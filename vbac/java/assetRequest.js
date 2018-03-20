@@ -300,14 +300,11 @@ function assetRequest() {
 
   this.countCharsInTextarea = function(){
 	  $('textarea').keypress(function(){
-		if(this.value.length < $(this).attr('min') ){
-			$(this).next('span').removeClass('bg-warning').removeClass('bg-success').removeClass('bg-danger').addClass('bg-warning');
-			$(this).next('span').html(($(this).attr('min') - this.value.length)+' more chars required');
-		} else if(this.value.length > $(this).attr('max')) {
+		if((this.value.length + 1) > $(this).attr('max')) {
 			$(this).next('span').html('Justification too long, please keep to between'+$(this).attr('min')+' and '+$(this).attr('max') + ' characters' );
 			$(this).next('span').removeClass('bg-warning').removeClass('bg-success').removeClass('bg-danger').addClass('bg-danger');
 		} else {
-			$(this).next('span').html(($(this).attr('max') - this.value.length)+' more chars allowed');
+			$(this).next('span').html(($(this).attr('max') - (this.value.length+1))+' more chars allowed');
 			$(this).next('span').removeClass('bg-warning').removeClass('bg-success').removeClass('bg-danger').addClass('bg-success');
 		}
 	  });
