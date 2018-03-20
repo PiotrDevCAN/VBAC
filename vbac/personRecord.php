@@ -299,10 +299,37 @@ class personRecord extends DbRecord
             ?>knownCnum.push("<?=trim($row['CNUM']);?>");
             <?php
         }
-        ?>console.log(knownCnum);<?php
         ?></script><?php
 
     }
+    
+    static function loadKnownEmail($predicate=null){
+        $sql = " SELECT EMAIL_ADDRESS FROM " . $_SESSION['Db2Schema'] . "." .  allTables::$PERSON;
+        $sql .= " WHERE CNUM like '%XXX' ";
+        
+        
+        $rs = db2_exec($_SESSION['conn'], $sql);
+        
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+        
+        ?><script type="text/javascript">
+        var knownEmail = [];
+        <?php
+
+        while(($row=db2_fetch_assoc($rs))==true){
+            ?>knownEmail.push("<?=trim($row['EMAIL_ADDRESS']);?>");
+            <?php
+        }
+        ?>console.log(knownEmail);<?php
+        ?></script><?php
+
+    }
+    
+    
+    
     
     function checkIfTimeToWarnPmo(){
         if(!empty($this->PROJECTED_END_DATE)){

@@ -27,6 +27,7 @@ set_time_limit(0);
 <?php
 $mode = personRecord::$modeDEFINE;
 personRecord::loadKnownCnum();
+personRecord::loadKnownEmail();
 $person = new personRecord();
 $person->displayBoardingForm($mode);
 ?>
@@ -55,6 +56,7 @@ $(document).ready(function() {
     person.initialiseStartEndDate();
     person.listenForHasBpEntry();
 	person.listenForName();
+	person.listenForEmail();
     person.listenForSerial();
     person.listenForSaveBoarding();
     person.listenForAccountOrganisation();

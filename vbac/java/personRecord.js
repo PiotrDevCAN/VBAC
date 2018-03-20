@@ -83,6 +83,26 @@ function personRecord() {
                 );
         }
   },
+  
+  
+  this.listenForEmail = function(){
+	  $(document).on('focusout','#resource_email',function(){
+		  var newEmail = $('#resource_email').val();
+		  console.log(newEmail);
+		  var allreadyExists = ($.inArray(newEmail, knownEmail) >= 0 );
+          console.log(allreadyExists);
+          if(allreadyExists){ // comes back with Position in array(true) or false is it's NOT in the array.
+            $('#saveBoarding').attr('disabled',true);
+            $('#resource_email').css("background-color","LightPink");
+            alert('Email address already defined to VBAC');
+            return false;
+          } else {
+            $('#resource_email').css("background-color","LightGreen");
+            $('#saveBoarding').attr('disabled',false);
+          }
+	  });
+	  
+  },
 
   this.listenForOnBoarding = function() {
     $(document).on('click','#onBoardingBtn', function(){
@@ -185,6 +205,7 @@ function personRecord() {
         $('#saveBoarding').attr('disabled',false);
         $('#resource_country').select2('destroy');
         $('#resource_country').select2();
+        $('#person_preboarded').val('').trigger('change');  // incase they already selected a pre-boarder - we need to clear this field.       
       } else {
         $('#notAnIbmer :input').attr('required',false);
         $('#existingIbmer :input').attr('required',true);
