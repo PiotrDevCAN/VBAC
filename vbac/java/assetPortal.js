@@ -49,7 +49,7 @@ function assetPortal() {
                       { "data": "JUSTIFICATION", "defaultContent": "" },                   
                       { "data": "REQUESTOR", "defaultContent": "" },
                       { "data": "APPROVER", "defaultContent": "" },                                           
-                      { "data": "USER_LOCATION", "defaultContent": "<i>unknown</i>" },
+                      { "data": "LOCATION", "defaultContent": "<i>unknown</i>" },
                       { "data": "PRIMARY_UID", "defaultContent": "<i>unknown</i>" },
                       { "data": "SECONDARY_UID", "defaultContent": "<i>unknown</i>" },
                       { "data": "DATE_ISSUED_TO_IBM", "defaultContent": "<i>unknown</i>" },
