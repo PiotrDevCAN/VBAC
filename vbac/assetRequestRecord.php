@@ -134,9 +134,11 @@ class assetRequestRecord extends DbRecord {
         			</div>
         			</div>
             	</div>
+            	<div id='requestableAssetDetailsDiv' style='display:none'>
 				<?php
 				$this->addRequestableAssetDetails();
 				?>
+				</div>
 
 
 			</div>

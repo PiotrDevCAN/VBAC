@@ -68,15 +68,17 @@ function assetRequest() {
   this.listenForSelectLocation = function(){
 	  $(document).on('select2:select','.locationFor', function (e) {
 		    var AssetRequest = new assetRequest();
+		    
+		    $('#requestableAssetDetailsDiv').show();
+		    console.log($('.requestableAsset'));
+		    
+		    $('.requestableAsset').not(':first').prop('checked',false);
+		    
 		    var data = e.params.data;
-		    console.log(data);
 		    var location = data.text.trim();
-		    console.log(location)
 		    if(location.includes('UK')){
-		    	console.log('onshore');
 		    	AssetRequest.checkAssetsForShore('on');
 		    } else {
-		    	console.log('offshore');
 		    	AssetRequest.checkAssetsForShore('off');
 		    }
 		});
@@ -84,17 +86,9 @@ function assetRequest() {
 
 
   this.listenForSelectAsset = function(){
-	  $(document).on('click','.requestableAsset', function (e) {
-		  console.log(this);
-		  console.log($(this).closest('.selectableThing'));
-		  console.log($(this).closest('.selectableThing').find('.justification'));
-		  
+	  $(document).on('click','.requestableAsset', function (e) {  
 		  var id = (this.id);
-		  
-		  console.log(id);
-		  
 		  var justificationDivId = id.replace("-asset-", "-justification-div-");
-		  
 		  $('#'+justificationDivId).toggle();
 
 		  var justificationState = $(this).is(':checked') ? true : false;
