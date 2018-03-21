@@ -88,6 +88,14 @@ function assetRequest() {
 		  console.log(this);
 		  console.log($(this).closest('.selectableThing'));
 		  console.log($(this).closest('.selectableThing').find('.justification'));
+		  
+		  var id = (this.id);
+		  
+		  console.log(id);
+		  
+		  var justificationDivId = id.replace("-asset-", "-justification-div-");
+		  
+		  $('#'+justificationDivId).toggle();
 
 		  var justificationState = $(this).is(':checked') ? true : false;
 		  $(this).closest('.selectableThing').find('.justification').attr('required',justificationState);
