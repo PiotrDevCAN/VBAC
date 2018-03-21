@@ -72,7 +72,7 @@ function assetRequest() {
 		    console.log(data);
 		    var location = data.text.trim();
 		    console.log(location)
-		    if(location=='All of UK,UK'){
+		    if(location.includes('UK')){
 		    	console.log('onshore');
 		    	AssetRequest.checkAssetsForShore('on');
 		    } else {
@@ -320,7 +320,11 @@ function assetRequest() {
 		  $('*[data-onshore="Yes"]').not('*[data-asset="CT ID"]').attr('disabled',false);
 		  $.each($('*[data-onshore="No"]').not('*[data-asset="CT ID"]').next('label'),function(key,value){
 			  var text = $(value).text();
-			  $(value).text(text + ' - not available onshore');
+			  var alreadyAmended = text.includes("not available onshore");
+			  if(!alreadyAmended) {
+				  $(value).text(text + ' - not available onshore');  
+			  }
+			  
 		  });
 		  $.each($('*[data-onshore="Yes"]').not('*[data-asset="CT ID"]'),function(key,value){
 			  var label = $(this).next('label');
@@ -334,7 +338,10 @@ function assetRequest() {
 		  $('*[data-offshore="Yes"]').not('*[data-asset="CT ID"]').attr('disabled',false);
 		  $.each($('*[data-offshore="No"]').not('*[data-asset="CT ID"]').next('label'),function(key,value){
 			  var text = $(value).text();
-			  $(value).text(text + ' - not available offshore');
+			  var alreadyAmended = text.includes("not available offshore");
+			  if(!alreadyAmended) {
+				  $(value).text(text + ' - not available offshore');
+			  }
 		  });
 	  }
   }
