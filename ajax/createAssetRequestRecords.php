@@ -100,10 +100,10 @@ foreach ($_POST as $key => $value){
             
             
             $assetRequestTable->saveRecord($assetRequestRecord);
-            $requestDetails = $status == assetRequestRecord::$STATUS_APPROVED ? "<div class='bg-success'>" : "<div class='bg-warning'>" ;
+            $requestDetails = ($status == assetRequestRecord::$STATUS_RAISED_ORDERIT ) || ($status == assetRequestRecord::$STATUS_APPROVED ) ? "<div class='bg-success'>" : "<div class='bg-warning'>" ;
             $requestDetails .= "<br/>Request :<strong>" .$assetRequestTable->lastId();
             $requestDetails .= "</strong><br/>Requestee: <strong>" .  $email . "</strong> Asset:<em>" . $assetTitle . "</em>";
-            $requestDetails .= $status==assetRequestRecord::$STATUS_APPROVED ? 'Status: <b>' . $status . "</b>" : ' Status: <b>Approval Required</b>';
+            $requestDetails .= ' Status: <strong>' . $status . '</strong>';
             $assetRequests[] = $requestDetails;
         } catch (Exception $e) {
             $messages = ob_get_clean();
