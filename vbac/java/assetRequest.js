@@ -72,7 +72,8 @@ function assetRequest() {
 		    $('#requestableAssetDetailsDiv').show();
 		    console.log($('.requestableAsset'));
 		    
-		    $('.requestableAsset').not(':first').prop('checked',false);
+		    $('.requestableAsset').not(':first').prop('checked',false); // uncheck all the ticks
+		    $('.justificationDiv').hide();								// Close all the Justification boxes.
 		    
 		    var data = e.params.data;
 		    var location = data.text.trim();
