@@ -219,6 +219,7 @@ function assetPortal() {
 	    	$('#approveRejectRequestReference').val($(e.target).data('reference'));
 	    	$('#approveRejectRequestee').val($(e.target).data('requestee'));    	 	
 	    	$('#approveRejectAssetTitle').val($(e.target).data('asset'));   
+	    	$('#approveRejectRequestOrderItStatus').val($(e.target).data('orderitstatus'));
 	    	$('#assetRequestApprovalToggle').prop('checked',true).change();
 	    	
 	    	$('#approveRejectRequestComment').val('').attr('required',false);	    	
@@ -231,7 +232,8 @@ this.listenForAssetRequestReject  = function(){
     $(document).on('click','.btnAssetRequestReject', function(e){    	
     	$('#approveRejectRequestReference').val($(e.target).data('reference'));
     	$('#approveRejectRequestee').val($(e.target).data('requestee'));    	 	
-    	$('#approveRejectAssetTitle').val($(e.target).data('asset'));    	
+    	$('#approveRejectAssetTitle').val($(e.target).data('asset'));   
+    	$('#approveRejectRequestOrderItStatus').val($(e.target).data('orderitstatus'));
     	$('#assetRequestApprovalToggle').prop('checked',false).change();
     	
     	console.log($('#assetRequestApprovalToggle'));
@@ -255,9 +257,14 @@ this.listenForAssetRequestApproveRejectConfirm  = function(){
 	          	$(allDisabledFields).attr('disabled',false);	          		
 	          	var reference = $('#approveRejectRequestReference').val();
 	          	var comment = $('#approveRejectRequestComment').val();
+	          	var orderItStatus = $('#approveRejectRequestOrderItStatus').val();
 	          	
 	          	var approveReject = $('#assetRequestApprovalToggle').is(':checked' );
+	          	var raisedInOrderIt = orderItStatus == 'Raised in Order IT' ? true : false;
 	          	var status = approveReject ? 'Approved for Order IT' : 'Rejected in vBAC';
+	          	var status = approveReject && raisedInOrderIt ? 'Raised in Order IT' : status;
+	          	
+	          	
 
 		         $(allDisabledFields).attr('disabled',true);
 	          	

@@ -17,13 +17,45 @@ $requested = $now->format('Y-m-d h:i:s');
 
 $approvingMgrEmail = personTable::getEmailFromCnum(trim($_POST['approvingManager']));
 $autoApproved = strtoupper(trim($_POST['requestor'])) == strtoupper(trim($approvingMgrEmail));
-$status = $autoApproved ? assetRequestRecord::$STATUS_APPROVED : assetRequestRecord::$STATUS_CREATED;
+//$status = $autoApproved ? assetRequestRecord::$STATUS_APPROVED : assetRequestRecord::$STATUS_CREATED;
 $approved = $autoApproved ? $requested : null;
 
 $educationConfirmed = !empty($_POST['EDUCATION_CONFIRMED']) ? $_POST['EDUCATION_CONFIRMED'] : 'No';
 
-$orderItStatus = empty($_POST['ORDERIT_NUMBER']) ? assetRequestRecord::$STATUS_ORDERIT_YET : assetRequestRecord::$STATUS_ORDERIT_RAISED;
-$userCreated   = empty($_POST['ORDERIT_NUMBER']) ? assetRequestRecord::$CREATED_PMO : assetRequestRecord::$CREATED_USER;
+// $orderItStatus = empty($_POST['ORDERIT_NUMBER']) ? assetRequestRecord::$STATUS_ORDERIT_YET : assetRequestRecord::$STATUS_ORDERIT_RAISED;
+// $userCreated   = empty($_POST['ORDERIT_NUMBER']) ? assetRequestRecord::$CREATED_PMO : assetRequestRecord::$CREATED_USER;
+
+switch (true) {
+    case $autoApproved && !empty($_POST['ORDERIT_NUMBER']) :
+        // This is a manager, entering details of a request that has already been raised in ORDER IT.
+        $orderItStatus = assetRequestRecord::$STATUS_ORDERIT_RAISED;
+        $status = assetRequestRecord::$STATUS_RAISED_ORDERIT;
+        $userCreated = assetRequestRecord::$CREATED_USER;
+    break;
+    case !$autoApproved && !empty($_POST['ORDERIT_NUMBER']) :
+        // Someone (Not the approving mgr) raising a request that has already been raised in ORDER IT.
+        $orderItStatus = assetRequestRecord::$STATUS_ORDERIT_RAISED;
+        $status = assetRequestRecord::$STATUS_CREATED;
+        $userCreated = assetRequestRecord::$CREATED_USER;
+        break;
+    case $autoApproved && empty($_POST['ORDERIT_NUMBER']) :
+        // Approving Mgr raising it - it's NOT in ORDER IT Yet, 
+        $orderItStatus = assetRequestRecord::$STATUS_ORDERIT_YET;
+        $status = assetRequestRecord::$STATUS_APPROVED;
+        $userCreated = assetRequestRecord::$CREATED_PMO;
+    case !$autoApproved && empty($_POST['ORDERIT_NUMBER']) :
+        // NOY the Approving Mgr raising it - it's NOT in ORDER IT Yet,
+        $orderItStatus = assetRequestRecord::$STATUS_ORDERIT_YET;
+        $status = assetRequestRecord::$STATUS_CREATED;
+        $userCreated = assetRequestRecord::$CREATED_PMO;
+    default:
+        ;
+    break;
+}
+
+
+
+
 
 foreach ($_POST as $key => $value){
     $decodedKey = urldecode($key);

@@ -68,6 +68,7 @@ class assetRequestsTable extends DbTable{
             $approveButton .= "data-reference='" .trim($row['REFERENCE']) . "' ";
             $approveButton .= "data-requestee='" .trim($row['EMAIL_ADDRESS']) . "' ";
             $approveButton .= "data-asset='"     .trim($row['ASSET']) . "' ";
+            $approveButton .= "data-orderitstatus='".trim($row['ORDERIT_STATUS']) . "' ";
             $approveButton .= "data-toggle='tooltip' data-placement='top' title='Approve the request'";
             $approveButton .= " > ";
             $approveButton .= "<span class='glyphicon glyphicon-ok ' aria-hidden='true'></span>";
@@ -77,6 +78,7 @@ class assetRequestsTable extends DbTable{
             $rejectButton .= "data-reference='" .trim($row['REFERENCE']) . "' ";
             $rejectButton .= "data-requestee='" .trim($row['EMAIL_ADDRESS']) . "' ";
             $rejectButton .= "data-asset='"     .trim($row['ASSET']) . "' ";
+            $rejectButton .= "data-orderitstatus='".trim($row['ORDERIT_STATUS']) . "' ";
             $rejectButton .= "data-toggle='tooltip' data-placement='top' title='Reject the request'";
             $rejectButton .= " > ";
             $rejectButton .= "<span class='glyphicon glyphicon-remove ' aria-hidden='true'></span>";
@@ -332,6 +334,7 @@ class assetRequestsTable extends DbTable{
                 ?>
 	      		<button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
           	</div>
+          	<input type=-'hidden' val='' id='approveRejectRequestOrderItStatus' name='approveRejectRequestOrderItStatus' />
           </form>
           </div>
         </div>
