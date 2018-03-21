@@ -123,9 +123,11 @@ function assetRequest() {
 		          success: function(result){
 		        	  console.log(result);
 	    			  console.log('record required');
-	    			  AssetRequest.recordCtidOnForm(requestee, 'Required');
+	    			  AssetRequest.recordCtidOnForm(requestee, ctid);
 		    		  },
 		      });
+		  } else {
+			  AssetRequest.recordCtidOnForm(requestee, 'Required');
 		  };
 	  });
   },
