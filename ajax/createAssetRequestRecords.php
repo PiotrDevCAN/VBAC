@@ -25,6 +25,8 @@ $educationConfirmed = !empty($_POST['EDUCATION_CONFIRMED']) ? $_POST['EDUCATION_
 // $orderItStatus = empty($_POST['ORDERIT_NUMBER']) ? assetRequestRecord::$STATUS_ORDERIT_YET : assetRequestRecord::$STATUS_ORDERIT_RAISED;
 // $userCreated   = empty($_POST['ORDERIT_NUMBER']) ? assetRequestRecord::$CREATED_PMO : assetRequestRecord::$CREATED_USER;
 
+
+
 switch (true) {
     case $autoApproved && !empty($_POST['ORDERIT_NUMBER']) :
         // This is a manager, entering details of a request that has already been raised in ORDER IT.
@@ -37,23 +39,27 @@ switch (true) {
         $orderItStatus = assetRequestRecord::$STATUS_ORDERIT_RAISED;
         $status = assetRequestRecord::$STATUS_CREATED;
         $userCreated = assetRequestRecord::$CREATED_USER;
-        break;
+    break;
     case $autoApproved && empty($_POST['ORDERIT_NUMBER']) :
         // Approving Mgr raising it - it's NOT in ORDER IT Yet, 
         $orderItStatus = assetRequestRecord::$STATUS_ORDERIT_YET;
         $status = assetRequestRecord::$STATUS_APPROVED;
         $userCreated = assetRequestRecord::$CREATED_PMO;
+    break;
     case !$autoApproved && empty($_POST['ORDERIT_NUMBER']) :
         // NOY the Approving Mgr raising it - it's NOT in ORDER IT Yet,
         $orderItStatus = assetRequestRecord::$STATUS_ORDERIT_YET;
         $status = assetRequestRecord::$STATUS_CREATED;
         $userCreated = assetRequestRecord::$CREATED_PMO;
+    break;
     default:
         ;
     break;
 }
 
-
+var_dump($autoApproved);
+var_dump(empty($_POST['ORDERIT_NUMBER']));
+var_dump($status);
 
 
 
@@ -110,6 +116,6 @@ foreach ($_POST as $key => $value){
 
 $messages = ob_get_clean();
 
-$response = array('result'=>'success','requests'=>$assetRequests, 'post'=>$post,'approvingMgrEmail'=>$approvingMgrEmail, 'records'=>$records);
+$response = array('result'=>'success','messages'=>$messages,'requests'=>$assetRequests, 'post'=>$post,'approvingMgrEmail'=>$approvingMgrEmail, 'records'=>$records);
 ob_clean();
 echo json_encode($response);
