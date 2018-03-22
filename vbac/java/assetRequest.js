@@ -194,7 +194,10 @@ function assetRequest() {
 
   this.saveAssetRequestRecords = function(){
 	  console.log('would save all the records now');
+	  var allDisabledFields = ($("#assetRequestForm input:disabled"));
+      $(allDisabledFields).attr('disabled',false);	  
       var formData = $('#assetRequestForm').serialize();
+      $(allDisabledFields).attr('disabled',true);
       console.log(formData);
       $.ajax({
     	  url: "ajax/createAssetRequestRecords.php",

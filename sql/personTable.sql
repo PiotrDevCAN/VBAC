@@ -57,7 +57,7 @@ alter table "VBAC".PERSON
 	 add column "PRE_BOARDED"
 	    char(9);
 	    
-alter table "ROB_DEV".PERSON
+alter table "VBAC_UT".PERSON
 	 add column "SECURITY_EDUCATION"
 	   char(3) default 'No' NOT NULL;	    
 
