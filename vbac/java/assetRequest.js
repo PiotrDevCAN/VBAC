@@ -17,6 +17,7 @@ function assetRequest() {
   this.showEducationConfirmationModal = function(){
 	  $(document).on('select2:select','#requestees', function (e) {
 		  $('.educationConfirmedCheckbox:last').attr('checked',false);
+		  $('#saveAssetRequest').attr('disabled',true);
 		  var data = e.params.data;
 		  console.log(data);
 		  var cnum_id = data.id.trim();
@@ -32,7 +33,8 @@ function assetRequest() {
 		    		  $('#cnumForSecurityModal').val(cnum_id);
 		    		  $('#confirmEducationModal').modal('show');		    	  
 		    	  } else {
-		    		  $('#person-1-educationConfirmed').attr('checked',true);		    		  
+		    		  $('#person-1-educationConfirmed').attr('checked',true);		
+		    		  $('#saveAssetRequest').attr('disabled',false);
 		    	  }
 		      }
 		  });
