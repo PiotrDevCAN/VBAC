@@ -66,7 +66,8 @@ class personRecord extends DbRecord
     protected $CONTRACTOR_ID;
     protected $CIO_ALIGNMENT;
     protected $PRE_BOARDED;
-
+    
+    protected $SECURITY_EDUCATION;
 
     protected $person_bio;
 

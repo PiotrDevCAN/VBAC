@@ -35,7 +35,8 @@ CREATE TABLE "VBAC_UT"."PERSON" (
 		"CONTRACTOR_ID_REQUIRED" CHAR(3),
 		"CONTRACTOR_ID" CHAR(10),
 		"CIO_ALIGNMENT" CHAR(30),
-		"PRE_BOARDED" CHAR(9)
+		"PRE_BOARDED" CHAR(9),
+		"SECURITY_EDUCATION" CHAR(3) default 'No'
 	)
 	DATA CAPTURE NONE;
 
@@ -55,6 +56,10 @@ alter table "VBAC_UT".PERSON
 alter table "VBAC".PERSON
 	 add column "PRE_BOARDED"
 	    char(9);
+	    
+alter table "ROB_DEV".PERSON
+	 add column "SECURITY_EDUCATION"
+	   char(3) default 'No' NOT NULL;	    
 
 
 
