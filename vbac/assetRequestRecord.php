@@ -130,7 +130,7 @@ class assetRequestRecord extends DbRecord {
             		<div class='form-group required'>
         			<div class='col-sm-4'>
         			<label for='educationConfirmed'>Security Education</label>
-        			<input type='checkbox' id='person-1-educationConfirmed' name='EDUCATION_CONFIRMED' value='Yes' disabled >
+        			<input type='checkbox' id='person-1-educationConfirmed' name='EDUCATION_CONFIRMED' value='Yes' disabled class='educationConfirmedCheckbox' >
         			</div>
         			</div>
             	</div>
@@ -264,6 +264,7 @@ class assetRequestRecord extends DbRecord {
       		  		<button type="button" class="btn btn-success" id='confirmedEducation'>Education Completed</button>
       		  		<button type="button" class="btn btn-danger" id='noEducation'>Education NOT Completed</button>
       			</div>
+      			<input id='cnumForSecurityModal' val='' type='hidden' />
     		</div>
   			</div>
 		</div>

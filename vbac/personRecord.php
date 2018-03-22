@@ -92,6 +92,9 @@ class personRecord extends DbRecord
     const REVALIDATED_PREBOARDER = 'preboarder';
     const REVALIDATED_OFFBOARDING = 'offboarding';
     const REVALIDATED_OFFBOARDED = 'offboarded';
+    
+    const SECURITY_EDUCATION_COMPLETED = 'Yes';
+    const SECURITY_EDUCATION_NOT_COMPLETED = 'No';
 
     public static $employeeTypeMapping = array('A'=>'Regular','B'=>'Contractor','C'=>'Contractor','I'=>'Regular','L'=>'Regular','O'=>'Regular','P'=>'Regular','V'=>'Contractor','X'=>'Regular');
 

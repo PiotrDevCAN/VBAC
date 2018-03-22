@@ -16,33 +16,70 @@ function assetRequest() {
 
   this.showEducationConfirmationModal = function(){
 	  $(document).on('select2:select','#requestees', function (e) {
+		  $('.educationConfirmedCheckbox:last').attr('checked',false);
 		  var data = e.params.data;
 		  console.log(data);
+		  var cnum_id = data.id.trim();
 		  $('#educationNotesid').html(data.text);
-		  $('#confirmEducationModal').modal('show');
+		  $.ajax({
+			  url: "ajax/getSecurityEducationForCnum.php",
+		      type: 'GET',
+		      data: { cnum:cnum_id},
+		      success: function(result){
+		    	  var resultObj = JSON.parse(result);
+		    	  var securityEducation = resultObj.securityEducation;
+		    	  if(securityEducation!='Yes'){		    
+		    		  $('#cnumForSecurityModal').val(cnum_id);
+		    		  $('#confirmEducationModal').modal('show');		    	  
+		    	  } else {
+		    		  $('#person-1-educationConfirmed').attr('checked',true);		    		  
+		    	  }
+		      }
+		  });
 	  });
   },
 
   this.listenForEducationConfirmation = function(){
 	  $(document).on('click','#confirmedEducation', function(){
+		    var cnum = $('#cnumForSecurityModal').val();
 	        $('#confirmEducationModal').modal('hide');
 	        $('#hideTillEducationConfirmed').show();
 	        $('#person-1-educationConfirmed').attr('checked',true);
 	        $('#saveAssetRequest').attr('disabled',false);
+	        $.ajax({
+				  url: "ajax/updateSecurityEducationForCnum.php",
+			      type: 'POST',
+			      data: { cnum:cnum,
+			    	      securityEducation: 'Yes'},
+			      success: function(result){
+			    	  var resultObj = JSON.parse(result);
+			    	  
+			      }
+			  });  
 	  });
   },
 
   this.listenForNoEducation = function(){
 	  $(document).on('click','#noEducation', function(){
+		    var cnum = $('#cnumForSecurityModal').val();
 		  	$('#saveAssetRequest').attr('disabled',false);
 	        $('#confirmEducationModal').modal('hide');
 	        $('#hideTillEducationConfirmed').hide();
 	        $('#doTheEducation').show();
+	        $.ajax({
+				  url: "ajax/updateSecurityEducationForCnum.php",
+			      type: 'POST',
+			      data: { cnum:cnum,
+			    	      securityEducation: 'No'},
+			      success: function(result){
+			    	  var resultObj = JSON.parse(result);			    	  
+			      }
+			  });  
 	  });
   },
 
   this.listenForSelectRequestee = function(){
-	  $(document).on('select2:select','#requestees', function (e) {
+	  $(document).on('select2:select','#requestees', function (e) {		    
 		    var AssetRequest = new assetRequest();
 		    var data = e.params.data;
 		    console.log(data);
@@ -64,11 +101,18 @@ function assetRequest() {
 		        	var lbgLocation = resultObj.lbgLocation;
 				    $('.locationFor').attr('disabled',false);
 				    if(lbgLocation){
-				    	$('.locationFor').val(lbgLocation).trigger('change');
+				    	$('.locationFor').val(lbgLocation).trigger('change').trigger({
+				    	    type: 'select2:select',
+				    	    params: {
+				    	        data:{
+				    	        	  "id": lbgLocation,
+				    	        	  "text": lbgLocation
+				    	        	}
+				    	    }
+				    	});
 				    } else {
 				    	$('.locationFor').val('').trigger('change');
-				    }
-				    
+				    }				    
 		        }
 		    });
 		    $("#approvingManager option[value='"+cnum_id+"']").remove();
@@ -77,6 +121,9 @@ function assetRequest() {
 
   this.listenForSelectLocation = function(){
 	  $(document).on('select2:select','.locationFor', function (e) {
+		    console.log(e);
+		  
+		  
 		    var AssetRequest = new assetRequest();
 		    
 		    $('#requestableAssetDetailsDiv').show();

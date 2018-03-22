@@ -4,6 +4,7 @@ use vbac\assetRequestRecord;
 use itdq\DbTable;
 use vbac\assetRequestsTable;
 use vbac\allTables;
+use vbac\personRecord;
 
 ob_start();
 
@@ -16,11 +17,12 @@ $assetRequests = array();
 $requested = $now->format('Y-m-d h:i:s');
 
 $approvingMgrEmail = personTable::getEmailFromCnum(trim($_POST['approvingManager']));
+
 $autoApproved = strtoupper(trim($_POST['requestor'])) == strtoupper(trim($approvingMgrEmail));
 //$status = $autoApproved ? assetRequestRecord::$STATUS_APPROVED : assetRequestRecord::$STATUS_CREATED;
 $approved = $autoApproved ? $requested : null;
 
-$educationConfirmed = !empty($_POST['EDUCATION_CONFIRMED']) ? $_POST['EDUCATION_CONFIRMED'] : 'No';
+
 
 // $orderItStatus = empty($_POST['ORDERIT_NUMBER']) ? assetRequestRecord::$STATUS_ORDERIT_YET : assetRequestRecord::$STATUS_ORDERIT_RAISED;
 // $userCreated   = empty($_POST['ORDERIT_NUMBER']) ? assetRequestRecord::$CREATED_PMO : assetRequestRecord::$CREATED_USER;
@@ -71,6 +73,7 @@ foreach ($_POST as $key => $value){
         $justification = !isset($_POST['person-'.$personId.'-justification-'.$assetId]) ? null : $_POST['person-'.$personId.'-justification-'.$assetId];
         $location = $_POST['person-'.$personId.'-location'];
         $cnum = $_POST['requestee'];
+        $educationConfirmed = personTable::getSecurityEducationForCnum($cnum);
         
         $email = $_POST[$cnum];
         
@@ -106,8 +109,8 @@ foreach ($_POST as $key => $value){
             $assetRequests[] = $requestDetails;
             
             $rest = $personTable->updateLbgLocationForCnum($location, $cnum);
-            
-            echo "<br/>Location:$location Cnum:$cnum Result:$rest";
+             
+            echo "<br/>Location:$location Cnum:$cnum Result:$rest Security: $educationConfirmed Educ:$educ" ;
             
             
         } catch (Exception $e) {

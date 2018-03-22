@@ -12,6 +12,7 @@ class personTable extends DbTable {
     private $preparedLeaverProjectedEndDateStmt;
     private $preparedUpdateBluepagesFields;
     private $preparedUpdateLbgLocationStmt;
+    private $preparedUpdateSecurityEducationStmt;
 
     private $allNotesIdByCnum;
     
@@ -514,23 +515,6 @@ class personTable extends DbTable {
         return $this->preparedLeaverProjectedEndDateStmt;
     }
     
-    private function prepareUpdateLbgLocationStmt(){
-        if(empty($this->preparedUpdateLbgLocationStmt)){
-            $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
-            $sql .= " SET LBG_LOCATION=? ";
-            $sql .= " WHERE CNUM=?  ";
-
-            $this->preparedUpdateLbgLocationStmt = db2_prepare($_SESSION['conn'], $sql);
-
-            if(!$this->preparedUpdateLbgLocationStmt){
-                DbTable::displayErrorMessage($this->preparedRevalidationLeaverStmt, __CLASS__, __METHOD__, $sql);
-                return false;
-            }
-        }
-        return $this->preparedUpdateLbgLocationStmt;
-    }
-    
-
     function confirmRevalidation($notesId,$email,$cnum){
         $preparedStmt = $this->prepareRevalidationStmt();
         $data = array(trim($notesId),trim($email),trim($cnum));
@@ -619,6 +603,24 @@ class personTable extends DbTable {
         
     }
     
+    private function prepareUpdateLbgLocationStmt(){
+        if(empty($this->preparedUpdateLbgLocationStmt)){
+            $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+            $sql .= " SET LBG_LOCATION=? ";
+            $sql .= " WHERE CNUM=?  ";
+            
+            $this->preparedUpdateLbgLocationStmt = db2_prepare($_SESSION['conn'], $sql);
+            
+            if(!$this->preparedUpdateLbgLocationStmt){
+                DbTable::displayErrorMessage($this->preparedRevalidationLeaverStmt, __CLASS__, __METHOD__, $sql);
+                return false;
+            }
+        }
+        return $this->preparedUpdateLbgLocationStmt;
+    }
+    
+    
+    
     function updateLbgLocationForCnum ($lbgLocation, $cnum){
         if(!empty($cnum) && !empty($lbgLocation)){
             $preparedStmt = $this->prepareUpdateLbgLocationStmt();           
@@ -651,6 +653,57 @@ class personTable extends DbTable {
         }
         return false;
     }
+    
+    private function prepareUpdateSecurityEducationStmt(){
+        if(empty($this->preparedUpdateSecurityEducationStmt)){
+            $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+            $sql .= " SET SECURITY_EDUCATION=? ";
+            $sql .= " WHERE CNUM=?  ";
+            
+            $this->preparedUpdateSecurityEducationStmt = db2_prepare($_SESSION['conn'], $sql);
+            
+            if(!$this->preparedUpdateSecurityEducationStmt){
+                DbTable::displayErrorMessage($this->preparedUpdateSecurityEducationStmt, __CLASS__, __METHOD__, $sql);
+                return false;
+            }
+        }
+        return $this->preparedUpdateSecurityEducationStmt;
+    }
+    
+    
+    function updateSecurityEducationForCnum ($securityEducation, $cnum){
+        if(!empty($cnum) && !empty($securityEducation)){
+            $preparedStmt = $this->prepareUpdateSecurityEducationStmt();
+            $data = array($securityEducation,$cnum);
+            $rs = db2_execute($preparedStmt,$data);
+            if(!$rs){
+                DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared statment');
+                return false;
+            }
+            AuditTable::audit("CNUM: $cnum  Security Education :" . $securityEducation ,AuditTable::RECORD_TYPE_AUDIT);
+            return true;
+        }
+        return false;
+    }
+    
+    static function getSecurityEducationForCnum ($cnum){
+        if(!empty($cnum)){
+            $sql = " SELECT SECURITY_EDUCATION FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
+            
+            $rs = db2_exec($_SESSION['conn'], $sql);
+            
+            if(!$rs){
+                DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared statment');
+                return false;
+            }
+            
+            $row = db2_fetch_assoc($rs);
+            $education = !empty($row['SECURITY_EDUCATION']) ? trim($row['SECURITY_EDUCATION']) : personRecord::SECURITY_EDUCATION_NOT_COMPLETED;
+            return $education;
+        }
+        return false;
+    }
+    
 
 
 
