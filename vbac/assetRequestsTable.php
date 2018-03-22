@@ -10,6 +10,8 @@ class assetRequestsTable extends DbTable{
     
     public $currentVarb;
     
+    private $preparedUpdateUidsStmt;
+    
     private static $portalHeaderCells = array('REFERENCE','CT_ID','PERSON','ASSET','STATUS','JUSTIFICATION','REQUESTOR','APPROVER',
         'LOCATION','PRIMARY_UID','SECONDARY_UID','DATE_ISSUED_TO_IBM','DATE_ISSUED_TO_USER','DATE_RETURNED',
         'EDUCATION_CONFIRMED','ORDERIT_VARB_REF','ORDERIT_NUMBER','ORDERIT_STATUS','ORDERIT_TYPE', 'COMMENT');
@@ -436,7 +438,7 @@ class assetRequestsTable extends DbTable{
         	<div class='form-group required'>
         	<div class='col-sm-12'>
         		<table class='table table-striped table-bordered ' cellspacing='0' width='90%' id='requestsWithinVarb'>
-        		<thead><tr><th>Included</th><th>Reference</th><th>Person</th><th>Asset Title</th></tr></thead>
+        		<thead><tr><th>Inc</th><th>Ref</th><th>Email</th><th>Asset</th><th>Primary UID</th><th>Secondary UID</th></tr></thead>
         		<tbody>
         		</tbody>
         		</table>
@@ -473,10 +475,14 @@ class assetRequestsTable extends DbTable{
     }
     
     function getAssetRequestsForVarb($varb){
-        $sql = " SELECT REQUEST_REFERENCE as REFERENCE, P.EMAIL_ADDRESS as PERSON, ASSET_TITLE as ASSET, AR.CNUM ";
+        $sql = " SELECT REQUEST_REFERENCE as REFERENCE, P.EMAIL_ADDRESS as PERSON, AR.ASSET_TITLE as ASSET, AR.CNUM, PRIMARY_UID, SECONDARY_UID, ";
+        $sql .= " ASSET_PRIMARY_UID_TITLE, ASSET_SECONDARY_UID_TITLE ";
         $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName . " as AR ";
         $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql .= " ON AR.CNUM = P.CNUM ";
+        $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$REQUESTABLE_ASSET_LIST . " as RAL ";
+        $sql .= " ON RAL.ASSET_TITLE = AR.ASSET_TITLE ";
+        
         $sql .= " WHERE ORDERIT_VARB_REF='" . db2_escape_string($varb) . "' ";
         
         $rs = db2_exec($_SESSION['conn'], $sql);
@@ -489,6 +495,9 @@ class assetRequestsTable extends DbTable{
         $data = array();
         while(($row=db2_fetch_assoc($rs))==true){
             $row['INCLUDED'] = "<input type='checkbox' name='request[]' value='" . $row['REFERENCE'] . "' checked />";
+            $row['PRIMARY_UID'] = !empty($row['ASSET_PRIMARY_UID_TITLE']) ?  "<input type='text' name='primaryUid[".$row['REFERENCE'] . "]' placeholder='" . $row['ASSET_PRIMARY_UID_TITLE'] . "' value='" . $row['PRIMARY_UID'] . "' />" : null;
+            $row['SECONDARY_UID'] = !empty($row['ASSET_SECONDARY_UID_TITLE']) ?  "<input type='text' name='secondaryUid[" .$row['REFERENCE'] . "]' placeholder='" . $row['ASSET_SECONDARY_UID_TITLE'] . "' value='" . $row['SECONDARY_UID'] . "'  />" : null;
+            
             unset($row['CNUM']);            
             $data[] = $row;
         }
@@ -582,6 +591,46 @@ class assetRequestsTable extends DbTable{
        
         return true;
     }
+    
+    
+    function prepareUpdateUidsStmt(){
+        
+        if(empty($this->preparedUpdateUidsStmt)){
+            $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+            $sql .= " SET PRIMARY_UID = ? , SECONDARY_UID = ? ";
+            $sql .= " WHERE REQUEST_REFERENCE = ? ";
+        
+            $preparedUpdateUidsStmt = db2_prepare($_SESSION['conn'], $sql);
+        
+            if(!$preparedUpdateUidsStmt){
+                DbTable::displayErrorMessage($preparedUpdateUidsStmt, __CLASS__, __METHOD__, $sql);
+                return false;
+            }            
+            $this->preparedUpdateUidsStmt = $preparedUpdateUidsStmt;
+        }
+        
+        return $this->preparedUpdateUidsStmt;    
+    }
+    
+    function updateUids($reference, $primaryUid,$secondaryUid=''){
+        $stmt = $this->prepareUpdateUidsStmt();
+        
+        $data = array($primaryUid, $secondaryUid, $reference);
+        
+        $result = db2_execute($stmt,$data);
+        
+        if(!$result){
+            echo db2_stmt_error();
+            echo db2_stmt_errormsg();
+            DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, 'prepared stmt');
+        }
+        
+        return true;
+        
+    
+    }
+    
+    
         
     
 

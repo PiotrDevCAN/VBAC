@@ -310,10 +310,12 @@ this.listenForAssetRequestApproveRejectToggle  = function(){
 	            	  return varbObject; }	        		
 	          		}	,
 	          columns: [
-	                      { "data": "INCLUDED" , "defaultContent": "", "width":"10%" },
-	                      { "data": "REFERENCE" ,"defaultContent": "", "width":"10%" },
-	                      { "data": "PERSON" ,"defaultContent": "", "width":"40%" },
-	                      { "data": "ASSET","defaultContent": "", "width":"40%"}
+	                      { "data": "INCLUDED" , "defaultContent": "", "width":"5%" },
+	                      { "data": "REFERENCE" ,"defaultContent": "", "width":"5%" },
+	                      { "data": "PERSON" ,"defaultContent": "", "width":"30%" },
+	                      { "data": "ASSET","defaultContent": "", "width":"20%"},
+	                      { "data": "PRIMARY_UID","defaultContent": "", "width":"20"},
+	                      { "data": "SECONDARY_UID","defaultContent": "", "width":"20%"}
 	                  ],
 	
 	          autoWidth: false,
