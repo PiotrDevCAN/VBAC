@@ -261,8 +261,8 @@ class assetRequestRecord extends DbRecord {
 					<p><center>Please note a false declaration of completion constitutes a breach of IBM Business Conduct Guidelines and may lead to disciplinary action.</center></p>
       			</div>
       			<div class="modal-footer">
-      		  		<button type="button" class="btn btn-success" id='confirmedEducation'>They have completed the Education</button>
-      		  		<button type="button" class="btn btn-danger" id='noEducation'>They have NOT completed the Education</button>
+      		  		<button type="button" class="btn btn-success" id='confirmedEducation'>Education Completed</button>
+      		  		<button type="button" class="btn btn-danger" id='noEducation'>Education NOT Completed</button>
       			</div>
     		</div>
   			</div>

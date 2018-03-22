@@ -55,12 +55,22 @@ function assetRequest() {
 				  AssetRequest.recordCtidOnForm(data.text, ctid_id);
 				//  AssetRequest.cloneRequestDetails(data.text, ctid_id);
 		    }
-		    $('.locationFor').attr('disabled',false);
-		    console.log(cnum_id);
-		    console.log($("#approvingManager option"));
-		    console.log($("#approvingManager option[value='001399866']"));
-		    console.log("#approvingManager option[value='"+cnum_id+"']");
-		    console.log($("#approvingManager option[value='"+cnum_id+"']"));
+		    $.ajax({
+		        url: "ajax/getLbgLocationForCnum.php",
+		        type: 'GET',
+		        data: { cnum:cnum_id},
+		        success: function(result){
+		        	var resultObj = JSON.parse(result);
+		        	var lbgLocation = resultObj.lbgLocation;
+				    $('.locationFor').attr('disabled',false);
+				    if(lbgLocation){
+				    	$('.locationFor').val(lbgLocation).trigger('change');
+				    } else {
+				    	$('.locationFor').val('').trigger('change');
+				    }
+				    
+		        }
+		    });
 		    $("#approvingManager option[value='"+cnum_id+"']").remove();
 		});
   },

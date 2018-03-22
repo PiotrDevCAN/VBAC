@@ -11,6 +11,7 @@ class personTable extends DbTable {
     private $preparedRevalidationLeaverStmt;
     private $preparedLeaverProjectedEndDateStmt;
     private $preparedUpdateBluepagesFields;
+    private $preparedUpdateLbgLocationStmt;
 
     private $allNotesIdByCnum;
     
@@ -513,22 +514,20 @@ class personTable extends DbTable {
         return $this->preparedLeaverProjectedEndDateStmt;
     }
     
-    
-
-    private function prepareRevalidationLeaverStmt(){
-        if(empty($this->preparedRevalidationLeaverStmt)){
+    private function prepareUpdateLbgLocationStmt(){
+        if(empty($this->preparedUpdateLbgLocationStmt)){
             $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
-            $sql .= " SET REVALIDATION_STATUS='" . personRecord::REVALIDATED_LEAVER . "', REVALIDATION_DATE_FIELD = current date ";
-            $sql .= " WHERE CNUM=?  AND ( REVALIDATION_STATUS is null or REVALIDATION_STATUS not in ('" . personRecord::REVALIDATED_LEAVER . "','" . personRecord::REVALIDATED_OFFBOARDED . "','" . personRecord::REVALIDATED_OFFBOARDING . "') )";
+            $sql .= " SET LBG_LOCATION=? ";
+            $sql .= " WHERE CNUM=?  ";
 
-            $this->preparedRevalidationLeaverStmt = db2_prepare($_SESSION['conn'], $sql);
+            $this->preparedUpdateLbgLocationStmt = db2_prepare($_SESSION['conn'], $sql);
 
-            if(!$this->preparedRevalidationLeaverStmt){
+            if(!$this->preparedUpdateLbgLocationStmt){
                 DbTable::displayErrorMessage($this->preparedRevalidationLeaverStmt, __CLASS__, __METHOD__, $sql);
                 return false;
             }
         }
-        return $this->preparedRevalidationLeaverStmt;
+        return $this->preparedUpdateLbgLocationStmt;
     }
     
 
@@ -618,6 +617,39 @@ class personTable extends DbTable {
             return true;
         }
         
+    }
+    
+    function updateLbgLocationForCnum ($lbgLocation, $cnum){
+        if(!empty($cnum) && !empty($lbgLocation)){
+            $preparedStmt = $this->prepareUpdateLbgLocationStmt();           
+            $data = array($lbgLocation,$cnum);            
+            $rs = db2_execute($preparedStmt,$data);            
+            if(!$rs){
+                DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared statment');
+                return false;
+            }
+            AuditTable::audit("CNUM: $cnum  has been recorded as working from Aurora Location :" . $lbgLocation ,AuditTable::RECORD_TYPE_AUDIT);
+            return true;
+        }
+        return false;        
+    }
+    
+    static function getLbgLocationForCnum ($cnum){
+        if(!empty($cnum)){
+            $sql = " SELECT LBG_LOCATION FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
+           
+            $rs = db2_exec($_SESSION['conn'], $sql);
+            
+            if(!$rs){
+                DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared statment');
+                return false;
+            }
+            
+            $row = db2_fetch_assoc($rs);            
+            $location = !empty($row['LBG_LOCATION']) ? trim($row['LBG_LOCATION']) : false;            
+            return $location;            
+        }
+        return false;
     }
 
 

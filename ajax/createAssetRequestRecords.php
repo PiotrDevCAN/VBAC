@@ -57,10 +57,7 @@ switch (true) {
     break;
 }
 
-var_dump($autoApproved);
-var_dump(empty($_POST['ORDERIT_NUMBER']));
-var_dump($status);
-
+$personTable = new personTable(allTables::$PERSON);
 
 
 foreach ($_POST as $key => $value){
@@ -72,13 +69,15 @@ foreach ($_POST as $key => $value){
         $assetId  = $split[2];
         $assetTitle = $split[3];
         $justification = !isset($_POST['person-'.$personId.'-justification-'.$assetId]) ? null : $_POST['person-'.$personId.'-justification-'.$assetId];
-
-        $email = $_POST[$_POST['requestee']];
+        $location = $_POST['person-'.$personId.'-location'];
+        $cnum = $_POST['requestee'];
+        
+        $email = $_POST[$cnum];
         
         $assetRequest = array(
-            'CNUM'=>$_POST['requestee']
+            'CNUM'=>$cnum
             ,'ASSET_TITLE'=>$assetTitle
-            ,'USER_LOCATION'=>$_POST['person-'.$personId.'-location']
+            ,'USER_LOCATION'=>$location
             ,'BUSINESS_JUSTIFICATION' => $justification
             ,'REQUESTOR_EMAIL'=>$_POST['requestor']
             ,'REQUESTED'=>$requested
@@ -105,6 +104,12 @@ foreach ($_POST as $key => $value){
             $requestDetails .= "</strong><br/>Requestee: <strong>" .  $email . "</strong> Asset:<em>" . $assetTitle . "</em>";
             $requestDetails .= ' Status: <strong>' . $status . '</strong>';
             $assetRequests[] = $requestDetails;
+            
+            $rest = $personTable->updateLbgLocationForCnum($location, $cnum);
+            
+            echo "<br/>Location:$location Cnum:$cnum Result:$rest";
+            
+            
         } catch (Exception $e) {
             $messages = ob_get_clean();
             $response = array('result'=>'failed','post'=>$post,'messages'=>$messages);
