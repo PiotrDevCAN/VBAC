@@ -134,7 +134,7 @@ class assetRequestsTable extends DbTable{
             
             
             $editUidButton  = "<button type='button' class='btn btn-default btn-xs btnEditUid btn-primary' aria-label='Left Align' ";
-            $editUidButton .= "data-reference='" .trim($row['REFERENCE']) . "' ";
+            $editUidButton .= "data-reference='" .$reference . "' ";
             $editUidButton .= "data-requestee='" .trim($row['PERSON']) . "' ";
             $editUidButton .= "data-asset='"     .trim($row['ASSET']) . "' ";
             $editUidButton .= "data-primarytitle='".trim($row['ASSET_PRIMARY_UID_TITLE']) . "' ";
@@ -699,7 +699,6 @@ class assetRequestsTable extends DbTable{
         return true;
     }
     
-    
     function prepareUpdateUidsStmt(){
         
         if(empty($this->preparedUpdateUidsStmt)){
@@ -720,8 +719,7 @@ class assetRequestsTable extends DbTable{
     }
     
     function updateUids($reference, $primaryUid,$secondaryUid=''){
-        $stmt = $this->prepareUpdateUidsStmt();
-        
+        $stmt = $this->prepareUpdateUidsStmt();       
         $data = array($primaryUid, $secondaryUid, $reference);
         
         $result = db2_execute($stmt,$data);

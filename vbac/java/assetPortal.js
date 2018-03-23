@@ -170,10 +170,6 @@ this.listenForReportShowUid = function(){
   
   this.listenForEditUid = function(){
 	  $(document).on('click','.btnEditUid', function(e){
-		  console.log(e);
-		  console.log(e.target);
-		  
-		  
 		  $('#asset').val($(e.target).data('asset'));
 		  $('#userid').val($(e.target).data('requestee'));		  
 		  
@@ -182,9 +178,6 @@ this.listenForReportShowUid = function(){
 		  $('#primaryUid').attr('placeholder',primaryTitle);
 		  
 		  var secondaryTitle = $(e.target).data('secondarytitle');
-		  console.log(secondaryTitle);
-		  
-		  
 		  if(secondaryTitle) {
 			 $('#secondaryLabel').text(secondaryTitle);
 			 $('#secondaryUid').attr('placeholder',secondaryTitle);
@@ -195,10 +188,9 @@ this.listenForReportShowUid = function(){
 			 $('#secondaryUidFormGroup').hide(); 			  
 		  }
 		 
-		  
-
-		  
-		  
+		  $('#reference').val($(e.target).data('reference')); 
+		  $('#primaryUid').val('');
+		  $('#secondaryUid').val('');
 		  $('#editUidModal').modal('show');
 		 
 	 
@@ -244,6 +236,31 @@ this.listenForReportShowUid = function(){
 		  
 	  });
 },
+
+
+this.listenForSaveEditUid = function(){
+	  $(document).on('click','#saveEditUid', function(e){ 
+		  $('#saveEditUid').addClass('spinning');
+		  var formData = $('#editUidForm').serialize();	
+		  console.log(formData);
+	      $.ajax({
+		        url: "ajax/saveEditUid.php",
+		        type: 'POST',
+		        data: formData,  
+		        success: function(result){
+		        	console.log(result);
+		        	var resultObj = JSON.parse(result);
+		  		    $('#saveEditUid').removeClass('spinning');
+		        	$('#editUidModal').modal('hide');	
+			    	assetPortal.table.ajax.reload();
+		        	
+		        }
+	      });
+		  
+		  
+	  });
+},
+
   
   
   

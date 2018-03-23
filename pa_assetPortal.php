@@ -68,6 +68,7 @@ $(document).ready(function(){
  	AssetPortal.listenForReportShowExportable();
  	AssetPortal.listenForReportShowUid();
  	AssetPortal.listenForEditUid();
+ 	AssetPortal.listenForSaveEditUid();
  	AssetPortal.listenForSaveMapping();
  	AssetPortal.listenForAssetRequestApprove();
  	AssetPortal.listenForAssetRequestReject();
