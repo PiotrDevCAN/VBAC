@@ -5,6 +5,18 @@
  */
 var selectedAssets = [];
 
+function sleep(ms) {
+	  return new Promise(resolve => setTimeout(resolve, ms));
+	}
+
+
+	async function demo() {
+	  	  console.log('Taking a break...');
+	  	  await sleep(2000);
+	  	  console.log('Two second later');
+	  	}
+
+
 
 function assetRequest() {
 	var table;
@@ -81,28 +93,33 @@ function assetRequest() {
   },
 
   this.listenForSelectRequestee = function(){
-	  $(document).on('select2:select','#requestees', function (e) {		    
+	  $(document).on('select2:select','#requestees', function (e) {		
+		    console.log('fired listenForSelectRequestee');
 		    var AssetRequest = new assetRequest();
 		    var data = e.params.data;
-		    console.log(data);
 		    var cnum_id = data.id.trim();
 		    var ctid_id = cnum2ctid[cnum_id];
 		    if(!ctid_id){
+		    	console.log('prompt for CT ID');
+		    	$('.locationFor').val('').trigger('change');
 		    	$('#requesteeName').val(data.text);
 		    	$('#obtainCtid').modal('show');
 		    } else {
-				  AssetRequest.recordCtidOnForm(data.text, ctid_id);
-				//  AssetRequest.cloneRequestDetails(data.text, ctid_id);
+		    	console.log('DONT rompt for CT ID');
+				AssetRequest.recordCtidOnForm(data.text, ctid_id);				
 		    }
+		    console.log('now ajax get location for cnum');
 		    $.ajax({
 		        url: "ajax/getLbgLocationForCnum.php",
 		        type: 'GET',
 		        data: { cnum:cnum_id},
 		        success: function(result){
+		        	console.log('did we get a location?');
 		        	var resultObj = JSON.parse(result);
 		        	var lbgLocation = resultObj.lbgLocation;
 				    $('.locationFor').attr('disabled',false);
 				    if(lbgLocation){
+				    	console.log('yes, we got a location');
 				    	$('.locationFor').val(lbgLocation).trigger('change').trigger({
 				    	    type: 'select2:select',
 				    	    params: {
@@ -113,6 +130,7 @@ function assetRequest() {
 				    	    }
 				    	});
 				    } else {
+				    	console.log('no, we did not get a location');
 				    	$('.locationFor').val('').trigger('change');
 				    }				    
 		        }
@@ -123,8 +141,13 @@ function assetRequest() {
 
   this.listenForSelectLocation = function(){
 	  $(document).on('select2:select','.locationFor', function (e) {
-		    console.log(e);
-		  
+		    console.log('fired listenForSelectLocation');
+		    console.log(e);		    
+		    
+			  console.log('is form valid NOW listenForSelectLocation ?');
+		      var form = document.getElementById('assetRequestForm');
+		      var formValid = form.checkValidity();
+		      console.log(formValid);
 		  
 		    var AssetRequest = new assetRequest();
 		    
@@ -141,6 +164,14 @@ function assetRequest() {
 		    } else {
 		    	AssetRequest.checkAssetsForShore('off');
 		    }
+		    
+			  console.log('is form valid NOW NOW listenForSelectLocation ?');
+		      var form = document.getElementById('assetRequestForm');
+		      var formValid = form.checkValidity();
+		      console.log(formValid);
+		    
+		      console.log('finished listenForSelectLocation');		    
+		    
 		});
   },
 
@@ -183,12 +214,14 @@ function assetRequest() {
 		          data : {notesid:requestee,
 		           	      ctid:ctid},
 		          success: function(result){
+		        	  console.log('we have saved their CT ID');
 		        	  console.log(result);
 	    			  console.log('record required');
 	    			  AssetRequest.recordCtidOnForm(requestee, ctid);
 		    		  },
 		      });
 		  } else {
+			  console.log('they did not provide a CT ID');
 			  AssetRequest.recordCtidOnForm(requestee, 'Required');
 		  };
 	  });
@@ -220,16 +253,13 @@ function assetRequest() {
   this.listenForSaveAssetRequest = function(){
 	  $(document).on('click','#saveAssetRequest', function(){
 		  console.log('they want to save');		  
+		  
 		  $('#saveAssetRequest').addClass('spinning'); 
 		  $('#saveAssetRequest').attr('disabled',true);
 
-		  console.log('is form valid ?');
 	      var form = document.getElementById('assetRequestForm');
-	      console.log(form);
 	      var formValid = form.checkValidity();
-	      console.log(formValid);
 	      if(formValid){
-	    	  console.log('valid');
 //	    	  var AssetRequest = new assetRequest();
 	    	  AssetRequest.saveAssetRequestRecords();
 	      } else {
@@ -237,8 +267,6 @@ function assetRequest() {
     		  $('#saveAssetRequest').removeClass('spinning');
     		  $('#saveAssetRequest').attr('disabled',false);	
 	      }
-		  console.log('we\'ve initiated the physical save');
-
 	  });
 
   },
@@ -325,11 +353,9 @@ function assetRequest() {
   
 
   this.recordCtidOnForm = function(email_address, ctid ){
-	  console.log(ctid);
-	  var lastCtidInput = $('#allCtidHereDiv > :input').last();
-	//  $(lastCtidInput).clone().appendTo("#allCtidHereDiv").attr('name','ctid'+ctid).attr('id','ctid'+ctid).data('ctid',ctid).data('email',email_address);
-	  $(lastCtidInput).val(ctid);
-	  console.log(lastCtidInput);
+	  var lastCtidInput = $('#allCtidHereDiv > :input').not('.select2').last();
+ 	  $(lastCtidInput).val(ctid); 
+   
 	  var lastRequest = $('#requestDetailsDiv > .panel').last();
 	  $(lastRequest).find('.panel-title').html('Request For : ' + email_address );
 	  ctidAsset = $('*[data-asset="CT ID"]');
