@@ -15,6 +15,7 @@ use vbac\personTable;
 <button id='reportShowExportable'   class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Show Exportable Requests</button>
 <button id='exportForOrderIt' 		class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Export for Order IT</button>
 <button id='mapVarbToOrderIt' 		class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Map vARB to Order IT</button>
+<button id='reportShowUid' 		    class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Show UID</button>
 &nbsp;
 <button id='reportReload'  		class='btn btn-warning btn-sm '>Reload Data</button>
 <button id='reportReset'  		class='btn btn-warning btn-sm '>Reset</button>
@@ -27,6 +28,7 @@ use vbac\personTable;
 
 $assetTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
 $assetTable->exportResultsModal();
+$assetTable->editUidModal();
 $assetTable->mapVarbToOrderItModal();
 $assetTable->approveRejectModal();
 
@@ -64,6 +66,8 @@ $(document).ready(function(){
  	AssetPortal.listenForReportReload();
  	AssetPortal.listenForReportShowAll();
  	AssetPortal.listenForReportShowExportable();
+ 	AssetPortal.listenForReportShowUid();
+ 	AssetPortal.listenForEditUid();
  	AssetPortal.listenForSaveMapping();
  	AssetPortal.listenForAssetRequestApprove();
  	AssetPortal.listenForAssetRequestReject();

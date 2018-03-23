@@ -14,7 +14,7 @@ class assetRequestsTable extends DbTable{
     
     private static $portalHeaderCells = array('REFERENCE','CT_ID','PERSON','ASSET','STATUS','JUSTIFICATION','REQUESTOR','APPROVER',
         'LOCATION','PRIMARY_UID','SECONDARY_UID','DATE_ISSUED_TO_IBM','DATE_ISSUED_TO_USER','DATE_RETURNED',
-        'EDUCATION_CONFIRMED','ORDERIT_VARB_REF','ORDERIT_NUMBER','ORDERIT_STATUS','ORDERIT_TYPE', 'COMMENT');
+        'ORDERIT_VARB_REF','ORDERIT_NUMBER','ORDERIT_STATUS','ORDERIT_TYPE', 'COMMENT');
     
 
 //     function saveRecord(assetRequestRecord $record, $populatedColumns, $nullColumns, $commit){
@@ -41,9 +41,11 @@ class assetRequestsTable extends DbTable{
         $sql .= " BUSINESS_JUSTIFICATION as JUSTIFICATION, REQUESTOR_EMAIL as REQUESTOR_EMAIL, REQUESTED as REQUESTED_DATE,  ";
         $sql .= " APPROVER_EMAIL, APPROVED as APPROVED_DATE, ";
         $sql .= " USER_LOCATION as LOCATION, ";
-        $sql .= " PRIMARY_UID, SECONDARY_UID, DATE_ISSUED_TO_IBM, DATE_ISSUED_TO_USER, DATE_RETURNED, EDUCATION_CONFIRMED,  ";
+        $sql .= " PRIMARY_UID, SECONDARY_UID, DATE_ISSUED_TO_IBM, DATE_ISSUED_TO_USER, DATE_RETURNED,   ";
         $sql .= " ORDERIT_VARB_REF, ORDERIT_NUMBER, ORDERIT_STATUS, ";
         $sql .= " RAL.ORDER_IT_TYPE as ORDERIT_TYPE ";
+        $sql .= " ,RAL.ASSET_PRIMARY_UID_TITLE ";
+        $sql .= " ,RAL.ASSET_SECONDARY_UID_TITLE ";
         $sql .= " , COMMENT ";
         $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
         $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
@@ -63,6 +65,14 @@ class assetRequestsTable extends DbTable{
 
         while(($row=db2_fetch_assoc($rs))==true){
                           
+            
+            $reference = $row['REFERENCE'];
+            
+            $row['REFERENCE'] = trim($row['ORDERIT_NUMBER']) . ":" . $reference;
+            $row['REFERENCE'] = empty($row['ORDERIT_VARB_REF']) ? $row['REFERENCE'] : $row['REFERENCE'] . "<br/><small>" . $row['ORDERIT_VARB_REF'] . "</small>";
+            
+            
+            
             $status = trim($row['STATUS']);
             $statusWithVarb = trim($row['ORDERIT_VARB_REF']) != null ? $status . " (" . trim($row['ORDERIT_VARB_REF']) . ") " : $status;
             
@@ -121,11 +131,27 @@ class assetRequestsTable extends DbTable{
             $row['REQUESTOR'] = $row['REQUESTOR_EMAIL'] . "<br/><small>" . $row['REQUESTED_DATE'] . "</small>";
             unset($row['REQUESTOR_EMAIL']);
             unset($row['REQUESTOR_DATE']);
-           
-
             
-
             
+            $editUidButton  = "<button type='button' class='btn btn-default btn-xs btnEditUid btn-primary' aria-label='Left Align' ";
+            $editUidButton .= "data-reference='" .trim($row['REFERENCE']) . "' ";
+            $editUidButton .= "data-requestee='" .trim($row['PERSON']) . "' ";
+            $editUidButton .= "data-asset='"     .trim($row['ASSET']) . "' ";
+            $editUidButton .= "data-primarytitle='".trim($row['ASSET_PRIMARY_UID_TITLE']) . "' ";
+            $editUidButton .= "data-secondarytitle='".trim($row['ASSET_SECONDARY_UID_TITLE']) . "' ";
+            $editUidButton .= "data-toggle='tooltip' data-placement='top' title='Update UID'";
+            $editUidButton .= " > ";
+            $editUidButton .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
+            $editUidButton .= " </button> ";
+            
+            
+            
+            
+            $primaryUid = empty($row['PRIMARY_UID']) ? "<i>unknown</i>" : $row['PRIMARY_UID'];
+            
+            $row['PRIMARY_UID'] = !empty($row['ASSET_PRIMARY_UID_TITLE']) ? $editUidButton . $primaryUid :  "<i>Not Applicable</i>";
+            $row['SECONDARY_UID'] = !empty($row['ASSET_SECONDARY_UID_TITLE']) ? $row['SECONDARY_UID'] :  "<i>Not Applicable</i>";
+              
             $data[] = $row;
         }
 
@@ -367,6 +393,87 @@ class assetRequestsTable extends DbTable{
       </div>
     <?php
     }
+    
+    function editUidModal(){
+        ?>
+       <!-- Modal -->
+    <div id="editUidModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+          <div class="modal-header">
+             <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Edit UID</h4>
+            </div>
+             <div class="modal-body" >
+             	<form class="form-horizontal" role="form" id='editUidForm' onSubmit='return false;' >
+             	
+				<div class="form-group">
+                    <label class="col-sm-2 control-label"
+                          for="userid" >User</label>
+                    <div class="col-sm-10">
+          				<input class='form-control' id='userid' name='userid'
+                			value=''
+                			type='text' disabled
+                			>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label"
+                          for="asset" >Asset</label>
+                    <div class="col-sm-10">
+          				<input class='form-control' id='asset' name='asset'
+                			value=''
+                			type='text' disabled
+                			>
+                    </div>
+                  </div>
+   
+                  <div class="form-group">               
+                  <label class="col-sm-2 control-label" id='primaryLabel'
+                          for="asset" >Primary UID</label>
+                    <div class="col-sm-10">
+          				<input class='form-control' id='primaryUid' name='primaryUid'
+                			value=''
+                			type='text'
+                			placeholder='Primary UID'
+                			>
+                    </div>
+                  </div>
+                 <div class="form-group" id='secondaryUidFormGroup' style='display:none' >
+                 <label class="col-sm-2 control-label" id='secondaryLabel' 
+                          for="asset" >Secondary UID</label>
+                    <div class="col-sm-10">
+          				<input class='form-control' id='secondaryUid' name='secondaryUid'
+                			value=''
+                			type='text'
+                			placeholder='Secondary UID'
+                			>
+                    </div>
+                  </div>
+                  <input id='reference' name='reference' value='' type='hidden' />             	
+             	</form>
+             </div>
+             <div class='modal-footer'>
+             <?php
+                $form = new FormClass();
+                $allButtons = null;
+                $submitButton = $form->formButton('submit','Submit','saveEditUid','enabled','Save','btn btn-primary');
+                $allButtons[] = $submitButton;
+                $form->formBlueButtons($allButtons);
+                $form->formHiddenInput('user',$GLOBALS['ltcuser']['mail'],'user');
+            ?>  
+             
+             
+             <button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
+             </div>
+             </form>
+            </div>
+        </div>
+      </div>
+    <?php
+    }
+    
+    
     
     
     function mapVarbToOrderItModal(){

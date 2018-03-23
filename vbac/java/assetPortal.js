@@ -54,8 +54,7 @@ function assetPortal() {
                       { "data": "SECONDARY_UID", "defaultContent": "<i>unknown</i>" },
                       { "data": "DATE_ISSUED_TO_IBM", "defaultContent": "<i>unknown</i>" },
                       { "data": "DATE_ISSUED_TO_USER", "defaultContent": "" },
-                      { "data": "DATE_RETURNED", "defaultContent": "" },
-                      { "data": "EDUCATION_CONFIRMATION", "defaultContent": "" },                  
+                      { "data": "DATE_RETURNED", "defaultContent": "" },                 
                       { "data": "ORDERIT_VARB_REF", "defaultContent": ""},
                       { "data": "ORDERIT_NUMBER", "defaultContent": "" },
                       { "data": "ORDERIT_STATUS" , "defaultContent": ""},
@@ -63,7 +62,7 @@ function assetPortal() {
                       { "data": "COMMENT" , "defaultContent": ""}
                   ],
           columnDefs: [
-                         { visible: false, targets: [8,9,10,11,12,13,14,15,16,17,18,19] }
+                         { visible: false, targets: [8,9,10,11,12,13,14,15,16,17,18] }
                   ] ,
           order: [[ 5, "asc" ]],
           autoWidth: true,
@@ -124,12 +123,27 @@ function assetPortal() {
 	  });
 },
 
-	this.listenForReportShowExportable = function(){
+  this.listenForReportShowExportable = function(){
 		$(document).on('click','#reportShowExportable', function(e){
 			assetPortal.table.destroy();
 			AssetPortal.initialiseAssetRequestDataTable(false);
 			$('#portalTitle').text('Asset Request Portal - Show Exportable Requests');
 	  });
+},
+
+this.listenForReportShowUid = function(){
+	$(document).on('click','#reportShowUid', function(e){
+    	$('#portalTitle').text('Asset Request Portal - Show UID' );
+    	$.fn.dataTableExt.afnFiltering.pop();
+    	
+		assetPortal.table.destroy();
+		AssetPortal.initialiseAssetRequestDataTable(true);
+    	
+    	
+    	assetPortal.table.columns().visible(false,false);
+    	assetPortal.table.columns([0,1,2,3,9,10]).visible(true);
+    	assetPortal.table.search('').order([0,"desc"]).draw();
+    });
 },
   
   
@@ -151,7 +165,46 @@ function assetPortal() {
 		        }
 	      });		 
 	  });
+  },
+  
+  
+  this.listenForEditUid = function(){
+	  $(document).on('click','.btnEditUid', function(e){
+		  console.log(e);
+		  console.log(e.target);
+		  
+		  
+		  $('#asset').val($(e.target).data('asset'));
+		  $('#userid').val($(e.target).data('requestee'));		  
+		  
+		  var primaryTitle = $(e.target).data('primarytitle');
+		  $('#primaryLabel').text(primaryTitle);
+		  $('#primaryUid').attr('placeholder',primaryTitle);
+		  
+		  var secondaryTitle = $(e.target).data('secondarytitle');
+		  console.log(secondaryTitle);
+		  
+		  
+		  if(secondaryTitle) {
+			 $('#secondaryLabel').text(secondaryTitle);
+			 $('#secondaryUid').attr('placeholder',secondaryTitle);
+			 $('#secondaryUidFormGroup').show(); 
+		  } else {
+			 $('#secondaryLabel').text('null');
+			 $('#secondaryUid').attr('placeholder','null');
+			 $('#secondaryUidFormGroup').hide(); 			  
+		  }
+		 
+		  
+
+		  
+		  
+		  $('#editUidModal').modal('show');
+		 
+	 
+	  });
   }
+  
   
   this.listenForMapVarbButton = function(){
 	  $(document).on('click','#mapVarbToOrderIt', function(e){
