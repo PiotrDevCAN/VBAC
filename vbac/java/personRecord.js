@@ -543,9 +543,7 @@ function personRecord() {
   },
 
   this.listenForSaveBoarding = function(){
-    console.log($('#saveBoarding'));
     $(document).on('click','#saveBoarding', function(){
-      console.log('caught SaveBoarding');
       var person = new personRecord();
       person.saveBoarding('Save');
     });
@@ -553,24 +551,19 @@ function personRecord() {
 
   this.listenforUpdateBoarding= function () {
     $(document).on('click','#updateBoarding', function(){
-      var form = $('#boardingForm');
-      var formValid = form[0].checkValidity();
-      if(formValid){
-        $('#updateBoarding').addClass('spinning');
         var person = new personRecord();
         person.saveBoarding('Update');
-      }
-      return false;
     });
   },
 
   this.saveBoarding = function(mode){
     console.log('saveBoarding mode:' + mode);
+    $("#saveBoarding").addClass('spinning');
+    $("#updateBoarding").addClass('spinning');
     var ibmer = $('#hasBpEntry').is(':checked');
     var form = $('#boardingForm');
     var formValid = form[0].checkValidity();
     if(formValid){
-      $("#saveBoarding").addClass('spinning');
       personRecord.boardingFormEnabledInputs = ($("input:enabled"));
       var allDisabledFields = ($("input:disabled"));
       $(allDisabledFields).attr('disabled',false);
@@ -624,6 +617,8 @@ function personRecord() {
           }
         });
     } else {
+      $("#saveBoarding").removeClass('spinning');
+      $("#updateBoarding").removeClass('spinning'); 
       console.log('invalid fields follow');
       console.log($(form).find( ":invalid" ));
     }
@@ -924,6 +919,7 @@ function personRecord() {
                     var person = new personRecord();
                       person.initialisePersonFormSelect2();
                       $('#person_intranet').attr('disabled',false);
+                      $.fn.modal.Constructor.prototype.enforceFocus = function() {};
                     var accountOrganisation = resultObj.accountOrganisation;
                     if(accountOrganisation=='T&T'){
                       $('.accountOrganisation')[0].click();
@@ -952,6 +948,8 @@ function personRecord() {
             });
       });
   },
+  
+  
 
   this.listenForToggleFmFlag = function(){
     $(document).on('click','.btnSetFmFlag', function(e){

@@ -36,7 +36,7 @@ try {
 
     $person->setFromArray($_POST);
     $person->convertCountryCodeToName();
-    $saveRecordResult = $table->saveRecord($person);
+    $saveRecordResult = $table->saveRecord($person,false,false);
     AuditTable::audit("Saved Boarding Record:<B>" . $_POST['CNUM'] .":" . $_POST['NOTES_ID'] .  "</b>Mode:<b>" . $_POST['mode'],AuditTable::RECORD_TYPE_AUDIT);
     AuditTable::audit("Saved Record:<pre>". print_r($person,true) . "</pre>", AuditTable::RECORD_TYPE_DETAILS);
     AuditTable::audit("PROJECTED_END_DATE:<pre>". print_r($_POST['PROJECTED_END_DATE'],true) . "</pre>", AuditTable::RECORD_TYPE_DETAILS);
