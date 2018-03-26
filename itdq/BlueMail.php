@@ -55,17 +55,7 @@ class BlueMail
                 $data['attachments'][] = array('attachment'=>$attachment);
             }            
         }
-        
-
         $data_json = json_encode($data);
-        
-        echo "<pre>";
-        
-        var_dump($data_json);
-        
-        echo "</pre>";
-        
-        
 
         if(isset(AllItdqTables::$EMAIL_LOG)){
             $emailLogRecordID = self::prelog($to, $subject, $message, $data_json);
