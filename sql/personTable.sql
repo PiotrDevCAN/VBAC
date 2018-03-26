@@ -42,8 +42,11 @@ CREATE TABLE "VBAC_UT"."PERSON" (
 
 	
 	
-alter table "ROB_DEV".PERSON
+alter table "VBAC_UT".PERSON
 	 rename column "CONTRACTOR_ID_REQUIRED" to "CT_ID_REQUIRED"
+	 
+alter table "VBAC_UT".PERSON
+	 rename column "CONTRACTOR_ID" to "CT_ID"
 
 	
 	
