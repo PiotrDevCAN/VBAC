@@ -219,8 +219,12 @@ this.listenForReportShowUid = function(){
   
   this.listenForSaveMapping = function(){
 	  $(document).on('click','#saveMapVarbToOrderIT', function(e){ 
-		  var formData = $('#mapVarbToOrderItForm').serialize();		  
-	      $.ajax({
+		  $('#saveMapVarbToOrderIT').addClass('spinning');
+	      var form = document.getElementById('mapVarbToOrderItForm');
+	      var formValid = form.checkValidity();
+	      if(formValid){
+			  var formData = $('#mapVarbToOrderItForm').serialize();
+	    	  $.ajax({
 		        url: "ajax/saveVarbToOrderItMapping.php",
 		        type: 'POST',
 		        data: formData,  
@@ -231,9 +235,12 @@ this.listenForReportShowUid = function(){
 		        	$('#mapVarbToOrderItModal').modal('hide');
 
 		        }
-	      });
-		  
-		  
+	    	  });
+	      } else {
+	    	  alert('Form is not valid, please correct');
+	      }	
+		  $('#saveMapVarbToOrderIT').removeClass('spinning');
+		  assetPortal.table.ajax.reload();
 	  });
 },
 

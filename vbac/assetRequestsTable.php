@@ -37,7 +37,7 @@ class assetRequestsTable extends DbTable{
         $sql  = " SELECT ";
 //        $sql .= " concat('000000',AR.REQUEST_REFERNCE) as car,";
         $sql .= " AR.REQUEST_REFERENCE as reference, ";
-        $sql .= " P.CONTRACTOR_ID as CT_ID, P.EMAIL_ADDRESS, P.NOTES_ID, AR.ASSET_TITLE as ASSET, STATUS, ";
+        $sql .= " P.CT_ID as CT_ID, P.EMAIL_ADDRESS, P.NOTES_ID, AR.ASSET_TITLE as ASSET, STATUS, ";
         $sql .= " BUSINESS_JUSTIFICATION as JUSTIFICATION, REQUESTOR_EMAIL as REQUESTOR_EMAIL, REQUESTED as REQUESTED_DATE,  ";
         $sql .= " APPROVER_EMAIL, APPROVED as APPROVED_DATE, ";
         $sql .= " USER_LOCATION as LOCATION, ";
@@ -191,7 +191,7 @@ class assetRequestsTable extends DbTable{
          */
         $predicate  = "";
         $predicate .= "   AND ORDERIT_VARB_REF is null and ORDERIT_NUMBER is null and RAL.ORDER_IT_TYPE = '" . db2_escape_string($orderItType) . "' AND AR.STATUS='" . assetRequestRecord::$STATUS_APPROVED . "' ";
-        $predicate .= "   AND ('" . db2_escape_string($orderItType) . "' = '1' or P.CONTRACTOR_ID is not null)";
+        $predicate .= "   AND ('" . db2_escape_string($orderItType) . "' = '1' or P.CT_ID is not null)";
         
         return $predicate;
     }
@@ -225,7 +225,7 @@ class assetRequestsTable extends DbTable{
         }
        
         $sql = " SELECT ORDERIT_VARB_REF, REQUEST_REFERENCE, ";
-        $sql .= " P.CONTRACTOR_ID as CT_ID, ";
+        $sql .= " P.CT_ID as CT_ID, ";
         $sql .= " P.CTB_RTB as CTB_RTB, ";
         $sql .= " P.TT_BAU as TT_BAU, ";
         $sql .= " P.LOB as LOB, ";
@@ -581,6 +581,27 @@ class assetRequestsTable extends DbTable{
     
     }
     
+    function getCnumAndAssetForReference($reference){
+        
+        $sql = " SELECT CNUM, ASSET_TITLE ";
+        $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql .= " WHERE REQUEST_REFERENCE= '" . db2_escape_string($reference) . "' ";
+        
+        
+        $rs = db2_exec($_SESSION['conn'], $sql);
+        
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+        
+        $row = db2_fetch_assoc($rs);
+        return array('cnum'=>$row['CNUM'],'assetTitle'=>$row['ASSET_TITLE']);
+    
+    }
+    
+    
+    
     function getAssetRequestsForVarb($varb){
         $sql = " SELECT REQUEST_REFERENCE as REFERENCE, P.EMAIL_ADDRESS as PERSON, AR.ASSET_TITLE as ASSET, AR.CNUM, PRIMARY_UID, SECONDARY_UID, ";
         $sql .= " ASSET_PRIMARY_UID_TITLE, ASSET_SECONDARY_UID_TITLE ";
@@ -625,9 +646,9 @@ class assetRequestsTable extends DbTable{
         $sql .= ",ORDERIT_STATUS='" . assetRequestRecord::$STATUS_ORDERIT_RAISED . "' ";
         $sql .= " WHERE ORDERIT_VARB_REF='" . db2_escape_string($varb) . "' and STATUS='" . assetRequestRecord::$STATUS_EXPORTED . "' ";
         $sql .= " AND REQUEST_REFERENCE in (" . $requestList . ") " ;
-        
-        
-        echo $sql;
+ 
+       
+        // echo __METHOD__ . __LINE__ . $sql;
         
         $rs = db2_exec($_SESSION['conn'], $sql);
         
@@ -635,6 +656,8 @@ class assetRequestsTable extends DbTable{
             DbTable::displayErrorMessage($rs,__CLASS__, __METHOD__, $sql);
             return false;
         }
+        
+        // Anything they didn't select gets reset for next time.
         
         $sql  = " UPDATE ";
         $sql .= $_SESSION['Db2Schema'] . "." . $this->tableName ;
@@ -645,7 +668,7 @@ class assetRequestsTable extends DbTable{
         $sql .= " WHERE ORDERIT_VARB_REF='" . db2_escape_string($varb) . "' and STATUS='" . assetRequestRecord::$STATUS_EXPORTED . "' ";
         
         
-        echo $sql;
+        // echo __METHOD__ . __LINE__ .  $sql;
         
         $rs = db2_exec($_SESSION['conn'], $sql);
         

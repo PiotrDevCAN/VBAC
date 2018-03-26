@@ -274,7 +274,7 @@ class personTable extends DbTable {
 
     function saveCtid($cnum,$ctid){
         $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
-        $sql .= " SET CONTRACTOR_ID='"  . db2_escape_string($ctid) . "' ";
+        $sql .= " SET CT_ID='"  . db2_escape_string($ctid) . "' ";
         $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
         $result = db2_exec($_SESSION['conn'], $sql);
@@ -283,7 +283,7 @@ class personTable extends DbTable {
             DbTable::displayErrorMessage($result, __CLASS__,__METHOD__, $sql);
             return false;
         }
-        AuditTable::audit("Set CONTRACTOR_ID to $ctid for $cnum",AuditTable::RECORD_TYPE_AUDIT);
+        AuditTable::audit("Set CT_ID to $ctid for $cnum",AuditTable::RECORD_TYPE_AUDIT);
 
         return true;
     }
@@ -468,7 +468,7 @@ class personTable extends DbTable {
 
     static function dataFromPreBoarder($cnum){
         $sql = " SELECT CTB_RTB,TT_BAU, WORK_STREAM, PES_DATE_REQUESTED, PES_DATE_RESPONDED, PES_REQUESTOR,  PES_STATUS, PES_STATUS_DETAILS, FM_CNUM ";
-        $sql .= " , CONTRACTOR_ID_REQUIRED, CONTRACTOR_ID, LOB, OPEN_SEAT_NUMBER, ROLE_ON_THE_ACCOUNT ";
+        $sql .= " , CT_ID_REQUIRED, CT_ID, LOB, OPEN_SEAT_NUMBER, ROLE_ON_THE_ACCOUNT ";
         $sql .= " , START_DATE, PROJECTED_END_DATE, CIO_ALIGNMENT  ";
         $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE CNUM='" . db2_escape_string(trim($cnum)) . "' ";
@@ -702,6 +702,24 @@ class personTable extends DbTable {
             return $education;
         }
         return false;
+    }
+    
+    function assetUpdate($cnum,$assetTitle,$primaryUid){
+        $columnName = DbTable::toColumnName($assetTitle);
+        if(!empty($this->columns[$columnName])){
+            $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+            $sql .= " SET " . $columnName . "='" . db2_escape_string(trim($primaryUid)) . "' ";
+            $sql .= " WHERE CNUM='" . db2_escape_string(trim($cnum)) . "' ";
+            
+            
+            $rs = db2_exec($_SESSION['conn'], $sql);
+            
+            if(!$rs){
+                DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+                return false;
+            }
+        }
+        return true;        
     }
     
 

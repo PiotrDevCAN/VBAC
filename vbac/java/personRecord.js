@@ -256,8 +256,8 @@ function personRecord() {
                      $(button).trigger('click');
                    }
 
-                   if(resultObj.data.CONTRACTOR_ID_REQUIRED != null){
-                     if(resultObj.data.CONTRACTOR_ID_REQUIRED.trim().toUpperCase().substring(0,1)=='Y'){
+                   if(resultObj.data.CT_ID_REQUIRED != null){
+                     if(resultObj.data.CT_ID_REQUIRED.trim().toUpperCase().substring(0,1)=='Y'){
                        var contractorIdReq = 'yes';
                      } else {
                        var contractorIdReq = 'no';
@@ -689,8 +689,8 @@ function personRecord() {
                       { "data": "CBN_DATE_FIELD", "defaultContent": "" },
                       { "data": "CBN_STATUS", "defaultContent": "" },
                       { "data": "WORK_STREAM", "defaultContent": "" },
-                      { "data": "CONTRACTOR_ID_REQUIRED" , "defaultContent": ""},
-                      { "data": "CONTRACTOR_ID", "defaultContent": "" },
+                      { "data": "CT_ID_REQUIRED" , "defaultContent": ""},
+                      { "data": "CT_ID", "defaultContent": "" },
                       { "data": "CIO_ALIGNMENT", "defaultContent": "" },
                       { "data": "PRE_BOARDED", "defaultContent": "" },
                       { "data": "SECURITY_EDUCATION", "defaultContent": "" },

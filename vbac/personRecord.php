@@ -62,8 +62,8 @@ class personRecord extends DbRecord
     protected $CBN_STATUS;
 
     protected $WORK_STREAM;
-    protected $CONTRACTOR_ID_REQUIRED;
-    protected $CONTRACTOR_ID;
+    protected $CT_ID_REQUIRED;
+    protected $CT_ID;
     protected $CIO_ALIGNMENT;
     protected $PRE_BOARDED;
     
