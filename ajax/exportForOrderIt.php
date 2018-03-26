@@ -35,7 +35,9 @@ foreach ($allOrderItTypes as $orderItType){
 
 // $dummy = 'VGhpcyBpcyBhIGJhc2U2NCBlbmNvZGVkIHRleHQ=';
 
-$varbRange = $varbsCovered[0];
+
+
+$varbRange = !empty($varbsCovered[0]) ? $varbsCovered[0] : null;
 $varbRange .= count($varbsCovered) > 1 ? " => " . $varbsCovered[count($varbsCovered)-1] : null;
 $csvName = "varbForOrderIt_" . $now->format('Y-m-d h:i:s') . ".csv";
 
