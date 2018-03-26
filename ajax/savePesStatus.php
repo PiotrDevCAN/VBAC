@@ -33,16 +33,24 @@ try {
        
         switch ($_POST['psm_status']) {
             case personRecord::PES_STATUS_REMOVED:
+            case personRecord::PES_STATUS_DECLINED:
+            case personRecord::PES_STATUS_FAILED:
+            case personRecord::PES_STATUS_INITIATED:
+            case personRecord::PES_STATUS_REMOVED:
+            case personRecord::PES_STATUS_EXCEPTION:
                 $notificationStatus = 'Email not applicable';
-                 break;            
-            default:
-                $emailResponse = $person->sendPesStatusChangedEmail();     
+                 break;  
+            case personRecord::PES_STATUS_CLEARED:
+            case personRecord::PES_STATUS_CLEARED_PERSONAL:
+                $emailResponse = $person->sendPesStatusChangedEmail();   
                 $notificationStatus = $emailResponse ? 'Email sent' : 'No email sent';
+                break;
+            default:
+                $notificationStatus = 'Email not applicable(other)';               
             break;
         }
         
-        
-
+        AuditTable::audit("PES Status Email:" . $notificationStatus ,AuditTable::RECORD_TYPE_DETAILS);
         
         $success = true;
     }
