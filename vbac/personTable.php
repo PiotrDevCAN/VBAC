@@ -241,7 +241,7 @@ class personTable extends DbTable {
             throw new \Exception('No CNUM provided in ' . __METHOD__);
         }
 
-        $status = empty($status) ? personRecord::PES_STATUS_REQUESTED : $status;
+        $status = empty($status) ? personRecord::PES_STATUS_NOT_REQUESTED : $status;
 
         switch ($status) {
             case personRecord::PES_STATUS_INITIATED:

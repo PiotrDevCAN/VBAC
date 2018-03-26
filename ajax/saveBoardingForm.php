@@ -58,13 +58,15 @@ try {
             $preBoarder = new personRecord();
             $preBoarder->setFromArray(array('CNUM'=>$_POST['person_preboarded']));
             $preBoarderData = $table->getFromDb($preBoarder);
-            $pesStatus = $preBoarderData['PES_STATUS_DETAILS'];
+            $pesStatus = $preBoarderData['PES_STATUS'];
+            $pesStatusD = $preBoarderData['PES_STATUS_DETAILS'];
             $preBoarderData['PES_STATUS_DETAILS'] = 'Boarded as ' . $_POST['CNUM'] . ":" . $_POST['NOTES_ID'] . " Status was:" . $pesStatus;
             $preBoarder->setFromArray($preBoarderData);
             $table->saveRecord($preBoarder);
+            $table->setPesStatus($_POST['CNUM'],$pesStatus,$_SESSION['ssoEmail']);  // Set the BOARDER's PES STATUS to that of their PRE_BOARDER
         }
     } else {
-       AuditTable::audit("Db2 Error in " . __FILE__ . " $_POST:" . print_r($_POST,true) , AuditTable::RECORD_TYPE_DETAILS);
+       AuditTable::audit("Db2 Error in " . __FILE__ . " POST:" . print_r($_POST,true) , AuditTable::RECORD_TYPE_DETAILS);
        $success = false;
     }
 } catch (Exception $e) {
