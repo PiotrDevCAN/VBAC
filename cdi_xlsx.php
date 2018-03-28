@@ -44,6 +44,22 @@ DbTable::writeResultSetToXls($rs, $spreadsheet);
 
 
 
+$sheet = $spreadsheet->getActiveSheet();
+$cellIterator = $sheet->getRowIterator()->current()->getCellIterator();
+$cellIterator->setIterateOnlyExistingCells(true);
+/** @var PHPExcel_Cell $cell */
+foreach ($cellIterator as $cell) {
+    $sheet->getColumnDimension($cell->getColumn())->setAutoSize(true);
+}
+
+
+$spreadsheet->getActiveSheet()->setAutoFilter(
+    $spreadsheet->getActiveSheet()
+    ->calculateWorksheetDimension()
+    );
+
+
+
 // Rename worksheet
 $spreadsheet->getActiveSheet()->setTitle('Master Tracker');
 // Set active sheet index to the first sheet, so Excel opens this as the first sheet

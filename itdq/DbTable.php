@@ -2141,9 +2141,10 @@ class DbTable
         $columnCounter = $columnIndex;
         $rowCounter = $rowIndex;
         
-        while (($row=db2_fetch_assoc($resultSet))==true) {
+        while (($rawRow=db2_fetch_assoc($resultSet))==true) {
+            $row = array_map('trim', $rawRow);
             if($headerRow && $withColumnHeadings){
-                foreach ($row as $columnName => $value){
+                foreach ($row as $columnName => $value){                   
                     $columnHeading = ucwords(str_replace("_", " ", $columnName));
                     $spreadsheet->getActiveSheet()->setCellValueByColumnAndRow($columnCounter++, $rowCounter, $columnHeading);   
                 }
@@ -2151,7 +2152,7 @@ class DbTable
                 $rowCounter++;
                 $columnCounter=$columnIndex;
             }
-            foreach ($row as $columnName => $value){
+            foreach ($row as $columnName => $value){               
                 $spreadsheet->getActiveSheet()->setCellValueByColumnAndRow($columnCounter++, $rowCounter, $value);               
             }
             $rowCounter++;
