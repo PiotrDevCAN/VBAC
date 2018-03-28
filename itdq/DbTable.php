@@ -1,6 +1,8 @@
 <?php
 namespace itdq;
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+
 /**
  * Class for interfacing with a DB2 Table.
  * Can handle tables with Encrypted Columns, simply call the __construct with the encryption password as the 2nd Parm.
@@ -2130,6 +2132,31 @@ class DbTable
 
     function getTableName(){
         return $this->tableName;
+    }
+    
+    
+    static function writeResultSetToXls( $resultSet,Spreadsheet $spreadsheet,$withColumnHeadings=true,$columnIndex=1,$rowIndex=1){
+        
+        $headerRow=true;
+        $columnCounter = $columnIndex;
+        $rowCounter = $rowIndex;
+        
+        while (($row=db2_fetch_assoc($resultSet))==true) {
+            if($headerRow && $withColumnHeadings){
+                foreach ($row as $columnName => $value){
+                    $columnHeading = ucwords(str_replace("_", " ", $columnName));
+                    $spreadsheet->getActiveSheet()->setCellValueByColumnAndRow($columnCounter++, $rowCounter, $columnHeading);   
+                }
+                $headerRow = false;
+                $rowCounter++;
+                $columnCounter=$columnIndex;
+            }
+            foreach ($row as $columnName => $value){
+                $spreadsheet->getActiveSheet()->setCellValueByColumnAndRow($columnCounter++, $rowCounter, $value);               
+            }
+            $rowCounter++;
+            $columnCounter=$columnIndex;
+        }        
     }
 
 

@@ -3,6 +3,8 @@
 use PhpOffice\PhpSpreadsheet\Helper\Sample;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use itdq\DbTable;
+use vbac\allTables;
 // require_once __DIR__ . '/../../src/Bootstrap.php';
 $helper = new Sample();
 if ($helper->isCli()) {
@@ -12,34 +14,51 @@ if ($helper->isCli()) {
 // Create new Spreadsheet object
 $spreadsheet = new Spreadsheet();
 // Set document properties
-$spreadsheet->getProperties()->setCreator('Maarten Balliauw')
-->setLastModifiedBy('Maarten Balliauw')
-->setTitle('Office 2007 XLSX Test Document')
-->setSubject('Office 2007 XLSX Test Document')
-->setDescription('Test document for Office 2007 XLSX, generated using PHP classes.')
-->setKeywords('office 2007 openxml php')
-->setCategory('Test result file');
+$spreadsheet->getProperties()->setCreator('vBAC')
+->setLastModifiedBy('vBAC')
+->setTitle('Aurora Master Tracker generated from vBAC')
+->setSubject('Aurora Master Tracker')
+->setDescription('Aurora Master Tracker generated from vBAC')
+->setKeywords('office 2007 openxml php vbac tracker')
+->setCategory('Master Tracker');
 // Add some data
-$spreadsheet->setActiveSheetIndex(0)
-->setCellValue('A1', 'Hello')
-->setCellValue('B2', 'world!')
-->setCellValue('C1', 'Hello')
-->setCellValue('D2', 'world!');
-// Miscellaneous glyphs, UTF-8
-$spreadsheet->setActiveSheetIndex(0)
-->setCellValue('A4', 'Miscellaneous glyphs')
-->setCellValue('A5', 'éàèùâêîôûëïüÿäöüç');
+
+
+
+// $spreadsheet->setActiveSheetIndex(0)
+// ->setCellValue('A1', 'Hello')
+// ->setCellValue('B2', 'world!')
+// ->setCellValue('C1', 'Hello')
+// ->setCellValue('D2', 'world!');
+
+
+$sql = " SELECT P.*,AR.* ";
+$sql .= " FROM " . $_SESSION['Db2Schema']. "." . allTables::$ASSET_REQUESTS  . " as AR ";
+$sql .= " LEFT JOIN " . $_SESSION['Db2Schema']. "." . allTables::$PERSON . " as P ";
+$sql .= " ON P.CNUM = AR.CNUM ";
+
+$rs = db2_exec($_SESSION['conn'], $sql);
+
+
+DbTable::writeResultSetToXls($rs, $spreadsheet);
+
+
+
 // Rename worksheet
-$spreadsheet->getActiveSheet()->setTitle('Simple');
+$spreadsheet->getActiveSheet()->setTitle('Master Tracker');
 // Set active sheet index to the first sheet, so Excel opens this as the first sheet
 $spreadsheet->setActiveSheetIndex(0);
 // Redirect output to a client’s web browser (Xlsx)
+
+$now = new DateTime();
+$fileNameSuffix = $now->format('Ymd_his');
+
 
 ob_clean();
 
 
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-header('Content-Disposition: attachment;filename="01simple.xlsx"');
+header('Content-Disposition: attachment;filename="masterTracker' . $fileNameSuffix . '.xlsx"');
 header('Cache-Control: max-age=0');
 // If you're serving to IE 9, then the following may be needed
 header('Cache-Control: max-age=1');
