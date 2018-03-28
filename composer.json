@@ -1,9 +1,9 @@
 {
   "name" : "vBAC_bm",
   "require" : {
-    "phpoffice/phpexcel" : "1.8.1",
+    "ext-ldap" : "*",
+    "phpoffice/phpspreadsheet" : "1.2.0"
     "php": "7.1.2",
-    "ext-ldap": "*"
   },
   "repositories" : [ {
     "type" : "composer",
