@@ -4,6 +4,12 @@ namespace vbac;
 use itdq\DbTable;
 
 class requestableAssetListTable extends DbTable {
+    
+    
+    const RETURN_EXCLUDE_DELETED = true;
+    const RETURN_INCLUDE_DELETED = false;
+    const RETURN_WITH_BUTTONS    = true;
+    const RETURN_WITHOUT_BUTTONS = false;
 
     function returnAsArray($excludeDeleted=true,$withButtons=true){
         $data = array();
@@ -21,14 +27,15 @@ class requestableAssetListTable extends DbTable {
             return false;
         } else {
             while(($row=db2_fetch_assoc($rs))==true){
-                $row['APPLICABLE_ONSHORE']              = trim($row['APPLICABLE_ONSHORE'])=='1'         ? 'Yes' : 'No';
-                $row['APPLICABLE_OFFSHORE']             = trim($row['APPLICABLE_OFFSHORE'])=='1'        ? 'Yes' : 'No';
-                $row['REQUEST_BY_DEFAULT']              = trim($row['REQUEST_BY_DEFAULT'])=='1'         ? 'Yes' : 'No';
-                $row['BUSINESS_JUSTIFICATION_REQUIRED'] = trim($row['BUSINESS_JUSTIFICATION_REQUIRED'])=='1' ? 'Yes' : 'No';
-                $row['RECORD_DATE_ISSUED_TO_IBM']       = trim($row['RECORD_DATE_ISSUED_TO_IBM'])=='1'  ? 'Yes' : 'No';
-                $row['RECORD_DATE_ISSUED_TO_USER']      = trim($row['RECORD_DATE_ISSUED_TO_USER'])=='1' ? 'Yes' : 'No';
-                $row['RECORD_DATE_RETURNED']            = trim($row['RECORD_DATE_RETURNED'])=='1'       ? 'Yes' : 'No';
-                $rowWithButtonsAdded = $withButtons ?  $this->addButtons($row) : $row ;
+                $trimmedData = array_map('trim', $row);
+                $trimmedData['APPLICABLE_ONSHORE']              = trim($trimmedData['APPLICABLE_ONSHORE'])=='1'         ? 'Yes' : 'No';
+                $trimmedData['APPLICABLE_OFFSHORE']             = trim($trimmedData['APPLICABLE_OFFSHORE'])=='1'        ? 'Yes' : 'No';
+                $trimmedData['REQUEST_BY_DEFAULT']              = trim($trimmedData['REQUEST_BY_DEFAULT'])=='1'         ? 'Yes' : 'No';
+                $trimmedData['BUSINESS_JUSTIFICATION_REQUIRED'] = trim($trimmedData['BUSINESS_JUSTIFICATION_REQUIRED'])=='1' ? 'Yes' : 'No';
+                $trimmedData['RECORD_DATE_ISSUED_TO_IBM']       = trim($trimmedData['RECORD_DATE_ISSUED_TO_IBM'])=='1'  ? 'Yes' : 'No';
+                $trimmedData['RECORD_DATE_ISSUED_TO_USER']      = trim($trimmedData['RECORD_DATE_ISSUED_TO_USER'])=='1' ? 'Yes' : 'No';
+                $trimmedData['RECORD_DATE_RETURNED']            = trim($trimmedData['RECORD_DATE_RETURNED'])=='1'       ? 'Yes' : 'No';
+                $rowWithButtonsAdded = $withButtons ?  $this->addButtons($trimmedData) : $trimmedData ;
                 $data[] = $rowWithButtonsAdded;
             }
         }

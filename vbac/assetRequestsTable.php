@@ -4,9 +4,13 @@ namespace vbac;
 use itdq\DbTable;
 use itdq\DbRecord;
 use itdq\FormClass;
+use itdq\Loader;
 
 
 class assetRequestsTable extends DbTable{
+    
+    const RETURN_WITH_BUTTONS = true;
+    const RETURN_WITHOUT_BUTTONS = false;
     
     public $currentVarb;
     
@@ -33,7 +37,7 @@ class assetRequestsTable extends DbTable{
          return $headerCells;
     }
 
-    static function returnForPortal($predicate=null){
+    static function returnForPortal($predicate=null,$withButtons=true){
         $sql  = " SELECT ";
 //        $sql .= " concat('000000',AR.REQUEST_REFERNCE) as car,";
         $sql .= " AR.REQUEST_REFERENCE as reference, ";
@@ -63,7 +67,9 @@ class assetRequestsTable extends DbTable{
 
         $data = array();
 
-        while(($row=db2_fetch_assoc($rs))==true){
+        while(($preTrimmed=db2_fetch_assoc($rs))==true){
+            
+            $row = array_map('trim', $preTrimmed);
                           
             
             $reference = $row['REFERENCE'];
@@ -86,6 +92,8 @@ class assetRequestsTable extends DbTable{
             $approveButton .= "<span class='glyphicon glyphicon-ok ' aria-hidden='true'></span>";
             $approveButton .= " </button> ";
             
+            $approveButton = $withButtons ? $approveButton : '';
+            
             $rejectButton  = "<button type='button' class='btn btn-default btn-xs btnAssetRequestReject btn-danger' aria-label='Left Align' ";
             $rejectButton .= "data-reference='" .trim($row['REFERENCE']) . "' ";
             $rejectButton .= "data-requestee='" .trim($row['EMAIL_ADDRESS']) . "' ";
@@ -95,6 +103,8 @@ class assetRequestsTable extends DbTable{
             $rejectButton .= " > ";
             $rejectButton .= "<span class='glyphicon glyphicon-remove ' aria-hidden='true'></span>";
             $rejectButton .= " </button> ";
+            
+            $rejectButton = $withButtons ? $rejectButton : '';
             
             $pmoOrFm = ($_SESSION['isFm'] || $_SESSION['isPmo']);            
             $notTheirOwnRecord = ( trim(strtolower($row['EMAIL_ADDRESS'])) != trim(strtolower($_SESSION['ssoEmail'])));               
@@ -117,20 +127,28 @@ class assetRequestsTable extends DbTable{
                 break;
             }
           
+            $button = $withButtons ? $button : '';
      
-            $row['STATUS'] = $allowedtoApproveReject ? $button . $statusWithVarb : $statusWithVarb;
+            $row['STATUS'] = $allowedtoApproveReject  ? $button . $statusWithVarb : $statusWithVarb;
             
             $row['PERSON'] = $row['NOTES_ID'];
-            unset($row['EMAIL_ADDRESS']);
-            unset($row['NOTES_ID']);
+            if($withButtons){
+                unset($row['EMAIL_ADDRESS']);
+                unset($row['NOTES_ID']);
+            }
+
                        
             $row['APPROVER'] = $row['APPROVER_EMAIL'] . "<br/><small>" . $row['APPROVED_DATE'] . "</small>";
-            unset($row['APPROVER_EMAIL']);
-            unset($row['APPROVED_DATE']);
+            if($withButtons){
+                unset($row['APPROVER_EMAIL']);
+                unset($row['APPROVED_DATE']);
+            }
             
             $row['REQUESTOR'] = $row['REQUESTOR_EMAIL'] . "<br/><small>" . $row['REQUESTED_DATE'] . "</small>";
-            unset($row['REQUESTOR_EMAIL']);
-            unset($row['REQUESTOR_DATE']);
+            if($withButtons){
+                unset($row['REQUESTOR_EMAIL']);
+                unset($row['REQUESTOR_DATE']);
+            }
             
             
             $editUidButton  = "<button type='button' class='btn btn-default btn-xs btnEditUid btn-primary' aria-label='Left Align' ";
@@ -144,7 +162,7 @@ class assetRequestsTable extends DbTable{
             $editUidButton .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
             $editUidButton .= " </button> ";
             
-            
+            $editUidButton = $withButtons ? $editUidButton : '';
             
             
             $primaryUid = empty($row['PRIMARY_UID']) ? "<i>unknown</i>" : $row['PRIMARY_UID'];
@@ -751,15 +769,84 @@ class assetRequestsTable extends DbTable{
             echo db2_stmt_error();
             echo db2_stmt_errormsg();
             DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, 'prepared stmt');
-        }
-        
-        return true;
-        
+        }        
+        return true;       
     
     }
     
-    
+    function extractForTracker(){
         
-    
+        $requestableAssetTable = new requestableAssetListTable(allTables::$REQUESTABLE_ASSET_LIST);
+        $requestableAssets = $requestableAssetTable->returnAsArray(requestableAssetListTable::RETURN_EXCLUDE_DELETED,requestableAssetListTable::RETURN_WITHOUT_BUTTONS);
 
+        foreach ($requestableAssets as $key => $record){
+            $requestableAssets[$record['ASSET_TITLE']] = $record;
+            unset($requestableAssets[$key]);
+        }
+        
+        $data = $this->returnForPortal(null,self::RETURN_WITHOUT_BUTTONS);
+        
+        foreach ($data as $key => $record){
+            $assetRequests[$record['EMAIL_ADDRESS']][$record['ASSET']] = $record;    
+        }
+      
+        ?>
+        
+        <div class='container-fluid'>
+        
+        <table class='table table-striped table-bordered compact' '>        
+        <thead>
+        <tr>
+        <th>IBMer</th>
+        <th>CT ID</th>
+        <th>Asset</th>
+        <th>Order IT Number</th>
+        <th>Order IT Status</th>
+        <th>VBAC Status</th>
+        <th>VBAC Approver</th>
+        <th>VBAC Approved</th>
+        <th>Location</th>
+        <th>Justification</th>
+        <th>Primary UID</th>
+        <th>Secondary UID</th>
+        <th>Date to IBM</th>
+        <th>Date to User</th>
+        <th>Date Rtnd</th>
+        
+        </tr>
+        </thead>
+        <tbody>
+        <?php 
+            foreach ($assetRequests as $email => $assetRequests){
+                foreach ($assetRequests as $asset => $record){
+                ?>
+                <tr>
+                <td><?=$email?></td>
+                <td><?=$record['CT_ID']?></td>
+                <td><?=$record['ASSET']?></td>
+                <td><?=$record['ORDERIT_NUMBER']?></td>
+                <td><?=$record['ORDERIT_STATUS']?></td>
+                <td><?=$record['STATUS']?></td>
+                <td><?=$record['APPROVER_EMAIL']?></td>
+                <td><?=$record['APPROVED_DATE']?></td>
+                <td style="word-wrap: break-word"><?=$record['LOCATION']?></td>
+                <td style="word-wrap: break-word"><?=$record['JUSTIFICATION']?></td>
+                <td><?=$record['PRIMARY_UID']?></td>
+                <td><?=$record['SECONDARY_UID']?></td>
+                <td><?=$record['DATE_ISSUED_TO_IBM']?></td>
+                <td><?=$record['DATE_ISSUED_TO_USER']?></td>
+                <td><?=$record['DATE_RETURNED']?></td>                
+                </tr>
+                <?php 
+                }
+            }
+        ?>
+        </tbody>
+        <tfoot>
+        </tfoot>
+        </table>
+        
+        </div>
+        <?php 
+    }
 }
