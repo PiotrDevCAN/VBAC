@@ -168,14 +168,14 @@ class assetRequestRecord extends DbRecord {
                                  *
                                  */
                                 $selected = " selected ";
-                            } elseif ($isFm && (trim($cnum)==$myCnum)){
+                            } elseif ($isFm && (trim($cnum)==trim($myCnum))){
                                 /*
                                  * They ARE an FM and this is their entry, so select it by default.
                                  * If the requestee becomes themselves, we'll remove the entry from the dropdown.
                                  */
                                 $selected = " selected ";
                             }
-                            ?><option value='<?=trim($cnum);?>'<?=$selected?>><?=$displayedName?><?=$myManagersCnum?><?=$cnum?><?=var_dump($isFm)?></option><?php
+                            ?><option value='<?=trim($cnum);?>'<?=$selected?>><?=$displayedName?><?=$myManagersCnum?><?=$cnum?><?=$myCnum?><?=var_dump($isFm)?></option><?php
                         };
                         ?>
             	</select>
