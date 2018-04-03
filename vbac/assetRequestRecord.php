@@ -159,7 +159,7 @@ class assetRequestRecord extends DbRecord {
                             $displayedName = !empty(trim($notesId)) ?  trim($notesId) : $selectableEmailAddress[$cnum];
                             $selected = null;
                             
-                            if(!$isFm && (trim($cnum)==$myManagersCnum)){
+                            if(!$isFm && (trim($cnum)== trim($myManagersCnum))){
                                 /*
                                  * The user is NOT a manager, and this entry is their Mgr
                                  *
@@ -175,7 +175,7 @@ class assetRequestRecord extends DbRecord {
                                  */
                                 $selected = " selected ";
                             }
-                            ?><option value='<?=trim($cnum);?>'<?=$selected?>><?=$displayedName?></option><?php
+                            ?><option value='<?=trim($cnum);?>'<?=$selected?>><?=$displayedName?><?=$myManagersCnum?></option><?php
                         };
                         ?>
             	</select>
