@@ -172,7 +172,7 @@ class assetRequestRecord extends DbRecord {
                                  */
                                 $selected = " selected ";
                             }
-                            ?><option value='<?=trim($cnum);?>'<?=$selected?>><?=$displayedName?><?=$myManagersCnum?><?=$cnum?><?=$myCnum?><?=var_dump($isFm)?></option><?php
+                            ?><option value='<?=trim($cnum);?>'<?=$selected?>><?=$displayedName?></option><?php
                         };
                         ?>
             	</select>
