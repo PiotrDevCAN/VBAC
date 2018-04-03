@@ -42,7 +42,7 @@ switch (true) {
     default:
         echo "is default";
         $myCnum = personTable::myCnum();
-        $predicate .= " AR.CNUM = '". db2_escape_string($myCnum) . "' ";
+        $predicate .= " AND AR.CNUM = '". db2_escape_string($myCnum) . "' ";
     break;
 }
 
