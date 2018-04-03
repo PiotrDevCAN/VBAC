@@ -41,7 +41,6 @@ $requestableAssets  = new NavbarOption('Requestable Assets', 'pa_requestableAsse
 
 $email          = new NavbarOption('Email Log', 'pi_emailLog.php','accessCdi');
 $adminMenu->addOption($pmo);
-$adminMenu->addOption($assetPortal);
 $adminMenu->addOption($revalidation);
 $adminMenu->addOption( new NavbarDivider('accessPmo accessCdi'));
 $adminMenu->addOption($control);
@@ -62,6 +61,7 @@ $assetPortal    = new NavbarOption('Asset Portal', 'pa_assetPortal.php','accessC
 $requestAssets  = new NavbarOption('Request Assets', 'pc_assetRequest.php','accessCdi accessPmo accessFm accessUser');
 $requestAccess  = new NavbarOption('Request Access', 'pc_accessRequest.php','accessCdi accessPmo accessFm accessUser');
 $iamAdmin       = new NavbarOption('IAM Admin', 'pc_iamAdmin.php','accessCdi accessPmo');
+$access->addOption($assetPortal);
 $access->addOption($requestAssets);
 $access->addOption($requestAccess);
 $access->addOption($iamAdmin);
