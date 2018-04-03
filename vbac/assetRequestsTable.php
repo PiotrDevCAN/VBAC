@@ -59,16 +59,6 @@ class assetRequestsTable extends DbTable{
         $sql .= " WHERE 1=1 ";
         $sql .= $predicate;  
         
-        
-        
-        echo $sql;
-        
-        echo "<pre>";
-        var_dump($_SESSION);
-        
-        
-        die('here');
-
         $rs = db2_exec($_SESSION['conn'],$sql);
 
         if(!$rs){
