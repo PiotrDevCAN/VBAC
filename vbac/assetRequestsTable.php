@@ -58,6 +58,16 @@ class assetRequestsTable extends DbTable{
         $sql .= " ON TRIM(RAL.ASSET_TITLE) = TRIM(AR.ASSET_TITLE) ";
         $sql .= " WHERE 1=1 ";
         $sql .= $predicate;  
+        
+        
+        
+        echo $sql;
+        
+        echo "<pre>";
+        var_dump($_SESSION);
+        
+        
+        die('here');
 
         $rs = db2_exec($_SESSION['conn'],$sql);
 
