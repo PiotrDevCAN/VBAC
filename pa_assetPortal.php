@@ -32,12 +32,6 @@ $assetTable->editUidModal();
 $assetTable->mapVarbToOrderItModal();
 $assetTable->approveRejectModal();
 
-$_SESSION['isPmo'] = true;
-$_SESSION['isCdi']  = false;
-$_SESSION['isFm'] = false;
-$_SESSION['isUser'] = false;
-$_SESSION['isPes'] = false;
-
 $isFm   = $_SESSION['isFm']   ? ".not('.accessFm')"   : null;
 $isCdi  = $_SESSION['isCdi']  ? ".not('.accessCdi')"  : null;
 $isPmo  = $_SESSION['isPmo']  ? ".not('.accessPmo')"  : null;
