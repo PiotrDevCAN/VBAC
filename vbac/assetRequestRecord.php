@@ -55,9 +55,6 @@ class assetRequestRecord extends DbRecord {
         $isFm   = personTable::isManager($GLOBALS['ltcuser']['mail']);
         $isPmo  = $_SESSION['isPmo'];
 
-         $isFm  = true;
-         $isPmo = false;
-
         switch (true){
             case $isPmo:
                 $predicate = " 1=1 ";
