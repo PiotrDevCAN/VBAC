@@ -98,7 +98,10 @@ class assetRequestRecord extends DbRecord {
                     foreach ($selectableNotesId as $cnum => $notesId){
                             $displayedName = !empty(trim($notesId)) ?  trim($notesId) : $selectableEmailAddress[$cnum];
                             $selected = !$isFm && trim($cnum)==trim($myCnum) ? ' selected ' : null
-                            ?><option value='<?=trim($cnum);?><?=$selected?>'><?=$displayedName?></option><?php
+                            
+                            
+                            
+                            ?><option value='<?=trim($cnum);?>'<?=$selected?>><?=$displayedName?></option><?php
                         };
                         ?>
             	</select>
