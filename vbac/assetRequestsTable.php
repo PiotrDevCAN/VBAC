@@ -84,7 +84,7 @@ class assetRequestsTable extends DbTable{
             $statusWithVarb = trim($row['ORDERIT_VARB_REF']) != null ? $status . " (" . trim($row['ORDERIT_VARB_REF']) . ") " : $status;
             
             $approveButton  = "<button type='button' class='btn btn-default btn-xs btnAssetRequestApprove btn-success' aria-label='Left Align' ";
-            $approveButton .= "data-reference='" .trim($row['REFERENCE']) . "' ";
+            $approveButton .= "data-reference='" .trim($reference) . "' ";
             $approveButton .= "data-requestee='" .trim($row['EMAIL_ADDRESS']) . "' ";
             $approveButton .= "data-asset='"     .trim($row['ASSET']) . "' ";
             $approveButton .= "data-orderitstatus='".trim($row['ORDERIT_STATUS']) . "' ";
@@ -96,7 +96,7 @@ class assetRequestsTable extends DbTable{
             $approveButton = $withButtons ? $approveButton : '';
             
             $rejectButton  = "<button type='button' class='btn btn-default btn-xs btnAssetRequestReject btn-danger' aria-label='Left Align' ";
-            $rejectButton .= "data-reference='" .trim($row['REFERENCE']) . "' ";
+            $rejectButton .= "data-reference='" .trim($reference) . "' ";
             $rejectButton .= "data-requestee='" .trim($row['EMAIL_ADDRESS']) . "' ";
             $rejectButton .= "data-asset='"     .trim($row['ASSET']) . "' ";
             $rejectButton .= "data-orderitstatus='".trim($row['ORDERIT_STATUS']) . "' ";
