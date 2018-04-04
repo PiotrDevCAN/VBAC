@@ -97,10 +97,8 @@ class assetRequestRecord extends DbRecord {
                     <?php
                     foreach ($selectableNotesId as $cnum => $notesId){
                             $displayedName = !empty(trim($notesId)) ?  trim($notesId) : $selectableEmailAddress[$cnum];
-                            $selected = !$isFm && trim($cnum)==trim($myCnum) ? ' selected ' : null
-                            
-                            
-                            
+                            //$selected = !$isFm && trim($cnum)==trim($myCnum) ? ' selected ' : null    // If they don't select the user - we don't fire the CT ID & Education prompts.
+                            $selected = null;
                             ?><option value='<?=trim($cnum);?>'<?=$selected?>><?=$displayedName?></option><?php
                         };
                         ?>
