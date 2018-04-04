@@ -69,10 +69,6 @@ class assetRequestRecord extends DbRecord {
 
         $predicate .= " and REVALIDATION_STATUS = '" . personRecord::REVALIDATED_FOUND . "' and PES_STATUS in ('" . personRecord::PES_STATUS_CLEARED. "','" . personRecord::PES_STATUS_CLEARED_PERSONAL. "','" . personRecord::PES_STATUS_EXCEPTION. "')";
         $selectableNotesId = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON,$predicate);
-        
-        var_dump($selectableNotesId);
-        
-        
         $selectableEmailAddress = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON,$predicate);
 
         $approvingMgrPredicate = " FM_MANAGER_FLAG ='Yes' ";
