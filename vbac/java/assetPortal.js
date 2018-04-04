@@ -145,8 +145,7 @@ this.listenForReportShowUid = function(){
     	assetPortal.table.search('').order([0,"desc"]).draw();
     });
 },
-  
-  
+
   this.listenForExportButton = function(){
 	  $(document).on('click','#exportForOrderIt', function(e){
 		  $('#exportForOrderIt').addClass('spinning');

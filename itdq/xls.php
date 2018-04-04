@@ -50,7 +50,7 @@ trait xls{
     
     
     
-    static function setRowColor(Spreadsheet $spreadsheet,$color='8099ccff',$rowNumber=1){
+    static function setRowColor(Spreadsheet $spreadsheet,$color='80333333',$rowNumber=1){
         $sheet = $spreadsheet->getActiveSheet();
         $cellIterator = $sheet->getRowIterator($rowNumber)->current()->getCellIterator();
         $cellIterator->setIterateOnlyExistingCells(true);

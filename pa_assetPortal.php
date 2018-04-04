@@ -19,6 +19,14 @@ use vbac\personTable;
 &nbsp;
 <button id='reportReload'  		class='btn btn-warning btn-sm '>Reload Data</button>
 <button id='reportReset'  		class='btn btn-warning btn-sm '>Reset</button>
+
+<?php 
+if($isPmo){
+    ?>&nbsp;<a class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi' href='/dn_tracker.php'><i class="glyphicon glyphicon-download-alt"></i> Tracker</a><?php 
+}
+?>
+
+
 <div id='assetRequestsDatatablesDiv' class='portalDiv'>
 </div>
 </div>

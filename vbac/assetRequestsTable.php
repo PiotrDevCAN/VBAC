@@ -5,6 +5,7 @@ use itdq\DbTable;
 use itdq\DbRecord;
 use itdq\FormClass;
 use itdq\Loader;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 
 class assetRequestsTable extends DbTable{
@@ -598,6 +599,43 @@ class assetRequestsTable extends DbTable{
         return $data;       
     
     }
+    
+    function getTracker(Spreadsheet $spreadsheet){
+        $loader = new Loader();
+        $allStatus = $loader->load('ORDERIT_STATUS',allTables::$ASSET_REQUESTS);
+        array_map('trim',$allStatus);
+        
+        $sheet = 1;
+        
+        foreach ($allStatus as $key => $value) {
+            $sql = " SELECT AR.ORDERIT_NUMBER, AR.ORDERIT_STATUS,Ar.ORDERIT_VARB_REF, AR.REQUEST_REFERENCE, AR.ASSET_TITLE, AR.BUSINESS_JUSTIFICATION, AR.REQUESTOR_EMAIl, AR.REQUESTED, AR.APPROVER_EMAIL, AR.APPROVED, P.FIRST_NAME, P.LAST_NAME, P.EMAIL_ADDRESS, P.LBG_EMAIL, P.EMPLOYEE_TYPE, P.CNUM, P.CT_ID, FM.CNUM as MGR_CNUM, FM.EMAIL_ADDRESS as MGR_EMAIL, FM.NOTES_ID as MGR_NOTESID, P.PES_STATUS, P.WORK_STREAM,P.CTB_RTB, P.TT_BAU, P.LOB, P.ROLE_ON_THE_ACCOUNT, P.CIO_ALIGNMENT,  AR.PRIMARY_UID, AR.SECONDARY_UID, AR.DATE_ISSUED_TO_IBM, AR. DATE_ISSUED_TO_USER, AR.DATE_RETURNED ";
+            $sql .= " FROM " . $_SESSION['Db2Schema']. "." . allTables::$ASSET_REQUESTS  . " as AR ";
+            $sql .= " LEFT JOIN " . $_SESSION['Db2Schema']. "." . allTables::$PERSON . " as P ";
+            $sql .= " ON P.CNUM = AR.CNUM ";
+            $sql .= " LEFT JOIN " . $_SESSION['Db2Schema']. "." . allTables::$PERSON . " as FM ";
+            $sql .= " ON P.FM_CNUM = FM.CNUM ";
+            $sql .= " WHERE AR.ORDERIT_STATUS = '" . db2_escape_string($value) . "'";
+            $sql .= " ORDER BY AR.REQUESTED asc ";
+            
+            $rs = db2_exec($_SESSION['conn'], $sql);
+            
+            DbTable::writeResultSetToXls($rs, $spreadsheet);
+            DbTable::autoFilter($spreadsheet);
+            DbTable::autoSizeColumns($spreadsheet);
+            DbTable::setRowColor($spreadsheet,'105abd19',1);
+            
+            // Rename worksheet & create next.
+            $spreadsheet->getActiveSheet()->setTitle($value);
+            $spreadsheet->createSheet();
+            $spreadsheet->setActiveSheetIndex($sheet++);
+            
+        }
+    
+    
+    
+    
+    }
+    
     
     function getCnumAndAssetForReference($reference){
         
