@@ -13,4 +13,4 @@ $messages = ob_get_clean();
 $response = array("form"=>$form,'messages'=>$messages);
 
 ob_clean();
-echo json_encode($response);
+echo json_encode($response); 
