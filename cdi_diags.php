@@ -30,4 +30,11 @@ $_SESSION['isPes']  = !empty($isPes)  ? true : false;
 <h3>Session</h3>
 <?=print_r($_SESSION)?>
 </pre>
+
+<pre>
+<h3>Session</h3>
+<?=print_r($GLOBALS)?>
+</pre>
+
+
 </div>
