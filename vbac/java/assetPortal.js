@@ -65,7 +65,7 @@ function assetPortal() {
           columnDefs: [
                          { visible: false, targets: [8,9,10,11,12,13,14,15,16,17,18] }
                   ] ,
-          order: [[ 5, "asc" ]],
+          order: [[ 18, "asc" ]],
           autoWidth: true,
           deferRender: true,
           responsive: false,
