@@ -223,7 +223,7 @@ this.listenForReportShowUid = function(){
 		  $('#setOrderItStatus').addClass('spinning');
 		  $('#setOrderItStatus').attr('disabled',true);
 	      $.ajax({
-		        url: "ajax/prepareForSetOrderITStatus.php",
+		        url: "ajax/prepareForSetOrderItStatus.php",
 		        type: 'GET',
 		        success: function(result){
 		        	var resultObj = JSON.parse(result);
