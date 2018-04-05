@@ -6,6 +6,7 @@
 function assetPortal() {
 	var table;
 	var varbRequestTable;
+	var requestsWithStatus;
 
   this.init = function(){
     console.log('+++ Function +++ assetPortal.init');
@@ -216,6 +217,49 @@ this.listenForReportShowUid = function(){
 	  });
   }
   
+  
+  this.listenForSetOitStatusButton = function(){
+	  $(document).on('click','#setOrderItStatus', function(e){
+		  $('#setOrderItStatus').addClass('spinning');
+		  $('#setOrderItStatus').attr('disabled',true);
+	      $.ajax({
+		        url: "ajax/prepareForSetOrderITStatus.php",
+		        type: 'GET',
+		        success: function(result){
+		        	var resultObj = JSON.parse(result);
+			    	// assetPortal.table.ajax.reload();
+		        	$('#setOitStatusModal .modal-body').html(resultObj.form);
+		        	$('#setOitStatusModal').modal('show');
+		  		    $('#setOrderItStatus').removeClass('spinning');
+				    $('#setOrderItStatus').attr('disabled',false);
+		        }
+	      });		 
+	  });
+  } 
+  
+  
+  this.listenForSetOitStatusModalShown = function(){
+	  $('#setOitStatusModal').on('shown.bs.modal',function(){
+			$('#orderit').select2({
+		         placeholder:"Select Order IT",
+		         });
+			AssetPortal.populateRequestTableForOrderIt();
+			AssetPortal.listenForOrderItSelected();
+		  
+	  });
+  }
+  
+  
+  this.listenForOrderItSelected = function(){
+	  console.log('setup listener for orderit selected');
+	  console.log($('#orderit'));
+	  $('#orderit').on('select2:select', function (e) {
+		  console.log('event triggered');
+		  assetPortal.requestsWithStatus.ajax.reload();
+		});
+  }
+  
+  
   this.listenForSaveMapping = function(){
 	  $(document).on('click','#saveMapVarbToOrderIT', function(e){ 
 		  $('#saveMapVarbToOrderIT').addClass('spinning');
@@ -267,6 +311,36 @@ this.listenForSaveEditUid = function(){
 	  });
 },
 
+
+this.listenForSaveOrderItStatus = function(){
+	  $(document).on('click','#saveOrderItStatus', function(e){ 
+		  $('#saveOrderItStatus').addClass('spinning');
+	      var form = document.getElementById('setOrderItStatusForm');
+	      var formValid = form.checkValidity();
+	      if(formValid){
+			  var formData = $('#setOrderItStatusForm').serialize();
+	    	  $.ajax({
+		        url: "ajax/saveOrderItStatus.php",
+		        type: 'POST',
+		        data: formData,  
+		        success: function(result){
+		        	console.log(result);
+		        	var resultObj = JSON.parse(result);
+		        	$('#setOitStatusModal .modal-body').html('');
+		        	$('#saveOrderItStatus').removeClass('spinning');
+		        	$('#setOitStatusModal').modal('hide');
+		  		  	
+		  		  	assetPortal.table.ajax.reload();
+
+		        }
+	    	  });
+	      } else {
+	    	  alert('Form is not valid, please correct');
+	    	  $('#saveOrderItStatus').removeClass('spinning');
+	      }	
+
+	  });
+},
   
   
   
@@ -289,6 +363,9 @@ this.listenForSaveEditUid = function(){
 		  assetPortal.varbRequestTable.ajax.reload();
 		});
   }
+  
+  
+  
   
   this.listenForAssetRequestApprove  = function(){
 	    $(document).on('click','.btnAssetRequestApprove', function(e){
@@ -410,8 +487,50 @@ this.listenForAssetRequestApproveRejectToggle  = function(){
 	                    'csvHtml5'
 	                ],
 	      });  
-  	}
+  	},
+
+  	this.populateRequestTableForOrderIt = function(){ 
+	  assetPortal.requestsWithStatus = $('#requestsWithStatus').DataTable({
+	          ajax: {
+	              url: 'ajax/populateRequestTableForOrderIt.php',
+	              type: 'POST',
+	              data: function ( d ) {
+	            	  var orderit = $('#orderit').find(':selected').val();
+	            	  var oitObject = { 'orderit' : orderit };
+	            	  return oitObject; }
+	              },
+
+	          columns: [
+	                      { "data": "REFERENCE" ,"defaultContent": "", "width":"5%" },
+	                      { "data": "EMAIL" ,"defaultContent": "", "width":"30%" },
+	                      { "data": "ASSET","defaultContent": "", "width":"25%"},
+	                      { "data": "ORDERIT_STATUS","defaultContent": "", "width":"25%"},
+	                      { "data": "ACTION","defaultContent": "", "width":"20%"}
+	                  ],
+	                  
+	          drawCallback: function(settings) {
+	                      console.log($('.statusToggle'));
+	                      $('.statusToggle').bootstrapToggle();
+	                  },
+	          autoWidth: false,
+	          deferRender: true,
+	          responsive: false,
+	          processing: true,
+	          responsive: true,
+	          pageLength: 20,
+	          order: [[ 1, "asc" ]],
+	          language: {
+	        	    "emptyTable": "Please select Order IT"
+	          		},   
+	          dom: 'Bfrtip',
+//		      colReorder: true,
+	          buttons: [
+	                    'csvHtml5'
+	                ],
+	      });  
+	}
 };
+
 
 
 var AssetPortal = new assetPortal();

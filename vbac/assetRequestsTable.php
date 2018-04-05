@@ -600,6 +600,92 @@ class assetRequestsTable extends DbTable{
     
     }
     
+    function setOitStatusModal(){
+        ?>
+       <!-- Modal -->
+    <div id="setOitStatusModal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+          <div class="modal-header">
+             <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Set OrderIt Status</h4>
+            </div>
+             <div class="modal-body" >
+             </div>
+             <div class='modal-footer'>
+             <?php
+                $form = new FormClass();
+                $allButtons = null;
+                $submitButton =   $form->formButton('submit','Submit','saveOrderItStatus','enabled','Save','btn btn-primary');
+                $allButtons[] = $submitButton;
+                $form->formBlueButtons($allButtons);
+                $form->formHiddenInput('mapper',$GLOBALS['ltcuser']['mail'],'mapper');
+            ?>             
+             <button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
+             </div>
+            </div>
+        </div>
+      </div>
+    <?php
+    }
+    
+    
+    function setOrderItStatusForm(){
+        $loader = new Loader();
+        $allOrderIt = $loader->load('ORDERIT_NUMBER',allTables::$ASSET_REQUESTS,null,true,'desc');
+        
+        ?>
+        <form id='setOrderItStatusForm'  class="form-horizontal"
+        	onsubmit="return false;">
+
+		<div class="panel panel-primary">
+		<div class="panel-heading">
+			<h3 class="panel-title">Set Order IT Status</h3>
+		</div>
+
+		<div class="panel-body">
+        	<div class='form-group required'>
+        		<div class='col-sm-5'>
+                <select class='form-control select select2 '
+                			  id='orderit'
+                              name='orderit'
+                              required
+                      >
+                    <option value=''></option>
+                    <?php
+                    foreach ($allOrderIt as $orderIt){                            
+                            ?><option value='<?=trim($orderIt);?>'><?=$orderIt?></option><?php
+                        };
+                        ?>
+				</select>
+            	</div>
+         		<div class='col-sm-7'>
+         		</div>  
+        	</div>
+        	
+        	<div class='form-group required'>
+        	<div class='col-sm-12'>
+        		<table class='table table-striped table-bordered ' cellspacing='0' width='90%' id='requestsWithStatus'>
+        		<thead><tr><th>Ref</th><th>Email</th><th>Asset</th><th>OrderIT<br/>Status</th><th>Action</th></tr></thead>
+        		<tbody>
+        		</tbody>
+        		</table>
+        	</div>
+        </div>
+        </div>
+        <div class='panel-footer'>        
+        </div>
+        </div>
+        </form>
+    	<?php 
+    }  
+    
+    
+    
+    
+    
+    
+    
     function getTracker(Spreadsheet $spreadsheet){
         $loader = new Loader();
         $allStatus = $loader->load('ORDERIT_STATUS',allTables::$ASSET_REQUESTS);
@@ -739,6 +825,68 @@ class assetRequestsTable extends DbTable{
         
         return true;
     }
+    
+    function getAssetRequestsForOrderIt($orderIt){
+        $sql = " SELECT REQUEST_REFERENCE as REFERENCE, P.EMAIL_ADDRESS as EMAIL, AR.ASSET_TITLE as ASSET, AR.ORDERIT_STATUS, '' as ACTION ";
+        $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName . " as AR ";
+        $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
+        $sql .= " ON AR.CNUM = P.CNUM ";      
+        $sql .= " WHERE ORDERIT_NUMBER='" . db2_escape_string($orderIt) . "' ";
+        
+        $rs = db2_exec($_SESSION['conn'], $sql);
+        
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+        
+        $data = array();
+        while(($row=db2_fetch_assoc($rs))==true){
+            $status = trim($row['ORDERIT_STATUS']);
+            switch ($status) {
+                case assetRequestRecord::$STATUS_ORDERIT_APPROVED:
+                case assetRequestRecord::$STATUS_ORDERIT_RAISED:    
+                    $row['ACTION']  = "<input name=\"status[". $row['REFERENCE'] . "]\" type='hidden' value='rejected' >";
+                    $row['ACTION']  .= "<input data-ref='" . trim($row['REFERENCE']) . "' data-toggle='toggle' data-on='Set to Approved' data-off='Set to Rejected' ";
+                    $row['ACTION'] .= " data-onstyle='success' data-offstyle='danger'  type='checkbox' name=\"status[". $row['REFERENCE'] . "]\" checked class='statusToggle'  />";                  
+                    break;
+                case assetRequestRecord::$STATUS_ORDERIT_REJECTED:
+                    $row['ACTION']  = "<input name=\"status[". $row['REFERENCE'] . "]\" type='hidden' value='rejected' >";
+                    $row['ACTION'] .= "<input data-ref='" . trim($row['REFERENCE']) . "' data-toggle='toggle' data-on='Set to Approved' data-off='Set to Rejected' ";
+                    $row['ACTION'] .= " data-onstyle='success' data-offstyle='danger'  type='checkbox' name=\"status[". $row['REFERENCE'] . "]\" class='statusToggle'  />";
+                    break;
+                default:
+                    $row['ACTION']='';
+                break;
+            }
+           
+            $data[] = $row;
+        }
+        
+        return $data;
+    }
+    
+    
+    
+    function setRequestsOrderItStatus($reference, $orderItStatus){
+        $sql  = " UPDATE ";
+        $sql .= $_SESSION['Db2Schema'] . "." . $this->tableName ;
+        $sql .= " SET ORDERIT_STATUS='" . db2_escape_string($orderItStatus) . "' ";
+        $sql .= " WHERE REQUEST_REFERENCE ='" . db2_escape_string($reference) . "' " ;
+        
+        
+        echo $sql;
+        
+        $rs = db2_exec($_SESSION['conn'], $sql);
+        
+        if(!$rs){
+            DbTable::displayErrorMessage($rs,__CLASS__, __METHOD__, $sql);
+            return false;
+        }
+        return true;
+    }
+    
+    
     
     
     static function setStatus($reference, $status, $comment=null){
