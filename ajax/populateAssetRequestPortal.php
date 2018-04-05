@@ -8,6 +8,9 @@ use vbac\assetRequestRecord;
 set_time_limit(0);
 ob_start();
 
+
+$GLOBALS['ltcuser']['mail'] = $_SESSION['ssoEmail'];
+
 $loader = new Loader();
 // $_SESSION['isFm']   = !empty($isFm)   ? true : false;
 // $_SESSION['isCdi']  = !empty($isCdi)  ? true : false;
