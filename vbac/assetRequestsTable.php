@@ -17,7 +17,7 @@ class assetRequestsTable extends DbTable{
     
     private $preparedUpdateUidsStmt;
     
-    private static $portalHeaderCells = array('REFERENCE','CT_ID','PERSON','ASSET','STATUS vBAC(Order It)','JUSTIFICATION','REQUESTOR','APPROVER',
+    private static $portalHeaderCells = array('REFERENCE','CT_ID','PERSON','ASSET','STATUS','JUSTIFICATION','REQUESTOR','APPROVER',
         'LOCATION','PRIMARY_UID','SECONDARY_UID','DATE_ISSUED_TO_IBM','DATE_ISSUED_TO_USER','DATE_RETURNED',
         'ORDERIT_VARB_REF','ORDERIT_NUMBER','ORDERIT_STATUS','ORDERIT_TYPE', 'COMMENT');
     
