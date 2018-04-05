@@ -15,6 +15,7 @@ use vbac\personTable;
 <button id='reportShowExportable'   class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Show Exportable Requests</button>
 <button id='exportForOrderIt' 		class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Export for Order IT</button>
 <button id='mapVarbToOrderIt' 		class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Map vARB to Order IT</button>
+<button id='setOrderItStatus' 		class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Set Order IT Status</button>
 <button id='reportShowUid' 		    class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi accessUser'>Show UID</button>
 &nbsp;
 <button id='reportReload'  		class='btn btn-warning btn-sm '>Reload Data</button>
@@ -33,6 +34,7 @@ $assetTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
 $assetTable->exportResultsModal();
 $assetTable->editUidModal();
 $assetTable->mapVarbToOrderItModal();
+$assetTable->setOitStatusModal();
 $assetTable->approveRejectModal();
 
 $isFm   = $_SESSION['isFm']   ? ".not('.accessFm')"   : null;
@@ -58,6 +60,8 @@ $(document).ready(function(){
  	AssetPortal.listenForExportButton();
  	AssetPortal.listenForMapVarbButton();
  	AssetPortal.listenForMapVarbModalShown();
+ 	AssetPortal.listenForSetOitStatusButton();
+ 	AssetPortal.listenForSetOitStatusModalShown();
 // 	AssetPortal.listenForSelectedVarbForMapping();
  	AssetPortal.listenForReportReset();
  	AssetPortal.listenForReportReload();
@@ -67,6 +71,7 @@ $(document).ready(function(){
  	AssetPortal.listenForEditUid();
  	AssetPortal.listenForSaveEditUid();
  	AssetPortal.listenForSaveMapping();
+ 	AssetPortal.listenForSaveOrderItStatus();
  	AssetPortal.listenForAssetRequestApprove();
  	AssetPortal.listenForAssetRequestReject();
  	AssetPortal.listenForAssetRequestApproveRejectToggle();
