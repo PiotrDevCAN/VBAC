@@ -17,7 +17,7 @@ class assetRequestsTable extends DbTable{
     
     private $preparedUpdateUidsStmt;
     
-    private static $portalHeaderCells = array('REFERENCE','CT_ID','PERSON','ASSET','VBAC STATUS','JUSTIFICATION','REQUESTOR','APPROVER',
+    private static $portalHeaderCells = array('REFERENCE','CT_ID','PERSON','ASSET','STATUS vBAC(Order It)','JUSTIFICATION','REQUESTOR','APPROVER',
         'LOCATION','PRIMARY_UID','SECONDARY_UID','DATE_ISSUED_TO_IBM','DATE_ISSUED_TO_USER','DATE_RETURNED',
         'ORDERIT_VARB_REF','ORDERIT_NUMBER','ORDERIT_STATUS','ORDERIT_TYPE', 'COMMENT');
     
@@ -81,7 +81,7 @@ class assetRequestsTable extends DbTable{
             
             
             $status = trim($row['STATUS']);
-            $statusWithVarb = trim($row['ORDERIT_VARB_REF']) != null ? $status . " (" . trim($row['ORDERIT_VARB_REF']) . ") " : $status;
+            $statusWithOitStatus = trim($row['ORDERIT_STATUS']) != null ? $status . " (" . trim($row['ORDERIT_STATUS']) . ") " : $status;
             
             $approveButton  = "<button type='button' class='btn btn-default btn-xs btnAssetRequestApprove btn-success' aria-label='Left Align' ";
             $approveButton .= "data-reference='" .trim($reference) . "' ";
@@ -130,7 +130,7 @@ class assetRequestsTable extends DbTable{
           
             $button = $withButtons ? $button : '';
      
-            $row['STATUS'] = $allowedtoApproveReject  ? $button . $statusWithVarb : $statusWithVarb;
+            $row['STATUS'] = $allowedtoApproveReject  ? $button . $statusWithOitStatus : $statusWithOitStatus;
             
             $row['PERSON'] = $row['NOTES_ID'];
             if($withButtons){
