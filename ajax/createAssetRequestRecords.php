@@ -18,9 +18,11 @@ $requested = $now->format('Y-m-d h:i:s');
 
 $approvingMgrEmail = personTable::getEmailFromCnum(trim($_POST['approvingManager']));
 
-$autoApproved = strtoupper(trim($_POST['requestor'])) == strtoupper(trim($approvingMgrEmail));
+$autoApproved = strtoupper(trim($_POST['requestor'])) == strtoupper(trim($approvingMgrEmail)) || isset($_POST['REQUEST_RETURN']);
 //$status = $autoApproved ? assetRequestRecord::$STATUS_APPROVED : assetRequestRecord::$STATUS_CREATED;
 $approved = $autoApproved ? $requested : null;
+
+$requestReturn = isset($_POST['REQUEST_RETURN']) ? 'Yes' : 'No';
 
 
 
@@ -30,6 +32,20 @@ $approved = $autoApproved ? $requested : null;
 
 
 switch (true) {
+    case isset($_POST['REQUEST_RETURN']) && !empty($_POST['ORDERIT_NUMBER']) :
+        // Raising a Return request that has already been raised in ORDER IT.
+        $approvingMgrEmail = $_SESSION['ssoEmail'];
+        $orderItStatus = assetRequestRecord::$STATUS_ORDERIT_RAISED;
+        $status = assetRequestRecord::$STATUS_RAISED_ORDERIT;
+        $userCreated = assetRequestRecord::$CREATED_USER;
+        break;
+    case isset($_POST['REQUEST_RETURN']) && empty($_POST['ORDERIT_NUMBER']) :
+        // Raising a Return request that has NOT already been raised in ORDER IT.
+        $approvingMgrEmail = $_SESSION['ssoEmail'];
+        $orderItStatus = assetRequestRecord::$STATUS_ORDERIT_YET;
+        $status = assetRequestRecord::$STATUS_APPROVED;
+        $userCreated = assetRequestRecord::$CREATED_PMO;
+        break;
     case $autoApproved && !empty($_POST['ORDERIT_NUMBER']) :
         // This is a manager, entering details of a request that has already been raised in ORDER IT.
         $orderItStatus = assetRequestRecord::$STATUS_ORDERIT_RAISED;
@@ -91,6 +107,7 @@ foreach ($_POST as $key => $value){
             ,'ORDERIT_NUMBER'=>$_POST['ORDERIT_NUMBER']
             ,'ORDERIT_STATUS'=>$orderItStatus
             ,'USER_CREATED' => $userCreated
+            ,'REQUEST_RETURN'=> $requestReturn
             );
 
         

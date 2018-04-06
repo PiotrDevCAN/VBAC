@@ -52,6 +52,7 @@ class assetRequestsTable extends DbTable{
         $sql .= " ,RAL.ASSET_PRIMARY_UID_TITLE ";
         $sql .= " ,RAL.ASSET_SECONDARY_UID_TITLE ";
         $sql .= " , COMMENT ";
+        $sql .= " , REQUEST_RETURN ";
         $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
         $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql .= " ON AR.CNUM = P.CNUM ";      
@@ -71,14 +72,10 @@ class assetRequestsTable extends DbTable{
         while(($preTrimmed=db2_fetch_assoc($rs))==true){
             
             $row = array_map('trim', $preTrimmed);
-                          
-            
+           
             $reference = $row['REFERENCE'];
-            
             $row['REFERENCE'] = trim($row['ORDERIT_NUMBER']) . ":" . $reference;
             $row['REFERENCE'] = empty($row['ORDERIT_VARB_REF']) ? array('display'=>$row['REFERENCE'],'reference'=>$reference) : array('display'=>$row['REFERENCE'] . "<br/><small>" . $row['ORDERIT_VARB_REF'] . "</small>",'reference'=>$reference);
-            
-            
             
             $status = trim($row['STATUS']);
             $statusWithOitStatus = trim($row['ORDERIT_STATUS']) != null ? $status . " (" . trim($row['ORDERIT_STATUS']) . ") " : $status;
@@ -164,13 +161,29 @@ class assetRequestsTable extends DbTable{
             $editUidButton .= " </button> ";
             
             $editUidButton = $withButtons ? $editUidButton : '';
-            
-            
+
             $primaryUid = empty($row['PRIMARY_UID']) ? "<i>unknown</i>" : $row['PRIMARY_UID'];
             
             $row['PRIMARY_UID'] = !empty($row['ASSET_PRIMARY_UID_TITLE']) ? $editUidButton . $primaryUid :  "<i>Not Applicable</i>";
             $row['SECONDARY_UID'] = !empty($row['ASSET_SECONDARY_UID_TITLE']) ? $row['SECONDARY_UID'] :  "<i>Not Applicable</i>";
               
+            $asset = $row['ASSET'];
+
+            $returnedButton  = "<button type='button' class='btn btn-default btn-xs btnAssetReturned btn-success' aria-label='Left Align' ";
+            $returnedButton .= "data-reference='" .trim($reference) . "' ";
+            $returnedButton .= "data-requestee='" .trim($row['PERSON']) . "' ";
+            $returnedButton .= "data-asset='"     .trim($row['ASSET']) . "' ";
+            $returnedButton .= "data-primarytitle='".trim($row['ASSET_PRIMARY_UID_TITLE']) . "' ";
+            $returnedButton .= "data-secondarytitle='".trim($row['ASSET_SECONDARY_UID_TITLE']) . "' ";          
+            $returnedButton .= "data-toggle='tooltip' data-placement='top' title='Report asset returned/removed'";
+            $returnedButton .= " > ";
+            $returnedButton .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
+            $returnedButton .= " </button> ";       
+            
+            $returnedButton = $status!= assetRequestRecord::$STATUS_RETURNED ? $returnedButton : null;
+            
+            $row['ASSET'] = $row['REQUEST_RETURN']=='Yes' ? $returnedButton . "&nbsp;<i>" .  $asset . "(Return/Remove)</i>" : $asset;
+             
             $data[] = $row;
         }
 
@@ -389,7 +402,101 @@ class assetRequestsTable extends DbTable{
     <?php
     }
     
+    function confirmReturnedModal(){
+        $now = new \DateTime();
+        $nowFormatted = $now->format('d M Y');
+        $nowFormattedDb2 = $now->format('Y-m-d');
+       ?>
+       <!-- Modal -->
+    	<div id="confirmReturnedModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+          <div class="modal-header">
+             <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Confirm Returned</h4>
+            </div>
+             <div class="modal-body" >
+             	<form class="form-horizontal" role="form" id='confirmReturnedForm' onSubmit='return false;' >
+             	
+				<div class="form-group">
+                    <label class="col-sm-2 control-label"
+                          for="useridRet" >User</label>
+                    <div class="col-sm-10">
+          				<input class='form-control' id='useridRet' name='userid'
+                			value=''
+                			type='text' disabled
+                			>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label"
+                          for="assetRet" >Asset</label>
+                    <div class="col-sm-10">
+          				<input class='form-control' id='assetRet' name='asset'
+                			value=''
+                			type='text' disabled
+                			>
+                    </div>
+                  </div>
+   
+                  <div class="form-group" id='primaryUidFormGroupRet' >               
+                  <label class="col-sm-2 control-label" id='primaryLabelRet'
+                          for="primaryUidRet" >Primary UID</label>
+                    <div class="col-sm-10">
+          				<input class='form-control' id='primaryUidRet' name='primaryUid'
+                			value=''
+                			type='text'
+                			placeholder='Primary UID'
+                			>
+                    </div>
+                  </div>
+                  
+                 <div class="form-group" id='secondaryUidFormGroupRet' style='display:none' >
+                 <label class="col-sm-2 control-label" id='secondaryLabelRet' 
+                          for="secondaryUidRet" >Secondary UID</label>
+                    <div class="col-sm-10">
+          				<input class='form-control' id='secondaryUidRet' name='secondaryUid'
+                			value=''
+                			type='text'
+                			placeholder='Secondary UID'
+                			>
+                    </div>
+                  </div>
+                 <div class="form-group" >
+                 <label class="col-sm-2 control-label" id='dateReturnedLabel' 
+                          for="date_returned" >Date Returned</label>
+                    <div class="col-sm-10">
+          				<input class="form-control" id="date_returned" value="<?=$nowFormatted?>" type="text" placeholder='Date Asset Returned' data-toggle='tooltip' title='Date Returned' required>
+          				<input class="form-control" id="date_returned_db2" name="DATE_RETURNED" value="<?=$nowFormattedDb2?>" type="hidden" required >
     
+                    </div>
+                  </div>
+                  
+                  
+                  
+                  <input id='referenceRet' name='reference' value='' type='hidden' />             	
+             	</form>
+             </div>
+             <div class='modal-footer'>
+             <?php
+                $form = new FormClass();
+                $allButtons = null;
+                $submitButton = $form->formButton('submit','Submit','confirmAssetReturned','enabled','Confirm','btn btn-success');
+                $allButtons[] = $submitButton;
+                $form->formBlueButtons($allButtons);
+                $form->formHiddenInput('user',$GLOBALS['ltcuser']['mail'],'user');
+            ?>  
+             
+             
+             <button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
+             </div>
+             </form>
+            </div>
+        </div>
+      </div>
+    <?php
+    }
+   
     
     function exportResultsModal(){
         ?>
@@ -889,7 +996,7 @@ class assetRequestsTable extends DbTable{
     
     
     
-    static function setStatus($reference, $status, $comment=null){
+    static function setStatus($reference, $status, $comment=null,$dateReturned=null){
        
         if(!empty($comment)){        
             $now = new \DateTime();
@@ -914,6 +1021,7 @@ class assetRequestsTable extends DbTable{
         $sql .= " SET STATUS='" . db2_escape_string($status) . "' ";
         $sql .= !empty($newComment) ? ", COMMENT='" . db2_escape_string(substr($newComment,0,500)) . "' " : null;
         $sql .= trim($status)==assetRequestRecord::$STATUS_APPROVED ? ", APPROVER_EMAIL='" . $_SESSION['ssoEmail'] . "' , APPROVED = current timestamp " : null;
+        $sql .= trim($status)==assetRequestRecord::$STATUS_RETURNED ? ", DATE_RETURNED = DATE('" . db2_escape_string($dateReturned). "') " : null;
         $sql .= " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' ";
         
         $rs = db2_exec($_SESSION['conn'], $sql);

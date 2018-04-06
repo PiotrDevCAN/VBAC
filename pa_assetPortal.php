@@ -36,6 +36,7 @@ $assetTable->editUidModal();
 $assetTable->mapVarbToOrderItModal();
 $assetTable->setOitStatusModal();
 $assetTable->approveRejectModal();
+$assetTable->confirmReturnedModal();
 
 $isFm   = $_SESSION['isFm']   ? ".not('.accessFm')"   : null;
 $isCdi  = $_SESSION['isCdi']  ? ".not('.accessCdi')"  : null;
@@ -51,18 +52,28 @@ $myCnum = personTable::myCnum();
 <input type='hidden' id='myCnum' value='<?=$myCnum?>' />
 
 <script>
+
+var dateReturned;
+var returnedPicker;
+
+
 $(document).ready(function(){
 
 	$('.accessBasedBtn')<?=$isFm?><?=$isPmo?><?=$isCdi?><?=$isUser?>.remove();
 	
 	var AssetPortal = new assetPortal();
 	AssetPortal.initialiseAssetRequestPortal();
+
  	AssetPortal.listenForExportButton();
  	AssetPortal.listenForMapVarbButton();
  	AssetPortal.listenForMapVarbModalShown();
  	AssetPortal.listenForSetOitStatusButton();
  	AssetPortal.listenForSetOitStatusModalShown();
-// 	AssetPortal.listenForSelectedVarbForMapping();
+
+ 	AssetPortal.listenForAssetReturned();
+	AssetPortal.listenForConfirmedAssetReturnedModalShown();
+ 	AssetPortal.listenForConfirmedAssetReturned();
+ 	
  	AssetPortal.listenForReportReset();
  	AssetPortal.listenForReportReload();
  	AssetPortal.listenForReportShowAll();

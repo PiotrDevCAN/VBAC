@@ -30,6 +30,7 @@ class assetRequestRecord extends DbRecord {
     protected $ORDERIT_STATUS;
     protected $USER_CREATED;
     protected $COMMENT;
+    protected $REQUEST_RETURN;
 
     public static $STATUS_CREATED           = 'Created in vBAC';
     public static $STATUS_APPROVED          = 'Approved for Order IT';
@@ -85,7 +86,7 @@ class assetRequestRecord extends DbRecord {
 		</div>
 
 		<div class="panel-body">
-        	<div class='form-group required'>
+        	<div class='form-group required'>      	
         		<div class='col-sm-4'>
                 <select class='form-control select select2 '
                 			  id='requestees'
@@ -104,6 +105,12 @@ class assetRequestRecord extends DbRecord {
                         ?>
             	</select>
             	</div>
+            	<div class='col-sm-3'>
+        		<input name='REQUEST_RETURN' class='toggle' type='checkbox' data-toggle='toggle' data-on='Return/Remove existing' data-off='Request New' data-onstyle='danger' data-offstyle='success' data-width='250' >
+        		</div> 
+            	
+            	
+            	
         	</div>
 		<div id='requestDetailsDiv'>
         	<div class="panel panel-info">
