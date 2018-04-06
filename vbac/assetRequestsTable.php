@@ -76,7 +76,7 @@ class assetRequestsTable extends DbTable{
             $reference = $row['REFERENCE'];
             
             $row['REFERENCE'] = trim($row['ORDERIT_NUMBER']) . ":" . $reference;
-            $row['REFERENCE'] = empty($row['ORDERIT_VARB_REF']) ? $row['REFERENCE'] : $row['REFERENCE'] . "<br/><small>" . $row['ORDERIT_VARB_REF'] . "</small>";
+            $row['REFERENCE'] = empty($row['ORDERIT_VARB_REF']) ? array('display'=>$row['REFERENCE'],'reference'=>$reference) : array('display'=>$row['REFERENCE'] . "<br/><small>" . $row['ORDERIT_VARB_REF'] . "</small>",'reference'=>$reference);
             
             
             
@@ -145,7 +145,7 @@ class assetRequestsTable extends DbTable{
                 unset($row['APPROVED_DATE']);
             }
             
-            $row['REQUESTOR'] = $row['REQUESTOR_EMAIL'] . "<br/><small>" . $row['REQUESTED_DATE'] . "</small>";
+            $row['REQUESTOR'] = array('display'=> $row['REQUESTOR_EMAIL'] . "<br/><small>" . $row['REQUESTED_DATE'] . "</small>",'timestamp'=>$row['REQUESTED_DATE']);
             if($withButtons){
                 unset($row['REQUESTOR_EMAIL']);
                 unset($row['REQUESTOR_DATE']);

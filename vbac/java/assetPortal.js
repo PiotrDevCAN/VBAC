@@ -42,13 +42,24 @@ function assetPortal() {
               data: {showAll:showAll}
           }	,
           columns: [
-                      { "data": "REFERENCE" , "defaultContent": "" },
+                      { "data": "REFERENCE" , "defaultContent": "",
+                    	  render: {
+                  	        _: 'display',
+                  	        sort: 'reference'
+                  	    }                     
+                      
+                      },
                       { "data": "CT_ID" ,"defaultContent": "<i>no ctid</i>" },
                       { "data": "PERSON" ,"defaultContent": "" },
                       { "data": "ASSET","defaultContent": "<i>unknown</i>"},
                       { "data": "STATUS", "defaultContent": "" },
                       { "data": "JUSTIFICATION", "defaultContent": "" },                   
-                      { "data": "REQUESTOR", "defaultContent": "" },
+                      { "data": "REQUESTOR", "defaultContent": "",
+                    	  render: {
+                    	        _: 'display',
+                    	        sort: 'timestamp'
+                    	    }
+                      },
                       { "data": "APPROVER", "defaultContent": "" },                                           
                       { "data": "LOCATION", "defaultContent": "<i>unknown</i>" },
                       { "data": "PRIMARY_UID", "defaultContent": "<i>unknown</i>" },
