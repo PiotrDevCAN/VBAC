@@ -71,10 +71,11 @@ function assetPortal() {
                       { "data": "ORDERIT_NUMBER", "defaultContent": "" },
                       { "data": "ORDERIT_STATUS" , "defaultContent": ""},
                       { "data": "ORDERIT_TYPE" , "defaultContent": ""},
-                      { "data": "COMMENT" , "defaultContent": ""}
+                      { "data": "COMMENT" , "defaultContent": ""},
+                      { "data": "USER_CREATED" , "defaultContent": ""}
                   ],
           columnDefs: [
-                         { visible: false, targets: [8,9,10,11,12,13,14,15,16,17,18] }
+                         { visible: false, targets: [8,9,10,11,12,13,14,15,16,17,18,19] }
                   ] ,
           order: [[ 18, "asc" ]],
           autoWidth: true,

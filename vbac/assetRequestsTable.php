@@ -19,7 +19,7 @@ class assetRequestsTable extends DbTable{
     
     private static $portalHeaderCells = array('REFERENCE','CT_ID','PERSON','ASSET','STATUS','JUSTIFICATION','REQUESTOR','APPROVER',
         'LOCATION','PRIMARY_UID','SECONDARY_UID','DATE_ISSUED_TO_IBM','DATE_ISSUED_TO_USER','DATE_RETURNED',
-        'ORDERIT_VARB_REF','ORDERIT_NUMBER','ORDERIT_STATUS','ORDERIT_TYPE', 'COMMENT');
+        'ORDERIT_VARB_REF','ORDERIT_NUMBER','ORDERIT_STATUS','ORDERIT_TYPE', 'COMMENT','USER_CREATED');
     
 
 //     function saveRecord(assetRequestRecord $record, $populatedColumns, $nullColumns, $commit){
@@ -53,6 +53,7 @@ class assetRequestsTable extends DbTable{
         $sql .= " ,RAL.ASSET_SECONDARY_UID_TITLE ";
         $sql .= " , COMMENT ";
         $sql .= " , REQUEST_RETURN ";
+        $sql .= " , USER_CREATED ";
         $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
         $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql .= " ON AR.CNUM = P.CNUM ";      
@@ -78,6 +79,7 @@ class assetRequestsTable extends DbTable{
             $row['REFERENCE'] = empty($row['ORDERIT_VARB_REF']) ? array('display'=>$row['REFERENCE'],'reference'=>$reference) : array('display'=>$row['REFERENCE'] . "<br/><small>" . $row['ORDERIT_VARB_REF'] . "</small>",'reference'=>$reference);
             
             $status = trim($row['STATUS']);
+            $orderItStatus = trim($row['ORDERIT_STATUS']);
             $statusWithOitStatus = trim($row['ORDERIT_STATUS']) != null ? $status . " (" . trim($row['ORDERIT_STATUS']) . ") " : $status;
             
             $approveButton  = "<button type='button' class='btn btn-default btn-xs btnAssetRequestApprove btn-success' aria-label='Left Align' ";
@@ -180,9 +182,24 @@ class assetRequestsTable extends DbTable{
             $returnedButton .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
             $returnedButton .= " </button> ";       
             
-            $returnedButton = $status!= assetRequestRecord::$STATUS_RETURNED ? $returnedButton : null;
+            switch (true) {
+                case $status== assetRequestRecord::$STATUS_PROVISIONED:
+                case $orderItStatus== assetRequestRecord::$STATUS_ORDERIT_APPROVED:
+                    $returnable = true;
+                    break;
+                case $row['USER_CREATED'] == assetRequestRecord::$CREATED_USER && $status==assetRequestRecord::$STATUS_RAISED_ORDERIT && $orderItStatus != assetRequestRecord::$STATUS_ORDERIT_REJECTED:
+                    $returnable = true;
+                    break;                  
+                default:
+                    $returnable = false;
+                break;
+            } 
             
-            $row['ASSET'] = $row['REQUEST_RETURN']=='Yes' ? $returnedButton . "&nbsp;<i>" .  $asset . "(Return/Remove)</i>" : $asset;
+            
+            $returnedButton = $returnable && $status!= assetRequestRecord::$STATUS_RETURNED ? $returnedButton : null;
+            
+            
+            $row['ASSET'] = $row['REQUEST_RETURN']!='Yes' ? $returnedButton . "&nbsp;<i>" .  $asset . "(Return/Remove)</i>" : $asset;
              
             $data[] = $row;
         }
