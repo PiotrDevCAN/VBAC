@@ -33,10 +33,7 @@ $(document).ready(function(){
 
 	var bluepages = new Bloodhound({
 	      datumTokenizer: Bloodhound.tokenizers.whitespace,
-		  queryTokenizer:  function (d){
-		      console.log(d);
-			  return  Bloodhound.tokenizers.whitespace(d);
-	      }, 
+		  queryTokenizer:  Bloodhound.tokenizers.whitespace, 
 	      identify: function(obj) {
 			  console.log(obj)
 		      return obj;
@@ -44,19 +41,20 @@ $(document).ready(function(){
 		  remote: {
 		    url: 'http://w3-services1.w3-969.ibm.com/myw3/unified-profile/v1/search/user?query=%QUERY&searchConfig=optimized_search',
 		    wildcard: '%QUERY',
-		    filter: function(data) {
-		        // assume data is an array of strings e.g. ['one', 'two', 'three']
-		        console.log(data.results);
-		        var dataObject = $.map(data.results, function(obj) { return { value: obj.nameFull, role: obj.role, preferredIdentity: obj.preferredIdentity, cnum:obj.id, notesEmail:obj.notesEmail, mail:obj.mail[0] }; });
-		        console.log(dataObject);		        
-		        return dataObject;
+		    filter: function(data) {  
+			        
+		        var dataObject = $.map(data.results, function(obj) {
+					console.log(obj.mail);			        
+					 var mail = typeof(obj.mail)=='undefined' ? 'unknown' : obj.mail[0];
+			         return { value: obj.nameFull, role: obj.role, preferredIdentity: obj.preferredIdentity, cnum:obj.id, notesEmail:obj.notesEmail, mail:mail }; });
+		        console.log(dataObject);  
+			    return dataObject;
 		      },
 		  }
 		});
 
 	$('#custom-templates .typeahead').typeahead(null, {
 		  limit : 3,
-		  minlength:3,
 		  name: 'bluepages',
 		  display: 'value',
 		  displayKey: 'value',
@@ -71,18 +69,13 @@ $(document).ready(function(){
 		  }
 		});
 
-	$('.typeahead').bind('typeahead:select', function(ev, suggestion) {
-		 $('#notesId').val(suggestion.notesEmail);
-		 $('#serial').val(suggestion.cnum);
-		 $('#role').val(suggestion.role);
-		 $('#email').val(suggestion.mail);
-
-		 
-
-
-		 
-		  console.log(suggestion);
-		});
+ 	$('.typeahead').bind('typeahead:select', function(ev, suggestion) {
+ 		 $('#notesId').val(suggestion.notesEmail);
+ 		 $('#serial').val(suggestion.cnum);
+ 		 $('#role').val(suggestion.role);
+ 		 $('#email').val(suggestion.mail);
+		console.log(suggestion.mail);		
+ 		});
 	
 	
 });  
