@@ -30,7 +30,7 @@ $(document).ready(function(){
 		        // assume data is an array of strings e.g. ['one', 'two', 'three']
 		        console.log(data);
 		        console.log(data.results);
-		        return $.map(data.results, function(obj) { return { value: obj.callupName }; });
+		        return $.map(data.results, function(obj) { return { value: obj.callupName, role: obj.role }; });
 		      },
 		  }
 		});
@@ -45,7 +45,7 @@ $(document).ready(function(){
 		        'unable to find any Best Picture winners that match the current query',
 		      '</div>'
 		    ].join('\n'),
-		    suggestion: Handlebars.compile('<div><strong>{{value}}</strong></div>')
+		    suggestion: Handlebars.compile('<div><strong>{{value}}</strong><br/>{{role}}</div>')
 		  }
 		});
 
