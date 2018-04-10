@@ -34,7 +34,7 @@ class assetRequestRecord extends DbRecord {
 
     public static $STATUS_CREATED           = 'Created in vBAC';
     public static $STATUS_APPROVED          = 'Approved for Order IT';
-    public static $STATUS_EXPORTED          = 'Exported';
+    public static $STATUS_EXPORTED          = 'Exported for Order IT';
     public static $STATUS_RAISED_ORDERIT    = 'Raised in Order IT';
     public static $STATUS_PROVISIONED       = 'Provisioned by Order IT';
     public static $STATUS_RETURNED          = 'Returned to LBG';
