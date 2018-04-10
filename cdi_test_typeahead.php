@@ -5,13 +5,31 @@
 ?>
 
 <div class='container'>
-<div id="custom-templates">
+<div id="custom-templates" class='col-sm-6'>
   <input class="typeahead" type="text" placeholder="Find IBMer">
 </div>
+<div id="custom-templates" class='col-sm-6'>
+<div class='form-group'>
+  <input id='notesId' type="text" placeholder="Notes Id">
+</div>
+<div class='form-group'>
+  <input id='serial' type="text" placeholder="Serial">
+</div>
+<div class='form-group'>  
+  <input id='role' type="text" placeholder="Role">
+  </div>
+<div class='form-group'>
+  <input id='email' type="text" placeholder="Email">
+  </div>
+</div>
+
+
 </div>
 
 <script type="text/javascript">
 $(document).ready(function(){
+
+	var selectedUser;
 
 	var bluepages = new Bloodhound({
 	      datumTokenizer: Bloodhound.tokenizers.whitespace,
@@ -28,29 +46,44 @@ $(document).ready(function(){
 		    wildcard: '%QUERY',
 		    filter: function(data) {
 		        // assume data is an array of strings e.g. ['one', 'two', 'three']
-		        console.log(data);
 		        console.log(data.results);
-		        return $.map(data.results, function(obj) { return { value: obj.nameFull, role: obj.role, preferredIdentity: obj.preferredIdentity, cnum:obj.id}; });
+		        var dataObject = $.map(data.results, function(obj) { return { value: obj.nameFull, role: obj.role, preferredIdentity: obj.preferredIdentity, cnum:obj.id, notesEmail:obj.notesEmail, mail:obj.mail[0] }; });
+		        console.log(dataObject);		        
+		        return dataObject;
 		      },
 		  }
 		});
 
 	$('#custom-templates .typeahead').typeahead(null, {
+		  limit : 3,
+		  minlength:3,
 		  name: 'bluepages',
 		  display: 'value',
+		  displayKey: 'value',
 		  source: bluepages,		 
 		  templates: {
 		    empty: [
 		      '<div class="empty-message">',
 		        'unable to find any IBMers that match the current query',
 		      '</div>'
-		    ].join('\n'),
-		  suggestion: Handlebars.compile('<div data-cnum="{{cnum}}"> <img src="http://w3-services1.w3-969.ibm.com/myw3/unified-profile-photo/v1/image/{{cnum}}?type=bp&def=blue&s=50" alt="Profile" height="42" width="42"> <strong>{{value}}</strong><br/><small>{{preferredIdentity}}<br/>{{role}}</small></div>'),
-		  
+		    	].join('\n'),
+		  	suggestion: Handlebars.compile('<div> <img src="http://w3-services1.w3-969.ibm.com/myw3/unified-profile-photo/v1/image/{{cnum}}?type=bp&def=blue&s=50" alt="Profile" height="42" width="42"> <strong>{{value}}</strong><br/><small>{{preferredIdentity}}<br/>{{role}}</small></div>')
 		  }
 		});
 
+	$('.typeahead').bind('typeahead:select', function(ev, suggestion) {
+		 $('#notesId').val(suggestion.notesEmail);
+		 $('#serial').val(suggestion.cnum);
+		 $('#role').val(suggestion.role);
+		 $('#email').val(suggestion.mail);
 
+		 
+
+
+		 
+		  console.log(suggestion);
+		});
+	
 	
 });  
 </script>
@@ -95,7 +128,7 @@ $(document).ready(function(){
 	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 	margin-top: 12px;
 	padding: 8px 0;
-	width: 422px;
+	width: 322px;
 }
 .tt-suggestion {
 	font-size: 12px;  /* Set suggestion dropdown font size */
