@@ -2,7 +2,6 @@
 namespace vbac;
 
 use itdq\DbTable;
-use itdq\DbRecord;
 use itdq\FormClass;
 use itdq\Loader;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -60,7 +59,7 @@ class assetRequestsTable extends DbTable{
         $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$REQUESTABLE_ASSET_LIST . " as RAL ";
         $sql .= " ON TRIM(RAL.ASSET_TITLE) = TRIM(AR.ASSET_TITLE) ";
         $sql .= " WHERE 1=1 ";
-        $sql .= $predicate;  
+        $sql .=  $predicate;  
         
         $rs = db2_exec($_SESSION['conn'],$sql);
 
@@ -1078,10 +1077,27 @@ class assetRequestsTable extends DbTable{
             echo db2_stmt_error();
             echo db2_stmt_errormsg();
             DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, 'prepared stmt');
-        }        
-        return true;       
-    
+        }  
+        return true;   
     }
+    
+    static function setToProvisionedStatus($reference){
+        $sql  = " UPDATE ";
+        $sql .= $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS;
+        $sql .= " SET STATUS='" . db2_escape_string(assetRequestRecord::$STATUS_PROVISIONED) . "' ";
+        $sql .= " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' ";
+        $sql .= " AND STATUS not in ('" . assetRequestRecord::$STATUS_REJECTED . "','" . assetRequestRecord::$STATUS_RETURNED ."') ";
+        $rs = db2_exec($_SESSION['conn'], $sql);
+        
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__,__METHOD__, $sql);
+            return false;
+        }
+        
+        return true;
+    }
+    
+    
     
     function extractForTracker(){
         

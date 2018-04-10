@@ -33,7 +33,7 @@ switch (true) {
             $myPeopleListed .= db2_escape_string($personCnum) . "','"; 
         }        
         $myPeopleListed .= "'";        
-        $predicate .= " AR.CNUM in ('". db2_escape_string($myCnum) . "'," . $myPeopleListed . ") or lower(Approver_email='" . db2_escape_string($myEmail) . "') ";    
+        $predicate .= " AND AR.CNUM in ('". db2_escape_string($myCnum) . "'," . $myPeopleListed . ") or lower(Approver_email='" . db2_escape_string($myEmail) . "') ";    
         break;
     case $_SESSION['isCdi']:
         echo "is CDI";

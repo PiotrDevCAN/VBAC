@@ -10,6 +10,7 @@ AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_POST,
 
 $assetRequestTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
 $assetRequestTable->updateUids($_POST['reference'], trim($_POST['primaryUid']), trim($_POST['secondaryUid']));
+assetRequestsTable::setToProvisionedStatus($_POST['reference']); 
 
 $requestDetails = $assetRequestTable->getCnumAndAssetForReference($_POST['reference']);
 
