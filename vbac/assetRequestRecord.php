@@ -43,7 +43,7 @@ class assetRequestRecord extends DbRecord {
     public static $STATUS_ORDERIT_YET       = 'Yet to be raised';
     public static $STATUS_ORDERIT_RAISED    = 'Raised in Order IT';
     public static $STATUS_ORDERIT_APPROVED  = 'Approved in Order IT';
-    public static $STATUS_ORDERIT_REJECTED  = 'Rejected by LBG';
+    public static $STATUS_ORDERIT_REJECTED  = 'Rejected in Order IT';
     
     public static $CREATED_USER             = 'Yes';
     public static $CREATED_PMO              = 'No';
