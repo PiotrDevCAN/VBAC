@@ -11,7 +11,7 @@ trait xls{
         $columnCounter = $columnIndex;
         $rowCounter = $rowIndex;
         
-        while (($rawRow=db2_fetch_assoc($resultSet))==true) {
+        while (($rawRow=db2_fetch_assoc($resultSet))==true) {          
             $row = array_map('trim', $rawRow);
             if($headerRow && $withColumnHeadings){
                 foreach ($row as $columnName => $value){

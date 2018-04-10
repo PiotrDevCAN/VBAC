@@ -1,0 +1,179 @@
+article, aside, canvas, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary {
+  display: block;
+}
+/* generic typeahead results styles */
+.typeahead-results {
+  text-align: left;
+  z-index: 30;
+  display: none;
+  width: 500px;
+  position: absolute;
+  -moz-box-shadow: rgba(0, 0, 0, 0.75) 0 2px 6px 0;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.75) 0 2px 6px 0;
+  -o-box-shadow: rgba(0, 0, 0, 0.75) 0 2px 6px 0;
+  box-shadow: rgba(0, 0, 0, 0.75) 0 2px 6px 0;
+  -moz-border-radius: 0 0 3px 3px;
+  -webkit-border-radius: 3px;
+  -o-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -khtml-border-radius: 3px;
+  border-radius: 3px;
+  background-color: white;
+  border: 4px solid #434446;
+  background: #434446;
+}
+.typeahead-inner-container{
+  background: white;
+  border: 1px solid black;
+  -moz-border-radius: 0 0 3px 3px;
+  -webkit-border-radius: 3px;
+  -o-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -khtml-border-radius: 3px;
+  border-radius: 3px;
+}
+.typeahead-main-header{
+  margin: 5px;
+  font-size: 14px;
+  color: white;
+  font-weight: normal;
+}
+.typeahead-results a {
+    text-decoration: none;
+}
+.typeahead-results a img {
+    border: none;
+}
+.typeahead-results ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: #333333;
+}
+.typeahead-results .typeahead-result-header-container {
+  margin: 5px;
+  font-size: 14px;
+}
+.typeahead-result-header, .typeahead-result-header-description{
+  margin: .5em 0 0;
+}
+.typeahead-result-header-description{
+  margin: .25em 0 0;
+  font-size: 12px;
+}
+.typeahead-results ul li.result {
+  overflow: hidden;
+  cursor: pointer;
+  letter-spacing: 0.01em;
+  line-height: 16px;
+}
+.typeahead-results ul li {
+  border-bottom: 1px solid #cdcdcd;
+}
+.typeahead-results ul:last-child .more-results {
+  border-bottom: none;
+}
+.faces-typeahead-results .result {
+  height: 50px;
+  padding: 10px;
+}
+.faces-typeahead-results .more-results {
+  background-image: url(//faces.tap.ibm.com/i/cio-lab-icon-xtra-small.png);
+  background-position: 10px center;
+  background-repeat: no-repeat;
+}
+.typeahead-results ul li.selected {
+  background-color: #eee;
+}
+.faces-typeahead-results .selected img {
+  -moz-box-shadow: rgba(0, 0, 0, 0.5) 1px 1px 3px 0;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.5) 1px 1px 3px 0;
+  -o-box-shadow: rgba(0, 0, 0, 0.5) 1px 1px 3px 0;
+  box-shadow: rgba(0, 0, 0, 0.5) 1px 1px 3px 0;
+}
+.faces-typeahead-results .result img {
+  float: left;
+  margin-right: 10px;
+  max-height: 50px;
+  -moz-box-shadow: rgba(0, 0, 0, 0.3) 1px 1px 3px 0;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.3) 1px 1px 3px 0;
+  -o-box-shadow: rgba(0, 0, 0, 0.3) 1px 1px 3px 0;
+  box-shadow: rgba(0, 0, 0, 0.3) 1px 1px 3px 0;
+}
+.faces-typeahead-results .small-result img {
+    width: 32px;
+}
+.faces-typeahead-results .large-result img {
+    width: 50px;
+}
+.typeahead-results ul li.result > div {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  color: #666;
+  font-size: 11px;
+}
+.typeahead-results ul li.result > div span.name {
+  color: #222;
+  font-size: 13px;
+  font-weight: bold;
+}
+.typeahead-results ul li.result > div span.meta {
+  display: block;
+  text-overflow: inherit;
+  overflow: inherit;
+}
+.typeahead-results ul li.result > div .inner-label {
+  color: #777777;
+  margin-left: 1em;
+}
+.typeahead-results ul li.result span.tel {
+  display: none;
+}
+.typeahead-results .selected 
+/* topsearch styles */
+.topsearch-typeahead-results {
+  /*overflow: hidden; */
+  *zoom: 1;
+}
+.topsearch-typeahead-results .result .icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 4px;
+  float: left;
+}
+.topsearch-typeahead-results .result > a {
+  padding: 5px;
+  display: block;
+}
+.topsearch-typeahead-results .result > a .query {
+  display: block;
+  font-size: 13px;
+}
+.topsearch-typeahead-results .result > a .url {
+  display: block;
+  color: #999999;
+  line-height: 18px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  clear: both;
+  font-size: 11px;
+}
+.topsearch-typeahead-results .result > a:hover {
+  text-decoration: none;
+}
+.more-results {
+    padding: 12px 10px;
+    text-align: right;
+    cursor: pointer;
+    font-size: 12px;
+}
+.more-results.selected a {
+    color: #05386b;
+    text-decoration: underlined;
+}
+.more-results a {
+    color: #00649d;
+}
+

@@ -157,21 +157,21 @@ function clearMessagePlaceHolder() {
 	reportDiv.innerHTML = "";
 }
 
-function applyFacesTypaheadToDynamicContent(divID) {
-	var config = {// set up the facesTypeahead
-		// API Key [REQUIRED]
-		key : 'cetarequest;tim.j.minter@uk.ibm.com',
-		sizeToInput : true,
-		resultsAlign : "left",
-		faces : {
-			// The handler for clicking a person in the drop-down.
-			onclick : function(person) {
-				return person.email;
-			}
-		}
-	};
-	FacesTypeAhead.init([ document.getElementById(divID) ], config);
-}
+//function applyFacesTypaheadToDynamicContent(divID) {
+//	var config = {// set up the facesTypeahead
+//		// API Key [REQUIRED]
+//		key : 'cetarequest;tim.j.minter@uk.ibm.com',
+//		sizeToInput : true,
+//		resultsAlign : "left",
+//		faces : {
+//			// The handler for clicking a person in the drop-down.
+//			onclick : function(person) {
+//				return person.email;
+//			}
+//		}
+//	};
+//	FacesTypeAhead.init([ document.getElementById(divID) ], config);
+//}
 
 
 function setCookie(cname, cvalue, exdays) {
