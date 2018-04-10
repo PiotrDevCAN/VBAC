@@ -30,7 +30,7 @@ $(document).ready(function(){
 		        // assume data is an array of strings e.g. ['one', 'two', 'three']
 		        console.log(data);
 		        console.log(data.results);
-		        return $.map(data.results, function(obj) { return { value: obj.callupName, role: obj.role }; });
+		        return $.map(data.results, function(obj) { return { value: obj.nameFull, role: obj.role, preferredIdentity: obj.preferredIdentity, cnum:obj.id}; });
 		      },
 		  }
 		});
@@ -42,10 +42,11 @@ $(document).ready(function(){
 		  templates: {
 		    empty: [
 		      '<div class="empty-message">',
-		        'unable to find any Best Picture winners that match the current query',
+		        'unable to find any IBMers that match the current query',
 		      '</div>'
 		    ].join('\n'),
-		    suggestion: Handlebars.compile('<div><strong>{{value}}</strong><br/>{{role}}</div>')
+		  suggestion: Handlebars.compile('<div data-cnum="{{cnum}}"> <img src="http://w3-services1.w3-969.ibm.com/myw3/unified-profile-photo/v1/image/{{cnum}}?type=bp&def=blue&s=50" alt="Profile" height="42" width="42"> <strong>{{value}}</strong><br/><small>{{preferredIdentity}}<br/>{{role}}</small></div>'),
+		  
 		  }
 		});
 
@@ -59,9 +60,6 @@ $(document).ready(function(){
   padding: 5px 10px;
  text-align: center;
 }
-
-
-
 
 .bs-example {
 	font-family: sans-serif;
@@ -100,8 +98,9 @@ $(document).ready(function(){
 	width: 422px;
 }
 .tt-suggestion {
-	font-size: 22px;  /* Set suggestion dropdown font size */
-	padding: 3px 20px;
+	font-size: 12px;  /* Set suggestion dropdown font size */
+	padding: 3px 5px;
+	border: 1px solid rgba(0, 0, 0, 0.2);
 }
 .tt-suggestion:hover {
 	cursor: pointer;
