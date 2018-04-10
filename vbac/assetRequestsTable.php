@@ -812,7 +812,7 @@ class assetRequestsTable extends DbTable{
     
     function getTracker(Spreadsheet $spreadsheet){
         $loader = new Loader();
-        $allStatus = $loader->load('ORDERIT_STATUS',allTables::$ASSET_REQUESTS," AR.REQUEST_RETURN = 'No' or AR.REQUEST_RETURN is null ");
+        $allStatus = $loader->load('ORDERIT_STATUS',allTables::$ASSET_REQUESTS," REQUEST_RETURN = 'No' or REQUEST_RETURN is null ");
         array_map('trim',$allStatus);
                 
         $sheet = 1;
