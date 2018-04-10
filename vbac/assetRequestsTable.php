@@ -706,7 +706,7 @@ class assetRequestsTable extends DbTable{
     function getUnmappedVarb(){
         $sql = " SELECT distinct ORDERIT_VARB_REF ";
         $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName;
-        $sql .= " WHERE ORDERIT_VARB_REF is not null and ORDERIT_NUMBER is null and STATUS = 'Exported' ";
+        $sql .= " WHERE ORDERIT_VARB_REF is not null and ORDERIT_NUMBER is null and STATUS = '". assetRequestRecord::$STATUS_EXPORTED . "' ";
         $sql .= " ORDER BY ORDERIT_VARB_REF asc ";
         
         $rs = db2_exec($_SESSION['conn'], $sql);
