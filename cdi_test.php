@@ -1,11 +1,14 @@
 <?php
-
-use vbac\personTable;
 use vbac\allTables;
 
-$table = new personTable(allTables::$PERSON);
+?>
+<div class='container greyablePage'>
+
+<?php 
 
 
-$cols = $table->getColumns();
+$loader = new Loader();
+$allStatus = $loader->load('ORDERIT_STATUS',allTables::$ASSET_REQUESTS," AR.REQUEST_RETURN = 'No' or AR.REQUEST_RETURN is null ");
+array_map('trim',$allStatus);
 
-var_dump($cols);
+var_dump($allStatus);
