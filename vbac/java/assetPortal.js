@@ -60,7 +60,8 @@ function assetPortal() {
                     	        sort: 'timestamp'
                     	    }
                       },
-                      { "data": "APPROVER", "defaultContent": "" },                                           
+                      { "data": "APPROVER", "defaultContent": "" }, 
+                      { "data": "FM", "defaultContent": "" },
                       { "data": "LOCATION", "defaultContent": "<i>unknown</i>" },
                       { "data": "PRIMARY_UID", "defaultContent": "<i>unknown</i>" },
                       { "data": "SECONDARY_UID", "defaultContent": "<i>unknown</i>" },
@@ -73,9 +74,18 @@ function assetPortal() {
                       { "data": "ORDERIT_TYPE" , "defaultContent": ""},
                       { "data": "COMMENT" , "defaultContent": ""},
                       { "data": "USER_CREATED" , "defaultContent": ""}
+                      ,{ "data": "REQUESTEE_EMAIL" , "defaultContent": ""}
+                      ,{ "data": "REQUESTEE_NOTES" , "defaultContent": ""}
+                      ,{ "data": "APPROVER_EMAIL" , "defaultContent": ""}
+                      ,{ "data": "FM_EMAIL" , "defaultContent": ""}                      
+                      ,{ "data": "FM_NOTES" , "defaultContent": ""}
+                      ,{ "data": "CTB_RTB" , "defaultContent": ""}
+                      ,{ "data": "TT_BAU" , "defaultContent": ""}
+                      ,{ "data": "LOB" , "defaultContent": ""}
+                      ,{ "data": "WORK_STREAM" , "defaultContent": ""}
                   ],
           columnDefs: [
-                         { visible: false, targets: [8,9,10,11,12,13,14,15,16,17,18,19] }
+                         { visible: false, targets: [8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28] }
                   ] ,
           order: [[ 18, "asc" ]],
           autoWidth: true,
@@ -154,7 +164,7 @@ this.listenForReportShowUid = function(){
     	
     	
     	assetPortal.table.columns().visible(false,false);
-    	assetPortal.table.columns([0,1,2,3,9,10]).visible(true);
+    	assetPortal.table.columns([0,1,2,3,10,11]).visible(true);
     	assetPortal.table.search('').order([0,"desc"]).draw();
     });
 },
@@ -632,9 +642,9 @@ this.listenForConfirmedAssetReturned = function(){
 	          columns: [
 	                      { "data": "REFERENCE" ,"defaultContent": "", "width":"5%" },
 	                      { "data": "EMAIL" ,"defaultContent": "", "width":"30%" },
-	                      { "data": "ASSET","defaultContent": "", "width":"25%"},
-	                      { "data": "ORDERIT_STATUS","defaultContent": "", "width":"25%"},
-	                      { "data": "ACTION","defaultContent": "", "width":"20%"}
+	                      { "data": "ASSET","defaultContent": "", "width":"20%"},
+	                      { "data": "ORDERIT_STATUS","defaultContent": "", "width":"15%"},
+	                      { "data": "ACTION","defaultContent": "", "width":"30%"}
 	                  ],
 	                  
 	          drawCallback: function(settings) {

@@ -43,6 +43,7 @@ class assetRequestRecord extends DbRecord {
     public static $STATUS_ORDERIT_YET       = 'Yet to be raised';
     public static $STATUS_ORDERIT_RAISED    = 'Raised in Order IT';
     public static $STATUS_ORDERIT_APPROVED  = 'Approved in Order IT';
+    public static $STATUS_ORDERIT_CANCELLED = 'Cancelled in Order IT';
     public static $STATUS_ORDERIT_REJECTED  = 'Rejected in Order IT';
     
     public static $CREATED_USER             = 'Yes';
@@ -68,7 +69,8 @@ class assetRequestRecord extends DbRecord {
             break;
         }
 
-        $predicate .= " and REVALIDATION_STATUS = '" . personRecord::REVALIDATED_FOUND . "' and PES_STATUS in ('" . personRecord::PES_STATUS_CLEARED. "','" . personRecord::PES_STATUS_CLEARED_PERSONAL. "','" . personRecord::PES_STATUS_EXCEPTION. "')";
+        $predicate .= " and (( REVALIDATION_STATUS = '" . personRecord::REVALIDATED_FOUND . "' and PES_STATUS in ('" . personRecord::PES_STATUS_CLEARED. "','" . personRecord::PES_STATUS_CLEARED_PERSONAL. "','" . personRecord::PES_STATUS_EXCEPTION. "') ) ";
+        $predicate .= " or  ( REVALIDATION_STATUS = '" . personRecord::REVALIDATED_PREBOARDER . "' and ( PES_STATUS_DETAILS not like 'Boarded%' or PES_STATUS_DETAILS is null) and PES_STATUS in ('" . personRecord::PES_STATUS_CLEARED. "','" . personRecord::PES_STATUS_CLEARED_PERSONAL. "','" . personRecord::PES_STATUS_EXCEPTION. "') ) )";
         $selectableNotesId = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON,$predicate);
         $selectableEmailAddress = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON,$predicate);
 

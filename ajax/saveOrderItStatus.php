@@ -12,7 +12,7 @@ $autoCommit = db2_autocommit($_SESSION['conn'],DB2_AUTOCOMMIT_OFF);
 $success = false;
 
 foreach ($_POST['status'] as $reference => $statusIndicator){
-    $status = trim($statusIndicator)=='on' ? assetRequestRecord::$STATUS_ORDERIT_APPROVED : assetRequestRecord::$STATUS_ORDERIT_REJECTED;
+    $status = trim($statusIndicator);
     echo "Ref:$reference Status:$status";
     $success = $assetRequestTable->setRequestsOrderItStatus($reference,$status);
     if(!$success){
