@@ -20,68 +20,37 @@ function personRecord() {
   },
 
   this.listenForName = function(){
-    var name = document.getElementById['person_name'];
-        var config = {
-            key: 'vbac;rob.daniel@uk.ibm.com',
-            faces: {
-                //The handler for clicking a person in the drop-down.
-                onclick: function(person) {
-                  console.log(person);
-
-                   var uid = document.getElementById('person_serial');
-                   if(typeof(uid) !== 'undefined'){ uid.value = person['uid'];};
-                   $('#person_serial').attr('disabled','disabled');
-
-                  var newCnum = person['uid'];
-                 console.log(newCnum);
-                 var allreadyExists = ($.inArray(newCnum, knownCnum) >= 0 );
-                 console.log(allreadyExists);
-                 if(allreadyExists){ // comes back with Position in array(true) or false is it's NOT in the array.
-                   $('#saveBoarding').attr('disabled',true);
-                   $('#person_name').css("background-color","LightPink");
-                   alert('Person already defined to VBAC');
-                   return false;
-                 } else {
-                   $('#person_name').css("background-color","LightGreen");
-                 }
-
-
-
-                  var intranet = document.getElementById('person_intranet');
-                   if(typeof(intranet) !== 'undefined'){ intranet.value = person['email'];};
-
-                   var notesId =  document.getElementById('person_notesid');
-                   if(typeof(notesId) !== 'undefined'){ notesId.value = person['notes-id'];};
-
-                   var bio =  document.getElementById('person_bio');
-                   if(typeof(bio) !== 'undefined'){ bio.value = person['bio'];};
-
-
-
-                   var personObj = new personRecord();
-                   personObj.fetchBluepagesDetailsForCnum(person['uid']);
-
-                   $('#personDetails').show();
-                   $('#person_contractor_id').select2();
-                   $('#person_functionalMgr').select2();
-
-                   return person['name'];
-                   }
-            }
-        };
-
-        if(typeof FacesTypeAhead !== 'object'){
-          alert('Faces Type Ahead not found, ensure you are connected to IBM network');
-          $('#person_name').attr('disabled',true);
-          $('#person_name').attr('placeholder','Please connect to IBM network');
-          $('#person_serial').attr('disabled',true);
-          $('#person_serial').attr('placeholder','Please connect to IBM network');
+	 	$('.typeahead').bind('typeahead:select', function(ev, suggestion) {
+		$('#person_notesid').val(suggestion.notesEmail);
+		$('#person_serial').val(suggestion.cnum).attr('disabled','disabled');
+		$('#person_bio').val(suggestion.role);
+		$('#person_intranet').val(suggestion.mail);
+		console.log(suggestion.mail);	
+		
+		var newCnum = suggestion.cnum;
+        console.log(newCnum);
+        var allreadyExists = ($.inArray(newCnum, knownCnum) >= 0 );
+        console.log(allreadyExists);
+        if(allreadyExists){ // comes back with Position in array(true) or false is it's NOT in the array.
+        	$('#saveBoarding').attr('disabled',true);
+        	$('#person_name').css("background-color","LightPink");
+        	alert('Person already defined to VBAC');
+        	return false;
         } else {
-            FacesTypeAhead.init(
-                document.getElementById('person_name'),
-                config
-                );
+        	$('#person_name').css("background-color","LightGreen");
         }
+        
+        var personObj = new personRecord();
+        personObj.fetchBluepagesDetailsForCnum(person['uid']);
+
+        $('#personDetails').show();
+        $('#person_contractor_id').select2();
+        $('#person_functionalMgr').select2();
+		
+		
+		
+		});
+	  
   },
   
   

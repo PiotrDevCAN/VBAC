@@ -39,6 +39,8 @@ $(document).ready(function(){
 		      return obj;
 		  },	      
 		  remote: {
+			//  http://unified-profile.w3ibm.mybluemix.net
+			//	  http://w3-services1.w3-969.ibm.com
 		    url: 'http://w3-services1.w3-969.ibm.com/myw3/unified-profile/v1/search/user?query=%QUERY&searchConfig=optimized_search',
 		    wildcard: '%QUERY',
 		    filter: function(data) {  
@@ -68,6 +70,8 @@ $(document).ready(function(){
 		  	suggestion: Handlebars.compile('<div> <img src="http://w3-services1.w3-969.ibm.com/myw3/unified-profile-photo/v1/image/{{cnum}}?type=bp&def=blue&s=50" alt="Profile" height="42" width="42"> <strong>{{value}}</strong><br/><small>{{preferredIdentity}}<br/>{{role}}</small></div>')
 		  }
 		});
+
+	// http://w3-services1.w3-969.ibm.com/myw3/unified-profile-photo/v1/image/001399866?type=bp&def=blue&s=100
 
  	$('.typeahead').bind('typeahead:select', function(ev, suggestion) {
  		 $('#notesId').val(suggestion.notesEmail);

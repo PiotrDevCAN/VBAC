@@ -413,7 +413,7 @@ class personRecord extends DbRecord
       <div id='existingIbmer'>
         <div class="form-group">
           <div class="col-sm-6">
-            <input class="form-control" id="person_name" name="person_name"
+            <input class="form-control typeahead" id="person_name" name="person_name"
               value="<?=trim($this->FIRST_NAME . " " . $this->LAST_NAME)?>"
               type="text" placeholder='Start typing name/serial/email'
               <?=$notEditable?>>

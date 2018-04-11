@@ -39,6 +39,8 @@ if( getenv( "VCAP_SERVICES" ) )
     else
     {
         echo "<p>Connection failed.</p>";
+        echo db2_conn_error();
+        echo db2_conn_errormsg();
     }
 }
 else
