@@ -156,6 +156,8 @@ class assetRequestsTable extends DbTable{
             $editUidButton .= "data-asset='"     .trim($row['ASSET']) . "' ";
             $editUidButton .= "data-primarytitle='".trim($row['ASSET_PRIMARY_UID_TITLE']) . "' ";
             $editUidButton .= "data-secondarytitle='".trim($row['ASSET_SECONDARY_UID_TITLE']) . "' ";
+            $editUidButton .= "data-primaryuid='".trim($row['PRIMARY_UID']) . "' ";
+            $editUidButton .= "data-secondaryuid='".trim($row['SECONDARY_UID']) . "' ";
             $editUidButton .= "data-toggle='tooltip' data-placement='top' title='Update UID'";
             $editUidButton .= " > ";
             $editUidButton .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
@@ -163,6 +165,9 @@ class assetRequestsTable extends DbTable{
             
             $editUidButton = $withButtons ? $editUidButton : '';
 
+            $pUid = trim($row['PRIMARY_UID']);
+            $sUid = trim($row['SECONDARY_UID']);
+            
             $primaryUid = empty($row['PRIMARY_UID']) ? "<i>unknown</i>" : $row['PRIMARY_UID'];
             
             $row['PRIMARY_UID'] = !empty($row['ASSET_PRIMARY_UID_TITLE']) ? $editUidButton . $primaryUid :  "<i>Not Applicable</i>";
@@ -175,7 +180,9 @@ class assetRequestsTable extends DbTable{
             $returnedButton .= "data-requestee='" .trim($row['PERSON']) . "' ";
             $returnedButton .= "data-asset='"     .trim($row['ASSET']) . "' ";
             $returnedButton .= "data-primarytitle='".trim($row['ASSET_PRIMARY_UID_TITLE']) . "' ";
-            $returnedButton .= "data-secondarytitle='".trim($row['ASSET_SECONDARY_UID_TITLE']) . "' ";          
+            $returnedButton .= "data-secondarytitle='".trim($row['ASSET_SECONDARY_UID_TITLE']) . "' ";  
+            $returnedButton .= "data-primaryuid='". $pUid . "' ";
+            $returnedButton .= "data-secondaryuid='".$sUid . "' ";            
             $returnedButton .= "data-toggle='tooltip' data-placement='top' title='Report asset returned/removed'";
             $returnedButton .= " > ";
             $returnedButton .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";

@@ -183,11 +183,20 @@ this.listenForReportShowUid = function(){
   this.listenForEditUid = function(){
 	  $(document).on('click','.btnEditUid', function(e){
 		  $('#asset').val($(e.target).data('asset'));
-		  $('#userid').val($(e.target).data('requestee'));		  
+		  $('#userid').val($(e.target).data('requestee'));		
+		  
+		  var primaryUid   = $(e.target).data('primaryuid');
+		  var secondaryUid = $(e.target).data('secondaryuid');
 		  
 		  var primaryTitle = $(e.target).data('primarytitle');
 		  $('#primaryLabel').text(primaryTitle);
 		  $('#primaryUid').attr('placeholder',primaryTitle);
+		  
+		  if(primaryUid){
+			  $('#primaryUid').val(primaryUid);			  
+		  } else {
+			  $('#primaryUid').val('');
+		  }	  
 		  
 		  var secondaryTitle = $(e.target).data('secondarytitle');
 		  if(secondaryTitle) {
@@ -199,10 +208,19 @@ this.listenForReportShowUid = function(){
 			 $('#secondaryUid').attr('placeholder','null');
 			 $('#secondaryUidFormGroup').hide(); 			  
 		  }
+		  
+		  if(secondaryUid){
+			  $('#secondaryUid').val(secondaryUid);			  
+		  } else {
+			  $('#secondaryUid').val('');
+		  }
+		  
+		  
+		  
 		 
 		  $('#reference').val($(e.target).data('reference')); 
-		  $('#primaryUid').val('');
-		  $('#secondaryUid').val('');
+//		  $('#primaryUid').val('');
+//		  $('#secondaryUid').val('');
 		  $('#editUidModal').modal('show');
 		 
 	 
@@ -465,11 +483,14 @@ this.listenForAssetRequestApproveRejectToggle  = function(){
 
 
 this.listenForAssetReturned = function(){
-	  $(document).on('click','.btnAssetReturned', function(e){ 
-		  
+	  $(document).on('click','.btnAssetReturned', function(e){ 		  
 	  
 		  $('#assetRet').val($(e.target).data('asset'));
 		  $('#useridRet').val($(e.target).data('requestee'));	
+		  
+		  var primaryUid   = $(e.target).data('primaryuid');
+		  var secondaryUid = $(e.target).data('secondaryuid');
+		  
 		  
 		  var primaryTitle = $(e.target).data('primarytitle');
 		  if(primaryTitle) {
@@ -482,6 +503,14 @@ this.listenForAssetReturned = function(){
 			 $('#primaryUidFormGroupRet').hide(); 			  
 		  }
 		  
+		  if(primaryUid){
+			  $('#primaryUidRet').val(primaryUid);	
+			  $('#primaryUidRet').attr('disabled',true);			  
+		  } else {
+			  $('#primaryUidRet').val('');
+			  $('#primaryUidRet').attr('disabled',false);
+		  }	
+		  
 		  var secondaryTitle = $(e.target).data('secondarytitle');
 		  if(secondaryTitle) {
 			 $('#secondaryLabelRet').text(secondaryTitle);
@@ -491,6 +520,14 @@ this.listenForAssetReturned = function(){
 			 $('#secondaryLabelRet').text('null');
 			 $('#secondaryUidRet').attr('placeholder','null');
 			 $('#secondaryUidFormGroupRet').hide(); 			  
+		  }
+		  
+		  if(secondaryUid){
+			  $('#secondaryUidRet').val(secondaryUid);	
+			  $('#secondaryUidRet').attr('disabled',true);
+		  } else {
+			  $('#secondaryUidRet').val('');
+			  $('#secondaryUidRet').attr('disabled',false);
 		  }
 		 
 		  $('#referenceRet').val($(e.target).data('reference')); 
