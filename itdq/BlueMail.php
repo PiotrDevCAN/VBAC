@@ -36,7 +36,7 @@ class BlueMail
 
 
 
-        $vcapServices = json_decode($_SERVER['VCAP_SERVICES']);
+
         $data = array('contact'=> $replyto,
             'recipients'=>$recipients,
             'subject'=>$subject,
@@ -55,86 +55,181 @@ class BlueMail
                 $data['attachments'][] = array('attachment'=>$attachment);
             }            
         }
-        $data_json = json_encode($data);
 
-        if(isset(AllItdqTables::$EMAIL_LOG)){
-            $emailLogRecordID = self::prelog($to, $subject, $message, $data_json);
-        }
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_HEADER,         1);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_TIMEOUT,        240);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 240);
-        curl_setopt($ch, CURLOPT_HTTPAUTH,  CURLAUTH_BASIC);
-        curl_setopt($ch, CURLOPT_HEADER,    FALSE);
 
-        $userpwd = $vcapServices->bluemailservice[0]->credentials->username . ':' . $vcapServices->bluemailservice[0]->credentials->password;
-        curl_setopt($ch, CURLOPT_USERPWD,        $userpwd);
+        
+        
+        switch (trim($_SERVER['email'])) {
+            case 'dev':
+            case 'user':
+                // We're in DEV mode for emails - override the recipients.                
+                $data['recipients'] = $_SERVER['email']=='user' ?  array('recipient'=>$_SESSION['ssoEmail']) : array('recipient'=>$_SESSION['devEmailId']);                
+                unset($data['cc']);
+                unset($data['bcc']);
+                
+                $data['subject'] = "**" . $_SERVER['email'] . "**" . $data['subject'];
+                
+                var_dump($data);
+                
 
-        curl_setopt($ch, CURLOPT_URL, $vcapServices->bluemailservice[0]->credentials->emailUrl);
-
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json','Content-Length: ' . strlen($data_json)));
-        curl_setopt($ch, CURLOPT_POSTFIELDS,$data_json);
-
-        if ($_SERVER['email'] == 'on') {
-            $resp = curl_exec($ch);
-
-            if ($emailLogRecordID) {
-                self::updatelog($emailLogRecordID, $resp);
-            }
-
-            $responseObject = json_decode($resp);
-
-            $statusUrl = $responseObject->link[0]->href;
-            $status = self::getStatus($emailLogRecordID, $statusUrl);
-            $statusObject = json_decode($status);
-
-            if (! $asynchronous) {
-                sleep(5);
-                $prevStatus = $status;
-                $status = self::getStatus($emailLogRecordID, $statusUrl, $prevStatus);
-                $statusObject = json_decode($status);
-                $iteration = 0;
-                $attempts = 0;
-
-                $statusObjects = array();
-                $statusObjects[] = $statusObject;
-
-                while (! self::checkStatus($statusObjects) && ! $statusObject->locked) {
-                    if ($attempts ++ > 20) {
-                        throw new \Exception($attempts . " unsuccessful attempts to send email. Abandoning process");
-                    }
-                    $iteration = ++ $iteration < 10 ? $iteration : 9; // wait a little longer each time up till 50 seconds wait. so if they are busy we're not hitting too frequently
-                    $response = self::resend($emailLogRecordID, $responseObject->link[1]->href);
-                    $prevStatus = $status;
-
-                    $responseObject = json_decode($response);
-                    $statusUrl = $responseObject->link[0]->href;
-                    $status = self::getStatus($emailLogRecordID, $statusUrl);
-                    $statusObject = json_decode($status);
-                    $statusObjects[] = $statusObject;
-                    sleep(5 + $iteration * 5);
+                
+                
+                
+                // no BREAK - need to drop through to proper email.
+            case 'on':
+                $data_json = json_encode($data);
+                
+                if(isset(AllItdqTables::$EMAIL_LOG)){
+                    $emailLogRecordID = self::prelog($to, $subject, $message, $data_json);
                 }
-            }
-        } else {
-            $response = array(
+                
+                $vcapServices = json_decode($_SERVER['VCAP_SERVICES']);
+                
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_HEADER,         1);
+                curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_TIMEOUT,        240);
+                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 240);
+                curl_setopt($ch, CURLOPT_HTTPAUTH,  CURLAUTH_BASIC);
+                curl_setopt($ch, CURLOPT_HEADER,    FALSE);
+                
+                $userpwd = $vcapServices->bluemailservice[0]->credentials->username . ':' . $vcapServices->bluemailservice[0]->credentials->password;
+                curl_setopt($ch, CURLOPT_USERPWD,        $userpwd);
+                
+                curl_setopt($ch, CURLOPT_URL, $vcapServices->bluemailservice[0]->credentials->emailUrl);
+                
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json','Content-Length: ' . strlen($data_json)));
+                curl_setopt($ch, CURLOPT_POSTFIELDS,$data_json);
+                
+                $resp = curl_exec($ch);
+                
+                var_dump($resp);
+                
+                die('here');
+                
+                
+                
+                
+                if ($emailLogRecordID) {
+                    self::updatelog($emailLogRecordID, $resp);
+                }
+                
+                $responseObject = json_decode($resp);
+                
+                $statusUrl = $responseObject->link[0]->href;
+                $status = self::getStatus($emailLogRecordID, $statusUrl);
+                $statusObject = json_decode($status);
+                
+                if (! $asynchronous) {
+                
+                    sleep(5);
+                    $prevStatus = $status;
+                    $status = self::getStatus($emailLogRecordID, $statusUrl, $prevStatus);
+                    $statusObject = json_decode($status);
+                    $iteration = 0;
+                    $attempts = 0;
+                    
+                    $statusObjects = array();
+                    $statusObjects[] = $statusObject;
+                
+                    while (! self::checkStatus($statusObjects) && ! $statusObject->locked) {
+                        if ($attempts ++ > 20) {
+                            throw new \Exception($attempts . " unsuccessful attempts to send email. Abandoning process");
+                        }
+                        $iteration = ++ $iteration < 10 ? $iteration : 9; // wait a little longer each time up till 50 seconds wait. so if they are busy we're not hitting too frequently
+                        $response = self::resend($emailLogRecordID, $responseObject->link[1]->href);
+                        $prevStatus = $status;
+                        
+                        $responseObject = json_decode($response);
+                        $statusUrl = $responseObject->link[0]->href;
+                        $status = self::getStatus($emailLogRecordID, $statusUrl);
+                        $statusObject = json_decode($status);
+                        $statusObjects[] = $statusObject;
+                        sleep(5 + $iteration * 5);
+                    }
+                }
+            break;
+            
+            default:
+                $response = array(
                 'response' => "email disabled in this environment, did not initiate send"
-            );
-            $status = array(
-                'status' => "email disabled in this environment, did not initiate send"
-            );
-            $responseObject = json_encode($response);
-            $statusObject = json_encode($status);
-
-            if ($emailLogRecordID) {
-                self::updatelog($emailLogRecordID, $responseObject);
-                self::logStatus($emailLogRecordID, $statusObject);
-            }
-
-
+                    );
+                $status = array(
+                    'status' => "email disabled in this environment, did not initiate send (" . trim($_SERVER['email']) .")"
+                );
+                $responseObject = json_encode($response);
+                $statusObject = json_encode($status);
+                
+                if ($emailLogRecordID) {
+                    self::updatelog($emailLogRecordID, $responseObject);
+                    self::logStatus($emailLogRecordID, $statusObject);
+                }
+            break;
         }
+        
+        
+        
+        
+
+//         if ($_SERVER['email'] == 'on') {
+//             $resp = curl_exec($ch);
+
+//             if ($emailLogRecordID) {
+//                 self::updatelog($emailLogRecordID, $resp);
+//             }
+
+//             $responseObject = json_decode($resp);
+
+//             $statusUrl = $responseObject->link[0]->href;
+//             $status = self::getStatus($emailLogRecordID, $statusUrl);
+//             $statusObject = json_decode($status);
+
+//             if (! $asynchronous) {
+//                 sleep(5);
+//                 $prevStatus = $status;
+//                 $status = self::getStatus($emailLogRecordID, $statusUrl, $prevStatus);
+//                 $statusObject = json_decode($status);
+//                 $iteration = 0;
+//                 $attempts = 0;
+
+//                 $statusObjects = array();
+//                 $statusObjects[] = $statusObject;
+
+//                 while (! self::checkStatus($statusObjects) && ! $statusObject->locked) {
+//                     if ($attempts ++ > 20) {
+//                         throw new \Exception($attempts . " unsuccessful attempts to send email. Abandoning process");
+//                     }
+//                     $iteration = ++ $iteration < 10 ? $iteration : 9; // wait a little longer each time up till 50 seconds wait. so if they are busy we're not hitting too frequently
+//                     $response = self::resend($emailLogRecordID, $responseObject->link[1]->href);
+//                     $prevStatus = $status;
+
+//                     $responseObject = json_decode($response);
+//                     $statusUrl = $responseObject->link[0]->href;
+//                     $status = self::getStatus($emailLogRecordID, $statusUrl);
+//                     $statusObject = json_decode($status);
+//                     $statusObjects[] = $statusObject;
+//                     sleep(5 + $iteration * 5);
+//                 }
+//             }
+//         } else {
+//             $response = array(
+//                 'response' => "email disabled in this environment, did not initiate send"
+//             );
+//             $status = array(
+//                 'status' => "email disabled in this environment, did not initiate send"
+//             );
+//             $responseObject = json_encode($response);
+//             $statusObject = json_encode($status);
+
+//             if ($emailLogRecordID) {
+//                 self::updatelog($emailLogRecordID, $responseObject);
+//                 self::logStatus($emailLogRecordID, $statusObject);
+//             }
+
+
+//         }
 
         return array('sendResponse' => $responseObject, 'Status'=>$statusObject);
     }

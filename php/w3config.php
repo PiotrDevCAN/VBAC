@@ -57,6 +57,7 @@ $site = array(
 
     'email' => false,
     'emailId' => 'DoNotReply_vbac@uk.ibm.com',
+    'devEmailId' => 'rob.daniel@uk.ibm.com',
 
     'AuditLife' => '13 months',
     'AuditDetailsLife' => '1 month',

@@ -23,7 +23,6 @@ class assetRequestsTable extends DbTable{
         ,'USER_CREATED','REQUESTEE_EMAIL','REQUESTEE_NOTES', 'APPROVER_EMAIL', 'FM_EMAIL','FM_NOTES',
         'CTB_RTB','TT_BAU','LOB', 'WORK_STREAM'
     );
-    
 
 //     function saveRecord(assetRequestRecord $record, $populatedColumns, $nullColumns, $commit){
 //         parent::saveRecord($record, $populatedColumns, $nullColumns, $commit);
