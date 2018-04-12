@@ -90,7 +90,7 @@ class assetRequestsTable extends DbTable{
             
             $approveButton  = "<button type='button' class='btn btn-default btn-xs btnAssetRequestApprove btn-success' aria-label='Left Align' ";
             $approveButton .= "data-reference='" .trim($reference) . "' ";
-            $approveButton .= "data-requestee='" .trim($row['EMAIL_ADDRESS']) . "' ";
+            $approveButton .= "data-requestee='" .trim($row['REQUESTEE_EMAIL']) . "' ";
             $approveButton .= "data-asset='"     .trim($row['ASSET']) . "' ";
             $approveButton .= "data-orderitstatus='".trim($row['ORDERIT_STATUS']) . "' ";
             $approveButton .= "data-toggle='tooltip' data-placement='top' title='Approve the request'";
@@ -102,7 +102,7 @@ class assetRequestsTable extends DbTable{
             
             $rejectButton  = "<button type='button' class='btn btn-default btn-xs btnAssetRequestReject btn-danger' aria-label='Left Align' ";
             $rejectButton .= "data-reference='" .trim($reference) . "' ";
-            $rejectButton .= "data-requestee='" .trim($row['EMAIL_ADDRESS']) . "' ";
+            $rejectButton .= "data-requestee='" .trim($row['REQUESTEE_EMAIL']) . "' ";
             $rejectButton .= "data-asset='"     .trim($row['ASSET']) . "' ";
             $rejectButton .= "data-orderitstatus='".trim($row['ORDERIT_STATUS']) . "' ";
             $rejectButton .= "data-toggle='tooltip' data-placement='top' title='Reject the request'";
@@ -113,7 +113,7 @@ class assetRequestsTable extends DbTable{
             $rejectButton = $withButtons ? $rejectButton : '';
             
             $pmoOrFm = ($_SESSION['isFm'] || $_SESSION['isPmo']);            
-            $notTheirOwnRecord = ( trim(strtolower($row['EMAIL_ADDRESS'])) != trim(strtolower($_SESSION['ssoEmail'])));               
+            $notTheirOwnRecord = ( trim(strtolower($row['REQUESTEE_EMAIL'])) != trim(strtolower($_SESSION['ssoEmail'])));               
             
             $allowedtoApproveReject = ( $pmoOrFm && $notTheirOwnRecord);      
             
