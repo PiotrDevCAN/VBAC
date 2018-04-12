@@ -87,7 +87,7 @@ function assetPortal() {
           columnDefs: [
                          { visible: false, targets: [8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28] }
                   ] ,
-          order: [[ 18, "asc" ]],
+          order: [[ 0, "desc" ]],
           autoWidth: true,
           deferRender: true,
           responsive: false,
