@@ -64,22 +64,16 @@ class BlueMail
             case 'dev':
             case 'user':
                 // We're in DEV mode for emails - override the recipients.                
-                $data['recipients'] = $_SERVER['email']=='user' ?  array('recipient'=>$_SESSION['ssoEmail']) : array('recipient'=>$_SESSION['devEmailId']);                
+                $data['recipients'][] = $_SERVER['email']=='user' ?  array('recipient'=>$_SESSION['ssoEmail']) : array('recipient'=>$_SESSION['devEmailId']);                
                 unset($data['cc']);
                 unset($data['bcc']);
                 
                 $data['subject'] = "**" . $_SERVER['email'] . "**" . $data['subject'];
-                
-                var_dump($data);
-                
 
-                
-                
-                
                 // no BREAK - need to drop through to proper email.
             case 'on':
                 $data_json = json_encode($data);
-                
+               
                 if(isset(AllItdqTables::$EMAIL_LOG)){
                     $emailLogRecordID = self::prelog($to, $subject, $message, $data_json);
                 }
@@ -104,13 +98,6 @@ class BlueMail
                 curl_setopt($ch, CURLOPT_POSTFIELDS,$data_json);
                 
                 $resp = curl_exec($ch);
-                
-                var_dump($resp);
-                
-                die('here');
-                
-                
-                
                 
                 if ($emailLogRecordID) {
                     self::updatelog($emailLogRecordID, $resp);
