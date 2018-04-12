@@ -14,6 +14,8 @@ class assetRequestsTable extends DbTable{
     
     public $currentVarb;
     
+    private $lastSql;
+    
     private $preparedUpdateUidsStmt;
     
     private static $portalHeaderCells = array('REFERENCE','CT_ID','PERSON','ASSET','STATUS','JUSTIFICATION','REQUESTOR','APPROVER','FM',
@@ -80,9 +82,10 @@ class assetRequestsTable extends DbTable{
             
             $row = array_map('trim', $preTrimmed);
            
-            $reference = $row['REFERENCE'];
+            $reference = trim($row['REFERENCE']);
+            $sortableReference = substr('0000000'.$reference,-6);
             $row['REFERENCE'] = trim($row['ORDERIT_NUMBER']) . ":" . $reference;
-            $row['REFERENCE'] = empty($row['ORDERIT_VARB_REF']) ? array('display'=>$row['REFERENCE'],'reference'=>$reference) : array('display'=>$row['REFERENCE'] . "<br/><small>" . $row['ORDERIT_VARB_REF'] . "</small>",'reference'=>$reference);
+            $row['REFERENCE'] = empty($row['ORDERIT_VARB_REF']) ? array('display'=>$row['REFERENCE'],'reference'=>$sortableReference) : array('display'=>$row['REFERENCE'] . "<br/><small>" . $row['ORDERIT_VARB_REF'] . "</small>",'reference'=>$sortableReference);
             
             $status = trim($row['STATUS']);
             $orderItStatus = trim($row['ORDERIT_STATUS']);
@@ -157,7 +160,15 @@ class assetRequestsTable extends DbTable{
 //                 unset($row['APPROVED_DATE']);
 //             }
             
-            $row['REQUESTOR'] = array('display'=> $row['REQUESTOR_EMAIL'] . "<br/><small>" . $row['REQUESTED_DATE'] . "</small>",'timestamp'=>$row['REQUESTED_DATE']);
+
+            
+            
+            $requestedDate = new \DateTime($row['REQUESTED_DATE']);
+            $sortableRequestedDate =  $requestedDate->format('YmdHis');
+            
+            
+            
+            $row['REQUESTOR'] = array('display'=> $row['REQUESTOR_EMAIL'] . "<br/><small>" . $row['REQUESTED_DATE'] . "</small>",'timestamp'=>$sortableRequestedDate);
 //             if($withButtons){
 //                 unset($row['REQUESTOR_EMAIL']);
 //                 unset($row['REQUESTOR_DATE']);
@@ -294,6 +305,9 @@ class assetRequestsTable extends DbTable{
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         }
+        
+        $this->lastSql = $sql;
+        
        
         $sql = " SELECT ORDERIT_VARB_REF, REQUEST_REFERENCE, ";
         $sql .= " P.CT_ID as CT_ID, ";
@@ -319,7 +333,7 @@ class assetRequestsTable extends DbTable{
   
         $data = array();
 //         $data[] = "";
-        $data[] = $first ? '"VARB","REQUEST","CT ID","CTB/RTB","TT/BAU","LOB","WORK STREAM", "ASSET TITLE","REQUESTEE EMAIL","JUSTIFICATION","STATUS","LOCATION","REQUESTOR","REQUESTED","APPROVER","APPROVED","FM EMAIL","EXPORTED"' : null;
+        $data[] = $first ? '"VARB","REQUEST","CT ID","CTB/RTB","TT/BAU","LOB","WORK STREAM","ASSET TITLE","REQUESTEE EMAIL","JUSTIFICATION","STATUS","LOCATION","REQUESTOR","REQUESTED","APPROVER","APPROVED","FM EMAIL","EXPORTED"' : null;
         
         $rs2 = db2_exec($_SESSION['conn'],$sql);    
         if(!$rs2){
@@ -368,6 +382,8 @@ class assetRequestsTable extends DbTable{
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         }
+        
+        $this->lastSql = $sql;
         
         $row = db2_fetch_assoc($rs);
         return $row['REQUESTS'];        
@@ -1248,4 +1264,9 @@ class assetRequestsTable extends DbTable{
         </div>
         <?php 
     }
+    
+    function getLastSql(){
+        return $this->lastSql;
+    }
+    
 }

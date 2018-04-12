@@ -16,17 +16,21 @@ $assetRequestTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
 $requestData = '';
 $varbsCovered = array();
 $first = true;
-
+$lastSql = array();
 foreach ($allOrderItTypes as $orderItType){
     
     $totalRequestsForType = 0;
     $outstandingRequestsForType = 0;
     
     while(($outstandingRequestsForType = $assetRequestTable->countApprovedForOrderItType($orderItType)) > 0){
+        $lastSql[] = $assetRequestTable->getLastSql();
+        
         $totalRequestsForType += $outstandingRequestsForType;
         $requestData .= $assetRequestTable->getRequestsForOrderIt($orderItType,$first);
         $varbsCovered[] = $assetRequestTable->currentVarb;
         $first = false;
+        
+        $lastSql[] = $assetRequestTable->getLastSql();
     }
     echo "<h5>Total requests for Order IT Type " . $orderItType . " :" . $totalRequestsForType;
 }
@@ -50,13 +54,13 @@ $base64EncodedData = base64_encode($requestData);
 if(empty($base64EncodedData)){
     $messages = ob_get_clean();
     $messages .= "<br/>No requests found to export";
-    $response = array('success'=>false,'messages'=>$messages,'post'=>print_r($_POST,true));
+    $response = array('success'=>false,'messages'=>$messages,'post'=>print_r($_POST,true),'lastSql'=>print_r($lastSql,true));
     echo json_encode($response);
 } else {
     $sendResponse = BlueMail::send_mail(personRecord::$pmoTaskId, 'vBac Orderit Export: ' . $varbRange, 'Find attached CSV of Asset Request Details ready for Order IT',
         'vbacNoReply@uk.ibm.com',array(),array(),true,array(array('filename'=>$csvName,'content_type'=>'text/plain','data'=>$base64EncodedData)));
 
     $messages = ob_get_clean();
-    $response = array('success'=>true,'messages'=>$messages,"sendResponse"=>$sendResponse,'post'=>print_r($_POST,true));
+    $response = array('success'=>true,'messages'=>$messages,"sendResponse"=>$sendResponse,'post'=>print_r($_POST,true),'lastSql'=>print_r($lastSql,true));
     echo json_encode($response);
 }
