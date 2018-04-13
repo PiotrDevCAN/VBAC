@@ -212,12 +212,7 @@ class assetRequestRecord extends DbRecord {
         </div>
         </div> <!--  Panel     -->
         </div> <!--  Container -->
-        <?php 
-		foreach ($selectableNotesId as $cnum => $notesId){
-		    $displayedName = !empty(trim($notesId)) ?  trim($notesId) : $selectableEmailAddress[$cnum];
-		    ?><input type='hidden' name='<?=trim($cnum);?>' value='<?=$displayedName?>'/><?php
-        };
-        ?>
+
         </div>
         </form>
 		<?php 

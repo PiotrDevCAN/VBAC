@@ -25,10 +25,6 @@ class assetRequestsTable extends DbTable{
         ,'USER_CREATED','REQUESTEE_EMAIL','REQUESTEE_NOTES', 'APPROVER_EMAIL', 'FM_EMAIL','FM_NOTES',
         'CTB_RTB','TT_BAU','LOB', 'WORK_STREAM'
     );
-
-//     function saveRecord(assetRequestRecord $record, $populatedColumns, $nullColumns, $commit){
-//         parent::saveRecord($record, $populatedColumns, $nullColumns, $commit);
-//     }
     
     static function portalHeaderCells(){
         $headerCells = null;
@@ -864,7 +860,7 @@ class assetRequestsTable extends DbTable{
         
         if(!empty($allStatus)){        
             foreach ($allStatus as $key => $value) {
-                $sql = " SELECT AR.ORDERIT_NUMBER, AR.ORDERIT_STATUS,Ar.ORDERIT_VARB_REF, AR.REQUEST_REFERENCE, AR.ASSET_TITLE, AR.BUSINESS_JUSTIFICATION, AR.COMMENT, AR.REQUESTOR_EMAIl, AR.REQUESTED, AR.APPROVER_EMAIL, AR.APPROVED, P.FIRST_NAME, P.LAST_NAME, P.EMAIL_ADDRESS, P.LBG_EMAIL, P.EMPLOYEE_TYPE, P.CNUM, P.CT_ID, FM.CNUM as MGR_CNUM, FM.EMAIL_ADDRESS as MGR_EMAIL, FM.NOTES_ID as MGR_NOTESID, P.PES_STATUS, P.WORK_STREAM,P.CTB_RTB, P.TT_BAU, P.LOB, P.ROLE_ON_THE_ACCOUNT, P.CIO_ALIGNMENT,  AR.PRIMARY_UID, AR.SECONDARY_UID, AR.DATE_ISSUED_TO_IBM, AR. DATE_ISSUED_TO_USER, AR.DATE_RETURNED ";
+                $sql = " SELECT AR.ORDERIT_NUMBER, AR.ORDERIT_STATUS,Ar.ORDERIT_VARB_REF, AR.REQUEST_REFERENCE, AR.ASSET_TITLE, AR.BUSINESS_JUSTIFICATION, AR.COMMENT, AR.REQUESTOR_EMAIl, AR.REQUESTED, AR.APPROVER_EMAIL, AR.APPROVED, P.FIRST_NAME, P.LAST_NAME, P.EMAIL_ADDRESS, P.LBG_EMAIL, P.EMPLOYEE_TYPE, P.CNUM, P.CT_ID, P.FM_CNUM as MGR_CNUM, FM.EMAIL_ADDRESS as MGR_EMAIL, FM.NOTES_ID as MGR_NOTESID, P.PES_STATUS, P.WORK_STREAM,P.CTB_RTB, P.TT_BAU, P.LOB, P.ROLE_ON_THE_ACCOUNT, P.CIO_ALIGNMENT,  AR.PRIMARY_UID, AR.SECONDARY_UID, AR.DATE_ISSUED_TO_IBM, AR. DATE_ISSUED_TO_USER, AR.DATE_RETURNED ";
                 $sql .= " FROM " . $_SESSION['Db2Schema']. "." . allTables::$ASSET_REQUESTS  . " as AR ";
                 $sql .= " LEFT JOIN " . $_SESSION['Db2Schema']. "." . allTables::$PERSON . " as P ";
                 $sql .= " ON P.CNUM = AR.CNUM ";
@@ -1268,5 +1264,14 @@ class assetRequestsTable extends DbTable{
     function getLastSql(){
         return $this->lastSql;
     }
+    
+    
+    function notifyApprovingMgr($approvingMgr){       
+        $notifyApprovingMgr = "Requests have been created in vBAC that require your approval.<br/>You can access the tool here  <a href='" . $_SERVER['HTTP_HOST'] . "/pa_assetPortal.php'  target='_blank' >vBAC Asset Portal</a>";
+        
+        \itdq\BlueMail::send_mail($approvingMgr, 'vBAC Approval Required', $notifyApprovingMgr, 'vbacNoReply@uk.ibm.com');        
+    }
+    
+    
     
 }

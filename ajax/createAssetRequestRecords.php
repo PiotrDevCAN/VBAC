@@ -5,8 +5,11 @@ use itdq\DbTable;
 use vbac\assetRequestsTable;
 use vbac\allTables;
 use vbac\personRecord;
+use itdq\AuditTable;
 
 ob_start();
+
+AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_POST,true) . "</b>",AuditTable::RECORD_TYPE_DETAILS);
 
 $post = print_r($_POST,true);
 $now = new DateTime();
@@ -24,7 +27,7 @@ $approved = $autoApproved ? $requested : null;
 
 $requestReturn = isset($_POST['REQUEST_RETURN']) ? 'Yes' : 'No';
 
-
+$notifyApprovingMgr = false;
 
 // $orderItStatus = empty($_POST['ORDERIT_NUMBER']) ? assetRequestRecord::$STATUS_ORDERIT_YET : assetRequestRecord::$STATUS_ORDERIT_RAISED;
 // $userCreated   = empty($_POST['ORDERIT_NUMBER']) ? assetRequestRecord::$CREATED_PMO : assetRequestRecord::$CREATED_USER;
@@ -57,6 +60,7 @@ switch (true) {
         $orderItStatus = assetRequestRecord::$STATUS_ORDERIT_RAISED;
         $status = assetRequestRecord::$STATUS_CREATED;
         $userCreated = assetRequestRecord::$CREATED_USER;
+        $notifyApprovingMgr = true;
     break;
     case $autoApproved && empty($_POST['ORDERIT_NUMBER']) :
         // Approving Mgr raising it - it's NOT in ORDER IT Yet, 
@@ -69,6 +73,7 @@ switch (true) {
         $orderItStatus = assetRequestRecord::$STATUS_ORDERIT_YET;
         $status = assetRequestRecord::$STATUS_CREATED;
         $userCreated = assetRequestRecord::$CREATED_PMO;
+        $notifyApprovingMgr = true;
     break;
     default:
         ;
@@ -91,7 +96,9 @@ foreach ($_POST as $key => $value){
         $cnum = $_POST['requestee'];
         $educationConfirmed = personTable::getSecurityEducationForCnum($cnum);
         
-        $email = $_POST[$cnum];
+//         $email = $_POST[$cnum];
+        
+        $email = $personTable->getEmailFromCnum($cnum);
         
         $assetRequest = array(
             'CNUM'=>$cnum
@@ -127,7 +134,7 @@ foreach ($_POST as $key => $value){
             
             $rest = $personTable->updateLbgLocationForCnum($location, $cnum);
              
-            echo "<br/>Location:$location Cnum:$cnum Result:$rest Security: $educationConfirmed Educ:$educ" ;
+//            echo "<br/>Location:$location Cnum:$cnum Result:$rest Security: $educationConfirmed" ;
             
             
         } catch (Exception $e) {
@@ -138,6 +145,8 @@ foreach ($_POST as $key => $value){
         }
     }
 }
+
+$notifyApprovingMgr && !empty($approvingMgrEmail) ? $assetRequestTable->notifyApprovingMgr(array($approvingMgrEmail)) : null;
 
 $messages = ob_get_clean();
 
