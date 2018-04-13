@@ -65,10 +65,9 @@ class BlueMail
             case 'user':
                 // We're in DEV mode for emails - override the recipients.                
                 $data['recipients'][] = $_SERVER['email']=='user' ?  array('recipient'=>$_SESSION['ssoEmail']) : array('recipient'=>$_SERVER['devemailid']);                
-                unset($data['cc']);
-                unset($data['bcc']);
-                
-                $data['subject'] = "**" . $_SERVER['email'] . "**" . $data['subject'];
+                $data['cc']=array();
+                $data['bcc']=array();
+                $data['subject'] = "**" . $_SERVER['environment'] . "**" . $data['subject'];
 
                 // no BREAK - need to drop through to proper email.
             case 'on':
