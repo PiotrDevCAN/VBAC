@@ -41,11 +41,11 @@ function assetRequest() {
 		      success: function(result){
 		    	  var resultObj = JSON.parse(result);
 		    	  var securityEducation = resultObj.securityEducation;
-		    	  if(securityEducation!='Yes'){		    
+		    	  if(securityEducation!='Yes'){
 		    		  $('#cnumForSecurityModal').val(cnum_id);
-		    		  $('#confirmEducationModal').modal('show');		    	  
+		    		  $('#confirmEducationModal').modal('show');
 		    	  } else {
-		    		  $('#person-1-educationConfirmed').attr('checked',true);		
+		    		  $('#person-1-educationConfirmed').attr('checked',true);
 		    		  $('#saveAssetRequest').attr('disabled',false);
 		    	  }
 		      }
@@ -67,9 +67,9 @@ function assetRequest() {
 			    	      securityEducation: 'Yes'},
 			      success: function(result){
 			    	  var resultObj = JSON.parse(result);
-			    	  
+
 			      }
-			  });  
+			  });
 	  });
   },
 
@@ -86,14 +86,14 @@ function assetRequest() {
 			      data: { cnum:cnum,
 			    	      securityEducation: 'No'},
 			      success: function(result){
-			    	  var resultObj = JSON.parse(result);			    	  
+			    	  var resultObj = JSON.parse(result);
 			      }
-			  });  
+			  });
 	  });
   },
 
   this.listenForSelectRequestee = function(){
-	  $(document).on('select2:select','#requestees', function (e) {		
+	  $(document).on('select2:select','#requestees', function (e) {
 		    console.log('fired listenForSelectRequestee');
 		    var AssetRequest = new assetRequest();
 		    var data = e.params.data;
@@ -106,7 +106,7 @@ function assetRequest() {
 		    	$('#obtainCtid').modal('show');
 		    } else {
 		    	console.log('DONT rompt for CT ID');
-				AssetRequest.recordCtidOnForm(data.text, ctid_id);				
+				AssetRequest.recordCtidOnForm(data.text, ctid_id);
 		    }
 		    console.log('now ajax get location for cnum');
 		    $.ajax({
@@ -132,7 +132,7 @@ function assetRequest() {
 				    } else {
 				    	console.log('no, we did not get a location');
 				    	$('.locationFor').val('').trigger('change');
-				    }				    
+				    }
 		        }
 		    });
 		    $("#approvingManager option[value='"+cnum_id+"']").remove();
@@ -142,21 +142,21 @@ function assetRequest() {
   this.listenForSelectLocation = function(){
 	  $(document).on('select2:select','.locationFor', function (e) {
 		    console.log('fired listenForSelectLocation');
-		    console.log(e);		    
-		    
+		    console.log(e);
+
 			  console.log('is form valid NOW listenForSelectLocation ?');
 		      var form = document.getElementById('assetRequestForm');
 		      var formValid = form.checkValidity();
 		      console.log(formValid);
-		  
+
 		    var AssetRequest = new assetRequest();
-		    
+
 		    $('#requestableAssetDetailsDiv').show();
 		    console.log($('.requestableAsset'));
-		    
+
 		    $('.requestableAsset').not(':first').prop('checked',false); // uncheck all the ticks
 		    $('.justificationDiv').hide();								// Close all the Justification boxes.
-		    
+
 		    var data = e.params.data;
 		    var location = data.text.trim();
 		    if(location.includes('UK')){
@@ -164,20 +164,20 @@ function assetRequest() {
 		    } else {
 		    	AssetRequest.checkAssetsForShore('off');
 		    }
-		    
+
 			  console.log('is form valid NOW NOW listenForSelectLocation ?');
 		      var form = document.getElementById('assetRequestForm');
 		      var formValid = form.checkValidity();
 		      console.log(formValid);
-		    
-		      console.log('finished listenForSelectLocation');		    
-		    
+
+		      console.log('finished listenForSelectLocation');
+
 		});
   },
 
 
   this.listenForSelectAsset = function(){
-	  $(document).on('click','.requestableAsset', function (e) {  
+	  $(document).on('click','.requestableAsset', function (e) {
 		  var id = (this.id);
 		  var justificationDivId = id.replace("-asset-", "-justification-div-");
 		  $('#'+justificationDivId).toggle();
@@ -230,7 +230,7 @@ function assetRequest() {
   this.saveAssetRequestRecords = function(){
 	  console.log('would save all the records now');
 	  var allDisabledFields = ($("#assetRequestForm input:disabled"));
-      $(allDisabledFields).attr('disabled',false);	  
+      $(allDisabledFields).attr('disabled',false);
       var formData = $('#assetRequestForm').serialize();
       $(allDisabledFields).attr('disabled',true);
       console.log(formData);
@@ -241,9 +241,9 @@ function assetRequest() {
           success: function(result){
         	  var resultObj = JSON.parse(result);
         	  console.log(resultObj);
-        	  var assetRequests = resultObj.requests;   
-        	  $('#saveFeedbackModal .modal-body').html("<h3>Requests Created</h3>" + assetRequests);        	  
-        	  $('#saveFeedbackModal').modal('show');       	  
+        	  var assetRequests = resultObj.requests;
+        	  $('#saveFeedbackModal .modal-body').html("<h3>Requests Created</h3>" + assetRequests);
+        	  $('#saveFeedbackModal').modal('show');
             },
           complete : function(xhr, status){
          	}
@@ -252,9 +252,9 @@ function assetRequest() {
 
   this.listenForSaveAssetRequest = function(){
 	  $(document).on('click','#saveAssetRequest', function(){
-		  console.log('they want to save');		  
-		  
-		  $('#saveAssetRequest').addClass('spinning'); 
+		  console.log('they want to save');
+
+		  $('#saveAssetRequest').addClass('spinning');
 		  $('#saveAssetRequest').attr('disabled',true);
 
 	      var form = document.getElementById('assetRequestForm');
@@ -265,7 +265,7 @@ function assetRequest() {
 	      } else {
 	    	  alert('Please complete form');
     		  $('#saveAssetRequest').removeClass('spinning');
-    		  $('#saveAssetRequest').attr('disabled',false);	
+    		  $('#saveAssetRequest').attr('disabled',false);
 	      }
 	  });
 
@@ -300,7 +300,7 @@ function assetRequest() {
 		  	}
 		  }
 	  };
-	  
+
 	  // If we found a prereqElement, (ie a pre-req that isn't checked - then return the Owning selectedAsset;
 	  return prereqsRequiredFor.length >0 ? prereqsRequiredFor[0] : false;
 
@@ -347,19 +347,43 @@ function assetRequest() {
 		  }
 	  });
   },
-  
+
   this.listenForClosingSaveFeedbackModal = function(){
 	  $('#saveFeedbackModal').on('hidden.bs.modal', function (e) {
 		  $('.greyablePage').addClass('overlay');
 		  location.reload();
 	  });
   },
-  
+
+  this.listenForToggleReturnRequest = function(){
+	  var saveCtidState='notRecorded';
+	  var saveCtidTick ='notRecorded';
+	  $(document).on('change','#returnRequest', function(){
+		  ctidAsset = $('*[data-asset="CT ID"]');
+		  console.log('Toggling between a return and a request');
+		  var isReturn = $('#returnRequest:checked').length > 0;
+
+		  console.log(isReturn);
+		  console.log(saveCtidState);
+
+		  if(isReturn && saveCtidState=='notRecorded' ){
+			  saveCtidState = $(ctidAsset).attr('disabled');
+			  saveCtidTick = $(ctidAsset).attr('checked');
+			  $(ctidAsset).attr('disabled',false);
+		  } else if(isReturn) {
+			  $(ctidAsset).attr('disabled',false);
+		  } else {
+			  $(ctidAsset).attr('disabled',saveCtidState);
+			  $(ctidAsset).attr('checked',saveCtidTick);
+		  }
+	  });
+  },
+
 
   this.recordCtidOnForm = function(email_address, ctid ){
 	  var lastCtidInput = $('#allCtidHereDiv > :input').not('.select2').last();
- 	  $(lastCtidInput).val(ctid); 
-   
+ 	  $(lastCtidInput).val(ctid);
+
 	  var lastRequest = $('#requestDetailsDiv > .panel').last();
 	  $(lastRequest).find('.panel-title').html('Request For : ' + email_address );
 	  ctidAsset = $('*[data-asset="CT ID"]');
@@ -417,9 +441,9 @@ function assetRequest() {
 			  var text = $(value).text();
 			  var alreadyAmended = text.includes("not available onshore");
 			  if(!alreadyAmended) {
-				  $(value).text(text + ' - not available onshore');  
+				  $(value).text(text + ' - not available onshore');
 			  }
-			  
+
 		  });
 		  $.each($('*[data-onshore="Yes"]').not('*[data-asset="CT ID"]'),function(key,value){
 			  var label = $(this).next('label');
@@ -440,7 +464,7 @@ function assetRequest() {
 		  });
 	  }
   }
- 
+
 }
 
 var AssetRequest = new assetRequest();

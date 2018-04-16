@@ -68,6 +68,7 @@ if($myCnum) {
      	AssetRequest.listenForSelectLocation();
      	AssetRequest.listenForSelectAsset();
      	AssetRequest.listenForSaveAssetRequest();
+     	AssetRequest.listenForToggleReturnRequest();
      	AssetRequest.listenForClosingSaveFeedbackModal();
      	AssetRequest.listenForAddPrereq();
      	AssetRequest.listenForIgnorePrereq();

@@ -39,17 +39,17 @@ class assetRequestRecord extends DbRecord {
     public static $STATUS_PROVISIONED       = 'Provisioned by Order IT';
     public static $STATUS_RETURNED          = 'Returned to LBG';
     public static $STATUS_REJECTED          = 'Rejected in vBAC';
-    
+
     public static $STATUS_ORDERIT_YET       = 'Yet to be raised';
     public static $STATUS_ORDERIT_RAISED    = 'Raised in Order IT';
     public static $STATUS_ORDERIT_APPROVED  = 'Approved in Order IT';
     public static $STATUS_ORDERIT_CANCELLED = 'Cancelled in Order IT';
     public static $STATUS_ORDERIT_REJECTED  = 'Rejected in Order IT';
-    
+
     public static $CREATED_USER             = 'Yes';
     public static $CREATED_PMO              = 'No';
-     
-    
+
+
     function displayForm(){
         $loader = new Loader();
         $myCnum = personTable::myCnum();
@@ -88,7 +88,7 @@ class assetRequestRecord extends DbRecord {
 		</div>
 
 		<div class="panel-body">
-        	<div class='form-group required'>      	
+        	<div class='form-group required'>
         		<div class='col-sm-4'>
                 <select class='form-control select select2 '
                 			  id='requestees'
@@ -108,11 +108,11 @@ class assetRequestRecord extends DbRecord {
             	</select>
             	</div>
             	<div class='col-sm-3'>
-        		<input name='REQUEST_RETURN' class='toggle' type='checkbox' data-toggle='toggle' data-on='Return/Remove existing' data-off='Request New' data-onstyle='danger' data-offstyle='success' data-width='250' >
-        		</div> 
-            	
-            	
-            	
+        		<input name='REQUEST_RETURN' class='toggle' type='checkbox' data-toggle='toggle' data-on='Return/Remove existing' data-off='Request New' data-onstyle='danger' data-offstyle='success' data-width='250' id='returnRequest' >
+        		</div>
+
+
+
         	</div>
 		<div id='requestDetailsDiv'>
         	<div class="panel panel-info">
@@ -160,13 +160,13 @@ class assetRequestRecord extends DbRecord {
                               name='approvingManager'
                               required
                       >
-                    <option value=''>                                     
+                    <option value=''>
                     </option>
                     <?php
                     foreach ($approvingMgrs as $cnum => $notesId){
                             $displayedName = !empty(trim($notesId)) ?  trim($notesId) : $selectableEmailAddress[$cnum];
                             $selected = null;
-                            
+
                             if(!$isFm && (trim($cnum)== trim($myManagersCnum))){
                                 /*
                                  * The user is NOT a manager, and this entry is their Mgr
@@ -191,13 +191,13 @@ class assetRequestRecord extends DbRecord {
             	<div class='col-sm-4' >
             	<label for='orderItNumber'>Order IT Number (If already created)</label>
             	<input type="number" name='ORDERIT_NUMBER' id=orderItNumber' placeholder="Order IT Number" min="999999" max="9999999" class='form-control' >
-            	
+
             	</div>
             	<div class='col-sm-4' >
-            	
+
             	</div>
-            	
-            	
+
+
         		</div>
 
 
@@ -215,7 +215,7 @@ class assetRequestRecord extends DbRecord {
 
         </div>
         </form>
-		<?php 
+		<?php
     }
 
     function createJsCtidLookup(){
@@ -223,7 +223,7 @@ class assetRequestRecord extends DbRecord {
         $ctId = $loader->loadIndexed('CT_ID','CNUM',allTables::$PERSON);
         JavaScript::buildObjectFromLoadIndexedPair($ctId,'cnum2ctid');
     }
-    
+
     function saveFeedbackModal(){
         ?>
         <!-- Modal -->
@@ -237,16 +237,16 @@ class assetRequestRecord extends DbRecord {
       			<div class="modal-body" >
       			</div>
       			<div class="modal-footer">
-      				<p class="text-center">When you close this modal, please allow time for the page to refresh before attempting to create another request</p>      				
+      				<p class="text-center">When you close this modal, please allow time for the page to refresh before attempting to create another request</p>
       				<button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
-      				
+
       			</div>
     		</div>
   			</div>
 		</div>
         <?php
     }
-    
+
 
     function confirmEducationModal(){
         ?>
@@ -359,8 +359,8 @@ class assetRequestRecord extends DbRecord {
 		</div>
         <?php
     }
-    
-    
+
+
     function exportResponseModal(){
         ?>
         <!-- Modal -->
