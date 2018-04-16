@@ -1097,20 +1097,44 @@ class assetRequestsTable extends DbTable{
         $sql .= " SET ORDERIT_STATUS='" . db2_escape_string($orderItStatus) . "' ";
         $sql .= " WHERE REQUEST_REFERENCE ='" . db2_escape_string($reference) . "' " ;
 
-
-        echo $sql;
-
         $rs = db2_exec($_SESSION['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs,__CLASS__, __METHOD__, $sql);
             return false;
         }
+
+        switch ($orderItStatus) {
+            case assetRequestRecord::$STATUS_ORDERIT_APPROVED:
+            case assetRequestRecord::$STATUS_ORDERIT_CANCELLED:
+            case assetRequestRecord::$STATUS_ORDERIT_RAISED:
+            case assetRequestRecord::$STATUS_ORDERIT_REJECTED:
+                    $this->notifyRequestee($reference, $orderItStatus);
+                    break;
+            default:
+            break;
+        }
         return true;
     }
 
+    function notifyRequestee($reference, $orderItStatus){
+        $loader = new Loader();
+        $cnum   = $loader->load('CNUM',$this->tableName," REQUEST_REFERENCE='" . db2_escape_string($reference) . "' ");
+        $asset   = $loader->load('ASSET_TITLE',$this->tableName," REQUEST_REFERENCE='" . db2_escape_string($reference) . "' ");
+
+        foreach ($cnum as $actualCnum){
+        }
+
+        foreach ($asset as $actualAsset){
+        }
 
 
+        $emailAddress = personTable::getEmailFromCnum($actualCnum);
+
+        $message = "vBAC Requests for : $actualAsset ($reference) -  has been set to $orderItStatus status in Order IT.<br/>You can access the tool here  <a href='" . $_SERVER['HTTP_HOST'] . "/pa_assetPortal.php'  target='_blank' >vBAC Asset Portal</a>";
+
+        \itdq\BlueMail::send_mail(array($emailAddress), 'vBAC Request : ' . $orderItStatus , $message , 'vbacNoReply@uk.ibm.com');
+    }
 
     static function setStatus($reference, $status, $comment=null,$dateReturned=null){
 
