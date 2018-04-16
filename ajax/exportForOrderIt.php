@@ -18,18 +18,21 @@ $varbsCovered = array();
 $first = true;
 $lastSql = array();
 foreach ($allOrderItTypes as $orderItType){
-    
+
     $totalRequestsForType = 0;
     $outstandingRequestsForType = 0;
-    
+
     while(($outstandingRequestsForType = $assetRequestTable->countApprovedForOrderItType($orderItType)) > 0){
         $lastSql[] = $assetRequestTable->getLastSql();
-        
+
         $totalRequestsForType += $outstandingRequestsForType;
+
         $requestData .= $assetRequestTable->getRequestsForOrderIt($orderItType,$first);
+        $lastSql[] = $assetRequestTable->getLastSql();
+
         $varbsCovered[] = $assetRequestTable->currentVarb;
         $first = false;
-        
+
         $lastSql[] = $assetRequestTable->getLastSql();
     }
     echo "<h5>Total requests for Order IT Type " . $orderItType . " :" . $totalRequestsForType;

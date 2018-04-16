@@ -23,7 +23,7 @@ class assetRequestsTable extends DbTable{
         ,'PRIMARY_UID','SECONDARY_UID','DATE_ISSUED_TO_IBM','DATE_ISSUED_TO_USER','DATE_RETURNED',
         'ORDERIT_VARB_REF','ORDERIT_NUMBER','ORDERIT_STATUS','ORDERIT_TYPE', 'COMMENT'
         ,'USER_CREATED','REQUESTEE_EMAIL','REQUESTEE_NOTES', 'APPROVER_EMAIL', 'FM_EMAIL','FM_NOTES',
-        'CTB_RTB','TT_BAU','LOB', 'WORK_STREAM'
+        'CTB_RTB','TT_BAU','LOB', 'WORK_STREAM','PRE_REQ_REQUEST'
     );
 
     static function portalHeaderCells(){
@@ -56,6 +56,7 @@ class assetRequestsTable extends DbTable{
         $sql .= " , REQUEST_RETURN ";
         $sql .= " , USER_CREATED ";
         $sql .= " , P.CTB_RTB,P.TT_BAU,P.LOB, P.WORK_STREAM ";
+        $sql .= " , PRE_REQ_REQUEST ";
         $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
         $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql .= " ON AR.CNUM = P.CNUM ";
@@ -270,6 +271,7 @@ class assetRequestsTable extends DbTable{
         $predicate  = "";
         $predicate .= "   AND ORDERIT_VARB_REF is null and ORDERIT_NUMBER is null and RAL.ORDER_IT_TYPE = '" . db2_escape_string($orderItType) . "' AND AR.STATUS='" . assetRequestRecord::$STATUS_APPROVED . "' ";
         $predicate .= "   AND ('" . db2_escape_string($orderItType) . "' = '1' or P.CT_ID is not null)";
+        $predicate .= $this->predicateForPmoExportableRequest();
 
         return $predicate;
     }
@@ -361,6 +363,20 @@ class assetRequestsTable extends DbTable{
         $rows = $this->getRequestsForOrderIt($orderItGroup);
         return $rows;
     }
+
+
+    function predicateForPmoExportableRequest() {
+        $predicate = " AND STATUS IN('" . assetRequestRecord::$STATUS_APPROVED . "') AND ORDERIT_NUMBER is NULL AND USER_CREATED='" . assetRequestRecord::$CREATED_PMO . "' ";
+        $predicate.= " and ( pre_req_Request is null or pre_req_request  in (  select AR2.pre_req_request
+						  	from " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR2
+						  	left join " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR3
+						  	on AR2.PRE_REQ_REQUEST = AR3.REQUEST_REFERENCE
+						    where AR3.ORDERIT_STATUS in ('Approved in Order IT')
+							) )";
+        return $predicate;
+    }
+
+
 
 
     function countApprovedForOrderItType($orderItType = 0){

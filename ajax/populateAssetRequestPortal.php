@@ -30,17 +30,16 @@ switch (true) {
         $myPeople = $loader->load("CNUM",allTables::$PERSON," FM_CNUM='" . trim($myCnum) . "' ");
         $myPeopleListed = "'";
         foreach ($myPeople as $personCnum){
-            $myPeopleListed .= db2_escape_string($personCnum) . "','"; 
-        }        
-        $myPeopleListed .= "'";        
-        $predicate .= " AND AR.CNUM in ('". db2_escape_string($myCnum) . "'," . $myPeopleListed . ") or lower(Approver_email='" . db2_escape_string($myEmail) . "') ";    
+            $myPeopleListed .= db2_escape_string($personCnum) . "','";
+        }
+        $myPeopleListed .= "'";
+        $predicate .= " AND AR.CNUM in ('". db2_escape_string($myCnum) . "'," . $myPeopleListed . ") or lower(Approver_email='" . db2_escape_string($myEmail) . "') ";
         break;
     case $_SESSION['isCdi']:
         echo "is CDI";
-        break;
     case $_SESSION['isPmo']:
         echo "is PMO";
-        $predicate .= $showAll ? null : " AND STATUS IN('" . assetRequestRecord::$STATUS_APPROVED . "') AND ORDERIT_NUMBER is NULL AND USER_CREATED='" . assetRequestRecord::$CREATED_PMO . "' "; 
+        $predicate .= $showAll ? null : assetRequestsTable::predicateForPmoExportableRequest();
         break;
     default:
         echo "is default";

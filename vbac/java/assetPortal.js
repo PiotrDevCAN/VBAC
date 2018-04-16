@@ -24,11 +24,11 @@ function assetPortal() {
 	        }
       });
   },
-  
-  
-  this.initialiseAssetRequestDataTable = function(showAll){  
+
+
+  this.initialiseAssetRequestDataTable = function(showAll){
 	showAll = typeof(showAll) == 'undefined'  ? false : showAll;
-	  
+
 	// Setup - add a text input to each footer cell
     $('#assetPortalTable tfoot th').each( function () {
           var title = $(this).text();
@@ -46,28 +46,28 @@ function assetPortal() {
                     	  render: {
                   	        _: 'display',
                   	        sort: 'reference'
-                  	    }                     
-                      
+                  	    }
+
                       },
                       { "data": "CT_ID" ,"defaultContent": "<i>no ctid</i>" },
                       { "data": "PERSON" ,"defaultContent": "" },
                       { "data": "ASSET","defaultContent": "<i>unknown</i>"},
                       { "data": "STATUS", "defaultContent": "" },
-                      { "data": "JUSTIFICATION", "defaultContent": "" },                   
+                      { "data": "JUSTIFICATION", "defaultContent": "" },
                       { "data": "REQUESTOR", "defaultContent": "",
                     	  render: {
                     	        _: 'display',
                     	        sort: 'timestamp'
                     	    }
                       },
-                      { "data": "APPROVER", "defaultContent": "" }, 
+                      { "data": "APPROVER", "defaultContent": "" },
                       { "data": "FM", "defaultContent": "" },
                       { "data": "LOCATION", "defaultContent": "<i>unknown</i>" },
                       { "data": "PRIMARY_UID", "defaultContent": "<i>unknown</i>" },
                       { "data": "SECONDARY_UID", "defaultContent": "<i>unknown</i>" },
                       { "data": "DATE_ISSUED_TO_IBM", "defaultContent": "<i>unknown</i>" },
                       { "data": "DATE_ISSUED_TO_USER", "defaultContent": "" },
-                      { "data": "DATE_RETURNED", "defaultContent": "" },                 
+                      { "data": "DATE_RETURNED", "defaultContent": "" },
                       { "data": "ORDERIT_VARB_REF", "defaultContent": ""},
                       { "data": "ORDERIT_NUMBER", "defaultContent": "" },
                       { "data": "ORDERIT_STATUS" , "defaultContent": ""},
@@ -77,15 +77,16 @@ function assetPortal() {
                       ,{ "data": "REQUESTEE_EMAIL" , "defaultContent": ""}
                       ,{ "data": "REQUESTEE_NOTES" , "defaultContent": ""}
                       ,{ "data": "APPROVER_EMAIL" , "defaultContent": ""}
-                      ,{ "data": "FM_EMAIL" , "defaultContent": ""}                      
+                      ,{ "data": "FM_EMAIL" , "defaultContent": ""}
                       ,{ "data": "FM_NOTES" , "defaultContent": ""}
                       ,{ "data": "CTB_RTB" , "defaultContent": ""}
                       ,{ "data": "TT_BAU" , "defaultContent": ""}
                       ,{ "data": "LOB" , "defaultContent": ""}
                       ,{ "data": "WORK_STREAM" , "defaultContent": ""}
+                      ,{ "data": "PRE_REQ_REQUEST" , "defaultContent": ""}
                   ],
           columnDefs: [
-                         { visible: false, targets: [8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28] }
+                         { visible: false, targets: [8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29] }
                   ] ,
           order: [[ 0, "desc" ]],
           autoWidth: true,
@@ -96,7 +97,7 @@ function assetPortal() {
           responsive: true,
           language: {
         	    "emptyTable": "No Asset Requests to show"
-          		},   
+          		},
           dom: 'Blfrtip',
 //	      colReorder: true,
           buttons: [
@@ -119,7 +120,7 @@ function assetPortal() {
           });
      });
   },
-  
+
   this.listenForReportReset = function(){
 	    $(document).on('click','#reportReset', function(e){
 	    	$('#portalTitle').text('Asset Request Portal');
@@ -128,8 +129,8 @@ function assetPortal() {
 	    	assetPortal.table.columns([0,1,2,3,4,5,6,7]).visible(true);
 	    	assetPortal.table.search('').order([0,"asc"]).draw();
 	    });
-  },  
-  
+  },
+
   this.listenForReportReload = function(){
 	    $(document).on('click','#reportReload', function(e){
 	    	$('#portalTitle').text('Asset Request Portal');
@@ -137,7 +138,7 @@ function assetPortal() {
 	    	assetPortal.table.ajax.reload();
 	      });
   },
-  
+
   this.listenForReportShowAll = function(){
 	  $(document).on('click','#reportShowAll', function(e){
 		  assetPortal.table.destroy();
@@ -158,11 +159,11 @@ this.listenForReportShowUid = function(){
 	$(document).on('click','#reportShowUid', function(e){
     	$('#portalTitle').text('Asset Request Portal - Show UID' );
     	$.fn.dataTableExt.afnFiltering.pop();
-    	
+
 		assetPortal.table.destroy();
 		AssetPortal.initialiseAssetRequestDataTable(true);
-    	
-    	
+
+
     	assetPortal.table.columns().visible(false,false);
     	assetPortal.table.columns([0,1,2,3,10,11]).visible(true);
     	assetPortal.table.search('').order([0,"desc"]).draw();
@@ -185,59 +186,59 @@ this.listenForReportShowUid = function(){
 		  		    $('#exportForOrderIt').removeClass('spinning');
 				    $('#exportForOrderIt').attr('disabled',false);
 		        }
-	      });		 
+	      });
 	  });
   },
-  
-  
+
+
   this.listenForEditUid = function(){
 	  $(document).on('click','.btnEditUid', function(e){
 		  $('#asset').val($(e.target).data('asset'));
-		  $('#userid').val($(e.target).data('requestee'));		
-		  
+		  $('#userid').val($(e.target).data('requestee'));
+
 		  var primaryUid   = $(e.target).data('primaryuid');
 		  var secondaryUid = $(e.target).data('secondaryuid');
-		  
+
 		  var primaryTitle = $(e.target).data('primarytitle');
 		  $('#primaryLabel').text(primaryTitle);
 		  $('#primaryUid').attr('placeholder',primaryTitle);
-		  
+
 		  if(primaryUid){
-			  $('#primaryUid').val(primaryUid);			  
+			  $('#primaryUid').val(primaryUid);
 		  } else {
 			  $('#primaryUid').val('');
-		  }	  
-		  
+		  }
+
 		  var secondaryTitle = $(e.target).data('secondarytitle');
 		  if(secondaryTitle) {
 			 $('#secondaryLabel').text(secondaryTitle);
 			 $('#secondaryUid').attr('placeholder',secondaryTitle);
-			 $('#secondaryUidFormGroup').show(); 
+			 $('#secondaryUidFormGroup').show();
 		  } else {
 			 $('#secondaryLabel').text('null');
 			 $('#secondaryUid').attr('placeholder','null');
-			 $('#secondaryUidFormGroup').hide(); 			  
+			 $('#secondaryUidFormGroup').hide();
 		  }
-		  
+
 		  if(secondaryUid){
-			  $('#secondaryUid').val(secondaryUid);			  
+			  $('#secondaryUid').val(secondaryUid);
 		  } else {
 			  $('#secondaryUid').val('');
 		  }
-		  
-		  
-		  
-		 
-		  $('#reference').val($(e.target).data('reference')); 
+
+
+
+
+		  $('#reference').val($(e.target).data('reference'));
 //		  $('#primaryUid').val('');
 //		  $('#secondaryUid').val('');
 		  $('#editUidModal').modal('show');
-		 
-	 
+
+
 	  });
   }
-  
-  
+
+
   this.listenForMapVarbButton = function(){
 	  $(document).on('click','#mapVarbToOrderIt', function(e){
 		  $('#mapVarbToOrderIt').addClass('spinning');
@@ -253,11 +254,11 @@ this.listenForReportShowUid = function(){
 		  		    $('#mapVarbToOrderIt').removeClass('spinning');
 				    $('#mapVarbToOrderIt').attr('disabled',false);
 		        }
-	      });		 
+	      });
 	  });
   }
-  
-  
+
+
   this.listenForSetOitStatusButton = function(){
 	  $(document).on('click','#setOrderItStatus', function(e){
 		  $('#setOrderItStatus').addClass('spinning');
@@ -273,11 +274,11 @@ this.listenForReportShowUid = function(){
 		  		    $('#setOrderItStatus').removeClass('spinning');
 				    $('#setOrderItStatus').attr('disabled',false);
 		        }
-	      });		 
+	      });
 	  });
-  } 
-  
-  
+  }
+
+
   this.listenForSetOitStatusModalShown = function(){
 	  $('#setOitStatusModal').on('shown.bs.modal',function(){
 			$('#orderit').select2({
@@ -285,11 +286,11 @@ this.listenForReportShowUid = function(){
 		         });
 			AssetPortal.populateRequestTableForOrderIt();
 			AssetPortal.listenForOrderItSelected();
-		  
+
 	  });
   }
-  
-  
+
+
   this.listenForOrderItSelected = function(){
 	  console.log('setup listener for orderit selected');
 	  console.log($('#orderit'));
@@ -298,10 +299,10 @@ this.listenForReportShowUid = function(){
 		  assetPortal.requestsWithStatus.ajax.reload();
 		});
   }
-  
-  
+
+
   this.listenForSaveMapping = function(){
-	  $(document).on('click','#saveMapVarbToOrderIT', function(e){ 
+	  $(document).on('click','#saveMapVarbToOrderIT', function(e){
 		  $('#saveMapVarbToOrderIT').addClass('spinning');
 	      var form = document.getElementById('mapVarbToOrderItForm');
 	      var formValid = form.checkValidity();
@@ -310,7 +311,7 @@ this.listenForReportShowUid = function(){
 	    	  $.ajax({
 		        url: "ajax/saveVarbToOrderItMapping.php",
 		        type: 'POST',
-		        data: formData,  
+		        data: formData,
 		        success: function(result){
 		        	console.log(result);
 		        	var resultObj = JSON.parse(result);
@@ -321,7 +322,7 @@ this.listenForReportShowUid = function(){
 	    	  });
 	      } else {
 	    	  alert('Form is not valid, please correct');
-	      }	
+	      }
 		  $('#saveMapVarbToOrderIT').removeClass('spinning');
 		  assetPortal.table.ajax.reload();
 	  });
@@ -329,31 +330,31 @@ this.listenForReportShowUid = function(){
 
 
 this.listenForSaveEditUid = function(){
-	  $(document).on('click','#saveEditUid', function(e){ 
+	  $(document).on('click','#saveEditUid', function(e){
 		  $('#saveEditUid').addClass('spinning');
-		  var formData = $('#editUidForm').serialize();	
+		  var formData = $('#editUidForm').serialize();
 		  console.log(formData);
 	      $.ajax({
 		        url: "ajax/saveEditUid.php",
 		        type: 'POST',
-		        data: formData,  
+		        data: formData,
 		        success: function(result){
 		        	console.log(result);
 		        	var resultObj = JSON.parse(result);
 		  		    $('#saveEditUid').removeClass('spinning');
-		        	$('#editUidModal').modal('hide');	
+		        	$('#editUidModal').modal('hide');
 			    	assetPortal.table.ajax.reload();
-		        	
+
 		        }
 	      });
-		  
-		  
+
+
 	  });
 },
 
 
 this.listenForSaveOrderItStatus = function(){
-	  $(document).on('click','#saveOrderItStatus', function(e){ 
+	  $(document).on('click','#saveOrderItStatus', function(e){
 		  $('#saveOrderItStatus').addClass('spinning');
 	      var form = document.getElementById('setOrderItStatusForm');
 	      var formValid = form.checkValidity();
@@ -362,14 +363,14 @@ this.listenForSaveOrderItStatus = function(){
 	    	  $.ajax({
 		        url: "ajax/saveOrderItStatus.php",
 		        type: 'POST',
-		        data: formData,  
+		        data: formData,
 		        success: function(result){
 		        	console.log(result);
 		        	var resultObj = JSON.parse(result);
 		        	$('#setOitStatusModal .modal-body').html('');
 		        	$('#saveOrderItStatus').removeClass('spinning');
 		        	$('#setOitStatusModal').modal('hide');
-		  		  	
+
 		  		  	assetPortal.table.ajax.reload();
 
 		        }
@@ -377,14 +378,14 @@ this.listenForSaveOrderItStatus = function(){
 	      } else {
 	    	  alert('Form is not valid, please correct');
 	    	  $('#saveOrderItStatus').removeClass('spinning');
-	      }	
+	      }
 
 	  });
 },
-  
-  
-  
-  
+
+
+
+
   this.listenForMapVarbModalShown = function(){
 	  $('#mapVarbToOrderItModal').on('shown.bs.modal',function(){
 			$('#unmappedVarb').select2({
@@ -392,48 +393,48 @@ this.listenForSaveOrderItStatus = function(){
 		         });
 			AssetPortal.populateRequestTableForVarb();
 			AssetPortal.listenForVarbSelectedForMapping();
-		  
+
 	  });
   }
-  
-  
+
+
   this.listenForVarbSelectedForMapping = function(){
 	  console.log('setup listener');
 	  $('#unmappedVarb').off('select2:select.varb').on('select2:select.varb', function (e) {
 		  assetPortal.varbRequestTable.ajax.reload();
 		});
   }
-  
-  
-  
-  
+
+
+
+
   this.listenForAssetRequestApprove  = function(){
 	    $(document).on('click','.btnAssetRequestApprove', function(e){
 	    	$('#approveRejectRequestReference').val($(e.target).data('reference'));
-	    	$('#approveRejectRequestee').val($(e.target).data('requestee'));    	 	
-	    	$('#approveRejectAssetTitle').val($(e.target).data('asset'));   
+	    	$('#approveRejectRequestee').val($(e.target).data('requestee'));
+	    	$('#approveRejectAssetTitle').val($(e.target).data('asset'));
 	    	$('#approveRejectRequestOrderItStatus').val($(e.target).data('orderitstatus'));
 	    	$('#assetRequestApprovalToggle').prop('checked',true).change();
-	    	
-	    	$('#approveRejectRequestComment').val('').attr('required',false);	    	
+
+	    	$('#approveRejectRequestComment').val('').attr('required',false);
 	    	$('#approveRejectModal').modal('show');
 	    });
-}, 
+},
 
 
 this.listenForAssetRequestReject  = function(){
-    $(document).on('click','.btnAssetRequestReject', function(e){    	
+    $(document).on('click','.btnAssetRequestReject', function(e){
     	$('#approveRejectRequestReference').val($(e.target).data('reference'));
-    	$('#approveRejectRequestee').val($(e.target).data('requestee'));    	 	
-    	$('#approveRejectAssetTitle').val($(e.target).data('asset'));   
+    	$('#approveRejectRequestee').val($(e.target).data('requestee'));
+    	$('#approveRejectAssetTitle').val($(e.target).data('asset'));
     	$('#approveRejectRequestOrderItStatus').val($(e.target).data('orderitstatus'));
     	$('#assetRequestApprovalToggle').prop('checked',false).change();
-    	
+
     	console.log($('#assetRequestApprovalToggle'));
-    	
+
     	$('#approveRejectRequestComment').val('').attr('required',true);
-    	
-    	$('#approveRejectModal').modal('show');    	
+
+    	$('#approveRejectModal').modal('show');
 
     });
 },
@@ -441,40 +442,40 @@ this.listenForAssetRequestReject  = function(){
 
 
 this.listenForAssetRequestApproveRejectConfirm  = function(){
-    $(document).on('click','#assetRequestApproveRejectConfirm', function(e){  
+    $(document).on('click','#assetRequestApproveRejectConfirm', function(e){
 	      var form = document.getElementById('assetRequestApproveRejectForm');
 	      var formValid = form.checkValidity();
 	      if(formValid){
-	    	  $('#approveRejectModal').modal('hide');  
+	    	  $('#approveRejectModal').modal('hide');
 	          	var allDisabledFields = ($("#assetRequestApproveRejectForm input:disabled"));
-	          	$(allDisabledFields).attr('disabled',false);	          		
+	          	$(allDisabledFields).attr('disabled',false);
 	          	var reference = $('#approveRejectRequestReference').val();
 	          	var comment = $('#approveRejectRequestComment').val();
 	          	var orderItStatus = $('#approveRejectRequestOrderItStatus').val();
-	          	
+
 	          	var approveReject = $('#assetRequestApprovalToggle').is(':checked' );
 	          	var raisedInOrderIt = orderItStatus == 'Raised in Order IT' ? true : false;
 	          	var status = approveReject ? 'Approved for Order IT' : 'Rejected in vBAC';
 	          	var status = approveReject && raisedInOrderIt ? 'Raised in Order IT' : status;
-	          	
-	          	
+
+
 
 		         $(allDisabledFields).attr('disabled',true);
-	          	
+
 	          	$.ajax({
 			        url: "ajax/updateAssetRequestStatus.php",
 			        type: 'POST',
 			        data: {reference: reference,
 			        	   status : status,
-			        	   comment : comment },  
+			        	   comment : comment },
 			        success: function(result){
 			        	console.log(result);
 			        	var resultObj = JSON.parse(result);
-			        	$('#approveRejectModal').modal('hide');  
+			        	$('#approveRejectModal').modal('hide');
 			        	assetPortal.table.ajax.reload();
 			        }
 		      });
-	      	    	  
+
 	      } else {
 	    	  alert('Please complete justification');
 	      }
@@ -483,25 +484,25 @@ this.listenForAssetRequestApproveRejectConfirm  = function(){
 
 
 this.listenForAssetRequestApproveRejectToggle  = function(){
-    $(document).off('change.varb').on('change.varb','#assetRequestApprovalToggle', function(e){    
-    	var comment = $('#assetRequestApprovalComment');    	
+    $(document).off('change.varb').on('change.varb','#assetRequestApprovalToggle', function(e){
+    	var comment = $('#assetRequestApprovalComment');
     	comment.prop("required", !comment.prop("required"));
-    	
+
     });
 },
 
 
 
 this.listenForAssetReturned = function(){
-	  $(document).on('click','.btnAssetReturned', function(e){ 		  
-	  
+	  $(document).on('click','.btnAssetReturned', function(e){
+
 		  $('#assetRet').val($(e.target).data('asset'));
-		  $('#useridRet').val($(e.target).data('requestee'));	
-		  
+		  $('#useridRet').val($(e.target).data('requestee'));
+
 		  var primaryUid   = $(e.target).data('primaryuid');
 		  var secondaryUid = $(e.target).data('secondaryuid');
-		  
-		  
+
+
 		  var primaryTitle = $(e.target).data('primarytitle');
 		  if(primaryTitle) {
 			  $('#primaryLabelRet').text(primaryTitle);
@@ -510,39 +511,39 @@ this.listenForAssetReturned = function(){
 		  } else {
 			 $('#primaryLabelRet').text('null');
 			 $('#primaryUidRet').attr('placeholder','null');
-			 $('#primaryUidFormGroupRet').hide(); 			  
+			 $('#primaryUidFormGroupRet').hide();
 		  }
-		  
+
 		  if(primaryUid){
-			  $('#primaryUidRet').val(primaryUid);	
-			  $('#primaryUidRet').attr('disabled',true);			  
+			  $('#primaryUidRet').val(primaryUid);
+			  $('#primaryUidRet').attr('disabled',true);
 		  } else {
 			  $('#primaryUidRet').val('');
 			  $('#primaryUidRet').attr('disabled',false);
-		  }	
-		  
+		  }
+
 		  var secondaryTitle = $(e.target).data('secondarytitle');
 		  if(secondaryTitle) {
 			 $('#secondaryLabelRet').text(secondaryTitle);
 			 $('#secondaryUidRet').attr('placeholder',secondaryTitle);
-			 $('#secondaryUidFormGroupRet').show(); 
+			 $('#secondaryUidFormGroupRet').show();
 		  } else {
 			 $('#secondaryLabelRet').text('null');
 			 $('#secondaryUidRet').attr('placeholder','null');
-			 $('#secondaryUidFormGroupRet').hide(); 			  
+			 $('#secondaryUidFormGroupRet').hide();
 		  }
-		  
+
 		  if(secondaryUid){
-			  $('#secondaryUidRet').val(secondaryUid);	
+			  $('#secondaryUidRet').val(secondaryUid);
 			  $('#secondaryUidRet').attr('disabled',true);
 		  } else {
 			  $('#secondaryUidRet').val('');
 			  $('#secondaryUidRet').attr('disabled',false);
 		  }
-		 
-		  $('#referenceRet').val($(e.target).data('reference')); 
+
+		  $('#referenceRet').val($(e.target).data('reference'));
 		  $('#confirmAssetReturned').attr('disabled',false);
-		  $('#confirmReturnedModal').modal('show');	  		  
+		  $('#confirmReturnedModal').modal('show');
 	  });
 },
 
@@ -556,42 +557,42 @@ this.listenForConfirmedAssetReturnedModalShown = function(){
 			});
 		var dateReturned = $('#date_returned').datepicker('getDate');
 	});
-	
+
 },
 
 
 
 
 this.listenForConfirmedAssetReturned = function(){
-	  $(document).on('click','#confirmAssetReturned', function(e){ 
+	  $(document).on('click','#confirmAssetReturned', function(e){
 		  $('#confirmAssetReturned').addClass('spinning');
 		  $('#confirmAssetReturned').attr('disabled',true);
-		  var formData = $('#confirmReturnedForm').serialize();			  
+		  var formData = $('#confirmReturnedForm').serialize();
 		  console.log(formData);
 	      $.ajax({
 		        url: "ajax/saveAssetReturned.php",
 		        type: 'POST',
-		        data: formData,  
+		        data: formData,
 		        success: function(result){
 		        	console.log(result);
 		        	var resultObj = JSON.parse(result);
 		  		    $('#confirmAssetReturned').removeClass('spinning');
 		  		    $('#confirmAssetReturned').attr('disabled',false);
-		        	$('#confirmReturnedModal').modal('hide');	
+		        	$('#confirmReturnedModal').modal('hide');
 			    	assetPortal.table.ajax.reload();
-		        	
+
 		        }
 	      });
-		  
- 
-		  
+
+
+
 	  });
 },
 
-  
-  
-  
-  this.populateRequestTableForVarb = function(){ 
+
+
+
+  this.populateRequestTableForVarb = function(){
 	  assetPortal.varbRequestTable = $('#requestsWithinVarb').DataTable({
 	          ajax: {
 	              url: 'ajax/populateRequestTableForVarb.php',
@@ -599,7 +600,7 @@ this.listenForConfirmedAssetReturned = function(){
 	              data: function ( d ) {
 	            	  var varb = $('#unmappedVarb').find(':selected').val();
 	            	  var varbObject = { 'varb' : varb };
-	            	  return varbObject; }	        		
+	            	  return varbObject; }
 	          		}	,
 	          columns: [
 	                      { "data": "INCLUDED" , "defaultContent": "", "width":"5%" },
@@ -609,7 +610,7 @@ this.listenForConfirmedAssetReturned = function(){
 	                      { "data": "PRIMARY_UID","defaultContent": "", "width":"20"},
 	                      { "data": "SECONDARY_UID","defaultContent": "", "width":"20%"}
 	                  ],
-	
+
 	          autoWidth: false,
 	          deferRender: true,
 	          responsive: false,
@@ -619,16 +620,16 @@ this.listenForConfirmedAssetReturned = function(){
 	          order: [[ 1, "asc" ]],
 	          language: {
 	        	    "emptyTable": "Please select VARB"
-	          		},   
+	          		},
 	          dom: 'Bfrtip',
 //		      colReorder: true,
 	          buttons: [
 	                    'csvHtml5'
 	                ],
-	      });  
+	      });
   	},
 
-  	this.populateRequestTableForOrderIt = function(){ 
+  	this.populateRequestTableForOrderIt = function(){
 	  assetPortal.requestsWithStatus = $('#requestsWithStatus').DataTable({
 	          ajax: {
 	              url: 'ajax/populateRequestTableForOrderIt.php',
@@ -646,7 +647,7 @@ this.listenForConfirmedAssetReturned = function(){
 	                      { "data": "ORDERIT_STATUS","defaultContent": "", "width":"15%"},
 	                      { "data": "ACTION","defaultContent": "", "width":"30%"}
 	                  ],
-	                  
+
 	          drawCallback: function(settings) {
 	                      console.log($('.statusToggle'));
 	                      $('.statusToggle').bootstrapToggle();
@@ -660,13 +661,13 @@ this.listenForConfirmedAssetReturned = function(){
 	          order: [[ 1, "asc" ]],
 	          language: {
 	        	    "emptyTable": "Please select Order IT"
-	          		},   
+	          		},
 	          dom: 'Bfrtip',
 //		      colReorder: true,
 	          buttons: [
 	                    'csvHtml5'
 	                ],
-	      });  
+	      });
 	}
 };
 
