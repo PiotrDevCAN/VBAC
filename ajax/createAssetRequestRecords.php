@@ -16,6 +16,7 @@ $now = new DateTime();
 $assetRequestTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
 $records = array();
 $assetRequests = array();
+$assetReferences = array();
 
 $requested = $now->format('Y-m-d h:i:s');
 
@@ -63,7 +64,7 @@ switch (true) {
         $notifyApprovingMgr = true;
     break;
     case $autoApproved && empty($_POST['ORDERIT_NUMBER']) :
-        // Approving Mgr raising it - it's NOT in ORDER IT Yet, 
+        // Approving Mgr raising it - it's NOT in ORDER IT Yet,
         $orderItStatus = assetRequestRecord::$STATUS_ORDERIT_YET;
         $status = assetRequestRecord::$STATUS_APPROVED;
         $userCreated = assetRequestRecord::$CREATED_PMO;
@@ -95,11 +96,11 @@ foreach ($_POST as $key => $value){
         $location = $_POST['person-'.$personId.'-location'];
         $cnum = $_POST['requestee'];
         $educationConfirmed = personTable::getSecurityEducationForCnum($cnum);
-        
+
 //         $email = $_POST[$cnum];
-        
+
         $email = $personTable->getEmailFromCnum($cnum);
-        
+
         $assetRequest = array(
             'CNUM'=>$cnum
             ,'ASSET_TITLE'=>$assetTitle
@@ -117,26 +118,27 @@ foreach ($_POST as $key => $value){
             ,'REQUEST_RETURN'=> $requestReturn
             );
 
-        
+
         try {
             $assetRequestRecord = new assetRequestRecord();
             $assetRequestRecord->setFromArray($assetRequest);
-            
+
             $records[] = print_r($assetRequestRecord,true);
-            
-            
+
+
             $assetRequestTable->saveRecord($assetRequestRecord);
+            $assetReferences[] = $assetRequestTable->lastId();
             $requestDetails = ($status == assetRequestRecord::$STATUS_RAISED_ORDERIT ) || ($status == assetRequestRecord::$STATUS_APPROVED ) ? "<div class='bg-success'>" : "<div class='bg-warning'>" ;
             $requestDetails .= "<br/>Request :<strong>" .$assetRequestTable->lastId();
             $requestDetails .= "</strong><br/>Requestee: <strong>" .  $email . "</strong> Asset:<em>" . $assetTitle . "</em>";
             $requestDetails .= ' Status: <strong>' . $status . '</strong>';
             $assetRequests[] = $requestDetails;
-            
+
             $rest = $personTable->updateLbgLocationForCnum($location, $cnum);
-             
+
 //            echo "<br/>Location:$location Cnum:$cnum Result:$rest Security: $educationConfirmed" ;
-            
-            
+
+
         } catch (Exception $e) {
             $messages = ob_get_clean();
             $response = array('result'=>'failed','post'=>$post,'messages'=>$messages);
@@ -147,6 +149,8 @@ foreach ($_POST as $key => $value){
 }
 
 $notifyApprovingMgr && !empty($approvingMgrEmail) ? $assetRequestTable->notifyApprovingMgr(array($approvingMgrEmail)) : null;
+
+$assetRequestTable->linkPrereqs($assetReferences);
 
 $messages = ob_get_clean();
 
