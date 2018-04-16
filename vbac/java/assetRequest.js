@@ -274,6 +274,7 @@ function assetRequest() {
   this.checkForAssetMissingPrereq = function() {
 	  var prereqElement = false;
 	  var selectedAssetsToInspect = $('.requestableAsset:checked').not('*[data-ignore="Yes"]');
+	  var prereqsRequiredFor = [];
 	  for(i=0;i<selectedAssetsToInspect.length;i++){
 		  var selectedAsset = selectedAssetsToInspect[i];
 		  var asset = $(selectedAsset).data('asset');
@@ -293,12 +294,15 @@ function assetRequest() {
 			   * If it turns up - return it from this Function and stop looking.
 			   * If it doesn't then carry one, we've been told to ignore it.
 			   */
-			  var prereqElement = $('.requestableAsset').not('*[data-ignore="Yes"]').filter('*[data-asset="'+preReq+'"]')[0];
-			  console.log(prereqElement);
-			  break;
+			  var prereqElement = $('.requestableAsset:enabled').not('*[data-ignore="Yes"]').filter('*[data-asset="'+preReq+'"]')[0];
+			  if(prereqElement){
+			  	prereqsRequiredFor.push(selectedAsset);
+		  	}
 		  }
 	  };
-	  return prereqElement ? selectedAsset : false;
+	  
+	  // If we found a prereqElement, (ie a pre-req that isn't checked - then return the Owning selectedAsset;
+	  return prereqsRequiredFor.length >0 ? prereqsRequiredFor[0] : false;
 
 
   },
