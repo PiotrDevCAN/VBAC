@@ -21,35 +21,33 @@ function personRecord() {
 
   this.listenForName = function(){
 	 	$('.typeahead').bind('typeahead:select', function(ev, suggestion) {
-		$('#person_notesid').val(suggestion.notesEmail);
-		$('#person_serial').val(suggestion.cnum).attr('disabled','disabled');
-		$('#person_bio').val(suggestion.role);
-		$('#person_intranet').val(suggestion.mail);
-		console.log(suggestion.mail);
+	 		$('.tt-menu').hide();
+	 		$('#person_notesid').val(suggestion.notesEmail);
+	 		$('#person_serial').val(suggestion.cnum).attr('disabled','disabled');
+	 		$('#person_bio').val(suggestion.role);
+	 		$('#person_intranet').val(suggestion.mail);
+	 		console.log(suggestion.mail);
 
-		var newCnum = suggestion.cnum;
-        console.log(newCnum);
-        var allreadyExists = ($.inArray(newCnum, knownCnum) >= 0 );
-        console.log(allreadyExists);
-        if(allreadyExists){ // comes back with Position in array(true) or false is it's NOT in the array.
-        	$('#saveBoarding').attr('disabled',true);
-        	$('#person_name').css("background-color","LightPink");
-        	alert('Person already defined to VBAC');
-        	return false;
-        } else {
-        	$('#person_name').css("background-color","LightGreen");
-        	$('#saveBoarding').attr('disabled',false);
-        }
+	 		var newCnum = suggestion.cnum;
+	 		console.log(newCnum);
+	 		var allreadyExists = ($.inArray(newCnum, knownCnum) >= 0 );
+	 		console.log(allreadyExists);
+	 		if(allreadyExists){ // comes back with Position in array(true) or false is it's NOT in the array.
+	 			$('#saveBoarding').attr('disabled',true);
+	 			$('#person_name').css("background-color","LightPink");
+	 			alert('Person already defined to VBAC');
+	 			return false;
+	 		} else {
+	 			$('#person_name').css("background-color","LightGreen");
+	 			$('#saveBoarding').attr('disabled',false);
+	 		}
 
-        var personObj = new personRecord();
-        personObj.fetchBluepagesDetailsForCnum(person['uid']);
+//	 		var personObj = new personRecord();
+//	 		personObj.fetchBluepagesDetailsForCnum(person['uid']);
 
-        $('#personDetails').show();
-        $('#person_contractor_id').select2();
-        $('#person_functionalMgr').select2();
-
-
-
+	 		$('#personDetails').show();
+	 		$('#person_contractor_id').select2();
+	 		$('#person_functionalMgr').select2();
 		});
 
   },
