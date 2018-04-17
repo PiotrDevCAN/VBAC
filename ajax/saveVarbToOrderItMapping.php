@@ -2,6 +2,7 @@
 use vbac\assetRequestsTable;
 use vbac\allTables;
 use vbac\personTable;
+use vbac\assetRequestRecord;
 
 ob_start();
 
@@ -11,14 +12,15 @@ $success = $assetRequestTable->saveVarbToOrderItMapping($_POST['ORDERIT_NUMBER']
 
 
 foreach ($_POST['primaryUid'] as $reference => $primaryUid){
-    $secondaryUid = !empty($_POST['secondaryUid'][$reference]) ? $_POST['secondaryUid'][$reference] : '';  
-    
+    $secondaryUid = !empty($_POST['secondaryUid'][$reference]) ? $_POST['secondaryUid'][$reference] : '';
+
     if(!empty($primaryUid)){
         $assetRequestTable->updateUids($reference, trim($primaryUid), trim($secondaryUid));
         $requestDetails = $assetRequestTable->getCnumAndAssetForReference($reference);
         if($requestDetails){
             $personTable->assetUpdate($requestDetails['cnum'], $requestDetails['assetTitle'], $primaryUid);
-        }  
+        }
+        $assetRequestTable->setRequestsOrderItStatus($reference, assetRequestRecord::$STATUS_ORDERIT_APPROVED);
     }
 }
 
