@@ -872,11 +872,13 @@ class assetRequestsTable extends DbTable{
 
 
 
-    function getTracker(Spreadsheet $spreadsheet){
+    function getTracker(Spreadsheet $spreadsheet,$fullExtract = false){
+        $recordsFound = false;
         $loader = new Loader();
-        $allStatus = $loader->load('ORDERIT_STATUS',allTables::$ASSET_REQUESTS," REQUEST_RETURN = 'No' or REQUEST_RETURN is null ");
+        $fullStatus = $loader->load('ORDERIT_STATUS',allTables::$ASSET_REQUESTS," REQUEST_RETURN = 'No' or REQUEST_RETURN is null ");
+        $lbgStatus = array(assetRequestRecord::$STATUS_ORDERIT_RAISED=>assetRequestRecord::$STATUS_ORDERIT_RAISED);
+        $allStatus = $fullExtract ? $fullStatus : $lbgStatus;
         array_map('trim',$allStatus);
-
         $sheet = 1;
 
         if(!empty($allStatus)){
@@ -893,17 +895,29 @@ class assetRequestsTable extends DbTable{
 
                 $rs = db2_exec($_SESSION['conn'], $sql);
 
-                DbTable::writeResultSetToXls($rs, $spreadsheet);
-                DbTable::autoFilter($spreadsheet);
-                DbTable::autoSizeColumns($spreadsheet);
-                DbTable::setRowColor($spreadsheet,'105abd19',1);
+                if($rs){
+                    $recordsFound = true;
+                    DbTable::writeResultSetToXls($rs, $spreadsheet);
+                    DbTable::autoFilter($spreadsheet);
+                    DbTable::autoSizeColumns($spreadsheet);
+                    DbTable::setRowColor($spreadsheet,'105abd19',1);
+
+                } else {
+
+                    $spreadsheet->getActiveSheet()->setCellValueByColumnAndRow(1, 1, "Warning");
+                    $spreadsheet->getActiveSheet()->setCellValueByColumnAndRow(1, 2,"No records found");
+
+                }
 
                 // Rename worksheet & create next.
                 $spreadsheet->getActiveSheet()->setTitle($value);
                 $spreadsheet->createSheet();
                 $spreadsheet->setActiveSheetIndex($sheet++);
+
+
             }
         }
+        return true;
     }
 
 
