@@ -80,8 +80,11 @@ class assetRequestsTable extends DbTable{
             $row = array_map('trim', $preTrimmed);
 
             $reference = trim($row['REFERENCE']);
+            $preReq = !empty(trim($row['PRE_REQ_REQUEST']))  ?  trim($row['PRE_REQ_REQUEST']): null;
             $sortableReference = substr('0000000'.$reference,-6);
             $row['REFERENCE'] = trim($row['ORDERIT_NUMBER']) . ":" . $reference;
+            $row['REFERENCE'] .= !empty($preReq) ? " <==" . $preReq : null;
+
             $row['REFERENCE'] = empty($row['ORDERIT_VARB_REF']) ? array('display'=>$row['REFERENCE'],'reference'=>$sortableReference) : array('display'=>$row['REFERENCE'] . "<br/><small>" . $row['ORDERIT_VARB_REF'] . "</small>",'reference'=>$sortableReference);
 
             $status = trim($row['STATUS']);
@@ -1103,17 +1106,7 @@ class assetRequestsTable extends DbTable{
             DbTable::displayErrorMessage($rs,__CLASS__, __METHOD__, $sql);
             return false;
         }
-
-        switch ($orderItStatus) {
-            case assetRequestRecord::$STATUS_ORDERIT_APPROVED:
-            case assetRequestRecord::$STATUS_ORDERIT_CANCELLED:
-            case assetRequestRecord::$STATUS_ORDERIT_RAISED:
-            case assetRequestRecord::$STATUS_ORDERIT_REJECTED:
-                    $this->notifyRequestee($reference, $orderItStatus);
-                    break;
-            default:
-            break;
-        }
+        $this->notifyRequestee($reference, $orderItStatus);
         return true;
     }
 
