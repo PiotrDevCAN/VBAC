@@ -107,7 +107,7 @@ class assetRequestsTable extends DbTable{
             $rejectButton .= "data-reference='" .trim($reference) . "' ";
             $rejectButton .= "data-requestee='" .trim($row['REQUESTEE_EMAIL']) . "' ";
             $rejectButton .= "data-asset='"     .trim($row['ASSET']) . "' ";
-            $rejectButton .= "data-orderitstatus='".trim($row['ORDERIT_STATUS']) . "' ";
+            $rejectButton .= "data-orderitstatus='". assetRequestRecord::$STATUS_ORDERIT_NOT . "' ";
             $rejectButton .= "data-toggle='tooltip' data-placement='top' title='Reject the request'";
             $rejectButton .= " > ";
             $rejectButton .= "<span class='glyphicon glyphicon-remove ' aria-hidden='true'></span>";
@@ -1154,7 +1154,9 @@ class assetRequestsTable extends DbTable{
         $sql .= " SET STATUS='" . db2_escape_string($status) . "' ";
         $sql .= !empty($newComment) ? ", COMMENT='" . db2_escape_string(substr($newComment,0,500)) . "' " : null;
         $sql .= trim($status)==assetRequestRecord::$STATUS_APPROVED ? ", APPROVER_EMAIL='" . $_SESSION['ssoEmail'] . "' , APPROVED = current timestamp " : null;
+        $sql .= trim($status)==assetRequestRecord::$STATUS_APPROVED ? ", ORDERIT_STATUS = '" . assetRequestRecord::$STATUS_ORDERIT_YET . "' " : null;
         $sql .= trim($status)==assetRequestRecord::$STATUS_RETURNED ? ", DATE_RETURNED = DATE('" . db2_escape_string($dateReturned). "') " : null;
+        $sql .= trim($status)==assetRequestRecord::$STATUS_REJECTED ? ", ORDERIT_STATUS = '" . assetRequestRecord::$STATUS_ORDERIT_NOT . "' " : null;
         $sql .= " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' ";
 
         $rs = db2_exec($_SESSION['conn'], $sql);

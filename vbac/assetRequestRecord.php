@@ -41,6 +41,7 @@ class assetRequestRecord extends DbRecord {
     public static $STATUS_REJECTED          = 'Rejected in vBAC';
 
     public static $STATUS_ORDERIT_YET       = 'Yet to be raised';
+    public static $STATUS_ORDERIT_NOT       = 'Not to be raised';
     public static $STATUS_ORDERIT_RAISED    = 'Raised in Order IT';
     public static $STATUS_ORDERIT_APPROVED  = 'Approved in Order IT';
     public static $STATUS_ORDERIT_CANCELLED = 'Cancelled in Order IT';
