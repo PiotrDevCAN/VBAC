@@ -891,6 +891,11 @@ class assetRequestsTable extends DbTable{
                 $sql .= " ON P.FM_CNUM = FM.CNUM ";
                 $sql .= " WHERE AR.ORDERIT_STATUS = '" . db2_escape_string($value) . "'";
                 $sql .= " AND AR.REQUEST_RETURN = 'No' or AR.REQUEST_RETURN is null ";
+                $sql .= " AND ( ";
+                $sql .= "      ( USER_CREATED = 'No' AND AR.STATUS in ('" . assetRequestRecord::$STATUS_RAISED_ORDERIT . "') ";
+                $sql .= "      OR ";
+                $sql .= "      ( USER_CREATED = 'Yes' AND AR.STATUS in ('" . assetRequestRecord::$STATUS_APPROVED . "') ";
+                $sql .= "    ) ";
                 $sql .= " ORDER BY AR.REQUESTED asc ";
 
                 $rs = db2_exec($_SESSION['conn'], $sql);
