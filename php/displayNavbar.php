@@ -57,9 +57,13 @@ $boarding->addOption($offBoarding);
 
 
 $access         = new NavbarMenu('Access/Assets');
-$assetPortal    = new NavbarOption('Asset Portal', 'pa_assetPortal.php','accessCdi accessPmo accessFm accessUser');
-$requestAssets  = new NavbarOption('Request/Return Digital Assets', 'pc_assetRequest.php','accessCdi accessPmo accessFm accessUser');
-$requestAccess  = new NavbarOption('Request/Return AD Group Access', 'pc_accessRequest.php','accessCdi accessPmo accessFm accessUser');
+// $assetPortal    = new NavbarOption('Asset Portal', 'pa_assetPortal.php','accessCdi accessPmo accessFm accessUser');
+// $requestAssets  = new NavbarOption('Request/Return Digital Assets', 'pc_assetRequest.php','accessCdi accessPmo accessFm accessUser');
+// $requestAccess  = new NavbarOption('Request/Return AD Group Access', 'pc_accessRequest.php','accessCdi accessPmo accessFm accessUser');
+// $iamAdmin       = new NavbarOption('IAM Admin', 'pc_iamAdmin.php','accessCdi accessPmo');
+$assetPortal    = new NavbarOption('Asset Portal', 'pa_assetPortal.php','accessCdi accessPmo  ');
+$requestAssets  = new NavbarOption('Request/Return Digital Assets', 'pc_assetRequest.php','accessCdi accessPmo  ');
+$requestAccess  = new NavbarOption('Request/Return AD Group Access', 'pc_accessRequest.php','accessCdi accessPmo  ');
 $iamAdmin       = new NavbarOption('IAM Admin', 'pc_iamAdmin.php','accessCdi accessPmo');
 $access->addOption($assetPortal);
 $access->addOption($requestAssets);
