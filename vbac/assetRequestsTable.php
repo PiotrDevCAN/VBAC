@@ -889,12 +889,13 @@ class assetRequestsTable extends DbTable{
                 $sql .= " ON P.CNUM = AR.CNUM ";
                 $sql .= " LEFT JOIN " . $_SESSION['Db2Schema']. "." . allTables::$PERSON . " as FM ";
                 $sql .= " ON P.FM_CNUM = FM.CNUM ";
-                $sql .= " WHERE AR.ORDERIT_STATUS = '" . db2_escape_string($value) . "'";
-                $sql .= " AND AR.REQUEST_RETURN = 'No' or AR.REQUEST_RETURN is null ";
+                $sql .= " WHERE 1=1 ";
+                $sql .= " AND AR.ORDERIT_STATUS in ('" . assetRequestRecord::$STATUS_ORDERIT_RAISED . "') ";
+                $sql .= " AND (AR.REQUEST_RETURN = 'No' or AR.REQUEST_RETURN is null ) ";
                 $sql .= " AND ( ";
-                $sql .= "      ( USER_CREATED = 'No' AND AR.STATUS in ('" . assetRequestRecord::$STATUS_RAISED_ORDERIT . "') ";
+                $sql .= "      ( USER_CREATED = 'No' AND AR.STATUS in ('" . assetRequestRecord::$STATUS_RAISED_ORDERIT . "') )";
                 $sql .= "      OR ";
-                $sql .= "      ( USER_CREATED = 'Yes' AND AR.STATUS in ('" . assetRequestRecord::$STATUS_APPROVED . "') ";
+                $sql .= "      ( USER_CREATED = 'Yes' AND AR.STATUS in ('" . assetRequestRecord::$STATUS_APPROVED . "') )";
                 $sql .= "    ) ";
                 $sql .= " ORDER BY AR.REQUESTED asc ";
 
