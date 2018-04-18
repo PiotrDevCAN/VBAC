@@ -26,14 +26,14 @@ switch (true) {
     case $_SESSION['isFm']:
         echo "is FM";
         $myCnum = personTable::myCnum();
-        $myEmail = strtolower($GLOBALS['ltcuser']['mail']);
+        $myEmail = trim(strtolower($GLOBALS['ltcuser']['mail']));
         $myPeople = $loader->load("CNUM",allTables::$PERSON," FM_CNUM='" . trim($myCnum) . "' ");
         $myPeopleListed = "'";
         foreach ($myPeople as $personCnum){
             $myPeopleListed .= db2_escape_string($personCnum) . "','";
         }
         $myPeopleListed .= "'";
-        $predicate .= " AND AR.CNUM in ('". db2_escape_string($myCnum) . "'," . $myPeopleListed . ") or lower(Approver_email='" . db2_escape_string($myEmail) . "') ";
+        $predicate .= " AND AR.CNUM in ('". db2_escape_string($myCnum) . "'," . $myPeopleListed . ") or lower(APPROVER_EMAIL) ='" . db2_escape_string($myEmail) . "' ";
         break;
     case $_SESSION['isCdi']:
         echo "is CDI";
