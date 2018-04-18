@@ -71,7 +71,7 @@ class personTable extends DbTable {
             return false;
         } else {
             while(($row=db2_fetch_assoc($rs))==true){
-                 // Only editable, if they're not a "pre-Boarder" who has now been boarded.
+                // Only editable, if they're not a "pre-Boarder" who has now been boarded.
                 $preparedRow = $this->prepareFields($row);
                 $rowWithButtonsAdded =(substr($row['PES_STATUS_DETAILS'],0,7)=='Boarded') ? $preparedRow : $this->addButtons($preparedRow);
                 $data[] = $rowWithButtonsAdded;
@@ -116,7 +116,7 @@ class personTable extends DbTable {
 
 
     function  prepareFields($row){
-        $preparedRow = array_filter(array_map('trim', $row));
+        $preparedRow = array_map('trim', $row);
         $fmNotesid = isset($this->allNotesIdByCnum[trim($row['FM_CNUM'])]) ? $this->allNotesIdByCnum[trim($row['FM_CNUM'])]  :  trim($row['FM_CNUM']);
         $preparedRow['FM_CNUM'] = $fmNotesid;
         return $preparedRow;
