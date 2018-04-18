@@ -16,6 +16,7 @@ foreach ($_POST['primaryUid'] as $reference => $primaryUid){
 
     if(!empty($primaryUid)){
         $assetRequestTable->updateUids($reference, trim($primaryUid), trim($secondaryUid));
+        assetRequestsTable::setToProvisionedStatus($reference);
         $requestDetails = $assetRequestTable->getCnumAndAssetForReference($reference);
         if($requestDetails){
             $personTable->assetUpdate($requestDetails['cnum'], $requestDetails['assetTitle'], $primaryUid);
