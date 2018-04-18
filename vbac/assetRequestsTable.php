@@ -174,7 +174,7 @@ class assetRequestsTable extends DbTable{
 //                 unset($row['REQUESTOR_DATE']);
 //             }
 
-            $row['FM'] = $row['FM_NOTESID'] . "<br/><small>" . $row['FM_EMAIL'] . "</small>";
+            $row['FM'] = $row['FM_NOTES'] . "<br/><small>" . $row['FM_EMAIL'] . "</small>";
 
 
             $editUidButton  = "<button type='button' class='btn btn-default btn-xs btnEditUid btn-primary' aria-label='Left Align' ";
