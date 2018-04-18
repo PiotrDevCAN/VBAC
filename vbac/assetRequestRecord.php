@@ -116,7 +116,7 @@ class assetRequestRecord extends DbRecord {
 
         	</div>
 		<div id='requestDetailsDiv'>
-        	<div class="panel panel-info">
+        	<div class="panel panel-primary">
 				<div class="panel-heading">
 					<h3 class="panel-title">Request Details</h3>
 				</div>
