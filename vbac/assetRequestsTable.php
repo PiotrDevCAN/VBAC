@@ -1234,15 +1234,6 @@ class assetRequestsTable extends DbTable{
         $sql .= " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' ";
         $sql .= " AND STATUS not in ('" . assetRequestRecord::$STATUS_REJECTED . "','" . assetRequestRecord::$STATUS_RETURNED ."') ";
         $rs = db2_exec($_SESSION['conn'], $sql);
-
-        var_dump($rs);
-
-        echo $sql;
-
-        die('here');
-
-
-
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__,__METHOD__, $sql);
             return false;
