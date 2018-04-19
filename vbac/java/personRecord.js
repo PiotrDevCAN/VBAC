@@ -31,6 +31,7 @@ function personRecord() {
 	 		var newCnum = suggestion.cnum;
 	 		console.log(newCnum);
 	 		var allreadyExists = ($.inArray(newCnum, knownCnum) >= 0 );
+
 	 		console.log(allreadyExists);
 	 		if(allreadyExists){ // comes back with Position in array(true) or false is it's NOT in the array.
 	 			$('#saveBoarding').attr('disabled',true);
@@ -42,8 +43,10 @@ function personRecord() {
 	 			$('#saveBoarding').attr('disabled',false);
 	 		}
 
-//	 		var personObj = new personRecord();
-//	 		personObj.fetchBluepagesDetailsForCnum(person['uid']);
+	 		console.log(suggestion.cnum);
+
+	 		var personObj = new personRecord();
+	 		personObj.fetchBluepagesDetailsForCnum(suggestion.cnum);
 
 	 		$('#personDetails').show();
 	 		$('#person_contractor_id').select2();

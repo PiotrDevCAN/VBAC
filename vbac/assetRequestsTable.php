@@ -904,6 +904,10 @@ class assetRequestsTable extends DbTable{
                     $sql .= $isThisCtb ? " AND upper(CTB_RTB='CTB') " : " AND (upper(CTB_RTB != 'CTB') or CTB_RTB is null ) ";
                     $sql .= " ORDER BY AR.REQUESTED asc ";
 
+                    var_dump($sql);
+                    die('here');
+
+
                     $rs = db2_exec($_SESSION['conn'], $sql);
 
                     if($rs){
