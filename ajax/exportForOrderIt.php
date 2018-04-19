@@ -42,6 +42,8 @@ foreach ($allOrderItTypes as $orderItType){
         $lastSql[] = $assetRequestTable->getLastSql();
     }
     echo "<h5>Total requests for Order IT Type " . $orderItType . " :" . $totalRequestsForType;
+    $lastSql[] = $assetRequestTable->getLastSql();
+
 }
 
 // $decoded = base64_decode($base64EncodedData);
