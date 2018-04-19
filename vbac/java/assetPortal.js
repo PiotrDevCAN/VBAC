@@ -191,6 +191,51 @@ this.listenForReportShowUid = function(){
   },
 
 
+  this.listenForExportCtbButton = function(){
+	  $(document).on('click','#exportCtbForOrderIt', function(e){
+		  $('#exportForOrderIt').addClass('spinning');
+		  $('#exportForOrderIt').attr('disabled',true);
+	      $.ajax({
+		        url: "ajax/exportForOrderIt.php",
+		        type: 'GET',
+		        data: { ctb: true},
+		        success: function(result){
+		        	console.log(result);
+		        	var resultObj = JSON.parse(result);
+			    	assetPortal.table.ajax.reload();
+		        	$('#exportResultsModal .modal-body').html(resultObj.messages);
+		        	$('#exportResultsModal').modal('show');
+		  		    $('#exportForOrderIt').removeClass('spinning');
+				    $('#exportForOrderIt').attr('disabled',false);
+		        }
+	      });
+	  });
+  },
+
+  this.listenForExportNonCtbButton = function(){
+	  $(document).on('click','#exportNonCtbForOrderIt', function(e){
+		  $('#exportForOrderIt').addClass('spinning');
+		  $('#exportForOrderIt').attr('disabled',true);
+	      $.ajax({
+		        url: "ajax/exportForOrderIt.php",
+		        type: 'GET',
+		        data: { ctb: false},
+		        success: function(result){
+		        	console.log(result);
+		        	var resultObj = JSON.parse(result);
+			    	assetPortal.table.ajax.reload();
+		        	$('#exportResultsModal .modal-body').html(resultObj.messages);
+		        	$('#exportResultsModal').modal('show');
+		  		    $('#exportForOrderIt').removeClass('spinning');
+				    $('#exportForOrderIt').attr('disabled',false);
+		        }
+	      });
+	  });
+  },
+
+
+
+
   this.listenForEditUid = function(){
 	  $(document).on('click','.btnEditUid', function(e){
 		  $('#asset').val($(e.target).data('asset'));

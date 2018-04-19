@@ -7,6 +7,12 @@ use vbac\personRecord;
 
 
 ob_start();
+
+$ctb = isset($_REQUEST['ctb']) ? $_REQUEST['ctb'] : false;
+$predicate = $ctb ? " AND CTB_RTB='CTB' " : " AND (CTB _RTB is null or CTB_RTB != 'CTB' ";
+$pmoTaskid = $ctb ? personRecord::$orderITCtbTaskId : personRecord::$orderITNonCtbTaskId;
+
+
 $now = new DateTime();
 $loader = new Loader();
 $allOrderItTypes = $loader->load('ORDER_IT_TYPE',allTables::$REQUESTABLE_ASSET_LIST);
@@ -22,12 +28,12 @@ foreach ($allOrderItTypes as $orderItType){
     $totalRequestsForType = 0;
     $outstandingRequestsForType = 0;
 
-    while(($outstandingRequestsForType = $assetRequestTable->countApprovedForOrderItType($orderItType)) > 0){
+    while(($outstandingRequestsForType = $assetRequestTable->countApprovedForOrderItType($orderItType, $predicate)) > 0){
         $lastSql[] = $assetRequestTable->getLastSql();
 
         $totalRequestsForType += $outstandingRequestsForType;
 
-        $requestData .= $assetRequestTable->getRequestsForOrderIt($orderItType,$first);
+        $requestData .= $assetRequestTable->getRequestsForOrderIt($orderItType,$first, $predicate);
         $lastSql[] = $assetRequestTable->getLastSql();
 
         $varbsCovered[] = $assetRequestTable->currentVarb;
@@ -52,15 +58,13 @@ $csvName = "varbForOrderIt_" . $now->format('Y-m-d h:i:s') . ".csv";
 
 $base64EncodedData = base64_encode($requestData);
 
-
-
 if(empty($base64EncodedData)){
     $messages = ob_get_clean();
     $messages .= "<br/>No requests found to export";
     $response = array('success'=>false,'messages'=>$messages,'post'=>print_r($_POST,true),'lastSql'=>print_r($lastSql,true));
     echo json_encode($response);
 } else {
-    $sendResponse = BlueMail::send_mail(personRecord::$pmoTaskId, 'vBac Orderit Export: ' . $varbRange, 'Find attached CSV of Asset Request Details ready for Order IT',
+    $sendResponse = BlueMail::send_mail($pmoTaskid, 'vBac Orderit Export: ' . $varbRange, 'Find attached CSV of Asset Request Details ready for Order IT',
         'vbacNoReply@uk.ibm.com',array(),array(),true,array(array('filename'=>$csvName,'content_type'=>'text/plain','data'=>$base64EncodedData)));
 
     $messages = ob_get_clean();

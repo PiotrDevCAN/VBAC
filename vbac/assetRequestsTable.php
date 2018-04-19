@@ -280,7 +280,7 @@ class assetRequestsTable extends DbTable{
     }
 
 
-    function getRequestsForOrderIt($orderItType, $first=false){
+    function getRequestsForOrderIt($orderItType, $first=false, $predicate = null ){
 
 
         $nextVarb = $this->getNextVarb();
@@ -296,6 +296,7 @@ class assetRequestsTable extends DbTable{
         $sql .= "  LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql .= "  ON AR.CNUM = P.CNUM ";
         $sql .= "   WHERE 1=1 ";
+        $sql .= !empty($predicate) ? $predicate : null;
         $sql .= $this->eligibleForOrderItPredicate($orderItType);
         $sql .= "   ORDER BY REQUEST_REFERENCE asc ";
         $sql .= "   FETCH FIRST 20 ROWS ONLY) ";
@@ -384,7 +385,7 @@ class assetRequestsTable extends DbTable{
 
 
 
-    function countApprovedForOrderItType($orderItType = 0){
+    function countApprovedForOrderItType($orderItType = 0, $predicate = null){
         $sql  = " SELECT COUNT(*) as REQUESTS ";
         $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR ";
         $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$REQUESTABLE_ASSET_LIST . " AS RAL ";
@@ -392,6 +393,7 @@ class assetRequestsTable extends DbTable{
         $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql .= " ON AR.CNUM = P.CNUM ";
         $sql .= " WHERE 1=1 ";
+        $sql .= !empty($predicate) ? $predicate : null;
         $sql .= $this->eligibleForOrderItPredicate($orderItType);
 
         $rs = db2_exec($_SESSION['conn'],$sql);
