@@ -99,14 +99,16 @@ function assetRequest() {
 		    var data = e.params.data;
 		    var cnum_id = data.id.trim();
 		    var ctid_id = cnum2ctid[cnum_id];
+		    var ctbFlag = cnum2ctbflag[cnum_id];
 		    if(!ctid_id){
 		    	console.log('prompt for CT ID');
 		    	$('.locationFor').val('').trigger('change');
 		    	$('#requesteeName').val(data.text);
+		    	$('#ctbflag').val(ctbFlag);
 		    	$('#obtainCtid').modal('show');
 		    } else {
 		    	console.log('DONT rompt for CT ID');
-				AssetRequest.recordCtidOnForm(data.text, ctid_id);
+				AssetRequest.recordCtidOnForm(data.text, ctid_id, ctbFlag);
 		    }
 		    console.log('now ajax get location for cnum');
 		    $.ajax({
@@ -202,27 +204,29 @@ function assetRequest() {
 	  $('#obtainCtid').on('hidden.bs.modal', function (e) {
 		  var requestee =$('#requesteeName').val();
 		  var ctid =$('#requesteeCtid').val().trim();
+		  var ctbflag = $('#ctbflag').val().trim();
 		  var AssetRequest = new assetRequest();
 		  console.log(ctid);
 
 		  if(ctid){
 			  console.log('record'+ ctid);
-			  AssetRequest.recordCtidOnForm(requestee, ctid);
+			  AssetRequest.recordCtidOnForm(requestee, ctid, ctbflag);
 		      $.ajax({
 		    	  url: "ajax/saveCtid.php",
 		          type: 'POST',
 		          data : {notesid:requestee,
-		           	      ctid:ctid},
+		           	      ctid:ctid
+		           	      },
 		          success: function(result){
 		        	  console.log('we have saved their CT ID');
 		        	  console.log(result);
 	    			  console.log('record required');
-	    			  AssetRequest.recordCtidOnForm(requestee, ctid);
+	    			  AssetRequest.recordCtidOnForm(requestee, ctid, ctbflag);
 		    		  },
 		      });
 		  } else {
 			  console.log('they did not provide a CT ID');
-			  AssetRequest.recordCtidOnForm(requestee, 'Required');
+			  AssetRequest.recordCtidOnForm(requestee, 'Required',ctbflag);
 		  };
 	  });
   },
@@ -380,12 +384,13 @@ function assetRequest() {
   },
 
 
-  this.recordCtidOnForm = function(email_address, ctid ){
+  this.recordCtidOnForm = function(email_address, ctid,ctbflag ){
+	  var ctb = ctbflag ?  ctbflag :  'unknown';
 	  var lastCtidInput = $('#allCtidHereDiv > :input').not('.select2').last();
  	  $(lastCtidInput).val(ctid);
 
 	  var lastRequest = $('#requestDetailsDiv > .panel').last();
-	  $(lastRequest).find('.panel-title').html('Request For : ' + email_address );
+	  $(lastRequest).find('.panel-title').html('Request For : ' + email_address + "(" + ctb + ")" );
 	  ctidAsset = $('*[data-asset="CT ID"]');
 	  if(ctid=='Required'){
 		$(ctidAsset).attr('disabled',true).prop('checked',true);

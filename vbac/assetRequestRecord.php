@@ -222,7 +222,9 @@ class assetRequestRecord extends DbRecord {
     function createJsCtidLookup(){
         $loader = new Loader();
         $ctId = $loader->loadIndexed('CT_ID','CNUM',allTables::$PERSON);
+        $ctbFlag = $loader->loadIndexed('CTB_RTB','CNUM',allTables::$PERSON);
         JavaScript::buildObjectFromLoadIndexedPair($ctId,'cnum2ctid');
+        JavaScript::buildObjectFromLoadIndexedPair($ctbFlag,'cnum2ctbflag');
     }
 
     function saveFeedbackModal(){
@@ -318,6 +320,7 @@ class assetRequestRecord extends DbRecord {
         		   <h4 class="modal-title">Contractor ID (CT ID)</h4>
       			</div>
       			<div class="modal-body" >
+      			<input id='ctbflag' value='' type='hidden'></p>
         		<p>Before requests can be made on Order IT, the individual needs to have a Contractor ID (CT ID).</p>
         		<p>We do not have a record of the CT ID for:</p>
         		<input id='requesteeName' value='' disabled></p>
