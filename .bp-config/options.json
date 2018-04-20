@@ -1,5 +1,5 @@
 {
-  "PHP_EXTENSIONS": ["zip", "bz2", "zlib", "curl", "mcrypt", "mbstring", "ldap", "pthreads" ],
+  "PHP_EXTENSIONS": ["zip", "bz2", "zlib", "curl", "mcrypt", "mbstring", "ldap" ],
   "COMPOSER_VENDOR_DIR": "htdocs/vendor",
   "WEBDIR": "htdocs/public",
   "ZEND_EXTENSIONS" : "opcache.so"
