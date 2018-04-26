@@ -515,6 +515,23 @@ class personTable extends DbTable {
         return $this->preparedLeaverProjectedEndDateStmt;
     }
 
+    private function prepareRevalidationLeaverStmt(){
+        if(empty($this->preparedRevalidationLeaverStmt)){
+            $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+            $sql .= " SET REVALIDATION_STATUS='" . personRecord::REVALIDATED_LEAVER . "' , REVALIDATION_DATE_FIELD = current date ";
+            $sql .= " WHERE CNUM=? ";
+
+            $this->preparedRevalidationLeaverStmt = db2_prepare($_SESSION['conn'], $sql);
+
+            if(!$this->preparedRevalidationLeaverStmt){
+                DbTable::displayErrorMessage($this->preparedRevalidationStmt, __CLASS__, __METHOD__, $sql);
+                return false;
+            }
+        }
+        return $this->preparedRevalidationLeaverStmt;
+    }
+
+
     function confirmRevalidation($notesId,$email,$cnum){
         $preparedStmt = $this->prepareRevalidationStmt();
         $data = array(trim($notesId),trim($email),trim($cnum));
