@@ -20,7 +20,7 @@ db2_commit($_SESSION['conn']);
 
 $offboarders = " ( REVALIDATION_STATUS like  'offboard%') ";
 $allOffboarders = $loader->load('CNUM',allTables::$PERSON, $offboarders ); //
-AuditTable::audit("Revalidation will ignore " . count($offboarders) . " offboarding/ed.",AuditTable::RECORD_TYPE_DETAILS);
+AuditTable::audit("Revalidation will ignore " . count($allOffboarders) . " offboarding/ed.",AuditTable::RECORD_TYPE_DETAILS);
 $allOffboarders= null; // free up some storage
 
 $preBoardersPredicate = "   ( REVALIDATION_STATUS =  '" . personRecord::REVALIDATED_PREBOARDER . "') ";
