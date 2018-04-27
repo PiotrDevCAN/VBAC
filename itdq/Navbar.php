@@ -61,22 +61,9 @@ class Navbar
 
 		<p class='nav navbar-nav navbar-right userLevel '>User Level is:<scan id='userLevel'></scan><br/>Powered by CDI</p>
         <ul class="nav navbar-nav navbar-right">
-
-        <li class=' mood'>
-		<button id='feedbackMoodOk'   class='mood moodSmile'><i class="far fa-smile"></i></button>
-		<button id='feedbackMoodOk'   class='mood moodMeh'><i class="far fa-meh"></i></button>
-		<button id='feedbackMoodBad'  class='mood moodFrown'><i class="far fa-frown"></i></button>
-		</li>
-
-
-
-
-
-
-
         <li class='accessCdi accessPmo accessFm accessUser'
                id='Help_Page'
-               data-pagename='pa_helpPage.php'><a href="pa_helpPage.php">Help</a></li>
+               data-pagename='pa_helpPage.php'><a href="pa_helpPage.php">Help/Feedback</a></li>
 	    </ul>
 
         </div><!-- /.navbar-collapse -->
