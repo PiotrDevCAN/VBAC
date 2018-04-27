@@ -70,6 +70,13 @@ a.bg-info:hover,a.bg-info:focus{
   width: 400px;
 }
 
+.userLevel {
+	padding: 3px;
+	border-style:solid;
+	border-color:white;
+	color:white;
+}
+
 .label-centre{
   text-align:center;
   position: relative;

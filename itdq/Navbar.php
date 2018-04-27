@@ -58,10 +58,27 @@ class Navbar
         }
         ?>
         </ul>
-        <ul class="nav navbar-nav navbar-right">
-        </ul>
 
-        <p class='nav navbar-nav navbar-right ' style='color:white'>User Level is:<scan id='userLevel'></scan><br/>Powered by CDI</p>
+		<p class='nav navbar-nav navbar-right userLevel '>User Level is:<scan id='userLevel'></scan><br/>Powered by CDI</p>
+        <ul class="nav navbar-nav navbar-right">
+
+        <li class=' mood'>
+		<button id='feedbackMoodOk'   class='mood moodSmile'><i class="far fa-smile"></i></button>
+		<button id='feedbackMoodOk'   class='mood moodMeh'><i class="far fa-meh"></i></button>
+		<button id='feedbackMoodBad'  class='mood moodFrown'><i class="far fa-frown"></i></button>
+		</li>
+
+
+
+
+
+
+
+        <li class='accessCdi accessPmo accessFm accessUser'
+               id='Help_Page'
+               data-pagename='pa_helpPage.php'><a href="pa_helpPage.php">Help</a></li>
+	    </ul>
+
         </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
         </nav>

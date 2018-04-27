@@ -121,10 +121,10 @@ if($page != "index.php" && substr($page,0,3)!='cdi'){
 $(document).ready(function () {
     $('button.accessRestrict')<?=$isFm?><?=$isPmo?><?=$isCdi?><?=$isUser?>.remove();
 
-    <?=!empty($isUser) ? '$("#userLevel").html("User");console.log("user");' : null;?>
-    <?=!empty($isFm)   ? '$("#userLevel").html("Func.Mgr.");console.log("fm");' : null;?>
-    <?=!empty($isPmo)  ? '$("#userLevel").html("PMO");console.log("pmo");' : null;?>
-    <?=!empty($isCdi)  ? '$("#userLevel").html("CDI");console.log("cdi");' : null;?>
+    <?=!empty($isUser) ? '$("#userLevel").html("User&nbsp;");console.log("user");' : null;?>
+    <?=!empty($isFm)   ? '$("#userLevel").html("Func.Mgr.&nbsp;");console.log("fm");' : null;?>
+    <?=!empty($isPmo)  ? '$("#userLevel").html("PMO&nbsp;");console.log("pmo");' : null;?>
+    <?=!empty($isCdi)  ? '$("#userLevel").html("CDI&nbsp;&nbsp;");console.log("cdi");' : null;?>
 
     var poContent = $('#<?=$plannedOutagesId?> a').html();
 	var badgedContent = poContent + "&nbsp;" + "<?=$plannedOutages->getBadge();?>";
