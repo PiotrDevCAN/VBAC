@@ -191,14 +191,14 @@ this.listenForReportShowUid = function(){
   },
 
 
-  this.listenForExportCtbButton = function(){
-	  $(document).on('click','#exportCtbForOrderIt', function(e){
+  this.listenForExportBauButton = function(){
+	  $(document).on('click','#exportBauForOrderIt', function(e){
 		  $('#exportForOrderIt').addClass('spinning');
 		  $('#exportForOrderIt').attr('disabled',true);
 	      $.ajax({
 		        url: "ajax/exportForOrderIt.php",
 		        type: 'GET',
-		        data: { ctb: true},
+		        data: { bau: true},
 		        success: function(result){
 		        	console.log(result);
 		        	var resultObj = JSON.parse(result);
@@ -212,14 +212,14 @@ this.listenForReportShowUid = function(){
 	  });
   },
 
-  this.listenForExportNonCtbButton = function(){
-	  $(document).on('click','#exportNonCtbForOrderIt', function(e){
+  this.listenForExportNonBauButton = function(){
+	  $(document).on('click','#exportNonBauForOrderIt', function(e){
 		  $('#exportForOrderIt').addClass('spinning');
 		  $('#exportForOrderIt').attr('disabled',true);
 	      $.ajax({
 		        url: "ajax/exportForOrderIt.php",
 		        type: 'GET',
-		        data: { ctb: false},
+		        data: { bau: false},
 		        success: function(result){
 		        	console.log(result);
 		        	var resultObj = JSON.parse(result);

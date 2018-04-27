@@ -104,6 +104,8 @@ class personRecord extends DbRecord
     public static $pmoTaskId = array('Aurora.On.andOff.Boarding.support@uk.ibm.com');
     public static $orderITCtbTaskId = array('jeemohan@in.ibm.com');
     public static $orderITNonCtbTaskId = array('Aurora.On.andOff.Boarding.support@uk.ibm.com');
+    public static $orderITBauTaskId = array('Aurora.On.andOff.Boarding.support@uk.ibm.com');
+    public static $orderITNonBauTaskId = array('Aurora.On.andOff.Boarding.support@uk.ibm.com');
     //private static $pesTaskId = 'rob.daniel@uk.ibm.com';
     //private static $pesTaskId    = array('rob.daniel@uk.ibm.com', 'carrabooth@uk.ibm.com');
 //     private static $pesEmailBody = '<table width="100%" border="0" cellspacing="0" cellpadding="0">

@@ -13,8 +13,8 @@ use vbac\personTable;
 
 <button id='reportShowAll'  		class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Show All Requests</button>
 <button id='reportShowExportable'   class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Show Exportable Requests</button>
-<button id='exportCtbForOrderIt' 	class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Export CTB for Order IT</button>
-<button id='exportNonCtbForOrderIt'	class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Export non-CTB for Order IT</button>
+<button id='exportBauForOrderIt' 	class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Export BAU for Order IT</button>
+<button id='exportNonBauForOrderIt'	class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Export non-BAU for Order IT</button>
 <button id='mapVarbToOrderIt' 		class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Map vARB to Order IT</button>
 <button id='setOrderItStatus' 		class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Set Order IT Status</button>
 <button id='reportShowUid' 		    class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi accessUser'>Show UID</button>
@@ -65,8 +65,8 @@ $(document).ready(function(){
 	var AssetPortal = new assetPortal();
 	AssetPortal.initialiseAssetRequestPortal();
 
- 	AssetPortal.listenForExportCtbButton();
- 	AssetPortal.listenForExportNonCtbButton();
+ 	AssetPortal.listenForExportBauButton();
+ 	AssetPortal.listenForExportNonBauButton();
  	AssetPortal.listenForMapVarbButton();
  	AssetPortal.listenForMapVarbModalShown();
  	AssetPortal.listenForSetOitStatusButton();

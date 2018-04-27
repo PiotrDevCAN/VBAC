@@ -8,9 +8,13 @@ use vbac\personRecord;
 
 ob_start();
 
-$ctb = isset($_REQUEST['ctb']) ? $_REQUEST['ctb']=='true' : false;
-$predicate = $ctb ? " AND CTB_RTB='CTB' " : " AND (CTB_RTB is null or CTB_RTB != 'CTB' ) ";
-$pmoTaskid = $ctb ? personRecord::$orderITCtbTaskId : personRecord::$orderITNonCtbTaskId;
+// $ctb = isset($_REQUEST['ctb']) ? $_REQUEST['ctb']=='true' : false;
+// $predicate = $ctb ? " AND CTB_RTB='CTB' " : " AND (CTB_RTB is null or CTB_RTB != 'CTB' ) ";
+// $pmoTaskid = $ctb ? personRecord::$orderITCtbTaskId : personRecord::$orderITNonCtbTaskId;
+
+$bau = isset($_REQUEST['bau']) ? $_REQUEST['bau']=='true' : false;
+$predicate = $bau ? " AND TT_BAU='BAU' " : " AND (TT_BAU is null or TT_BAU != 'BAU' ) ";
+$pmoTaskid = $bau ? personRecord::$orderITBauTaskId : personRecord::$orderITNonBauTaskId;
 
 
 $now = new DateTime();
@@ -66,7 +70,9 @@ if(empty($base64EncodedData)){
     $response = array('success'=>false,'messages'=>$messages,'post'=>print_r($_REQUEST,true),'lastSql'=>print_r($lastSql,true));
     echo json_encode($response);
 } else {
-    $sendResponse = BlueMail::send_mail($pmoTaskid, 'vBac Orderit Export: ' . $varbRange, 'Find attached CSV of Asset Request Details ready for Order IT',
+    $titlePrefix = $bau ? "(BAU)" : "(Non-BAU)";
+
+    $sendResponse = BlueMail::send_mail($pmoTaskid, 'vBac Orderit Export' . $titlePrefix . ': ' . $varbRange, 'Find attached CSV of Asset Request Details ready for Order IT',
         'vbacNoReply@uk.ibm.com',array(),array(),true,array(array('filename'=>$csvName,'content_type'=>'text/plain','data'=>$base64EncodedData)));
 
     $messages = ob_get_clean();
