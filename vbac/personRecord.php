@@ -183,12 +183,20 @@ class personRecord extends DbRecord
     private static $pesClearedPersonalEmail = 'Hello &&candidate&&,
                                               <br/>I can confirm that you have successfully passed Lloyds Bank PES Screening, with a personal reference, effective from &&effectiveDate&&
                                               <br/>If you need any more information regarding your PES clearance, please contact the taskid &&taskid&&.
-                                              <br/>Many Thanks for your cooperation,';
+                                              <br/>You are now required to successfully complete the mandatory Aurora Security Education for IBMers.
+                                              <br/>Please contact <a href="mailto:Aurora.Central.PMO@uk.ibm.com">Aurora Central PMO/UK/IBM</a> to gain access to these self-paced online courses which are available here:- <a href="https://lt.be.ibm.com/aurora">https://lt.be.ibm.com/aurora</a>
+                                              <br/>Many Thanks for your cooperation';
+
+
+
     private static $pesClearedPersonalEmailPattern = array('/&&candidate&&/','/&&effectiveDate&&/','/&&taskid&&/');
 
     private static $pesClearedEmail = 'Hello &&candidate&&,
                                               <br/>I can confirm that you have successfully passed Lloyds Bank PES Screening, effective from &&effectiveDate&&
                                               <br/>If you need any more information regarding your PES clearance, please contact the taskid &&taskid&&.
+                                              <br/>You are now required to successfully complete the mandatory Aurora Security Education for IBMers.
+                                              <br/>Please contact <a href="mailto:Aurora.Central.PMO@uk.ibm.com">Aurora Central PMO/UK/IBM</a> to gain access to these self-paced online courses which are available here:- <a href="https://lt.be.ibm.com/aurora">https://lt.be.ibm.com/aurora</a>
+
                                               <br/>Many Thanks for your cooperation,';
     private static $pesClearedEmailPattern = array('/&&candidate&&/','/&&effectiveDate&&/','/&&taskid&&/');
 
