@@ -171,6 +171,7 @@ function personRecord() {
       $('#linkToPreBoarded').toggle();
 
       if($('#notAnIbmer').is(":visible")){
+    	$('#open_seat').attr('placeholder','IBM Hiring Number');
         $('#notAnIbmer :input').attr('required',true);
         $('#existingIbmer :input').attr('required',false);
         $('#saveBoarding').attr('disabled',false);
@@ -178,6 +179,7 @@ function personRecord() {
         $('#resource_country').select2();
         $('#person_preboarded').val('').trigger('change');  // incase they already selected a pre-boarder - we need to clear this field.
       } else {
+    	$('#open_seat').attr('placeholder','Open Seat Number');
         $('#notAnIbmer :input').attr('required',false);
         $('#existingIbmer :input').attr('required',true);
       }

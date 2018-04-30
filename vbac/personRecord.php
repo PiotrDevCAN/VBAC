@@ -119,6 +119,7 @@ class personRecord extends DbRecord
                                     <tr><th style="background-color:silver;font-size:20px">LoB</th><td style="font-size:20px">&&lob&&</td></tr>
                                     <tr><th style="background-color:silver;font-size:20px">Role on Project</th><td style="font-size:20px">&&role&&</td></tr>
                                     <tr><th style="background-color:silver;font-size:20px">Contract</th><td style="font-size:20px">&&contract&&</td></tr>
+                                    <tr><th style="background-color:silver;font-size:20px">Open Seat/Hiring</th><td style="font-size:20px">&&openSeat&&</td></tr>
                                     <tr><th style="background-color:WhiteSmoke;font-size:16px">Requested By</th><td style="font-size:16px">&&requestor&&</td></tr>
                                     <tr><th style="background-color:WhiteSmoke;font-size:16px">Requested Timestamp</th><td style="font-size:16px">&&requested&&</td></tr>
                                     <tr><th style="background-color:WhiteSmoke;font-size:16px">Functional Mgr (on CC)</th><td style="font-size:16px">&&functionalMgr&&</td></tr>
@@ -145,6 +146,7 @@ class personRecord extends DbRecord
         '/&&lob&&/',
         '/&&role&&/',
         '/&&contract&&/',
+        '/&&openSeat&&/',
         '/&&requestor&&/',
         '/&&requested&&/',
         '/&&functionalMgr&&/',
@@ -572,7 +574,7 @@ class personRecord extends DbRecord
   <div class="panel-body">
     <div class='form-group' >
         <div class='col-sm-6'>
-          <input class="form-control" id="open_seat" name="OPEN_SEAT_NUMBER"  required maxlength='12' value="<?=$this->OPEN_SEAT_NUMBER?>" type="text" placeholder='Open Seat' data-toggle='tooltip' title='Open Seat' max=12 >
+          <input class="form-control" id="open_seat" name="OPEN_SEAT_NUMBER"  required maxlength='15' value="<?=$this->OPEN_SEAT_NUMBER?>" type="text" placeholder='Open Seat' data-toggle='tooltip' title='Open Seat' max=12 >
         </div>
         <div class='col-sm-6'>
           <input class="form-control" id="role_on_account" name="ROLE_ON_THE_ACCOUNT" maxlength='120' value="<?=$this->ROLE_ON_THE_ACCOUNT?>" type="text" placeholder='Role on account' >
@@ -1006,6 +1008,7 @@ class personRecord extends DbRecord
         $emailAddress = !empty($this->EMAIL_ADDRESS) ? $this->EMAIL_ADDRESS : "emailAddress";
         $notesId = !empty($this->NOTES_ID) ? $this->NOTES_ID : "notesId";
         $country = !empty($this->COUNTRY) ? $this->COUNTRY : "country";
+        $openSeat = !empty($this->OPEN_SEAT_NUMBER) ? $this->OPEN_SEAT_NUMBER : "open seat/hiring";
         $lob = !empty($this->LOB) ? $this->LOB : "lob";
         $role = !empty($this->ROLE_ON_THE_ACCOUNT) ? $this->ROLE_ON_THE_ACCOUNT : "role";
 
@@ -1017,6 +1020,7 @@ class personRecord extends DbRecord
                               $lob,
                               $role,
                               'Ventus',
+                              $openSeat,
                               $_SESSION['ssoEmail'],
                               $now->format('Y-m-d H:i:s'),
                               $fmEmail);

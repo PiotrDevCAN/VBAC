@@ -42,3 +42,14 @@ CREATE TABLE "VBAC"."PERSON" (
 ALTER TABLE "VBAC"."PERSON" ADD CONSTRAINT "SQL171213120532360" PRIMARY KEY
 	("CNUM");
 
+
+alter table "VBAC_UT"."PERSON"
+ alter column "OPEN_SEAT_NUMBER"
+ set data type char(15);
+
+
+
+
+ alter table "ROB_DEV"."REQUESTABLE_ASSET_LIST"
+ alter column "ASSET_TITLE"
+ 	  set NOT NULL;
