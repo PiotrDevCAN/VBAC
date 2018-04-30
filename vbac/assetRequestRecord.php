@@ -262,8 +262,13 @@ class assetRequestRecord extends DbRecord {
         		   <h4 class="modal-title">Security Education Confirmation</h4>
       			</div>
       			<div class="modal-body" >
+
+
+
+
       				<p><center>Please confirm <b><span id='educationNotesid'></span></b> has successfully completed the mandatory Aurora Security Education Modules for IBMers before continuing</center></p>
-      				<p><center>Contact Aurora Central PMO/UK/IBM for details of these self paced online courses.</center></p>
+      				<p><center>Access to these self paced online courses is via the following link <a href='https://lt.be.ibm.com/aurora' target='_blank'>https://lt.be.ibm.com/aurora</a></center></p>
+      				<p><center>Contact <a href='mailto:Aurora.Central.PMO@uk.ibm.com'>Aurora Central PMO/UK/IBM</a> for details of these self paced online courses.</center></p>
 					<p><center>Please note a false declaration of completion constitutes a breach of IBM Business Conduct Guidelines and may lead to disciplinary action.</center></p>
       			</div>
       			<div class="modal-footer">
