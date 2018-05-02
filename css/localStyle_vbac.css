@@ -52,6 +52,15 @@ td { font-size: 10px; }
     margin-right: 5px;
 }
 
+.bg-info{
+	background-color:#c0c0c0
+}
+
+a.bg-info:hover,a.bg-info:focus{
+	background-color:#888888
+}
+
+
 .faces-typeahead-results .result {
   height: 65px;
   padding: 10px;
