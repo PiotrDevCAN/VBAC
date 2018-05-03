@@ -58,7 +58,7 @@ body {
 
 <ul class='helpLink'>
 <li><a href='https://w3.tap.ibm.com/medialibrary/media_set_view?id=47864' target='_blank' class=''>User Guide and Training Videos</a></li>
-
+<li><a href='http://w3.tap.ibm.com/data/medialibrary/media/419943.doc/1048424/2018_05_03_2111_vBAC_FAQs.doc' target='_blank' class=''>FAQ</a></li>
 
 <li class=' feedback'>Feedback
 <div id='feedbackDiv'>
@@ -76,10 +76,9 @@ body {
 </div>
 </form>
 </div>
-<li>Find us on Slack&nbsp;<a href='https://ventusdelivery.slack.com/messages/C8DLE1DFH/' target='_blank' >here</a></li>
+<li>Find us on Slack&nbsp;<a href='https://ventusdelivery.slack.com/messages/C8DLE1DFH/' target='_blank' ># sm-cognitive-delivery</a></li>
 </li>
 </ul>
-
 </div>
 
 <<script type="text/javascript">
