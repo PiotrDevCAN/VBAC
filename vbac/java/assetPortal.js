@@ -193,8 +193,8 @@ this.listenForReportShowUid = function(){
 
   this.listenForExportBauButton = function(){
 	  $(document).on('click','#exportBauForOrderIt', function(e){
-		  $('#exportForOrderIt').addClass('spinning');
-		  $('#exportForOrderIt').attr('disabled',true);
+		  $('#exportBauForOrderIt').addClass('spinning');
+		  $('#exportBauForOrderIt').attr('disabled',true);
 	      $.ajax({
 		        url: "ajax/exportForOrderIt.php",
 		        type: 'GET',
@@ -205,8 +205,8 @@ this.listenForReportShowUid = function(){
 			    	assetPortal.table.ajax.reload();
 		        	$('#exportResultsModal .modal-body').html(resultObj.messages);
 		        	$('#exportResultsModal').modal('show');
-		  		    $('#exportForOrderIt').removeClass('spinning');
-				    $('#exportForOrderIt').attr('disabled',false);
+		  		    $('#exportBauForOrderIt').removeClass('spinning');
+				    $('#exportBauForOrderIt').attr('disabled',false);
 		        }
 	      });
 	  });
@@ -214,8 +214,8 @@ this.listenForReportShowUid = function(){
 
   this.listenForExportNonBauButton = function(){
 	  $(document).on('click','#exportNonBauForOrderIt', function(e){
-		  $('#exportForOrderIt').addClass('spinning');
-		  $('#exportForOrderIt').attr('disabled',true);
+		  $('#exportNonBauForOrderIt').addClass('spinning');
+		  $('#exportNonBauForOrderIt').attr('disabled',true);
 	      $.ajax({
 		        url: "ajax/exportForOrderIt.php",
 		        type: 'GET',
@@ -226,8 +226,8 @@ this.listenForReportShowUid = function(){
 			    	assetPortal.table.ajax.reload();
 		        	$('#exportResultsModal .modal-body').html(resultObj.messages);
 		        	$('#exportResultsModal').modal('show');
-		  		    $('#exportForOrderIt').removeClass('spinning');
-				    $('#exportForOrderIt').attr('disabled',false);
+		  		    $('#exportNonBauForOrderIt').removeClass('spinning');
+				    $('#exportNonBauForOrderIt').attr('disabled',false);
 		        }
 	      });
 	  });

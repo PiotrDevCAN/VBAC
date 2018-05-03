@@ -82,8 +82,13 @@ class assetRequestsTable extends DbTable{
             $reference = trim($row['REFERENCE']);
             $preReq = !empty(trim($row['PRE_REQ_REQUEST']))  ?  trim($row['PRE_REQ_REQUEST']): null;
             $sortableReference = substr('0000000'.$reference,-6);
-            $row['REFERENCE'] = trim($row['ORDERIT_NUMBER']) . ":" . $reference;
+
+            $startItalics = $row['USER_CREATED']==assetRequestRecord::$CREATED_USER ? "<i>" : null;
+            $endItalics = $row['USER_CREATED']==assetRequestRecord::$CREATED_USER ? "</i>" : null;
+
+            $row['REFERENCE'] =  $startItalics . trim($row['ORDERIT_NUMBER']) . ":" . $reference;
             $row['REFERENCE'] .= !empty($preReq) ? " <==" . $preReq : null;
+            $row['REFERENCE'] .= $endItalics;
 
             $row['REFERENCE'] = empty($row['ORDERIT_VARB_REF']) ? array('display'=>$row['REFERENCE'],'reference'=>$sortableReference) : array('display'=>$row['REFERENCE'] . "<br/><small>" . $row['ORDERIT_VARB_REF'] . "</small>",'reference'=>$sortableReference);
 
@@ -362,6 +367,94 @@ class assetRequestsTable extends DbTable{
         return $requestData;
     }
 
+    function getRequestsForNonPmo(){
+        $commitState  = db2_autocommit($_SESSION['conn'],DB2_AUTOCOMMIT_OFF);
+
+        $sql = " SELECT 'User Created' as ORDERIT_VARB_REF, ORDERIT_NUMBER, REQUEST_REFERENCE, ";
+        $sql .= " P.CT_ID as CT_ID, ";
+        $sql .= " P.CTB_RTB as CTB_RTB, ";
+        $sql .= " P.TT_BAU as TT_BAU, ";
+        $sql .= " P.LOB as LOB, ";
+        $sql .= " P.WORK_STREAM as WORK_STREAM, ";
+        $sql .= " ASSET_TITLE, ";
+        $sql .= " CASE when P.EMAIL_ADDRESS is null then P.NOTES_ID else P.EMAIL_ADDRESS end as IDENTITY, ";
+        $sql .= " case when BUSINESS_JUSTIFICATION is null then 'N/A' else BUSINESS_JUSTIFICATION end as JUSTIFICATION, ";
+        $sql .= " STATUS,  USER_LOCATION, REQUESTOR_EMAIL, date(REQUESTED) as REQUESTED,  APPROVER_EMAIL, DATE(APPROVED) as APPROVED,";
+        $sql .= " F.EMAIL_ADDRESS as FM_EMAIL, ";
+        $sql .= " current date as EXPORTED ";
+        $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
+        $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
+        $sql .= " ON AR.CNUM = P.CNUM ";
+        $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as F ";
+        $sql .= " ON F.CNUM = P.FM_CNUM ";
+
+
+        $sql .= " WHERE 1=1 ";
+        $sql .= $this->predicateExportNonPmoRequests();
+
+        $sql .= " ORDER BY ORDERIT_NUMBER desc, ASSET_TITLE, REQUEST_REFERENCE desc";
+
+        $data = array();
+        //         $data[] = "";
+        $data[] = '"VARB","ORDER IT","REQUEST","CT ID","CTB/RTB","TT/BAU","LOB","WORK STREAM","ASSET TITLE","REQUESTEE EMAIL","JUSTIFICATION","STATUS","LOCATION","REQUESTOR","REQUESTED","APPROVER","APPROVED","FM EMAIL","EXPORTED"';
+
+        $rs2 = db2_exec($_SESSION['conn'],$sql);
+        if(!$rs2){
+            db2_rollback($_SESSION['conn']);
+            DbTable::displayErrorMessage($rs2, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+
+        while(($row=db2_fetch_assoc($rs2))==true){
+            $trimmedData = array_map('trim', $row);
+            $data[] = '"' . implode('","',$trimmedData) . '" ';
+        }
+
+        $requestData = '';
+        foreach ($data as $request){
+            $requestData .= $request . "\n";
+        }
+
+        db2_commit($_SESSION['conn']);
+        db2_autocommit($_SESSION['conn'],$commitState);
+
+        return $requestData;
+    }
+
+
+    function countRequestsForNonPmoExport(){
+        $sql = " SELECT count(*) as tickets ";
+        $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
+        $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
+        $sql .= " ON AR.CNUM = P.CNUM ";
+        $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as F ";
+        $sql .= " ON F.CNUM = P.FM_CNUM ";
+
+        $sql .= " WHERE 1=1 ";
+        $sql .= $this->predicateExportNonPmoRequests();
+
+
+        $rs2 = db2_exec($_SESSION['conn'],$sql);
+        if(!$rs2){
+            db2_rollback($_SESSION['conn']);
+            DbTable::displayErrorMessage($rs2, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+
+        $row=db2_fetch_assoc($rs2);
+
+        return $row['TICKETS'];
+
+    }
+
+    function predicateExportNonPmoRequests(){
+        $predicate = " AND STATUS IN('" . assetRequestRecord::$STATUS_APPROVED . "','" . assetRequestRecord::$STATUS_RAISED_ORDERIT . "') AND ORDERIT_NUMBER is not NULL AND USER_CREATED='" . assetRequestRecord::$CREATED_USER . "' ";
+        $predicate .= " AND ORDERIT_VARB_REF is null  AND APPROVED is not null";
+
+        return $predicate;
+
+    }
+
 
     function exportForOrderIT($orderItGroup = 0){
         $rows = $this->getRequestsForOrderIt($orderItGroup);
@@ -370,15 +463,17 @@ class assetRequestsTable extends DbTable{
 
 
     function predicateForPmoExportableRequest() {
-        $predicate  = " AND STATUS IN('" . assetRequestRecord::$STATUS_APPROVED . "') AND ORDERIT_NUMBER is NULL AND USER_CREATED='" . assetRequestRecord::$CREATED_PMO . "' ";
+        $predicate  = " AND  ( ";
+        $predicate .= " STATUS IN('" . assetRequestRecord::$STATUS_APPROVED . "') AND ORDERIT_NUMBER is NULL AND USER_CREATED='" . assetRequestRecord::$CREATED_PMO . "' ";
         $predicate .= " AND ORDERIT_VARB_REF is null and ORDERIT_NUMBER is null ";
         $predicate .= " AND (ORDER_IT_TYPE = '1' or P.CT_ID is not null)";
-        $predicate.= " and ( pre_req_Request is null or pre_req_request  in (  select AR2.pre_req_request
+        $predicate .= " and ( pre_req_Request is null or pre_req_request  in (  select AR2.pre_req_request
 						  	from " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR2
 						  	left join " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR3
 						  	on AR2.PRE_REQ_REQUEST = AR3.REQUEST_REFERENCE
 						    where AR3.ORDERIT_STATUS in ('" . assetRequestRecord::$STATUS_ORDERIT_APPROVED . "')
 							) )";
+        $predicate .= " )";
         return $predicate;
     }
 

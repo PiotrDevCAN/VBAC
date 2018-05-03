@@ -40,7 +40,8 @@ switch (true) {
     case $_SESSION['isPmo']:
         echo "is PMO";
         $assetRequestTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
-        $predicate .= $showAll ? null : $assetRequestTable->predicateForPmoExportableRequest();
+        $predicate .= $showAll ? null :  " AND (( 1=1 " . $assetRequestTable->predicateForPmoExportableRequest() . " ) ";
+        $predicate .= $showAll ? null :  " OR ( 1=1 " . $assetRequestTable->predicateExportNonPmoRequests() . " )) ";
         break;
     default:
         echo "is default";
