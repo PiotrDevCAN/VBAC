@@ -4,14 +4,16 @@ namespace itdq;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 trait xls{
-    
+
     static function writeResultSetToXls( $resultSet,Spreadsheet $spreadsheet,$withColumnHeadings=true,$columnIndex=1,$rowIndex=1){
-        
+
+        $rowsWritten = false;
         $headerRow=true;
         $columnCounter = $columnIndex;
         $rowCounter = $rowIndex;
-        
-        while (($rawRow=db2_fetch_assoc($resultSet))==true) {          
+
+        while (($rawRow=db2_fetch_assoc($resultSet))==true) {
+            $rowsWritten = true;
             $row = array_map('trim', $rawRow);
             if($headerRow && $withColumnHeadings){
                 foreach ($row as $columnName => $value){
@@ -28,8 +30,9 @@ trait xls{
             $rowCounter++;
             $columnCounter=$columnIndex;
         }
+        return $rowsWritten;
     }
-    
+
     static function autoSizeColumns(Spreadsheet $spreadsheet){
         $sheet = $spreadsheet->getActiveSheet();
         $cellIterator = $sheet->getRowIterator()->current()->getCellIterator();
@@ -39,17 +42,17 @@ trait xls{
             $sheet->getColumnDimension($cell->getColumn())->setAutoSize(true);
         }
     }
-    
+
     static function autoFilter(Spreadsheet $spreadsheet){
         $spreadsheet->getActiveSheet()->setAutoFilter(
             $spreadsheet->getActiveSheet()
             ->calculateWorksheetDimension()
             );
-        
+
     }
-    
-    
-    
+
+
+
     static function setRowColor(Spreadsheet $spreadsheet,$color='80333333',$rowNumber=1){
         $sheet = $spreadsheet->getActiveSheet();
         $cellIterator = $sheet->getRowIterator($rowNumber)->current()->getCellIterator();
@@ -61,15 +64,15 @@ trait xls{
             ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
             ->getStartColor()
             ->setARGB($color);
-            
-            
-            
-            
+
+
+
+
         }
-        
+
     }
-    
-    
-    
-    
+
+
+
+
 }

@@ -4,7 +4,9 @@ use vbac\assetRequestsTable;
 ob_start();
 
 $comment = !empty($_POST['comment']) ? trim($_POST['comment']) : null;
-assetRequestsTable::setStatus($_POST['reference'], $_POST['status'],$comment);
+$dateReturned = null;
+$orderItStatus = !empty($_POST['orderitstatus']) ? trim($_POST['orderitstatus']) : null;
+assetRequestsTable::setStatus($_POST['reference'], $_POST['status'],$comment,$dateReturned,$orderItStatus);
 
 $messages = ob_get_clean();
 

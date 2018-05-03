@@ -112,7 +112,7 @@ class assetRequestsTable extends DbTable{
             $rejectButton .= "data-reference='" .trim($reference) . "' ";
             $rejectButton .= "data-requestee='" .trim($row['REQUESTEE_EMAIL']) . "' ";
             $rejectButton .= "data-asset='"     .trim($row['ASSET']) . "' ";
-            $rejectButton .= "data-orderitstatus='". assetRequestRecord::$STATUS_ORDERIT_NOT . "' ";
+            $rejectButton .= "data-orderitstatus='".trim($row['ORDERIT_STATUS']) . "' ";
             $rejectButton .= "data-toggle='tooltip' data-placement='top' title='Reject the request'";
             $rejectButton .= " > ";
             $rejectButton .= "<span class='glyphicon glyphicon-remove ' aria-hidden='true'></span>";
@@ -465,7 +465,7 @@ class assetRequestsTable extends DbTable{
     function predicateForPmoExportableRequest() {
         $predicate  = " AND  ( ";
         $predicate .= " STATUS IN('" . assetRequestRecord::$STATUS_APPROVED . "') AND ORDERIT_NUMBER is NULL AND USER_CREATED='" . assetRequestRecord::$CREATED_PMO . "' ";
-        $predicate .= " AND ORDERIT_VARB_REF is null and ORDERIT_NUMBER is null ";
+        $predicate .= " AND ORDERIT_VARB_REF is null ";
         $predicate .= " AND (ORDER_IT_TYPE = '1' or P.CT_ID is not null)";
         $predicate .= " and ( pre_req_Request is null or pre_req_request  in (  select AR2.pre_req_request
 						  	from " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR2
@@ -976,7 +976,7 @@ class assetRequestsTable extends DbTable{
         $lbgStatus = array(assetRequestRecord::$STATUS_ORDERIT_RAISED=>assetRequestRecord::$STATUS_ORDERIT_RAISED);
         $allStatus = $fullExtract ? $fullStatus : $lbgStatus;
         array_map('trim',$allStatus);
-        $ctbOnly =  array(true,false);
+        $ctbOnly =  array(false,true);
         $sheet = 1;
 
         if(!empty($allStatus)){
@@ -994,34 +994,39 @@ class assetRequestsTable extends DbTable{
                     $sql .= " AND ( ";
                     $sql .= "      ( USER_CREATED = 'No' AND AR.STATUS in ('" . assetRequestRecord::$STATUS_RAISED_ORDERIT . "') )";
                     $sql .= "      OR ";
-                    $sql .= "      ( USER_CREATED = 'Yes' AND AR.STATUS in ('" . assetRequestRecord::$STATUS_APPROVED . "') )";
+                    $sql .= "      ( USER_CREATED = 'Yes' AND AR.APPROVED is not null )";
                     $sql .= "    ) ";
                     $sql .= $isThisCtb ? " AND upper(P.CTB_RTB='CTB') " : " AND (upper(P.CTB_RTB != 'CTB') or P.CTB_RTB is null ) ";
                     $sql .= " ORDER BY AR.REQUESTED asc ";
                     $rs = db2_exec($_SESSION['conn'], $sql);
 
                     if($rs){
-                        $recordsFound = true;
-                        DbTable::writeResultSetToXls($rs, $spreadsheet);
-                        DbTable::autoFilter($spreadsheet);
-                        DbTable::autoSizeColumns($spreadsheet);
-                        DbTable::setRowColor($spreadsheet,'105abd19',1);
+                        $recordsFound = DbTable::writeResultSetToXls($rs, $spreadsheet);
 
-                    } else {
+                        if($recordsFound){
+                            DbTable::autoFilter($spreadsheet);
+                            DbTable::autoSizeColumns($spreadsheet);
+                            DbTable::setRowColor($spreadsheet,'105abd19',1);
+                        }
+                    }
 
+                    if(!$recordsFound){
                         $spreadsheet->getActiveSheet()->setCellValueByColumnAndRow(1, 1, "Warning");
                         $spreadsheet->getActiveSheet()->setCellValueByColumnAndRow(1, 2,"No records found");
-
                     }
                     // Rename worksheet & create next.
                     $sheetTitle = $isThisCtb ? "CTB-$value" : "Non CTB-$value";
-
                     $spreadsheet->getActiveSheet()->setTitle($sheetTitle);
                     $spreadsheet->createSheet();
                     $spreadsheet->setActiveSheetIndex($sheet++);
                 }
             }
         }
+//         $nonPmo = self::countRequestsForNonPmoExport();
+
+//         if($nonPmo > 0){
+//         }
+
         return true;
     }
 
@@ -1250,7 +1255,7 @@ class assetRequestsTable extends DbTable{
         \itdq\BlueMail::send_mail(array($emailAddress), 'vBAC Request : ' . $orderItStatus , $message , 'vbacNoReply@uk.ibm.com');
     }
 
-    static function setStatus($reference, $status, $comment=null,$dateReturned=null){
+    static function setStatus($reference, $status, $comment=null,$dateReturned=null, $orderItStatus=null){
 
         if(!empty($comment)){
             $now = new \DateTime();
@@ -1270,14 +1275,33 @@ class assetRequestsTable extends DbTable{
             $newComment = trim($comment);
         }
 
+        switch (true) {
+            case !empty($orderItStatus):
+                // if they gave us a status - use it.
+                $orderItStatus = trim($orderItStatus);
+                break;
+            case trim($status)==assetRequestRecord::$STATUS_REJECTED:
+                // else - if they are rejecting then go to "Not to be Raised"
+                $orderItStatus = assetRequestRecord::$STATUS_ORDERIT_NOT;
+                break;
+            case trim($status)==assetRequestRecord::$STATUS_APPROVED:
+                // else - if they are rejecting then go to "Not to be Raised"
+                $orderItStatus = assetRequestRecord::$STATUS_ORDERIT_YET;
+                break;
+            default:
+                $orderItStatus = null;
+                break;
+        }
+
+
+
         $sql  = " UPDATE ";
         $sql .= $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS;
         $sql .= " SET STATUS='" . db2_escape_string($status) . "' ";
         $sql .= !empty($newComment) ? ", COMMENT='" . db2_escape_string(substr($newComment,0,500)) . "' " : null;
         $sql .= trim($status)==assetRequestRecord::$STATUS_APPROVED ? ", APPROVER_EMAIL='" . $_SESSION['ssoEmail'] . "' , APPROVED = current timestamp " : null;
-        $sql .= trim($status)==assetRequestRecord::$STATUS_APPROVED ? ", ORDERIT_STATUS = '" . assetRequestRecord::$STATUS_ORDERIT_YET . "' " : null;
         $sql .= trim($status)==assetRequestRecord::$STATUS_RETURNED ? ", DATE_RETURNED = DATE('" . db2_escape_string($dateReturned). "') " : null;
-        $sql .= trim($status)==assetRequestRecord::$STATUS_REJECTED ? ", ORDERIT_STATUS = '" . assetRequestRecord::$STATUS_ORDERIT_NOT . "' " : null;
+        $sql .= !empty($orderItStatus) ? ", ORDERIT_STATUS = '" . db2_escape_string($orderItStatus) . "' " : null ;
         $sql .= " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' ";
 
         $rs = db2_exec($_SESSION['conn'], $sql);

@@ -37,9 +37,7 @@ try {
         // Set active sheet index to the first sheet, so Excel opens this as the first sheet
         $spreadsheet->setActiveSheetIndex(0);
         // Redirect output to a client’s web browser (Xlsx)
-
         DbTable::autoSizeColumns($spreadsheet);
-
         $fileNameSuffix = $now->format('Ymd_His');
 
         ob_clean();
@@ -61,8 +59,12 @@ try {
 
 } catch (Exception $e) {
 
-    ob_clean();
+//    ob_clean();
+
+    echo "<br/><br/><br/><br/><br/>";
 
     echo $e->getMessage();
-    echo "<h1>No data found to export to tracker</h2>";
+    echo $e->getLine();
+    echo $e->getFile();
+    echo "<h1>No data found to export to tracker</h1>";
 }

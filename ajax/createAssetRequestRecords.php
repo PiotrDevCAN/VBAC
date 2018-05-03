@@ -53,7 +53,7 @@ switch (true) {
     case $autoApproved && !empty($_POST['ORDERIT_NUMBER']) :
         // This is a manager, entering details of a request that has already been raised in ORDER IT.
         $orderItStatus = assetRequestRecord::$STATUS_ORDERIT_RAISED;
-        $status = assetRequestRecord::$STATUS_RAISED_ORDERIT;
+        $status = assetRequestRecord::$STATUS_APPROVED;
         $userCreated = assetRequestRecord::$CREATED_USER;
     break;
     case !$autoApproved && !empty($_POST['ORDERIT_NUMBER']) :

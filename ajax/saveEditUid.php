@@ -10,13 +10,13 @@ AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_POST,
 
 $assetRequestTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
 $assetRequestTable->updateUids($_POST['reference'], trim($_POST['primaryUid']), trim($_POST['secondaryUid']));
-assetRequestsTable::setToProvisionedStatus($_POST['reference']); 
+assetRequestsTable::setToProvisionedStatus($_POST['reference']);
 
 $requestDetails = $assetRequestTable->getCnumAndAssetForReference($_POST['reference']);
 
 if($requestDetails){
     $personTable = new personTable(allTables::$PERSON);
-    $personTable->assetUpdate($requestDetails['cnum'], $requestDetails['assetTitle'], $primaryUid);    
+    $personTable->assetUpdate($requestDetails['cnum'], $requestDetails['assetTitle'], trim($_POST['primaryUid']));
 }
 
 

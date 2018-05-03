@@ -500,18 +500,53 @@ this.listenForAssetRequestApproveRejectConfirm  = function(){
 
 	          	var approveReject = $('#assetRequestApprovalToggle').is(':checked' );
 	          	var raisedInOrderIt = orderItStatus == 'Raised in Order IT' ? true : false;
-	          	var status = approveReject ? 'Approved for Order IT' : 'Rejected in vBAC';
-	          	var status = approveReject && raisedInOrderIt ? 'Raised in Order IT' : status;
+	          	//var status = approveReject ? 'Approved for Order IT' : 'Rejected in vBAC';
+	          	//var orderitstatus = raisedInOrderIt ? orderItStatus : 'Yet to be raised';
+	          	// var status = approveReject && raisedInOrderIt ? 'Raised in Order IT' : status;   --> We are now saying - even for the 'raised in order it' they need to go throufg 'Approved for Order IT' status
+
+	          	console.log(approveReject);
+	          	console.log(orderItStatus);
+	          	console.log(raisedInOrderIt);
 
 
 
-		         $(allDisabledFields).attr('disabled',true);
+	          	switch(true) {
+	          	case approveReject && raisedInOrderIt:
+	          		console.log('true and true');
+	          		// It was already raised in order it - and now it's approved.
+	          		var status = 'Approved for Order IT';
+	          		var orderitstatus = 'Raised in Order IT';
+	          		break;
+	          	case approveReject && !raisedInOrderIt:
+	          		console.log('true and false');
+	          		// It's NOT already raised in order it - and has now been approved.
+	          		var status = 'Approved for Order IT';
+	          		var orderitstatus = 'Yet to be raised';
+	          		break;
+	          	case !approveReject && raisedInOrderIt:
+	          		console.log('false and true');
+	          		// It was already raised in order it - but has now been rejected in vbac.
+	          		var status = 'Rejected in vBAC';
+	          		var orderitstatus = 'Raised in Order IT';
+	          		break;
+	          	case !approveReject && !raisedInOrderIt:
+	          		console.log('false and false');
+	          		// It's NOT raised in order it - but has now been rejected in vbac, so we WON'T Raise it in Order IT.
+	          		var status = 'Rejected in vBAC';
+	          		var orderitstatus = 'Not to be raised';
+	          		break;
+	          	default:
+	          		break;
+	          	}
+
+     	        $(allDisabledFields).attr('disabled',true);
 
 	          	$.ajax({
 			        url: "ajax/updateAssetRequestStatus.php",
 			        type: 'POST',
 			        data: {reference: reference,
 			        	   status : status,
+			        	   orderitstatus : orderitstatus,
 			        	   comment : comment },
 			        success: function(result){
 			        	console.log(result);
