@@ -50,9 +50,12 @@ switch (true) {
     break;
 }
 
-$data = assetRequestsTable::returnForPortal($predicate);
+$dataAndSql = assetRequestsTable::returnForPortal($predicate);
+$data = $dataAndSql['data'];
+$sql  = $dataAndSql['sql'];
 $messages = ob_get_clean();
-$response = array("data"=>$data,'messages'=>$messages, 'predicate'=>$predicate,'isFm'=>$_SESSION['isFm'],'isPmo'=>$_SESSION['isPmo'],'showAll'=>$showAll);
+
+$response = array("data"=>$data,'messages'=>$messages,'sql'=>$sql);
 
 ob_clean();
 echo json_encode($response);

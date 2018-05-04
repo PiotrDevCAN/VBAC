@@ -242,7 +242,7 @@ class assetRequestsTable extends DbTable{
             $data[] = $row;
         }
 
-        return $data;
+        return array('data'=>$data,'sql'=>$sql);
 
     }
 
@@ -1374,7 +1374,10 @@ class assetRequestsTable extends DbTable{
             unset($requestableAssets[$key]);
         }
 
-        $data = $this->returnForPortal(null,self::RETURN_WITHOUT_BUTTONS);
+        $dataAndSql = $this->returnForPortal(null,self::RETURN_WITHOUT_BUTTONS);
+        $data = $dataAndSql['data'];
+        $sql  = $dataAndSql['sql'];
+
 
         foreach ($data as $key => $record){
             $assetRequests[$record['EMAIL_ADDRESS']][$record['ASSET']] = $record;
