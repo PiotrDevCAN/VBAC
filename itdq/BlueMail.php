@@ -19,23 +19,24 @@ class BlueMail
         // $attachments=array('filename'=>'filename.txt','content_type'=>'text/plain','data'=>'base64 encoded data here')
         $emailLogRecordID = null;
 
+        $cleanedTo = self::validateIbmEmailArray($to);
+        $cleanedCc = self::validateIbmEmailArray($cc);
+        $cleanedBcc= self::validateIbmEmailArray($bcc);
+
         $recipients = array();
-        foreach ($to as $emailAddress){
+        foreach ($cleanedTo as $emailAddress){
             $recipients[] = array('recipient'=>$emailAddress);
         }
 
         $ccRecipients = array();
-        foreach ($cc as $emailAddress){
+        foreach ($cleanedCc as $emailAddress){
             $ccRecipients[] = array('recipient'=>$emailAddress);
         }
 
         $bccRecipients = array();
-        foreach ($bcc as $emailAddress){
+        foreach ($cleanedBcc as $emailAddress){
             $bccRecipients[] = array('recipient'=>$emailAddress);
         }
-
-
-
 
         $data = array('contact'=> $replyto,
             'recipients'=>$recipients,
@@ -353,6 +354,23 @@ class BlueMail
         self::getStatus($recordId, $emailDetails['PREV_STATUS']);
         return $resp;
     }
+
+
+    private static function validateIbmEmail($emailAddress){
+        $domain = strtolower(substr($emailAddress,-7));
+        $hasTheAt = stripos($emailAddress, '@');
+        return $domain=='ibm.com' && $hasTheAt;
+    }
+
+    static function validateIbmEmailArray($arrayOfEmailAddress){
+        foreach ($arrayOfEmailAddress as $key => $emailAddress){
+            if(!self::validateIbmEmail(trim($emailAddress))){
+                unset($arrayOfEmailAddress[$key]);
+            }
+        }
+        return $arrayOfEmailAddress;
+    }
+
 
 
 }
