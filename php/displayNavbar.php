@@ -70,10 +70,17 @@ $access->addOption($requestAssets);
 // $access->addOption($requestAccess);
 $access->addOption($iamAdmin);
 
+
+$reports         = new NavbarMenu('Downloadable Reports');
+$fullExtract     = new NavbarOption('Person Details', 'pr_personDetails.php','accessCdi accessPmo accessRepFullPerson');
+$reports->addOption($fullExtract);
+
+
 $navbar->addMenu($cdiAdmin);
 $navbar->addMenu($adminMenu);
 $navbar->addMenu($boarding);
 $navbar->addMenu($access);
+$navbar->addMenu($reports);
 
 $outages = new NavbarOption($plannedOutagesLabel, 'ppo_PlannedOutages.php','accessCdi accessPmo accessFm accessUser ');
 $navbar->addOption($outages);
@@ -84,11 +91,13 @@ $isFm   = personTable::isManager($GLOBALS['ltcuser']['mail'])                 ? 
 $isCdi  = employee_in_group($_SESSION['cdiBg'],  $GLOBALS['ltcuser']['mail']) ? ".not('.accessCdi')" : null;
 $isPmo  = employee_in_group($_SESSION['pmoBg'],  $GLOBALS['ltcuser']['mail']) ? ".not('.accessPmo')" : null;
 $isPes  = employee_in_group($_SESSION['pesBg'],  $GLOBALS['ltcuser']['mail']) ? ".not('.accessPes')" : null;
+$isRep1  = employee_in_group('vbac_Reports_Full_Person',  $GLOBALS['ltcuser']['mail']) ? ".not('.accessRepFullPerson')" : null;
 $isUser = ".not('.accessUser')";
 
 $isCdi   = stripos($_SERVER['environment'], 'dev') ? ".not('.accessCdi')"  : $isCdi;
 $isPmo   = stripos($_SERVER['environment'], 'dev')  ? ".not('.accessPmo')" : $isPmo;
 $isPes   = stripos($_SERVER['environment'], 'dev')  ? ".not('.accessPes')" : $isPes;
+$isRep1   = stripos($_SERVER['environment'], 'dev')  ? ".not('.accessRepFullPerson')" : $isPes;
 
 $isFm = $isPmo ? null : $isFm; // If they are PMO it don't matter if they are FM
 
@@ -97,6 +106,7 @@ $_SESSION['isCdi']  = !empty($isCdi)  ? true : false;
 $_SESSION['isPmo']  = !empty($isPmo)  ? true : false;
 $_SESSION['isPes']  = !empty($isPes)  ? true : false;
 $_SESSION['isUser'] = !empty($isUser) ? true : false;
+$_SESSION['isRep1'] = !empty($isRep1) ? true : false;
 
 $plannedOutagesId = str_replace(" ","_",$plannedOutagesLabel);
 ?>
@@ -116,15 +126,18 @@ if($page != "index.php" && substr($page,0,3)!='cdi'){
 	}
 	<?php
 }
+
+$rep = null;
+!empty($isRep1) ? $rep .= '<small>(R1)</small>' : '';
 ?>
 
 $(document).ready(function () {
     $('button.accessRestrict')<?=$isFm?><?=$isPmo?><?=$isCdi?><?=$isUser?>.remove();
 
-    <?=!empty($isUser) ? '$("#userLevel").html("User&nbsp;");console.log("user");' : null;?>
-    <?=!empty($isFm)   ? '$("#userLevel").html("Func.Mgr.&nbsp;");console.log("fm");' : null;?>
-    <?=!empty($isPmo)  ? '$("#userLevel").html("PMO&nbsp;");console.log("pmo");' : null;?>
-    <?=!empty($isCdi)  ? '$("#userLevel").html("CDI&nbsp;&nbsp;");console.log("cdi");' : null;?>
+    <?=!empty($isUser) ? '$("#userLevel").html("User&nbsp;' . $rep . '");console.log("user");' : null;?>
+    <?=!empty($isFm)   ? '$("#userLevel").html("Func.Mgr.&nbsp;' . $rep . '");console.log("fm");' : null;?>
+    <?=!empty($isPmo)  ? '$("#userLevel").html("PMO&nbsp;' . $rep . '");console.log("pmo");' : null;?>
+    <?=!empty($isCdi)  ? '$("#userLevel").html("CDI&nbsp;' . $rep . '");console.log("cdi");' : null;?>
 
     var poContent = $('#<?=$plannedOutagesId?> a').html();
 	var badgedContent = poContent + "&nbsp;" + "<?=$plannedOutages->getBadge();?>";
