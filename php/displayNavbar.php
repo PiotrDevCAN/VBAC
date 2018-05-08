@@ -67,7 +67,7 @@ $iamAdmin       = new NavbarOption('IAM Admin', 'pc_iamAdmin.php','accessCdi acc
 // $iamAdmin       = new NavbarOption('IAM Admin', 'pc_iamAdmin.php','accessCdi accessPmo');
 $access->addOption($assetPortal);
 $access->addOption($requestAssets);
-$access->addOption($requestAccess);
+// $access->addOption($requestAccess);
 $access->addOption($iamAdmin);
 
 $navbar->addMenu($cdiAdmin);
