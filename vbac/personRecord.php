@@ -108,36 +108,36 @@ class personRecord extends DbRecord
     public static $orderITNonBauTaskId = array('Aurora.On.andOff.Boarding.support@uk.ibm.com');
     //private static $pesTaskId = 'rob.daniel@uk.ibm.com';
     //private static $pesTaskId    = array('rob.daniel@uk.ibm.com', 'carrabooth@uk.ibm.com');
-    private static $pesEmailBody = '<table width="100%" border="0" cellspacing="0" cellpadding="0">
-                             <tr><td align="center">
-                                <table width="50%">
-                                    <tr><td colspan="2" style="font-size:16px;padding-bottom:10px"">Please initiate PES check for the following individual:</td></tr>
-                                    <tr><th style="background-color:silver;font-size:20px">Name</th><td style="font-size:20px">&&name&&</td></tr>
-                                    <tr><th style="background-color:silver;font-size:20px">Email Address</th><td style="font-size:20px">&&email&&</td></tr>
-                                    <tr><th style="background-color:silver;font-size:20px">Notes Id</th><td style="font-size:20px">&&notesid&&</td></tr>
-                                    <tr><th style="background-color:silver;font-size:20px">Country working in </th><td style="font-size:20px">&&country&&</td></tr>
-                                    <tr><th style="background-color:silver;font-size:20px">LoB</th><td style="font-size:20px">&&lob&&</td></tr>
-                                    <tr><th style="background-color:silver;font-size:20px">Role on Project</th><td style="font-size:20px">&&role&&</td></tr>
-                                    <tr><th style="background-color:silver;font-size:20px">Contract</th><td style="font-size:20px">&&contract&&</td></tr>
-                                    <tr><th style="background-color:silver;font-size:20px">Open Seat/Hiring</th><td style="font-size:20px">&&openSeat&&</td></tr>
-                                    <tr><th style="background-color:WhiteSmoke;font-size:16px">Requested By</th><td style="font-size:16px">&&requestor&&</td></tr>
-                                    <tr><th style="background-color:WhiteSmoke;font-size:16px">Requested Timestamp</th><td style="font-size:16px">&&requested&&</td></tr>
-                                    <tr><th style="background-color:WhiteSmoke;font-size:16px">Functional Mgr (on CC)</th><td style="font-size:16px">&&functionalMgr&&</td></tr>
-                                </table>
-                            </td></tr>
-                            </table>';
-//     private static $pesEmailBody = 'Please initiate PES check for the following individual:\n
-//                                     Name : &&name&&
-//                                     Email Address : &&email&&
-//                                     Notes Id : &&notesid&&
-//                                     Country working in : &&country&&
-//                                     LoB : &&lob&&
-//                                     Role on Project : &&role&&
+//     private static $pesEmailBody = '<table width="100%" border="0" cellspacing="0" cellpadding="0">
+//                              <tr><td align="center">
+//                                 <table width="50%">
+//                                     <tr><td colspan="2" style="font-size:16px;padding-bottom:10px"">Please initiate PES check for the following individual:</td></tr>
+//                                     <tr><th style="background-color:silver;font-size:20px">Name</th><td style="font-size:20px">&&name&&</td></tr>
+//                                     <tr><th style="background-color:silver;font-size:20px">Email Address</th><td style="font-size:20px">&&email&&</td></tr>
+//                                     <tr><th style="background-color:silver;font-size:20px">Notes Id</th><td style="font-size:20px">&&notesid&&</td></tr>
+//                                     <tr><th style="background-color:silver;font-size:20px">Country working in </th><td style="font-size:20px">&&country&&</td></tr>
+//                                     <tr><th style="background-color:silver;font-size:20px">LoB</th><td style="font-size:20px">&&lob&&</td></tr>
+//                                     <tr><th style="background-color:silver;font-size:20px">Role on Project</th><td style="font-size:20px">&&role&&</td></tr>
+//                                     <tr><th style="background-color:silver;font-size:20px">Contract</th><td style="font-size:20px">&&contract&&</td></tr>
+//                                     <tr><th style="background-color:silver;font-size:20px">Open Seat/Hiring</th><td style="font-size:20px">&&openSeat&&</td></tr>
+//                                     <tr><th style="background-color:WhiteSmoke;font-size:16px">Requested By</th><td style="font-size:16px">&&requestor&&</td></tr>
+//                                     <tr><th style="background-color:WhiteSmoke;font-size:16px">Requested Timestamp</th><td style="font-size:16px">&&requested&&</td></tr>
+//                                     <tr><th style="background-color:WhiteSmoke;font-size:16px">Functional Mgr (on CC)</th><td style="font-size:16px">&&functionalMgr&&</td></tr>
+//                                 </table>
+//                             </td></tr>
+//                             </table>';
+    private static $pesEmailBody = 'Please initiate PES check for the following individual:\n
+                                    Name : &&name&&
+                                    Email Address : &&email&&
+                                    Notes Id : &&notesid&&
+                                    Country working in : &&country&&
+                                    LoB : &&lob&&
+                                    Role on Project : &&role&&
 
-//                                     Contract : &&contract&&
-//                                     Requested By : &&requestor&&
-//                                     Requested Timestamp : &&requested&&
-//                                     Functional Mgr (on CC) : &&functionalMgr&&';
+                                    Contract : &&contract&&
+                                    Requested By : &&requestor&&
+                                    Requested Timestamp : &&requested&&
+                                    Functional Mgr (on CC) : &&functionalMgr&&';
     private static $pesEmailPatterns = array(
         '/&&name&&/',
         '/&&email&&/',
