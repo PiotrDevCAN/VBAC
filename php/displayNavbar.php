@@ -97,7 +97,7 @@ $isUser = ".not('.accessUser')";
 $isCdi   = stripos($_SERVER['environment'], 'dev') ? ".not('.accessCdi')"  : $isCdi;
 $isPmo   = stripos($_SERVER['environment'], 'dev')  ? ".not('.accessPmo')" : $isPmo;
 $isPes   = stripos($_SERVER['environment'], 'dev')  ? ".not('.accessPes')" : $isPes;
-$isRep1   = stripos($_SERVER['environment'], 'dev')  ? ".not('.accessRepFullPerson')" : $isPes;
+$isRep1   = stripos($_SERVER['environment'], 'dev')  ? ".not('.accessRepFullPerson')" : $isRep1;
 
 $isFm = $isPmo ? null : $isFm; // If they are PMO it don't matter if they are FM
 
