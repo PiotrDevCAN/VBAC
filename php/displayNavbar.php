@@ -132,7 +132,7 @@ $rep = null;
 ?>
 
 $(document).ready(function () {
-    $('button.accessRestrict')<?=$isFm?><?=$isPmo?><?=$isCdi?><?=$isUser?>.remove();
+    $('button.accessRestrict')<?=$isFm?><?=$isPmo?><?=$isCdi?><?=$isUser?><?$isRep1?>.remove();
 
     <?=!empty($isUser) ? '$("#userLevel").html("User&nbsp;' . $rep . '");console.log("user");' : null;?>
     <?=!empty($isFm)   ? '$("#userLevel").html("Func.Mgr.&nbsp;' . $rep . '");console.log("fm");' : null;?>
