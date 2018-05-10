@@ -112,7 +112,7 @@ $plannedOutagesId = str_replace(" ","_",$plannedOutagesLabel);
 ?>
 <script>
 
-$('.navbarMenuOption')<?=$isFm?><?=$isPmo?><?=$isCdi?><?=$isUser?>.remove();
+$('.navbarMenuOption')<?=$isFm?><?=$isPmo?><?=$isCdi?><?=$isUser?><?=$isRep1?>.remove();
 $('.navbarMenu').not(':has(li)').remove();
 
 $('li[data-pagename="<?=$page;?>"]').addClass('active').closest('li.dropdown').addClass('active');
@@ -132,7 +132,8 @@ $rep = null;
 ?>
 
 $(document).ready(function () {
-    $('button.accessRestrict')<?=$isFm?><?=$isPmo?><?=$isCdi?><?=$isUser?><?$isRep1?>.remove();
+
+    $('button.accessRestrict')<?=$isFm?><?=$isPmo?><?=$isCdi?><?=$isUser?><?=$isRep1?>.remove();
 
     <?=!empty($isUser) ? '$("#userLevel").html("User&nbsp;' . $rep . '");console.log("user");' : null;?>
     <?=!empty($isFm)   ? '$("#userLevel").html("Func.Mgr.&nbsp;' . $rep . '");console.log("fm");' : null;?>
@@ -144,5 +145,4 @@ $(document).ready(function () {
 	$('#<?=$plannedOutagesId?> a').html(badgedContent);
 });
 </script>
-
 
