@@ -1,6 +1,6 @@
 applications:
 - path: ../
-  memory: 128M
+  memory: 256M
   instances: 1
   domain: w3ibm.mybluemix.net
   name: vBAC User Testing
