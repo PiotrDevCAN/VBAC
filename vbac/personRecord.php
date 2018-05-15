@@ -101,7 +101,7 @@ class personRecord extends DbRecord
     public static $cio = array('Commercial','Cross CIO Leadership','Cyber', 'Digital','Divestment','GOFE','IT 4 IT','Insurance','Retail','Sandbox','TRP','tbc');
 
     public static $pesTaskId = array('lbgvetpr@uk.ibm.com','rob.daniel@uk.ibm.com'); // Only first entry will be used as the "contact" in the PES status emails.
-    public static $pmoTaskId = array('Aurora.On.andOff.Boarding.support@uk.ibm.com');
+    public static $pmoTaskId = array('Aurora.On.and.Off.Boarding.support@uk.ibm.com');
     public static $orderITCtbTaskId = array('jeemohan@in.ibm.com');
     public static $orderITNonCtbTaskId = array('Aurora.On.andOff.Boarding.support@uk.ibm.com');
     public static $orderITBauTaskId = array('Aurora.On.andOff.Boarding.support@uk.ibm.com');
