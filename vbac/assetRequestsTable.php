@@ -45,7 +45,7 @@ class assetRequestsTable extends DbTable{
         $sql .= " P.CT_ID as CT_ID, P.EMAIL_ADDRESS as REQUESTEE_EMAIL, P.NOTES_ID as REQUESTEE_NOTES, AR.ASSET_TITLE as ASSET, STATUS, ";
         $sql .= " BUSINESS_JUSTIFICATION as JUSTIFICATION, REQUESTOR_EMAIL as REQUESTOR_EMAIL, REQUESTED as REQUESTED_DATE,  ";
         $sql .= " APPROVER_EMAIL, APPROVED as APPROVED_DATE, ";
-        $sql .= " F.EMAIL_ADDRESS as FM_EMAIL, F.NOTES_ID as FM_NOTES, ";
+        $sql .= " F.EMAIL_ADDRESS as FM_EMAIL, F.NOTES_ID as FM_NOTES, P.FM_CNUM,";
         $sql .= " USER_LOCATION as LOCATION, ";
         $sql .= " PRIMARY_UID, SECONDARY_UID, DATE_ISSUED_TO_IBM, DATE_ISSUED_TO_USER, DATE_RETURNED,   ";
         $sql .= " ORDERIT_VARB_REF, ORDERIT_NUMBER, ORDERIT_STATUS, ";
@@ -179,7 +179,7 @@ class assetRequestsTable extends DbTable{
 //                 unset($row['REQUESTOR_DATE']);
 //             }
 
-            $row['FM'] = $row['FM_NOTES'] . "<br/><small>" . $row['FM_EMAIL'] . "</small>";
+            $row['FM'] = !empty($row['FM_NOTES']) ? $row['FM_NOTES'] . "<br/><small>" . $row['FM_EMAIL'] . "</small>" : $row['FM_CNUM'];
 
 
             $editUidButton  = "<button type='button' class='btn btn-default btn-xs btnEditUid btn-primary' aria-label='Left Align' ";
