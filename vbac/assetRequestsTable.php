@@ -154,7 +154,7 @@ class assetRequestsTable extends DbTable{
             if(strtolower(trim($row['FM_EMAIL'])) == (strtolower(trim($row['APPROVER_EMAIL'])))){
                $indicatorIfApproverIsFm = "<span class='bg-success'>&nbsp;";
             } else {
-               $indicatorIfApproverIsFm = "<span class='bg-danger'>&nbsp;";
+               $indicatorIfApproverIsFm = "<span class='bg-warning'>&nbsp;";
             }
 
             $indicatorIfApproverIsFm = $_SESSION['isPmo'] ? $indicatorIfApproverIsFm : "<span>&nbsp;";
