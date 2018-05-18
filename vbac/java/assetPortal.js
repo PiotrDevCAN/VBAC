@@ -303,6 +303,31 @@ this.listenForReportShowUid = function(){
 	  });
   }
 
+  this.listenForDeVarbButton = function(){
+	  $(document).on('click','#deVarb', function(e){
+		  $('#deVarb').addClass('spinning');
+		  $('#deVarb').attr('disabled',true);
+		  if(!confirm('This will remove ALL the requests from the VARB, please confirm that is what you want to do')){
+			  $('#deVarb').removeClass('spinning');
+			  $('#deVarb').attr('disabled',false);
+			  return false;
+		  }
+		  var varbRef = $('#unmappedVarb').val();
+	      $.ajax({
+		        url: "ajax/deVarb.php",
+		        type: 'POST',
+		        data:{varbref:varbRef},
+		        success: function(result){
+		        	var resultObj = JSON.parse(result);
+			    	// assetPortal.table.ajax.reload();
+		        	$('#deVarb').removeClass('spinning');
+				    $('#deVarb').attr('disabled',false);
+				    $('#mapVarbToOrderItModal').modal('hide');
+		        }
+	      });
+	  });
+  }
+
 
   this.listenForSetOitStatusButton = function(){
 	  $(document).on('click','#setOrderItStatus', function(e){
@@ -447,6 +472,7 @@ this.listenForSaveOrderItStatus = function(){
 	  console.log('setup listener');
 	  $('#unmappedVarb').off('select2:select.varb').on('select2:select.varb', function (e) {
 		  assetPortal.varbRequestTable.ajax.reload();
+		  $('#deVarb').attr('disabled',false);
 		});
   }
 

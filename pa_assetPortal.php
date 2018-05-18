@@ -76,6 +76,7 @@ $(document).ready(function(){
  	AssetPortal.listenForExportBauButton();
  	AssetPortal.listenForExportNonBauButton();
  	AssetPortal.listenForMapVarbButton();
+ 	AssetPortal.listenForDeVarbButton();
  	AssetPortal.listenForMapVarbModalShown();
  	AssetPortal.listenForSetOitStatusButton();
  	AssetPortal.listenForSetOitStatusModalShown();

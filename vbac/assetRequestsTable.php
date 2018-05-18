@@ -791,6 +791,12 @@ class assetRequestsTable extends DbTable{
              <div class="modal-body" >
              </div>
              <div class='modal-footer'>
+             <div class='col-sm-1'>
+             <button type="button" class="btn btn-xs btn-danger float-left" id='deVarb'  disabled >DeVarb ALL</button>
+             </div>
+             <div class='col-sm-8'>
+             </div>
+             <div class='col-sm-3'>
              <?php
                 $form = new FormClass();
                 $allButtons = null;
@@ -800,6 +806,7 @@ class assetRequestsTable extends DbTable{
                 $form->formHiddenInput('mapper',$GLOBALS['ltcuser']['mail'],'mapper');
             ?>
              <button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
+             </div>
              </div>
             </div>
         </div>
@@ -1530,6 +1537,31 @@ class assetRequestsTable extends DbTable{
         db2_commit($_SESSION['conn']);
         db2_autocommit($_SESSION['conn'],$autocommit);
     }
+
+
+    function deVarb($varbRef = null){
+        if(empty($varbRef)){
+            return false;
+        }
+
+        $sql  = " UPDATE ";
+        $sql .= $_SESSION['Db2Schema'] . "." . $this->tableName ;
+        $sql .= " SET STATUS='" . assetRequestRecord::$STATUS_APPROVED . "' ";
+        $sql .= ", ORDERIT_VARB_REF = null ";
+        $sql .= ", ORDERIT_STATUS = '" . assetRequestRecord::$STATUS_ORDERIT_YET . "' ";
+        $sql .= ", ORDERIT_NUMBER = null ";
+        $sql .= " WHERE ORDERIT_VARB_REF='" . db2_escape_string($varbRef) . "' and STATUS='" . assetRequestRecord::$STATUS_EXPORTED . "' ";
+
+        $rs = db2_exec($_SESSION['conn'], $sql);
+
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+            return FALSE;
+        }
+
+        return;
+
+      }
 
 
 
