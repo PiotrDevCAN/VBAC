@@ -70,7 +70,7 @@ class assetRequestRecord extends DbRecord {
             break;
         }
 
-        $predicate .= " and (( REVALIDATION_STATUS = '" . personRecord::REVALIDATED_FOUND . "' and PES_STATUS in ('" . personRecord::PES_STATUS_CLEARED. "','" . personRecord::PES_STATUS_CLEARED_PERSONAL. "','" . personRecord::PES_STATUS_EXCEPTION. "') ) ";
+        $predicate .= " and ((( REVALIDATION_STATUS = '" . personRecord::REVALIDATED_FOUND . "' or (REVALIDATION_STATUS is null )) and PES_STATUS in ('" . personRecord::PES_STATUS_CLEARED. "','" . personRecord::PES_STATUS_CLEARED_PERSONAL. "','" . personRecord::PES_STATUS_EXCEPTION. "') ) ";
         $predicate .= " or  ( REVALIDATION_STATUS IN ('" . personRecord::REVALIDATED_PREBOARDER . "','" . personRecord::REVALIDATED_VENDOR . "') and ( PES_STATUS_DETAILS not like 'Boarded%' or PES_STATUS_DETAILS is null) and PES_STATUS in ('" . personRecord::PES_STATUS_CLEARED. "','" . personRecord::PES_STATUS_CLEARED_PERSONAL. "','" . personRecord::PES_STATUS_EXCEPTION. "') ) )";
         $selectableNotesId = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON,$predicate);
         $selectableEmailAddress = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON,$predicate);

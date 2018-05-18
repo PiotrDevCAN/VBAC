@@ -72,8 +72,13 @@ $access->addOption($iamAdmin);
 
 
 $reports         = new NavbarMenu('Downloadable Reports');
-$fullExtract     = new NavbarOption('Person Details', 'pr_personDetails.php','accessCdi accessPmo accessRepFullPerson');
+$original        = new NavbarOption('Person Details - Original', 'pr_personDetails.php','accessCdi accessPmo accessRepFullPerson');
+$fullExtract     = new NavbarOption('Person Details - Full', 'pr_personDetailsFull.php','accessCdi accessPmo accessRepFullPerson');
+$active          = new NavbarOption('Person Details - Active', 'pr_personDetailsActive.php','accessCdi accessPmo accessRepFullPerson');
+$inactive        = new NavbarOption('Person Details - Inactive', 'pr_personDetailsInactive.php','accessCdi accessPmo accessRepFullPerson');
 $reports->addOption($fullExtract);
+$reports->addOption($active);
+$reports->addOption($inactive);
 
 
 $navbar->addMenu($cdiAdmin);
