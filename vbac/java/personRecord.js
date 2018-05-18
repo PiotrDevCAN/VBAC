@@ -1082,7 +1082,6 @@ function personRecord() {
       $('#start_date').datepicker({ dateFormat: 'dd M yy',
 			   altField: '#start_date_db2',
 			   altFormat: 'yy-mm-dd' ,
-			   minDate: 0,
 			   maxDate: +100,
 		       onSelect: function( selectedDate ) {
 		            $( "#end_date" ).datepicker( "option", "minDate", selectedDate );}
