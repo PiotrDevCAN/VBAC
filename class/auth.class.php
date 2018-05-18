@@ -22,6 +22,15 @@
 		{
 			if(isset($_SESSION['uid']) && isset($_SESSION['exp']) && ($_SESSION['exp']-300) > time()) return true;
 
+			?>
+			<script type="text/javascript">
+    			// Firefox 1.0+
+    			var isFirefox = typeof InstallTrigger !== 'undefined';
+    			if(!isFirefox){
+        			alert('Only the Firefox browser is supported by vBAC. \nIt has detected you are using a different browser. \nIf you experience any problems with the tool, please try using FireFox before alerting the CDI Team.');
+    			}
+		    </script>
+			<?php
 			switch ($this->technology) {
 				case "openidconnect":
 					$this->authenticateOpenIDConnect();
