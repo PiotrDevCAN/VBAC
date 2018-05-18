@@ -1153,7 +1153,6 @@ class assetRequestsTable extends DbTable{
             $status = trim($row['ORDERIT_STATUS']);
             switch ($status) {
                 case assetRequestRecord::$STATUS_ORDERIT_APPROVED:
-                case assetRequestRecord::$STATUS_ORDERIT_RAISED:
                     $row['ACTION'] = '<div class="form-check">
                                         <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'app" checked value="' . assetRequestRecord::$STATUS_ORDERIT_APPROVED. '" >
                                         <label class="form-check-label text-success" for="radio" id="radio' . $row['REFERENCE'] . 'app" >' . assetRequestRecord::$STATUS_ORDERIT_APPROVED. '</label>
@@ -1167,12 +1166,13 @@ class assetRequestsTable extends DbTable{
                                     <div class="form-check">
                                     <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'can" value="' . assetRequestRecord::$STATUS_ORDERIT_CANCELLED. '" >
                                     <label class="form-check-label text-warning" for="radio" id="radio' . $row['REFERENCE'] . 'app">' . assetRequestRecord::$STATUS_ORDERIT_CANCELLED. '</label>
+                                    </div>
+
+                                    <div class="form-check">
+                                    <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'rai" value="' . assetRequestRecord::$STATUS_ORDERIT_RAISED. '" >
+                                    <label class="form-check-label text-warning" for="radio" id="radio' . $row['REFERENCE'] . 'rai">' . assetRequestRecord::$STATUS_ORDERIT_RAISED. '</label>
                                     </div>';
-
-
-                    //$row['ACTION']  .= "<input data-ref='" . trim($row['REFERENCE']) . "' data-toggle='toggle' data-on='Set to Approved' data-off='Set to Rejected' ";
-                    //$row['ACTION'] .= " data-onstyle='success' data-offstyle='danger'  type='checkbox' name=\"status[". $row['REFERENCE'] . "]\" checked class='statusToggle'  />";
-                    break;
+                     break;
                 case assetRequestRecord::$STATUS_ORDERIT_REJECTED:
                     $row['ACTION'] = '<div class="form-check">
                                         <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'app"  value="' . assetRequestRecord::$STATUS_ORDERIT_APPROVED. '" >
@@ -1187,6 +1187,11 @@ class assetRequestsTable extends DbTable{
                                     <div class="form-check">
                                     <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'can" value="' . assetRequestRecord::$STATUS_ORDERIT_CANCELLED. '" >
                                     <label class="form-check-label text-warning" for="radio" id="radio' . $row['REFERENCE'] . 'app">' . assetRequestRecord::$STATUS_ORDERIT_CANCELLED. '</label>
+                                    </div>
+
+                                    <div class="form-check">
+                                    <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'rai" value="' . assetRequestRecord::$STATUS_ORDERIT_RAISED. '" >
+                                    <label class="form-check-label text-warning" for="radio" id="radio' . $row['REFERENCE'] . 'rai">' . assetRequestRecord::$STATUS_ORDERIT_RAISED. '</label>
                                     </div>';
 
                     break;
@@ -1204,11 +1209,34 @@ class assetRequestsTable extends DbTable{
                                     <div class="form-check">
                                     <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'can" checked value="' . assetRequestRecord::$STATUS_ORDERIT_CANCELLED. '" >
                                     <label class="form-check-label text-warning" for="radio" id="radio' . $row['REFERENCE'] . 'app">' . assetRequestRecord::$STATUS_ORDERIT_CANCELLED. '</label>
+                                    </div>
+
+                                    <div class="form-check">
+                                    <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'rai" value="' . assetRequestRecord::$STATUS_ORDERIT_RAISED. '" >
+                                    <label class="form-check-label text-warning" for="radio" id="radio' . $row['REFERENCE'] . 'rai">' . assetRequestRecord::$STATUS_ORDERIT_RAISED. '</label>
                                     </div>';
 
                     break;
                 default:
-                    $row['ACTION']='';
+                    $row['ACTION'] = '<div class="form-check">
+                                        <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'app"  value="' . assetRequestRecord::$STATUS_ORDERIT_APPROVED. '" >
+                                        <label class="form-check-label text-success" for="radio" id="radio' . $row['REFERENCE'] . 'app" >' . assetRequestRecord::$STATUS_ORDERIT_APPROVED. '</label>
+                                        </div>
+
+                                    <div class="form-check">
+                                    <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'rej" value="' . assetRequestRecord::$STATUS_ORDERIT_REJECTED. '" >
+                                    <label class="form-check-label text-danger" for="radio" id="radio' . $row['REFERENCE'] . 'app">' . assetRequestRecord::$STATUS_ORDERIT_REJECTED. '</label>
+                                    </div>
+
+                                    <div class="form-check">
+                                    <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'can" value="' . assetRequestRecord::$STATUS_ORDERIT_CANCELLED. '" >
+                                    <label class="form-check-label text-warning" for="radio" id="radio' . $row['REFERENCE'] . 'app">' . assetRequestRecord::$STATUS_ORDERIT_CANCELLED. '</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'xxx" checked value="' .  $status. '" >
+                                        <label class="form-check-label text-primary" for="radio" id="radio' . $row['REFERENCE'] . 'xxx" >' . $status. '</label>
+                                        </div>
+';
                 break;
             }
 
