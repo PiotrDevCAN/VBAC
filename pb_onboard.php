@@ -14,7 +14,7 @@ set_time_limit(0);
 <div class='col-sm-2'></div>
 <div class='col-sm-8'>
 <h2>Onboard Individual
-<input checked data-size="mini" data-toggle="toggle" type="checkbox" class='toggle' data-width='100' data-on="IBMer Boarding" data-off="Pre-Hire" data-onstyle="primary" data-offstyle="warning" id='hasBpEntry'>
+<input checked data-size="mini" data-toggle="toggle" type="checkbox" class='toggle' data-width='120' data-on="IBMer Boarding" data-off="Pre-Hire/Vendor" data-onstyle="primary" data-offstyle="warning" id='hasBpEntry'>
 </h2>
 </div>
 </div>
@@ -63,6 +63,7 @@ $(document).ready(function() {
     person.listenForCtbRtb();
     person.listenForInitiatePesFromBoarding();
     person.listenForLinkToPreBoarded();
+    person.listenForEmployeeTypeRadioBtn();
 
 });
 

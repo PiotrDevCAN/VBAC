@@ -88,6 +88,7 @@ class personRecord extends DbRecord
     const FIELD_PES_STATUS = 25;
 
     const REVALIDATED_FOUND = 'found';
+    const REVALIDATED_VENDOR = 'vendor';
     const REVALIDATED_LEAVER = 'leaver';
     const REVALIDATED_PREBOARDER = 'preboarder';
     const REVALIDATED_OFFBOARDING = 'offboarding';
@@ -417,162 +418,153 @@ class personRecord extends DbRecord
 
         ?>
         <form id='boardingForm'  class="form-horizontal" onsubmit="return false;">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title" id='employeeResourceHeading'>Employee Details</h3>
-      </div>
+    	<div class="panel panel-default">
+      		<div class="panel-heading">
+        	<h3 class="panel-title" id='employeeResourceHeading'>Employee Details</h3>
+      		</div>
+	    	<div class="panel-body">
+    			<div id='existingIbmer'>
+	        		<div class="form-group">
+	          			<div class="col-sm-6">
+	            		<input class="form-control typeahead" id="person_name" name="person_name"
+	              			   value="<?=trim($this->FIRST_NAME . " " . $this->LAST_NAME)?>"
+	              			   type="text" placeholder='Start typing name/serial/email'
+	                           <?=$notEditable?>>
+	          			</div>
+					<div class='col-sm-6'>
+ 	         		<input class='form-control' id='person_serial' name='CNUM'
+	          			   value='<?=$this->CNUM?>' required type='text' disabled='disabled'
+   	                    placeholder='Serial Number' <?=$notEditable?>>
+	   	       		</div>
+				</div>
+
+	        	<div id='personDetails' display='<?=$displayForEdit?>'>
+	          		<div class='form-group'>
+	            		<div class='col-sm-6'>
+	              		<input class='form-control' id='person_notesid' name='NOTES_ID'
+	                		   value='<?=$this->NOTES_ID?>'  type='text'
+	                		   disabled='disabled' placeholder="Notesid" <?=$notEditable?>>
+	            		</div>
+		            	<div class='col-sm-6'>
+    	        		<input class='form-control' id='person_intranet'
+        	           		   name='EMAIL_ADDRESS' value='<?=$this->EMAIL_ADDRESS?>'
+                	   		   type='text' disabled='disabled' placeholder="Intranet" >
+            			</div>
+          			</div>
+
+          			<div class='form-group'>
+            			<div class='col-sm-12' <?=$hideDivFromEdit?>>
+		              	<input class='form-control' id='person_bio' name='person_bio'  value='' required type='text' disabled='disabled' placeholder="Bio">
+                		<input id='person_uid'           name='person_uid'        value='' type='hidden' required>
+                		<input id='person_is_mgr'	     name='FM_MANAGER_FLAG'   value='<?=$this->FM_MANAGER_FLAG?>'   type='hidden'  >
+                		<input id='person_employee_type' name='EMPLOYEE_TYPE'     value='<?=$this->EMPLOYEE_TYPE?>'		type='Hidden'  >
+                		<input id='person_first_name'    name='FIRST_NAME'        value='<?=$this->FIRST_NAME?>'        type='hidden'   <?=$notEditable?>>
+                		<input id='person_last_name'     name='LAST_NAME'         value='<?=$this->LAST_NAME?>'         type='hidden'   <?=$notEditable?>>
+                		<input id='person_ibm_location'  name='IBM_BASE_LOCATION' value='<?=$this->IBM_BASE_LOCATION?>'	type='hidden'  >
+                		<input id='person_country'       name='COUNTRY'           value='<?=$this->COUNTRY?>'           type='hidden'  >
+                		<input id='person_pes_status'    name='PES_STATUS'        value='<?=$pesStatus?>'               type='hidden'   <?=$notEditable?>>
+			            </div>
+          			</div>
+        		</div>
+      		</div>
 
 
-    <div class="panel-body">
-      <div id='existingIbmer'>
-        <div class="form-group">
-          <div class="col-sm-6">
-            <input class="form-control typeahead" id="person_name" name="person_name"
-              value="<?=trim($this->FIRST_NAME . " " . $this->LAST_NAME)?>"
-              type="text" placeholder='Start typing name/serial/email'
-              <?=$notEditable?>>
-          </div>
-          <div class='col-sm-6'>
-            <input class='form-control' id='person_serial' name='CNUM'
-              value='<?=$this->CNUM?>' required type='text' disabled='disabled'
-              placeholder='Serial Number' <?=$notEditable?>>
-          </div>
-        </div>
+      		<div id='notAnIbmer' style='display:none'>
+        		<div class="form-group">
+          			<div class="col-sm-6">
+		            <input class="form-control" id="resource_first_name" name="resFIRST_NAME"
+              			   value="<?=$this->LAST_NAME?>"
+                           type="text" placeholder='First Name'
+                           <?=$notEditable?>>
+          			</div>
+          			<div class="col-sm-6">
+            		<input class="form-control" id="resource_last_name" name="resLAST_NAME"
+              			   value="<?=$this->LAST_NAME?>"
+              			   type="text" placeholder='Last Name'
+                           <?=$notEditable?>>
+          			</div>
+        		</div>
 
-        <div id='personDetails' display='<?=$displayForEdit?>'>
-          <div class='form-group'>
-            <div class='col-sm-6'>
-              <input class='form-control' id='person_notesid' name='NOTES_ID'
-                value='<?=$this->NOTES_ID?>'  type='text'
-                disabled='disabled' placeholder="Notesid" <?=$notEditable?>>
-            </div>
+        		<div id='resourceDetails' style="display:<?=$displayForEdit?>">
+          			<div class='form-group'>
+            			<div class='col-sm-6'>
+              			<input class='form-control' id='resource_email'
+                			   name='resEMAIL_ADDRESS' value='<?=$this->EMAIL_ADDRESS?>'
+                			   type='text' placeholder="Email Address"	>
+		            	</div>
+        		    	<div class='col-sm-6'>
+		                <select class='form-control select select2 ' id='resource_country'
+                        		name='resCOUNTRY'
+                              	placeholder='Country working in:' >
 
-            <div class='col-sm-6'>
-              <input class='form-control' id='person_intranet'
-                name='EMAIL_ADDRESS' value='<?=$this->EMAIL_ADDRESS?>'
-                type='text' disabled='disabled' placeholder="Intranet"
-                >
-            </div>
-          </div>
-
-          <div class='form-group'>
-            <div class='col-sm-12' <?=$hideDivFromEdit?>>
-              <input class='form-control' id='person_bio' name='person_bio'
-                value='' required type='text' disabled='disabled' placeholder="Bio">
-                <input id='person_uid'           name='person_uid'        value='' type='hidden' required>
-                <input id='person_is_mgr'	     name='FM_MANAGER_FLAG'   value='<?=$this->FM_MANAGER_FLAG?>'   type='hidden'  >
-                <input id='person_employee_type' name='EMPLOYEE_TYPE'     value='<?=$this->EMPLOYEE_TYPE?>'		type='Hidden'  >
-                <input id='person_first_name'    name='FIRST_NAME'        value='<?=$this->FIRST_NAME?>'        type='hidden'   <?=$notEditable?>>
-                <input id='person_last_name'     name='LAST_NAME'         value='<?=$this->LAST_NAME?>'         type='hidden'   <?=$notEditable?>>
-                <input id='person_ibm_location'  name='IBM_BASE_LOCATION' value='<?=$this->IBM_BASE_LOCATION?>'	type='hidden'  >
-                <input id='person_country'       name='COUNTRY'           value='<?=$this->COUNTRY?>'           type='hidden'  >
-                <input id='person_pes_status'    name='PES_STATUS'        value='<?=$pesStatus?>'               type='hidden'   <?=$notEditable?>>
-
-            </div>
-          </div>
-        </div>
-      </div>
-      <div id='notAnIbmer' style='display:none'>
-        <div class="form-group">
-          <div class="col-sm-6">
-            <input class="form-control" id="resource_first_name" name="resFIRST_NAME"
-              value="<?=$this->LAST_NAME?>"
-              type="text" placeholder='First Name'
-              <?=$notEditable?>>
-          </div>
-          <div class="col-sm-6">
-            <input class="form-control" id="resource_last_name" name="resLAST_NAME"
-              value="<?=$this->LAST_NAME?>"
-              type="text" placeholder='Last Name'
-              <?=$notEditable?>>
-          </div>
-        </div>
-
-        <div id='resourceDetails' style="display:<?=$displayForEdit?>">
-          <div class='form-group'>
-            <div class='col-sm-6'>
-              <input class='form-control' id='resource_email'
-                name='resEMAIL_ADDRESS' value='<?=$this->EMAIL_ADDRESS?>'
-                type='text' placeholder="Email Address"
-                >
-            </div>
-            <div class='col-sm-6'>
-                <select class='form-control select select2 ' id='resource_country'
-                              name='resCOUNTRY'
-                              placeholder='Country working in:'
-                      >
-                    <option value=''>Country working in</option>
-                    <?php
-                        foreach ($countryCodes as $countryName){
-                            echo "<option value='$countryName'>$countryName</option>";
-                        };
+                   		<option value=''>Country working in</option>
+                   		<?php
+                            foreach ($countryCodes as $countryName){
+                                echo "<option value='$countryName'>$countryName</option>";
+                            };
                         ?>
-                  </select>
+              			</select>
+        				</div>
+        			</div>
+				<input id='resource_uid'           name='resperson_uid'        value='<?=$this->CNUM?>'   				type='hidden' >
+        		<input id='resource_is_mgr'	       name='resFM_MANAGER_FLAG'   value='N'               			    	type='hidden' >
+        		<input id='resource_employee_type' name='resEMPLOYEE_TYPE'     value='setByRadioButtons'	    		type='hidden' >
+        		<input id='resource_ibm_location'  name='resIBM_BASE_LOCATION' value='<?=$this->IBM_BASE_LOCATION?>'	type='hidden' >
+        		<input id='resource_pes_status'    name='resPES_STATUS'        value='<?=$pesStatus?>'                  type='hidden' >
+        		<input id='resource_pes_status_details'    name='resPES_STATUS_DETAILS'        value='<?=$pesStatusDetails?>'                 type='hidden' >
+				</div>
 
-            </div>
-          </div>
-
-          <div class='form-group' style='display:none'>
-                <input id='resource_uid'           name='resperson_uid'        value='<?=$this->CNUM?>'   				type='hidden' >
-                <input id='resource_is_mgr'	       name='resFM_MANAGER_FLAG'   value='N'               				type='hidden' >
-                <input id='resource_employee_type' name='resEMPLOYEE_TYPE'     value='Pre-Hire'						type='hidden' >
-                <input id='resource_ibm_location'  name='resIBM_BASE_LOCATION' value='<?=$this->IBM_BASE_LOCATION?>'	type='hidden' >
-                <input id='resource_pes_status'    name='resPES_STATUS'        value='<?=$pesStatus?>'                 type='hidden'  <?$notEditable?>>
-                <input id='resource_pes_status_details'    name='resPES_STATUS_DETAILS'        value='<?=$pesStatusDetails?>'                 type='hidden'  <?$notEditable?>>
-
-
-          </div>
-        </div>
-      </div>
-
-
-        <div class='form-group'>
-
-              <div class="col-sm-6" id='linkToPreBoarded'>
+				<div class='form-group'>
+            		<div class='col-sm-12'>
+						<label class="radio-inline employeeTypeRadioBtn"><input type="radio" name="employeeType" required value='<?=personRecord::REVALIDATED_PREBOARDER ?>' >IBMer Pre-Hire </label>
+						<label class="radio-inline employeeTypeRadioBtn"><input type="radio" name="employeeType" required value='<?=personRecord::REVALIDATED_VENDOR?>'      >3rd Party Vendor (Non IBM employee)</label>
+		        	</div>
+        		</div>
+			</div>
+        	<div class='form-group' id='linkToPreBoardedFormgroupDiv'>
+	            <div class="col-sm-6" id='linkToPreBoarded'>
                 <select class='form-control select select2' id='person_preboarded'
-                              name='person_preboarded'
-                              <?=$preBoardersAvailable?>
-                              <?=$notEditable?>
-                              placeholder='Was pre-boarded as:'
-                      >
-                    <option value=''>Link to Pre-Boarded</option>
-                    <?php
-                        foreach ($availableFromPreBoarding as $option){
-                            echo $option;
-                        };
-                        ?>
-                  </select>
-              </div>
-            </div>
-      </div>
-    </div>
-
-
-  <div class="panel panel-default">
-    <div class="panel-heading">
-    <h3 class="panel-title">Functional Manager Details</h3>
-  </div>
-  <div class="panel-body">
-        <div class="form-group">
-        <div class="col-sm-6">
-          <select class='form-control select select2' id='FM_CNUM'
-                              name='FM_CNUM'
-                              required='required'
-                              placeholder='Select functional manager'
-                >
-                <option value=''>Select Functional Mgr</option>
+                        name='person_preboarded'
+                        <?=$preBoardersAvailable?>
+                        <?=$notEditable?>
+                        placeholder='Was pre-boarded as:' >
+                <option value=''>Link to Pre-Boarded</option>
                 <?php
+                    foreach ($availableFromPreBoarding as $option){
+                        echo $option;
+                    };
+               ?>
+               </select>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="panel panel-default">
+	<div class="panel-heading">
+	<h3 class="panel-title">Functional Manager Details</h3>
+  	</div>
+	<div class="panel-body">
+    	<div class="form-group">
+        	<div class="col-sm-6">
+          	<select class='form-control select select2' id='FM_CNUM'
+                    name='FM_CNUM'
+                    required='required'
+                    placeholder='Select functional manager' >
+            <option value=''>Select Functional Mgr</option>
+            <?php
                 foreach ($allManagers as $mgrCnum => $mgrNotesid){
                     echo"<option value='" . $mgrCnum . "' ";
                     echo (($userCnum==$mgrCnum) && empty($this->FM_CNUM)) ? " selected " : null;        // The person using the tool is a Manager - and this is their entry.
                     echo $mgrCnum==$this->FM_CNUM ? " selected " : null;                                // This is the entry for the person already declared to be the Func Mgr
                     echo ">" . $mgrNotesid . "</option>";
                 };
-                ?>
-              </select>
-        </div>
-        </div>
-</div>
+            ?>
+          	</select>
+			</div>
+		</div>
+	</div>
 </div>
 
 <div class="panel panel-default">

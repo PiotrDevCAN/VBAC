@@ -1070,6 +1070,14 @@ function personRecord() {
   },
 
 
+  this.listenForEmployeeTypeRadioBtn = function(){
+	  $(document).on('click','.employeeTypeRadioBtn', function(e){
+		  var employeeType = $('input[name=employeeType]:checked').val();
+		  $('#resource_employee_type').val(employeeType);
+	  });
+  },
+
+
 
   this.initialisePersonFormSelect2 = function(){
     console.log($('.select2'));

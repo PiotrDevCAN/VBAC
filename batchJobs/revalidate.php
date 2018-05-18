@@ -28,6 +28,13 @@ $allPreboarders = $loader->load('CNUM',allTables::$PERSON, $preBoardersPredicate
 AuditTable::audit("Revalidation will ignore " . count($allPreboarders) . " pre-boarders.",AuditTable::RECORD_TYPE_DETAILS);
 $allPreboarders= null; // free up some storage
 
+$vendorsPredicate = "   ( REVALIDATION_STATUS =  '" . personRecord::REVALIDATED_VENDOR . "') ";
+$allVendors = $loader->load('CNUM',allTables::$PERSON, $preBoardersPredicate ); //
+AuditTable::audit("Revalidation will ignore " . count($allVendors) . " vendors.",AuditTable::RECORD_TYPE_DETAILS);
+$allVendors= null; // free up some storage
+
+
+
 $activeIbmErsPredicate = "   ( REVALIDATION_STATUS is null or REVALIDATION_STATUS =  '" . personRecord::REVALIDATED_FOUND . "') ";
 $allNonLeavers = $loader->load('CNUM',allTables::$PERSON, $activeIbmErsPredicate ); //
 AuditTable::audit("Revalidation will check " . count($allNonLeavers) . " people currently flagged as found.",AuditTable::RECORD_TYPE_DETAILS);
