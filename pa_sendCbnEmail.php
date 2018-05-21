@@ -1,4 +1,7 @@
 <?php
+use vbac\personRecord;
+
+$personRecord = new personRecord();
 $personRecord->sendCbnEmail();
 ?>
 

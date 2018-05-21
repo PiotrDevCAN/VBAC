@@ -1133,7 +1133,7 @@ You are able to amend the Functional Manager of people assigned to you but who n
         $allFm = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON, " UPPER(FM_MANAGER_FLAG) like 'Y%' ");
         $emailableFmLists = array_chunk($allFm, 75);
         foreach ($emailableFmLists as $groupOfFmEmail){
-            \itdq\BlueMail::send_mail(self::$pmoTaskId, 'CBN Initiation Request' , self::$cbnEmailBody, 'vbacNoReply@uk.ibm.com',null,$groupOfFmEmail);
+            \itdq\BlueMail::send_mail(self::$pmoTaskId, 'CBN Initiation Request' , self::$cbnEmailBody, 'vbacNoReply@uk.ibm.com',array(),$groupOfFmEmail);
         }
    }
 
