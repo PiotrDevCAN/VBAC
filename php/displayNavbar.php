@@ -34,6 +34,7 @@ $cdiAdmin->addOption($revalidation);
 $adminMenu      = new NavbarMenu('vBac Admin');
 $pmo            = new NavbarOption('Person Portal', 'pa_pmo.php','accessCdi accessPmo accessFm');
 $revalidation   = new NavbarOption('Revalidation Portal','pa_revalidation.php','accessCdi accessPmo');
+$initiateCBN    = new NavbarOption('Iniate CBN','pa_sendCbnEmail.php','accessCdi accessPmo');
 $control        = new NavbarOption('Control', 'pa_control.php','accessCdi accessPmo');
 $audit          = new NavbarOption('Audit Report', 'pa_auditListing.php','accessCdi accessPmo');
 $requestableAssets  = new NavbarOption('Requestable Assets', 'pa_requestableAssets.php','accessCdi accessPmo');
@@ -42,6 +43,7 @@ $requestableAssets  = new NavbarOption('Requestable Assets', 'pa_requestableAsse
 $email          = new NavbarOption('Email Log', 'pi_emailLog.php','accessCdi');
 $adminMenu->addOption($pmo);
 $adminMenu->addOption($revalidation);
+$adminMenu->addOption($initiateCBN);
 $adminMenu->addOption( new NavbarDivider('accessPmo accessCdi'));
 $adminMenu->addOption($control);
 $adminMenu->addOption($requestableAssets);

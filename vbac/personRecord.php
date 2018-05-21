@@ -260,9 +260,8 @@ class personRecord extends DbRecord
         );
 
 
-
-
-
+    private static $cbnEmailBody = 'You are recorded in the vBAC tool, as a Functional Manager for one of more people. Please review the people assigned to you in vBAC and ensure it accurately reflects the current situation.
+You are able to amend the Functional Manager of people assigned to you but who now report to someone else. If you have people who are no longer working on the account, then please initiate Offboarding for them by amending their end date in vBac. If you are missing people that should be assigned to you, please contact their current FM to have them re-assigned to you';
 
     private static  $lobValue = array('GTS','GBS','IMI','Cloud','Security','Other');
 
@@ -1126,8 +1125,17 @@ class personRecord extends DbRecord
         $message = preg_replace(self::$warnPmoDateChangePattern, $replacements, self::$warnPmoDateChange);
 
         \itdq\BlueMail::send_mail(self::$pmoTaskId, 'vBAC Projected End Date Change - ' . $this->CNUM ." (" . trim($this->FIRST_NAME) . " " . trim($this->LAST_NAME) . ")", $message, 'vbacNoReply@uk.ibm.com');
-
-
-
     }
+
+
+    function sendCbnEmail(){
+        $loader = new Loader();
+        $allFm = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON, " UPPER(FM_MANAGER_FLAG) like 'Y%' ");
+        $emailableFmLists = array_chunk($allFm, 75);
+        foreach ($emailableFmLists as $groupOfFmEmail){
+            \itdq\BlueMail::send_mail(self::$pmoTaskId, 'CBN Initiation Request' , self::$cbnEmailBody, 'vbacNoReply@uk.ibm.com',null,$groupOfFmEmail);
+        }
+   }
+
+
 }
