@@ -887,8 +887,10 @@ function personRecord() {
               success: function(result){
                 var resultObj = JSON.parse(result);
                 console.log(resultObj);
+
                    if(!resultObj.messages){
                     $('#editPersonModal .modal-body').html(resultObj.body);
+                    $('.employeeTypeRadioBtn').attr('required',false);
                     var person = new personRecord();
                       person.initialisePersonFormSelect2();
                       $('#person_intranet').attr('disabled',false);
