@@ -18,7 +18,15 @@ $loader = new Loader();
 // $_SESSION['isPes']  = !empty($isPes)  ? true : false;
 // $_SESSION['isUser'] = !empty($isUser) ? true : false;
 $showAll = !empty($_POST['showAll']) ? $_POST['showAll'] : false;
-$pmoRaised = !empty($_POST['pmoRaised']) ? $_POST['pmoRaised'] : false;
+$pmoRaised = !empty($_POST['pmoRaised']) ?$_POST['pmoRaised'] : false;
+
+$pmoRaised = strtolower($pmoRaised)=='true';
+
+
+if(empty($_POST['pmoRaised'])){
+    die('here');
+}
+
 
 $showAll = $showAll==='true' ? true : false;
 
@@ -43,7 +51,10 @@ switch (true) {
         $assetRequestTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
         $predicate .= $showAll ? null :  " AND (( 1=1 " . $assetRequestTable->predicateForPmoExportableRequest() . " ) ";
         $predicate .= $showAll ? null :  " OR ( 1=1 " . $assetRequestTable->predicateExportNonPmoRequests() . " )) ";
-        $predicate .= $pmoRaised ? " AND USER_CREATED='No' " : " AND USER_CREATED='Yes' ";
+        $predicate .= $pmoRaised ?  " AND USER_CREATED='" . assetRequestRecord::$CREATED_PMO . "' " : " AND USER_CREATED='" . assetRequestRecord::$CREATED_USER . "' ";
+        var_dump($pmoRaised);
+        var_dump($predicate);
+
         break;
     default:
         echo "is default";
@@ -52,12 +63,14 @@ switch (true) {
     break;
 }
 
+
 $dataAndSql = assetRequestsTable::returnForPortal($predicate);
 $data = $dataAndSql['data'];
 $sql  = $dataAndSql['sql'];
+
 $messages = ob_get_clean();
 
-$response = array("data"=>$data,'messages'=>$messages,'sql'=>$sql);
+$response = array("data"=>$data,'messages'=>$messages,'sql'=>$sql,'post'=>print_r($_POST,true));
 
 ob_clean();
 echo json_encode($response);

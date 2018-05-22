@@ -153,7 +153,7 @@ function assetPortal() {
 		$(document).on('click','#reportShowExportable', function(e){
 			assetPortal.table.destroy();
 			AssetPortal.initialiseAssetRequestDataTable(false,true);
-			$('#portalTitle').text('Asset Request Portal - Show Exportable Requests');
+			$('#portalTitle').text('Asset Request Portal - Show Pmo To Raise Requests');
 	  });
 },
 
@@ -162,7 +162,7 @@ this.listenForReportShowUserRaised = function(){
 		$(document).on('click','#reportShowUserRaised', function(e){
 			assetPortal.table.destroy();
 			AssetPortal.initialiseAssetRequestDataTable(false,false);
-			$('#portalTitle').text('Asset Request Portal - Show Exportable Requests');
+			$('#portalTitle').text('Asset Request Portal - Show User Raised Requests');
 	  });
 },
 
