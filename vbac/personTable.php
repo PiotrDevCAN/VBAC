@@ -62,11 +62,13 @@ class personTable extends DbTable {
 
         $justaUser = !$_SESSION['isCdi']  && !$_SESSION['isPmo'] && !$_SESSION['isPes'] && !$_SESSION['isFm'] ;
 
-        $predicate = $isFM ? " FM_CNUM='" . db2_escape_string(trim($myCnum)) . "' " : "";
-        $predicate = $justaUser ? " CNUM='" . db2_escape_string(trim($myCnum)) . "' " : ""; // FM Can only see their own people.
+        $predicate = " 1=1  ";
+
+        $predicate .= $isFM ? " AND FM_CNUM='" . db2_escape_string(trim($myCnum)) . "' " : "";
+        $predicate .= $justaUser ? " AND CNUM='" . db2_escape_string(trim($myCnum)) . "' " : ""; // FM Can only see their own people.
 
         $sql  = " SELECT * FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName ;
-        $sql .= " WHERE 1=1 AND " . $predicate;
+        $sql .= " WHERE " . $predicate;
 
         $rs = db2_exec($_SESSION['conn'], $sql);
 
