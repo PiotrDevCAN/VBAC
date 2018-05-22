@@ -7,7 +7,7 @@ use vbac\personRecord;
 
 
 ob_start();
-
+AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_REQUEST,true) . "</b>",AuditTable::RECORD_TYPE_DETAILS);
 // $ctb = isset($_REQUEST['ctb']) ? $_REQUEST['ctb']=='true' : false;
 // $predicate = $ctb ? " AND CTB_RTB='CTB' " : " AND (CTB_RTB is null or CTB_RTB != 'CTB' ) ";
 // $pmoTaskid = $ctb ? personRecord::$orderITCtbTaskId : personRecord::$orderITNonCtbTaskId;

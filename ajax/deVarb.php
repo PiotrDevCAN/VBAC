@@ -4,6 +4,8 @@ use vbac\allTables;
 
 ob_start();
 
+AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_REQUEST,true) . "</b>",AuditTable::RECORD_TYPE_DETAILS);
+
 $assetRequestTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
 $success = $assetRequestTable->deVarb($_REQUEST['varbref']);
 

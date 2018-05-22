@@ -5,7 +5,7 @@ use vbac\personTable;
 use vbac\assetRequestRecord;
 
 ob_start();
-
+AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_REQUEST,true) . "</b>",AuditTable::RECORD_TYPE_DETAILS);
 $personTable = new personTable(allTables::$PERSON);
 $assetRequestTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
 $success = $assetRequestTable->saveVarbToOrderItMapping($_POST['ORDERIT_NUMBER'], $_POST['unmappedVarb'], $_POST['request']);

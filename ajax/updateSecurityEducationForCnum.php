@@ -3,6 +3,7 @@ use vbac\personTable;
 use vbac\allTables;
 
 ob_start();
+AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_REQUEST,true) . "</b>",AuditTable::RECORD_TYPE_DETAILS);
 
 $personTable = new personTable(allTables::$PERSON);
 
