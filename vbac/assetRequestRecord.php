@@ -77,7 +77,7 @@ class assetRequestRecord extends DbRecord {
         $selectableNotesId = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON,$predicate);
         $selectableEmailAddress = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON,$predicate);
 
-        $approvingMgrPredicate = " upper(FM_MANAGER_FLAG) like  ='Y%' ";
+        $approvingMgrPredicate = " upper(FM_MANAGER_FLAG) like 'Y%' ";
         $approvingMgrs = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON,$approvingMgrPredicate)
 
         ?>
