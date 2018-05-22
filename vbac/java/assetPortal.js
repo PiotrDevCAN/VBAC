@@ -336,6 +336,7 @@ this.listenForReportShowUid = function(){
 		        	$('#deVarb').removeClass('spinning');
 				    $('#deVarb').attr('disabled',false);
 				    $('#mapVarbToOrderItModal').modal('hide');
+				    assetPortal.table.ajax.reload();
 		        }
 	      });
 	  });
