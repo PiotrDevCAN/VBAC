@@ -370,6 +370,16 @@ function assetRequest() {
 		  console.log(isReturn);
 		  console.log(saveCtidState);
 
+		  if(isReturn){
+			  var reallyReturn = confirm('You have indicated you wish to RETURN an asset, is this correct ? If this is NOT what you intend to do, please click "Cancel" for this prompt and re-click the Toggle so it reads "Request New"');
+			  if(!reallyReturn){
+				  console.log('they dont want to return it');
+				  return;
+			  }
+		  }
+
+		  console.log('they really want to return it');
+
 		  if(isReturn && saveCtidState=='notRecorded' ){
 			  saveCtidState = $(ctidAsset).attr('disabled');
 			  saveCtidTick = $(ctidAsset).attr('checked');
