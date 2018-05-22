@@ -57,8 +57,10 @@ class assetRequestRecord extends DbRecord {
         $myManagersCnum = personTable::myManagersCnum();
         $isFm   = personTable::isManager($GLOBALS['ltcuser']['mail']);
         $isPmo  = $_SESSION['isPmo'];
+        $isRequestor = employee_in_group('vbac_requestor', $_SESSION['ssoEmail']);
 
         switch (true){
+            case $isRequestor:
             case $isPmo:
                 $predicate = " 1=1 ";
                 break;
@@ -75,7 +77,7 @@ class assetRequestRecord extends DbRecord {
         $selectableNotesId = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON,$predicate);
         $selectableEmailAddress = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON,$predicate);
 
-        $approvingMgrPredicate = " FM_MANAGER_FLAG ='Yes' ";
+        $approvingMgrPredicate = " upper(FM_MANAGER_FLAG) like  ='Y%' ";
         $approvingMgrs = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON,$approvingMgrPredicate)
 
         ?>
