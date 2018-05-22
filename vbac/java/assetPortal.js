@@ -26,8 +26,9 @@ function assetPortal() {
   },
 
 
-  this.initialiseAssetRequestDataTable = function(showAll){
+  this.initialiseAssetRequestDataTable = function(showAll,pmoRaised){
 	showAll = typeof(showAll) == 'undefined'  ? false : showAll;
+	pmoRaised = typeof(pmoRaised) == 'undefined'  ? false : pmoRaised;
 
 	// Setup - add a text input to each footer cell
     $('#assetPortalTable tfoot th').each( function () {
@@ -39,7 +40,8 @@ function assetPortal() {
         ajax: {
               url: 'ajax/populateAssetRequestPortal.php',
               type: 'POST',
-              data: {showAll:showAll}
+              data: {showAll:showAll,
+            	     pmoRaised:pmoRaised}
           }	,
           columns: [
                       { "data": "REFERENCE" , "defaultContent": "",
@@ -150,10 +152,20 @@ function assetPortal() {
   this.listenForReportShowExportable = function(){
 		$(document).on('click','#reportShowExportable', function(e){
 			assetPortal.table.destroy();
-			AssetPortal.initialiseAssetRequestDataTable(false);
+			AssetPortal.initialiseAssetRequestDataTable(false,true);
 			$('#portalTitle').text('Asset Request Portal - Show Exportable Requests');
 	  });
 },
+
+
+this.listenForReportShowUserRaised = function(){
+		$(document).on('click','#reportShowUserRaised', function(e){
+			assetPortal.table.destroy();
+			AssetPortal.initialiseAssetRequestDataTable(false,false);
+			$('#portalTitle').text('Asset Request Portal - Show Exportable Requests');
+	  });
+},
+
 
 this.listenForReportShowUid = function(){
 	$(document).on('click','#reportShowUid', function(e){

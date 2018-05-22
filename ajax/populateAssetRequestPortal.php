@@ -18,6 +18,7 @@ $loader = new Loader();
 // $_SESSION['isPes']  = !empty($isPes)  ? true : false;
 // $_SESSION['isUser'] = !empty($isUser) ? true : false;
 $showAll = !empty($_POST['showAll']) ? $_POST['showAll'] : false;
+$pmoRaised = !empty($_POST['pmoRaised']) ? $_POST['pmoRaised'] : false;
 
 $showAll = $showAll==='true' ? true : false;
 
@@ -42,6 +43,7 @@ switch (true) {
         $assetRequestTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
         $predicate .= $showAll ? null :  " AND (( 1=1 " . $assetRequestTable->predicateForPmoExportableRequest() . " ) ";
         $predicate .= $showAll ? null :  " OR ( 1=1 " . $assetRequestTable->predicateExportNonPmoRequests() . " )) ";
+        $predicate .= $pmoRaised ? " AND USER_CREATED='No' " : " AND USER_CREATED='Yes' ";
         break;
     default:
         echo "is default";

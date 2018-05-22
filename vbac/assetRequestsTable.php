@@ -5,6 +5,7 @@ use itdq\DbTable;
 use itdq\FormClass;
 use itdq\Loader;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use itdq\AuditTable;
 
 
 class assetRequestsTable extends DbTable{
@@ -67,6 +68,8 @@ class assetRequestsTable extends DbTable{
         $sql .= " WHERE 1=1 ";
         $sql .=  $predicate;
 
+
+        AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
         $rs = db2_exec($_SESSION['conn'],$sql);
 
         if(!$rs){
@@ -78,6 +81,9 @@ class assetRequestsTable extends DbTable{
         while(($preTrimmed=db2_fetch_assoc($rs))==true){
 
             $row = array_map('trim', $preTrimmed);
+
+            $userRaised = strtoupper($row['USER_CREATED'])=='YES';
+            $approved   = $row['STATUS'] == assetRequestRecord::$STATUS_APPROVED;
 
             $reference = trim($row['REFERENCE']);
             $preReq = !empty(trim($row['PRE_REQ_REQUEST']))  ?  trim($row['PRE_REQ_REQUEST']): null;
@@ -119,6 +125,7 @@ class assetRequestsTable extends DbTable{
             $rejectButton .= " </button> ";
 
             $rejectButton = $withButtons ? $rejectButton : '';
+            $rejectButton = $userRaised & $approved  ? '' : $rejectButton;
 
             $pmoOrFm = ($_SESSION['isFm'] || $_SESSION['isPmo']);
             $notTheirOwnRecord = ( trim(strtolower($row['REQUESTEE_EMAIL'])) != trim(strtolower($_SESSION['ssoEmail'])));
@@ -444,8 +451,36 @@ class assetRequestsTable extends DbTable{
         $row=db2_fetch_assoc($rs2);
 
         return $row['TICKETS'];
-
     }
+
+    function countRequestsForPmoExport(){
+        $sql = " SELECT count(*) as tickets ";
+        $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
+        $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
+        $sql .= " ON AR.CNUM = P.CNUM ";
+        $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as F ";
+        $sql .= " ON F.CNUM = P.FM_CNUM ";
+        $sql .= "  LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$REQUESTABLE_ASSET_LIST . " AS RAL ";
+        $sql .= "  ON RAL.ASSET_TITLE = AR.ASSET_TITLE ";
+
+
+        $sql .= " WHERE 1=1 ";
+        $sql .= $this->predicateForPmoExportableRequest();
+
+
+        $rs2 = db2_exec($_SESSION['conn'],$sql);
+        if(!$rs2){
+            db2_rollback($_SESSION['conn']);
+            DbTable::displayErrorMessage($rs2, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+
+        $row=db2_fetch_assoc($rs2);
+
+        return $row['TICKETS'];
+    }
+
+
 
     function predicateExportNonPmoRequests(){
         $predicate = " AND STATUS IN('" . assetRequestRecord::$STATUS_APPROVED . "','" . assetRequestRecord::$STATUS_RAISED_ORDERIT . "') AND ORDERIT_NUMBER is not NULL AND USER_CREATED='" . assetRequestRecord::$CREATED_USER . "' ";
@@ -1007,6 +1042,9 @@ class assetRequestsTable extends DbTable{
                     $sql .= " ORDER BY AR.REQUESTED asc ";
                     $rs = db2_exec($_SESSION['conn'], $sql);
 
+                    AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
+
+
                     if($rs){
                         $recordsFound = DbTable::writeResultSetToXls($rs, $spreadsheet);
 
@@ -1044,6 +1082,7 @@ class assetRequestsTable extends DbTable{
         $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName;
         $sql .= " WHERE REQUEST_REFERENCE= '" . db2_escape_string($reference) . "' ";
 
+        AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
         $rs = db2_exec($_SESSION['conn'], $sql);
 
@@ -1069,6 +1108,8 @@ class assetRequestsTable extends DbTable{
         $sql .= " ON RAL.ASSET_TITLE = AR.ASSET_TITLE ";
 
         $sql .= " WHERE ORDERIT_VARB_REF='" . db2_escape_string($varb) . "' ";
+
+        AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
         $rs = db2_exec($_SESSION['conn'], $sql);
 
@@ -1105,7 +1146,7 @@ class assetRequestsTable extends DbTable{
         $sql .= " AND REQUEST_REFERENCE in (" . $requestList . ") " ;
 
 
-        // echo __METHOD__ . __LINE__ . $sql;
+        AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
         $rs = db2_exec($_SESSION['conn'], $sql);
 
@@ -1124,6 +1165,7 @@ class assetRequestsTable extends DbTable{
         $sql .= ", ORDERIT_NUMBER = null ";
         $sql .= " WHERE ORDERIT_VARB_REF='" . db2_escape_string($varb) . "' and STATUS='" . assetRequestRecord::$STATUS_EXPORTED . "' ";
 
+        AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
         // echo __METHOD__ . __LINE__ .  $sql;
 
@@ -1147,6 +1189,8 @@ class assetRequestsTable extends DbTable{
         $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql .= " ON AR.CNUM = P.CNUM ";
         $sql .= " WHERE ORDERIT_NUMBER='" . db2_escape_string($orderIt) . "' ";
+
+        AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
         $rs = db2_exec($_SESSION['conn'], $sql);
 
@@ -1261,6 +1305,8 @@ class assetRequestsTable extends DbTable{
         $sql .= " SET ORDERIT_STATUS='" . db2_escape_string($orderItStatus) . "' ";
         $sql .= " WHERE REQUEST_REFERENCE ='" . db2_escape_string($reference) . "' " ;
 
+        AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
+
         $rs = db2_exec($_SESSION['conn'], $sql);
 
         if(!$rs){
@@ -1339,6 +1385,8 @@ class assetRequestsTable extends DbTable{
         $sql .= !empty($orderItStatus) ? ", ORDERIT_STATUS = '" . db2_escape_string($orderItStatus) . "' " : null ;
         $sql .= " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' ";
 
+        AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
+
         $rs = db2_exec($_SESSION['conn'], $sql);
 
         if(!$rs){
@@ -1355,6 +1403,8 @@ class assetRequestsTable extends DbTable{
             $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
             $sql .= " SET PRIMARY_UID = ? , SECONDARY_UID = ? ";
             $sql .= " WHERE REQUEST_REFERENCE = ? ";
+
+            AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
             $preparedUpdateUidsStmt = db2_prepare($_SESSION['conn'], $sql);
 
@@ -1388,6 +1438,9 @@ class assetRequestsTable extends DbTable{
         $sql .= " SET STATUS='" . db2_escape_string(assetRequestRecord::$STATUS_PROVISIONED) . "' ";
         $sql .= " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' ";
         $sql .= " AND STATUS not in ('" . assetRequestRecord::$STATUS_REJECTED . "','" . assetRequestRecord::$STATUS_RETURNED ."') ";
+
+        AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
+
         $rs = db2_exec($_SESSION['conn'], $sql);
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__,__METHOD__, $sql);
@@ -1506,6 +1559,8 @@ class assetRequestsTable extends DbTable{
         $sql .= "and AR2.request_reference in ('" . $listOfAssetRefs  . "')  ";
 
         try {
+            AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
+
             $rs1 = db2_exec($_SESSION['conn'], $sql);
 
             if(!$rs1){
@@ -1552,6 +1607,7 @@ class assetRequestsTable extends DbTable{
         $sql .= ", ORDERIT_NUMBER = null ";
         $sql .= " WHERE ORDERIT_VARB_REF='" . db2_escape_string($varbRef) . "' and STATUS='" . assetRequestRecord::$STATUS_EXPORTED . "' ";
 
+        AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
         $rs = db2_exec($_SESSION['conn'], $sql);
 
         if(!$rs){

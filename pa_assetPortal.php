@@ -16,12 +16,14 @@ use vbac\personTable;
 
 $assetTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
 $nonPmoForExport = $assetTable->countRequestsForNonPmoExport();
+$pmoForExport = $assetTable->countRequestsForPmoExport();
 
 ?>
 
-
+<div class='row'>
 <button id='reportShowAll'  		class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Show All Requests</button>
-<button id='reportShowExportable'   class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Show Exportable Requests&nbsp;<span class="badge"><?='+'.$nonPmoForExport?></span></button>
+<button id='reportShowExportable'   class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Show PMO To Raise&nbsp;<span class="badge"><?='+'.$pmoForExport?></span></button>
+<button id='reportUserRaised'       class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Show User Raised&nbsp;<span class="badge"><?='+'.$nonPmoForExport?></span></button>
 <button id='exportBauForOrderIt' 	class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Export BAU for Order IT</button>
 <button id='exportNonBauForOrderIt'	class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Export non-BAU for Order IT</button>
 <button id='mapVarbToOrderIt' 		class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Map vARB to Order IT</button>
@@ -32,6 +34,10 @@ $nonPmoForExport = $assetTable->countRequestsForNonPmoExport();
 <button id='reportReset'  		class='btn btn-warning btn-sm '>Reset</button>
 &nbsp;
 <a class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi' href='/dn_tracker.php'><i class="glyphicon glyphicon-download-alt"></i> Tracker</a>
+</div>
+<div class='row'>
+<button id='secondaryOne' 		    class='btn btn-secondary btn-sm accessBasedBtn accessPmo accessCdi accessUser'>Sample Secondary</button>
+</div>
 
 <div id='assetRequestsDatatablesDiv' class='portalDiv'>
 </div>
@@ -89,6 +95,7 @@ $(document).ready(function(){
  	AssetPortal.listenForReportReload();
  	AssetPortal.listenForReportShowAll();
  	AssetPortal.listenForReportShowExportable();
+ 	AssetPortal.listenForReportShowUserRaised();
  	AssetPortal.listenForReportShowUid();
  	AssetPortal.listenForEditUid();
  	AssetPortal.listenForSaveEditUid();
