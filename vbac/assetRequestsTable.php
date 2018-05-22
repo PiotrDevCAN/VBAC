@@ -484,6 +484,7 @@ class assetRequestsTable extends DbTable{
 
     function predicateExportNonPmoRequests(){
         $predicate = " AND STATUS IN('" . assetRequestRecord::$STATUS_APPROVED . "','" . assetRequestRecord::$STATUS_RAISED_ORDERIT . "') AND ORDERIT_NUMBER is not NULL AND USER_CREATED='" . assetRequestRecord::$CREATED_USER . "' ";
+        $predicate .= " AND ORDER_IT_STATUS in ('" . assetRequestRecord::$STATUS_ORDERIT_RAISED . "') ";
         $predicate .= " AND ORDERIT_VARB_REF is null  AND APPROVED is not null";
 
         return $predicate;
