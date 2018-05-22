@@ -56,15 +56,11 @@ class personTable extends DbTable {
 
         $data = array();
 
-        $isCdi   = stripos($_SERVER['environment'], 'dev') ? ".not('.accessCdi')"  : $isCdi;
-        $isPmo   = stripos($_SERVER['environment'], 'dev')  ? ".not('.accessPmo')" : $isPmo;
-        $isPes   = stripos($_SERVER['environment'], 'dev')  ? ".not('.accessPes')" : $isPes;
-
         $isFM   = personTable::isManager($_SESSION['ssoEmail']);
         $myCnum = personTable::myCnum();
 
 
-        $justaUser = !$isCdi && !$isPmo && !$isPes && !$isFM;
+        $justaUser = !$_SESSION['isCdi']  && !$_SESSION['isPmo'] && !$_SESSION['isPes'] && !$_SESSION['isFm'] ;
 
         $predicate = $isFM ? " FM_CNUM='" . db2_escape_string(trim($myCnum)) . "' " : "";
         $predicate = $justaUser ? " CNUM='" . db2_escape_string(trim($myCnum)) . "' " : ""; // FM Can only see their own people.
