@@ -60,7 +60,7 @@ $site = array(
     'devEmailId' => 'rob.daniel@uk.ibm.com',
 
     'AuditLife' => '13 months',
-    'AuditDetailsLife' => '1 month',
+    'AuditDetailsLife' => '6 months',
 
     'SITE_NAME' => $_SERVER['environment'],
     'iconDirectory' => 'ICON'
