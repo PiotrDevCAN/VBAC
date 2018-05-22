@@ -36,7 +36,7 @@ $pmoForExport = $assetTable->countRequestsForPmoExport();
 <a class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi' href='/dn_tracker.php'><i class="glyphicon glyphicon-download-alt"></i> Tracker</a>
 </div>
 <div class='row'>
-<button id='secondaryOne' 		    class='btn btn-secondary btn-sm accessBasedBtn accessPmo accessCdi accessUser'>Sample Secondary</button>
+
 </div>
 
 <div id='assetRequestsDatatablesDiv' class='portalDiv'>
