@@ -32,7 +32,7 @@ $cdiAdmin->addOption($revalidation);
 
 
 $adminMenu      = new NavbarMenu('vBac Admin');
-$pmo            = new NavbarOption('Person Portal', 'pa_pmo.php','accessCdi accessPmo accessFm');
+$pmo            = new NavbarOption('Person Portal', 'pa_pmo.php','accessCdi accessPmo accessFm accessUser');
 $revalidation   = new NavbarOption('Revalidation Portal','pa_revalidation.php','accessCdi accessPmo');
 $initiateCBN    = new NavbarOption('Iniate CBN','pa_sendCbnEmail.php','accessCdi accessPmo');
 $control        = new NavbarOption('Control', 'pa_control.php','accessCdi accessPmo');
