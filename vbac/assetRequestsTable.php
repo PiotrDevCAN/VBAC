@@ -246,7 +246,7 @@ class assetRequestsTable extends DbTable{
 
             $row['ASSET'] =  ($returnable && $row['REQUEST_RETURN']!='Yes' ) ? $returnedButton . "&nbsp;<i>" .  $asset . "(Return/Remove)</i>" : $asset;
 
-            $row['ASSET'] .= $row['REQUEST_RETURN']=='Yes' ? "&npsp;<small>(Return Request)</small>" : "";
+            $row['ASSET'] .= $row['REQUEST_RETURN']=='Yes' ? "&nbsp;<small>(Return Request)</small>" : "";
 
             $data[] = $row;
         }
