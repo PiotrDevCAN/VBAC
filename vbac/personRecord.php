@@ -515,8 +515,8 @@ You are able to amend the Functional Manager of people assigned to you but who n
 
 				<div class='form-group'>
             		<div class='col-sm-12'>
-						<label class="radio-inline employeeTypeRadioBtn"><input type="radio" name="employeeType" required value='<?=personRecord::REVALIDATED_PREBOARDER ?>' >IBMer Pre-Hire </label>
-						<label class="radio-inline employeeTypeRadioBtn"><input type="radio" name="employeeType" required value='<?=personRecord::REVALIDATED_VENDOR?>'      >3rd Party Vendor (Non IBM employee)</label>
+						<label class="radio-inline employeeTypeRadioBtn"><input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_PREBOARDER ?>' >IBMer Pre-Hire </label>
+						<label class="radio-inline employeeTypeRadioBtn"><input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_VENDOR?>'      >3rd Party Vendor (Non IBM employee)</label>
 		        	</div>
         		</div>
 			</div>

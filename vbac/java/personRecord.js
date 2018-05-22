@@ -165,12 +165,15 @@ function personRecord() {
 
       console.log($('#hasBpEntry').is(':checked'));
 
+
+
       console.log(this);
       $('#notAnIbmer').toggle();
       $('#existingIbmer').toggle();
       $('#linkToPreBoarded').toggle();
 
       if($('#notAnIbmer').is(":visible")){
+    	$('.employeeTypeRadioBtn input[type=radio]').prop('required',true);
     	$('#open_seat').attr('placeholder','IBM Hiring Number');
         $('#notAnIbmer :input').attr('required',true);
         $('#existingIbmer :input').attr('required',false);
@@ -179,6 +182,7 @@ function personRecord() {
         $('#resource_country').select2();
         $('#person_preboarded').val('').trigger('change');  // incase they already selected a pre-boarder - we need to clear this field.
       } else {
+    	$('.employeeTypeRadioBtn input[type=radio]').removeAttr('required');
     	$('#open_seat').attr('placeholder','Open Seat Number');
         $('#notAnIbmer :input').attr('required',false);
         $('#existingIbmer :input').attr('required',true);
@@ -186,6 +190,10 @@ function personRecord() {
       var currentHeading = $('#employeeResourceHeading').text();
       var newHeading = currentHeading=='Employee Details' ? 'Resource Details' : 'Employee Details';
       $('#employeeResourceHeading').text(newHeading);
+
+  	console.log($('.employeeTypeRadioBtn input[type=radio]'));
+
+
     });
   },
 
@@ -887,14 +895,14 @@ function personRecord() {
               success: function(result){
                 var resultObj = JSON.parse(result);
                 console.log(resultObj);
+                $('.employeeTypeRadioBtn input[type=radio]').removeAttr('required');
 
-                   if(!resultObj.messages){
+                if(!resultObj.messages){
                     $('#editPersonModal .modal-body').html(resultObj.body);
-                    $('.employeeTypeRadioBtn').attr('required',false);
                     var person = new personRecord();
-                      person.initialisePersonFormSelect2();
-                      $('#person_intranet').attr('disabled',false);
-                      $.fn.modal.Constructor.prototype.enforceFocus = function() {};
+                    person.initialisePersonFormSelect2();
+                    $('#person_intranet').attr('disabled',false);
+                    $.fn.modal.Constructor.prototype.enforceFocus = function() {};
                     var accountOrganisation = resultObj.accountOrganisation;
                     if(accountOrganisation=='T&T'){
                       $('.accountOrganisation')[0].click();
