@@ -21,14 +21,8 @@ $showAll = !empty($_POST['showAll']) ? $_POST['showAll'] : false;
 $pmoRaised = !empty($_POST['pmoRaised']) ?$_POST['pmoRaised'] : false;
 
 $pmoRaised = strtolower($pmoRaised)=='true';
-
-
-if(empty($_POST['pmoRaised'])){
-    die('here');
-}
-
-
 $showAll = $showAll==='true' ? true : false;
+
 
 $predicate = null;
 switch (true) {
@@ -51,9 +45,9 @@ switch (true) {
         $assetRequestTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
         $predicate .= $showAll ? null :  " AND (( 1=1 " . $assetRequestTable->predicateForPmoExportableRequest() . " ) ";
         $predicate .= $showAll ? null :  " OR ( 1=1 " . $assetRequestTable->predicateExportNonPmoRequests() . " )) ";
-        $predicate .= $pmoRaised ?  " AND USER_CREATED='" . assetRequestRecord::$CREATED_PMO . "' " : " AND USER_CREATED='" . assetRequestRecord::$CREATED_USER . "' ";
-        var_dump($pmoRaised);
-        var_dump($predicate);
+        $predicate .= $pmoRaised && !$showAll ?  " AND USER_CREATED='" . assetRequestRecord::$CREATED_PMO . "' " : " AND USER_CREATED='" . assetRequestRecord::$CREATED_USER . "' ";
+
+        var_dump($pmoRaised && !$showAll);
 
         break;
     default:
