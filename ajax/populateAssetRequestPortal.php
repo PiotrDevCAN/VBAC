@@ -45,7 +45,9 @@ switch (true) {
         $assetRequestTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
         $predicate .= $showAll ? null :  " AND (( 1=1 " . $assetRequestTable->predicateForPmoExportableRequest() . " ) ";
         $predicate .= $showAll ? null :  " OR ( 1=1 " . $assetRequestTable->predicateExportNonPmoRequests() . " )) ";
-        $predicate .= $pmoRaised && !$showAll ?  " AND USER_CREATED='" . assetRequestRecord::$CREATED_PMO . "' " : " AND USER_CREATED='" . assetRequestRecord::$CREATED_USER . "' ";
+        if(!$showAll){
+            $predicate .= $pmoRaised ?  " AND USER_CREATED='" . assetRequestRecord::$CREATED_PMO . "' " : " AND USER_CREATED='" . assetRequestRecord::$CREATED_USER . "' ";
+        }
 
         var_dump($pmoRaised && !$showAll);
 
