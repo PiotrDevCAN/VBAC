@@ -77,6 +77,10 @@ class assetRequestRecord extends DbRecord {
         $selectableNotesId = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON,$predicate);
         $selectableEmailAddress = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON,$predicate);
 
+        AuditTable::audit("Invoked:<b>" . __FUNCTION__ . __LINE__ . "</b>Predicate:" . db2_escape_string($predicate),AuditTable::RECORD_TYPE_DETAILS);
+        AuditTable::audit("Invoked:<b>" . __FUNCTION__ . __LINE__ . "</b>Returns:" . serialize($selectableNotesId),AuditTable::RECORD_TYPE_DETAILS);
+
+
         $approvingMgrPredicate = " upper(FM_MANAGER_FLAG) like 'Y%' ";
         $approvingMgrs = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON,$approvingMgrPredicate)
 
