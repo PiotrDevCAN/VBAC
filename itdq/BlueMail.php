@@ -242,13 +242,21 @@ class BlueMail
     {
         AuditTable::audit("Invoked:<b>" . __METHOD__ . "</b>To:" . strlen(db2_escape_string(serialize($to))) . "-" .  serialize($to) . "</br>Subject:" . strlen(db2_escape_string($subject)) . "-" . $subject . "</br>Message:" . strlen(db2_escape_string($message)) . "</br>DataJson:" . strlen(db2_escape_string($data_json)) . "</br>",AuditTable::RECORD_TYPE_DETAILS);
 
-
-
         $sql  = " INSERT INTO " . $_SESSION['Db2Schema'] . "." . AllItdqTables::$EMAIL_LOG;
-        $sql .= " (TO, SUBJECT, MESSAGE, DATA_JSON ) VALUES ( '" . db2_escape_string(serialize($to)) ."','" . db2_escape_string($subject) . "'";
-        $sql .= " ,'" . db2_escape_string($message) . "','" . db2_escape_string($data_json) . "'); ";
+        $sql .= " (TO, SUBJECT, MESSAGE, DATA_JSON ) VALUES ( ?,?,?,?); ";
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $preparedStatement = db2_prepare($_SESSION['conn'], $sql);
+
+        $data = array(serialize($to),$subject,$message,$data_json);
+
+        $rs = db2_execute($preparedStatement,$data);
+
+
+//         $sql  = " INSERT INTO " . $_SESSION['Db2Schema'] . "." . AllItdqTables::$EMAIL_LOG;
+//         $sql .= " (TO, SUBJECT, MESSAGE, DATA_JSON ) VALUES ( '" . db2_escape_string(serialize($to)) ."','" . db2_escape_string($subject) . "'";
+//         $sql .= " ,'" . db2_escape_string($message) . "','" . db2_escape_string($data_json) . "'); ";
+
+//         $rs = db2_exec($_SESSION['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs,__CLASS__,__METHOD__,$sql);
