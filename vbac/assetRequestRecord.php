@@ -291,8 +291,10 @@ class assetRequestRecord extends DbRecord {
         <div class="panel-heading">
         <h3 class="panel-title" id='requestableAssetListTitle'>Asset Request</h3>
         </div>
-        <div class="panel-body">
-        <p>User : <?=$GLOBALS['ltcuser']['mail']?> is not known to this tool. Please contact support</p>
+    	<div class="panel-body">
+    	<p><?=$GLOBALS['ltcuser']['mail']?> has not been boarded to vBAC.</p>
+        <p><b>Your Functional Manager on the account can resolve this issue</b></p>
+        <p>Please contact them and have them Board you into vBac & initiate your PES Check if that's not yet been done.</p>
         </div>
         <div class='panel-footer'>
         </div>
