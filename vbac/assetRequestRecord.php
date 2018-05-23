@@ -115,8 +115,9 @@ class assetRequestRecord extends DbRecord {
                         ?>
             	</select>
             	</div>
-            	<div class='col-sm-3'>
-        		<input name='REQUEST_RETURN' class='toggle' type='checkbox' data-toggle='toggle' data-on='Return/Remove existing' data-off='Request New' data-onstyle='danger' data-offstyle='success' data-width='250' id='returnRequest' >
+            	<div class='col-sm-4'>
+<!--         		<input name='REQUEST_RETURN' class='toggle' type='checkbox' data-toggle='toggle' data-on='Return/Remove existing' data-off='Request New' data-onstyle='danger' data-offstyle='success' data-width='250' id='returnRequest' > -->
+<!-- 				<p class='bg-warning'><small>The ability to initiate the return of an asset has been suspended. Please contact PMO direct to arrange</small></p> -->
         		</div>
 
 
@@ -291,11 +292,13 @@ class assetRequestRecord extends DbRecord {
         <div class="panel-heading">
         <h3 class="panel-title" id='requestableAssetListTitle'>Asset Request</h3>
         </div>
-    	<div class="panel-body">
-    	<p><?=$GLOBALS['ltcuser']['mail']?> has not been boarded to vBAC.</p>
-        <p><b>Your Functional Manager on the account can resolve this issue</b></p>
-        <p>Please contact them and have them Board you into vBac & initiate your PES Check if that's not yet been done.</p>
-        </div>
+		<div class="panel-body">
+      	<p>User <?=$GLOBALS['ltcuser']['mail']?> is not known to this tool</p>
+       	<p>Your Functional Manager needs to Onboard you onto vBAC. </p>
+       	<p>Boarding education for your manager can be found at this URL: http://w3.tap.ibm.com/medialibrary/media_set_view?id=47864</p>
+       	<p>If you already have a Preboarder record in vBAC your manager will need to onboard you as an IBMer AND link it to your Preboarder Record.</p>
+       	<p>They SHOULD NOT Initiate PES in vBAC if you are already PES cleared. Your manager should contact the PES Team (LBG Vetting Process/UK/IBM) asking them to update your PES Status in vBAC if necessary. </p>
+      	</div>
         <div class='panel-footer'>
         </div>
         </div>
