@@ -240,7 +240,7 @@ class BlueMail
 
     static function prelog(array $to, $subject, $message, $data_json)
     {
-        AuditTable::audit("Invoked:<b>" . __METHOD__ . "</b>To:" . strlen(db2_escape_string($to)) . "</br>Subject:" . strlen(db2_escape_string($subject)) . "</br>Message:" . strlen(db2_escape_string($message)) . "</br>DataJson:" . strlen(db2_escape_string($data_json)) . "</br>",AuditTable::RECORD_TYPE_DETAILS);
+        AuditTable::audit("Invoked:<b>" . __METHOD__ . "</b>To:" . strlen(db2_escape_string(serialize($to))) . "</br>Subject:" . strlen(db2_escape_string($subject)) . "</br>Message:" . strlen(db2_escape_string($message)) . "</br>DataJson:" . strlen(db2_escape_string($data_json)) . "</br>",AuditTable::RECORD_TYPE_DETAILS);
 
 
 
