@@ -2,6 +2,7 @@
 namespace itdq;
 
 use itdq\AllItdqTables;
+use itdq\AuditTable;
 
 /**
  *
@@ -239,6 +240,10 @@ class BlueMail
 
     static function prelog(array $to, $subject, $message, $data_json)
     {
+        AuditTable::audit("Invoked:<b>" . __METHOD__ . "</b>To:" . strlen(db2_escape_string($to)) . "</br>Subject:" . strlen(db2_escape_string($subject)) . "</br>Message:" . strlen(db2_escape_string($message)) . "</br>DataJson:" . strlen(db2_escape_string($data_json)) . "</br>",AuditTable::RECORD_TYPE_DETAILS);
+
+
+
         $sql  = " INSERT INTO " . $_SESSION['Db2Schema'] . "." . AllItdqTables::$EMAIL_LOG;
         $sql .= " (TO, SUBJECT, MESSAGE, DATA_JSON ) VALUES ( '" . db2_escape_string(serialize($to)) ."','" . db2_escape_string($subject) . "'";
         $sql .= " ,'" . db2_escape_string($message) . "','" . db2_escape_string($data_json) . "'); ";
