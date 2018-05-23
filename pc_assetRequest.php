@@ -2,6 +2,7 @@
 
 use vbac\assetRequestRecord;
 use vbac\personTable;
+use itdq\AuditTable;
 
 set_time_limit(0);
 ob_start();
