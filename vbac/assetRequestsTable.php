@@ -892,7 +892,7 @@ class assetRequestsTable extends DbTable{
         	<div class='form-group required'>
         	<div class='col-sm-12'>
         		<table class='table table-striped table-bordered ' cellspacing='0' width='90%' id='requestsWithinVarb'>
-        		<thead><tr><th>Inc</th><th>Ref</th><th>Email</th><th>Asset</th><th>Primary UID</th><th>Secondary UID</th></tr></thead>
+        		<thead><tr><th>Inc</th><th>Ref</th><th>Requestee</th><th>Asset</th><th>Primary UID</th><th>Secondary UID</th></tr></thead>
         		<tbody>
         		</tbody>
         		</table>
@@ -1102,7 +1102,7 @@ class assetRequestsTable extends DbTable{
 
 
     function getAssetRequestsForVarb($varb){
-        $sql = " SELECT REQUEST_REFERENCE as REFERENCE, P.EMAIL_ADDRESS as PERSON, AR.ASSET_TITLE as ASSET, AR.CNUM, PRIMARY_UID, SECONDARY_UID, ";
+        $sql = " SELECT REQUEST_REFERENCE as REFERENCE, P.NOTES_ID as PERSON, AR.ASSET_TITLE as ASSET, AR.CNUM, PRIMARY_UID, SECONDARY_UID, ";
         $sql .= " ASSET_PRIMARY_UID_TITLE, ASSET_SECONDARY_UID_TITLE ";
         $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName . " as AR ";
         $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
@@ -1123,7 +1123,7 @@ class assetRequestsTable extends DbTable{
 
         $data = array();
         while(($row=db2_fetch_assoc($rs))==true){
-            $row['INCLUDED'] = "<input type='checkbox' name='request[]' value='" . $row['REFERENCE'] . "' checked />";
+            $row['INCLUDED'] = "<input type='checkbox' name='request[]' value='" . $row['REFERENCE'] . "'  />";
             $row['PRIMARY_UID'] = !empty($row['ASSET_PRIMARY_UID_TITLE']) ?  "<input type='text' name='primaryUid[".$row['REFERENCE'] . "]' placeholder='" . $row['ASSET_PRIMARY_UID_TITLE'] . "' value='" . $row['PRIMARY_UID'] . "' />" : null;
             $row['SECONDARY_UID'] = !empty($row['ASSET_SECONDARY_UID_TITLE']) ?  "<input type='text' name='secondaryUid[" .$row['REFERENCE'] . "]' placeholder='" . $row['ASSET_SECONDARY_UID_TITLE'] . "' value='" . $row['SECONDARY_UID'] . "'  />" : null;
 
