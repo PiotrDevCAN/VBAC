@@ -42,6 +42,7 @@ $assetRequest->createJsCtidLookup();
 if($myCnum) {
     ?>
     $(document).ready(function() {
+    	$('[data-toggle="tooltip"]').tooltip();
     	$('.toggle').bootstrapToggle();
     	$('#requestees').select2({
         	width:'100%',

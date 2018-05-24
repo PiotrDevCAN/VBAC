@@ -98,10 +98,13 @@ class assetRequestRecord extends DbRecord {
 		<div class="panel-body">
         	<div class='form-group required'>
         		<div class='col-sm-4'>
+
                 <select class='form-control select select2 '
                 			  id='requestees'
                               name='requestee'
                               required
+                              data-toggle="tooltip" title="Only PES Cleared IBMers & Vendors will appear in this list. If you feel someone is missing, please ensure they have a FULL Boarded record in the system."
+
 
                       >
                     <option value=''></option>
