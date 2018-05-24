@@ -28,7 +28,7 @@ function assetPortal() {
 
   this.initialiseAssetRequestDataTable = function(showAll,pmoRaised){
 	showAll = typeof(showAll) == 'undefined'  ? false : showAll;
-	pmoRaised = typeof(pmoRaised) == 'undefined'  ? false : pmoRaised;
+	pmoRaised = typeof(pmoRaised) == 'undefined'  ? true : pmoRaised;
 
 	// Setup - add a text input to each footer cell
     $('#assetPortalTable tfoot th').each( function () {
