@@ -1,8 +1,7 @@
 <?phpuse itdq\AuditTable;
 use vbac\personRecord;
 use vbac\personTable;
-use vbac\allTables;use itdq\AuditTable;
-
+use vbac\allTables;
 ob_start();$success = false;
 
 AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_POST,true) . "</b>",AuditTable::RECORD_TYPE_DETAILS);
