@@ -5,6 +5,7 @@ use itdq\Loader;
 use itdq\BlueMail;
 use vbac\personRecord;
 use itdq\AuditTable;
+use itdq\DbTable;
 
 
 ob_start();
@@ -38,10 +39,40 @@ foreach ($allOrderItTypes as $orderItType){
 
         $totalRequestsForType += $outstandingRequestsForType;
 
-        $requestData .= $assetRequestTable->getRequestsForOrderIt($orderItType,$first, $predicate);
-        $lastSql[] = $assetRequestTable->getLastSql();
+        $restrictToApproverPredicate = $predicate . $assetRequestTable->eligibleForOrderItPredicate($orderItType);
 
-        $varbsCovered[] = $assetRequestTable->currentVarb;
+        $sql = " SELECT DISTINCT APPROVER_EMAIL ";
+        $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR ";
+        $sql .= "  LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$REQUESTABLE_ASSET_LIST . " AS RAL ";
+        $sql .= "  ON RAL.ASSET_TITLE = AR.ASSET_TITLE ";
+        $sql.= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
+        $sql .= " ON AR.CNUM = P.CNUM ";
+        $sql .= " WHERE 1=1 " . $restrictToApproverPredicate;
+
+        $rs = db2_exec($_SESSION['conn'], $sql);
+
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __FILE__, __LINE__, $sql);
+            throw new Exception('error finding approvers for varb process');
+        }
+
+        $allApproversForType = array();
+        while (($row=db2_fetch_assoc($rs))==true) {
+            $allApproversForType[] = $row['APPROVER_EMAIL'] ;
+        }
+//         $allApproversForType = $loader->load('APPROVER_EMAIL',allTables::$ASSET_REQUESTS,$restrictToFmPredicate);
+
+        foreach ($allApproversForType as $approverEmail){
+            $requestForOneApproverPredicate = $restrictToApproverPredicate . " AND APPROVER_EMAIL='" . trim($approverEmail) . "' ";
+            $requestData .= $assetRequestTable->getRequestsForOrderIt($orderItType,$first, $requestForOneApproverPredicate);
+            $lastSql[] = $assetRequestTable->getLastSql();
+            $varbsCovered[] = $assetRequestTable->currentVarb;
+        }
+
+//         $requestData .= $assetRequestTable->getRequestsForOrderIt($orderItType,$first, $predicate);
+//         $lastSql[] = $assetRequestTable->getLastSql();
+
+//         $varbsCovered[] = $assetRequestTable->currentVarb;
         $first = false;
 
        // $lastSql[] = $assetRequestTable->getLastSql();

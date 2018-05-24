@@ -273,7 +273,7 @@ class assetRequestsTable extends DbTable{
         return $nextVarb;
     }
 
-    private function eligibleForOrderItPredicate($orderItType=0){
+    public function eligibleForOrderItPredicate($orderItType=0){
         /*
          *   ORDERIT_VARB_REF is null - Has not previously been exported.
          *   ORDER_IT_NUMBER is null  - Hasn't already been raised by the individual
