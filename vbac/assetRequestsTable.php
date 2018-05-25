@@ -27,6 +27,15 @@ class assetRequestsTable extends DbTable{
         'CTB_RTB','TT_BAU','LOB', 'WORK_STREAM','PRE_REQ_REQUEST','REQUEST_RETURN'
     );
 
+    private static $statusChangeEmail = "This is to inform you that your vBAC Request<b>&&requestReference&& (&&assetTitle&&)</b> has now moved to status :<b>&&status&&</b>.
+<br/>The associated comment is :
+<br/>&&comment&&
+<br/>Reference Information : Request:<b>&&requestReference&&</b> Varb:<b>&&varbNumber&&</b> Order IT Number:<b>&&orderItNumber&&</b> Vbac Status:<b>&&vbacStatus&&</b> </b> Order IT Status:<b>&&orderItStatus&&";
+
+    private static $statusChangeEmailPattern = array('/&&requestReference&&/','/&&assetTitle&&/','/&&status&&/','/&&comment&&/','/&&varbNumber&&/','/&&orderItNumber&&/','/&&vbacStatus&&/','/&&orderItStatus&&/');
+
+
+
     static function portalHeaderCells(){
         $headerCells = null;
        // $widths = array(5,5,5,5,10,10,10,10,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
@@ -1405,6 +1414,9 @@ class assetRequestsTable extends DbTable{
                 return false;
             }
         }
+
+        self::notifyChangeOfStatus($reference, $status, $comment);
+
         return true;
     }
 
@@ -1631,5 +1643,39 @@ class assetRequestsTable extends DbTable{
       }
 
 
+     static function notifyChangeOfStatus($reference, $status, $comment=null){
+
+         $sql = " SELECT P.EMAIL_ADDRESS, REQUESTOR_EMAIL, ASSET_TITLE, ORDERIT_VARB_REF, ORDERIT_NUMBER, STATUS, ORDERIT_STATUS, STATUS ";
+         $sql.= " FROM ". $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " AS AR ";
+         $sql.= " LEFT JOIN ". $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
+         $sql.= " ON P.CNUM = AR.CNUM ";
+         $sql.= " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' " ;
+
+         $rs = db2_exec($_SESSION['conn'], $sql);
+
+         if(!$rs){
+             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+             return false;
+         }
+
+         $row = db2_fetch_assoc($rs);
+
+
+
+
+         $requestee  = array(trim($row['EMAIL_ADDRESS']));
+         $requestor  = array(trim($row['REQUESTOR_EMAIL']));
+         $assetTitle = trim($row['ASSET_TITLE']);
+         $varbRef = !empty($row['ORDERIT_VARB_REF']) ? trim($row['ORDERIT_VARB_REF']) : "N/A";
+         $orderIt = !empty($row['ORDERIT_NUMBER']) ? trim($row['ORDERIT_NUMBER']) : "N/A";
+         $orderItStatus = trim($row['ORDERIT_STATUS']) ;
+         $vStatus = trim($row['STATUS']) ;
+
+         // $statusChangeEmailPattern = array('/&&requestReference&&/','/&&assetTitle&&/','/&&status&&/','/&&comment&&/','/&&varbNumber&&/','/&&orderItNumber&&/','/&&orderItStatus&&/','/&&vbacStatus&&/');
+         $replacements = array($reference, $assetTitle, $status, $comment, $varbRef, $orderIt, $vStatus, $orderItStatus);
+         $message = preg_replace(self::$statusChangeEmailPattern, $replacements, self::$statusChangeEmail);
+
+         \itdq\BlueMail::send_mail($requestee, "vBAC Request :$reference ($assetTitle ) - Status Change($status)", $message, 'vbacNoReply@uk.ibm.com',$requestor);
+     }
 
 }
