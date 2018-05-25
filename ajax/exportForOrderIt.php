@@ -105,7 +105,7 @@ $base64EncodedDataNonPmo = !empty($nonPmoRequestData) ?  base64_encode($nonPmoRe
 $messages = ob_get_clean();
 
 if(empty($base64EncodedData) && empty($base64EncodedDataNonPmo)){
-      $messages .= "<br/>No requests found to export";
+    $messages .= "<br/><br/><br/><h2<No requests found to export</h2>";
     $response = array('success'=>false,'messages'=>$messages,'post'=>print_r($_REQUEST,true),'lastSql'=>print_r($lastSql,true));
     echo json_encode($response);
 } else {
@@ -114,6 +114,11 @@ if(empty($base64EncodedData) && empty($base64EncodedDataNonPmo)){
     $attachments = array();
     $attachments[] = !empty($requestData) ? array('filename'=>$csvName,'content_type'=>'text/plain','data'=>$base64EncodedData) : null;
     $attachments[] = $bau && !empty($nonPmoRequestData) ? array('filename'=>$csvNameNonPmo,'content_type'=>'text/plain','data'=>$base64EncodedDataNonPmo) : null;
+
+    $actualAttachments = 'Details of attachments to this email<br/> ';
+    $actualAttachments.= !empty($requestData) ? " Attachment : $csvName contains records for PMO to raise in Order IT<br/>" : " There are no records for PMO to raise, hence no attachment of those records<br/>";
+    $actualAttachments.= $bau && !empty($nonPmoRequestData) ? " Attachment : $csvNameNonPmo contains details of User Created Order IT records for PMO to check in Order IT<br/>" : " There are no User Created Order IT records, hence no attachment of those records<br/>";
+    $actualAttachments.= !$bau ? " This is the non-BAU Export, so there is no attachment of User Created records, check the BAU export for those records<br/>" : null;
 
     if(empty($attachments[0])){
         unset($attachments[0]);
@@ -126,8 +131,7 @@ if(empty($base64EncodedData) && empty($base64EncodedDataNonPmo)){
 
     $messages .= $bau && !empty($nonPmoRequestData) ? "<br/> User created requests have been attached to the email" : null;
 
-    $sendResponse = BlueMail::send_mail($pmoTaskid, 'vBac Orderit Export' . $titlePrefix . ': ' . $varbRange, 'Find attached CSV of Asset Request Details ready for Order IT',
-        'vbacNoReply@uk.ibm.com',array(),array(),true,$attachments);
+    $sendResponse = BlueMail::send_mail($pmoTaskid, 'vBac Orderit Export' . $titlePrefix . ': ' . $varbRange, $actualAttachments,'vbacNoReply@uk.ibm.com',array(),array(),true,$attachments);
 
 //    $messages = ob_get_clean();
     $response = array('success'=>true,'messages'=>$messages,"sendResponse"=>$sendResponse,'post'=>print_r($_REQUEST,true),'lastSql'=>print_r($lastSql,true));
