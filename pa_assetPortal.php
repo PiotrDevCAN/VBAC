@@ -3,6 +3,7 @@ use vbac\assetRequestsTable;
 use vbac\allTables;
 use vbac\personTable;
 
+$assetTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
 ?>
 <div class='container'>
 <h1 id='portalTitle'>Asset Request Portal</h1>
