@@ -13,6 +13,21 @@ function assetPortal() {
     console.log('--- Function --- assetPortal.init');
   },
 
+  this.countRequestsForPortal = function(){
+  	  $('#countPmoForExport').html('**');
+	  $('#countNonPmoForExport').html('**');
+      $.ajax({
+	        url: "ajax/countRequestsForPortal.php",
+	        type: 'GET',
+	        success: function(result){
+	        	var resultObj = JSON.parse(result);
+	        	$('#countPmoForExport').html(resultObj.pmoForExport);
+	        	$('#countNonPmoForExport').html(resultObj.nonPmoForExport);
+	        }
+      });
+  },
+
+
   this.initialiseAssetRequestPortal = function(){
       $.ajax({
 	        url: "ajax/createHtmlForAssetPortal.php",
@@ -21,6 +36,7 @@ function assetPortal() {
 	          var AssetPortal = new assetPortal();
 	          $('#assetRequestsDatatablesDiv').html(result);
 	          AssetPortal.initialiseAssetRequestDataTable();
+	          AssetPortal.countRequestsForPortal();
 	        }
       });
   },
@@ -131,6 +147,7 @@ function assetPortal() {
 	    	assetPortal.table.columns().visible(false,false);
 	    	assetPortal.table.columns([0,1,2,3,4,5,6,7]).visible(true);
 	    	assetPortal.table.search('').order([0,"asc"]).draw();
+	        AssetPortal.countRequestsForPortal();
 	    });
   },
 
@@ -139,6 +156,7 @@ function assetPortal() {
 	    	$('#portalTitle').text('Asset Request Portal');
 	    	$.fn.dataTableExt.afnFiltering.pop();
 	    	assetPortal.table.ajax.reload();
+	        AssetPortal.countRequestsForPortal();
 	      });
   },
 
@@ -198,6 +216,7 @@ this.listenForReportShowUid = function(){
 		        	$('#exportResultsModal').modal('show');
 		  		    $('#exportForOrderIt').removeClass('spinning');
 				    $('#exportForOrderIt').attr('disabled',false);
+			        AssetPortal.countRequestsForPortal();
 		        }
 	      });
 	  });
@@ -220,6 +239,7 @@ this.listenForReportShowUid = function(){
 		        	$('#exportResultsModal').modal('show');
 		  		    $('#exportBauForOrderIt').removeClass('spinning');
 				    $('#exportBauForOrderIt').attr('disabled',false);
+			        AssetPortal.countRequestsForPortal();
 		        }
 	      });
 	  });
@@ -241,6 +261,7 @@ this.listenForReportShowUid = function(){
 		        	$('#exportResultsModal').modal('show');
 		  		    $('#exportNonBauForOrderIt').removeClass('spinning');
 				    $('#exportNonBauForOrderIt').attr('disabled',false);
+			        AssetPortal.countRequestsForPortal();
 		        }
 	      });
 	  });
@@ -337,6 +358,7 @@ this.listenForReportShowUid = function(){
 				    $('#deVarb').attr('disabled',false);
 				    $('#mapVarbToOrderItModal').modal('hide');
 				    assetPortal.table.ajax.reload();
+				    AssetPortal.countRequestsForPortal();
 		        }
 	      });
 	  });
@@ -409,6 +431,7 @@ this.listenForReportShowUid = function(){
 	      }
 		  $('#saveMapVarbToOrderIT').removeClass('spinning');
 		  assetPortal.table.ajax.reload();
+		  AssetPortal.countRequestsForPortal();
 	  });
 },
 
@@ -428,6 +451,7 @@ this.listenForSaveEditUid = function(){
 		  		    $('#saveEditUid').removeClass('spinning');
 		        	$('#editUidModal').modal('hide');
 			    	assetPortal.table.ajax.reload();
+			    	AssetPortal.countRequestsForPortal();
 
 		        }
 	      });
@@ -456,6 +480,7 @@ this.listenForSaveOrderItStatus = function(){
 		        	$('#setOitStatusModal').modal('hide');
 
 		  		  	assetPortal.table.ajax.reload();
+		  		    AssetPortal.countRequestsForPortal();
 
 		        }
 	    	  });
@@ -593,6 +618,7 @@ this.listenForAssetRequestApproveRejectConfirm  = function(){
 			        	var resultObj = JSON.parse(result);
 			        	$('#approveRejectModal').modal('hide');
 			        	assetPortal.table.ajax.reload();
+			        	AssetPortal.countRequestsForPortal();
 			        }
 		      });
 
@@ -700,7 +726,7 @@ this.listenForConfirmedAssetReturned = function(){
 		  		    $('#confirmAssetReturned').attr('disabled',false);
 		        	$('#confirmReturnedModal').modal('hide');
 			    	assetPortal.table.ajax.reload();
-
+			    	AssetPortal.countRequestsForPortal();
 		        }
 	      });
 
