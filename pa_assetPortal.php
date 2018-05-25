@@ -16,8 +16,8 @@ $assetTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
 <button id='reportShowAll'  		class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Show All Requests</button>
 <button id='reportShowExportable'   class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Show PMO To Raise&nbsp;<span class="badge" id='countPmoForExport'>**</span></button>
 <button id='reportShowUserRaised'   class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Show User Raised&nbsp;<span class="badge" id='countNonPmoForExport'>**</span></button>
-<button id='exportBauForOrderIt' 	class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Export BAU for Order IT</button>
-<button id='exportNonBauForOrderIt'	class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Export non-BAU for Order IT</button>
+<button id='exportBauForOrderIt' 	class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Export BAU for Order IT&nbsp;<span class="badge" id='countBauForExport'>**</span></button>
+<button id='exportNonBauForOrderIt'	class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Export non-BAU for Order IT&nbsp;<span class="badge" id='countNonBauExport'>**</span></button>
 <button id='mapVarbToOrderIt' 		class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Map vARB to Order IT</button>
 <button id='setOrderItStatus' 		class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Set Order IT Status</button>
 <button id='reportShowUid' 		    class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi accessUser'>Show UID</button>

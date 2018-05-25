@@ -464,7 +464,16 @@ class assetRequestsTable extends DbTable{
         return $row['TICKETS'];
     }
 
-    function countRequestsForPmoExport(){
+    function countRequestsForPmoExport($bauRequest){
+
+        $bau = false;
+        $nonBau = false;
+
+        if(!empty($bauRequest)){
+            $bau = (strtolower(trim($bauRequest))=='true');
+            $nonBau = (strtolower(trim($bauRequest))!='true');
+        }
+
         $sql = " SELECT count(*) as tickets ";
         $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
         $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
@@ -476,8 +485,12 @@ class assetRequestsTable extends DbTable{
 
 
         $sql .= " WHERE 1=1 ";
-        $sql .= $this->predicateForPmoExportableRequest();
+        $sql .= $bau ? " AND P.TT_BAU='BAU' " : null;
+        $sql .= $nonBau ? " AND P.TT_BAU!='BAU' " : null;
 
+        $pred = $this->predicateForPmoExportableRequest();
+
+        $sql.= $pred;
 
         $rs2 = db2_exec($_SESSION['conn'],$sql);
         if(!$rs2){

@@ -16,6 +16,10 @@ function assetPortal() {
   this.countRequestsForPortal = function(){
   	  $('#countPmoForExport').html('**');
 	  $('#countNonPmoForExport').html('**');
+  	  $('#countBauForExport').html('**');
+	  $('#countNonBauExport').html('**');
+
+
       $.ajax({
 	        url: "ajax/countRequestsForPortal.php",
 	        type: 'GET',
@@ -23,6 +27,8 @@ function assetPortal() {
 	        	var resultObj = JSON.parse(result);
 	        	$('#countPmoForExport').html(resultObj.pmoForExport);
 	        	$('#countNonPmoForExport').html(resultObj.nonPmoForExport);
+	        	$('#countBauForExport').html(resultObj.bauForExport);
+	        	$('#countNonBauExport').html(resultObj.nonBauForExport);
 	        }
       });
   },
