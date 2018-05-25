@@ -2,10 +2,12 @@
 namespace vbac;
 
 use itdq\DbTable;
+use itdq\AuditTable;
+use itdq\AuditRecord;
 
 class requestableAssetListTable extends DbTable {
-    
-    
+
+
     const RETURN_EXCLUDE_DELETED = true;
     const RETURN_INCLUDE_DELETED = false;
     const RETURN_WITH_BUTTONS    = true;
@@ -39,6 +41,9 @@ class requestableAssetListTable extends DbTable {
                 $data[] = $rowWithButtonsAdded;
             }
         }
+
+        AuditTable::audit("Diag:" . __METHOD__ . __LINE__ . ":" . print_r($data,true),AuditTable::RECORD_TYPE_DETAILS);
+
         return $data;
     }
 
