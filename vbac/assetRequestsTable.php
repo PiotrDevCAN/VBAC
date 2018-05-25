@@ -960,8 +960,8 @@ class assetRequestsTable extends DbTable{
 
     function setOrderItStatusForm(){
         $loader = new Loader();
-        $allOrderIt = $loader->load('ORDERIT_NUMBER',allTables::$ASSET_REQUESTS,null,true,'desc');
-
+        $restrictToActiveOrderIT = " ORDERIT_STATUS in ('" . assetRequestRecord::$STATUS_ORDERIT_RAISED . "') ";
+        $allOrderIt = $loader->load('ORDERIT_NUMBER',allTables::$ASSET_REQUESTS,$restrictToActiveOrderIT,true,'desc');
         ?>
         <form id='setOrderItStatusForm'  class="form-horizontal"
         	onsubmit="return false;">
@@ -1007,11 +1007,6 @@ class assetRequestsTable extends DbTable{
         </form>
     	<?php
     }
-
-
-
-
-
 
 
     function getTracker(Spreadsheet $spreadsheet,$fullExtract = false){
