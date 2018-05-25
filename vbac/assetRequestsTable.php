@@ -1372,15 +1372,12 @@ class assetRequestsTable extends DbTable{
                 break;
         }
 
-
-
         $sql  = " UPDATE ";
         $sql .= $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS;
         $sql .= " SET STATUS='" . db2_escape_string($status) . "' ";
         $sql .= !empty($newComment) ? ", COMMENT='" . db2_escape_string(substr($newComment,0,500)) . "' " : null;
         $sql .= trim($status)==assetRequestRecord::$STATUS_APPROVED ? ", APPROVER_EMAIL='" . $_SESSION['ssoEmail'] . "' , APPROVED = current timestamp " : null;
         $sql .= trim($status)==assetRequestRecord::$STATUS_RETURNED ? ", DATE_RETURNED = DATE('" . db2_escape_string($dateReturned). "') " : null;
-        $sql .= !empty($orderItStatus) ? ", ORDERIT_STATUS = '" . db2_escape_string($orderItStatus) . "' " : null ;
         $sql .= " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' ";
 
         AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
@@ -1392,6 +1389,22 @@ class assetRequestsTable extends DbTable{
             return false;
         }
 
+        // IF we're approving it - AND - it's NOT user raised - then set the ORDERIT_STATUS to 'Yet to be raised'
+        if(trim($status)==assetRequestRecord::$STATUS_APPROVED ){
+            $sql  = " UPDATE ";
+            $sql .= $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS;
+            $sql .= " SET ORDERIT_STATUS = '" . assetRequestRecord::$STATUS_ORDERIT_YET . "' " ;
+            $sql .= " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' AND USER_CREATED='" . assetRequestRecord::$CREATED_PMO . "' ";
+
+            AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
+
+            $rs = db2_exec($_SESSION['conn'], $sql);
+
+            if(!$rs){
+                DbTable::displayErrorMessage($rs, __CLASS__,__METHOD__, $sql);
+                return false;
+            }
+        }
         return true;
     }
 
