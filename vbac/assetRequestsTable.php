@@ -486,7 +486,7 @@ class assetRequestsTable extends DbTable{
 
         $sql .= " WHERE 1=1 ";
         $sql .= $bau ? " AND P.TT_BAU='BAU' " : null;
-        $sql .= $nonBau ? " AND P.TT_BAU!='BAU' " : null;
+        $sql .= $nonBau ? " AND ( P.TT_BAU!='BAU' or P.TT_BAU is null) " : null;
 
         $pred = $this->predicateForPmoExportableRequest();
 
