@@ -1457,8 +1457,8 @@ class assetRequestsTable extends DbTable{
         $emailAddress = personTable::getEmailFromCnum($actualCnum);
 
         $message = "vBAC Requests for : $actualAsset ($reference) -  has been set to $orderItStatus status in Order IT.<br/>";
-        $message .= !empty($comment) ? "<b>Comment</b>" . $comment : "<b>No comment was provided</b>";
-        $message .= " You can access the tool here  <a href='" . $_SERVER['HTTP_HOST'] . "/pa_assetPortal.php'  target='_blank' >vBAC Asset Portal</a>";
+        $message .= !empty($comment) ? "<b>Comment</b>&nbsp;" . $comment : "&nbsp;<b>No comment was provided</b>";
+        $message .= "<br/>You can access the tool here  <a href='" . $_SERVER['HTTP_HOST'] . "/pa_assetPortal.php'  target='_blank' >vBAC Asset Portal</a>";
 
         \itdq\BlueMail::send_mail(array($emailAddress), 'vBAC Request : ' . $orderItStatus , $message , 'vbacNoReply@uk.ibm.com');
     }

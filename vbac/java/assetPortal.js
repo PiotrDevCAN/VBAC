@@ -794,10 +794,11 @@ this.listenForConfirmedAssetReturned = function(){
 
 	          columns: [
 	                      { "data": "REFERENCE" ,"defaultContent": "", "width":"5%" },
-	                      { "data": "EMAIL" ,"defaultContent": "", "width":"30%" },
-	                      { "data": "ASSET","defaultContent": "", "width":"20%"},
+	                      { "data": "PERSON" ,"defaultContent": "", "width":"5%" },
+	                      { "data": "ASSET","defaultContent": "", "width":"15%"},
 	                      { "data": "ORDERIT_STATUS","defaultContent": "", "width":"15%"},
-	                      { "data": "ACTION","defaultContent": "", "width":"30%"}
+	                      { "data": "ACTION","defaultContent": "", "width":"30%"},
+	                      { "data": "COMMENT","defaultContent": "", "width":"30%"}
 	                  ],
 
 	          drawCallback: function(settings) {
