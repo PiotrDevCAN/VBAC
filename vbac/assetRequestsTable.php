@@ -18,6 +18,9 @@ class assetRequestsTable extends DbTable{
     private $lastSql;
 
     private $preparedUpdateUidsStmt;
+    private $preparedSetRequestOrderItStatus;
+    private $preparedUpdateComment;
+    private $preparedGetComment;
 
     private static $portalHeaderCells = array('REFERENCE','CT_ID','PERSON','ASSET','STATUS','JUSTIFICATION','REQUESTOR','APPROVER','FM',
         'LOCATION'
@@ -954,7 +957,7 @@ class assetRequestsTable extends DbTable{
         ?>
        <!-- Modal -->
     <div id="setOitStatusModal" class="modal fade" role="dialog">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-xl">
           <div class="modal-content">
           <div class="modal-header">
              <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -1016,7 +1019,7 @@ class assetRequestsTable extends DbTable{
         	<div class='form-group required'>
         	<div class='col-sm-12'>
         		<table class='table table-striped table-bordered ' cellspacing='0' width='90%' id='requestsWithStatus'>
-        		<thead><tr><th>Ref</th><th>Email</th><th>Asset</th><th>OrderIT<br/>Status</th><th>Action</th></tr></thead>
+        		<thead><tr><th>Ref</th><th>Person</th><th>Asset</th><th>OrderIT<br/>Status</th><th>Action</th><th>Comment</th></tr></thead>
         		<tbody>
         		</tbody>
         		</table>
@@ -1204,7 +1207,7 @@ class assetRequestsTable extends DbTable{
     }
 
     function getAssetRequestsForOrderIt($orderIt){
-        $sql = " SELECT REQUEST_REFERENCE as REFERENCE, P.EMAIL_ADDRESS as EMAIL, AR.ASSET_TITLE as ASSET, AR.ORDERIT_STATUS, '' as ACTION ";
+        $sql = " SELECT REQUEST_REFERENCE as REFERENCE, P.NOTES_ID as PERSON, AR.ASSET_TITLE as ASSET, AR.ORDERIT_STATUS, '' as ACTION, '' as COMMENT ";
         $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName . " as AR ";
         $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql .= " ON AR.CNUM = P.CNUM ";
@@ -1311,6 +1314,8 @@ class assetRequestsTable extends DbTable{
                 break;
             }
 
+            $row['COMMENT'] = '<div class="form-check"><textarea class="form-check-input" style="min-width: 100%" name=\'comment['. $row['REFERENCE'] . "]'  id=\'comment[". $row['REFERENCE'] . "]'" . " ></textarea></div>";
+
             $data[] = $row;
         }
 
@@ -1319,25 +1324,125 @@ class assetRequestsTable extends DbTable{
 
 
 
-    function setRequestsOrderItStatus($reference, $orderItStatus){
+    function setRequestsOrderItStatus($reference, $orderItStatus, $comment){
+
+//         $sql  = " UPDATE ";
+//         $sql .= $_SESSION['Db2Schema'] . "." . $this->tableName ;
+//         $sql .= " SET ORDERIT_STATUS='" . db2_escape_string($orderItStatus) . "' ";
+//         $sql .= " WHERE REQUEST_REFERENCE ='" . db2_escape_string($reference) . "' " ;
+
+        $data = array($orderItStatus,$reference);
+        $preparedStmt = $this->prepareSetRequestsOrderItStatus();
+
+        AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>Data:" . print_r($data,true),AuditTable::RECORD_TYPE_DETAILS);
+
+        db2_execute($preparedStmt,$data);
+
+        if(!$preparedStmt){
+            DbTable::displayErrorMessage($preparedStmt,__CLASS__, __METHOD__, 'preparedStmt');
+            return false;
+        }
+        $this->notifyRequestee($reference, $orderItStatus, $comment);
+        return true;
+    }
+
+    function updateCommentForOrderItStatus($requestReference, $comment){
+        if(!empty($comment)){
+            $now = new \DateTime();
+            $existingComment = $this->GetCommentField($requestReference);
+
+            $newComment = "<b>" . $now->format('Y-m-d H:i') . "</b>:" . trim($comment) . "<br/>";
+            $newComment.= trim($existingComment);
+            $newComment = substr($newComment, 0,512);
+
+            $preparedStmt = $this->prepareUpdateCommentField();
+            $data = array($newComment,$requestReference);
+
+            var_dump($data);
+
+
+            $rs = db2_execute($preparedStmt,$data);
+
+            if(!$rs){
+                DbTable::displayErrorMessage($preparedStmt, __CLASS__, __METHOD__, 'preparedStmt');
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    function prepareSetRequestsOrderItStatus(){
+
+        if(!empty($this->preparedSetRequestOrderItStatus)){
+            return $this->preparedSetRequestOrderItStatus;
+        }
         $sql  = " UPDATE ";
         $sql .= $_SESSION['Db2Schema'] . "." . $this->tableName ;
-        $sql .= " SET ORDERIT_STATUS='" . db2_escape_string($orderItStatus) . "' ";
-        $sql .= " WHERE REQUEST_REFERENCE ='" . db2_escape_string($reference) . "' " ;
+        $sql .= " SET ORDERIT_STATUS=? ";
+        $sql .= " WHERE REQUEST_REFERENCE =? " ;
 
         AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_prepare($_SESSION['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs,__CLASS__, __METHOD__, $sql);
             return false;
         }
-        $this->notifyRequestee($reference, $orderItStatus);
-        return true;
+        $this->preparedSetRequestOrderItStatus = $rs;
+        return $this->preparedSetRequestOrderItStatus;
     }
 
-    function notifyRequestee($reference, $orderItStatus){
+
+    function prepareUpdateCommentField(){
+        if(!empty($this->preparedUpdateComment)){
+            return $this->preparedUpdateComment;
+        }
+
+        $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS ;
+        $sql.= " SET COMMENT = ? ";
+        $sql.= " WHERE REQUEST_REFERENCE=? ";
+
+        $rs = db2_prepare($_SESSION['conn'], $sql);
+
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+
+        $this->preparedUpdateComment = $rs;
+        return $this->preparedUpdateComment;
+    }
+
+    function preparepGetCommentField(){
+        if(!empty($this->preparedGetComment)){
+            return $this->preparedGetComment;
+        }
+
+        $sql = " SELECT COMMENT FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " WHERE REQUEST_REFERENCE=? ";
+
+        $rs = db2_prepare($_SESSION['conn'], $sql);
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__,__METHOD__, $sql);
+            return false;
+        }
+        $this->preparedGetComment = $rs;
+        return $this->preparedGetComment;
+    }
+
+    function GetCommentField($requestReference){
+        $preparedStmt = $this->preparepGetCommentField();
+        $data = array($requestReference);
+
+        db2_execute($preparedStmt,$data);
+
+        $row = db2_fetch_assoc($preparedStmt);
+        return !empty($row['COMMENT']) ? $row['COMMENT'] : false;
+    }
+
+
+    function notifyRequestee($reference, $orderItStatus,$comment=null){
         $loader = new Loader();
         $cnum   = $loader->load('CNUM',$this->tableName," REQUEST_REFERENCE='" . db2_escape_string($reference) . "' ");
         $asset   = $loader->load('ASSET_TITLE',$this->tableName," REQUEST_REFERENCE='" . db2_escape_string($reference) . "' ");
@@ -1351,7 +1456,9 @@ class assetRequestsTable extends DbTable{
 
         $emailAddress = personTable::getEmailFromCnum($actualCnum);
 
-        $message = "vBAC Requests for : $actualAsset ($reference) -  has been set to $orderItStatus status in Order IT.<br/>You can access the tool here  <a href='" . $_SERVER['HTTP_HOST'] . "/pa_assetPortal.php'  target='_blank' >vBAC Asset Portal</a>";
+        $message = "vBAC Requests for : $actualAsset ($reference) -  has been set to $orderItStatus status in Order IT.<br/>";
+        $message .= !empty($comment) ? "<b>Comment</b>" . $comment : "<b>No comment was provided</b>";
+        $message .= " You can access the tool here  <a href='" . $_SERVER['HTTP_HOST'] . "/pa_assetPortal.php'  target='_blank' >vBAC Asset Portal</a>";
 
         \itdq\BlueMail::send_mail(array($emailAddress), 'vBAC Request : ' . $orderItStatus , $message , 'vbacNoReply@uk.ibm.com');
     }
