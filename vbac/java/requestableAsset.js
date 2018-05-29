@@ -118,6 +118,7 @@ function requestableAsset() {
 
   this.saveRequestableAsset = function(mode){
 		    console.log('saveRequestableAsset mode:' + mode);
+		    $('#asset_title').attr('disabled',false); // So it can be passed to the ajax call.
 		    var ibmer = $('#hasBpEntry').is(':checked');
 		    var form = $('#requestableAssetListForm');
 		    var formValid = form[0].checkValidity();
@@ -139,7 +140,7 @@ function requestableAsset() {
 		        	  var resultObj = JSON.parse(result);
 		        	  if(resultObj.success==true){
 		        		  $('#requestableAssetListForm')[0].reset();
-		        	  } 
+		        	  }
 		        	  console.log(typeof(requestableAsset.table));
 		        	  $('.greyablePage').addClass('overlay');
 		    		  location.reload();
@@ -171,16 +172,14 @@ function requestableAsset() {
 		        $('#prompt').val(promptnat);
 		        $('#asset_primary_uid_title').val($(this).data('uidpri'));
 		        $('#asset_secondary_uid_title').val($(this).data('uidsec'));
-		        $('#asset_title').val($(this).data('asset'));
+		        $('#asset_title').val($(this).data('asset')).attr('disabled',true);
 		        $('#saveRequestableAsset').val('Update');
 		        $('#ORDER_IT_TYPE').val(type);
-		        
+
 		        var prereq = $(this).data('prereq')
-		        
-		        console.log(prereq);
-		        
+
 		        $('option[value="' + prereq + '"]').prop('selected', true).trigger('change');
-		        
+
 		     });
 	  },
 
