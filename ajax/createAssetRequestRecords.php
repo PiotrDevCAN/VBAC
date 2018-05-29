@@ -87,7 +87,7 @@ $personTable = new personTable(allTables::$PERSON);
 foreach ($_POST as $key => $value){
     $decodedKey = urldecode($key);
     $split=array();
-    $isAssetRequest = preg_match('/person-([\d]+)-asset-([\d]+)-([\D]+)/', $decodedKey, $split);
+    $isAssetRequest = preg_match('/person-([\d]+)-asset-([\d]+)-([\D0-9]+)/', $decodedKey, $split);
     if($isAssetRequest && $value=='on') {
         $personId = $split[1];
         $assetId  = $split[2];
