@@ -20,11 +20,11 @@ $spreadsheet = new Spreadsheet();
 // Set document properties
 $spreadsheet->getProperties()->setCreator('vBAC')
 ->setLastModifiedBy('vBAC')
-->setTitle('Asset Request Full Extract generated from vBAC')
-->setSubject('Asset Request Full Extract')
-->setDescription('Asset Request Full Extract generated from vBAC')
+->setTitle('Varb Tracker generated from vBAC')
+->setSubject('Varb Tracker')
+->setDescription('Varb Tracker generated from vBAC')
 ->setKeywords('office 2007 openxml php vbac tracker')
-->setCategory('Asset Request Extract');
+->setCategory('Varb Tracker');
 // Add some data
 
 $now = new DateTime();
@@ -32,7 +32,7 @@ $now = new DateTime();
 $assetRequestTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
 
 try {
-    $assetRequestTable->getFullExtract($spreadsheet);
+    $assetRequestTable->getVarbTracker($spreadsheet);
     // Set active sheet index to the first sheet, so Excel opens this as the first sheet
     $spreadsheet->setActiveSheetIndex(0);
     // Redirect output to a client’s web browser (Xlsx)
@@ -41,7 +41,7 @@ try {
 
     ob_clean();
     header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    header('Content-Disposition: attachment;filename="assetRequestExtract_' . $fileNameSuffix . '.xlsx"');
+    header('Content-Disposition: attachment;filename="varbTrackerReport_' . $fileNameSuffix . '.xlsx"');
     header('Cache-Control: max-age=0');
     // If you're serving to IE 9, then the following may be needed
     header('Cache-Control: max-age=1');

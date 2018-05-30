@@ -27,6 +27,7 @@ $assetTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
 &nbsp;
 <a class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi' href='/dn_tracker.php'><i class="glyphicon glyphicon-download-alt"></i> Tracker</a>
 <a class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi' href='/dn_assetRequestExtract.php'><i class="glyphicon glyphicon-download-alt"></i> Full Extract</a>
+<a class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi' href='/dn_varbTrackingReport.php'><i class="glyphicon glyphicon-download-alt"></i> Varb Tracking</a>
 </div>
 <div class='row'>
 

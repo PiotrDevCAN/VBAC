@@ -1173,6 +1173,70 @@ class assetRequestsTable extends DbTable{
     }
 
 
+    function getVarbTracker(Spreadsheet $spreadsheet,$fullExtract = false){
+        $recordsFound = false;
+        $loader = new Loader();
+        array_map('trim',$allStatus);
+        $ctbOnly =  array(false,true);
+        $sheet = 1;
+
+//         if(!empty($allStatus)){
+            foreach ($ctbOnly as $isThisCtb){
+//                 foreach ($allStatus as $key => $value) {
+                    $sql = " SELECT AR.ORDERIT_VARB_REF, V.CREATED_DATE, V.CREATED_BY,AR.STATUS, AR.ORDERIT_STATUS, AR.ORDERIT_NUMBER, AR.REQUEST_REFERENCE, AR.ASSET_TITLE, AR.BUSINESS_JUSTIFICATION, AR.COMMENT, AR.REQUESTOR_EMAIl, AR.REQUESTED, AR.APPROVER_EMAIL, AR.APPROVED,  AR.PRIMARY_UID, AR.SECONDARY_UID ";
+                    $sql .= " FROM " . $_SESSION['Db2Schema']. "." . allTables::$ASSET_REQUESTS  . " as AR ";
+                    $sql .= " LEFT JOIN " . $_SESSION['Db2Schema']. "." . allTables::$PERSON . " as P ";
+                    $sql .= " ON P.CNUM = AR.CNUM ";
+                    $sql .= " LEFT JOIN " . $_SESSION['Db2Schema']. "." . allTables::$ORDER_IT_VARB_TRACKER . " as V ";
+                    $sql .= " ON right(trim(AR.ORDERIT_VARB_REF),5) = right(concat('000000',V.VARB),5) ";
+                    $sql .= " WHERE 1=1 ";
+                    $sql .= " AND AR.STATUS in ('" . assetRequestRecord::$STATUS_EXPORTED . "','" . assetRequestRecord::$STATUS_RAISED_ORDERIT . "') ";
+                    $sql .= " AND AR.ORDERIT_STATUS not in ('" . assetRequestRecord::$STATUS_ORDERIT_APPROVED . "','" . assetRequestRecord::$STATUS_ORDERIT_CANCELLED . "','" . assetRequestRecord::$STATUS_ORDERIT_REJECTED. "') ";
+                    $sql .= " AND (AR.REQUEST_RETURN = 'No' or AR.REQUEST_RETURN is null ) ";
+//                     $sql .= " AND ( ";
+//                     $sql .= "      ( USER_CREATED = 'No' AND AR.STATUS in ('" . assetRequestRecord::$STATUS_RAISED_ORDERIT . "') )";
+//                     $sql .= "      OR ";
+//                     $sql .= "      ( USER_CREATED = 'Yes' AND AR.APPROVED is not null )";
+//                     $sql .= "    ) ";
+                    $sql .= $isThisCtb ? " AND upper(P.CTB_RTB='CTB') " : " AND (upper(P.CTB_RTB != 'CTB') or P.CTB_RTB is null ) ";
+                    $sql .= " ORDER BY V.CREATED_DATE desc ";
+                    $rs = db2_exec($_SESSION['conn'], $sql);
+
+                    AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
+
+
+                    if($rs){
+                        $recordsFound = DbTable::writeResultSetToXls($rs, $spreadsheet);
+
+                        if($recordsFound){
+                            DbTable::autoFilter($spreadsheet);
+                            DbTable::autoSizeColumns($spreadsheet);
+                            DbTable::setRowColor($spreadsheet,'105abd19',1);
+                        }
+                    }
+
+                    if(!$recordsFound){
+                        $spreadsheet->getActiveSheet()->setCellValueByColumnAndRow(1, 1, "Warning");
+                        $spreadsheet->getActiveSheet()->setCellValueByColumnAndRow(1, 2,"No records found");
+                    }
+                    // Rename worksheet & create next.
+                    $sheetTitle = $isThisCtb ? "CTB" : "Non CTB";
+                    $spreadsheet->getActiveSheet()->setTitle($sheetTitle);
+                    $spreadsheet->createSheet();
+                    $spreadsheet->setActiveSheetIndex($sheet++);
+//                 }
+            }
+//         }
+        //         $nonPmo = self::countRequestsForNonPmoExport();
+
+        //         if($nonPmo > 0){
+        //         }
+
+        return true;
+    }
+
+
+
     function getCnumAndAssetForReference($reference){
 
         $sql = " SELECT CNUM, ASSET_TITLE ";
