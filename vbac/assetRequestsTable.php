@@ -1099,6 +1099,76 @@ class assetRequestsTable extends DbTable{
     }
 
 
+    function getFullExtract(Spreadsheet $spreadsheet,$fullExtract = false){
+        $recordsFound = false;
+        $loader = new Loader();
+//         $fullStatus = $loader->load('ORDERIT_STATUS',allTables::$ASSET_REQUESTS," REQUEST_RETURN = 'No' or REQUEST_RETURN is null ");
+//         $lbgStatus = array(assetRequestRecord::$STATUS_ORDERIT_RAISED=>assetRequestRecord::$STATUS_ORDERIT_RAISED);
+//         $allStatus = $fullExtract ? $fullStatus : $lbgStatus;
+//         array_map('trim',$allStatus);
+//         $ctbOnly =  array(false,true);
+
+        $age = array('Recent'=>' AR.REQUESTED > CURRENT TIMESTAMP - 3 MONTHS','>3 Months'=>' ( AR.REQUESTED <= CURRENT TIMESTAMP - 3 MONTHS )');
+
+        $sheet = 1;
+
+//         if(!empty($allStatus)){
+//             foreach ($ctbOnly as $isThisCtb){
+        foreach ($age as $ageTitle => $agePredicate) {
+        $sql = " SELECT AR.*, P.FIRST_NAME, P.LAST_NAME, P.NOTES_ID, P.EMAIL_ADDRESS, P.LBG_EMAIL, P.EMPLOYEE_TYPE, P.CNUM, P.CT_ID, P.FM_CNUM as MGR_CNUM, FM.EMAIL_ADDRESS as MGR_EMAIL, FM.NOTES_ID as MGR_NOTESID, P.PES_STATUS, P.WORK_STREAM,P.CTB_RTB, P.TT_BAU, P.LOB, P.ROLE_ON_THE_ACCOUNT, P.CIO_ALIGNMENT, A.EMAIL_ADDRESS as APPROVER_EMAIL, A.NOTES_ID as APPROVER_NOTESID,A.WORK_STREAM as APPROVER_WORK_STREAM, A.TT_BAU as APPROVER_TT_BAU  ";
+        $sql .= " FROM " . $_SESSION['Db2Schema']. "." . allTables::$ASSET_REQUESTS  . " as AR ";
+        $sql .= " LEFT JOIN " . $_SESSION['Db2Schema']. "." . allTables::$PERSON . " as P ";
+        $sql .= " ON P.CNUM = AR.CNUM ";
+        $sql .= " LEFT JOIN " . $_SESSION['Db2Schema']. "." . allTables::$PERSON . " as FM ";
+        $sql .= " ON P.FM_CNUM = FM.CNUM ";
+        $sql .= " LEFT JOIN " . $_SESSION['Db2Schema']. "." . allTables::$PERSON . " as A ";
+        $sql .= " ON lower(A.EMAIL_ADDRESS) = lower(AR.APPROVER_EMAIL) ";
+
+
+        $sql .= " WHERE 1=1 ";
+        $sql .= " AND (AR.REQUEST_RETURN = 'No' or AR.REQUEST_RETURN is null ) ";
+        $sql .= " AND " . $agePredicate;
+//         $sql .= "      ( AR.REQUESTED > CURRENT TIMESTAMP - 6 MONTHS )";
+//         $sql .= "      OR ";
+//         $sql .= "      ( AR.APPROVED > CURRENT TIMESTAMP - 6 MONTHS )";
+//        $sql .= "    ) ";
+        $sql .= " ORDER BY AR.REQUESTED desc ";
+        $rs = db2_exec($_SESSION['conn'], $sql);
+
+        AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
+
+
+        if($rs){
+            $recordsFound = DbTable::writeResultSetToXls($rs, $spreadsheet);
+
+            if($recordsFound){
+                DbTable::autoFilter($spreadsheet);
+                DbTable::autoSizeColumns($spreadsheet);
+                DbTable::setRowColor($spreadsheet,'105abd19',1);
+            }
+        }
+
+        if(!$recordsFound){
+            $spreadsheet->getActiveSheet()->setCellValueByColumnAndRow(1, 1, "Warning");
+            $spreadsheet->getActiveSheet()->setCellValueByColumnAndRow(1, 2,"No records found");
+        }
+        // Rename worksheet & create next.
+        $sheetTitle = $ageTitle;
+        $spreadsheet->getActiveSheet()->setTitle($sheetTitle);
+        $spreadsheet->createSheet();
+        $spreadsheet->setActiveSheetIndex($sheet++);
+        }
+//             }
+//         }
+        //         $nonPmo = self::countRequestsForNonPmoExport();
+
+        //         if($nonPmo > 0){
+        //         }
+
+        return true;
+    }
+
+
     function getCnumAndAssetForReference($reference){
 
         $sql = " SELECT CNUM, ASSET_TITLE ";

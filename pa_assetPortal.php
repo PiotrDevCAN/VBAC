@@ -26,6 +26,7 @@ $assetTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
 <button id='reportReset'  		class='btn btn-warning btn-sm '>Reset</button>
 &nbsp;
 <a class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi' href='/dn_tracker.php'><i class="glyphicon glyphicon-download-alt"></i> Tracker</a>
+<a class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi' href='/dn_assetRequestExtract.php'><i class="glyphicon glyphicon-download-alt"></i> Full Extract</a>
 </div>
 <div class='row'>
 
