@@ -16,7 +16,7 @@ $preBoarderData = $table->getFromDb($preBoarder);
 
 $ibmer = new personRecord();
 $ibmer->setFromArray(array('CNUM'=>$_POST['ibmer_preboarded']));
-$ibmerData = $table->getFromDb($ibmer);
+$ibmerData = $table->getFromDb($ibmer);$ibmerData['PRE_BOARDED'] = $_POST['person_preboarded'];
 
 $preboarderPesStatus = $preBoarderData['PES_STATUS'];
 $preboarderPesStatusD = $preBoarderData['PES_STATUS_DETAILS'];
