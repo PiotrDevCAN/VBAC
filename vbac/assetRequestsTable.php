@@ -260,6 +260,10 @@ class assetRequestsTable extends DbTable{
 
             $row['ASSET'] .= $row['REQUEST_RETURN']=='Yes' ? "&nbsp;<small>(Return Request)</small>" : "";
 
+            $row['JUSTIFICATION'] .= "<hr/>" . $row['COMMENT'];
+
+
+
             $data[] = $row;
         }
 
