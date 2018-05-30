@@ -537,6 +537,39 @@ function personRecord() {
     });
   },
 
+  this.listenForSaveLinking = function(){
+	    $(document).on('click','#saveLinking', function(){
+		    console.log('saveLinking');
+		    $("#saveLinking").addClass('spinning');
+		    var form = $('#linkingForm');
+		    var formValid = form[0].checkValidity();
+		    if(formValid){
+		      personRecord.boardingFormEnabledInputs = ($("input:enabled"));
+		      var allDisabledFields = ($("input:disabled"));
+		      $(allDisabledFields).attr('disabled',false);
+		      var formData = form.serialize();
+		      $(allDisabledFields).attr('disabled',true);
+		      console.log(formData);
+		        $.ajax({
+		          url: "ajax/saveLinking.php",
+		          type: 'POST',
+		            data : formData,
+		          success: function(result){
+		        	  $("#saveLinking").removeClass('spinning');
+		        	  console.log(result);
+		        	  var resultObj = JSON.parse(result);
+
+		          }
+		        });
+		    } else {
+		      $("#saveLinking").removeClass('spinning');
+		      console.log('invalid fields follow');
+		      console.log($(form).find( ":invalid" ));
+		    }
+	    });
+	  },
+
+
   this.saveBoarding = function(mode){
     console.log('saveBoarding mode:' + mode);
     $("#saveBoarding").addClass('spinning');
@@ -604,7 +637,6 @@ function personRecord() {
       console.log($(form).find( ":invalid" ));
     }
   },
-
 
   this.initialisePersonTable = function(){
       $.ajax({

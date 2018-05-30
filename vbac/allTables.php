@@ -11,11 +11,12 @@ namespace vbac;
 class allTables
 {
     public static $ASSET_REQUESTS     = 'ASSET_REQUESTS';
+    public static $ASSET_REQUESTS_EVENTS     = 'ASSET_REQUESTS_EVENTS';
 
     public static $DB2_ERRORS         = 'DB2_ERRORS';
 
     public static $ORDER_IT_VARB_TRACKER = 'ORDER_IT_VARB_TRACKER';
-    
+
     public static $PERSON             = 'PERSON';
     public static $PERSON_PORTAL_REPORTS = 'PERSON_PORTAL_REPORTS';
 

@@ -694,6 +694,70 @@ You are able to amend the Functional Manager of people assigned to you but who n
     <?php
     }
 
+    function displayLinkForm(){
+        $loader = new Loader();
+        $availableFromPreBoarding = personTable::optionsForPreBoarded();
+        $preBoardersAvailable = count($availableFromPreBoarding) > 1 ? null : " disabled='disabled' ";
+
+        $availableForLinking = " PRE_BOARDED is null ";
+        $allNonLinkedIbmers = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON, $availableForLinking);
+
+        ?>
+        <form id='linkingForm'  class="form-horizontal" onsubmit="return false;">
+    	<div class="panel panel-default">
+      		<div class="panel-heading">
+        	<h3 class="panel-title" id='employeeResourceHeading'>Employee Details</h3>
+      		</div>
+	    	<div class="panel-body">
+				<div class='form-group' id='ibmerForLinking'>
+	           		<div class="col-sm-6" id='ibmerSelect'>
+                	<select class='form-control select select2' id='ibmer_preboarded'
+                        name='ibmer_preboarded'
+                        placeholder='Select IBMer:' >
+                	<option value=''>IBMer to Link</option>
+                	<?php
+                    foreach ($allNonLinkedIbmers as $cnum => $notesId){
+                        ?><option value='<?=$cnum?>'><?=$notesId . "(" . $cnum . ")" ?></option><?php
+                    };
+                    ?>
+               		</select>
+					</div>
+				</div>
+
+			<div class='form-group' id='linkToPreBoardedFormgroupDiv'>
+	        	<div class="col-sm-6" id='linkToPreBoarded'>
+                <select class='form-control select select2' id='person_preboarded'
+                        name='person_preboarded'
+                        <?=$preBoardersAvailable?>
+                        <?=$notEditable?>
+                        placeholder='Was pre-boarded as:' >
+                <option value=''>Link to Pre-Boarded</option>
+                <?php
+                    foreach ($availableFromPreBoarding as $option){
+                        echo $option;
+                    };
+                ?>
+                </select>
+				</div>
+			</div>
+		</div>
+	</div>
+    <?php
+    $allButtons = null;
+    $submitButton =  $this->formButton('submit','Submit','saveLinking',null,'Save','btn btn-primary');
+    $allButtons[] = $submitButton;
+    $this->formBlueButtons($allButtons);
+    $this->formHiddenInput('requestor',$GLOBALS['ltcuser']['mail'],'requestor');
+    ?>
+
+  </form>
+    <?php
+
+
+
+    }
+
+
 
     function savingBoardingDetailsModal(){
         ?>
