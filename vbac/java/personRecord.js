@@ -558,6 +558,8 @@ function personRecord() {
 		        	  $("#saveLinking").removeClass('spinning');
 		        	  console.log(result);
 		        	  var resultObj = JSON.parse(result);
+		        	  $('#ibmer_preboarded').val('');
+		        	  $('#person_preboarded').val('');
 
 		          }
 		        });
