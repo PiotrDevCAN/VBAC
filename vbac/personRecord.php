@@ -699,7 +699,7 @@ You are able to amend the Functional Manager of people assigned to you but who n
         $availableFromPreBoarding = personTable::optionsForPreBoarded();
         $preBoardersAvailable = count($availableFromPreBoarding) > 1 ? null : " disabled='disabled' ";
 
-        $availableForLinking = " PRE_BOARDED is null ";
+        $availableForLinking = " PRE_BOARDED is null && CNUM not like '%XXX' ";
         $allNonLinkedIbmers = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON, $availableForLinking);
 
         ?>
