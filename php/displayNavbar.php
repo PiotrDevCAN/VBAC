@@ -25,7 +25,7 @@ $trace          = new NavbarOption('View Trace','pi_trace.php','accessCdi');
 $traceControl   = new NavbarOption('Trace Control','pi_traceControl.php','accessCdi');
 $traceDelete    = new NavbarOption('Trace Deletion', 'pi_traceDelete.php','accessCdi');
 $revalidation   = new NavbarOption('Batch Reval','batchJobs/revalidate.php','accessCdi');
-$link           = new NavbarOption('Link IBMer to PreB','pi_linkIbmerToPreBoarder.php','accessCdi');
+$link           = new NavbarOption('Link IBMer to PreB','pi_linkIbmerToPreboarder.php','accessCdi');
 $cdiAdmin->addOption($trace);
 $cdiAdmin->addOption($traceControl);
 $cdiAdmin->addOption($traceDelete);
