@@ -21,9 +21,9 @@ $ibmerData = $table->getFromDb($ibmer);$ibmerData['PRE_BOARDED'] = $_POST['pers
 $preboarderPesStatus = $preBoarderData['PES_STATUS'];
 $preboarderPesStatusD = $preBoarderData['PES_STATUS_DETAILS'];
 
-$ibmerPesStatus = $preBoarderData['PES_STATUS'];
-$ibmerPesStatusD = $preBoarderData['PES_STATUS_DETAILS'];
-if($ibmerPesStatus == personRecord::PES_STATUS_INITIATED  ){    $ibmerData['PES_STATUS'] = $preboarderPesStatus;    $ibmerData['PES_STATUS_DETAILS'] = $ibmperPesStatusD . ":" . $preboarderPesStatusD;}$ibmer->setFromArray($ibmerData);$table->saveRecord($ibmer);
+$ibmerPesStatus = $ibmerData['PES_STATUS'];
+$ibmerPesStatusD = $ibmerData['PES_STATUS_DETAILS'];
+if(trim($ibmerPesStatus) == personRecord::PES_STATUS_INITIATED  ){    $ibmerData['PES_STATUS'] = $preboarderPesStatus;    $ibmerData['PES_STATUS_DETAILS'] = $ibmperPesStatusD . ":" . $preboarderPesStatusD;}$ibmer->setFromArray($ibmerData);$table->saveRecord($ibmer);
 
 $preBoarderData['PES_STATUS_DETAILS'] = 'Boarded as ' . $ibmerData['CNUM'] . ":" . $ibmerData['NOTES_ID'] . " Status was:" . $preboarderPesStatus;$preBoarderData['EMAIL_ADDRESS'] = str_replace('ibm.com', '###.com', strtolower($preBoarderData['EMAIL_ADDRESS']));
 $preBoarder->setFromArray($preBoarderData);
