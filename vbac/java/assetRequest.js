@@ -111,32 +111,56 @@ function assetRequest() {
 				AssetRequest.recordCtidOnForm(data.text, ctid_id, ctbFlag);
 		    }
 		    console.log('now ajax get location for cnum');
+
 		    $.ajax({
-		        url: "ajax/getLbgLocationForCnum.php",
-		        type: 'GET',
-		        data: { cnum:cnum_id},
-		        success: function(result){
-		        	console.log('did we get a location?');
-		        	var resultObj = JSON.parse(result);
-		        	var lbgLocation = resultObj.lbgLocation;
-				    $('.locationFor').attr('disabled',false);
-				    if(lbgLocation){
-				    	console.log('yes, we got a location');
-				    	$('.locationFor').val(lbgLocation).trigger('change').trigger({
-				    	    type: 'select2:select',
-				    	    params: {
-				    	        data:{
-				    	        	  "id": lbgLocation,
-				    	        	  "text": lbgLocation
-				    	        	}
-				    	    }
-				    	});
-				    } else {
-				    	console.log('no, we did not get a location');
-				    	$('.locationFor').val('').trigger('change');
-				    }
-		        }
-		    });
+		    	  url: "ajax/checkForOpenRequests.php",
+		          data : { cnum:cnum_id },
+		          type: 'POST',
+		          success: function(result){
+		        	  var resultObj = JSON.parse(result);
+		        	  console.log(resultObj);
+		        	  var assetTitles = resultObj.assetTitles;
+		        	  console.log(assetTitles);
+		        	  console.log(typeof(assetTitles));
+		        	  for (var asset in assetTitles) {
+		        		    if (assetTitles.hasOwnProperty(asset)) {
+		        		    	$("[data-asset='" + asset + "']").addClass('subjectToOpenRequest')
+		        		    	console.log(asset);
+		        		    	console.log($("[data-asset='" + asset + "']"));
+		        		    }
+		        		}
+		        	  console.log($(".subjectToOpenRequest"));
+
+		            },
+		          complete : function(xhr, status){
+		        	  $.ajax({
+		  		        url: "ajax/getLbgLocationForCnum.php",
+		  		        type: 'GET',
+		  		        data: { cnum:cnum_id},
+		  		        success: function(result){
+		  		        	console.log('did we get a location?');
+		  		        	var resultObj = JSON.parse(result);
+		  		        	var lbgLocation = resultObj.lbgLocation;
+		  				    $('.locationFor').attr('disabled',false);
+		  				    if(lbgLocation){
+		  				    	console.log('yes, we got a location');
+		  				    	$('.locationFor').val(lbgLocation).trigger('change').trigger({
+		  				    	    type: 'select2:select',
+		  				    	    params: {
+		  				    	        data:{
+		  				    	        	  "id": lbgLocation,
+		  				    	        	  "text": lbgLocation
+		  				    	        	}
+		  				    	    }
+		  				    	});
+		  				    } else {
+		  				    	console.log('no, we did not get a location');
+		  				    	$('.locationFor').val('').trigger('change');
+		  				    }
+		  		        }
+		  		    });
+		          }
+		      });
 		    $("#approvingManager option[value='"+cnum_id+"']").remove();
 		});
   },
@@ -412,6 +436,7 @@ function assetRequest() {
 		$(ctidAsset).attr('disabled',true).prop('checked',false);
 	  }
 	  $(ctidAsset).next('label').text('CT ID ('+ ctid +')');
+
   },
 
 
@@ -451,6 +476,7 @@ function assetRequest() {
   },
 
   this.checkAssetsForShore = function(shore){
+
 	  if(shore=='on'){
 		  console.log('dissallow onshore=no');
 		  console.log($('*[data-onshore="No"]'));
@@ -482,6 +508,18 @@ function assetRequest() {
 			  }
 		  });
 	  }
+	  /*
+	   * Now disable anything subject to an open request.
+	   */
+	  $('.subjectToOpenRequest').attr('disabled',true);
+
+	  $.each($('.subjectToOpenRequest'), function( index, value ) {
+		  console.log(value);
+		  var asset = $(value).data('asset');
+		  alert( asset + " is currently subject to an open request so cannot be selected at this time." );
+		});
+
+
   }
 
 }

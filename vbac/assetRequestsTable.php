@@ -1918,9 +1918,6 @@ class assetRequestsTable extends DbTable{
 
          $row = db2_fetch_assoc($rs);
 
-
-
-
          $requestee  = array(trim($row['EMAIL_ADDRESS']));
          $requestor  = array(trim($row['REQUESTOR_EMAIL']));
          $assetTitle = trim($row['ASSET_TITLE']);
@@ -1934,6 +1931,29 @@ class assetRequestsTable extends DbTable{
          $message = preg_replace(self::$statusChangeEmailPattern, $replacements, self::$statusChangeEmail);
 
          \itdq\BlueMail::send_mail($requestee, "vBAC Request :$reference ($assetTitle ) - Status Change($status)", $message, 'vbacNoReply@uk.ibm.com',$requestor);
+     }
+
+
+     function getOpenRequestsForCnum($cnum){
+         $sql = " select distinct Asset_title ";
+         $sql.= " from " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+         $sql.= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
+         $sql.= " AND ORDERIT_STATUS in ('" . assetRequestRecord::$STATUS_ORDERIT_YET . "','" . assetRequestRecord::$STATUS_ORDERIT_RAISED . "') ";
+
+         $rs = db2_exec($_SESSION['conn'], $sql);
+
+         if(!$rs){
+             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+             return false;
+         }
+         $assetTitles=array();
+
+         while (($row=db2_fetch_assoc($rs))==true) {
+             $assetTitles[trim($row['ASSET_TITLE'])] = trim($row['ASSET_TITLE']);
+         }
+
+        return $assetTitles;
+
      }
 
 }
