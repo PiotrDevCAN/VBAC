@@ -109,6 +109,38 @@ function personRecord() {
 
   }
 
+  this.listenForStopOffBoarding = function(){
+		$(document).on('click','.btnStopOffboarding', function(e){
+		   console.log(this);
+			var data = $(this).data();
+			console.log(data);
+		   $.ajax({
+			   url: "ajax/stopOffboarding.php",
+		       type: 'POST',
+		       data : {cnum:data.cnum},
+		       success: function(result){
+		    	   personRecord.table.ajax.reload();
+		           console.log(result);
+		           var resultObj = JSON.parse(result);
+		           if(resultObj.success==true){
+		        	   var message = "<div class=panel-heading><h3 class=panel-title>Success</h3>";
+		               message += "<br/><h4>Offboarding has been STOPPED</h4></br>";
+		               $('#confirmOffboardingModal  .panel').html(message);
+		               $('#confirmOffboardingModal  .panel').addClass('panel-success');
+		               $('#confirmOffboardingModal  .panel').removeClass('panel-danger');
+		             } else {
+			           var message = "<div class=panel-heading><h3 class=panel-title>Failure</h3>";
+			           message += "<br/><h4>Offboarding has <b>NOT</b> been STOPPED</h4></br>";
+		               $('#confirmOffboardingModal  .panel').html(message);
+		               $('#confirmOffboardingModal  .panel').addClass('panel-danger');
+		               $('#confirmOffboardingModal  .panel').removeClass('panel-success');
+		             };
+                	 $('#confirmOffboardingModal').modal('show');
+		       }
+		   });
+		});
+	  }
+
 
   this.listenForOffBoardingCompleted = function(){
 	$(document).on('click','.btnOffboarded', function(e){
@@ -121,6 +153,22 @@ function personRecord() {
 	       data : {cnum:data.cnum},
 	       success: function(result){
 	    	   personRecord.table.ajax.reload();
+	           console.log(result);
+	           var resultObj = JSON.parse(result);
+	           if(resultObj.success==true){
+	        	   var message = "<div class=panel-heading><h3 class=panel-title>Success</h3>";
+	               message += "<br/><h4>Offboarding has been completed</h4></br>";
+	               $('#confirmOffboardingModal  .panel').html(message);
+	               $('#confirmOffboardingModal  .panel').addClass('panel-success');
+	               $('#confirmOffboardingModal  .panel').removeClass('panel-danger');
+	             } else {
+		           var message = "<div class=panel-heading><h3 class=panel-title>Failure</h3>";
+		           message += "<br/><h4>Offboarding has <b>NOT</b> been completed</h4></br>";
+	               $('#confirmOffboardingModal  .panel').html(message);
+	               $('#confirmOffboardingModal  .panel').addClass('panel-danger');
+	               $('#confirmOffboardingModal  .panel').removeClass('panel-success');
+	             };
+            	 $('#confirmOffboardingModal').modal('show');
 	       }
 	   });
 	});
@@ -145,7 +193,7 @@ function personRecord() {
 		               $('#confirmOffboardingModal  .panel').addClass('panel-success');
 		               $('#confirmOffboardingModal  .panel').removeClass('panel-danger');
 		             } else {
-			           var message = "<div class=panel-heading><h3 class=panel-title>Success</h3>";
+			           var message = "<div class=panel-heading><h3 class=panel-title>Failure</h3>";
 			           message += "<br/><h4>Offboarding has <b>NOT</b> been initiated</h4></br>";
 		               $('#confirmOffboardingModal  .panel').html(message);
 		               $('#confirmOffboardingModal  .panel').addClass('panel-danger');
@@ -806,7 +854,7 @@ function personRecord() {
 	    		        if (evalDate != '' && evalDate != '2000-01-01' &&  evalDate <= dateEnd && (revalidationStatus.trim() != 'preboarder' && revalidationStatus.trim() != 'offboarded')) {
 	    		            return true;
 	    		        }
-	    		        else if(revalidationStatus.trim() == 'leaver' || revalidationStatus.trim() == 'offboarding'  ){
+	    		        else if(revalidationStatus.trim() == 'leaver' || revalidationStatus.slice(0,11) == 'offboarding'  ){
 	    		        	return true;
 
 	    		        } else {

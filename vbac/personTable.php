@@ -138,7 +138,8 @@ class personTable extends DbTable {
         $projectedEndDateObj = !empty($row['PROJECTED_END_DATE']) ? \DateTime::createFromFormat('Y-m-d', $row['PROJECTED_END_DATE']) : false;
         $potentialForOffboarding = $projectedEndDateObj ? $projectedEndDateObj <= $this->thirtyDaysHence : false; // Thirty day rule.
         $potentialForOffboarding = $potentialForOffboarding || $row['REVALIDATION_STATUS']==personRecord::REVALIDATED_LEAVER ? true : $potentialForOffboarding;  // Any leaver - has potential to be offboarded
-        $potentialForOffboarding = $row['REVALIDATION_STATUS']==personRecord::REVALIDATED_OFFBOARDED ? false : $potentialForOffboarding;
+        $potentialForOffboarding = substr(trim($row['REVALIDATION_STATUS']),0,10)==personRecord::REVALIDATED_OFFBOARDED ? false : $potentialForOffboarding;
+        $potentialForOffboarding = substr(trim($row['REVALIDATION_STATUS']),0,11)==personRecord::REVALIDATED_OFFBOARDING ? false : $potentialForOffboarding;
         $revalidationStatus = trim($row['REVALIDATION_STATUS']);
 
 
@@ -211,18 +212,26 @@ class personTable extends DbTable {
             $row['NOTES_ID'] .= $notesId;
         }
 
-        if( ($_SESSION['isPmo'] || $_SESSION['isCdi']) && ($revalidationStatus==personRecord::REVALIDATED_OFFBOARDING))  {
-            $row['REVALIDATION_STATUS']  = "<button type='button' class='btn btn-default btn-xs btnOffboarded' aria-label='Left Align' ";
+        if( ($_SESSION['isPmo'] || $_SESSION['isCdi']) && (substr(trim($row['REVALIDATION_STATUS']),0,11)==personRecord::REVALIDATED_OFFBOARDING))  {
+            $row['REVALIDATION_STATUS']  = "<button type='button' class='btn btn-default btn-xs btnStopOffboarding btn-danger' aria-label='Left Align' ";
             $row['REVALIDATION_STATUS'] .= "data-cnum='" .$cnum . "'";
+            $row['REVALIDATION_STATUS'] .= "title='Stop Offboarding'";
+            $row['REVALIDATION_STATUS'] .= " > ";
+            $row['REVALIDATION_STATUS'] .= "<span class='glyphicon glyphicon-remove-sign ' aria-hidden='true'></span>";
+            $row['REVALIDATION_STATUS'] .= " </button> ";
+            $row['REVALIDATION_STATUS'] .= "<button type='button' class='btn btn-default btn-xs btnOffboarded btn-danger' aria-label='Left Align' ";
+            $row['REVALIDATION_STATUS'] .= "data-cnum='" .$cnum . "'";
+            $row['REVALIDATION_STATUS'] .= "title='Complete Offboarding.'";
             $row['REVALIDATION_STATUS'] .= " > ";
             $row['REVALIDATION_STATUS'] .= "<span class='glyphicon glyphicon-log-out ' aria-hidden='true'></span>";
             $row['REVALIDATION_STATUS'] .= " </button> ";
             $row['REVALIDATION_STATUS'] .= $revalidationStatus;
         }
 
-        if( $potentialForOffboarding && ($_SESSION['isPmo'] || $_SESSION['isCdi']) && $revalidationStatus!=personRecord::REVALIDATED_OFFBOARDING )  {
-            $row['REVALIDATION_STATUS']  = "<button type='button' class='btn btn-default btn-xs btnOffboarding' aria-label='Left Align' ";
+        if( $potentialForOffboarding && ($_SESSION['isPmo'] || $_SESSION['isCdi']) && substr(trim($row['REVALIDATION_STATUS']),0,11)!=personRecord::REVALIDATED_OFFBOARDING )  {
+            $row['REVALIDATION_STATUS']  = "<button type='button' class='btn btn-default btn-xs btnOffboarding btn-warning' aria-label='Left Align' ";
             $row['REVALIDATION_STATUS'] .= "data-cnum='" .$cnum . "'";
+            $row['REVALIDATION_STATUS'] .= "title='Initiate Offboarding.'";
             $row['REVALIDATION_STATUS'] .= " > ";
             $row['REVALIDATION_STATUS'] .= "<span class='glyphicon glyphicon-log-out ' aria-hidden='true'></span>";
             $row['REVALIDATION_STATUS'] .= " </button> ";
@@ -594,7 +603,7 @@ class personTable extends DbTable {
     function flagOffboarding ($cnum){
         if(!empty($cnum)){
             $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
-            $sql .= " SET REVALIDATION_STATUS='" . personRecord::REVALIDATED_OFFBOARDING . "', REVALIDATION_DATE_FIELD = current date ";
+            $sql .= " SET REVALIDATION_STATUS= CONCAT(CONCAT(TRIM('" . personRecord::REVALIDATED_OFFBOARDING . "'),':'),REVALIDATION_STATUS),  REVALIDATION_DATE_FIELD = current date ";
             $sql .= " WHERE CNUM = '" . db2_escape_string($cnum) . "'";
 
             $rs = db2_exec($_SESSION['conn'],$sql);
@@ -612,7 +621,7 @@ class personTable extends DbTable {
     function flagOffboarded ($cnum){
         if(!empty($cnum)){
             $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
-            $sql .= " SET REVALIDATION_STATUS='" . personRecord::REVALIDATED_OFFBOARDED . "', REVALIDATION_DATE_FIELD = current date, OFFBOARDED_DATE = current date ";
+            $sql .= " SET REVALIDATION_STATUS=CONCAT(CONCAT('" . personRecord::REVALIDATED_OFFBOARDED . "',':'),SUBSTR(REVALIDATION_STATUS,13)), REVALIDATION_DATE_FIELD = current date, OFFBOARDED_DATE = current date ";
             $sql .= " WHERE CNUM = '" . db2_escape_string($cnum) . "'";
 
             $rs = db2_exec($_SESSION['conn'],$sql);
@@ -626,6 +635,25 @@ class personTable extends DbTable {
         }
 
     }
+
+    function stopOffboarded ($cnum){
+        if(!empty($cnum)){
+            $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+            $sql .= " SET REVALIDATION_STATUS= SUBSTR(REVALIDATION_STATUS,13), REVALIDATION_DATE_FIELD = current date, OFFBOARDED_DATE = null  ";
+            $sql .= " WHERE CNUM = '" . db2_escape_string($cnum) . "'";
+
+            $rs = db2_exec($_SESSION['conn'],$sql);
+
+            if(!$rs){
+                DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+                return false;
+            }
+            AuditTable::audit("CNUM: $cnum  has been been STOPPED from Offboarding",AuditTable::RECORD_TYPE_AUDIT);
+            return true;
+        }
+
+    }
+
 
     private function prepareUpdateLbgLocationStmt(){
         if(empty($this->preparedUpdateLbgLocationStmt)){

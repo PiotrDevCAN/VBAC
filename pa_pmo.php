@@ -53,6 +53,7 @@ $(document).ready(function(){
 	person.listenForToggleFmFlag();
 	person.listenForConfirmFmFlag();
 	person.listenforUpdateBoarding();
+	person.listenForStopOffBoarding();
 	person.listenForOffBoardingCompleted();
 	person.listenForBtnOffboarding();
 });
