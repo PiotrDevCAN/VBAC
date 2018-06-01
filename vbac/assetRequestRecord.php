@@ -336,14 +336,18 @@ class assetRequestRecord extends DbRecord {
         		   <h4 class="modal-title">Contractor ID (CT ID)</h4>
       			</div>
       			<div class="modal-body" >
-      			<input id='ctbflag' value='' type='hidden'></p>
+      			<h1 class='text-center' style='font-size:56px;background-color:red;color:white'>STOP</h1>
         		<p>Before requests can be made on Order IT, the individual needs to have a Contractor ID (CT ID).</p>
         		<p>We do not have a record of the CT ID for:</p>
-        		<input id='requesteeName' value='' disabled></p>
+        		<input id='requesteeName' value='' disabled>
+        		<input id='ctbflag' value='' type='hidden'></p></p>
         		<label for='requesteeCtid'><b>Either</b> enter it here</label>
         		<input id='requesteeCtid' value=''></p>
-        		<p><b>Or</b> simply close this Modal to have the form request a CT ID.</p>
-        		<p class='bg-warning'>Please do not simply close this Modal if the individual already has a CT ID</p>
+        		<p><b>Or</b> simply close this Modal, without entering a CT ID, to have the form request a CT ID.</p>
+        		<p class='text-center'>Closing this modal without entering a CT ID will cause a request for a CT ID to be generated.</p>
+        		<h3 class='bg-warning text-center'>So please do not close this Modal, without entering a CT ID, if the individual already has a CT ID.<br/>If you are unsure, please check now before proceeding.</h3>
+        		<p>Creating these duplicate requests is a significant source of delay in the process of obtaining Digital Assets for access to the account</p>
+        		<p>If you need to check, close this screen but DO NOT "Submit" the Asset Request Form</p>
         		</div>
         		<div class='modal-footer'>
       		  		<button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
