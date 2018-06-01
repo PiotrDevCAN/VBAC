@@ -225,6 +225,10 @@ function assetRequest() {
 		    		  },
 		      });
 		  } else {
+			  var doubleCheck = confirm('STOP : Please confirm the indivual DOES NOT ALREADY HAVE a CT ID')
+			  if(!doubleCheck){
+				  $('#obtainCtid').modal('show');
+				  }
 			  console.log('they did not provide a CT ID');
 			  AssetRequest.recordCtidOnForm(requestee, 'Required',ctbflag);
 		  };
