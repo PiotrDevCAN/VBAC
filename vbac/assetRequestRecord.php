@@ -343,11 +343,10 @@ class assetRequestRecord extends DbRecord {
         		<input id='ctbflag' value='' type='hidden'></p></p>
         		<label for='requesteeCtid'><b>Either</b> enter it here</label>
         		<input id='requesteeCtid' value=''></p>
-        		<p><b>Or</b> simply close this Modal, without entering a CT ID, to have the form request a CT ID.</p>
+        		<p><b>Or</b> simply close this Modal to generate a new CT ID request.</p>
         		<p class='text-center'>Closing this modal without entering a CT ID will cause a request for a CT ID to be generated.</p>
-        		<h3 class='bg-warning text-center'>So please do not close this Modal, without entering a CT ID, if the individual already has a CT ID.<br/>If you are unsure, please check now before proceeding.</h3>
-        		<p>Creating these duplicate requests is a significant source of delay in the process of obtaining Digital Assets for access to the account</p>
-        		<p>If you need to check, close this screen but DO NOT "Submit" the Asset Request Form</p>
+        		<h3 class='bg-warning text-center'>Please do not close this Modal without entering a CT ID if the individual already has a CT ID.If you are unsure, please check now before proceeding..</h3>
+        		<p>Creating duplicate requests introduces significant delay to the process of obtaining Digital Assets</p>
         		</div>
         		<div class='modal-footer'>
       		  		<button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
