@@ -142,33 +142,46 @@ class assetRequestsTable extends DbTable{
             $pmoOrFm = ($_SESSION['isFm'] || $_SESSION['isPmo']);
             $notTheirOwnRecord = ( trim(strtolower($row['REQUESTEE_EMAIL'])) != trim(strtolower($_SESSION['ssoEmail'])));
 
-            $allowedtoApproveReject = ( $pmoOrFm && $notTheirOwnRecord);
-
+            $allowedtoApproveReject = $withButtons && $pmoOrFm && $notTheirOwnRecord;
+            $allowedtoReject = $withButtons && !$notTheirOwnRecord;
 
             switch (true) {
                 case $status == assetRequestRecord::$STATUS_APPROVED:
-                    $button = $rejectButton;
+                    $rejectable = true;
+                    $approvable = false;
                 break;
                 case $status == assetRequestRecord::$STATUS_CREATED:
-                    $button = $rejectButton . $approveButton;
+                    $rejectable = true;
+                    $approvable = true;
                     break;
                 case $status == assetRequestRecord::$STATUS_REJECTED:
-                    $button = $approveButton;
+                    $rejectable = false;
+                    $approvable = true;
                     break;
                 default:
-                    $button = null;
+                    $rejectable = false;
+                    $approvable = false;
                 break;
             }
 
-            $button = $withButtons ? $button : '';
+            switch (true) {
+                case $allowedtoApproveReject && $rejectable && $approvable:
+                    $row['STATUS'] =  $rejectButton . $approveButton . $statusWithOitStatus;
+                    break;
+                case $allowedtoApproveReject && $approvable && !$rejectable:
+                    $row['STATUS'] =  $approveButton . $statusWithOitStatus;
+                    break;
+                case $allowedtoApproveReject && $rejectable && !$approvable:
+                case $allowedtoReject && $rejectable && !$approvable:
+                    $row['STATUS'] =  $rejectButton . $statusWithOitStatus;
+                    break;
+                default:
+                    $row['STATUS'] =  $statusWithOitStatus;
+                break;
+            }
 
-            $row['STATUS'] = $allowedtoApproveReject  ? $button . $statusWithOitStatus : $statusWithOitStatus;
 
             $row['PERSON'] = $row['REQUESTEE_NOTES'] . "<br/><small>" . $row['REQUESTEE_EMAIL'] . "</small>";
-//             if($withButtons){
-//                 unset($row['EMAIL_ADDRESS']);
-//                 unset($row['NOTES_ID']);
-//             }
 
             if(strtolower(trim($row['FM_EMAIL'])) == (strtolower(trim($row['APPROVER_EMAIL'])))){
                $indicatorIfApproverIsFm = "<span class='bg-success'>&nbsp;";
@@ -179,25 +192,11 @@ class assetRequestsTable extends DbTable{
             $indicatorIfApproverIsFm = $_SESSION['isPmo'] ? $indicatorIfApproverIsFm : "<span>&nbsp;";
 
             $row['APPROVER'] = $indicatorIfApproverIsFm .  $row['APPROVER_EMAIL'] . "&nbsp;</span><br/><small>" . $row['APPROVED_DATE'] . "</small>";
-//             if($withButtons){
-//                 unset($row['APPROVER_EMAIL']);
-//                 unset($row['APPROVED_DATE']);
-//             }
-
-
-
 
             $requestedDate = new \DateTime($row['REQUESTED_DATE']);
             $sortableRequestedDate =  $requestedDate->format('YmdHis');
 
-
-
             $row['REQUESTOR'] = array('display'=> $row['REQUESTOR_EMAIL'] . "<br/><small>" . $row['REQUESTED_DATE'] . "</small>",'timestamp'=>$sortableRequestedDate);
-//             if($withButtons){
-//                 unset($row['REQUESTOR_EMAIL']);
-//                 unset($row['REQUESTOR_DATE']);
-//             }
-
             $row['FM'] = !empty($row['FM_NOTES']) ? $row['FM_NOTES'] . "<br/><small>" . $row['FM_EMAIL'] . "</small>" : $row['FM_CNUM'];
 
 
