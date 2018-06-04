@@ -757,10 +757,11 @@ this.listenForConfirmedAssetReturned = function(){
 	          columns: [
 	                      { "data": "INCLUDED" , "defaultContent": "", "width":"5%" },
 	                      { "data": "REFERENCE" ,"defaultContent": "", "width":"5%" },
-	                      { "data": "PERSON" ,"defaultContent": "", "width":"30%" },
+	                      { "data": "ORDERIT_NUMBER" ,"defaultContent": "", "width":"15%" },
+	                      { "data": "PERSON" ,"defaultContent": "", "width":"20%" },
 	                      { "data": "ASSET","defaultContent": "", "width":"20%"},
 	                      { "data": "PRIMARY_UID","defaultContent": "", "width":"20"},
-	                      { "data": "SECONDARY_UID","defaultContent": "", "width":"20%"}
+	                      { "data": "SECONDARY_UID","defaultContent": "", "width":"15%"}
 	                  ],
 
 	          autoWidth: false,
