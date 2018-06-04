@@ -254,9 +254,9 @@ class assetRequestsTable extends DbTable{
             $returnedButton = $returnable && $status!= assetRequestRecord::$STATUS_RETURNED ? $returnedButton : null;
 
 
-            $row['ASSET'] =  ($returnable && $row['REQUEST_RETURN']!='Yes' ) ? $returnedButton . "&nbsp;<i>" .  $asset . "(Return/Remove)</i>" : $asset;
+//             $row['ASSET'] =  ($returnable && $row['REQUEST_RETURN']!='Yes' ) ? $returnedButton . "&nbsp;<i>" .  $asset . "(Return/Remove)</i>" : $asset;
 
-            $row['ASSET'] .= $row['REQUEST_RETURN']=='Yes' ? "&nbsp;<small>(Return Request)</small>" : "";
+//             $row['ASSET'] .= $row['REQUEST_RETURN']=='Yes' ? "&nbsp;<small>(Return Request)</small>" : "";
 
             $row['JUSTIFICATION'] .= "<hr/>" . $row['COMMENT'];
 
