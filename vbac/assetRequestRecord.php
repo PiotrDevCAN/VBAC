@@ -333,20 +333,21 @@ class assetRequestRecord extends DbRecord {
 	        <!-- Modal content-->
     		<div class="modal-content">
       			<div class="modal-header">
-        		   <h4 class="modal-title">Contractor ID (CT ID)</h4>
+        		   <h4 class="modal-title">Contractor ID (CT ID) - LBG ID(7 Digits)</h4>
       			</div>
       			<div class="modal-body" >
       			<h1 class='text-center' style='font-size:56px;background-color:red;color:white'>STOP</h1>
-        		<p>Before requests can be made on Order IT, the individual needs to have a Contractor ID (CT ID).</p>
-        		<p>We do not have a record of the CT ID for:</p>
+        		<p>Before requests can be made on Order IT, the individual needs to have a Contractor ID (CT ID/LBG ID).</p>
+        		<p>We do not have a record of the CT ID/LBG ID for:</p>
         		<input id='requesteeName' value='' disabled>
         		<input id='ctbflag' value='' type='hidden'></p></p>
         		<label for='requesteeCtid'><b>Either</b> enter it here</label>
         		<input id='requesteeCtid' value=''></p>
-        		<p><b>Or</b> simply close this Modal to generate a new CT ID request.</p>
-        		<p class='text-center'>Closing this modal without entering a CT ID will cause a request for a CT ID to be generated.</p>
-        		<h3 class='bg-warning text-center'>Please do not close this Modal without entering a CT ID if the individual already has a CT ID.If you are unsure, please check now before proceeding..</h3>
+        		<p><b>Or</b> simply close this Modal to generate a new CT ID/LBG ID request.</p>
+        		<p class='text-center'>Closing this modal without entering a CT ID/LBG ID will cause a request for a CT ID/LBG ID to be generated.</p>
+        		<h3 class='bg-warning text-center'>Please do not close this Modal without entering a CT ID/LBG ID if the individual already has a CT ID/LBG ID.If you are unsure, please check now before proceeding..</h3>
         		<p>Creating duplicate requests introduces significant delay to the process of obtaining Digital Assets</p>
+        		<p><small>The terms CT ID and LBG ID are interchangable and refer to the same thing</small></p>
         		</div>
         		<div class='modal-footer'>
       		  		<button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
