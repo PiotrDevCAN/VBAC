@@ -172,14 +172,13 @@ class assetRequestsTable extends DbTable{
                     $row['STATUS'] =  $approveButton . $statusWithOitStatus;
                     break;
                 case $allowedtoApproveReject && $rejectable && !$approvable:
-                case $allowedtoReject && $rejectable && !$approvable:
+                case $allowedtoReject && $rejectable:
                     $row['STATUS'] =  $rejectButton . $statusWithOitStatus;
                     break;
                 default:
                     $row['STATUS'] =  $statusWithOitStatus;
                 break;
             }
-
 
             $row['PERSON'] = $row['REQUESTEE_NOTES'] . "<br/><small>" . $row['REQUESTEE_EMAIL'] . "</small>";
 
