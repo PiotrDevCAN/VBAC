@@ -21,6 +21,7 @@ class assetRequestsTable extends DbTable{
     private $preparedSetRequestOrderItStatus;
     private $preparedUpdateComment;
     private $preparedGetComment;
+    private $preparedRefToOrderIt;
 
     private static $portalHeaderCells = array('REFERENCE','CT_ID','PERSON','ASSET','STATUS','JUSTIFICATION','REQUESTOR','APPROVER','FM',
         'LOCATION'
@@ -937,8 +938,10 @@ class assetRequestsTable extends DbTable{
     function getUnmappedVarb(){
         $sql = " SELECT distinct ORDERIT_VARB_REF ";
         $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName;
-        $sql .= " WHERE ORDERIT_VARB_REF is not null and ORDERIT_NUMBER is null and STATUS = '". assetRequestRecord::$STATUS_EXPORTED . "' ";
+        $sql .= " WHERE ORDERIT_VARB_REF is not null and ORDERIT_NUMBER is null and STATUS in ('". assetRequestRecord::$STATUS_EXPORTED . "','". assetRequestRecord::$STATUS_RAISED_ORDERIT . "') ";
         $sql .= " ORDER BY ORDERIT_VARB_REF asc ";
+
+        echo $sql;
 
         $rs = db2_exec($_SESSION['conn'], $sql);
 
@@ -1280,7 +1283,7 @@ class assetRequestsTable extends DbTable{
         $data = array();
         while(($row=db2_fetch_assoc($rs))==true){
             $row['INCLUDED'] = "<input type='checkbox' name='request[]' value='" . $row['REFERENCE'] . "'  />";
-            $row['ORDERIT_NUMBER'] = "<input type='text' name='orderit[]' value='" . $row['ORDERIT_NUMBER'] . "'  min='999999' max='9999999' class='form-control'  /> ";
+            $row['ORDERIT_NUMBER'] = "<input type='text' name='orderit[" . $row['REFERENCE'] . "]' value='" . $row['ORDERIT_NUMBER'] . "'  min='999999' max='9999999' class='form-control'  /> ";
             $row['PRIMARY_UID'] = !empty($row['ASSET_PRIMARY_UID_TITLE']) ?  "<input type='text' name='primaryUid[".$row['REFERENCE'] . "]' placeholder='" . $row['ASSET_PRIMARY_UID_TITLE'] . "' value='" . $row['PRIMARY_UID'] . "' />" : null;
             $row['SECONDARY_UID'] = !empty($row['ASSET_SECONDARY_UID_TITLE']) ?  "<input type='text' name='secondaryUid[" .$row['REFERENCE'] . "]' placeholder='" . $row['ASSET_SECONDARY_UID_TITLE'] . "' value='" . $row['SECONDARY_UID'] . "'  />" : null;
 
@@ -1343,6 +1346,75 @@ class assetRequestsTable extends DbTable{
 
         return true;
     }
+
+    function  prepareRefToOrderItMapping(){
+
+        if(!empty($this->preparedRefToOrderIt)){
+            return $this->preparedRefToOrderIt;
+        }
+
+        $sql  = " UPDATE ";
+        $sql .= $_SESSION['Db2Schema'] . "." . $this->tableName ;
+        $sql .= " SET ORDERIT_NUMBER=? ";
+        $sql .= ",STATUS='" . assetRequestRecord::$STATUS_RAISED_ORDERIT . "' ";
+        $sql .= ",ORDERIT_STATUS='" . assetRequestRecord::$STATUS_ORDERIT_RAISED . "' ";
+        $sql .= " WHERE REQUEST_REFERENCE=? ";
+
+        AuditTable::audit("Prepare SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
+
+        $rs = db2_prepare($_SESSION['conn'], $sql);
+
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+
+        $this->preparedRefToOrderIt = $rs;
+
+        return $this->preparedRefToOrderIt;
+    }
+
+
+
+    function saveRefToOrderItMapping($orderIt, $ref){
+
+        $preparedStatement = $this->prepareRefToOrderItMapping();
+        $data = array($orderIt,$ref);
+        $rs = db2_execute($preparedStatement, $data);
+
+        if(!$rs){
+            DbTable::displayErrorMessage($rs,__CLASS__, __METHOD__, $sql);
+            return false;
+        }
+
+//         // Anything they didn't select gets reset for next time.
+
+//         $sql  = " UPDATE ";
+//         $sql .= $_SESSION['Db2Schema'] . "." . $this->tableName ;
+//         $sql .= " SET STATUS='" . assetRequestRecord::$STATUS_APPROVED . "' ";
+//         $sql .= ", ORDERIT_VARB_REF = null ";
+//         $sql .= ", ORDERIT_STATUS = '" . assetRequestRecord::$STATUS_ORDERIT_YET . "' ";
+//         $sql .= ", ORDERIT_NUMBER = null ";
+//         $sql .= " WHERE ORDERIT_VARB_REF='" . db2_escape_string($varb) . "' and STATUS='" . assetRequestRecord::$STATUS_EXPORTED . "' ";
+
+//         AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
+
+//         // echo __METHOD__ . __LINE__ .  $sql;
+
+//         $rs = db2_exec($_SESSION['conn'], $sql);
+
+//         if(!$rs){
+//             DbTable::displayErrorMessage($rs,__CLASS__, __METHOD__, $sql);
+//             return false;
+//         }
+
+//         db2_commit($_SESSION['conn']);
+
+//         db2_autocommit($_SESSION['conn'],$autoCommit);
+
+        return true;
+    }
+
 
     function getAssetRequestsForOrderIt($orderIt){
         $sql = " SELECT REQUEST_REFERENCE as REFERENCE, P.NOTES_ID as PERSON, AR.ASSET_TITLE as ASSET, AR.ORDERIT_STATUS, '' as ACTION, '' as COMMENT ";
