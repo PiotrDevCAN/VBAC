@@ -858,7 +858,7 @@ class assetRequestsTable extends DbTable{
              </div>
              <div class='modal-footer'>
              <div class='col-sm-1'>
-             <button type="button" class="btn btn-xs btn-danger float-left" id='deVarb'  disabled >DeVarb ALL</button>
+             <button type="button" class="btn btn-xs btn-danger float-left" id='deVarb'  disabled >DeVarb Selected</button>
              </div>
              <div class='col-sm-8'>
              </div>
@@ -1262,7 +1262,7 @@ class assetRequestsTable extends DbTable{
 
     function getAssetRequestsForVarb($varb){
         $sql = " SELECT REQUEST_REFERENCE as REFERENCE, P.NOTES_ID as PERSON, AR.ASSET_TITLE as ASSET, AR.CNUM, PRIMARY_UID, SECONDARY_UID, ORDERIT_NUMBER ";
-        $sql .= " ASSET_PRIMARY_UID_TITLE, ASSET_SECONDARY_UID_TITLE ";
+        $sql .= " ,ASSET_PRIMARY_UID_TITLE, ASSET_SECONDARY_UID_TITLE ";
         $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName . " as AR ";
         $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql .= " ON AR.CNUM = P.CNUM ";
@@ -1283,13 +1283,12 @@ class assetRequestsTable extends DbTable{
         $data = array();
         while(($row=db2_fetch_assoc($rs))==true){
             $row['INCLUDED'] = "<input type='checkbox' name='request[]' value='" . $row['REFERENCE'] . "'  />";
-            $row['ORDERIT_NUMBER'] = "<input type='text' name='orderit[" . $row['REFERENCE'] . "]' value='" . $row['ORDERIT_NUMBER'] . "'  min='999999' max='9999999' class='form-control'  /> ";
+            $row['ORDERIT_NUMBER'] = "<input type='text' name='orderit[" . $row['REFERENCE'] . "]' value='" . $row['ORDERIT_NUMBER'] . "'  min='999999' max='9999999' class='form-control'  /> " ;
             $row['PRIMARY_UID'] = !empty($row['ASSET_PRIMARY_UID_TITLE']) ?  "<input type='text' name='primaryUid[".$row['REFERENCE'] . "]' placeholder='" . $row['ASSET_PRIMARY_UID_TITLE'] . "' value='" . $row['PRIMARY_UID'] . "' />" : null;
             $row['SECONDARY_UID'] = !empty($row['ASSET_SECONDARY_UID_TITLE']) ?  "<input type='text' name='secondaryUid[" .$row['REFERENCE'] . "]' placeholder='" . $row['ASSET_SECONDARY_UID_TITLE'] . "' value='" . $row['SECONDARY_UID'] . "'  />" : null;
 
             unset($row['CNUM']);
             $data[] = $row;
-
         }
 
         return $data;
