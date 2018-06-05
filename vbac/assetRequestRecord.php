@@ -345,7 +345,7 @@ class assetRequestRecord extends DbRecord {
         		<input id='requesteeCtid' value=''></p>
         		<p><b>Or</b> simply close this Modal to generate a new CT ID/LBG ID request.</p>
         		<p class='text-center'>Closing this modal without entering a CT ID/LBG ID will cause a request for a CT ID/LBG ID to be generated.</p>
-        		<h3 class='bg-warning text-center'>Please do not close this Modal without entering a CT ID/LBG ID if the individual already has a CT ID/LBG ID.If you are unsure, please check now before proceeding..</h3>
+        		<h4 class='bg-warning text-center'>Please do not close this Modal without entering a valid CTID (LBG ID) if the individual already has one. If you are unsure please check now before proceeding</h4>
         		<p>Creating duplicate requests introduces significant delay to the process of obtaining Digital Assets</p>
         		<p><small>The terms CT ID and LBG ID are interchangable and refer to the same thing</small></p>
         		</div>
