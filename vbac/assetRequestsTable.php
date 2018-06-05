@@ -22,6 +22,7 @@ class assetRequestsTable extends DbTable{
     private $preparedUpdateComment;
     private $preparedGetComment;
     private $preparedRefToOrderIt;
+    private $preparedDevarb;
 
     private static $portalHeaderCells = array('REFERENCE','CT_ID','PERSON','ASSET','STATUS','JUSTIFICATION','REQUESTOR','APPROVER','FM',
         'LOCATION'
@@ -940,8 +941,6 @@ class assetRequestsTable extends DbTable{
         $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName;
         $sql .= " WHERE ORDERIT_VARB_REF is not null and ORDERIT_NUMBER is null and STATUS in ('". assetRequestRecord::$STATUS_EXPORTED . "','". assetRequestRecord::$STATUS_RAISED_ORDERIT . "') ";
         $sql .= " ORDER BY ORDERIT_VARB_REF asc ";
-
-        echo $sql;
 
         $rs = db2_exec($_SESSION['conn'], $sql);
 
@@ -1945,11 +1944,12 @@ class assetRequestsTable extends DbTable{
         db2_autocommit($_SESSION['conn'],$autocommit);
     }
 
+    function prepareDevarb(){
 
-    function deVarb($varbRef = null){
-        if(empty($varbRef)){
-            return false;
+        if(!empty($this->preparedDevarb)){
+            return $this->preparedDevarb;
         }
+
 
         $sql  = " UPDATE ";
         $sql .= $_SESSION['Db2Schema'] . "." . $this->tableName ;
@@ -1957,18 +1957,42 @@ class assetRequestsTable extends DbTable{
         $sql .= ", ORDERIT_VARB_REF = null ";
         $sql .= ", ORDERIT_STATUS = '" . assetRequestRecord::$STATUS_ORDERIT_YET . "' ";
         $sql .= ", ORDERIT_NUMBER = null ";
-        $sql .= " WHERE ORDERIT_VARB_REF='" . db2_escape_string($varbRef) . "' and STATUS='" . assetRequestRecord::$STATUS_EXPORTED . "' ";
+        $sql .= " WHERE REQUEST_REFERENCE= ? ";
 
-        AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        AuditTable::audit("Prepare SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>prepared sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
+
+        $rs = db2_prepare($_SESSION['conn'], $sql);
+
+
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+
+        $this->preparedDevarb = $rs;
+        return $this->preparedDevarb;
+
+    }
+
+
+    function deVarb($requestRef = null){
+        if(empty($requestRef)){
+            return false;
+        }
+
+        $preparedStmt = $this->prepareDevarb();
+        $data = array($requestRef);
+
+        AuditTable::audit("Devarb:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>Devarb:" . $requestRef,AuditTable::RECORD_TYPE_DETAILS);
+
+        $rs = db2_execute($preparedStmt,$data);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return FALSE;
         }
 
-        return;
-
+        return true;
       }
 
 

@@ -347,16 +347,16 @@ this.listenForReportShowUid = function(){
 	  $(document).on('click','#deVarb', function(e){
 		  $('#deVarb').addClass('spinning');
 		  $('#deVarb').attr('disabled',true);
-		  if(!confirm('This will remove ALL the requests from the VARB, please confirm that is what you want to do')){
+		  if(!confirm('This will remove SELECTED requests from the VARB, please confirm that is what you want to do')){
 			  $('#deVarb').removeClass('spinning');
 			  $('#deVarb').attr('disabled',false);
 			  return false;
 		  }
-		  var varbRef = $('#unmappedVarb').val();
+		  var formData = $('#mapVarbToOrderItForm').serialize();
 	      $.ajax({
 		        url: "ajax/deVarb.php",
 		        type: 'POST',
-		        data:{varbref:varbRef},
+		        data:formData,
 		        success: function(result){
 		        	var resultObj = JSON.parse(result);
 			    	// assetPortal.table.ajax.reload();
@@ -429,13 +429,14 @@ this.listenForReportShowUid = function(){
 		        	var resultObj = JSON.parse(result);
 		        	$('#mapVarbToOrderItModal .modal-body').html('');
 		        	$('#mapVarbToOrderItModal').modal('hide');
+		  		    $('#saveMapVarbToOrderIT').removeClass('spinning');
 
 		        }
 	    	  });
 	      } else {
 	    	  alert('Form is not valid, please correct');
+	    	  $('#saveMapVarbToOrderIT').removeClass('spinning');
 	      }
-		  $('#saveMapVarbToOrderIT').removeClass('spinning');
 		  assetPortal.table.ajax.reload();
 		  AssetPortal.countRequestsForPortal();
 	  });
