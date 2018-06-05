@@ -883,6 +883,7 @@ class assetRequestsTable extends DbTable{
 
     function mapVarbToOrderITForm(){
         $unmappedVarb = $this->getUnmappedVarb();
+        $unmappedRef  = $this->getUnmappedRef();
         ?>
         <form id='mapVarbToOrderItForm'  class="form-horizontal"
         	onsubmit="return false;">
@@ -894,11 +895,10 @@ class assetRequestsTable extends DbTable{
 
 		<div class="panel-body">
         	<div class='form-group required'>
-        		<div class='col-sm-5'>
+        		<div class='col-sm-3'>
                 <select class='form-control select select2 '
                 			  id='unmappedVarb'
                               name='unmappedVarb'
-                              required
                       >
                     <option value=''></option>
                     <?php
@@ -908,8 +908,21 @@ class assetRequestsTable extends DbTable{
                         ?>
 				</select>
             	</div>
-         		<div class='col-sm-2 align-middle'>
-         		<h4 class='text-center align-middle'>Maps to Order IT</h4>
+            	<div class='col-sm-3'>
+                <select class='form-control select select2 '
+                			  id='unmappedRef'
+                              name='unmappedRef'
+                      >
+                    <option value=''></option>
+                    <?php
+                    foreach ($unmappedRef as $ref){
+                            ?><option value='<?=trim($ref);?>'><?=$ref?></option><?php
+                        };
+                        ?>
+				</select>
+            	</div>
+<!--          		<div class='col-sm-2 align-middle'> -->
+<!--          		<h4 class='text-center align-middle'>Maps to Order IT</h4> -->
          		</div>
 <!--          		<div class='col-sm-5'> -->
 <!--         			<input type="number" name='ORDERIT_NUMBER' id=orderItNumber' placeholder="Order IT Number" min="999999" max="9999999" class='form-control' required > -->
@@ -921,7 +934,7 @@ class assetRequestsTable extends DbTable{
         	<div class='form-group required'>
         	<div class='col-sm-12'>
         		<table class='table table-striped table-bordered ' cellspacing='0' width='90%' id='requestsWithinVarb'>
-        		<thead><tr><th>Inc</th><th>Ref</th><th>Order IT</th><th>Requestee</th><th>Asset</th><th>Primary UID</th><th>Secondary UID</th></tr></thead>
+        		<thead><tr><th>Devarb</th><th>Ref</th><th>Order IT</th><th>Requestee</th><th>Asset</th><th>Primary UID</th><th>Secondary UID</th></tr></thead>
         		<tbody>
         		</tbody>
         		</table>
@@ -957,6 +970,69 @@ class assetRequestsTable extends DbTable{
 
     }
 
+    function getUnmappedref(){
+        $sql = " SELECT distinct REQUEST_REFERENCE ";
+        $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql .= " WHERE ORDERIT_VARB_REF is not null and ORDERIT_NUMBER is null and STATUS in ('". assetRequestRecord::$STATUS_EXPORTED . "','". assetRequestRecord::$STATUS_RAISED_ORDERIT . "') ";
+        $sql .= " ORDER BY REQUEST_REFERENCE asc ";
+
+        $rs = db2_exec($_SESSION['conn'], $sql);
+
+        if(!$rs){
+            DbTable::displayErrorMessage($rs,__CLASS__, __METHOD__, $sql);
+            return false;
+        }
+
+        while(($row=db2_fetch_assoc($rs))==true){
+            $data[]=$row['REQUEST_REFERENCE'];
+        }
+        return $data;
+
+    }
+
+    function getMappedVarb(){
+        $sql = " SELECT distinct ORDERIT_VARB_REF ";
+        $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql .= " WHERE ORDERIT_VARB_REF is not null and ORDERIT_NUMBER is not null ";
+        $sql .= " ORDER BY ORDERIT_VARB_REF asc ";
+
+        $rs = db2_exec($_SESSION['conn'], $sql);
+
+        if(!$rs){
+            DbTable::displayErrorMessage($rs,__CLASS__, __METHOD__, $sql);
+            return false;
+        }
+
+
+        while(($row=db2_fetch_assoc($rs))==true){
+            $data[]=$row['ORDERIT_VARB_REF'];
+        }
+        return $data;
+
+    }
+
+    function getMappedref(){
+        $sql = " SELECT distinct REQUEST_REFERENCE ";
+        $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql .= " WHERE ORDERIT_NUMBER is not null ";
+        $sql .= " ORDER BY REQUEST_REFERENCE asc ";
+
+        $rs = db2_exec($_SESSION['conn'], $sql);
+
+        if(!$rs){
+            DbTable::displayErrorMessage($rs,__CLASS__, __METHOD__, $sql);
+            return false;
+        }
+
+        while(($row=db2_fetch_assoc($rs))==true){
+            $data[]=$row['REQUEST_REFERENCE'];
+        }
+        return $data;
+
+    }
+
+
+
     function setOitStatusModal(){
         ?>
        <!-- Modal -->
@@ -991,6 +1067,8 @@ class assetRequestsTable extends DbTable{
         $loader = new Loader();
         $restrictToActiveOrderIT = " ORDERIT_STATUS in ('" . assetRequestRecord::$STATUS_ORDERIT_RAISED . "') ";
         $allOrderIt = $loader->load('ORDERIT_NUMBER',allTables::$ASSET_REQUESTS,$restrictToActiveOrderIT,true,'desc');
+        $mappedVarb = $this->getMappedVarb();
+        $mappedRef  = $this->getMappedRef();
         ?>
         <form id='setOrderItStatusForm'  class="form-horizontal"
         	onsubmit="return false;">
@@ -1002,7 +1080,7 @@ class assetRequestsTable extends DbTable{
 
 		<div class="panel-body">
         	<div class='form-group required'>
-        		<div class='col-sm-5'>
+        		<div class='col-sm-3'>
                 <select class='form-control select select2 '
                 			  id='orderit'
                               name='orderit'
@@ -1016,6 +1094,37 @@ class assetRequestsTable extends DbTable{
                         ?>
 				</select>
             	</div>
+            	<div class='col-sm-3'>
+                <select class='form-control select select2 '
+                			  id='mappedVarb'
+                              name='mappedVarb'
+                      >
+                    <option value=''></option>
+                    <?php
+                    foreach ($mappedVarb as $varb){
+                            ?><option value='<?=trim($varb);?>'><?=$varb?></option><?php
+                        };
+                        ?>
+				</select>
+            	</div>
+
+
+
+            	<div class='col-sm-3'>
+                <select class='form-control select select2 '
+                			  id='mappedRef'
+                              name='mappedRef'
+                      >
+                    <option value=''></option>
+                    <?php
+                    foreach ($mappedRef as $ref){
+                            ?><option value='<?=trim($ref);?>'><?=$ref?></option><?php
+                        };
+                        ?>
+				</select>
+            	</div>
+
+
          		<div class='col-sm-7'>
          		</div>
         	</div>
@@ -1259,7 +1368,10 @@ class assetRequestsTable extends DbTable{
 
 
 
-    function getAssetRequestsForVarb($varb){
+    function getAssetRequestsForVarb($varb,$ref){
+
+
+
         $sql = " SELECT REQUEST_REFERENCE as REFERENCE, P.NOTES_ID as PERSON, AR.ASSET_TITLE as ASSET, AR.CNUM, PRIMARY_UID, SECONDARY_UID, ORDERIT_NUMBER ";
         $sql .= " ,ASSET_PRIMARY_UID_TITLE, ASSET_SECONDARY_UID_TITLE ";
         $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName . " as AR ";
@@ -1268,7 +1380,9 @@ class assetRequestsTable extends DbTable{
         $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$REQUESTABLE_ASSET_LIST . " as RAL ";
         $sql .= " ON RAL.ASSET_TITLE = AR.ASSET_TITLE ";
 
-        $sql .= " WHERE ORDERIT_VARB_REF='" . db2_escape_string($varb) . "' ";
+        $sql .=  " WHERE 1=1 " ;
+        $sql .= !empty($varb) ? " AND ORDERIT_VARB_REF='" . db2_escape_string($varb) . "' " : null;
+        $sql .= !empty($ref) ? " AND REQUEST_REFERENCE='" . db2_escape_string($ref) . "' " : null;
 
         AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
@@ -1414,12 +1528,15 @@ class assetRequestsTable extends DbTable{
     }
 
 
-    function getAssetRequestsForOrderIt($orderIt){
-        $sql = " SELECT REQUEST_REFERENCE as REFERENCE, P.NOTES_ID as PERSON, AR.ASSET_TITLE as ASSET, AR.ORDERIT_STATUS, '' as ACTION, '' as COMMENT ";
+    function getAssetRequestsForOrderIt($orderIt,$varb,$ref){
+        $sql = " SELECT REQUEST_REFERENCE as REFERENCE, P.NOTES_ID as PERSON, AR.ASSET_TITLE as ASSET, AR.ORDERIT_STATUS, '' as ACTION, '' as COMMENT, ORDERIT_NUMBER, ORDERIT_VARB_REF ";
         $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName . " as AR ";
         $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql .= " ON AR.CNUM = P.CNUM ";
-        $sql .= " WHERE ORDERIT_NUMBER='" . db2_escape_string($orderIt) . "' ";
+        $sql .= " WHERE 1=1 " ;
+        $sql .= !empty($orderIt) ? " AND ORDERIT_NUMBER='" . db2_escape_string($orderIt) . "' " : null;
+        $sql .= !empty($varb) ? " AND ORDERIT_VARB_REF='" . db2_escape_string($varb) . "' " : null;
+        $sql .= !empty($ref) ? " AND REQUEST_REFERENCE='" . db2_escape_string($ref) . "' " : null;
 
         AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
@@ -1523,6 +1640,13 @@ class assetRequestsTable extends DbTable{
             }
 
             $row['COMMENT'] = '<div class="form-check"><textarea class="form-check-input" style="min-width: 100%" name=\'comment['. $row['REFERENCE'] . "]'  id=\'comment[". $row['REFERENCE'] . "]'" . " ></textarea></div>";
+
+            $row['REFERENCE'] = "<small>" . $row['ORDERIT_NUMBER'] . ":" . $row['REFERENCE'] . "<br/>" . $row['ORDERIT_VARB_REF'] . "</small>";
+            $row['PERSON'] = "<small>" . $row['PERSON'] . "</small>";
+
+            unset($row['ORDERIT_NUMBER']);
+            unset($row['ORDERIT_VARB_REF']);
+
 
             $data[] = $row;
         }

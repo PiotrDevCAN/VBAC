@@ -395,9 +395,22 @@ this.listenForReportShowUid = function(){
 	  $('#setOitStatusModal').on('shown.bs.modal',function(){
 			$('#orderit').select2({
 		         placeholder:"Select Order IT",
+		         allowClear:true,
 		         });
+
+			$('#mappedVarb').select2({
+		         placeholder:"Select VARB",
+		         allowClear:true,
+		         });
+			$('#mappedRef').select2({
+		         placeholder:"Select Request Reference",
+		         allowClear:true,
+		         });
+
 			AssetPortal.populateRequestTableForOrderIt();
 			AssetPortal.listenForOrderItSelected();
+			AssetPortal.listenForMappedVarbSelected();
+			AssetPortal.listenForMappedRefSelected();
 
 	  });
   }
@@ -408,6 +421,18 @@ this.listenForReportShowUid = function(){
 	  console.log($('#orderit'));
 	  $('#orderit').on('select2:select', function (e) {
 		  console.log('event triggered');
+		  assetPortal.requestsWithStatus.ajax.reload();
+		});
+  }
+
+  this.listenForMappedVarbSelected = function(){
+	  $('#mappedVarb').on('select2:select', function (e) {
+		  assetPortal.requestsWithStatus.ajax.reload();
+		});
+  }
+
+  this.listenForMappedRefSelected = function(){
+	  $('#mappedRef').on('select2:select', function (e) {
 		  assetPortal.requestsWithStatus.ajax.reload();
 		});
   }
@@ -507,8 +532,12 @@ this.listenForSaveOrderItStatus = function(){
 			$('#unmappedVarb').select2({
 		         placeholder:"Select VARB Reference",
 		         });
+			$('#unmappedRef').select2({
+		         placeholder:"Select Request Reference",
+		         });
 			AssetPortal.populateRequestTableForVarb();
 			AssetPortal.listenForVarbSelectedForMapping();
+			AssetPortal.listenForRefSelectedForMapping();
 
 	  });
   }
@@ -517,6 +546,14 @@ this.listenForSaveOrderItStatus = function(){
   this.listenForVarbSelectedForMapping = function(){
 	  console.log('setup listener');
 	  $('#unmappedVarb').off('select2:select.varb').on('select2:select.varb', function (e) {
+		  assetPortal.varbRequestTable.ajax.reload();
+		  $('#deVarb').attr('disabled',false);
+		});
+  }
+
+  this.listenForRefSelectedForMapping = function(){
+	  console.log('setup listener');
+	  $('#unmappedRef').off('select2:select.varb').on('select2:select.varb', function (e) {
 		  assetPortal.varbRequestTable.ajax.reload();
 		  $('#deVarb').attr('disabled',false);
 		});
@@ -752,7 +789,9 @@ this.listenForConfirmedAssetReturned = function(){
 	              type: 'POST',
 	              data: function ( d ) {
 	            	  var varb = $('#unmappedVarb').find(':selected').val();
-	            	  var varbObject = { 'varb' : varb };
+	            	  var ref  = $('#unmappedRef').find(':selected').val();
+	            	  var varbObject = { 'varb' : varb,
+	            			  			  'ref' : ref };
 	            	  return varbObject; }
 	          		}	,
 	          columns: [
@@ -773,7 +812,7 @@ this.listenForConfirmedAssetReturned = function(){
 	          pageLength: 20,
 	          order: [[ 1, "asc" ]],
 	          language: {
-	        	    "emptyTable": "Please select VARB"
+	        	    "emptyTable": "Please select VARB or Request Reference"
 	          		},
 	          dom: 'Bfrtip',
 //		      colReorder: true,
@@ -790,7 +829,12 @@ this.listenForConfirmedAssetReturned = function(){
 	              type: 'POST',
 	              data: function ( d ) {
 	            	  var orderit = $('#orderit').find(':selected').val();
-	            	  var oitObject = { 'orderit' : orderit };
+	            	  var varb = $('#mappedVarb').find(':selected').val();
+	            	  var ref  = $('#mappedRef').find(':selected').val();
+
+	            	  var oitObject = { 'orderit' : orderit,
+	            			  			'varb' : varb,
+	            			  			'ref'  : ref };
 	            	  return oitObject; }
 	              },
 
