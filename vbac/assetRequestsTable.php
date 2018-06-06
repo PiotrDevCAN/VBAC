@@ -1084,7 +1084,6 @@ class assetRequestsTable extends DbTable{
                 <select class='form-control select select2 '
                 			  id='orderit'
                               name='orderit'
-                              required
                       >
                     <option value=''></option>
                     <?php
@@ -1132,7 +1131,7 @@ class assetRequestsTable extends DbTable{
         	<div class='form-group required'>
         	<div class='col-sm-12'>
         		<table class='table table-striped table-bordered ' cellspacing='0' width='90%' id='requestsWithStatus'>
-        		<thead><tr><th>Ref</th><th>Person</th><th>Asset</th><th>OrderIT<br/>Status</th><th>Action</th><th>Comment</th></tr></thead>
+        		<thead><tr><th>Ref</th><th>Person</th><th>Asset</th><th>vbac<br/>Status</th><th>Order IT<br/>Status</th><th>Primary UID</th><th>Comment</th></tr></thead>
         		<tbody>
         		</tbody>
         		</table>
@@ -1370,9 +1369,7 @@ class assetRequestsTable extends DbTable{
 
     function getAssetRequestsForVarb($varb,$ref){
 
-
-
-        $sql = " SELECT REQUEST_REFERENCE as REFERENCE, P.NOTES_ID as PERSON, AR.ASSET_TITLE as ASSET, AR.CNUM, PRIMARY_UID, SECONDARY_UID, ORDERIT_NUMBER ";
+        $sql = " SELECT REQUEST_REFERENCE as REFERENCE, P.NOTES_ID as PERSON, AR.ASSET_TITLE as ASSET, AR.CNUM, PRIMARY_UID, SECONDARY_UID, ORDERIT_NUMBER, P.CT_ID ";
         $sql .= " ,ASSET_PRIMARY_UID_TITLE, ASSET_SECONDARY_UID_TITLE ";
         $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName . " as AR ";
         $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
@@ -1397,7 +1394,14 @@ class assetRequestsTable extends DbTable{
         while(($row=db2_fetch_assoc($rs))==true){
             $row['INCLUDED'] = "<input type='checkbox' name='request[]' value='" . $row['REFERENCE'] . "'  />";
             $row['ORDERIT_NUMBER'] = "<input type='text' name='orderit[" . $row['REFERENCE'] . "]' value='" . $row['ORDERIT_NUMBER'] . "'  min='999999' max='9999999' class='form-control'  /> " ;
-            $row['PRIMARY_UID'] = !empty($row['ASSET_PRIMARY_UID_TITLE']) ?  "<input type='text' name='primaryUid[".$row['REFERENCE'] . "]' placeholder='" . $row['ASSET_PRIMARY_UID_TITLE'] . "' value='" . $row['PRIMARY_UID'] . "' />" : null;
+
+            if(trim($row['ASSET'])=='LBG Email' && empty(trim($row['PRIMARY_UID'])) && !empty(trim($row['CT_ID']))){
+                $primaryUid = trim($row['CT_ID']) . "@lloydsbanking.com";
+            } else {
+                $primaryUid = trim($row['PRIMARY_UID']);
+            }
+
+            $row['PRIMARY_UID'] = !empty($row['ASSET_PRIMARY_UID_TITLE']) ?  "<input type='text' name='primaryUid[".$row['REFERENCE'] . "]' placeholder='" . $row['ASSET_PRIMARY_UID_TITLE'] . "' value='" . $primaryUid . "' />" : null;
             $row['SECONDARY_UID'] = !empty($row['ASSET_SECONDARY_UID_TITLE']) ?  "<input type='text' name='secondaryUid[" .$row['REFERENCE'] . "]' placeholder='" . $row['ASSET_SECONDARY_UID_TITLE'] . "' value='" . $row['SECONDARY_UID'] . "'  />" : null;
 
             unset($row['CNUM']);
@@ -1529,10 +1533,14 @@ class assetRequestsTable extends DbTable{
 
 
     function getAssetRequestsForOrderIt($orderIt,$varb,$ref){
-        $sql = " SELECT REQUEST_REFERENCE as REFERENCE, P.NOTES_ID as PERSON, AR.ASSET_TITLE as ASSET, AR.ORDERIT_STATUS, '' as ACTION, '' as COMMENT, ORDERIT_NUMBER, ORDERIT_VARB_REF ";
+        $sql = " SELECT REQUEST_REFERENCE as REFERENCE, P.NOTES_ID as PERSON, AR.ASSET_TITLE as ASSET,AR.STATUS as STATUS,  AR.ORDERIT_STATUS, '' as ACTION, '' as COMMENT, ORDERIT_NUMBER, ORDERIT_VARB_REF, ASSET_PRIMARY_UID_TITLE, P.CT_ID, PRIMARY_UID ";
         $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName . " as AR ";
         $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql .= " ON AR.CNUM = P.CNUM ";
+        $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$REQUESTABLE_ASSET_LIST . " as RAL ";
+        $sql .= " ON AR.ASSET_TITLE = RAL.ASSET_TITLE ";
+
+
         $sql .= " WHERE 1=1 " ;
         $sql .= !empty($orderIt) ? " AND ORDERIT_NUMBER='" . db2_escape_string($orderIt) . "' " : null;
         $sql .= !empty($varb) ? " AND ORDERIT_VARB_REF='" . db2_escape_string($varb) . "' " : null;
@@ -1549,6 +1557,7 @@ class assetRequestsTable extends DbTable{
 
         $data = array();
         while(($row=db2_fetch_assoc($rs))==true){
+
             $status = trim($row['ORDERIT_STATUS']);
             switch ($status) {
                 case assetRequestRecord::$STATUS_ORDERIT_APPROVED:
@@ -1641,12 +1650,25 @@ class assetRequestsTable extends DbTable{
 
             $row['COMMENT'] = '<div class="form-check"><textarea class="form-check-input" style="min-width: 100%" name=\'comment['. $row['REFERENCE'] . "]'  id=\'comment[". $row['REFERENCE'] . "]'" . " ></textarea></div>";
 
-            $row['REFERENCE'] = "<small>" . $row['ORDERIT_NUMBER'] . ":" . $row['REFERENCE'] . "<br/>" . $row['ORDERIT_VARB_REF'] . "</small>";
+            $reference = trim($row['REFERENCE']);
+            $row['REFERENCE'] = "<small>" . trim($row['ORDERIT_NUMBER']) . ":" . $reference . "<br/>" . $row['ORDERIT_VARB_REF'] . "</small>";
             $row['PERSON'] = "<small>" . $row['PERSON'] . "</small>";
+
+
+
+            if(trim($row['ASSET'])=='LBG Email' && empty(trim($row['PRIMARY_UID'])) && !empty(trim($row['CT_ID']))){
+                $primaryUid = trim($row['CT_ID']) . "@lloydsbanking.com";
+            } else {
+                $primaryUid = trim($row['PRIMARY_UID']);
+            }
+
+            $row['PRIMARY_UID'] = !empty(trim($row['ASSET_PRIMARY_UID_TITLE'])) ?  "<input type='text' name='primaryUid[".$reference. "]' placeholder='" . trim($row['ASSET_PRIMARY_UID_TITLE']) . "' value='" . $primaryUid . "' />" : null;
+            $row['STATUS'] = "<small>" . trim($row['STATUS']) . "</small>";
 
             unset($row['ORDERIT_NUMBER']);
             unset($row['ORDERIT_VARB_REF']);
-
+            unset($row['ORDERIT_STATUS']);
+            unset($row['CT_ID']);
 
             $data[] = $row;
         }

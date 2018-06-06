@@ -842,8 +842,9 @@ this.listenForConfirmedAssetReturned = function(){
 	                      { "data": "REFERENCE" ,"defaultContent": "", "width":"5%" },
 	                      { "data": "PERSON" ,"defaultContent": "", "width":"5%" },
 	                      { "data": "ASSET","defaultContent": "", "width":"15%"},
-	                      { "data": "ORDERIT_STATUS","defaultContent": "", "width":"15%"},
-	                      { "data": "ACTION","defaultContent": "", "width":"30%"},
+	                      { "data": "STATUS","defaultContent": "", "width":"15%"},
+	                      { "data": "ACTION","defaultContent": "", "width":"20%"},
+	                      { "data": "PRIMARY_UID","defaultContent": "", "width":"10%"},
 	                      { "data": "COMMENT","defaultContent": "", "width":"30%"}
 	                  ],
 
@@ -859,7 +860,7 @@ this.listenForConfirmedAssetReturned = function(){
 	          pageLength: 20,
 	          order: [[ 1, "asc" ]],
 	          language: {
-	        	    "emptyTable": "Please select Order IT"
+	        	    "emptyTable": "Please select Order IT/Varb or Request Reference"
 	          		},
 	          dom: 'Bfrtip',
 //		      colReorder: true,
