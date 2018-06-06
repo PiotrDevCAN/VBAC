@@ -1859,6 +1859,7 @@ class assetRequestsTable extends DbTable{
         $sql  = " UPDATE ";
         $sql .= $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS;
         $sql .= " SET STATUS='" . db2_escape_string($status) . "' ";
+        $sql .= !empty($orderItStatus) ? " ,ORDERIT_STATUS='" . db2_escape_string($orderItStatus) . "' " : null ;
         $sql .= !empty($newComment) ? ", COMMENT='" . db2_escape_string(substr($newComment,0,500)) . "' " : null;
         $sql .= trim($status)==assetRequestRecord::$STATUS_APPROVED ? ", APPROVER_EMAIL='" . $_SESSION['ssoEmail'] . "' , APPROVED = current timestamp " : null;
         $sql .= trim($status)==assetRequestRecord::$STATUS_RETURNED ? ", DATE_RETURNED = DATE('" . db2_escape_string($dateReturned). "') " : null;
