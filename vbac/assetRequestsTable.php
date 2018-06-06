@@ -1679,7 +1679,7 @@ class assetRequestsTable extends DbTable{
 
 
 
-    function setRequestsOrderItStatus($reference, $orderItStatus, $comment){
+    function setRequestsOrderItStatus($reference, $orderItStatus, $comment=null){
 
 //         $sql  = " UPDATE ";
 //         $sql .= $_SESSION['Db2Schema'] . "." . $this->tableName ;
