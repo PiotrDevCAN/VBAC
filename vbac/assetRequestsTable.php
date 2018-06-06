@@ -83,7 +83,7 @@ class assetRequestsTable extends DbTable{
         $sql .=  $predicate;
 
 
-        AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
+    //    AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
         $rs = db2_exec($_SESSION['conn'],$sql);
 
         if(!$rs){
@@ -934,7 +934,7 @@ class assetRequestsTable extends DbTable{
         	<div class='form-group required'>
         	<div class='col-sm-12'>
         		<table class='table table-striped table-bordered ' cellspacing='0' width='90%' id='requestsWithinVarb'>
-        		<thead><tr><th>Devarb</th><th>Ref</th><th>Order IT</th><th>Requestee</th><th>Asset</th><th>Primary UID</th><th>Secondary UID</th></tr></thead>
+        		<thead><tr><th>Devarb</th><th>Ref</th><th>Order IT</th><th>Requestee</th><th>Asset</th><th>CT ID</th></tr></thead>
         		<tbody>
         		</tbody>
         		</table>
@@ -1369,7 +1369,7 @@ class assetRequestsTable extends DbTable{
 
     function getAssetRequestsForVarb($varb,$ref){
 
-        $sql = " SELECT REQUEST_REFERENCE as REFERENCE, P.NOTES_ID as PERSON, AR.ASSET_TITLE as ASSET, AR.CNUM, PRIMARY_UID, SECONDARY_UID, ORDERIT_NUMBER, P.CT_ID ";
+        $sql = " SELECT REQUEST_REFERENCE as REFERENCE, P.NOTES_ID as PERSON, AR.ASSET_TITLE as ASSET, AR.CNUM, PRIMARY_UID, ORDERIT_NUMBER, P.CT_ID ";
         $sql .= " ,ASSET_PRIMARY_UID_TITLE, ASSET_SECONDARY_UID_TITLE ";
         $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName . " as AR ";
         $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
@@ -1395,14 +1395,8 @@ class assetRequestsTable extends DbTable{
             $row['INCLUDED'] = "<input type='checkbox' name='request[]' value='" . $row['REFERENCE'] . "'  />";
             $row['ORDERIT_NUMBER'] = "<input type='text' name='orderit[" . $row['REFERENCE'] . "]' value='" . $row['ORDERIT_NUMBER'] . "'  min='999999' max='9999999' class='form-control'  /> " ;
 
-            if(trim($row['ASSET'])=='LBG Email' && empty(trim($row['PRIMARY_UID'])) && !empty(trim($row['CT_ID']))){
-                $primaryUid = trim($row['CT_ID']) . "@lloydsbanking.com";
-            } else {
-                $primaryUid = trim($row['PRIMARY_UID']);
-            }
-
-            $row['PRIMARY_UID'] = !empty($row['ASSET_PRIMARY_UID_TITLE']) ?  "<input type='text' name='primaryUid[".$row['REFERENCE'] . "]' placeholder='" . $row['ASSET_PRIMARY_UID_TITLE'] . "' value='" . $primaryUid . "' />" : null;
-            $row['SECONDARY_UID'] = !empty($row['ASSET_SECONDARY_UID_TITLE']) ?  "<input type='text' name='secondaryUid[" .$row['REFERENCE'] . "]' placeholder='" . $row['ASSET_SECONDARY_UID_TITLE'] . "' value='" . $row['SECONDARY_UID'] . "'  />" : null;
+            $row['PRIMARY_UID'] = trim($row['ASSET'])=='CT ID' ?  "<input type='text' name='primaryUid[".$row['REFERENCE'] . "]' placeholder='" . $row['ASSET'] . "' value='' />" : null;
+ //           $row['SECONDARY_UID'] = !empty($row['ASSET_SECONDARY_UID_TITLE']) ?  "<input type='text' name='secondaryUid[" .$row['REFERENCE'] . "]' placeholder='" . $row['ASSET_SECONDARY_UID_TITLE'] . "' value='" . $row['SECONDARY_UID'] . "'  />" : null;
 
             unset($row['CNUM']);
             $data[] = $row;
@@ -1623,6 +1617,13 @@ class assetRequestsTable extends DbTable{
                                     <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'rai" value="' . assetRequestRecord::$STATUS_ORDERIT_RAISED. '" >
                                     <label class="form-check-label text-warning" for="radio" id="radio' . $row['REFERENCE'] . 'rai">' . assetRequestRecord::$STATUS_ORDERIT_RAISED. '</label>
                                     </div>';
+
+                    break;
+                case assetRequestRecord::$STATUS_ORDERIT_YET:
+                    $row['ACTION'] = '<div class="form-check">
+                                      <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'xxx" checked disabled value="' .  $status. '" >
+                                      <label class="form-check-label text-primary" for="radio" id="radio' . $row['REFERENCE'] . 'xxx" >' . $status. '</label>
+                                      </div>';
 
                     break;
                 default:
