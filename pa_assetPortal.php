@@ -95,6 +95,8 @@ $(document).ready(function(){
  	AssetPortal.listenForSaveEditUid();
  	AssetPortal.listenForSaveMapping();
  	AssetPortal.listenForSaveOrderItStatus();
+ 	AssetPortal.listenForAddToJustification();
+ 	AssetPortal.listenForSaveAmendedJustification();
  	AssetPortal.listenForAssetRequestApprove();
  	AssetPortal.listenForAssetRequestReject();
  	AssetPortal.listenForAssetRequestApproveRejectToggle();

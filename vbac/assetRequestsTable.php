@@ -106,6 +106,13 @@ class assetRequestsTable extends DbTable{
             $startItalics = $row['USER_CREATED']==assetRequestRecord::$CREATED_USER ? "<i>" : null;
             $endItalics = $row['USER_CREATED']==assetRequestRecord::$CREATED_USER ? "</i>" : null;
 
+            $justificationEditAllowed = $row['STATUS'] == assetRequestRecord::$STATUS_CREATED || $row['STATUS'] == assetRequestRecord::$STATUS_REJECTED;
+
+            $isRequestor = strtolower(trim($row['REQUESTOR_EMAIL'])) == strtolower(trim($_SESSION['ssoEmail']));
+            $isRequestee = strtolower(trim($row['REQUESTEE_EMAIL'])) == strtolower(trim($_SESSION['ssoEmail']));
+            $isApprover  = strtolower(trim($row['APPROVER_EMAIL'])) == strtolower(trim($_SESSION['ssoEmail']));
+
+
             $row['REFERENCE'] =  $startItalics . trim($row['ORDERIT_NUMBER']) . ":" . $reference;
             $row['REFERENCE'] .= !empty($preReq) ? " <==" . $preReq : null;
             $row['REFERENCE'] .= $endItalics;
@@ -260,9 +267,27 @@ class assetRequestsTable extends DbTable{
 
 //             $row['ASSET'] .= $row['REQUEST_RETURN']=='Yes' ? "&nbsp;<small>(Return Request)</small>" : "";
 
+            /*
+             * Allow requestor and approver to add to the Justification Text
+             */
+
+
+            $canAddToJusification = $isApprover || $isRequestor || $isRequestee;
+
+            $justification = trim($row['JUSTIFICATION']);
+
+            $justificationButton = "<button type='button' class='btn btn-default btn-xs btnAddToJustification btn-success' aria-label='Left Align' ";
+            $justificationButton .= "data-reference='" .trim($reference) . "' ";
+            $justificationButton .= "data-justification='" .trim($justification) . "' ";
+            $justificationButton .= "data-toggle='tooltip' data-placement='top' title='Amend Justification'";
+            $justificationButton .= " > ";
+            $justificationButton .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
+            $justificationButton .= " </button> ";
+
+
+
+            $row['JUSTIFICATION'] = $canAddToJusification && $justificationEditAllowed ? $justificationButton . "&nbsp;" . $justification : $justification;
             $row['JUSTIFICATION'] .= "<hr/>" . $row['COMMENT'];
-
-
 
             $data[] = $row;
         }

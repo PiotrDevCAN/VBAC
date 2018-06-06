@@ -576,6 +576,15 @@ this.listenForSaveOrderItStatus = function(){
 },
 
 
+this.listenForAddToJustification  = function(){
+    $(document).on('click','.btnAddToJustification', function(e){
+    	$('#justificationRequestReference').val($(e.target).data('reference'));
+    	$('#justificationText').val($(e.target).data('justification'));
+    	$('#justificationEdit').modal('show');
+    });
+},
+
+
 this.listenForAssetRequestReject  = function(){
     $(document).on('click','.btnAssetRequestReject', function(e){
     	$('#approveRejectRequestReference').val($(e.target).data('reference'));
@@ -592,6 +601,8 @@ this.listenForAssetRequestReject  = function(){
 
     });
 },
+
+
 
 
 
