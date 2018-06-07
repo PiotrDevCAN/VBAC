@@ -18,6 +18,7 @@ function assetPortal() {
 	  $('#countNonPmoForExport').html('**');
   	  $('#countBauForExport').html('**');
 	  $('#countNonBauExport').html('**');
+	  $('#countPmoExported').html('**');
 
 
       $.ajax({
@@ -29,6 +30,7 @@ function assetPortal() {
 	        	$('#countNonPmoForExport').html(resultObj.nonPmoForExport);
 	        	$('#countBauForExport').html(resultObj.bauForExport);
 	        	$('#countNonBauExport').html(resultObj.nonBauForExport);
+	      	    $('#countPmoExported').html(resultObj.pmoExported);
 	        }
       });
   },
@@ -48,8 +50,8 @@ function assetPortal() {
   },
 
 
-  this.initialiseAssetRequestDataTable = function(showAll,pmoRaised){
-	showAll = typeof(showAll) == 'undefined'  ? false : showAll;
+  this.initialiseAssetRequestDataTable = function(showType,pmoRaised){
+	showType = typeof(showType) == 'undefined'  ? 'all' : showType;
 	pmoRaised = typeof(pmoRaised) == 'undefined'  ? true : pmoRaised;
 
 	// Setup - add a text input to each footer cell
@@ -62,7 +64,7 @@ function assetPortal() {
         ajax: {
               url: 'ajax/populateAssetRequestPortal.php',
               type: 'POST',
-              data: {showAll:showAll,
+              data: {show:showType,
             	     pmoRaised:pmoRaised}
           }	,
           columns: [
@@ -169,7 +171,7 @@ function assetPortal() {
   this.listenForReportShowAll = function(){
 	  $(document).on('click','#reportShowAll', function(e){
 		  assetPortal.table.destroy();
-		  AssetPortal.initialiseAssetRequestDataTable(true);
+		  AssetPortal.initialiseAssetRequestDataTable('all');
 		  $('#portalTitle').text('Asset Request Portal - Show All');
 	  });
 },
@@ -177,7 +179,7 @@ function assetPortal() {
   this.listenForReportShowExportable = function(){
 		$(document).on('click','#reportShowExportable', function(e){
 			assetPortal.table.destroy();
-			AssetPortal.initialiseAssetRequestDataTable(false,true);
+			AssetPortal.initialiseAssetRequestDataTable('exportable',true);
 			$('#portalTitle').text('Asset Request Portal - Show Pmo To Raise Requests');
 	  });
 },
@@ -186,8 +188,18 @@ function assetPortal() {
 this.listenForReportShowUserRaised = function(){
 		$(document).on('click','#reportShowUserRaised', function(e){
 			assetPortal.table.destroy();
-			AssetPortal.initialiseAssetRequestDataTable(false,false);
+			AssetPortal.initialiseAssetRequestDataTable('exportable',false);
 			$('#portalTitle').text('Asset Request Portal - Show User Raised Requests');
+	  });
+},
+
+this.listenForReportExported = function(){
+	  console.log('set listener for clicked on exported');
+	  $(document).on('click','#reportShowExported', function(e){
+		  console.log('clicked on exported');
+		  assetPortal.table.destroy();
+		  AssetPortal.initialiseAssetRequestDataTable('exported');
+		  $('#portalTitle').text('Asset Request Portal - Exported');
 	  });
 },
 
@@ -198,7 +210,7 @@ this.listenForReportShowUid = function(){
     	$.fn.dataTableExt.afnFiltering.pop();
 
 		assetPortal.table.destroy();
-		AssetPortal.initialiseAssetRequestDataTable(true);
+		AssetPortal.initialiseAssetRequestDataTable('all');
 
 
     	assetPortal.table.columns().visible(false,false);

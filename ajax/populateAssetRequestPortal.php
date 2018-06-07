@@ -17,11 +17,11 @@ $loader = new Loader();
 // $_SESSION['isPmo']  = !empty($isPmo)  ? true : false;
 // $_SESSION['isPes']  = !empty($isPes)  ? true : false;
 // $_SESSION['isUser'] = !empty($isUser) ? true : false;
-$showAll = !empty($_POST['showAll']) ? $_POST['showAll'] : false;
+$show = !empty($_POST['show']) ? $_POST['show'] : 'all';
 $pmoRaised = !empty($_POST['pmoRaised']) ?$_POST['pmoRaised'] : false;
 
 $pmoRaised = strtolower($pmoRaised)=='true';
-$showAll = $showAll==='true' ? true : false;
+// $showAll = $showAll==='true' ? true : false;
 
 
 $predicate = null;
@@ -43,10 +43,13 @@ switch (true) {
     case $_SESSION['isPmo']:
         echo "is PMO";
         $assetRequestTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
-        $predicate .= $showAll ? null :  " AND (( 1=1 " . $assetRequestTable->predicateForPmoExportableRequest() . " ) ";
-        $predicate .= $showAll ? null :  " OR ( 1=1 " . $assetRequestTable->predicateExportNonPmoRequests() . " )) ";
-        if(!$showAll){
+        if($show=='exportable'){
+            $predicate .= " AND (( 1=1 " . $assetRequestTable->predicateForPmoExportableRequest() . " ) ";
+            $predicate .= " OR ( 1=1 " . $assetRequestTable->predicateExportNonPmoRequests() . " )) ";
             $predicate .= $pmoRaised ?  " AND USER_CREATED='" . assetRequestRecord::$CREATED_PMO . "' " : " AND USER_CREATED='" . assetRequestRecord::$CREATED_USER . "' ";
+        }
+        if($show=='exported'){
+            $predicate .= " AND STATUS='" . assetRequestRecord::$STATUS_EXPORTED . "' ";
         }
         break;
     default:

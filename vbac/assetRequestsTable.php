@@ -542,6 +542,26 @@ class assetRequestsTable extends DbTable{
         return $row['TICKETS'];
     }
 
+    function countRequestsExported(){
+
+        $sql = " SELECT count(*) as tickets ";
+        $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
+
+        $sql .= " WHERE 1=1 ";
+        $sql .= " AND STATUS='" . assetRequestRecord::$STATUS_EXPORTED . "' ";
+
+        $rs2 = db2_exec($_SESSION['conn'],$sql);
+        if(!$rs2){
+            db2_rollback($_SESSION['conn']);
+            DbTable::displayErrorMessage($rs2, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+
+        $row=db2_fetch_assoc($rs2);
+
+        return $row['TICKETS'];
+    }
+
 
 
     function predicateExportNonPmoRequests(){
