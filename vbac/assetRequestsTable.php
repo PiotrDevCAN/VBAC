@@ -278,7 +278,13 @@ class assetRequestsTable extends DbTable{
 
             $justificationButton = "<button type='button' class='btn btn-default btn-xs btnAddToJustification btn-success' aria-label='Left Align' ";
             $justificationButton .= "data-reference='" .trim($reference) . "' ";
-            $justificationButton .= "data-justification='" .trim($justification) . "' ";
+            $justificationButton .= "data-requestee='" .trim($row['PERSON']) . "' ";
+            $justificationButton .= "data-asset='"     .trim($row['ASSET']) . "' ";
+            $justificationButton .= "data-status='"     .trim($status) . "' ";
+
+
+//             $justificationButton .= "data-justification='" .trim($justification) . "' ";
+//             $justificationButton .= "data-comment='" .trim($row['COMMENT']) . "' ";
             $justificationButton .= "data-toggle='tooltip' data-placement='top' title='Amend Justification'";
             $justificationButton .= " > ";
             $justificationButton .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
@@ -663,6 +669,78 @@ class assetRequestsTable extends DbTable{
 	      		<button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
           	</div>
           	<input type=-'hidden' val='' id='approveRejectRequestOrderItStatus' name='approveRejectRequestOrderItStatus' />
+          </form>
+          </div>
+        </div>
+      </div>
+    <?php
+    }
+
+    function justificationEditModal(){
+        ?>
+       <!-- Modal -->
+    <div id="justificationEditModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+          <div class="modal-header">
+             <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Edit Justification</h4>
+          </div>
+          <div class="modal-body" >
+
+          	<form class="form-horizontal" role="form" id='editJustificationForm' onSubmit='return false;' >
+                  <div class="form-group">
+                    <label  class="col-sm-2 control-label"
+                              for="editJustificationRequestReference">Reference</label>
+                    <div class="col-sm-10">
+        				<div class='div-like-input'  id='editJustificationRequestReference' name='editJustificationRequestReference' ></div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label"
+                          for="editJustificationRequestee" >Requestee</label>
+                    <div class="col-sm-10">
+       					<div  class='div-like-input' id='editJustificationRequestee'  name='editJustificationRequestee' ></div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label"
+                          for="editJustificationAssetTitle" >Asset</label>
+                    <div class="col-sm-10">
+          				<div class='div-like-input'  id='editJustificationAssetTitle' name='editJustificationAssetTitle'></div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                     <label  class="col-sm-2 control-label"
+                              for="editJustificationComment">Comment</label>
+                    <div class="col-sm-10">
+						 <div class='div-like-input' id='editJustificationComment' name='editJustificationComment' ></div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                   <label  class="col-sm-2 control-label"
+                              for="editJustificationJustification">Business Justification</label>
+                    <div class="col-sm-10">
+						 <textarea class='form-control justification' rows='4' style='min-width: 100%' id='editJustificationJustification' name='editJustificationJustification' placeholder='Supply business justification here' min='0' max='500' required ></textarea><span disabled>500 characters max</span>
+                    </div>
+                  </div>
+				<input type='hidden' id='editJustificationStatus' name='editJustificationStatus' />
+
+
+
+                </form>
+          </div>
+          <div class='modal-footer'>
+          		<?php
+                $form = new FormClass();
+                $allButtons = null;
+                $confirmButton =  $form->formButton('submit','Submit','editJustificationConfirm',null,'Confirm','btn btn-primary');
+                $allButtons[] = $confirmButton;
+                $form->formBlueButtons($allButtons);
+                $form->formHiddenInput('editJustificationEditor',$_SESSION['ssoEmail'],'editJustificationEditor');
+                ?>
+	      		<button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
+          	</div>
           </form>
           </div>
         </div>
@@ -1974,6 +2052,25 @@ class assetRequestsTable extends DbTable{
         return true;
     }
 
+    function saveJustification($reference, $justification){
+        $justification = trim(substr($justification, 0, 500));
+
+        $sql = " UPDATE ";
+        $sql.= $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql.= " SET BUSINESS_JUSTIFICATION='" . db2_escape_string($justification) . "' ";
+        $sql.= " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' ";
+
+        $rs = db2_exec($_SESSION['conn'], $sql);
+
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+
+        return true;
+    }
+
+
 
 
     function extractForTracker(){
@@ -2060,7 +2157,7 @@ class assetRequestsTable extends DbTable{
     }
 
 
-    function notifyApprovingMgr($approvingMgr){
+    function notifyApprovingMgr(array $approvingMgr){
         $notifyApprovingMgr = "Requests have been created in vBAC that require your approval.<br/>You can access the tool here  <a href='" . $_SERVER['HTTP_HOST'] . "/pa_assetPortal.php'  target='_blank' >vBAC Asset Portal</a>";
 
         \itdq\BlueMail::send_mail($approvingMgr, 'vBAC Approval Required', $notifyApprovingMgr, 'vbacNoReply@uk.ibm.com');

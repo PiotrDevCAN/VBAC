@@ -46,6 +46,7 @@ $assetTable->mapVarbToOrderItModal();
 $assetTable->setOitStatusModal();
 $assetTable->approveRejectModal();
 $assetTable->confirmReturnedModal();
+$assetTable->justificationEditModal();
 
 $isFm   = $_SESSION['isFm']   ? ".not('.accessFm')"   : null;
 $isCdi  = $_SESSION['isCdi']  ? ".not('.accessCdi')"  : null;

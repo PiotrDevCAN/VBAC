@@ -578,10 +578,60 @@ this.listenForSaveOrderItStatus = function(){
 
 this.listenForAddToJustification  = function(){
     $(document).on('click','.btnAddToJustification', function(e){
-    	$('#justificationRequestReference').val($(e.target).data('reference'));
-    	$('#justificationText').val($(e.target).data('justification'));
-    	$('#justificationEdit').modal('show');
+    	var reference = $(e.target).data('reference');
+      	$.ajax({
+	        url: "ajax/getDetailsForEditJustification.php",
+	        type: 'GET',
+	        data: { reference : reference },
+	        success: function(result){
+
+	        	var resultObj = JSON.parse(result);
+	        	console.log(resultObj);
+	        	console.log($(e.target));
+
+	        	$('#editJustificationRequestReference').html($(e.target).data('reference'));
+	        	$('#editJustificationRequestee').html($(e.target).data('requestee'));
+	        	$('#editJustificationAssetTitle').html($(e.target).data('asset'));
+	        	$('#editJustificationStatus').val($(e.target).data('status'));
+
+	        	$('#editJustificationJustification').val(resultObj.justification);
+	        	$('#editJustificationComment').html(resultObj.comment);
+	        	$('#justificationEditModal').modal('show');
+	        }
+	     });
     });
+},
+
+
+this.listenForSaveAmendedJustification = function(){
+	$(document).on('click','#editJustificationConfirm', function(e){
+	    var form = document.getElementById('editJustificationForm');
+	    var formValid = form.checkValidity();
+	    if(formValid){
+			$('#editJustificationConfirm').addClass('spinning');
+			var reference = $('#editJustificationRequestReference').text();
+			var justification = $('#editJustificationJustification').val();
+			var status = $('#editJustificationStatus').val();
+
+			console.log(reference);
+			console.log(justification);
+			console.log(status);
+
+	  	  	$.ajax({
+		        url: "ajax/saveAmendedJustification.php",
+		        type: 'POST',
+		        data: { reference : reference,
+		        	    justification : justification,
+		        	    status : status },
+		        success: function(result){
+		        	var resultObj = JSON.parse(result);
+		        	$('#editJustificationConfirm').removeClass('spinning');
+		        	$('#justificationEditModal').modal('hide');
+		        	assetPortal.table.ajax.reload();
+		        }
+		    });
+	    }
+	});
 },
 
 

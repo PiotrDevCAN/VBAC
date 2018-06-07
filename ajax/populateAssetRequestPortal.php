@@ -48,9 +48,6 @@ switch (true) {
         if(!$showAll){
             $predicate .= $pmoRaised ?  " AND USER_CREATED='" . assetRequestRecord::$CREATED_PMO . "' " : " AND USER_CREATED='" . assetRequestRecord::$CREATED_USER . "' ";
         }
-
-        var_dump($pmoRaised && !$showAll);
-
         break;
     default:
         echo "is default";
