@@ -37,7 +37,7 @@ foreach ($_POST['status'] as $reference => $statusIndicator){
     if($success && trim($statusIndicator)==assetRequestRecord::STATUS_ORDERIT_APPROVED && !empty($_POST['primaryUid'][$reference])){
        $primaryUid = $_POST['primaryUid'][$reference];
         $assetRequestTable->updateUids($reference, trim($primaryUid));
-        $assetRequestsTable->setToProvisionedStatus($reference);
+        $assetRequestTable->setToProvisionedStatus($reference);
         $requestDetails = $assetRequestTable->getCnumAndAssetForReference($reference);
         if($requestDetails){
             $personTable->assetUpdate($requestDetails['cnum'], $requestDetails['assetTitle'], $primaryUid);

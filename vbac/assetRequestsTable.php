@@ -368,6 +368,33 @@ class assetRequestsTable extends DbTable{
 
         $commitState  = db2_autocommit($_SESSION['conn'],DB2_AUTOCOMMIT_OFF);
 
+        // Get the Ref's for this export - so we can timestamp the export.
+
+        $sql = " SELECT REQUEST_REFERENCE ";
+        $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS ;
+        $sql.= " WHERE REQUEST_REFERENCE in ";
+        $sql.= " (SELECT REQUEST_REFERENCE FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR ";
+        $sql.= "  LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$REQUESTABLE_ASSET_LIST . " AS RAL ";
+        $sql.= "  ON RAL.ASSET_TITLE = AR.ASSET_TITLE ";
+        $sql.= "  LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
+        $sql.= "  ON AR.CNUM = P.CNUM ";
+        $sql.= "   WHERE 1=1 ";
+        $sql.= !empty($predicate) ? $predicate : null;
+        $sql.= $this->eligibleForOrderItPredicate($orderItType);
+        $sql.= "   ORDER BY REQUEST_REFERENCE asc ";
+        $sql.= "   FETCH FIRST 20 ROWS ONLY) ";
+
+        $rs = db2_exec($_SESSION['conn'],$sql);
+
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+
+        while (($row=db2_fetch_assoc($rs))==true) {
+            $this->assetRequestEventsTable->logEventForRequest(assetRequestsEventsTable::EVENT_EXPORTED, $row['REQUEST_REFERENCE']);
+        }
+
         $sql =  "UPDATE " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS ;
         $sql .= " SET ORDERIT_VARB_REF = '$nextVarb', STATUS='" . assetRequestRecord::STATUS_EXPORTED . "' ";
         $sql .= " WHERE REQUEST_REFERENCE in ";
@@ -390,7 +417,6 @@ class assetRequestsTable extends DbTable{
         }
 
         $this->lastSql = $sql;
-
 
         $sql = " SELECT ORDERIT_VARB_REF, REQUEST_REFERENCE, ";
         $sql .= " P.CT_ID as CT_ID, ";
@@ -1671,6 +1697,8 @@ class assetRequestsTable extends DbTable{
             DbTable::displayErrorMessage($rs,__CLASS__, __METHOD__, $sql);
             return false;
         }
+
+        $this->assetRequestEventsTable->logEventForRequest(assetRequestsEventsTable::EVENT_ORDERIT_RAISED, $ref);
 
 //         // Anything they didn't select gets reset for next time.
 
