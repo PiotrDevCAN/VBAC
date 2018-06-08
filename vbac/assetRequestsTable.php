@@ -1993,7 +1993,7 @@ class assetRequestsTable extends DbTable{
         \itdq\BlueMail::send_mail(array($emailAddress), 'vBAC Request : ' . $orderItStatus , $message , 'vbacNoReply@uk.ibm.com');
     }
 
-    static function setStatus($reference, $status, $comment=null,$dateReturned=null, $orderItStatus=null){
+    function setStatus($reference, $status, $comment=null,$dateReturned=null, $orderItStatus=null){
 
         if(!empty($comment)){
             $now = new \DateTime();
