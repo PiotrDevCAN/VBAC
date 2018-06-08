@@ -17,6 +17,8 @@ $assetTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
 <button id='reportShowExportable'   class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>PMO To Raise&nbsp;<span class="badge" id='countPmoForExport'>**</span></button>
 <button id='reportShowUserRaised'   class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>User Raised&nbsp;<span class="badge" id='countNonPmoForExport'>**</span></button>
 <button id='reportShowExported'     class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Exported&nbsp;<span class="badge" id='countPmoExported'>**</span></button>
+<button id='reportShowBauRaised'    class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Raised BAU&nbsp;<span class="badge" id='countBauRaised'>**</span></button>
+<button id='reportShowNonBauRaised' class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Raised non-BAU&nbsp;<span class="badge" id='countNonBauRaised'>**</span></button>
 <button id='reportShowUid' 		    class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi accessUser'>Show UID</button>
 &nbsp;
 <button id='exportBauForOrderIt' 	class='btn btn-dark btn-sm accessBasedBtn accessPmo accessCdi'>Export BAU for Order IT&nbsp;<span class="badge" id='countBauForExport'>**</span></button>
@@ -27,10 +29,11 @@ $assetTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
 &nbsp;
 <button id='reportReload'  		class='btn btn-warning btn-sm '>Reload Data</button>
 <button id='reportReset'  		class='btn btn-warning btn-sm '>Reset</button>
-&nbsp;
-<a class='btn btn-sm accessBasedBtn accessPmo accessCdi' href='/dn_tracker.php'><i class="glyphicon glyphicon-download-alt"></i> Tracker</a>
-<a class='btn btn-sm accessBasedBtn accessPmo accessCdi' href='/dn_assetRequestExtract.php'><i class="glyphicon glyphicon-download-alt"></i> Full Extract</a>
-<a class='btn btn-sm accessBasedBtn accessPmo accessCdi' href='/dn_varbTrackingReport.php'><i class="glyphicon glyphicon-download-alt"></i> Varb Tracking</a>
+</div>
+<div class='row'>
+<a class='btn btn-sm btn-link accessBasedBtn accessPmo accessCdi' href='/dn_tracker.php'><i class="glyphicon glyphicon-download-alt"></i> Tracker</a>
+<a class='btn btn-sm btn-link accessBasedBtn accessPmo accessCdi' href='/dn_assetRequestExtract.php'><i class="glyphicon glyphicon-download-alt"></i> Full Extract</a>
+<a class='btn btn-sm btn-link accessBasedBtn accessPmo accessCdi' href='/dn_varbTrackingReport.php'><i class="glyphicon glyphicon-download-alt"></i> Varb Tracking</a>
 </div>
 <div class='row'>
 
@@ -94,6 +97,8 @@ $(document).ready(function(){
  	AssetPortal.listenForReportShowAll();
  	AssetPortal.listenForReportShowExportable();
  	AssetPortal.listenForReportExported();
+ 	AssetPortal.listenForReportBauRaised();
+ 	AssetPortal.listenForReportNonBauRaised();
  	AssetPortal.listenForReportShowUserRaised();
  	AssetPortal.listenForReportShowUid();
  	AssetPortal.listenForEditUid();

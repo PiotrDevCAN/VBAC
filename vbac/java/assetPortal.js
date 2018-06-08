@@ -19,7 +19,8 @@ function assetPortal() {
   	  $('#countBauForExport').html('**');
 	  $('#countNonBauExport').html('**');
 	  $('#countPmoExported').html('**');
-
+	  $('#countBauRaised').html('**');
+	  $('#countNonBauRaised').html('**');
 
       $.ajax({
 	        url: "ajax/countRequestsForPortal.php",
@@ -31,6 +32,8 @@ function assetPortal() {
 	        	$('#countBauForExport').html(resultObj.bauForExport);
 	        	$('#countNonBauExport').html(resultObj.nonBauForExport);
 	      	    $('#countPmoExported').html(resultObj.pmoExported);
+	      	    $('#countBauRaised').html(resultObj.bauRaised);
+	    	    $('#countNonBauRaised').html(resultObj.nonBauRaised);
 	        }
       });
   },
@@ -199,6 +202,23 @@ this.listenForReportExported = function(){
 		  console.log('clicked on exported');
 		  assetPortal.table.destroy();
 		  AssetPortal.initialiseAssetRequestDataTable('exported');
+		  $('#portalTitle').text('Asset Request Portal - Exported');
+	  });
+},
+
+this.listenForReportBauRaised = function(){
+	  $(document).on('click','#reportShowBauRaised', function(e){
+		  assetPortal.table.destroy();
+		  AssetPortal.initialiseAssetRequestDataTable('bauRaised');
+		  $('#portalTitle').text('Asset Request Portal - Exported');
+	  });
+},
+
+this.listenForReportNonBauRaised = function(){
+	  console.log('set listener for clicked on exported');
+	  $(document).on('click','#reportShowNonBauRaised', function(e){
+		  assetPortal.table.destroy();
+		  AssetPortal.initialiseAssetRequestDataTable('nonBauRaised');
 		  $('#portalTitle').text('Asset Request Portal - Exported');
 	  });
 },

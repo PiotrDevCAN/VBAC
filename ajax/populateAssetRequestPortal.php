@@ -4,6 +4,7 @@ use vbac\allTables;
 use vbac\personTable;
 use itdq\Loader;
 use vbac\assetRequestRecord;
+use vbac\personRecord;
 
 set_time_limit(0);
 ob_start();
@@ -43,13 +44,25 @@ switch (true) {
     case $_SESSION['isPmo']:
         echo "is PMO";
         $assetRequestTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
-        if($show=='exportable'){
-            $predicate .= " AND (( 1=1 " . $assetRequestTable->predicateForPmoExportableRequest() . " ) ";
-            $predicate .= " OR ( 1=1 " . $assetRequestTable->predicateExportNonPmoRequests() . " )) ";
-            $predicate .= $pmoRaised ?  " AND USER_CREATED='" . assetRequestRecord::$CREATED_PMO . "' " : " AND USER_CREATED='" . assetRequestRecord::$CREATED_USER . "' ";
-        }
-        if($show=='exported'){
-            $predicate .= " AND STATUS='" . assetRequestRecord::$STATUS_EXPORTED . "' ";
+
+        switch ($show) {
+            case 'exportable':
+                $predicate .= " AND (( 1=1 " . $assetRequestTable->predicateForPmoExportableRequest() . " ) ";
+                $predicate .= " OR ( 1=1 " . $assetRequestTable->predicateExportNonPmoRequests() . " )) ";
+                $predicate .= $pmoRaised ?  " AND USER_CREATED='" . assetRequestRecord::$CREATED_PMO . "' " : " AND USER_CREATED='" . assetRequestRecord::$CREATED_USER . "' ";
+            break;
+            case 'exported':
+                $predicate .= " AND STATUS='" . assetRequestRecord::$STATUS_EXPORTED . "' ";
+                break;
+            case 'bauRaised':
+                $predicate .= " AND ORDERIT_STATUS='" . assetRequestRecord::$STATUS_ORDERIT_RAISED . "' AND P.TT_BAU='BAU' " ;
+                break;
+            case 'nonBauRaised':
+                $predicate .= " AND ORDERIT_STATUS='" . assetRequestRecord::$STATUS_ORDERIT_RAISED . "' AND ( P.TT_BAU!='BAU' or P.TT_BAU is null )  " ;
+                break;
+            default:
+                ;
+            break;
         }
         break;
     default:
