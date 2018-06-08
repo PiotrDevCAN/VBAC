@@ -6,6 +6,7 @@ use itdq\FormClass;
 use itdq\Loader;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use itdq\AuditTable;
+use itdq\DbRecord;
 
 
 class assetRequestsTable extends DbTable{
@@ -45,7 +46,7 @@ class assetRequestsTable extends DbTable{
         $this->assetRequestEventsTable = new assetRequestsEventsTable(allTables::$ASSET_REQUESTS_EVENTS);
     }
 
-    function saveRecord($record,$populatedColumns=true,$nullColumns=true,$commit=true){
+    function saveRecord(DbRecord $record,$populatedColumns=true,$nullColumns=true,$commit=true){
         $created = parent::saveRecord($record,$populatedColumns,$nullColumns,false);
 
         if($created){
@@ -116,16 +117,16 @@ class assetRequestsTable extends DbTable{
             $row = array_map('trim', $preTrimmed);
 
             $userRaised = strtoupper($row['USER_CREATED'])=='YES';
-            $approved   = $row['STATUS'] == assetRequestRecord::$STATUS_APPROVED;
+            $approved   = $row['STATUS'] == assetRequestRecord::STATUS_APPROVED;
 
             $reference = trim($row['REFERENCE']);
             $preReq = !empty(trim($row['PRE_REQ_REQUEST']))  ?  trim($row['PRE_REQ_REQUEST']): null;
             $sortableReference = substr('0000000'.$reference,-6);
 
-            $startItalics = $row['USER_CREATED']==assetRequestRecord::$CREATED_USER ? "<i>" : null;
-            $endItalics = $row['USER_CREATED']==assetRequestRecord::$CREATED_USER ? "</i>" : null;
+            $startItalics = $row['USER_CREATED']==assetRequestRecord::CREATED_USER ? "<i>" : null;
+            $endItalics = $row['USER_CREATED']==assetRequestRecord::CREATED_USER ? "</i>" : null;
 
-            $justificationEditAllowed = $row['STATUS'] == assetRequestRecord::$STATUS_CREATED || $row['STATUS'] == assetRequestRecord::$STATUS_REJECTED;
+            $justificationEditAllowed = $row['STATUS'] == assetRequestRecord::STATUS_CREATED || $row['STATUS'] == assetRequestRecord::STATUS_REJECTED;
 
             $isRequestor = strtolower(trim($row['REQUESTOR_EMAIL'])) == strtolower(trim($_SESSION['ssoEmail']));
             $isRequestee = strtolower(trim($row['REQUESTEE_EMAIL'])) == strtolower(trim($_SESSION['ssoEmail']));
@@ -174,15 +175,15 @@ class assetRequestsTable extends DbTable{
             $allowedtoReject = $withButtons && !$notTheirOwnRecord;
 
             switch (true) {
-                case $status == assetRequestRecord::$STATUS_APPROVED:
+                case $status == assetRequestRecord::STATUS_APPROVED:
                     $rejectable = true;
                     $approvable = false;
                 break;
-                case $status == assetRequestRecord::$STATUS_CREATED:
+                case $status == assetRequestRecord::STATUS_CREATED:
                     $rejectable = true;
                     $approvable = true;
                     break;
-                case $status == assetRequestRecord::$STATUS_REJECTED:
+                case $status == assetRequestRecord::STATUS_REJECTED:
                     $rejectable = false;
                     $approvable = true;
                     break;
@@ -266,11 +267,11 @@ class assetRequestsTable extends DbTable{
             $returnedButton .= " </button> ";
 
             switch (true) {
-                case $status== assetRequestRecord::$STATUS_PROVISIONED:
-                case $orderItStatus== assetRequestRecord::$STATUS_ORDERIT_APPROVED:
+                case $status== assetRequestRecord::STATUS_PROVISIONED:
+                case $orderItStatus== assetRequestRecord::STATUS_ORDERIT_APPROVED:
                     $returnable = true;
                     break;
-                case $row['USER_CREATED'] == assetRequestRecord::$CREATED_USER && $status==assetRequestRecord::$STATUS_RAISED_ORDERIT && $orderItStatus != assetRequestRecord::$STATUS_ORDERIT_REJECTED:
+                case $row['USER_CREATED'] == assetRequestRecord::CREATED_USER && $status==assetRequestRecord::STATUS_RAISED_ORDERIT && $orderItStatus != assetRequestRecord::STATUS_ORDERIT_REJECTED:
                     $returnable = true;
                     break;
                 default:
@@ -279,7 +280,7 @@ class assetRequestsTable extends DbTable{
             }
 
 
-            $returnedButton = $returnable && $status!= assetRequestRecord::$STATUS_RETURNED ? $returnedButton : null;
+            $returnedButton = $returnable && $status!= assetRequestRecord::STATUS_RETURNED ? $returnedButton : null;
 
 
 //             $row['ASSET'] =  ($returnable && $row['REQUEST_RETURN']!='Yes' ) ? $returnedButton . "&nbsp;<i>" .  $asset . "(Return/Remove)</i>" : $asset;
@@ -344,7 +345,7 @@ class assetRequestsTable extends DbTable{
          *   ORDERIT_VARB_REF is null - Has not previously been exported.
          *   ORDER_IT_NUMBER is null  - Hasn't already been raised by the individual
          *   RAL.ORDER_IT_TYPE = '" . db2_escape_string($orderItGroup) . "'  - the ASSET_TITLE has a TYPE that matches the type we're processing
-         *   AR.STATUS='" . assetRequestRecord::$STATUS_APPROVED . "'  - It's approved for processing
+         *   AR.STATUS='" . assetRequestRecord::STATUS_APPROVED . "'  - It's approved for processing
          *
          *   '" . db2_escape_string($orderItType) . "' == 1  - It's a TYPE1 - ie it doesn't need a CT ID
          *   or P.CONTRACTOR_ID is not null                  - It's not a TYPE 1 - so it does need a CT ID, so CONTRACTOR ID can't be empty.
@@ -352,7 +353,7 @@ class assetRequestsTable extends DbTable{
          *
          */
         $predicate  = "";
-        $predicate .= "   AND ORDERIT_VARB_REF is null and ORDERIT_NUMBER is null and RAL.ORDER_IT_TYPE = '" . db2_escape_string($orderItType) . "' AND AR.STATUS='" . assetRequestRecord::$STATUS_APPROVED . "' ";
+        $predicate .= "   AND ORDERIT_VARB_REF is null and ORDERIT_NUMBER is null and RAL.ORDER_IT_TYPE = '" . db2_escape_string($orderItType) . "' AND AR.STATUS='" . assetRequestRecord::STATUS_APPROVED . "' ";
         $predicate .= "   AND ('" . db2_escape_string($orderItType) . "' = '1' or P.CT_ID is not null)";
         $predicate .= $this->predicateForPmoExportableRequest();
 
@@ -368,7 +369,7 @@ class assetRequestsTable extends DbTable{
         $commitState  = db2_autocommit($_SESSION['conn'],DB2_AUTOCOMMIT_OFF);
 
         $sql =  "UPDATE " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS ;
-        $sql .= " SET ORDERIT_VARB_REF = '$nextVarb', STATUS='" . assetRequestRecord::$STATUS_EXPORTED . "' ";
+        $sql .= " SET ORDERIT_VARB_REF = '$nextVarb', STATUS='" . assetRequestRecord::STATUS_EXPORTED . "' ";
         $sql .= " WHERE REQUEST_REFERENCE in ";
         $sql .= " (SELECT REQUEST_REFERENCE FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR ";
         $sql .= "  LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$REQUESTABLE_ASSET_LIST . " AS RAL ";
@@ -567,7 +568,7 @@ class assetRequestsTable extends DbTable{
         $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
 
         $sql .= " WHERE 1=1 ";
-        $sql .= " AND STATUS='" . assetRequestRecord::$STATUS_EXPORTED . "' ";
+        $sql .= " AND STATUS='" . assetRequestRecord::STATUS_EXPORTED . "' ";
 
         $rs2 = db2_exec($_SESSION['conn'],$sql);
         if(!$rs2){
@@ -588,7 +589,7 @@ class assetRequestsTable extends DbTable{
         $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql .= " ON AR.CNUM = P.CNUM ";
         $sql .= " WHERE 1=1 ";
-        $sql .= " AND ORDERIT_STATUS='" . assetRequestRecord::$STATUS_ORDERIT_RAISED . "' ";
+        $sql .= " AND ORDERIT_STATUS='" . assetRequestRecord::STATUS_ORDERIT_RAISED . "' ";
         $sql .= $bau ? " AND P.TT_BAU='BAU' " : " AND ( P.TT_BAU!='BAU' or P.TT_BAU is null )  ";
 
         $rs2 = db2_exec($_SESSION['conn'],$sql);
@@ -606,8 +607,8 @@ class assetRequestsTable extends DbTable{
 
 
     function predicateExportNonPmoRequests(){
-        $predicate = " AND STATUS IN('" . assetRequestRecord::$STATUS_APPROVED . "','" . assetRequestRecord::$STATUS_RAISED_ORDERIT . "') AND ORDERIT_NUMBER is not NULL AND USER_CREATED='" . assetRequestRecord::$CREATED_USER . "' ";
-        $predicate .= " AND ORDERIT_STATUS in ('" . assetRequestRecord::$STATUS_ORDERIT_RAISED . "') ";
+        $predicate = " AND STATUS IN('" . assetRequestRecord::STATUS_APPROVED . "','" . assetRequestRecord::STATUS_RAISED_ORDERIT . "') AND ORDERIT_NUMBER is not NULL AND USER_CREATED='" . assetRequestRecord::CREATED_USER . "' ";
+        $predicate .= " AND ORDERIT_STATUS in ('" . assetRequestRecord::STATUS_ORDERIT_RAISED . "') ";
         $predicate .= " AND ORDERIT_VARB_REF is null  AND APPROVED is not null";
 
         return $predicate;
@@ -623,14 +624,14 @@ class assetRequestsTable extends DbTable{
 
     function predicateForPmoExportableRequest() {
         $predicate  = " AND  ( ";
-        $predicate .= " STATUS IN('" . assetRequestRecord::$STATUS_APPROVED . "') AND ORDERIT_NUMBER is NULL AND USER_CREATED='" . assetRequestRecord::$CREATED_PMO . "' ";
+        $predicate .= " STATUS IN('" . assetRequestRecord::STATUS_APPROVED . "') AND ORDERIT_NUMBER is NULL AND USER_CREATED='" . assetRequestRecord::CREATED_PMO . "' ";
         $predicate .= " AND ORDERIT_VARB_REF is null ";
         $predicate .= " AND (ORDER_IT_TYPE = '1' or P.CT_ID is not null)";
         $predicate .= " and ( pre_req_Request is null or pre_req_request  in (  select AR2.pre_req_request
 						  	from " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR2
 						  	left join " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR3
 						  	on AR2.PRE_REQ_REQUEST = AR3.REQUEST_REFERENCE
-						    where AR3.ORDERIT_STATUS in ('" . assetRequestRecord::$STATUS_ORDERIT_APPROVED . "')
+						    where AR3.ORDERIT_STATUS in ('" . assetRequestRecord::STATUS_ORDERIT_APPROVED . "')
 							) )";
         $predicate .= " )";
         return $predicate;
@@ -707,7 +708,7 @@ class assetRequestsTable extends DbTable{
                   </div>
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-						<input  data-toggle="toggle" type="checkbox" class='toggle' data-width='250' data-on="<?=assetRequestRecord::$STATUS_APPROVED?>" data-off="<?=assetRequestRecord::$STATUS_REJECTED?>" id='assetRequestApprovalToggle' name='assetRequestApproval' value='Yes' data-onstyle='success' data-offstyle='warning'>
+						<input  data-toggle="toggle" type="checkbox" class='toggle' data-width='250' data-on="<?=assetRequestRecord::STATUS_APPROVED?>" data-off="<?=assetRequestRecord::STATUS_REJECTED?>" id='assetRequestApprovalToggle' name='assetRequestApproval' value='Yes' data-onstyle='success' data-offstyle='warning'>
                     </div>
                   </div>
 
@@ -1116,7 +1117,7 @@ class assetRequestsTable extends DbTable{
     function getUnmappedVarb(){
         $sql = " SELECT distinct ORDERIT_VARB_REF ";
         $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName;
-        $sql .= " WHERE ORDERIT_VARB_REF is not null and ORDERIT_NUMBER is null and STATUS in ('". assetRequestRecord::$STATUS_EXPORTED . "','". assetRequestRecord::$STATUS_RAISED_ORDERIT . "') ";
+        $sql .= " WHERE ORDERIT_VARB_REF is not null and ORDERIT_NUMBER is null and STATUS in ('". assetRequestRecord::STATUS_EXPORTED . "','". assetRequestRecord::STATUS_RAISED_ORDERIT . "') ";
         $sql .= " ORDER BY ORDERIT_VARB_REF asc ";
 
         $rs = db2_exec($_SESSION['conn'], $sql);
@@ -1137,7 +1138,7 @@ class assetRequestsTable extends DbTable{
     function getUnmappedref(){
         $sql = " SELECT distinct REQUEST_REFERENCE ";
         $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName;
-        $sql .= " WHERE ORDERIT_VARB_REF is not null and ORDERIT_NUMBER is null and STATUS in ('". assetRequestRecord::$STATUS_EXPORTED . "','". assetRequestRecord::$STATUS_RAISED_ORDERIT . "') ";
+        $sql .= " WHERE ORDERIT_VARB_REF is not null and ORDERIT_NUMBER is null and STATUS in ('". assetRequestRecord::STATUS_EXPORTED . "','". assetRequestRecord::STATUS_RAISED_ORDERIT . "') ";
         $sql .= " ORDER BY REQUEST_REFERENCE asc ";
 
         $rs = db2_exec($_SESSION['conn'], $sql);
@@ -1229,7 +1230,7 @@ class assetRequestsTable extends DbTable{
 
     function setOrderItStatusForm(){
         $loader = new Loader();
-        $restrictToActiveOrderIT = " ORDERIT_STATUS in ('" . assetRequestRecord::$STATUS_ORDERIT_RAISED . "') ";
+        $restrictToActiveOrderIT = " ORDERIT_STATUS in ('" . assetRequestRecord::STATUS_ORDERIT_RAISED . "') ";
         $allOrderIt = $loader->load('ORDERIT_NUMBER',allTables::$ASSET_REQUESTS,$restrictToActiveOrderIT,true,'desc');
         $mappedVarb = $this->getMappedVarb();
         $mappedRef  = $this->getMappedRef();
@@ -1314,7 +1315,7 @@ class assetRequestsTable extends DbTable{
         $recordsFound = false;
         $loader = new Loader();
         $fullStatus = $loader->load('ORDERIT_STATUS',allTables::$ASSET_REQUESTS," REQUEST_RETURN = 'No' or REQUEST_RETURN is null ");
-        $lbgStatus = array(assetRequestRecord::$STATUS_ORDERIT_RAISED=>assetRequestRecord::$STATUS_ORDERIT_RAISED);
+        $lbgStatus = array(assetRequestRecord::STATUS_ORDERIT_RAISED=>assetRequestRecord::STATUS_ORDERIT_RAISED);
         $allStatus = $fullExtract ? $fullStatus : $lbgStatus;
         array_map('trim',$allStatus);
         $ctbOnly =  array(false,true);
@@ -1336,10 +1337,10 @@ class assetRequestsTable extends DbTable{
                     $sql.= " LEFT JOIN " . $_SESSION['Db2Schema']. "." . allTables::$ORDER_IT_VARB_TRACKER . " as V ";
                     $sql.= " ON right(trim(AR.ORDERIT_VARB_REF),5) = right(concat('000000',V.VARB),5) ";
                     $sql.= " WHERE 1=1 ";
-                    $sql.= " AND AR.ORDERIT_STATUS in ('" . assetRequestRecord::$STATUS_ORDERIT_RAISED . "') ";
+                    $sql.= " AND AR.ORDERIT_STATUS in ('" . assetRequestRecord::STATUS_ORDERIT_RAISED . "') ";
                     $sql.= " AND (AR.REQUEST_RETURN = 'No' or AR.REQUEST_RETURN is null ) ";
                     $sql.= " AND ( ";
-                    $sql.= "      ( USER_CREATED = 'No' AND AR.STATUS in ('" . assetRequestRecord::$STATUS_RAISED_ORDERIT . "') )";
+                    $sql.= "      ( USER_CREATED = 'No' AND AR.STATUS in ('" . assetRequestRecord::STATUS_RAISED_ORDERIT . "') )";
                     $sql.= "      OR ";
                     $sql.= "      ( USER_CREATED = 'Yes' AND AR.APPROVED is not null )";
                     $sql.= "    ) ";
@@ -1385,7 +1386,7 @@ class assetRequestsTable extends DbTable{
         $recordsFound = false;
         $loader = new Loader();
 //         $fullStatus = $loader->load('ORDERIT_STATUS',allTables::$ASSET_REQUESTS," REQUEST_RETURN = 'No' or REQUEST_RETURN is null ");
-//         $lbgStatus = array(assetRequestRecord::$STATUS_ORDERIT_RAISED=>assetRequestRecord::$STATUS_ORDERIT_RAISED);
+//         $lbgStatus = array(assetRequestRecord::STATUS_ORDERIT_RAISED=>assetRequestRecord::STATUS_ORDERIT_RAISED);
 //         $allStatus = $fullExtract ? $fullStatus : $lbgStatus;
 //         array_map('trim',$allStatus);
 //         $ctbOnly =  array(false,true);
@@ -1468,11 +1469,11 @@ class assetRequestsTable extends DbTable{
                     $sql .= " LEFT JOIN " . $_SESSION['Db2Schema']. "." . allTables::$ORDER_IT_VARB_TRACKER . " as V ";
                     $sql .= " ON right(trim(AR.ORDERIT_VARB_REF),5) = right(concat('000000',V.VARB),5) ";
                     $sql .= " WHERE 1=1 ";
-                    $sql .= " AND AR.STATUS in ('" . assetRequestRecord::$STATUS_EXPORTED . "','" . assetRequestRecord::$STATUS_RAISED_ORDERIT . "') ";
-                    $sql .= " AND AR.ORDERIT_STATUS not in ('" . assetRequestRecord::$STATUS_ORDERIT_APPROVED . "','" . assetRequestRecord::$STATUS_ORDERIT_CANCELLED . "','" . assetRequestRecord::$STATUS_ORDERIT_REJECTED. "') ";
+                    $sql .= " AND AR.STATUS in ('" . assetRequestRecord::STATUS_EXPORTED . "','" . assetRequestRecord::STATUS_RAISED_ORDERIT . "') ";
+                    $sql .= " AND AR.ORDERIT_STATUS not in ('" . assetRequestRecord::STATUS_ORDERIT_APPROVED . "','" . assetRequestRecord::STATUS_ORDERIT_CANCELLED . "','" . assetRequestRecord::STATUS_ORDERIT_REJECTED. "') ";
                     $sql .= " AND (AR.REQUEST_RETURN = 'No' or AR.REQUEST_RETURN is null ) ";
 //                     $sql .= " AND ( ";
-//                     $sql .= "      ( USER_CREATED = 'No' AND AR.STATUS in ('" . assetRequestRecord::$STATUS_RAISED_ORDERIT . "') )";
+//                     $sql .= "      ( USER_CREATED = 'No' AND AR.STATUS in ('" . assetRequestRecord::STATUS_RAISED_ORDERIT . "') )";
 //                     $sql .= "      OR ";
 //                     $sql .= "      ( USER_CREATED = 'Yes' AND AR.APPROVED is not null )";
 //                     $sql .= "    ) ";
@@ -1584,9 +1585,9 @@ class assetRequestsTable extends DbTable{
         $sql  = " UPDATE ";
         $sql .= $_SESSION['Db2Schema'] . "." . $this->tableName ;
         $sql .= " SET ORDERIT_NUMBER='" . db2_escape_string($orderIt) . "' ";
-        $sql .= ",STATUS='" . assetRequestRecord::$STATUS_RAISED_ORDERIT . "' ";
-        $sql .= ",ORDERIT_STATUS='" . assetRequestRecord::$STATUS_ORDERIT_RAISED . "' ";
-        $sql .= " WHERE ORDERIT_VARB_REF='" . db2_escape_string($varb) . "' and STATUS='" . assetRequestRecord::$STATUS_EXPORTED . "' ";
+        $sql .= ",STATUS='" . assetRequestRecord::STATUS_RAISED_ORDERIT . "' ";
+        $sql .= ",ORDERIT_STATUS='" . assetRequestRecord::STATUS_ORDERIT_RAISED . "' ";
+        $sql .= " WHERE ORDERIT_VARB_REF='" . db2_escape_string($varb) . "' and STATUS='" . assetRequestRecord::STATUS_EXPORTED . "' ";
         $sql .= " AND REQUEST_REFERENCE in (" . $requestList . ") " ;
 
 
@@ -1607,11 +1608,11 @@ class assetRequestsTable extends DbTable{
 
         $sql  = " UPDATE ";
         $sql .= $_SESSION['Db2Schema'] . "." . $this->tableName ;
-        $sql .= " SET STATUS='" . assetRequestRecord::$STATUS_APPROVED . "' ";
+        $sql .= " SET STATUS='" . assetRequestRecord::STATUS_APPROVED . "' ";
         $sql .= ", ORDERIT_VARB_REF = null ";
-        $sql .= ", ORDERIT_STATUS = '" . assetRequestRecord::$STATUS_ORDERIT_YET . "' ";
+        $sql .= ", ORDERIT_STATUS = '" . assetRequestRecord::STATUS_ORDERIT_YET . "' ";
         $sql .= ", ORDERIT_NUMBER = null ";
-        $sql .= " WHERE ORDERIT_VARB_REF='" . db2_escape_string($varb) . "' and STATUS='" . assetRequestRecord::$STATUS_EXPORTED . "' ";
+        $sql .= " WHERE ORDERIT_VARB_REF='" . db2_escape_string($varb) . "' and STATUS='" . assetRequestRecord::STATUS_EXPORTED . "' ";
 
         AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
@@ -1640,8 +1641,8 @@ class assetRequestsTable extends DbTable{
         $sql  = " UPDATE ";
         $sql .= $_SESSION['Db2Schema'] . "." . $this->tableName ;
         $sql .= " SET ORDERIT_NUMBER=? ";
-        $sql .= ",STATUS='" . assetRequestRecord::$STATUS_RAISED_ORDERIT . "' ";
-        $sql .= ",ORDERIT_STATUS='" . assetRequestRecord::$STATUS_ORDERIT_RAISED . "' ";
+        $sql .= ",STATUS='" . assetRequestRecord::STATUS_RAISED_ORDERIT . "' ";
+        $sql .= ",ORDERIT_STATUS='" . assetRequestRecord::STATUS_ORDERIT_RAISED . "' ";
         $sql .= " WHERE REQUEST_REFERENCE=? ";
 
         AuditTable::audit("Prepare SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
@@ -1675,11 +1676,11 @@ class assetRequestsTable extends DbTable{
 
 //         $sql  = " UPDATE ";
 //         $sql .= $_SESSION['Db2Schema'] . "." . $this->tableName ;
-//         $sql .= " SET STATUS='" . assetRequestRecord::$STATUS_APPROVED . "' ";
+//         $sql .= " SET STATUS='" . assetRequestRecord::STATUS_APPROVED . "' ";
 //         $sql .= ", ORDERIT_VARB_REF = null ";
-//         $sql .= ", ORDERIT_STATUS = '" . assetRequestRecord::$STATUS_ORDERIT_YET . "' ";
+//         $sql .= ", ORDERIT_STATUS = '" . assetRequestRecord::STATUS_ORDERIT_YET . "' ";
 //         $sql .= ", ORDERIT_NUMBER = null ";
-//         $sql .= " WHERE ORDERIT_VARB_REF='" . db2_escape_string($varb) . "' and STATUS='" . assetRequestRecord::$STATUS_EXPORTED . "' ";
+//         $sql .= " WHERE ORDERIT_VARB_REF='" . db2_escape_string($varb) . "' and STATUS='" . assetRequestRecord::STATUS_EXPORTED . "' ";
 
 //         AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
@@ -1728,72 +1729,72 @@ class assetRequestsTable extends DbTable{
 
             $status = trim($row['ORDERIT_STATUS']);
             switch ($status) {
-                case assetRequestRecord::$STATUS_ORDERIT_APPROVED:
+                case assetRequestRecord::STATUS_ORDERIT_APPROVED:
                     $row['ACTION'] = '<div class="form-check">
-                                        <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'app" checked value="' . assetRequestRecord::$STATUS_ORDERIT_APPROVED. '" >
-                                        <label class="form-check-label text-success" for="radio" id="radio' . $row['REFERENCE'] . 'app" >' . assetRequestRecord::$STATUS_ORDERIT_APPROVED. '</label>
+                                        <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'app" checked value="' . assetRequestRecord::STATUS_ORDERIT_APPROVED. '" >
+                                        <label class="form-check-label text-success" for="radio" id="radio' . $row['REFERENCE'] . 'app" >' . assetRequestRecord::STATUS_ORDERIT_APPROVED. '</label>
                                         </div>
 
                                     <div class="form-check">
-                                    <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'rej" value="' . assetRequestRecord::$STATUS_ORDERIT_REJECTED. '" >
-                                    <label class="form-check-label text-danger" for="radio" id="radio' . $row['REFERENCE'] . 'app">' . assetRequestRecord::$STATUS_ORDERIT_REJECTED. '</label>
+                                    <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'rej" value="' . assetRequestRecord::STATUS_ORDERIT_REJECTED. '" >
+                                    <label class="form-check-label text-danger" for="radio" id="radio' . $row['REFERENCE'] . 'app">' . assetRequestRecord::STATUS_ORDERIT_REJECTED. '</label>
                                     </div>
 
                                     <div class="form-check">
-                                    <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'can" value="' . assetRequestRecord::$STATUS_ORDERIT_CANCELLED. '" >
-                                    <label class="form-check-label text-warning" for="radio" id="radio' . $row['REFERENCE'] . 'app">' . assetRequestRecord::$STATUS_ORDERIT_CANCELLED. '</label>
+                                    <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'can" value="' . assetRequestRecord::STATUS_ORDERIT_CANCELLED. '" >
+                                    <label class="form-check-label text-warning" for="radio" id="radio' . $row['REFERENCE'] . 'app">' . assetRequestRecord::STATUS_ORDERIT_CANCELLED. '</label>
                                     </div>
 
                                     <div class="form-check">
-                                    <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'rai" value="' . assetRequestRecord::$STATUS_ORDERIT_RAISED. '" >
-                                    <label class="form-check-label text-warning" for="radio" id="radio' . $row['REFERENCE'] . 'rai">' . assetRequestRecord::$STATUS_ORDERIT_RAISED. '</label>
+                                    <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'rai" value="' . assetRequestRecord::STATUS_ORDERIT_RAISED. '" >
+                                    <label class="form-check-label text-warning" for="radio" id="radio' . $row['REFERENCE'] . 'rai">' . assetRequestRecord::STATUS_ORDERIT_RAISED. '</label>
                                     </div>';
                      break;
-                case assetRequestRecord::$STATUS_ORDERIT_REJECTED:
+                case assetRequestRecord::STATUS_ORDERIT_REJECTED:
                     $row['ACTION'] = '<div class="form-check">
-                                        <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'app"  value="' . assetRequestRecord::$STATUS_ORDERIT_APPROVED. '" >
-                                        <label class="form-check-label text-success" for="radio" id="radio' . $row['REFERENCE'] . 'app" >' . assetRequestRecord::$STATUS_ORDERIT_APPROVED. '</label>
+                                        <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'app"  value="' . assetRequestRecord::STATUS_ORDERIT_APPROVED. '" >
+                                        <label class="form-check-label text-success" for="radio" id="radio' . $row['REFERENCE'] . 'app" >' . assetRequestRecord::STATUS_ORDERIT_APPROVED. '</label>
                                         </div>
 
                                     <div class="form-check">
-                                    <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'rej" checked value="' . assetRequestRecord::$STATUS_ORDERIT_REJECTED. '" >
-                                    <label class="form-check-label text-danger" for="radio" id="radio' . $row['REFERENCE'] . 'app">' . assetRequestRecord::$STATUS_ORDERIT_REJECTED. '</label>
+                                    <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'rej" checked value="' . assetRequestRecord::STATUS_ORDERIT_REJECTED. '" >
+                                    <label class="form-check-label text-danger" for="radio" id="radio' . $row['REFERENCE'] . 'app">' . assetRequestRecord::STATUS_ORDERIT_REJECTED. '</label>
                                     </div>
 
                                     <div class="form-check">
-                                    <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'can" value="' . assetRequestRecord::$STATUS_ORDERIT_CANCELLED. '" >
-                                    <label class="form-check-label text-warning" for="radio" id="radio' . $row['REFERENCE'] . 'app">' . assetRequestRecord::$STATUS_ORDERIT_CANCELLED. '</label>
+                                    <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'can" value="' . assetRequestRecord::STATUS_ORDERIT_CANCELLED. '" >
+                                    <label class="form-check-label text-warning" for="radio" id="radio' . $row['REFERENCE'] . 'app">' . assetRequestRecord::STATUS_ORDERIT_CANCELLED. '</label>
                                     </div>
 
                                     <div class="form-check">
-                                    <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'rai" value="' . assetRequestRecord::$STATUS_ORDERIT_RAISED. '" >
-                                    <label class="form-check-label text-warning" for="radio" id="radio' . $row['REFERENCE'] . 'rai">' . assetRequestRecord::$STATUS_ORDERIT_RAISED. '</label>
+                                    <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'rai" value="' . assetRequestRecord::STATUS_ORDERIT_RAISED. '" >
+                                    <label class="form-check-label text-warning" for="radio" id="radio' . $row['REFERENCE'] . 'rai">' . assetRequestRecord::STATUS_ORDERIT_RAISED. '</label>
                                     </div>';
 
                     break;
-                case assetRequestRecord::$STATUS_ORDERIT_CANCELLED:
+                case assetRequestRecord::STATUS_ORDERIT_CANCELLED:
                     $row['ACTION'] = '<div class="form-check">
-                                        <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'app"  value="' . assetRequestRecord::$STATUS_ORDERIT_APPROVED. '" >
-                                        <label class="form-check-label text-success" for="radio" id="radio' . $row['REFERENCE'] . 'app" >' . assetRequestRecord::$STATUS_ORDERIT_APPROVED. '</label>
+                                        <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'app"  value="' . assetRequestRecord::STATUS_ORDERIT_APPROVED. '" >
+                                        <label class="form-check-label text-success" for="radio" id="radio' . $row['REFERENCE'] . 'app" >' . assetRequestRecord::STATUS_ORDERIT_APPROVED. '</label>
                                         </div>
 
                                     <div class="form-check">
-                                    <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'rej"  value="' . assetRequestRecord::$STATUS_ORDERIT_REJECTED. '" >
-                                    <label class="form-check-label text-danger" for="radio" id="radio' . $row['REFERENCE'] . 'app">' . assetRequestRecord::$STATUS_ORDERIT_REJECTED. '</label>
+                                    <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'rej"  value="' . assetRequestRecord::STATUS_ORDERIT_REJECTED. '" >
+                                    <label class="form-check-label text-danger" for="radio" id="radio' . $row['REFERENCE'] . 'app">' . assetRequestRecord::STATUS_ORDERIT_REJECTED. '</label>
                                     </div>
 
                                     <div class="form-check">
-                                    <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'can" checked value="' . assetRequestRecord::$STATUS_ORDERIT_CANCELLED. '" >
-                                    <label class="form-check-label text-warning" for="radio" id="radio' . $row['REFERENCE'] . 'app">' . assetRequestRecord::$STATUS_ORDERIT_CANCELLED. '</label>
+                                    <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'can" checked value="' . assetRequestRecord::STATUS_ORDERIT_CANCELLED. '" >
+                                    <label class="form-check-label text-warning" for="radio" id="radio' . $row['REFERENCE'] . 'app">' . assetRequestRecord::STATUS_ORDERIT_CANCELLED. '</label>
                                     </div>
 
                                     <div class="form-check">
-                                    <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'rai" value="' . assetRequestRecord::$STATUS_ORDERIT_RAISED. '" >
-                                    <label class="form-check-label text-warning" for="radio" id="radio' . $row['REFERENCE'] . 'rai">' . assetRequestRecord::$STATUS_ORDERIT_RAISED. '</label>
+                                    <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'rai" value="' . assetRequestRecord::STATUS_ORDERIT_RAISED. '" >
+                                    <label class="form-check-label text-warning" for="radio" id="radio' . $row['REFERENCE'] . 'rai">' . assetRequestRecord::STATUS_ORDERIT_RAISED. '</label>
                                     </div>';
 
                     break;
-                case assetRequestRecord::$STATUS_ORDERIT_YET:
+                case assetRequestRecord::STATUS_ORDERIT_YET:
                     $row['ACTION'] = '<div class="form-check">
                                       <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'xxx" checked disabled value="' .  $status. '" >
                                       <label class="form-check-label text-primary" for="radio" id="radio' . $row['REFERENCE'] . 'xxx" >' . $status. '</label>
@@ -1802,18 +1803,18 @@ class assetRequestsTable extends DbTable{
                     break;
                 default:
                     $row['ACTION'] = '<div class="form-check">
-                                        <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'app"  value="' . assetRequestRecord::$STATUS_ORDERIT_APPROVED. '" >
-                                        <label class="form-check-label text-success" for="radio" id="radio' . $row['REFERENCE'] . 'app" >' . assetRequestRecord::$STATUS_ORDERIT_APPROVED. '</label>
+                                        <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'app"  value="' . assetRequestRecord::STATUS_ORDERIT_APPROVED. '" >
+                                        <label class="form-check-label text-success" for="radio" id="radio' . $row['REFERENCE'] . 'app" >' . assetRequestRecord::STATUS_ORDERIT_APPROVED. '</label>
                                         </div>
 
                                     <div class="form-check">
-                                    <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'rej" value="' . assetRequestRecord::$STATUS_ORDERIT_REJECTED. '" >
-                                    <label class="form-check-label text-danger" for="radio" id="radio' . $row['REFERENCE'] . 'app">' . assetRequestRecord::$STATUS_ORDERIT_REJECTED. '</label>
+                                    <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'rej" value="' . assetRequestRecord::STATUS_ORDERIT_REJECTED. '" >
+                                    <label class="form-check-label text-danger" for="radio" id="radio' . $row['REFERENCE'] . 'app">' . assetRequestRecord::STATUS_ORDERIT_REJECTED. '</label>
                                     </div>
 
                                     <div class="form-check">
-                                    <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'can" value="' . assetRequestRecord::$STATUS_ORDERIT_CANCELLED. '" >
-                                    <label class="form-check-label text-warning" for="radio" id="radio' . $row['REFERENCE'] . 'app">' . assetRequestRecord::$STATUS_ORDERIT_CANCELLED. '</label>
+                                    <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'can" value="' . assetRequestRecord::STATUS_ORDERIT_CANCELLED. '" >
+                                    <label class="form-check-label text-warning" for="radio" id="radio' . $row['REFERENCE'] . 'app">' . assetRequestRecord::STATUS_ORDERIT_CANCELLED. '</label>
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input" name=\'status['. $row['REFERENCE'] . ']\'  type="radio" id="radio' . $row['REFERENCE'] . 'xxx" checked value="' .  $status. '" >
@@ -2018,13 +2019,13 @@ class assetRequestsTable extends DbTable{
                 // if they gave us a status - use it.
                 $orderItStatus = trim($orderItStatus);
                 break;
-            case trim($status)==assetRequestRecord::$STATUS_REJECTED:
+            case trim($status)==assetRequestRecord::STATUS_REJECTED:
                 // else - if they are rejecting then go to "Not to be Raised"
-                $orderItStatus = assetRequestRecord::$STATUS_ORDERIT_NOT;
+                $orderItStatus = assetRequestRecord::STATUS_ORDERIT_NOT;
                 break;
-            case trim($status)==assetRequestRecord::$STATUS_APPROVED:
+            case trim($status)==assetRequestRecord::STATUS_APPROVED:
                 // else - if they are rejecting then go to "Not to be Raised"
-                $orderItStatus = assetRequestRecord::$STATUS_ORDERIT_YET;
+                $orderItStatus = assetRequestRecord::STATUS_ORDERIT_YET;
                 break;
             default:
                 $orderItStatus = null;
@@ -2036,8 +2037,8 @@ class assetRequestsTable extends DbTable{
         $sql .= " SET STATUS='" . db2_escape_string($status) . "' ";
         $sql .= !empty($orderItStatus) ? " ,ORDERIT_STATUS='" . db2_escape_string($orderItStatus) . "' " : null ;
         $sql .= !empty($newComment) ? ", COMMENT='" . db2_escape_string(substr($newComment,0,500)) . "' " : null;
-        $sql .= trim($status)==assetRequestRecord::$STATUS_APPROVED ? ", APPROVER_EMAIL='" . $_SESSION['ssoEmail'] . "' , APPROVED = current timestamp " : null;
-        $sql .= trim($status)==assetRequestRecord::$STATUS_RETURNED ? ", DATE_RETURNED = DATE('" . db2_escape_string($dateReturned). "') " : null;
+        $sql .= trim($status)==assetRequestRecord::STATUS_APPROVED ? ", APPROVER_EMAIL='" . $_SESSION['ssoEmail'] . "' , APPROVED = current timestamp " : null;
+        $sql .= trim($status)==assetRequestRecord::STATUS_RETURNED ? ", DATE_RETURNED = DATE('" . db2_escape_string($dateReturned). "') " : null;
         $sql .= " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' ";
 
         AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
@@ -2052,11 +2053,11 @@ class assetRequestsTable extends DbTable{
         $this->assetRequestEventsTable->logEventForRequest($status, $reference);
 
         // IF we're approving it - AND - it's NOT user raised - then set the ORDERIT_STATUS to 'Yet to be raised'
-        if(trim($status)==assetRequestRecord::$STATUS_APPROVED ){
+        if(trim($status)==assetRequestRecord::STATUS_APPROVED ){
             $sql  = " UPDATE ";
             $sql .= $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS;
-            $sql .= " SET ORDERIT_STATUS = '" . assetRequestRecord::$STATUS_ORDERIT_YET . "' " ;
-            $sql .= " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' AND USER_CREATED='" . assetRequestRecord::$CREATED_PMO . "' ";
+            $sql .= " SET ORDERIT_STATUS = '" . assetRequestRecord::STATUS_ORDERIT_YET . "' " ;
+            $sql .= " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' AND USER_CREATED='" . assetRequestRecord::CREATED_PMO . "' ";
 
             AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
@@ -2111,9 +2112,9 @@ class assetRequestsTable extends DbTable{
     function setToProvisionedStatus($reference){
         $sql  = " UPDATE ";
         $sql .= $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS;
-        $sql .= " SET STATUS='" . db2_escape_string(assetRequestRecord::$STATUS_PROVISIONED) . "' ";
+        $sql .= " SET STATUS='" . db2_escape_string(assetRequestRecord::STATUS_PROVISIONED) . "' ";
         $sql .= " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' ";
-        $sql .= " AND STATUS not in ('" . assetRequestRecord::$STATUS_REJECTED . "','" . assetRequestRecord::$STATUS_RETURNED ."') ";
+        $sql .= " AND STATUS not in ('" . assetRequestRecord::STATUS_REJECTED . "','" . assetRequestRecord::STATUS_RETURNED ."') ";
 
         AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
@@ -2299,9 +2300,9 @@ class assetRequestsTable extends DbTable{
 
         $sql  = " UPDATE ";
         $sql .= $_SESSION['Db2Schema'] . "." . $this->tableName ;
-        $sql .= " SET STATUS='" . assetRequestRecord::$STATUS_APPROVED . "' ";
+        $sql .= " SET STATUS='" . assetRequestRecord::STATUS_APPROVED . "' ";
         $sql .= ", ORDERIT_VARB_REF = null ";
-        $sql .= ", ORDERIT_STATUS = '" . assetRequestRecord::$STATUS_ORDERIT_YET . "' ";
+        $sql .= ", ORDERIT_STATUS = '" . assetRequestRecord::STATUS_ORDERIT_YET . "' ";
         $sql .= ", ORDERIT_NUMBER = null ";
         $sql .= " WHERE REQUEST_REFERENCE= ? ";
 
@@ -2379,7 +2380,7 @@ class assetRequestsTable extends DbTable{
          $sql = " select distinct Asset_title ";
          $sql.= " from " . $_SESSION['Db2Schema'] . "." . $this->tableName;
          $sql.= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
-         $sql.= " AND ORDERIT_STATUS in ('" . assetRequestRecord::$STATUS_ORDERIT_YET . "','" . assetRequestRecord::$STATUS_ORDERIT_RAISED . "') ";
+         $sql.= " AND ORDERIT_STATUS in ('" . assetRequestRecord::STATUS_ORDERIT_YET . "','" . assetRequestRecord::STATUS_ORDERIT_RAISED . "') ";
          $sql.= " AND ASSET_TITLE NOT LIKE 'Other%' ";
 
          $rs = db2_exec($_SESSION['conn'], $sql);

@@ -33,23 +33,23 @@ class assetRequestRecord extends DbRecord {
     protected $COMMENT;
     protected $REQUEST_RETURN;
 
-    public static $STATUS_CREATED           = 'Created in vBAC';
-    public static $STATUS_APPROVED          = 'Approved for Order IT';
-    public static $STATUS_EXPORTED          = 'Exported for Order IT';
-    public static $STATUS_RAISED_ORDERIT    = 'Raised in Order IT';
-    public static $STATUS_PROVISIONED       = 'Provisioned by Order IT';
-    public static $STATUS_RETURNED          = 'Returned to LBG';
-    public static $STATUS_REJECTED          = 'Rejected in vBAC';
+    const STATUS_CREATED           = 'Created in vBAC';
+    const STATUS_APPROVED          = 'Approved for Order IT';
+    const STATUS_EXPORTED          = 'Exported for Order IT';
+    const STATUS_RAISED_ORDERIT    = 'Raised in Order IT';
+    const STATUS_PROVISIONED       = 'Provisioned by Order IT';
+    const STATUS_RETURNED          = 'Returned to LBG';
+    const STATUS_REJECTED          = 'Rejected in vBAC';
 
-    public static $STATUS_ORDERIT_YET       = 'Yet to be raised';
-    public static $STATUS_ORDERIT_NOT       = 'Not to be raised';
-    public static $STATUS_ORDERIT_RAISED    = 'Raised in Order IT';
-    public static $STATUS_ORDERIT_APPROVED  = 'Approved in Order IT';
-    public static $STATUS_ORDERIT_CANCELLED = 'Cancelled in Order IT';
-    public static $STATUS_ORDERIT_REJECTED  = 'Rejected in Order IT';
+    const STATUS_ORDERIT_YET       = 'Yet to be raised';
+    const STATUS_ORDERIT_NOT       = 'Not to be raised';
+    const STATUS_ORDERIT_RAISED    = 'Raised in Order IT';
+    const STATUS_ORDERIT_APPROVED  = 'Approved in Order IT';
+    const STATUS_ORDERIT_CANCELLED = 'Cancelled in Order IT';
+    const STATUS_ORDERIT_REJECTED  = 'Rejected in Order IT';
 
-    public static $CREATED_USER             = 'Yes';
-    public static $CREATED_PMO              = 'No';
+    const CREATED_USER             = 'Yes';
+    const CREATED_PMO              = 'No';
 
 
     function displayForm(){

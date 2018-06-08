@@ -6,7 +6,7 @@ use vbac\allTables;
 ob_start();
 AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_REQUEST,true) . "</b>",AuditTable::RECORD_TYPE_DETAILS);
 
-$assetRequestTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
+$assetRequestsTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
 
 $comment = !empty($_POST['comment']) ? trim($_POST['comment']) : null;
 $dateReturned = null;

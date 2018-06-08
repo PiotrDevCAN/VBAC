@@ -16,8 +16,8 @@ $status         = trim($_POST['status']);
 
 $saved = $assetRequestTable->saveJustification($reference, $justification);
 
-if($saved && $status==assetRequestRecord::$STATUS_REJECTED){
-    $assetRequestTable->setStatus($_POST['reference'], assetRequestRecord::$STATUS_CREATED,'Justification Amended');
+if($saved && $status==assetRequestRecord::STATUS_REJECTED){
+    $assetRequestTable->setStatus($_POST['reference'], assetRequestRecord::STATUS_CREATED,'Justification Amended');
     $approverDetails = $loader->loadIndexed('APPROVER_EMAIL','REQUEST_REFERENCE',allTables::$ASSET_REQUESTS," REQUEST_REFERENCE='" . $reference . "' " );
     $approvingMgr = array($approverDetails[$reference]);
     $assetRequestTable->notifyApprovingMgr($approvingMgr);

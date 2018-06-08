@@ -13,7 +13,7 @@ if(!empty($_POST['primaryUid'])){
     $assetRequestTable->updateUids($_POST['reference'], trim($_POST['primaryUid']), trim($_POST['secondaryUid']));
 }
 
-$assetRequestTable->setStatus($_POST['reference'], assetRequestRecord::$STATUS_RETURNED,'Asset Returned/Removed', trim($_POST['DATE_RETURNED']));
+$assetRequestTable->setStatus($_POST['reference'], assetRequestRecord::STATUS_RETURNED,'Asset Returned/Removed', trim($_POST['DATE_RETURNED']));
 
 
 $messages = ob_get_clean();

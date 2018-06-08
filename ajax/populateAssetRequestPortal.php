@@ -49,16 +49,16 @@ switch (true) {
             case 'exportable':
                 $predicate .= " AND (( 1=1 " . $assetRequestTable->predicateForPmoExportableRequest() . " ) ";
                 $predicate .= " OR ( 1=1 " . $assetRequestTable->predicateExportNonPmoRequests() . " )) ";
-                $predicate .= $pmoRaised ?  " AND USER_CREATED='" . assetRequestRecord::$CREATED_PMO . "' " : " AND USER_CREATED='" . assetRequestRecord::$CREATED_USER . "' ";
+                $predicate .= $pmoRaised ?  " AND USER_CREATED='" . assetRequestRecord::CREATED_PMO . "' " : " AND USER_CREATED='" . assetRequestRecord::CREATED_USER . "' ";
             break;
             case 'exported':
-                $predicate .= " AND STATUS='" . assetRequestRecord::$STATUS_EXPORTED . "' ";
+                $predicate .= " AND STATUS='" . assetRequestRecord::STATUS_EXPORTED . "' ";
                 break;
             case 'bauRaised':
-                $predicate .= " AND ORDERIT_STATUS='" . assetRequestRecord::$STATUS_ORDERIT_RAISED . "' AND P.TT_BAU='BAU' " ;
+                $predicate .= " AND ORDERIT_STATUS='" . assetRequestRecord::STATUS_ORDERIT_RAISED . "' AND P.TT_BAU='BAU' " ;
                 break;
             case 'nonBauRaised':
-                $predicate .= " AND ORDERIT_STATUS='" . assetRequestRecord::$STATUS_ORDERIT_RAISED . "' AND ( P.TT_BAU!='BAU' or P.TT_BAU is null )  " ;
+                $predicate .= " AND ORDERIT_STATUS='" . assetRequestRecord::STATUS_ORDERIT_RAISED . "' AND ( P.TT_BAU!='BAU' or P.TT_BAU is null )  " ;
                 break;
             default:
                 ;

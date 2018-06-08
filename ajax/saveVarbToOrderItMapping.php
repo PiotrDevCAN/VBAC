@@ -34,7 +34,7 @@ if(!empty($_POST['primaryUid'])){
             if($requestDetails){
                 $personTable->assetUpdate($requestDetails['cnum'], $requestDetails['assetTitle'], $primaryUid);
             }
-            $assetRequestTable->setRequestsOrderItStatus($reference, assetRequestRecord::$STATUS_ORDERIT_APPROVED);
+            $assetRequestTable->setRequestsOrderItStatus($reference, assetRequestRecord::STATUS_ORDERIT_APPROVED);
         }
     }
 }

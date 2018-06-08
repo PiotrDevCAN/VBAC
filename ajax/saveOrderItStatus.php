@@ -34,7 +34,7 @@ foreach ($_POST['status'] as $reference => $statusIndicator){
         $success = $assetRequestTable->updateCommentForOrderItStatus($reference, $comment);
     }
     // Now, if we're APPROVE and we have a PRIMAR_UID, save that too.
-    if($success && trim($statusIndicator)==assetRequestRecord::$STATUS_ORDERIT_APPROVED && !empty($_POST['primaryUid'][$reference])){
+    if($success && trim($statusIndicator)==assetRequestRecord::STATUS_ORDERIT_APPROVED && !empty($_POST['primaryUid'][$reference])){
        $primaryUid = $_POST['primaryUid'][$reference];
         $assetRequestTable->updateUids($reference, trim($primaryUid));
         $assetRequestsTable->setToProvisionedStatus($reference);

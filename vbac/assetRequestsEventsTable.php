@@ -7,16 +7,16 @@ use vbac\allTables;
 
 class assetRequestsEventsTable extends DbTable{
 
-    const EVENT_CREATED             = assetRequestRecord::$STATUS_CREATED;
-    const EVENT_VBAC_APPROVED       = assetRequestRecord::$STATUS_APPROVED;
-    const EVENT_VBAC_REJECTED       = assetRequestRecord::$STATUS_REJECTED;
-    const EVENT_EXPORTED            = assetRequestRecord::$STATUS_EXPORTED;
-    const EVENT_PROVISIONED         = assetRequestRecord::$STATUS_PROVISIONED;
+    const EVENT_CREATED             = assetRequestRecord::STATUS_CREATED;
+    const EVENT_VBAC_APPROVED       = assetRequestRecord::STATUS_APPROVED;
+    const EVENT_VBAC_REJECTED       = assetRequestRecord::STATUS_REJECTED;
+    const EVENT_EXPORTED            = assetRequestRecord::STATUS_EXPORTED;
+    const EVENT_PROVISIONED         = assetRequestRecord::STATUS_PROVISIONED;
     const EVENT_DEVARBED            = 'devarbed';
-    const EVENT_ORDERIT_RAISED      = assetRequestRecord::$STATUS_RAISED_ORDERIT;
-    const EVENT_ORDERIT_APPROVED    = assetRequestRecord::$STATUS_ORDERIT_APPROVED;
-    const EVENT_ORDERIT_REJECTED    = assetRequestRecord::$STATUS_ORDERIT_REJECTED;
-    const EVENT_ORDERIT_CANCELLED   = assetRequestRecord::$STATUS_ORDERIT_CANCELLED;
+    const EVENT_ORDERIT_RAISED      = assetRequestRecord::STATUS_RAISED_ORDERIT;
+    const EVENT_ORDERIT_APPROVED    = assetRequestRecord::STATUS_ORDERIT_APPROVED;
+    const EVENT_ORDERIT_REJECTED    = assetRequestRecord::STATUS_ORDERIT_REJECTED;
+    const EVENT_ORDERIT_CANCELLED   = assetRequestRecord::STATUS_ORDERIT_CANCELLED;
 
     const EVENT_MISC                ='misc';
 
@@ -33,9 +33,9 @@ class assetRequestsEventsTable extends DbTable{
         $initator = empty($_SESSION['ssoEmail']) ? 'Unknown' : $_SESSION['ssoEmail'];
 
         $sql = " INSERT INTO " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS_EVENTS ;
-        $sql.= " ( REQUEST_REFERENCE, EVENT, OCCCURED, INITIATED_BY ) ";
+        $sql.= " ( REQUEST_REFERENCE, EVENT, OCCURED, INITIATED_BY ) ";
         $sql.= " values ";
-        $sql.= "( ?, ?, current timestamp, $initator) ";
+        $sql.= "( ?, ?, current timestamp, '$initator') ";
 
         $rs = db2_prepare($_SESSION['conn'], $sql);
 
@@ -50,7 +50,7 @@ class assetRequestsEventsTable extends DbTable{
     }
 
     function logEventForRequest($event, $requestReference){
-        $preparedStmt = $this->preparedInsertEventStatement;
+        $preparedStmt = $this->prepareInsertStatement();
         $data = array($requestReference, $event);
         $rs = db2_execute($preparedStmt,$data);
         if(!$rs){
