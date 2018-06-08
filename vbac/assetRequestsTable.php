@@ -2108,7 +2108,7 @@ class assetRequestsTable extends DbTable{
         return true;
     }
 
-    static function setToProvisionedStatus($reference){
+    function setToProvisionedStatus($reference){
         $sql  = " UPDATE ";
         $sql .= $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS;
         $sql .= " SET STATUS='" . db2_escape_string(assetRequestRecord::$STATUS_PROVISIONED) . "' ";
@@ -2122,6 +2122,8 @@ class assetRequestsTable extends DbTable{
             DbTable::displayErrorMessage($rs, __CLASS__,__METHOD__, $sql);
             return false;
         }
+
+        $this->assetRequestEventsTable->logEventForRequest(assetRequestsEventsTable::EVENT_PROVISIONED, $reference);
 
         return true;
     }

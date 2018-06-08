@@ -29,7 +29,7 @@ if(!empty($_POST['primaryUid'])){
 
         if(!empty($primaryUid)){
             $assetRequestTable->updateUids($reference, trim($primaryUid), trim($secondaryUid));
-            assetRequestsTable::setToProvisionedStatus($reference);
+            $assetRequestsTable->setToProvisionedStatus($reference);
             $requestDetails = $assetRequestTable->getCnumAndAssetForReference($reference);
             if($requestDetails){
                 $personTable->assetUpdate($requestDetails['cnum'], $requestDetails['assetTitle'], $primaryUid);
