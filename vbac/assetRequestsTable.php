@@ -14,6 +14,7 @@ class assetRequestsTable extends DbTable{
     const RETURN_WITHOUT_BUTTONS = false;
 
     public $currentVarb;
+    public $assetRequestEventsTable;
 
     private $lastSql;
 
@@ -38,6 +39,24 @@ class assetRequestsTable extends DbTable{
 <br/>Reference Information : Request:<b>&&requestReference&&</b> Varb:<b>&&varbNumber&&</b> Order IT Number:<b>&&orderItNumber&&</b> Vbac Status:<b>&&vbacStatus&&</b> </b> Order IT Status:<b>&&orderItStatus&&";
 
     private static $statusChangeEmailPattern = array('/&&requestReference&&/','/&&assetTitle&&/','/&&status&&/','/&&comment&&/','/&&varbNumber&&/','/&&orderItNumber&&/','/&&vbacStatus&&/','/&&orderItStatus&&/');
+
+    function __construct($table,$pwd=null,$log=null){
+        parent::__construct($table,$pwd,$log);
+        $this->assetRequestEventsTable = new assetRequestsEventsTable(allTables::$ASSET_REQUESTS_EVENTS);
+    }
+
+    function saveRecord($record,$populatedColumns=true,$nullColumns=true,$commit=true){
+        $created = parent::saveRecord($record,$populatedColumns,$nullColumns,false);
+
+        if($created){
+            $requestReference = self::lastId();
+            $this->assetRequestEventsTable->logEventForRequest(assetRequestsEventsTable::EVENT_CREATED, $requestReference);
+        }
+        if($commit){
+            self::commitUpdates();
+        }
+
+    }
 
 
 
@@ -1580,6 +1599,25 @@ class assetRequestsTable extends DbTable{
             return false;
         }
 
+        foreach ($request as $requestRef){
+            $this->assetRequestEventsTable->logEventForRequest(assetRequestsEventsTable::EVENT_ORDERIT_RAISED, $requestRef);
+        }
+
+        $sql = " SELECT REQUEST_REFERENCE ";
+        $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName ;
+        $sql .= " WHERE ORDERIT_VARB_REF='" . db2_escape_string($varb) . "' and STATUS='" . assetRequestRecord::$STATUS_EXPORTED . "' ";
+
+        $rs = db2_exec($_SESSION['conn'], $sql);
+
+        if(!$rs){
+            DbTable::displayErrorMessage($rs,__CLASS__, __METHOD__, $sql);
+            return false;
+        }
+
+        while (($row=db2_fetch_assoc($rs))==true) {
+            $this->assetRequestEventsTable->logEventForRequest(assetRequestsEventsTable::EVENT_DEVARBED, $row['REQUEST_REFERENCE']);
+        }
+
         // Anything they didn't select gets reset for next time.
 
         $sql  = " UPDATE ";
@@ -1849,6 +1887,7 @@ class assetRequestsTable extends DbTable{
             return false;
         }
         $this->notifyRequestee($reference, $orderItStatus, $comment);
+        $this->assetRequestEventsTable->logEventForRequest($orderItStatus, $reference);
         return true;
     }
 
@@ -2024,6 +2063,8 @@ class assetRequestsTable extends DbTable{
             DbTable::displayErrorMessage($rs, __CLASS__,__METHOD__, $sql);
             return false;
         }
+
+        $this->assetRequestEventsTable->logEventForRequest($status, $reference);
 
         // IF we're approving it - AND - it's NOT user raised - then set the ORDERIT_STATUS to 'Yet to be raised'
         if(trim($status)==assetRequestRecord::$STATUS_APPROVED ){
