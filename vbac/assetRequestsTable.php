@@ -1603,21 +1603,6 @@ class assetRequestsTable extends DbTable{
             $this->assetRequestEventsTable->logEventForRequest(assetRequestsEventsTable::EVENT_ORDERIT_RAISED, $requestRef);
         }
 
-        $sql = " SELECT REQUEST_REFERENCE ";
-        $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName ;
-        $sql .= " WHERE ORDERIT_VARB_REF='" . db2_escape_string($varb) . "' and STATUS='" . assetRequestRecord::$STATUS_EXPORTED . "' ";
-
-        $rs = db2_exec($_SESSION['conn'], $sql);
-
-        if(!$rs){
-            DbTable::displayErrorMessage($rs,__CLASS__, __METHOD__, $sql);
-            return false;
-        }
-
-        while (($row=db2_fetch_assoc($rs))==true) {
-            $this->assetRequestEventsTable->logEventForRequest(assetRequestsEventsTable::EVENT_DEVARBED, $row['REQUEST_REFERENCE']);
-        }
-
         // Anything they didn't select gets reset for next time.
 
         $sql  = " UPDATE ";
