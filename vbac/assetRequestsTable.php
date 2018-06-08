@@ -1304,22 +1304,28 @@ class assetRequestsTable extends DbTable{
         if(!empty($allStatus)){
             foreach ($ctbOnly as $isThisCtb){
                 foreach ($allStatus as $key => $value) {
-                    $sql = " SELECT AR.ORDERIT_NUMBER, AR.ORDERIT_STATUS,Ar.ORDERIT_VARB_REF, AR.REQUEST_REFERENCE, AR.ASSET_TITLE, AR.BUSINESS_JUSTIFICATION, AR.COMMENT, AR.REQUESTOR_EMAIl, AR.REQUESTED, AR.APPROVER_EMAIL, AR.APPROVED, P.FIRST_NAME, P.LAST_NAME, P.EMAIL_ADDRESS, P.LBG_EMAIL, P.EMPLOYEE_TYPE, P.CNUM, P.CT_ID, P.FM_CNUM as MGR_CNUM, FM.EMAIL_ADDRESS as MGR_EMAIL, FM.NOTES_ID as MGR_NOTESID, P.PES_STATUS, P.WORK_STREAM,P.CTB_RTB, P.TT_BAU, P.LOB, P.ROLE_ON_THE_ACCOUNT, P.CIO_ALIGNMENT,  AR.PRIMARY_UID, AR.SECONDARY_UID, AR.DATE_ISSUED_TO_IBM, AR. DATE_ISSUED_TO_USER, AR.DATE_RETURNED ";
-                    $sql .= " FROM " . $_SESSION['Db2Schema']. "." . allTables::$ASSET_REQUESTS  . " as AR ";
-                    $sql .= " LEFT JOIN " . $_SESSION['Db2Schema']. "." . allTables::$PERSON . " as P ";
-                    $sql .= " ON P.CNUM = AR.CNUM ";
-                    $sql .= " LEFT JOIN " . $_SESSION['Db2Schema']. "." . allTables::$PERSON . " as FM ";
-                    $sql .= " ON P.FM_CNUM = FM.CNUM ";
-                    $sql .= " WHERE 1=1 ";
-                    $sql .= " AND AR.ORDERIT_STATUS in ('" . assetRequestRecord::$STATUS_ORDERIT_RAISED . "') ";
-                    $sql .= " AND (AR.REQUEST_RETURN = 'No' or AR.REQUEST_RETURN is null ) ";
-                    $sql .= " AND ( ";
-                    $sql .= "      ( USER_CREATED = 'No' AND AR.STATUS in ('" . assetRequestRecord::$STATUS_RAISED_ORDERIT . "') )";
-                    $sql .= "      OR ";
-                    $sql .= "      ( USER_CREATED = 'Yes' AND AR.APPROVED is not null )";
-                    $sql .= "    ) ";
-                    $sql .= $isThisCtb ? " AND upper(P.CTB_RTB='CTB') " : " AND (upper(P.CTB_RTB != 'CTB') or P.CTB_RTB is null ) ";
-                    $sql .= " ORDER BY AR.REQUESTED asc ";
+                    $sql = " SELECT AR.ORDERIT_NUMBER, AR.ORDERIT_STATUS,Ar.ORDERIT_VARB_REF, AR.REQUEST_REFERENCE, AR.ASSET_TITLE, AR.BUSINESS_JUSTIFICATION, AR.COMMENT ";
+                    $sql.= " , AR.REQUESTOR_EMAIl, AR.REQUESTED, AR.APPROVER_EMAIL, AR.APPROVED, P.FIRST_NAME, P.LAST_NAME, P.EMAIL_ADDRESS, P.LBG_EMAIL, P.EMPLOYEE_TYPE ";
+                    $sql.= " , P.CNUM, P.CT_ID, P.FM_CNUM as MGR_CNUM, FM.EMAIL_ADDRESS as MGR_EMAIL, FM.NOTES_ID as MGR_NOTESID, P.PES_STATUS, P.WORK_STREAM,P.CTB_RTB ";
+                    $sql.= " ,P.TT_BAU, P.LOB, P.ROLE_ON_THE_ACCOUNT, P.CIO_ALIGNMENT,  AR.PRIMARY_UID, AR.SECONDARY_UID, AR.DATE_ISSUED_TO_IBM, AR. DATE_ISSUED_TO_USER  ";
+                    $sql.= " ,AR.DATE_RETURNED ,V.CREATED_DATE as VARB_CREATED ";
+                    $sql.= " FROM " . $_SESSION['Db2Schema']. "." . allTables::$ASSET_REQUESTS  . " as AR ";
+                    $sql.= " LEFT JOIN " . $_SESSION['Db2Schema']. "." . allTables::$PERSON . " as P ";
+                    $sql.= " ON P.CNUM = AR.CNUM ";
+                    $sql.= " LEFT JOIN " . $_SESSION['Db2Schema']. "." . allTables::$PERSON . " as FM ";
+                    $sql.= " ON P.FM_CNUM = FM.CNUM ";
+                    $sql.= " LEFT JOIN " . $_SESSION['Db2Schema']. "." . allTables::$ORDER_IT_VARB_TRACKER . " as V ";
+                    $sql.= " ON right(trim(AR.ORDERIT_VARB_REF),5) = right(concat('000000',V.VARB),5) ";
+                    $sql.= " WHERE 1=1 ";
+                    $sql.= " AND AR.ORDERIT_STATUS in ('" . assetRequestRecord::$STATUS_ORDERIT_RAISED . "') ";
+                    $sql.= " AND (AR.REQUEST_RETURN = 'No' or AR.REQUEST_RETURN is null ) ";
+                    $sql.= " AND ( ";
+                    $sql.= "      ( USER_CREATED = 'No' AND AR.STATUS in ('" . assetRequestRecord::$STATUS_RAISED_ORDERIT . "') )";
+                    $sql.= "      OR ";
+                    $sql.= "      ( USER_CREATED = 'Yes' AND AR.APPROVED is not null )";
+                    $sql.= "    ) ";
+                    $sql.= $isThisCtb ? " AND upper(P.CTB_RTB='CTB') " : " AND (upper(P.CTB_RTB != 'CTB') or P.CTB_RTB is null ) ";
+                    $sql.= " ORDER BY AR.REQUESTED asc ";
                     $rs = db2_exec($_SESSION['conn'], $sql);
 
                     AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
