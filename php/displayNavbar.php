@@ -104,6 +104,7 @@ $isPmo  = employee_in_group($_SESSION['pmoBg'],  $GLOBALS['ltcuser']['mail']) ? 
 $isPes  = employee_in_group($_SESSION['pesBg'],  $GLOBALS['ltcuser']['mail']) ? ".not('.accessPes')" : null;
 $isRep1  = employee_in_group('vbac_Reports_Full_Person',  $GLOBALS['ltcuser']['mail']) ? ".not('.accessRepFullPerson')" : null;
 $isUser = ".not('.accessUser')";
+$isRequestor = employee_in_group('vbac_requestor', $_SESSION['ssoEmail']);
 
 $isCdi   = stripos($_SERVER['environment'], 'dev') ? ".not('.accessCdi')"  : $isCdi;
 $isPmo   = stripos($_SERVER['environment'], 'dev')  ? ".not('.accessPmo')" : $isPmo;
@@ -140,13 +141,17 @@ if($page != "index.php" && substr($page,0,3)!='cdi'){
 
 $rep = null;
 !empty($isRep1) ? $rep .= '<small>(R1)</small>' : '';
+
+$userString = 'User';
+$userString.= $isRequestor ? "+" : null;
+
 ?>
 
 $(document).ready(function () {
 
     $('button.accessRestrict')<?=$isFm?><?=$isPmo?><?=$isCdi?><?=$isUser?><?=$isRep1?>.remove();
 
-    <?=!empty($isUser) ? '$("#userLevel").html("User&nbsp;' . $rep . '");console.log("user");' : null;?>
+    <?=!empty($isUser) ? '$("#userLevel").html(' . $userString . '&nbsp;' . $rep . '");console.log("user");' : null;?>
     <?=!empty($isFm)   ? '$("#userLevel").html("Func.Mgr.&nbsp;' . $rep . '");console.log("fm");' : null;?>
     <?=!empty($isPmo)  ? '$("#userLevel").html("PMO&nbsp;' . $rep . '");console.log("pmo");' : null;?>
     <?=!empty($isCdi)  ? '$("#userLevel").html("CDI&nbsp;' . $rep . '");console.log("cdi");' : null;?>
