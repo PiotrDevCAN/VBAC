@@ -484,10 +484,7 @@ this.listenForReportShowUid = function(){
 		        success: function(result){
 		        	console.log(result);
 		        	var resultObj = JSON.parse(result);
-		        	$('#mapVarbToOrderItModal .modal-body').html('');
-		        	$('#mapVarbToOrderItModal').modal('hide');
 		  		    $('#saveMapVarbToOrderIT').removeClass('spinning');
-
 		        }
 	    	  });
 	      } else {
@@ -539,9 +536,7 @@ this.listenForSaveOrderItStatus = function(){
 		        success: function(result){
 		        	console.log(result);
 		        	var resultObj = JSON.parse(result);
-		        	$('#setOitStatusModal .modal-body').html('');
 		        	$('#saveOrderItStatus').removeClass('spinning');
-		        	$('#setOitStatusModal').modal('hide');
 
 		  		  	assetPortal.table.ajax.reload();
 		  		    AssetPortal.countRequestsForPortal();
