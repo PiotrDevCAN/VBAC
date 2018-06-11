@@ -210,7 +210,7 @@ this.listenForReportBauRaised = function(){
 	  $(document).on('click','#reportShowBauRaised', function(e){
 		  assetPortal.table.destroy();
 		  AssetPortal.initialiseAssetRequestDataTable('bauRaised');
-		  $('#portalTitle').text('Asset Request Portal - Exported');
+		  $('#portalTitle').text('Asset Request Portal - Raised BAU');
 	  });
 },
 
@@ -219,7 +219,7 @@ this.listenForReportNonBauRaised = function(){
 	  $(document).on('click','#reportShowNonBauRaised', function(e){
 		  assetPortal.table.destroy();
 		  AssetPortal.initialiseAssetRequestDataTable('nonBauRaised');
-		  $('#portalTitle').text('Asset Request Portal - Exported');
+		  $('#portalTitle').text('Asset Request Portal - Raised Non-BAU');
 	  });
 },
 
