@@ -616,6 +616,7 @@ class assetRequestsTable extends DbTable{
         $sql .= " ON AR.CNUM = P.CNUM ";
         $sql .= " WHERE 1=1 ";
         $sql .= " AND ORDERIT_STATUS='" . assetRequestRecord::STATUS_ORDERIT_RAISED . "' ";
+        $sql .= " AND USER_CREATED='" . assetRequestRecord::CREATED_PMO . "' ";
         $sql .= $bau ? " AND P.TT_BAU='BAU' " : " AND ( P.TT_BAU!='BAU' or P.TT_BAU is null )  ";
 
         $rs2 = db2_exec($_SESSION['conn'],$sql);
