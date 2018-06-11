@@ -650,7 +650,7 @@ class assetRequestsTable extends DbTable{
 
     function predicateForPmoExportableRequest() {
         $predicate  = " AND  ( ";
-        $predicate .= " STATUS IN('" . assetRequestRecord::STATUS_APPROVED . "') AND ORDERIT_NUMBER is NULL AND USER_CREATED='" . assetRequestRecord::CREATED_PMO . "' ";
+        $predicate .= " STATUS IN('" . assetRequestRecord::STATUS_APPROVED . "','" . assetRequestRecord::STATUS_PROVISIONED . "') AND ORDERIT_NUMBER is NULL AND USER_CREATED='" . assetRequestRecord::CREATED_PMO . "' ";
         $predicate .= " AND ORDERIT_VARB_REF is null ";
         $predicate .= " AND (ORDER_IT_TYPE = '1' or P.CT_ID is not null)";
         $predicate .= " and ( pre_req_Request is null or pre_req_request  in (  select AR2.pre_req_request
