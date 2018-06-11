@@ -15,10 +15,10 @@ $assetTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
 <div class='row'>
 <button id='reportShowAll'  		class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>All Requests</button>
 <button id='reportShowExportable'   class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>PMO To Raise&nbsp;<span class="badge" id='countPmoForExport'>**</span></button>
-<button id='reportShowUserRaised'   class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>User Raised&nbsp;<span class="badge" id='countNonPmoForExport'>**</span></button>
 <button id='reportShowExported'     class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Exported&nbsp;<span class="badge" id='countPmoExported'>**</span></button>
 <button id='reportShowBauRaised'    class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Raised BAU&nbsp;<span class="badge" id='countBauRaised'>**</span></button>
 <button id='reportShowNonBauRaised' class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Raised non-BAU&nbsp;<span class="badge" id='countNonBauRaised'>**</span></button>
+<button id='reportShowUserRaised'   class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>User Raised&nbsp;<span class="badge" id='countNonPmoForExport'>**</span></button>
 <button id='reportShowUid' 		    class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi accessUser'>Show UID</button>
 &nbsp;
 <button id='exportBauForOrderIt' 	class='btn btn-dark btn-sm accessBasedBtn accessPmo accessCdi'>Export BAU for Order IT&nbsp;<span class="badge" id='countBauForExport'>**</span></button>
