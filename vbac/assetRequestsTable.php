@@ -1354,7 +1354,7 @@ class assetRequestsTable extends DbTable{
                     $sql.= " , AR.REQUESTOR_EMAIl, AR.REQUESTED, AR.APPROVER_EMAIL, AR.APPROVED, P.FIRST_NAME, P.LAST_NAME, P.EMAIL_ADDRESS, P.LBG_EMAIL, P.EMPLOYEE_TYPE ";
                     $sql.= " , P.CNUM, P.CT_ID, P.FM_CNUM as MGR_CNUM, FM.EMAIL_ADDRESS as MGR_EMAIL, FM.NOTES_ID as MGR_NOTESID, P.PES_STATUS, P.WORK_STREAM,P.CTB_RTB ";
                     $sql.= " ,P.TT_BAU, P.LOB, P.ROLE_ON_THE_ACCOUNT, P.CIO_ALIGNMENT,  AR.PRIMARY_UID, AR.SECONDARY_UID, AR.DATE_ISSUED_TO_IBM, AR. DATE_ISSUED_TO_USER  ";
-                    $sql.= " ,AR.DATE_RETURNED ,V.CREATED_DATE as VARB_CREATED ";
+                    $sql.= " ,AR.DATE_RETURNED  ";
                     $sql.= " FROM " . $_SESSION['Db2Schema']. "." . allTables::$ASSET_REQUESTS  . " as AR ";
                     $sql.= " LEFT JOIN " . $_SESSION['Db2Schema']. "." . allTables::$PERSON . " as P ";
                     $sql.= " ON P.CNUM = AR.CNUM ";
