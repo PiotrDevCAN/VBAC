@@ -56,9 +56,11 @@ switch (true) {
                 break;
             case 'bauRaised':
                 $predicate .= " AND ORDERIT_STATUS='" . assetRequestRecord::STATUS_ORDERIT_RAISED . "' AND P.TT_BAU='BAU' " ;
+                $predicate .= " AND USER_CREATED='" . assetRequestRecord::CREATED_PMO . "' " ;
                 break;
             case 'nonBauRaised':
                 $predicate .= " AND ORDERIT_STATUS='" . assetRequestRecord::STATUS_ORDERIT_RAISED . "' AND ( P.TT_BAU!='BAU' or P.TT_BAU is null )  " ;
+                $predicate .= " AND USER_CREATED='" . assetRequestRecord::CREATED_PMO . "' " ;
                 break;
             default:
                 ;
