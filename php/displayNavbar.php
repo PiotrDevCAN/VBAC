@@ -142,8 +142,7 @@ if($page != "index.php" && substr($page,0,3)!='cdi'){
 $rep = null;
 !empty($isRep1) ? $rep .= '<small>(R1)</small>' : '';
 
-$userString = 'User';
-$userString.= $isRequestor ? "+" : null;
+$requestor= $isRequestor ? "+" : null;
 
 ?>
 
@@ -151,10 +150,11 @@ $(document).ready(function () {
 
     $('button.accessRestrict')<?=$isFm?><?=$isPmo?><?=$isCdi?><?=$isUser?><?=$isRep1?>.remove();
 
-    <?=!empty($isUser) ? '$("#userLevel").html(' . $userString . '&nbsp;' . $rep . '");console.log("user");' : null;?>
-    <?=!empty($isFm)   ? '$("#userLevel").html("Func.Mgr.&nbsp;' . $rep . '");console.log("fm");' : null;?>
-    <?=!empty($isPmo)  ? '$("#userLevel").html("PMO&nbsp;' . $rep . '");console.log("pmo");' : null;?>
-    <?=!empty($isCdi)  ? '$("#userLevel").html("CDI&nbsp;' . $rep . '");console.log("cdi");' : null;?>
+    <?=!empty($isUser) ? '$("#userLevel").html("User' . $requestor . '&nbsp;' . $rep . '");console.log("user");' : null;?>
+
+    <?=!empty($isFm)   ? '$("#userLevel").html("Func.Mgr.' . $requestor . '&nbsp;' . $rep . '");console.log("fm");' : null;?>
+    <?=!empty($isPmo)  ? '$("#userLevel").html("PMO' . $requestor . '&nbsp;' . $rep . '");console.log("pmo");' : null;?>
+    <?=!empty($isCdi)  ? '$("#userLevel").html("CDI' . $requestor . '&nbsp;' . $rep . '");console.log("cdi");' : null;?>
 
     var poContent = $('#<?=$plannedOutagesId?> a').html();
 	var badgedContent = poContent + "&nbsp;" + "<?=$plannedOutages->getBadge();?>";
