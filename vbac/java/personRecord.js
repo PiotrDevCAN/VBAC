@@ -102,6 +102,42 @@ function personRecord() {
 
   },
 
+  this.listenForDeoffBoarding = function() {
+		$(document).on('click','.btnDeoffBoarding', function(e){
+			   console.log(this);
+				var data = $(this).data();
+				console.log(data);
+			   $.ajax({
+				   url: "ajax/deoffBoarding.php",
+			       type: 'POST',
+			       data : {cnum:data.cnum},
+			       success: function(result){
+			    	   personRecord.table.ajax.reload();
+			           console.log(result);
+			           var resultObj = JSON.parse(result);
+			           if(resultObj.success==true){
+			        	   var message = "<div class=panel-heading><h3 class=panel-title>Success</h3>";
+			               message += "<br/><h4>Offboarded has been reversed.</h4></br>";
+			               $('#confirmOffboardingModal  .panel').html(message);
+			               $('#confirmOffboardingModal  .panel').addClass('panel-success');
+			               $('#confirmOffboardingModal  .panel').removeClass('panel-danger');
+			             } else {
+				           var message = "<div class=panel-heading><h3 class=panel-title>Failure</h3>";
+				           message += "<br/><h4>Offboarding has <b>NOT</b> been reversed</h4></br>";
+			               $('#confirmOffboardingModal  .panel').html(message);
+			               $('#confirmOffboardingModal  .panel').addClass('panel-danger');
+			               $('#confirmOffboardingModal  .panel').removeClass('panel-success');
+			             };
+	                	 $('#confirmOffboardingModal').modal('show');
+			       }
+			   });
+			});
+
+
+
+
+  },
+
 
 
 

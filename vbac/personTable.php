@@ -238,6 +238,16 @@ class personTable extends DbTable {
             $row['REVALIDATION_STATUS'] .= $revalidationStatus;
          }
 
+         if( ($_SESSION['isPmo'] || $_SESSION['isCdi']) && substr(trim($row['REVALIDATION_STATUS']),0,10)==personRecord::REVALIDATED_OFFBOARDED )  {
+             $row['REVALIDATION_STATUS']  = "<button type='button' class='btn btn-default btn-xs btnDeoffBoarding btn-danger' aria-label='Left Align' ";
+             $row['REVALIDATION_STATUS'] .= "data-cnum='" .$cnum . "'";
+             $row['REVALIDATION_STATUS'] .= "title='Bring back from Offboarding.'";
+             $row['REVALIDATION_STATUS'] .= " > ";
+             $row['REVALIDATION_STATUS'] .= "<span class='glyphicon glyphicon-log-in ' aria-hidden='true'></span>";
+             $row['REVALIDATION_STATUS'] .= " </button> ";
+             $row['REVALIDATION_STATUS'] .= $revalidationStatus;
+         }
+
 
 
         return $row;
@@ -653,6 +663,26 @@ class personTable extends DbTable {
         }
 
     }
+
+    function deOffboarded ($cnum){
+        if(!empty($cnum)){
+            $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+            $sql .= " SET REVALIDATION_STATUS= SUBSTR(REVALIDATION_STATUS,12), REVALIDATION_DATE_FIELD = current date, OFFBOARDED_DATE = null  ";
+            $sql .= " WHERE CNUM = '" . db2_escape_string($cnum) . "'";
+
+            $rs = db2_exec($_SESSION['conn'],$sql);
+
+            if(!$rs){
+                DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+                return false;
+            }
+            AuditTable::audit("CNUM: $cnum  has been been REVERSED from Offboarded",AuditTable::RECORD_TYPE_AUDIT);
+            return true;
+        }
+
+    }
+
+
 
 
     private function prepareUpdateLbgLocationStmt(){

@@ -54,6 +54,7 @@ $(document).ready(function(){
 	person.listenForConfirmFmFlag();
 	person.listenforUpdateBoarding();
 	person.listenForStopOffBoarding();
+	person.listenForDeoffBoarding();
 	person.listenForOffBoardingCompleted();
 	person.listenForBtnOffboarding();
 });
