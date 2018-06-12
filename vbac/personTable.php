@@ -729,9 +729,24 @@ class personTable extends DbTable {
                 return false;
             }
 
+            $locationRow = db2_fetch_assoc($rs);
+
+            $sql = " SELECT FM_CNUM FROM " .  $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
+
+            $rs = db2_exec($_SESSION['conn'], $sql);
+
+            if(!$rs){
+                DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared statment');
+                return false;
+            }
+
+            $fmrow = db2_fetch_assoc($rs);
+
+
             $row = db2_fetch_assoc($rs);
-            $location = !empty($row['LBG_LOCATION']) ? trim($row['LBG_LOCATION']) : false;
-            return $location;
+            $location = !empty($locationRow['LBG_LOCATION']) ? trim($locationRow['LBG_LOCATION']) : false;
+            $fmCnum = !empty($fmrow['FM_CNUM']) ? trim($fmrow['FM_CNUM']) : false;
+            return array('location'=>$location,'fmCnum'=>$fmCnum);
         }
         return false;
     }

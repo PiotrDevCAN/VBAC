@@ -141,6 +141,7 @@ function assetRequest() {
 		  		        	console.log('did we get a location?');
 		  		        	var resultObj = JSON.parse(result);
 		  		        	var lbgLocation = resultObj.lbgLocation;
+		  		        	var fmCnum = resultObj.fmCnum;
 		  				    $('.locationFor').attr('disabled',false);
 		  				    if(lbgLocation){
 		  				    	console.log('yes, we got a location');
@@ -153,6 +154,7 @@ function assetRequest() {
 		  				    	        	}
 		  				    	    }
 		  				    	});
+		  				    	$('#approvingManager').val(fmCnum).trigger('change');
 		  				    } else {
 		  				    	console.log('no, we did not get a location');
 		  				    	$('.locationFor').val('').trigger('change');

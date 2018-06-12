@@ -3,9 +3,9 @@ use vbac\personTable;
 
 ob_start();
 
-$lbgLocation = !empty($_GET['cnum']) ? personTable::getLbgLocationForCnum($_GET['cnum']) : false ;
+$details = !empty($_GET['cnum']) ? personTable::getLbgLocationForCnum($_GET['cnum']) : false ;
 
 $messages = ob_get_clean();
-$response = array('lbgLocation'=>$lbgLocation,'messages'=>$messages);
+$response = array('lbgLocation'=>$details['location'],'fmCnum'=>$details['fmCnum'],'messages'=>$messages);
 ob_clean();
 echo json_encode($response);
