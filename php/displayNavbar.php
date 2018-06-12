@@ -40,6 +40,7 @@ $revalidation   = new NavbarOption('Revalidation Portal','pa_revalidation.php','
 $control        = new NavbarOption('Control', 'pa_control.php','accessCdi accessPmo');
 $audit          = new NavbarOption('Audit Report', 'pa_auditListing.php','accessCdi accessPmo');
 $requestableAssets  = new NavbarOption('Requestable Assets', 'pa_requestableAssets.php','accessCdi accessPmo');
+$delegate       = new NavbarOption('Delegates', 'pc_delegate.php','accessCdi accessPmo accessFm accessUser');
 
 
 $email          = new NavbarOption('Email Log', 'pi_emailLog.php','accessCdi');
@@ -49,9 +50,14 @@ $adminMenu->addOption($revalidation);
 $adminMenu->addOption( new NavbarDivider('accessPmo accessCdi'));
 $adminMenu->addOption($control);
 $adminMenu->addOption($requestableAssets);
+$adminMenu->addOption( new NavbarDivider('accessPmo accessCdi accessUser accessFm'));
+$adminMenu->addOption($delegate);
+
+
 $adminMenu->addOption( new NavbarDivider('accessCdi'));
 $adminMenu->addOption($audit);
 $adminMenu->addOption($email);
+
 
 $boarding       = new NavbarMenu('Boarding');
 $onBoarding     = new NavbarOption('OnBoard','pb_onboard.php','accessCdi accessPmo accessFm');
