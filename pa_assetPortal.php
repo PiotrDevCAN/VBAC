@@ -24,7 +24,7 @@ $assetTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
 <button id='exportBauForOrderIt' 	class='btn btn-dark btn-sm accessBasedBtn accessPmo accessCdi'>Export BAU for Order IT&nbsp;<span class="badge" id='countBauForExport'>**</span></button>
 <button id='exportNonBauForOrderIt'	class='btn btn-dark btn-sm accessBasedBtn accessPmo accessCdi'>Export non-BAU for Order IT&nbsp;<span class="badge" id='countNonBauExport'>**</span></button>
 &nbsp;
-<button id='mapVarbToOrderIt' 		class='btn btn-info btn-sm accessBasedBtn accessPmo accessCdi'>Map vARB to Order IT</button>
+<button id='mapVarbToOrderIt' 		class='btn btn-info btn-sm accessBasedBtn accessPmo accessCdi'>Map to Order IT</button>
 <button id='setOrderItStatus' 		class='btn btn-info btn-sm accessBasedBtn accessPmo accessCdi'>Set Order IT Status</button>
 &nbsp;
 <button id='reportReload'  		class='btn btn-warning btn-sm '>Reload Data</button>
