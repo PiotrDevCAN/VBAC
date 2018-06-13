@@ -74,6 +74,11 @@ class assetRequestsTable extends DbTable{
     }
 
     static function returnForPortal($predicate=null,$withButtons=true){
+        $loader = new Loader();
+        $myCnum = personTable::myCnum();
+        $amADelegateForRaw = $loader->load('EMAIL_ADDRESS',allTables::$DELEGATE," DELEGATE_CNUM='" . db2_escape_string($myCnum) . "' ");
+        $amADelegateFor = array_map('strtolower',$amADelegateForRaw);
+
         $sql  = " SELECT ";
 //        $sql .= " concat('000000',AR.REQUEST_REFERNCE) as car,";
         $sql .= " AR.REQUEST_REFERENCE as reference, ";
@@ -132,9 +137,9 @@ class assetRequestsTable extends DbTable{
 
             $justificationEditAllowed = $row['STATUS'] == assetRequestRecord::STATUS_CREATED || $row['STATUS'] == assetRequestRecord::STATUS_REJECTED;
 
-            $isRequestor = strtolower(trim($row['REQUESTOR_EMAIL'])) == strtolower(trim($_SESSION['ssoEmail']));
-            $isRequestee = strtolower(trim($row['REQUESTEE_EMAIL'])) == strtolower(trim($_SESSION['ssoEmail']));
-            $isApprover  = strtolower(trim($row['APPROVER_EMAIL'])) == strtolower(trim($_SESSION['ssoEmail']));
+            $isRequestor = (strtolower(trim($row['REQUESTOR_EMAIL'])) == strtolower(trim($_SESSION['ssoEmail'])) or (in_array(strtolower(trim($ROW['REQUESTOR_EMAIL'])), $amADelegateFor)));
+            $isRequestee = (strtolower(trim($row['REQUESTEE_EMAIL'])) == strtolower(trim($_SESSION['ssoEmail'])) or (in_array(strtolower(trim($ROW['REQUESTEE_EMAIL'])), $amADelegateFor)));
+            $isApprover  = (strtolower(trim($row['APPROVER_EMAIL']))  == strtolower(trim($_SESSION['ssoEmail'])) or (in_array(strtolower(trim($ROW['APPROVER_EMAIL'])), $amADelegateFor)));
 
 
             $row['REFERENCE'] =  $startItalics . trim($row['ORDERIT_NUMBER']) . ":" . $reference;

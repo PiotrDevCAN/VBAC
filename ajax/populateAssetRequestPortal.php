@@ -24,12 +24,17 @@ $pmoRaised = !empty($_POST['pmoRaised']) ?$_POST['pmoRaised'] : false;
 $pmoRaised = strtolower($pmoRaised)=='true';
 // $showAll = $showAll==='true' ? true : false;
 
-
+$withButtons = true;
 $predicate = null;
 switch (true) {
     case $_SESSION['isFm']:
         echo "is FM";
         $myCnum = personTable::myCnum();
+
+//         $amADelegateForRaw = $loader->load('EMAIL_ADDRESS',allTables::$DELEGATE," DELEGATE_CNUM='" . db2_escape_string($myCnum) . "' ");
+//         $amADelegateFor = array_map('strtolower',$amADelegateForRaw);
+
+
         $myEmail = trim(strtolower($GLOBALS['ltcuser']['mail']));
         $myPeople = $loader->load("CNUM",allTables::$PERSON," FM_CNUM='" . trim($myCnum) . "' ");
         $myPeopleListed = "'";
@@ -37,7 +42,10 @@ switch (true) {
             $myPeopleListed .= db2_escape_string($personCnum) . "','";
         }
         $myPeopleListed .= "'";
-        $predicate .= " AND AR.CNUM in ('". db2_escape_string($myCnum) . "'," . $myPeopleListed . ") or lower(APPROVER_EMAIL) ='" . db2_escape_string($myEmail) . "' ";
+        $predicate .= " AND ( AR.CNUM in ('". db2_escape_string($myCnum) . "'," . $myPeopleListed . ") or lower(APPROVER_EMAIL) ='" . db2_escape_string($myEmail) . "' ";
+        $predicate .= "       OR ";
+        $predicate .= "       D.DELEGATE_CNUM='" . db2_escape_string($myCnum) . "' ) ";
+
         break;
     case $_SESSION['isCdi']:
         echo "is CDI";
@@ -73,11 +81,12 @@ switch (true) {
         $predicate .= " AND ( AR.CNUM = '". db2_escape_string($myCnum) . "' ";
         $predicate .= "       OR ";
         $predicate .= "       D.DELEGATE_CNUM='" . db2_escape_string($myCnum) . "' ) ";
+        $withButtons = false;
     break;
 }
 
 
-$dataAndSql = assetRequestsTable::returnForPortal($predicate);
+$dataAndSql = assetRequestsTable::returnForPortal($predicate, $withButtons);
 $data = $dataAndSql['data'];
 $sql  = $dataAndSql['sql'];
 
