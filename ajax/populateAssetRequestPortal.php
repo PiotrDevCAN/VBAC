@@ -70,7 +70,9 @@ switch (true) {
     default:
         echo "is default";
         $myCnum = personTable::myCnum();
-        $predicate .= " AND AR.CNUM = '". db2_escape_string($myCnum) . "' ";
+        $predicate .= " AND ( AR.CNUM = '". db2_escape_string($myCnum) . "' ";
+        $predicate .= "       OR ";
+        $predicate .= "       D.DELEGATE_CNUM='" . db2_escape_string($myCnum) . "' ) ";
     break;
 }
 
