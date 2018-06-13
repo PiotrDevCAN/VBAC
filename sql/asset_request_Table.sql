@@ -31,6 +31,43 @@ ALTER TABLE "VBAC"."ASSET_REQUESTS" 	RENAME COLUMN ORDERIT_GROUP_REF to ORDERIT_
 ALTER TABLE "ROB_DEV"."ASSET_REQUESTS" ADD CONSTRAINT "PI_ASSET_REQUESTS_00001" PRIMARY KEY
 	("REQUEST_REFERENCE");
 
+
+
+
+drop view vbac_ut.asset_requests_events_interim;
+
+create view vbac.asset_requests_events_interim as
+select request_reference as ref,
+case when event = 'Created in vBAC' then occured else null end  as created_in_vbac,
+case when event = 'Rejected in vBAC' then occured else null end as rejected_in_vbac,
+case when event = 'Approved for Order IT' then occured else null end as approved_for_order_it,
+case when event = 'Pre-req Created' then occured else null end as pre_req_created,
+case when event = 'Pre-req Approved' then occured else null end as pre_req_approved,
+case when event = 'Exported for Order IT' then occured else null end  as exported_for_order_it,
+case when event = 'Raised in Order IT' then occured else null end  as raised_in_order_it,
+case when event = 'Approved in Order IT' then occured else null end as approved_in_order_it,
+case when event = 'Rejected in Order IT' then occured else null end as rejected_in_order_it,
+case when event = 'Provisioned by Order IT' then occured else null end as provisioned_by_order_it
+from vbac.asset_requests_events;
+
+
+create view vbac.asset_requests_events_summary as
+select ref, max(created_in_vbac) as created_in_vbac
+, max(rejected_in_vbac) as rejected_in_vbac
+, max(approved_for_order_it) as approved_for_order_it
+, max(pre_req_created) as pre_req_created
+, max(pre_req_approved) as pre_req_approved
+, max(exported_for_order_it) as exported_for_order_it
+, max(raised_in_order_it) as raised_in_order_it
+, max(approved_in_order_it) as appproved_in_order_it
+, max(rejected_in_order_it) as rejected_in_order_it
+, max(provisioned_by_order_it) as provisioned_by_order_it
+from vbac.asset_requests_events_interim
+group by ref;
+
+
+
+
 DROP TABLE "ROB_DEV"."ORDER_IT_VARB_TRACKER";
 
 CREATE TABLE "ROB_DEV"."ORDER_IT_VARB_TRACKER"(
@@ -51,4 +88,7 @@ ALTER TABLE ROB_DEV.ORDER_IT_VARB_TRACKER
  alter table "VBAC".ASSET_REQUESTS
 	 alter column "BUSINESS_JUSTIFICATION"
 	  set data type varchar(512) ;
+
+
+
 

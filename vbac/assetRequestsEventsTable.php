@@ -9,6 +9,8 @@ class assetRequestsEventsTable extends DbTable{
 
     const EVENT_CREATED             = assetRequestRecord::STATUS_CREATED;
     const EVENT_VBAC_APPROVED       = assetRequestRecord::STATUS_APPROVED;
+    const EVENT_PRE_REQ_CREATED     = 'Pre-req Created';
+    const EVENT_PRE_REQ_APPROVED    = 'Pre-req Approved';
     const EVENT_VBAC_REJECTED       = assetRequestRecord::STATUS_REJECTED;
     const EVENT_EXPORTED            = assetRequestRecord::STATUS_EXPORTED;
     const EVENT_PROVISIONED         = assetRequestRecord::STATUS_PROVISIONED;

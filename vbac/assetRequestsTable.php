@@ -2274,6 +2274,8 @@ class assetRequestsTable extends DbTable{
 
     function linkPrereqs($assetReferences){
 
+        $assetRequestEventsTable = new assetRequestsEventsTable(allTables::$ASSET_REQUESTS_EVENTS);
+
         $autocommit = db2_autocommit($_SESSION['conn'],DB2_AUTOCOMMIT_OFF);
 
         $listOfAssetRefs = implode("','", $assetReferences);
@@ -2308,6 +2310,8 @@ class assetRequestsTable extends DbTable{
                     DbTable::displayErrorMessage($rs2,__CLASS__, __METHOD__, $sql);
                     return false;
                 }
+
+                $assetRequestEventsTable->logEventForRequest(assetRequestsEventsTable::EVENT_PRE_REQ_CREATED, $row['REQUEST_REFERENCE']);
             }
 
 

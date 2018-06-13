@@ -4,12 +4,9 @@ use vbac\allTables;
 use itdq\AuditTable;
 use vbac\personTable;
 use vbac\assetRequestRecord;
-
-function timestampNow($comment){
-    $new = new DateTime();
-    echo "<br/>" . $new->format('H:i:s.u') . ":" . $comment;
-}
-
+use itdq\Loader;
+use vbac\assetRequestsEventsTable;
+use itdq\AllItdqTables;
 
 ob_start();
 AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_REQUEST,true) . "</b>",AuditTable::RECORD_TYPE_DETAILS);
@@ -20,8 +17,6 @@ $personTable = new personTable(allTables::$PERSON);
 $autoCommit = db2_autocommit($_SESSION['conn'],DB2_AUTOCOMMIT_OFF);
 
 $success = false;
-
-timestampNow('Before Loop');
 
 foreach ($_POST['status'] as $reference => $statusIndicator){
     set_time_limit(60);
@@ -41,6 +36,15 @@ foreach ($_POST['status'] as $reference => $statusIndicator){
         $requestDetails = $assetRequestTable->getCnumAndAssetForReference($reference);
         if($requestDetails){
             $personTable->assetUpdate($requestDetails['cnum'], $requestDetails['assetTitle'], $primaryUid);
+        }
+    }
+    // Now, if we're setting to approved - ?Has that released any of our pre-reqs, if so log that event
+    if($success && trim($statusIndicator)==assetRequestRecord::STATUS_ORDERIT_APPROVED){
+        $assetRequestEventsTable = new assetRequestsEventsTable(allTables::$ASSET_REQUESTS_EVENTS);
+        $loader = new Loader();
+        $postReqs = $loader->load('REQUEST_REFERENCE',allTables::$ASSET_REQUESTS," PRE_REQ_REQUEST='" . db2_escape_string($reference) . "' ");
+        foreach ($postReqs as $postReqReference){
+            $assetRequestEventsTable->logEventForRequest(assetRequestsEventsTable::EVENT_PRE_REQ_APPROVED, $postReqReference);
         }
     }
 }
