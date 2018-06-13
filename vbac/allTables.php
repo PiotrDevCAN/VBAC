@@ -11,7 +11,8 @@ namespace vbac;
 class allTables
 {
     public static $ASSET_REQUESTS     = 'ASSET_REQUESTS';
-    public static $ASSET_REQUESTS_EVENTS     = 'ASSET_REQUESTS_EVENTS';
+    public static $ASSET_REQUESTS_EVENTS  = 'ASSET_REQUESTS_EVENTS';
+    public static $ASSET_REQUESTS_EVENTS_SUMMARY  = 'ASSET_REQUESTS_EVENTS_SUMMARY';
 
     public static $DB2_ERRORS         = 'DB2_ERRORS';
 

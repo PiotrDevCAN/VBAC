@@ -1483,29 +1483,38 @@ class assetRequestsTable extends DbTable{
         $recordsFound = false;
         $loader = new Loader();
         array_map('trim',$allStatus);
-        $ctbOnly =  array(false,true);
+//        $ctbOnly =  array(false,true);
+        $userCreated = array(false,true);
         $sheet = 1;
 
 //         if(!empty($allStatus)){
-            foreach ($ctbOnly as $isThisCtb){
+        foreach ($userCreated as $uCreated  ) {
+//            foreach ($ctbOnly as $isThisCtb){
 //                 foreach ($allStatus as $key => $value) {
-                    $sql = " SELECT AR.ORDERIT_VARB_REF, V.CREATED_DATE, V.CREATED_BY,AR.STATUS, AR.ORDERIT_STATUS, AR.ORDERIT_NUMBER, AR.REQUEST_REFERENCE, AR.ASSET_TITLE, AR.BUSINESS_JUSTIFICATION, AR.COMMENT, AR.REQUESTOR_EMAIl, AR.REQUESTED, AR.APPROVER_EMAIL, AR.APPROVED,  AR.PRIMARY_UID, AR.SECONDARY_UID ";
-                    $sql .= " FROM " . $_SESSION['Db2Schema']. "." . allTables::$ASSET_REQUESTS  . " as AR ";
-                    $sql .= " LEFT JOIN " . $_SESSION['Db2Schema']. "." . allTables::$PERSON . " as P ";
-                    $sql .= " ON P.CNUM = AR.CNUM ";
-                    $sql .= " LEFT JOIN " . $_SESSION['Db2Schema']. "." . allTables::$ORDER_IT_VARB_TRACKER . " as V ";
-                    $sql .= " ON right(trim(AR.ORDERIT_VARB_REF),5) = right(concat('000000',V.VARB),5) ";
-                    $sql .= " WHERE 1=1 ";
-                    $sql .= " AND AR.STATUS in ('" . assetRequestRecord::STATUS_EXPORTED . "','" . assetRequestRecord::STATUS_RAISED_ORDERIT . "') ";
-                    $sql .= " AND AR.ORDERIT_STATUS not in ('" . assetRequestRecord::STATUS_ORDERIT_APPROVED . "','" . assetRequestRecord::STATUS_ORDERIT_CANCELLED . "','" . assetRequestRecord::STATUS_ORDERIT_REJECTED. "') ";
-                    $sql .= " AND (AR.REQUEST_RETURN = 'No' or AR.REQUEST_RETURN is null ) ";
-//                     $sql .= " AND ( ";
-//                     $sql .= "      ( USER_CREATED = 'No' AND AR.STATUS in ('" . assetRequestRecord::STATUS_RAISED_ORDERIT . "') )";
-//                     $sql .= "      OR ";
-//                     $sql .= "      ( USER_CREATED = 'Yes' AND AR.APPROVED is not null )";
-//                     $sql .= "    ) ";
-                    $sql .= $isThisCtb ? " AND upper(P.CTB_RTB='CTB') " : " AND (upper(P.CTB_RTB != 'CTB') or P.CTB_RTB is null ) ";
-                    $sql .= " ORDER BY V.CREATED_DATE desc ";
+                    $sql = " SELECT AR.ORDERIT_VARB_REF, V.CREATED_DATE, V.CREATED_BY,AR.STATUS, AR.ORDERIT_STATUS ";
+                    $sql.= ", AR.ORDERIT_NUMBER, AR.REQUEST_REFERENCE, AR.ASSET_TITLE, AR.BUSINESS_JUSTIFICATION, AR.COMMENT ";
+                    $sql.= ", AR.REQUESTOR_EMAIl, AR.REQUESTED, AR.APPROVER_EMAIL, AR.APPROVED,  AR.PRIMARY_UID, AR.SECONDARY_UID ";
+                    $sql.= ", ES.* ";
+                    $sql.= " FROM " . $_SESSION['Db2Schema']. "." . allTables::$ASSET_REQUESTS  . " as AR ";
+                    $sql.= " LEFT JOIN " . $_SESSION['Db2Schema']. "." . allTables::$PERSON . " as P ";
+                    $sql.= " ON P.CNUM = AR.CNUM ";
+                    $sql.= " LEFT JOIN " . $_SESSION['Db2Schema']. "." . allTables::$ORDER_IT_VARB_TRACKER . " as V ";
+                    $sql.= " ON right(trim(AR.ORDERIT_VARB_REF),5) = right(concat('000000',V.VARB),5) ";
+                    $sql.= " LEFT JOIN " . $_SESSION['Db2Schema']. "." . allTables::$ASSET_REQUESTS_EVENTS_SUMMARY . " as ES ";
+                    $sql.= " ON AR.REQUEST_REFERENCE = ES.REF ";
+
+                    $sql.= " WHERE 1=1 ";
+                    $sql.= " AND AR.STATUS in ('" . assetRequestRecord::STATUS_EXPORTED . "','" . assetRequestRecord::STATUS_RAISED_ORDERIT . "') ";
+                    $sql.= " AND AR.ORDERIT_STATUS not in ('" . assetRequestRecord::STATUS_ORDERIT_APPROVED . "','" . assetRequestRecord::STATUS_ORDERIT_CANCELLED . "','" . assetRequestRecord::STATUS_ORDERIT_REJECTED. "') ";
+                    $sql.= " AND (AR.REQUEST_RETURN = 'No' or AR.REQUEST_RETURN is null ) ";
+                    $sql.= $uCreated ? " AND USER_CREATED='" . assetRequestRecord::CREATED_USER . "' " : " AND USER_CREATED='" . assetRequestRecord::CREATED_PMO . "'  ";
+//                     $sql.= " AND ( ";
+//                     $sql.= "      ( USER_CREATED = 'No' AND AR.STATUS in ('" . assetRequestRecord::STATUS_RAISED_ORDERIT . "') )";
+//                     $sql.= "      OR ";
+//                     $sql.= "      ( USER_CREATED = 'Yes' AND AR.APPROVED is not null )";
+//                     $sql.= "    ) ";
+//                    $sql.= $isThisCtb ? " AND upper(P.CTB_RTB='CTB') " : " AND (upper(P.CTB_RTB != 'CTB') or P.CTB_RTB is null ) ";
+                    $sql.= " ORDER BY V.CREATED_DATE desc ";
                     $rs = db2_exec($_SESSION['conn'], $sql);
 
                     AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
@@ -1526,17 +1535,14 @@ class assetRequestsTable extends DbTable{
                         $spreadsheet->getActiveSheet()->setCellValueByColumnAndRow(1, 2,"No records found");
                     }
                     // Rename worksheet & create next.
-                    $sheetTitle = $isThisCtb ? "CTB" : "Non CTB";
+                    $sheetTitle = $uCreated ? "User Created" : "PMO Created";
                     $spreadsheet->getActiveSheet()->setTitle($sheetTitle);
                     $spreadsheet->createSheet();
                     $spreadsheet->setActiveSheetIndex($sheet++);
 //                 }
-            }
-//         }
-        //         $nonPmo = self::countRequestsForNonPmoExport();
+//            }
+        }
 
-        //         if($nonPmo > 0){
-        //         }
 
         return true;
     }
