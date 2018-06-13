@@ -16,7 +16,7 @@ class delegateRecord extends DbRecord
     protected $CNUM;
     protected $EMAIL_ADDRESS;
     protected $DELEGATE_CNUM;
-    protected $DELEGATE_EMAIL_ADDRESS;
+    protected $DELEGATE_EMAIL;
 
     function displayForm(){
         $loader = new Loader();
@@ -50,24 +50,49 @@ class delegateRecord extends DbRecord
                         ?>
             	</select>
             	</div>
+            	<div id='resultHere'></div>
            	</div>
 
 
         <div class='panel-footer'>
         	<?php
+        	$myCnum = personTable::myCnum();
             $allButtons = null;
             $submitButton =   $this->formButton('submit','Submit','saveDelegate',null,'Save','btn btn-primary');
             $allButtons[] = $submitButton;
             $this->formBlueButtons($allButtons);
-            $this->formHiddenInput('requestor',$GLOBALS['ltcuser']['mail'],'requestor');
+            $this->formHiddenInput('requestorEmail',$_SESSION['ssoEmail'],'requestorEmail');
+            $this->formHiddenInput('requestorCnum',$myCnum,'requestorCnum');
             ?>
         </div>
+
+        </div>
+
         </div> <!--  Panel     -->
 
 		<?php
     }
 
 
+    function displayMyDelegates(){
+        ?>
+       	<div class="panel panel-primary">
+ 		<div class="panel-heading">
+			<h3 class="panel-title">My Delegates</h3>
+		</div>
 
+		<div class="panel-body">
+
+          	<table id='myDelegatesTable' class='table table-striped table-bordered compact' cellspacing='0' width='100%'>
+        	<thead>
+        	<tr><th>Email</th><th>Delete</th></tr>
+        	</thead>
+        	</table>
+        </div>
+        <div class='panel-footer'>
+        </div>
+        </div>
+        <?php
+    }
 
 }

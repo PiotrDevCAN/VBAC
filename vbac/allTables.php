@@ -15,6 +15,7 @@ class allTables
     public static $ASSET_REQUESTS_EVENTS_SUMMARY  = 'ASSET_REQUESTS_EVENTS_SUMMARY';
 
     public static $DB2_ERRORS         = 'DB2_ERRORS';
+    public static $DELEGATE           = 'DELEGATE';
 
     public static $ORDER_IT_VARB_TRACKER = 'ORDER_IT_VARB_TRACKER';
 
