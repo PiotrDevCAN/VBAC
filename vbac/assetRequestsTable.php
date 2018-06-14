@@ -117,6 +117,7 @@ class assetRequestsTable extends DbTable{
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+            var_dump($sql);
         }
 
         $data = array();
@@ -124,7 +125,7 @@ class assetRequestsTable extends DbTable{
         while(($preTrimmed=db2_fetch_assoc($rs))==true){
 
             $row = array_map('trim', $preTrimmed);
-
+            
             $userRaised = strtoupper($row['USER_CREATED'])=='YES';
             $approved   = $row['STATUS'] == assetRequestRecord::STATUS_APPROVED;
 
