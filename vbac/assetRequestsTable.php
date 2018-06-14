@@ -1502,8 +1502,8 @@ class assetRequestsTable extends DbTable{
         foreach ($userCreated as $uCreated  ) {
 //            foreach ($ctbOnly as $isThisCtb){
 //                 foreach ($allStatus as $key => $value) {
-                    $sql = " SELECT AR.ORDERIT_VARB_REF, V.CREATED_DATE, V.CREATED_BY,AR.STATUS, AR.ORDERIT_STATUS ";
-                    $sql.= ", AR.ORDERIT_NUMBER, AR.REQUEST_REFERENCE, AR.ASSET_TITLE, AR.BUSINESS_JUSTIFICATION, AR.COMMENT ";
+                    $sql = " SELECT AR.REQUEST_REFERENCE, AR.ORDERIT_NUMBER, AR.ORDERIT_VARB_REF, V.CREATED_DATE, V.CREATED_BY,AR.STATUS, AR.ORDERIT_STATUS ";
+                    $sql.= ", AR.ASSET_TITLE, AR.BUSINESS_JUSTIFICATION, AR.COMMENT ";
                     $sql.= ", AR.REQUESTOR_EMAIl, AR.REQUESTED, AR.APPROVER_EMAIL, AR.APPROVED,  AR.PRIMARY_UID, AR.SECONDARY_UID ";
                     $sql.= ", ES.* ";
                     $sql.= " FROM " . $_SESSION['Db2Schema']. "." . allTables::$ASSET_REQUESTS  . " as AR ";
@@ -1525,7 +1525,7 @@ class assetRequestsTable extends DbTable{
 //                     $sql.= "      ( USER_CREATED = 'Yes' AND AR.APPROVED is not null )";
 //                     $sql.= "    ) ";
 //                    $sql.= $isThisCtb ? " AND upper(P.CTB_RTB='CTB') " : " AND (upper(P.CTB_RTB != 'CTB') or P.CTB_RTB is null ) ";
-                    $sql.= " ORDER BY V.CREATED_DATE desc ";
+                    $sql.= " ORDER BY Ar..REQUEST_REFERENCE desc ";
                     $rs = db2_exec($_SESSION['conn'], $sql);
 
                     AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
