@@ -120,11 +120,17 @@ class assetRequestsTable extends DbTable{
             var_dump($sql);
         }
 
+        
+        var_dump($sql);
+        
         $data = array();
 
         while(($preTrimmed=db2_fetch_assoc($rs))==true){
 
-            $row = array_map('trim', $preTrimmed);
+            $row = array_map('trim', $preTrimmed);    
+            
+            var_dump($row);
+            
             
             $userRaised = strtoupper($row['USER_CREATED'])=='YES';
             $approved   = $row['STATUS'] == assetRequestRecord::STATUS_APPROVED;
@@ -138,9 +144,9 @@ class assetRequestsTable extends DbTable{
 
             $justificationEditAllowed = $row['STATUS'] == assetRequestRecord::STATUS_CREATED || $row['STATUS'] == assetRequestRecord::STATUS_REJECTED;
 
-            $isRequestor = (strtolower(trim($row['REQUESTOR_EMAIL'])) == strtolower(trim($_SESSION['ssoEmail'])) or (in_array(strtolower(trim($ROW['REQUESTOR_EMAIL'])), $amADelegateFor)));
-            $isRequestee = (strtolower(trim($row['REQUESTEE_EMAIL'])) == strtolower(trim($_SESSION['ssoEmail'])) or (in_array(strtolower(trim($ROW['REQUESTEE_EMAIL'])), $amADelegateFor)));
-            $isApprover  = (strtolower(trim($row['APPROVER_EMAIL']))  == strtolower(trim($_SESSION['ssoEmail'])) or (in_array(strtolower(trim($ROW['APPROVER_EMAIL'])), $amADelegateFor)));
+            $isRequestor = (strtolower(trim($row['REQUESTOR_EMAIL'])) == strtolower(trim($_SESSION['ssoEmail'])) or (in_array(strtolower(trim($row['REQUESTOR_EMAIL'])), $amADelegateFor)));
+            $isRequestee = (strtolower(trim($row['REQUESTEE_EMAIL'])) == strtolower(trim($_SESSION['ssoEmail'])) or (in_array(strtolower(trim($row['REQUESTEE_EMAIL'])), $amADelegateFor)));
+            $isApprover  = (strtolower(trim($row['APPROVER_EMAIL']))  == strtolower(trim($_SESSION['ssoEmail'])) or (in_array(strtolower(trim($row['APPROVER_EMAIL'])), $amADelegateFor)));
 
 
             $row['REFERENCE'] =  $startItalics . trim($row['ORDERIT_NUMBER']) . ":" . $reference;
