@@ -1525,7 +1525,7 @@ class assetRequestsTable extends DbTable{
 //                     $sql.= "      ( USER_CREATED = 'Yes' AND AR.APPROVED is not null )";
 //                     $sql.= "    ) ";
 //                    $sql.= $isThisCtb ? " AND upper(P.CTB_RTB='CTB') " : " AND (upper(P.CTB_RTB != 'CTB') or P.CTB_RTB is null ) ";
-                    $sql.= " ORDER BY Ar..REQUEST_REFERENCE desc ";
+                    $sql.= " ORDER BY Ar.REQUEST_REFERENCE desc ";
                     $rs = db2_exec($_SESSION['conn'], $sql);
 
                     AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
