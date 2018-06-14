@@ -1515,7 +1515,7 @@ class assetRequestsTable extends DbTable{
                     $sql.= " ON AR.REQUEST_REFERENCE = ES.REF ";
 
                     $sql.= " WHERE 1=1 ";
-                    $sql.= " AND AR.STATUS in ('" . assetRequestRecord::STATUS_EXPORTED . "','" . assetRequestRecord::STATUS_RAISED_ORDERIT . "') ";
+                    $sql.= $uCreated ? " AND AR.STATUS in ('" . assetRequestRecord::STATUS_APPROVED  . "' " : " AND AR.STATUS in ('" . assetRequestRecord::STATUS_EXPORTED . "','" . assetRequestRecord::STATUS_RAISED_ORDERIT . "') ";
                     $sql.= " AND AR.ORDERIT_STATUS not in ('" . assetRequestRecord::STATUS_ORDERIT_APPROVED . "','" . assetRequestRecord::STATUS_ORDERIT_CANCELLED . "','" . assetRequestRecord::STATUS_ORDERIT_REJECTED. "') ";
                     $sql.= " AND (AR.REQUEST_RETURN = 'No' or AR.REQUEST_RETURN is null ) ";
                     $sql.= $uCreated ? " AND USER_CREATED='" . assetRequestRecord::CREATED_USER . "' " : " AND USER_CREATED='" . assetRequestRecord::CREATED_PMO . "'  ";

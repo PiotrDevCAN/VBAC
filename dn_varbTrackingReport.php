@@ -20,11 +20,11 @@ $spreadsheet = new Spreadsheet();
 // Set document properties
 $spreadsheet->getProperties()->setCreator('vBAC')
 ->setLastModifiedBy('vBAC')
-->setTitle('Varb Tracker generated from vBAC')
-->setSubject('Varb Tracker')
-->setDescription('Varb Tracker generated from vBAC')
+->setTitle('Workflow Tracker generated from vBAC')
+->setSubject('Workflow Tracker')
+->setDescription('Workflow Tracker generated from vBAC')
 ->setKeywords('office 2007 openxml php vbac tracker')
-->setCategory('Varb Tracker');
+->setCategory('Workflow Tracker');
 // Add some data
 
 $now = new DateTime();
@@ -41,7 +41,7 @@ try {
 
     ob_clean();
     header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    header('Content-Disposition: attachment;filename="varbTrackerReport_' . $fileNameSuffix . '.xlsx"');
+    header('Content-Disposition: attachment;filename="WorkflowTrackerReport_' . $fileNameSuffix . '.xlsx"');
     header('Cache-Control: max-age=0');
     // If you're serving to IE 9, then the following may be needed
     header('Cache-Control: max-age=1');
