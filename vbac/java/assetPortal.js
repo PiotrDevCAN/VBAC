@@ -366,7 +366,7 @@ this.listenForReportShowUid = function(){
 		        success: function(result){
 		        	var resultObj = JSON.parse(result);
 			    	// assetPortal.table.ajax.reload();
-		        	$('#mapVarbToOrderItModal .modal-body').html(resultObj.form);
+		        	$('#mapVarbToOrderItModal .modal-body').html("<p>Hello</p>");
 		        	$('#mapVarbToOrderItModal').modal('show');
 		  		    $('#mapVarbToOrderIt').removeClass('spinning');
 				    $('#mapVarbToOrderIt').attr('disabled',false);

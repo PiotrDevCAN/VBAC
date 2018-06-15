@@ -1,6 +1,7 @@
 <?php
 
 use itdq\AuditTable;
+use itdq\DbTable;
 
 ?>
 <div class='container'>
@@ -12,6 +13,7 @@ use itdq\AuditTable;
 
 <?php
 AuditTable::removeExpired();
+DbTable::db2ErrorModal();
 ?>
 
 <div id='auditDatabaseDiv'>

@@ -48,13 +48,20 @@ class AuditTable extends DbTable {
 
 
 
-    static function returnAsArray($fromTimestamp=null,$toTimestamp = null, $predicate=null){
-        $sql  = " SELECT * FROM " . $_SESSION['Db2Schema'] . "." . AllItdqTables::$AUDIT;
+    static function returnAsArray($fromRecord=null, $length=null, $predicate=null){
+        $fromRecord = !empty($fromRecord) ? $fromRecord : 1;
+        $fromRecord = $fromRecord < 1 ? 1 : $fromRecord;
+        $length = !empty($length) ? $length : 10;
+        $length = $length < 1 ? 1 : $length;
+        $end = $fromRecord + $length;
+            
+        $sql = " SELECT TIMESTAMP, EMAIL_ADDRESS, DATA, TYPE FROM ( ";
+        $sql .= " SELECT ROW_NUMBER() OVER() AS rownum,A.* FROM " . $_SESSION['Db2Schema'] . "." . AllItdqTables::$AUDIT . " AS A ";
         $sql .= " WHERE 1=1 ";
-        $sql .= !empty($fromTimestamp) ? " AND 'TIMESTAMP'>= '" . db2_escape_string($fromTimestamp) . "' " : null;
-        $sql .= !empty($toTimestamp)   ? " AND 'TIMESTAMP'<= '" . db2_escape_string($toTimestamp) . "' " : null;
-        $sql .= !empty($predicate)   ? " AND $predicate " : null;
-
+        $sql .= !empty($predicate)   ? "  $predicate " : null;
+        $sql .= " ) as tmp ";
+        $sql .= " WHERE ROWNUM >= $fromRecord AND ROWNUM < " .  $end ;
+     
         $rs = db2_exec($_SESSION['conn'],$sql);
 
         if(!$rs){
@@ -64,10 +71,41 @@ class AuditTable extends DbTable {
         $data = array();
 
         while(($row=db2_fetch_array($rs))==true){
-            $data[] = $row;
+            $trimmedRow = array_map('trim', $row);       
+            $data[] = $trimmedRow;
         }
-
         return $data;
-
      }
+     
+     static function recordsFiltered($predicate){
+         $sql = " SELECT count(*) as recordsFiltered FROM " . $_SESSION['Db2Schema'] . "." . AllItdqTables::$AUDIT . " AS A ";
+         $sql .= " WHERE 1=1 ";
+         $sql .= !empty($predicate)   ? "  $predicate " : null;
+         
+         $rs = db2_exec($_SESSION['conn'],$sql);
+         
+         if(!$rs){
+             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+         }
+         
+         $row=db2_fetch_assoc($rs);
+         
+         return $row['RECORDSFILTERED'];
+         
+         
+     }
+     
+     static function totalRows(){
+         $sql = " SELECT count(*) as totalRows FROM " . $_SESSION['Db2Schema'] . "." . AllItdqTables::$AUDIT . " AS A ";
+         $rs = db2_exec($_SESSION['conn'],$sql);
+        
+         if(!$rs){
+             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+         }
+         
+         $row=db2_fetch_assoc($rs);   
+        
+         return $row['TOTALROWS'];
+     }
+     
 }

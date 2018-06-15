@@ -4,6 +4,7 @@
  *
  */
 
+
 function auditRecord() {
 
 	var table;
@@ -32,24 +33,34 @@ function auditRecord() {
 
 	this.initialiseDataTable = function(){
 	    // Setup - add a text input to each footer cell
-	    $('#auditTable tfoot th').each( function () {
+		var columnNumber = 1;
+	    $('#auditTable tfoot th').each( function () {	    	
 	        var title = $(this).text();
-	        $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+	        $(this).html( '<input type="text" placeholder="Search '+title+'"  id="dtSearch_' + columnNumber++ + '"  />');
 	    } );
 		// DataTable
 	    auditRecord.table = $('#auditTable').DataTable({
+	    	serverSide: true,
+	    	searchDelay: 1500,
 	    	ajax: {
 	            url: 'ajax/populateAuditDatatable.php',
 	            type: 'POST',
+	            dataSrc: function ( json ) {
+	                //Make your callback here.
+	            	console.log(json.messages.length);
+	            	console.log(json.messages.length != 0);
+	            	console.log(json.messages.length != '0' ) ;
+	            	console.log(json.messages) ;
+	            	if(json.messages.length != 0){
+		            	$('#db2ErrorModal .modal-body').html(json.messages);
+		            	$('#db2ErrorModal').modal('show');	            		
+	            	}
+	                return json.data;
+	            }             	
 	        }	,
 	        order: [[ 0, "desc" ]],
-	    	autoWidth: false,
-	    	deferRender: true,
-	    	responsive: false,
-	    	// scrollX: true,
+	    	autoWidth: true,
 	    	processing: true,
-	    	responsive: true,
-	    	colReorder: true,
 	    	dom: 'Blfrtip',
 	        buttons: [
 	                  'colvis',
@@ -58,23 +69,32 @@ function auditRecord() {
 	                  'print'
 	              ],
 	    });
-
-
+	    
+	    var searchAt = $.fn.dataTable.util.throttle(
+	      	    function ( val, col ) {
+	        	auditRecord.table.columns(col).search( val ).draw();
+	      	    },
+	       	    400
+	    );
+	    
 	    // Apply the search
 	    auditRecord.table.columns().every( function () {
-	        var that = this;
-
 	        $( 'input', this.footer() ).on( 'keyup change', function () {
-	            if ( that.search() !== this.value ) {
-	                that
-	                    .search( this.value )
-	                    .draw();
-	            }
-	        } );
-	    } );
-
-
+	        	var id = $(this).attr('id');
+	        	var column = id.substr(9);
+        		searchAt( this.value,column );
+	        });
+	    });
 	},
+	        
+
+//	        $( 'input', this.footer() ).on( 'keyup change', function () {
+//	            if ( that.search() !== this.value ) {
+//	                that
+//	                    .search( this.value )
+//	                    .draw();
+//	            }
+//	        } );
 
 
 	this.initialiseRevalidationAuditTable = function(){
