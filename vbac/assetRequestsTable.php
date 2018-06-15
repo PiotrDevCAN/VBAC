@@ -2434,6 +2434,7 @@ class assetRequestsTable extends DbTable{
          $sql.= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
          $sql.= " AND ORDERIT_STATUS in ('" . assetRequestRecord::STATUS_ORDERIT_YET . "','" . assetRequestRecord::STATUS_ORDERIT_RAISED . "') ";
          $sql.= " AND ASSET_TITLE NOT LIKE 'Other%' ";
+         $sql.= " AND ASSET_TITLE NOT LIKE ' MPW Renewal%' ";
 
          $rs = db2_exec($_SESSION['conn'], $sql);
 
