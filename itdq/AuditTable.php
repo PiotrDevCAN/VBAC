@@ -62,6 +62,8 @@ class AuditTable extends DbTable {
         $sql .= " ) as tmp ";
         $sql .= " WHERE ROWNUM >= $fromRecord AND ROWNUM < " .  $end ;
      
+        set_time_limit(0);
+        
         $rs = db2_exec($_SESSION['conn'],$sql);
 
         if(!$rs){
@@ -74,6 +76,7 @@ class AuditTable extends DbTable {
             $trimmedRow = array_map('trim', $row);       
             $data[] = $trimmedRow;
         }
+        set_time_limit(60);
         return $data;
      }
      
