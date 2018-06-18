@@ -835,7 +835,7 @@ function personRecord() {
     	$('#portalTitle').text('Person Portal - PES Report');
     	$.fn.dataTableExt.afnFiltering.pop();
     	personRecord.table.columns().visible(false,false);
-    	personRecord.table.columns([5,21,22,23,24,25,34]).visible(true);
+    	personRecord.table.columns([5,21,22,23,25,27,34]).visible(true);
     	console.log(personRecord.table);
     	personRecord.table.order([21,'desc'],[5,"asc"]).draw();
       });
