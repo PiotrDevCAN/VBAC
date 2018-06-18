@@ -676,7 +676,7 @@ class personTable extends DbTable {
     function deOffboarded ($cnum){
         if(!empty($cnum)){
             $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
-            $sql .= " SET REVALIDATION_STATUS= SUBSTR(REVALIDATION_STATUS,12), REVALIDATION_DATE_FIELD = current date, OFFBOARDED_DATE = null  ";
+            $sql .= " SET REVALIDATION_STATUS= TRIM(SUBSTR(REVALIDATION_STATUS,12)), REVALIDATION_DATE_FIELD = current date, OFFBOARDED_DATE = null  ";
             $sql .= " WHERE CNUM = '" . db2_escape_string($cnum) . "'";
 
             $rs = db2_exec($_SESSION['conn'],$sql);
