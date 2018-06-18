@@ -118,9 +118,12 @@ function auditRecord() {
 	    	var processing =( xhrPool[0].readyState!=4 );
 	    	if(processing){
 	    		$('#auditTable_processing').show(); 
+	    		$('tbody').hide();
 	    	} else {
 	    		$('#auditTable_processing').hide(); 
+	    		$('tbody').show();
 	    	}
+	    	
 	    } );
 	    
 	    
