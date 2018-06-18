@@ -36,5 +36,10 @@ $_SESSION['isPes']  = !empty($isPes)  ? true : false;
 <?=print_r($GLOBALS)?>
 </pre>
 
+<pre>
+<h3>phpInfo</h3>
+<?=phpinfo()?>
+</pre>
+
 
 </div>
