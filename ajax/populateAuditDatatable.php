@@ -22,8 +22,6 @@ $fromRecord = 1;
 $draw = $_POST['draw'] * 1;
 $start = $_POST['start'] * 1;
 
-
-
 $predicate .= !empty($_POST['columns']['1']['search']['value']) ? " and to_char(TIMESTAMP,'YYYY-MM-DD-HH24:MI:SS.NNNNNN') like '%" . strtolower(trim($_POST['columns']['1']['search']['value'])) . "%' " : null;
 $predicate .= !empty($_POST['columns']['2']['search']['value']) ? " AND lower(EMAIL_ADDRESS) like '%" . strtolower(trim($_POST['columns']['2']['search']['value'])) . "%' " : null;
 $predicate .= !empty($_POST['columns']['3']['search']['value']) ? " AND lower(DATA) like '%" . strtolower(trim($_POST['columns']['3']['search']['value'])) . "%' " : null;
@@ -34,8 +32,6 @@ $predicate .= !empty($_POST['search']['value']) ? " or lower(EMAIL_ADDRESS) like
 $predicate .= !empty($_POST['search']['value']) ? " or lower(DATA) like '%" . strtolower(trim($_POST['search']['value'])) . "%' " : null;
 $predicate .= !empty($_POST['search']['value']) ? " or lower(TYPE) like '%" . strtolower(trim($_POST['search']['value'])) . "%' " : null;
 $predicate .= !empty($_POST['search']['value']) ? " ) " : null;
-
-echo "Predicate:$predicate";
 
 $auditTable = new AuditTable(AllItdqTables::$AUDIT);
 $recordsTotal    = AuditTable::totalRows();

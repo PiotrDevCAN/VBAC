@@ -9,12 +9,18 @@ use itdq\DbTable;
 </div>
 
 <div class='container-fluid'>
+
+<div id='auditTableProgress'></div>
+
+
 <h3>Audit Table</h3>
 
 <?php
 AuditTable::removeExpired();
 DbTable::db2ErrorModal();
 ?>
+
+
 
 <div id='auditDatabaseDiv'>
 </div>
@@ -27,4 +33,5 @@ $(document).ready(function(){
 	audit.initialiseAuditTable();
 
 });
+
 </script>

@@ -5,12 +5,14 @@
  */
 
 
+
 function auditRecord() {
 
 	var table;
 	var dataTableElements;
 	var currentXmlDoc;
 	var spinner =  '<div id="overlay"><i class="fa fa-spinner fa-spin spin-big"></i></div>';
+	var xhrPool = []; // to save the ajax calls, so they can be cancelled.
 
 	this.init = function(){
 		console.log('+++ Function +++ auditRecord.init');
@@ -40,27 +42,40 @@ function auditRecord() {
 	    } );
 		// DataTable
 	    auditRecord.table = $('#auditTable').DataTable({
-	    	serverSide: true,
-	    	searchDelay: 1500,
+	        processing: true,
+	        serverSide: true,
+	        scrollColapse: false,
+	    	searchDelay: 500,
 	    	ajax: {
 	            url: 'ajax/populateAuditDatatable.php',
 	            type: 'POST',
 	            dataSrc: function ( json ) {
+	            	$('.dataTables_processing').css({"display": "block", "z-index": 10000 })
+	            	console.log(xhrPool);
 	                //Make your callback here.
-	            	console.log(json.messages.length);
-	            	console.log(json.messages.length != 0);
-	            	console.log(json.messages.length != '0' ) ;
-	            	console.log(json.messages) ;
 	            	if(json.messages.length != 0){
 		            	$('#db2ErrorModal .modal-body').html(json.messages);
 		            	$('#db2ErrorModal').modal('show');	            		
-	            	}
+	            	}  
+//	            	$('#auditTable').show();  
 	                return json.data;
-	            }             	
-	        }	,
-	        order: [[ 0, "desc" ]],
+	            	},
+	            beforeSend: function (jqXHR, settings) {	            	
+	            	$('.dataTables_processing').css({"display": "block", "z-index": 10000 })
+//	            	$('#auditTable').hide();  
+	            	$.each(xhrPool, function(idx, jqXHR) {
+	            	          jqXHR.abort();
+	            	          xhrPool.splice(idx, 1);
+	            	});
+	                xhrPool.push(jqXHR);
+	            	},
+	        	},
+	        language: {
+	                    searchPlaceholder: "Search ALL fields - Very slow",
+	                    emptyTable: "No records found"
+	        },
 	    	autoWidth: true,
-	    	processing: true,
+	        responsive: false,
 	    	dom: 'Blfrtip',
 	        buttons: [
 	                  'colvis',
@@ -72,9 +87,10 @@ function auditRecord() {
 	    
 	    var searchAt = $.fn.dataTable.util.throttle(
 	      	    function ( val, col ) {
-	        	auditRecord.table.columns(col).search( val ).draw();
+//	      	    	$('.dataTables_processing').html("<p>Searching for " + val + " in Column " + col + ".......</p><i id='processingIcon' class='fa fa-cog fa-spin fa-2x'></i>").show();
+	      	    	auditRecord.table.columns(col).search( val ).draw();
 	      	    },
-	       	    400
+	       	    500
 	    );
 	    
 	    // Apply the search
@@ -85,6 +101,21 @@ function auditRecord() {
         		searchAt( this.value,column );
 	        });
 	    });
+	    
+//	    auditRecord.table.on( 'search.dt', function () {
+//	    	console.log('caught search.dt');
+//	    	$('#auditTableMasterDiv').hide();  
+//	    	console.log($('.dataTables_processing'));
+//	    } );
+	    
+//	    auditRecord.table.on( 'processing.dt', function ( e, settings, processing ) {
+//	    	console.log('caught processing.dt');
+//	    	console.log(processing);
+//	    	console.log($('#processingIndicator'));
+//	        $('#processingIndicator').css( 'display', processing ? 'block' : 'none' );
+//	    } )
+	    
+	    
 	},
 	        
 
@@ -160,6 +191,7 @@ function auditRecord() {
 }
 
 $( document ).ready(function() {
+	var xhrPool = []; // to save the ajax calls, so they can be cancelled.
 	var audit = new auditRecord();
     audit.init();
 });
