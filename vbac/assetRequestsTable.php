@@ -1137,7 +1137,7 @@ class assetRequestsTable extends DbTable{
         	<div class='form-group required'>
         	<div class='col-sm-12'>
         		<table class='table table-striped table-bordered ' cellspacing='0' width='90%' id='requestsWithinVarb'>
-        		<thead><tr><th>Devarb</th><th>Ref</th><th>Order IT</th><th>Requestee</th><th>Asset</th><th>CT ID</th></tr></thead>
+        		<thead><tr><th>Devarb</th><th>Ref</th><th>Order IT</th><th>Requestee</th><th>Asset</th><th>Comment</th></tr></thead>
         		<tbody>
         		</tbody>
         		</table>
@@ -1584,7 +1584,7 @@ class assetRequestsTable extends DbTable{
 
     function getAssetRequestsForVarb($varb,$ref){
 
-        $sql = " SELECT REQUEST_REFERENCE as REFERENCE, P.NOTES_ID as PERSON, AR.ASSET_TITLE as ASSET, AR.CNUM, PRIMARY_UID, ORDERIT_NUMBER, P.CT_ID ";
+        $sql = " SELECT REQUEST_REFERENCE as REFERENCE, P.NOTES_ID as PERSON, AR.ASSET_TITLE as ASSET, AR.CNUM, PRIMARY_UID, ORDERIT_NUMBER, COMMENT ";
         $sql .= " ,ASSET_PRIMARY_UID_TITLE, ASSET_SECONDARY_UID_TITLE ";
         $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName . " as AR ";
         $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
@@ -1610,7 +1610,10 @@ class assetRequestsTable extends DbTable{
             $row['INCLUDED'] = "<input type='checkbox' name='request[]' value='" . $row['REFERENCE'] . "'  />";
             $row['ORDERIT_NUMBER'] = "<input type='text' name='orderit[" . $row['REFERENCE'] . "]' value='" . $row['ORDERIT_NUMBER'] . "'  min='999999' max='9999999' class='form-control'  /> " ;
 
-            $row['PRIMARY_UID'] = trim($row['ASSET'])=='CT ID' ?  "<input type='text' name='primaryUid[".$row['REFERENCE'] . "]' placeholder='" . $row['ASSET'] . "' value='' />" : null;
+            $comment =trim($row['COMMENT']);            
+            $row['COMMENT'] = "<input type='text' name='comment[" . $row['REFERENCE'] . "]' value='' class='form-control'  /><br/>$comment"; 
+            
+ //           $row['PRIMARY_UID'] = trim($row['ASSET'])=='CT ID' ?  "<input type='text' name='primaryUid[".$row['REFERENCE'] . "]' placeholder='" . $row['ASSET'] . "' value='' />" : null;
  //           $row['SECONDARY_UID'] = !empty($row['ASSET_SECONDARY_UID_TITLE']) ?  "<input type='text' name='secondaryUid[" .$row['REFERENCE'] . "]' placeholder='" . $row['ASSET_SECONDARY_UID_TITLE'] . "' value='" . $row['SECONDARY_UID'] . "'  />" : null;
 
             unset($row['CNUM']);
@@ -1934,9 +1937,6 @@ class assetRequestsTable extends DbTable{
 
             $preparedStmt = $this->prepareUpdateCommentField();
             $data = array($newComment,$requestReference);
-
-            var_dump($data);
-
 
             $rs = db2_execute($preparedStmt,$data);
 

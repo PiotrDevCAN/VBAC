@@ -23,21 +23,31 @@ foreach ($_POST['orderit'] as $requestReference => $orderIt){
 
 // $success = $assetRequestTable->saveVarbToOrderItMapping($_POST['ORDERIT_NUMBER'], $_POST['unmappedVarb'], $_POST['request']);
 
-if(!empty($_POST['primaryUid'])){
-    foreach ($_POST['primaryUid'] as $reference => $primaryUid){
-        $secondaryUid = !empty($_POST['secondaryUid'][$reference]) ? $_POST['secondaryUid'][$reference] : '';
-
-        if(!empty($primaryUid)){
-            $assetRequestTable->updateUids($reference, trim($primaryUid), trim($secondaryUid));
-            $assetRequestTable->setToProvisionedStatus($reference);
-            $requestDetails = $assetRequestTable->getCnumAndAssetForReference($reference);
-            if($requestDetails){
-                $personTable->assetUpdate($requestDetails['cnum'], $requestDetails['assetTitle'], $primaryUid);
-            }
-            $assetRequestTable->setRequestsOrderItStatus($reference, assetRequestRecord::STATUS_ORDERIT_APPROVED);
-        }
+if(!empty($_POST['comment'])){
+    foreach ($_POST['comment'] as $requestReference => $comment){
+        $assetRequestTable->updateCommentForOrderItStatus($requestReference, $comment);
     }
 }
+
+
+
+
+
+// if(!empty($_POST['primaryUid'])){
+//     foreach ($_POST['primaryUid'] as $reference => $primaryUid){
+//         $secondaryUid = !empty($_POST['secondaryUid'][$reference]) ? $_POST['secondaryUid'][$reference] : '';
+
+//         if(!empty($primaryUid)){
+//             $assetRequestTable->updateUids($reference, trim($primaryUid), trim($secondaryUid));
+//             $assetRequestTable->setToProvisionedStatus($reference);
+//             $requestDetails = $assetRequestTable->getCnumAndAssetForReference($reference);
+//             if($requestDetails){
+//                 $personTable->assetUpdate($requestDetails['cnum'], $requestDetails['assetTitle'], $primaryUid);
+//             }
+//             $assetRequestTable->setRequestsOrderItStatus($reference, assetRequestRecord::STATUS_ORDERIT_APPROVED);
+//         }
+//     }
+// }
 
 
 db2_commit($_SESSION['conn']);

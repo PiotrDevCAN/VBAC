@@ -886,9 +886,9 @@ this.listenForConfirmedAssetReturned = function(){
 	                      { "data": "INCLUDED" , "defaultContent": "", "width":"5%" },
 	                      { "data": "REFERENCE" ,"defaultContent": "", "width":"5%" },
 	                      { "data": "ORDERIT_NUMBER" ,"defaultContent": "", "width":"15%" },
-	                      { "data": "PERSON" ,"defaultContent": "", "width":"30%" },
-	                      { "data": "ASSET","defaultContent": "", "width":"30%"},
-	                      { "data": "PRIMARY_UID","defaultContent": "", "width":"15"},
+	                      { "data": "PERSON" ,"defaultContent": "", "width":"25%" },
+	                      { "data": "ASSET","defaultContent": "", "width":"25%"},
+	                      { "data": "COMMENT","defaultContent": "", "width":"25%"},
 	                  ],
 
 	          autoWidth: false,
