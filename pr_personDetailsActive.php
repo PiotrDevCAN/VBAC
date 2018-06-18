@@ -25,7 +25,7 @@ $spreadsheet->getProperties()->setCreator('vBAC')
 ->setLastModifiedBy('vBAC')
 ->setTitle('Aurora Person Table Extract generated from vBAC')
 ->setSubject('Full Person Table')
-->setDescription('urora Person Table Extract generated from vBAC')
+->setDescription('Aurora Person Table Extract generated from vBAC')
 ->setKeywords('office 2007 openxml php vbac tracker')
 ->setCategory('Person Extract');
 // Add some data
@@ -33,12 +33,7 @@ $spreadsheet->getProperties()->setCreator('vBAC')
 $now = new DateTime();
 
 $personTable = new personTable(allTables::$PERSON);
-
-$activePredicate = " ((( REVALIDATION_STATUS in ('" . personRecord::REVALIDATED_FOUND . "','" . personRecord::REVALIDATED_VENDOR . "') or REVALIDATION_STATUS is null or REVALIDATION_STATUS like '" . personRecord::REVALIDATED_OFFBOARDING . "%') ";
-$activePredicate.= "   OR ";
-$activePredicate.= " ( REVALIDATION_STATUS is null ) )";
-$activePredicate.= " AND PES_STATUS in ('". personRecord::PES_STATUS_CLEARED ."','". personRecord::PES_STATUS_CLEARED_PERSONAL ."','". personRecord::PES_STATUS_EXCEPTION ."') ) ";
-
+$activePredicate = personTable::activePersonPredicate();
 
 
 try {

@@ -44,6 +44,15 @@ class personTable extends DbTable {
         return $nextVirtualCnum;
 
     }
+    
+    static function activePersonPredicate(){
+        $activePredicate = " ((( REVALIDATION_STATUS in ('" . personRecord::REVALIDATED_FOUND . "','" . personRecord::REVALIDATED_VENDOR . "') or trim(REVALIDATION_STATUS) is null or REVALIDATION_STATUS like '" . personRecord::REVALIDATED_OFFBOARDING . "%') ";
+        $activePredicate.= "   OR ";
+        $activePredicate.= " ( trim(REVALIDATION_STATUS) is null ) )";
+        $activePredicate.= " AND REVALIDATION_STATUS not like '" . personRecord::REVALIDATED_OFFBOARDING . ":" .personRecord::REVALIDATED_LEAVER . "%' " ;
+        $activePredicate.= " AND PES_STATUS in ('". personRecord::PES_STATUS_CLEARED ."','". personRecord::PES_STATUS_CLEARED_PERSONAL ."','". personRecord::PES_STATUS_EXCEPTION ."') ) ";
+        return $activePredicate;    
+    }
 
 
     function returnAsArray(){

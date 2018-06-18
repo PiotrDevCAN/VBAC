@@ -7,6 +7,7 @@ use vbac\allTables;
 use itdq\Loader;
 use vbac\assetRequestsTable;
 use vbac\personRecord;
+use vbac\personTable;
 // require_once __DIR__ . '/../../src/Bootstrap.php';
 $helper = new Sample();
 if ($helper->isCli()) {
@@ -31,10 +32,7 @@ $spreadsheet->getProperties()->setCreator('vBAC')
 
 $now = new DateTime();
 
-$activePredicate = " ((( REVALIDATION_STATUS in ('" . personRecord::REVALIDATED_FOUND . "','" . personRecord::REVALIDATED_VENDOR . "') or REVALIDATION_STATUS is null or REVALIDATION_STATUS like '" . personRecord::REVALIDATED_OFFBOARDING . "%') ";
-$activePredicate.= "   OR ";
-$activePredicate.= " ( REVALIDATION_STATUS is null ) )";
-$activePredicate.= " AND PES_STATUS in ('". personRecord::PES_STATUS_CLEARED ."','". personRecord::PES_STATUS_CLEARED_PERSONAL ."','". personRecord::PES_STATUS_EXCEPTION ."') ) ";
+$activePredicate = personTable::activePersonPredicate();
 
 try {
     $sheet = 1;
