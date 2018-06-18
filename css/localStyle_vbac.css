@@ -218,3 +218,8 @@ dropdown-menu > li > a {
  -o-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;
  transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s
 }
+
+.dataTables_processing {
+      top: 64px !important;
+      z-index: 11000 !important;
+}

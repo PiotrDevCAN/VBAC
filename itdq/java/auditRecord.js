@@ -50,19 +50,20 @@ function auditRecord() {
 	            url: 'ajax/populateAuditDatatable.php',
 	            type: 'POST',
 	            dataSrc: function ( json ) {
-	            	$('.dataTables_processing').css({"display": "block", "z-index": 10000 })
-	            	console.log(xhrPool);
+	            	console.log('dataSrc');
+	            	console.log($('#auditTable_processing').is(":visible"));  
 	                //Make your callback here.
 	            	if(json.messages.length != 0){
 		            	$('#db2ErrorModal .modal-body').html(json.messages);
 		            	$('#db2ErrorModal').modal('show');	            		
 	            	}  
-//	            	$('#auditTable').show();  
 	                return json.data;
 	            	},
-	            beforeSend: function (jqXHR, settings) {	            	
-	            	$('.dataTables_processing').css({"display": "block", "z-index": 10000 })
-//	            	$('#auditTable').hide();  
+	            beforeSend: function (jqXHR, settings) {	
+	            	console.log('before send');
+	             	console.log($('.dataTables_processing'));
+	             	console.log($('#auditTable_processing').is(":visible")); 
+	            	
 	            	$.each(xhrPool, function(idx, jqXHR) {
 	            	          jqXHR.abort();
 	            	          xhrPool.splice(idx, 1);
@@ -72,7 +73,8 @@ function auditRecord() {
 	        	},
 	        language: {
 	                    searchPlaceholder: "Search ALL fields - Very slow",
-	                    emptyTable: "No records found"
+	                    emptyTable: "No records found",
+	                    processing: "Processing<i class='fas fa-spinner fa-spin '></i>"
 	        },
 	    	autoWidth: true,
 	        responsive: false,
@@ -87,7 +89,6 @@ function auditRecord() {
 	    
 	    var searchAt = $.fn.dataTable.util.throttle(
 	      	    function ( val, col ) {
-//	      	    	$('.dataTables_processing').html("<p>Searching for " + val + " in Column " + col + ".......</p><i id='processingIcon' class='fa fa-cog fa-spin fa-2x'></i>").show();
 	      	    	auditRecord.table.columns(col).search( val ).draw();
 	      	    },
 	       	    500
@@ -104,16 +105,23 @@ function auditRecord() {
 	    
 //	    auditRecord.table.on( 'search.dt', function () {
 //	    	console.log('caught search.dt');
-//	    	$('#auditTableMasterDiv').hide();  
+//	    	$('.dataTables_processing').show();  
+//	    	$('#auditTable_processing').show();	    	
+//	    	console.log($('#auditTable_processing').is(":visible")); 
+//	    	
 //	    	console.log($('.dataTables_processing'));
+//	    	
+//	    	
 //	    } );
 	    
-//	    auditRecord.table.on( 'processing.dt', function ( e, settings, processing ) {
-//	    	console.log('caught processing.dt');
-//	    	console.log(processing);
-//	    	console.log($('#processingIndicator'));
-//	        $('#processingIndicator').css( 'display', processing ? 'block' : 'none' );
-//	    } )
+	    auditRecord.table.on( 'processing.dt', function ( e, settings, processing ) {
+	    	var processing =( xhrPool[0].readyState!=4 );
+	    	if(processing){
+	    		$('#auditTable_processing').show(); 
+	    	} else {
+	    		$('#auditTable_processing').hide(); 
+	    	}
+	    } );
 	    
 	    
 	},
