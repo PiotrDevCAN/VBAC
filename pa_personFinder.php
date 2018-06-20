@@ -7,7 +7,7 @@ use vbac\personRecord;
 </div>
 
 <div class='container-fluid'>
-<h3>Person Finder</h3>
+<h3>Transfer Management Alignment</h3>
 <div id='personFinderDatabaseDiv' class='portalDiv'>
 </div>
 </div>
