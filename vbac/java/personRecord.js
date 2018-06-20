@@ -761,7 +761,7 @@ function personRecord() {
                       { "data": "NOTES_ID", "defaultContent": "<i>unknown</i>" },
                       { "data": "FM_CNUM", "defaultContent": "" },
                   ],
-          order: [[ 5, "asc" ]],
+          order: [[ 4, "asc" ]],
           responsive: false,
           processing: true,
           responsive: true,
