@@ -7,6 +7,7 @@
 function personRecord() {
 
   var table;
+  var personFinderTable;
   var dataTableElements;
   var currentXmlDoc;
   var spinner =  '<div id="overlay"><i class="fa fa-spinner fa-spin spin-big"></i></div>';
@@ -724,6 +725,71 @@ function personRecord() {
     }
   },
 
+  this.initialisePersonFinderTable = function(){
+      $.ajax({
+        url: "ajax/createHtmlForPersonFinderTable.php",
+        type: 'POST',
+        success: function(result){
+        	console.log(result);
+        	var Person = new personRecord();
+         
+        	$('#personFinderDatabaseDiv').html(result);
+        	Person.initialisePersonFinderDataTable();
+        	}
+      });
+  }, 
+  
+  this.initialisePersonFinderDataTable = function(){	  
+	  console.log('initialisePersonFinderDataTable');
+	  
+      // Setup - add a text input to each footer cell
+      $('#personFinderTable tfoot th').each( function () {
+          var title = $(this).text();
+          $(this).html( '<input type="text" id="footer'+ title + '" placeholder="Search '+title+'" />' );
+      } );
+    // DataTable
+      personRecord.personFinderTable = $('#personFinderTable').DataTable({
+        ajax: {
+              url: 'ajax/populatePersonFinderDatatable.php',
+              type: 'GET',
+          }	,
+          columns: [
+                      { "data": "CNUM" , "defaultContent": "" },
+                      { "data": "FIRST_NAME"       ,"defaultContent": "<i>unknown</i>"},
+                      { "data": "LAST_NAME", "defaultContent": "<i>unknown</i>" },
+                      { "data": "EMAIL_ADDRESS", "defaultContent": "<i>unknown</i>" },
+                      { "data": "NOTES_ID", "defaultContent": "<i>unknown</i>" },
+                      { "data": "FM_CNUM", "defaultContent": "" },
+                  ],
+          order: [[ 5, "asc" ]],
+          responsive: false,
+          processing: true,
+          responsive: true,
+          dom: 'Blfrtip',
+          buttons: [
+                    'colvis',
+                    'excelHtml5',
+                    'csvHtml5',
+                    'print'
+                ],
+      });
+      
+      console.log(personRecord.personFinderTable);
+      
+      // Apply the search
+      personRecord.personFinderTable.columns().every( function () {
+          var that = this;
+
+          $( 'input', this.footer() ).on( 'keyup change', function () {
+              if ( that.search() !== this.value ) {
+                  that
+                      .search( this.value )
+                      .draw();
+              }
+          } );
+      } );
+  },
+  
   this.initialisePersonTable = function(){
       $.ajax({
         url: "ajax/createHtmlForPersonTable.php",
@@ -737,6 +803,8 @@ function personRecord() {
       });
 
   },
+  
+  
 
   this.initialiseDataTable = function(){
       // Setup - add a text input to each footer cell
@@ -829,6 +897,52 @@ function personRecord() {
           } );
       } );
   },
+  
+  
+  this.listenForBtnTransfer = function(){
+	  $(document).on('click','.btnTransfer', function(e){  
+		  var cnum 			= $(e.target).data('cnum');
+		  var notesid 		= $(e.target).data('notesid');
+		  var fromCnum 		=  $(e.target).data('fromcnum');
+		  var fromNotesid 	=  $(e.target).data('fromnotesid');
+		 
+		  $('#transferNotes_id').val(notesid);
+		  $('#transferCnum').val(cnum);
+		  $('#transferFromCnum').val(fromCnum);
+		  $('#transferFromNotesId').val(fromNotesid);
+		  $('#confirmTransferModal').modal('show');
+      });
+  },  
+  
+  this.listenForBtnTransferConfirmed = function(){
+	  $(document).on('click','.btnConfirmTransfer', function(e){
+		  $('.btnConfirmTransfer').addClass('spinning');
+		  console.log($('#confirmTransferForm'));
+ 		  var formData = $('#confirmTransferForm').serialize();		  
+		  console.log(formData);
+	      $.ajax({
+	          url: "ajax/transferIndividual.php",
+	          type: 'POST',
+	          data: formData,
+	          success: function(result){	
+	        	  console.log(result);
+	        	  personRecord.personFinderTable.ajax.reload();
+	    		  $('#transferNotes_id').val('');
+	    		  $('#transferCnum').val('');
+	    		  $('#transferFromCnum').val('');
+	    		  $('#transferFromNotesId').val('');
+	        	  $('.btnConfirmTransfer').removeClass('spinning');
+	              $('#confirmTransferModal').modal('hide');
+	          }
+	        });
+		  
+		  
+		  
+		  
+      });
+  },  
+  
+  
 
   this.listenForReportPes = function(){
     $(document).on('click','#reportPes', function(e){
@@ -1110,14 +1224,7 @@ function personRecord() {
            var cnum = ($(e.target).data('cnum'));
            var notesid = ($(e.target).data('notesid'));
            var email = ($(e.target).data('email'));
-
-           console.log(notesid);
-           console.log(email);
-
            notesid = notesid.trim() != "" ? notesid : email;
-
-           console.log(notesid);
-
            var status  = ($(e.target).data('pesstatus'));
            $('#psm_notesid').val(notesid);
            $('#psm_cnum').val(cnum);

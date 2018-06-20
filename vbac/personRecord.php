@@ -763,6 +763,48 @@ You are able to amend the Functional Manager of people assigned to you but who n
 
     }
 
+    
+    function confirmTransferModal(){
+        $myCnum = personTable::myCnum();
+        $myEmail = trim($_SESSION['ssoEmail']);
+        $myNotesid = personTable::getNotesidFromCnum($myCnum);
+        ?>
+       <!-- Modal -->
+    <div id="confirmTransferModal" class="modal fade" role="dialog">
+    	<div class="modal-dialog">
+        	<div class="modal-content">
+          		<div class="modal-header">
+            		<button type="button" class="close" data-dismiss="modal">&times;</button>
+            		<h4 class="modal-title">Confirm Transfer</h4>
+          		</div>
+          		<div class="modal-body" >
+<form id='confirmTransferForm' >
+  <div class="form-group">
+    <label for="notes_id">Notes ID</label>
+    <input type="text" class="form-control" id="transferNotes_id" disabled placeholder="Notes Id">
+    <input type="hidden" class="form-control" id="transferCnum" name="transferCnum" >
+  </div>
+    <div class="form-group">
+    <label for="from_notes_id">From Manager:</label>
+    <input type="text" class="form-control" id="transferFromNotesId"  disabled placeholder="From Manager">
+    <input type="hidden" class="form-control" id="transferFromCnum" >
+  </div>
+    <div class="form-group">
+    <label for="to_notes_id">To Manager:</label>
+    <input type="text" class="form-control" id="transferToNotesId" disabled placeholder="To Manager" value='<?=$myNotesid;?>'>
+    <input type="hidden" class="form-control" id="transferToCnum" name="transferToCnum" value='<?=$myCnum;?>' >
+  </div>
+</form>	   						             
+       			</div>
+       			<div class="modal-footer">
+       				<button type="button" class="btn btn-success btnConfirmTransfer" >Confirm</button>
+       				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+       			</div>
+			</div>
+		</div>
+	</div>
+        <?php
+    }
 
 
     function savingBoardingDetailsModal(){
