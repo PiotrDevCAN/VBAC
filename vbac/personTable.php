@@ -97,10 +97,12 @@ class personTable extends DbTable {
     }
     
     function returnPersonFinderArray(){
+        $activePredicate = $this->activePersonPredicate();
         $data = array();        
         
         $sql = " SELECT CNUM, FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, NOTES_ID, FM_CNUM ";
         $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName ;
+        $sql.= " WHERE 1=1 AND " . $activePredicate;
         
         $rs = db2_exec($_SESSION['conn'], $sql);
         
