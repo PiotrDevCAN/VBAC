@@ -15,6 +15,7 @@ class personTable extends DbTable {
     private $preparedUpdateSecurityEducationStmt;
 
     private $allNotesIdByCnum;
+    private $loader;
 
     private $thirtyDaysHence;
 
@@ -56,8 +57,8 @@ class personTable extends DbTable {
 
 
     function returnAsArray(){
-        $loader = new Loader();
-        $this->allNotesIdByCnum = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON);
+//         $this->loader = empty($this->loader) ? new Loader() : $this->loader;
+//         $this->allNotesIdByCnum = empty($this->allNotesIdByCnum) ? $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON) : $this->allNotesIdByCnum;
 
         $this->thirtyDaysHence = new \DateTime();
         $this->thirtyDaysHence->add(new \DateInterval('P31D'));
@@ -90,6 +91,38 @@ class personTable extends DbTable {
                 $preparedRow = $this->prepareFields($row);
                 $rowWithButtonsAdded =(substr($row['PES_STATUS_DETAILS'],0,7)=='Boarded') ? $preparedRow : $this->addButtons($preparedRow);
                 $data[] = $rowWithButtonsAdded;
+            }
+        }
+        return $data;
+    }
+    
+    function returnPersonFinderArray(){
+        $activePredicate = $this->activePersonPredicate();
+        $data = array();        
+        
+        $sql = " SELECT CNUM, FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, NOTES_ID, FM_CNUM ";
+        $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName ;
+        $sql.= " WHERE 1=1 AND " . $activePredicate;
+        
+        $rs = db2_exec($_SESSION['conn'], $sql);
+        
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+            return false;
+        } else {
+            while(($row=db2_fetch_assoc($rs))==true){              
+                $preparedRow = $this->prepareFields($row);
+                $fmCnumField = $preparedRow['FM_CNUM'];                
+                $transferButton = "<button type='button' class='btn btn-default btn-xs btnTransfer' aria-label='Left Align' ";
+                $transferButton.= "data-cnum='" .trim($row['CNUM']) . "' ";
+                $transferButton.= "data-notesid='" .trim($row['NOTES_ID']) . "' ";
+                $transferButton.= "data-fromCnum ='" .trim($row['FM_CNUM']) . "' ";
+                $transferButton.= "data-fromNotesid ='" .$preparedRow['FM_CNUM'] . "' ";
+                $transferButton.= " > ";
+                $transferButton.= "<span class='glyphicon glyphicon-transfer ' aria-hidden='true'></span>";
+                $transferButton.= " </button> ";                
+                $preparedRow['FM_CNUM'] = $transferButton . $fmCnumField; 
+                $data[] = $preparedRow;
             }
         }
         return $data;
@@ -131,9 +164,15 @@ class personTable extends DbTable {
 
 
     function  prepareFields($row){
+        $this->loader = empty($this->loader) ? new Loader() : $this->loader;
+        $this->allNotesIdByCnum = empty($this->allNotesIdByCnum) ? $this->loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON) : $this->allNotesIdByCnum;
+       
         $preparedRow = array_map('trim', $row);
         $fmNotesid = isset($this->allNotesIdByCnum[trim($row['FM_CNUM'])]) ? $this->allNotesIdByCnum[trim($row['FM_CNUM'])]  :  trim($row['FM_CNUM']);
         $preparedRow['FM_CNUM'] = $fmNotesid;
+        
+        var_dump($fmNotesid);
+        
         return $preparedRow;
     }
 
@@ -337,6 +376,22 @@ class personTable extends DbTable {
 
         return true;
     }
+    
+    function transferIndividual($cnum,$toFmCnum){
+        $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql .= " SET FM_CNUM='"  . db2_escape_string($toFmCnum) . "' ";
+        $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
+        
+        $result = db2_exec($_SESSION['conn'], $sql);
+
+        
+        if(!$result){
+            DbTable::displayErrorMessage($result, __CLASS__,__METHOD__, $sql);
+            return false;
+        }
+        AuditTable::audit("Set FM_CNUM to $toFmCnum for $cnum",AuditTable::RECORD_TYPE_AUDIT);           
+        return true;
+    }
 
 
     static function isManager($emailAddress){
@@ -462,6 +517,23 @@ class personTable extends DbTable {
         $row = db2_fetch_assoc($resultSet);
         $cnum = strtoupper(trim($row['CNUM']));
         return $cnum;
+    }
+    
+    
+    static function getNotesidFromCnum($cnum){
+        $sql = " SELECT NOTES_ID FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
+        $sql .= " WHERE CNUM = '" . db2_escape_string(strtoupper(trim($cnum))) . "' ";
+        
+        $resultSet = db2_exec($_SESSION['conn'], $sql);
+        
+        if(!$resultSet){
+            DbTable::displayErrorMessage($resultSet, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+        
+        $row = db2_fetch_assoc($resultSet);
+        $notesid = trim($row['NOTES_ID']);
+        return $notesid;
     }
 
 
