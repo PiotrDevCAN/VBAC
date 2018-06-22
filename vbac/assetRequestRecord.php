@@ -74,7 +74,7 @@ class assetRequestRecord extends DbRecord {
                 $predicate = " ( FM_CNUM='" . db2_escape_string($myCnum) . "' or CNUM='" . db2_escape_string($myCnum) . "' $iAmDelegateForPredicate ) ";
             break;
             default:
-                $predicate = " ( CNUM='" . db2_escape_string($myCnum) . "' $iAmDelegateForPredicate ";
+                $predicate = " ( CNUM='" . db2_escape_string($myCnum) . "' $iAmDelegateForPredicate  ) ";
             break;
         }
 
