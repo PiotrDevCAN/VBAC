@@ -207,6 +207,14 @@ function assetRequest() {
   this.listenForSelectAsset = function(){
 	  $(document).on('click','.requestableAsset', function (e) {
 		  var id = (this.id);
+		  var asset = $(this).data('asset');
+		  console.log(asset);
+		  if(asset.substring(0,5)=='Other'){
+			  alert("Please Note : You CANNOT raise requests for AD Groups in vBAC, they must be submitted through the Proforma");
+		  }
+		  
+		  
+		  
 		  var justificationDivId = id.replace("-asset-", "-justification-div-");
 		  $('#'+justificationDivId).toggle();
 
