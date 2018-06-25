@@ -19,8 +19,8 @@ switch ($type){
 
 $fromRecord = 1;
 
-$draw = $_POST['draw'] * 1;
-$start = $_POST['start'] * 1;
+$draw = isset($_POST['draw']) ? $_POST['draw'] * 1 : 1 ;
+$start = isset($_POST['start']) ? $_POST['start'] * 1 : 1 ;
 
 $predicate .= !empty($_POST['columns']['1']['search']['value']) ? " and to_char(TIMESTAMP,'YYYY-MM-DD-HH24:MI:SS.NNNNNN') like '%" . strtolower(trim($_POST['columns']['1']['search']['value'])) . "%' " : null;
 $predicate .= !empty($_POST['columns']['2']['search']['value']) ? " AND lower(EMAIL_ADDRESS) like '%" . strtolower(trim($_POST['columns']['2']['search']['value'])) . "%' " : null;
