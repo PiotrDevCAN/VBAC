@@ -931,8 +931,10 @@ this.listenForConfirmedAssetReturned = function(){
 	                      { "data": "ASSET","defaultContent": "", "width":"15%"},
 	                      { "data": "STATUS","defaultContent": "", "width":"15%"},
 	                      { "data": "ACTION","defaultContent": "", "width":"20%"},
-	                      { "data": "PRIMARY_UID","defaultContent": "", "width":"10%"},
-	                      { "data": "COMMENT","defaultContent": "", "width":"30%"}
+	                      { "data": "PRIMARY_UID","defaultContent": "", "width":"8%"},
+	                      { "data": "COMMENT","defaultContent": "", "width":"25%"},
+	                      { "data": "ORDERIT_RESPONDED","defaultContent": "", "width":"7%"}
+	                      
 	                  ],
 
 	          drawCallback: function(settings) {

@@ -32,6 +32,7 @@ class assetRequestRecord extends DbRecord {
     protected $USER_CREATED;
     protected $COMMENT;
     protected $REQUEST_RETURN;
+    protected $ORDERIT_RESPONDED;
 
     const STATUS_CREATED           = 'Created in vBAC';
     const STATUS_APPROVED          = 'Approved for Order IT';

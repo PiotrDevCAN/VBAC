@@ -16,6 +16,7 @@ class assetRequestsEventsTable extends DbTable{
     const EVENT_PROVISIONED         = assetRequestRecord::STATUS_PROVISIONED;
     const EVENT_DEVARBED            = 'devarbed';
     const EVENT_ORDERIT_RAISED      = assetRequestRecord::STATUS_RAISED_ORDERIT;
+    const EVENT_ORDERIT_RESPONDED   = 'orderIt Responded';
     const EVENT_ORDERIT_APPROVED    = assetRequestRecord::STATUS_ORDERIT_APPROVED;
     const EVENT_ORDERIT_REJECTED    = assetRequestRecord::STATUS_ORDERIT_REJECTED;
     const EVENT_ORDERIT_CANCELLED   = assetRequestRecord::STATUS_ORDERIT_CANCELLED;

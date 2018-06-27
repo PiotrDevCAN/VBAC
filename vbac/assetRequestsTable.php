@@ -22,6 +22,7 @@ class assetRequestsTable extends DbTable{
     private $preparedUpdateUidsStmt;
     private $preparedSetRequestOrderItStatus;
     private $preparedUpdateComment;
+    private $preparedOrderitResponded;
     private $preparedGetComment;
     private $preparedRefToOrderIt;
     private $preparedDevarb;
@@ -1333,8 +1334,8 @@ class assetRequestsTable extends DbTable{
 
         	<div class='form-group required'>
         	<div class='col-sm-12'>
-        		<table class='table table-striped table-bordered ' cellspacing='0' width='90%' id='requestsWithStatus'>
-        		<thead><tr><th>Ref</th><th>Person</th><th>Asset</th><th>vbac<br/>Status</th><th>Order IT<br/>Status</th><th>Primary UID</th><th>Comment</th></tr></thead>
+        		<table class='table table-striped table-bordered ' cellspacing='0' width='100%' id='requestsWithStatus'>
+        		<thead><tr><th>Ref</th><th>Person</th><th>Asset</th><th>vbac<br/>Status</th><th>Order IT<br/>Status</th><th>Primary UID</th><th>Comment</th><th>Order IT Responded</th></tr></thead>
         		<tbody>
         		</tbody>
         		</table>
@@ -1751,7 +1752,8 @@ class assetRequestsTable extends DbTable{
 
 
     function getAssetRequestsForOrderIt($orderIt,$varb,$ref){
-        $sql = " SELECT REQUEST_REFERENCE as REFERENCE, P.NOTES_ID as PERSON, AR.ASSET_TITLE as ASSET,AR.STATUS as STATUS,  AR.ORDERIT_STATUS, '' as ACTION, COMMENT as COMMENT, ORDERIT_NUMBER, ORDERIT_VARB_REF, ASSET_PRIMARY_UID_TITLE, P.CT_ID, PRIMARY_UID ";
+        $sql = " SELECT REQUEST_REFERENCE as REFERENCE, P.NOTES_ID as PERSON, AR.ASSET_TITLE as ASSET,AR.STATUS as STATUS,  AR.ORDERIT_STATUS";
+        $sql .=", '' as ACTION, COMMENT as COMMENT, ORDERIT_NUMBER, ORDERIT_VARB_REF, ASSET_PRIMARY_UID_TITLE, P.CT_ID, PRIMARY_UID, AR.ORDERIT_RESPONDED  ";
         $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName . " as AR ";
         $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql .= " ON AR.CNUM = P.CNUM ";
@@ -1873,11 +1875,14 @@ class assetRequestsTable extends DbTable{
                 break;
             }
 
-            $comment = $row['COMMENT'];
             
-            $row['COMMENT'] = '<div class="form-check"><textarea class="form-check-input" style="min-width: 100%" name=\'comment['. $row['REFERENCE'] . "]'  id=\'comment[". $row['REFERENCE'] . "]'" . " ></textarea><br/>$comment</div>";
-
+            $comment = $row['COMMENT'];
             $reference = trim($row['REFERENCE']);
+
+            
+            $row['COMMENT'] = '<div class="form-check"><textarea class="form-check-input" style="min-width: 100%" name=\'comment['. $row['REFERENCE'] . "]'  id=\'comment[". $row['REFERENCE'] . "]\'" . " ></textarea><br/>$comment</div>";
+
+
             $row['REFERENCE'] = "<small>" . trim($row['ORDERIT_NUMBER']) . ":" . $reference . "<br/>" . $row['ORDERIT_VARB_REF'] . "</small>";
             $row['PERSON'] = "<small>" . $row['PERSON'] . "</small>";
 
@@ -1891,6 +1896,14 @@ class assetRequestsTable extends DbTable{
 
             $row['PRIMARY_UID'] = !empty(trim($row['ASSET_PRIMARY_UID_TITLE'])) ?  "<input type='text' name='primaryUid[".$reference. "]' placeholder='" . trim($row['ASSET_PRIMARY_UID_TITLE']) . "' value='" . $primaryUid . "' />" : null;
             $row['STATUS'] = "<small>" . trim($row['STATUS']) . "</small>";
+            
+            
+            $orderItResponded = \DateTime::createFromFormat('Y-m-d', $row['ORDERIT_RESPONDED']);
+            $orderItRespondedDisplay = is_object($orderItResponded) ?  $orderItResponded->format('d M Y') : null;
+            
+            $row['ORDERIT_RESPONDED'] = "<div class='form-check'><input class='form-check' name='orderit_responded[" . $reference . "]' id='orderit_responded[". $reference ."]' value='$orderItRespondedDisplay' type='date' size='10' maxlength='10' placeholder='OrderIt Resp.' data-toggle='tooltip' title='Order IT Responded'>";
+            $row['ORDERIT_RESPONDED'].= "</div>";
+            
 
             unset($row['ORDERIT_NUMBER']);
             unset($row['ORDERIT_VARB_REF']);
@@ -1917,9 +1930,9 @@ class assetRequestsTable extends DbTable{
 
         AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>Data:" . print_r($data,true),AuditTable::RECORD_TYPE_DETAILS);
 
-        db2_execute($preparedStmt,$data);
+        $rs = db2_execute($preparedStmt,$data);
 
-        if(!$preparedStmt){
+        if(!$rs){
             DbTable::displayErrorMessage($preparedStmt,__CLASS__, __METHOD__, 'preparedStmt');
             return false;
         }
@@ -1942,6 +1955,33 @@ class assetRequestsTable extends DbTable{
 
             $rs = db2_execute($preparedStmt,$data);
 
+            if(!$rs){
+                DbTable::displayErrorMessage($preparedStmt, __CLASS__, __METHOD__, 'preparedStmt');
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    function updateOrderItResponded($requestReference, $orderitResponded){
+        if(!empty($orderitResponded)){
+            $now = new \DateTime();
+            
+            $preparedStmt = $this->prepareUpdateOrderitRespondedField();
+            
+            if(!$preparedStmt){
+                echo "Prepare for Order IT Responded has failed.";
+                die('here');
+            }
+            
+            
+            $data = array($orderitResponded,$requestReference);
+            
+            AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>Data:" . print_r($data,true),AuditTable::RECORD_TYPE_DETAILS);
+            
+            
+            $rs = db2_execute($preparedStmt,$data);
+            
             if(!$rs){
                 DbTable::displayErrorMessage($preparedStmt, __CLASS__, __METHOD__, 'preparedStmt');
                 return false;
@@ -1993,6 +2033,27 @@ class assetRequestsTable extends DbTable{
         $this->preparedUpdateComment = $rs;
         return $this->preparedUpdateComment;
     }
+    
+    function prepareUpdateOrderitRespondedField(){
+        if(!empty($this->preparedOrderitResponded)){
+            return $this->preparedOrderitResponded;
+        }
+        
+        $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS ;
+        $sql.= " SET ORDERIT_RESPONDED = ? ";
+        $sql.= " WHERE REQUEST_REFERENCE=? ";
+        
+        $rs = db2_prepare($_SESSION['conn'], $sql);
+        
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+        
+        $this->preparedOrderitResponded = $rs;
+        return $this->preparedOrderitResponded;
+    }
+    
 
     function preparepGetCommentField(){
         if(!empty($this->preparedGetComment)){
