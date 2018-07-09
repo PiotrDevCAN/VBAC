@@ -714,6 +714,9 @@ function personRecord() {
             if(typeof(personRecord.table) != "undefined") {
               personRecord.table.ajax.reload();
             }
+            if(resultObj.employeetype=='vendor'){
+            	 $('#initiatePes').attr('disabled',true);
+            }
 
           }
         });
@@ -1309,6 +1312,27 @@ function personRecord() {
 	  $(document).on('click','.employeeTypeRadioBtn', function(e){
 		  var employeeType = $('input[name=employeeType]:checked').val();
 		  $('#resource_employee_type').val(employeeType);
+		  console.log(employeeType);
+		  
+		  console.log($('input[name=employeeType]:checked').data('type'));
+		  var type = $('input[name=employeeType]:checked').data('type');
+		  
+		  if(employeeType != 'preboarder'){
+			  $('#resource_email').val('').attr('disabled',true).attr('required',false);
+			  $('#resource_email').css("background-color","LightGray").attr('placeholder','Not required - GPDR');
+			  $('#saveBoarding').attr('disabled',false);
+			  var Type = type[0].toUpperCase() + type.slice(1).toLowerCase();
+			  console.log(Type);
+			  $('#open_seat').val(Type);
+			  $('#role_on_account').val(Type).attr('disabled',true);
+		  } else {
+			  $('#saveBoarding').attr('disabled',true);
+			  $('#resource_email').val('').attr('disabled',false).attr('required',true);
+			  $('#resource_email').css("background-color","white").attr('placeholder','Email Address');	
+			  $('#open_seat').val('');
+			  $('#role_on_account').val('').attr('disabled',false);
+		  }
+		  
 	  });
   },
 

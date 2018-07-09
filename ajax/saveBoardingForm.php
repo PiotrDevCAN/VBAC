@@ -27,9 +27,17 @@ try {
         $_POST['COUNTRY'] = $_POST['resCOUNTRY'];
         $_POST['EMAIL_ADDRESS'] = $_POST['resEMAIL_ADDRESS'];
         $_POST['EMPLOYEE_TYPE'] = $_POST['resEMPLOYEE_TYPE'];
-//         $_POST['PES_STATUS'] = $_POST['resPES_STATUS'];
+        
+        if($_POST['EMPLOYEE_TYPE']=='vendor'){
+            $_POST['REVALIDATION_STATUS'] = personRecord::REVALIDATED_VENDOR;
+            $_POST['PES_STATUS'] = personRecord::PES_STATUS_CLEARED;
+        } else {
+            $_POST['REVALIDATION_STATUS'] = personRecord::REVALIDATED_PREBOARDER;
+        }
+        
+
 //         $_POST['PES_STATUS_DETAILS'] = $_POST['resPES_STATUS_DETAILS'];
-        AuditTable::audit("Pre boarding:<b>" . $cnum . "</b>",AuditTable::RECORD_TYPE_AUDIT);
+        AuditTable::audit("Pre boarding:<b>" . $cnum . "</b> Type:" .  $_POST['EMPLOYEE_TYPE'],AuditTable::RECORD_TYPE_AUDIT);
     }
 
     $_POST['PRE_BOARDED'] = !empty($_POST['person_preboarded']) ? $_POST['person_preboarded']  : null;  // Save the link to the pre-boarded person
@@ -77,6 +85,6 @@ try {
 }
 
 $messages = ob_get_clean();
-$response = array('boarding'=>$_POST['boarding'], 'boardingIbmer'=>$boardingIbmer, 'success'=>$success,'messages'=>$messages,"saveRecord"=>$saveRecordResult,'cnum'=>$_POST['CNUM'], 'post'=>print_r($_POST,true),'sendWarning'=>print_r($timeToWarnPmo,true));
+$response = array('boarding'=>$_POST['boarding'], 'boardingIbmer'=>$boardingIbmer, 'employeetype'=>$_POST['EMPLOYEE_TYPE'], 'success'=>$success,'messages'=>$messages,"saveRecord"=>$saveRecordResult,'cnum'=>$_POST['CNUM'], 'post'=>print_r($_POST,true),'sendWarning'=>print_r($timeToWarnPmo,true));
 ob_clean();
 echo json_encode($response);

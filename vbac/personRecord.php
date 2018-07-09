@@ -515,8 +515,11 @@ You are able to amend the Functional Manager of people assigned to you but who n
 
 				<div class='form-group'>
             		<div class='col-sm-12'>
-						<label class="radio-inline employeeTypeRadioBtn"><input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_PREBOARDER ?>' >IBMer Pre-Hire </label>
-						<label class="radio-inline employeeTypeRadioBtn"><input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_VENDOR?>'      >3rd Party Vendor (Non IBM employee)</label>
+						<label class="radio-inline employeeTypeRadioBtn"><input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_PREBOARDER ?>' data-type='ibmer'>IBMer Pre-Hire </label>		
+						<label class="radio-inline employeeTypeRadioBtn"><input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_VENDOR?>' data-type='cognizant' >Cognizant </label>
+						<label class="radio-inline employeeTypeRadioBtn"><input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_VENDOR?>' data-type='densify'   >Densify </label>
+						<label class="radio-inline employeeTypeRadioBtn"><input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_VENDOR?>' data-type='wipro'     >Wipro </label>
+						<label class="radio-inline employeeTypeRadioBtn"><input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_VENDOR?>' data-type='other'     >Other (Non IBM employee)</label>
 		        	</div>
         		</div>
 			</div>
