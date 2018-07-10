@@ -13,10 +13,6 @@ if ($helper->isCli()) {
     $helper->log('This example should only be run from a Web Browser' . PHP_EOL);
     return;
 }
-
-echo "<pre>";
-
-
 // Create new Spreadsheet object
 $spreadsheet = new Spreadsheet();
 // Set document properties
@@ -38,7 +34,8 @@ try {
     $sql = " Select * ";
     $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
 
-    set_time_limit(60);
+    set_time_limit(0);
+    ini_set('memory_limit', '256M');
 
     $rs = db2_exec($_SESSION['conn'], $sql);
 
