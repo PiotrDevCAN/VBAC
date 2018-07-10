@@ -348,7 +348,7 @@ class assetRequestRecord extends DbRecord {
         		<input id='requesteeName' value='' disabled>
         		<input id='ctbflag' value='' type='hidden'></p></p>
         		<label for='requesteeCtid'><b>Either</b> enter it here</label>
-        		<input id='requesteeCtid' value=''></p>
+        		<input id='requesteeCtid' value='' type="number" min='999999' max='9999999'></p>
         		<p><b>Or</b> simply close this Modal to generate a new CT ID/LBG ID request.</p>
         		<p class='text-center'>Closing this modal without entering a CT ID/LBG ID will cause a request for a CT ID/LBG ID to be generated.</p>
         		<h4 class='bg-warning text-center'>Please do not close this Modal without entering a valid CTID (LBG ID) if the individual already has one. If you are unsure please check now before proceeding</h4>

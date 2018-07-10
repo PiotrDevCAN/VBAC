@@ -240,9 +240,8 @@ function assetRequest() {
 		  var ctid =$('#requesteeCtid').val().trim();
 		  var ctbflag = $('#ctbflag').val().trim();
 		  var AssetRequest = new assetRequest();
-		  console.log(ctid);
 
-		  if(ctid){
+		  if(ctid && ctid.length == 7 && !isNaN(ctid)){
 			  console.log('record'+ ctid);
 			  AssetRequest.recordCtidOnForm(requestee, ctid, ctbflag);
 		      $.ajax({
@@ -258,6 +257,9 @@ function assetRequest() {
 	    			  AssetRequest.recordCtidOnForm(requestee, ctid, ctbflag);
 		    		  },
 		      });
+		  } else if((ctid && ctid.length != 7) || isNaN(ctid)){
+			  alert('CT ID must be 7 digits in length. Please re-enter valid CT ID');
+			  $('#obtainCtid').modal('show');
 		  } else {
 			  var doubleCheck = confirm('STOP : Please confirm the indivual DOES NOT ALREADY HAVE a CT ID')
 			  if(!doubleCheck){
