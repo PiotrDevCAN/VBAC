@@ -602,7 +602,7 @@ You are able to amend the Functional Manager of people assigned to you but who n
     	</div>
     	    <?php $allowEditCtid = empty($this->CT_ID) ? " style='display:none;' " : null; ?>    	
             <div class='col-sm-6' <?=$allowEditCtid;?>>
-          		<input class="form-control" id="ct_id" name="CT_ID" maxlength='7' value="<?=$this->CT_ID?>" type="text" placeholder='Contractor Id(CT Id)' >
+          		<input class="form-control" id="ct_id" name="CT_ID" type="number" min='999999' max='9999999'  value="<?=$this->CT_ID?>" placeholder='7-digit Contractor Id(CT Id)' >
        		</div>
     
     
