@@ -20,7 +20,6 @@ if($dataJsonAble) {
  } else {     
     $personTable->findDirtyData();
     $dirtyDetails = ob_get_clean();      
-    ob_clean();
     echo $dirtyDetails;
     exit();
  }
