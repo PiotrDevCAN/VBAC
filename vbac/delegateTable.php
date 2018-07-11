@@ -41,9 +41,12 @@ class delegateTable extends DbTable {
     function returnForDataTableS($cnum){
         $sql = " SELECT * ";
         $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName;
-        $sql.= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
-
-
+        
+        if(!$_SESSION['isPmo'] && !$_SESSION['isCdi']){
+            $sql.= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
+        }
+        
+ 
         $rs = db2_exec($_SESSION['conn'], $sql);
 
         if(!$rs){
