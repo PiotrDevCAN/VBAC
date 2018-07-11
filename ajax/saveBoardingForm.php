@@ -30,9 +30,18 @@ try {
         
         if($_POST['EMPLOYEE_TYPE']=='vendor'){
             $_POST['REVALIDATION_STATUS'] = personRecord::REVALIDATED_VENDOR;
-            $_POST['PES_STATUS'] = personRecord::PES_STATUS_CLEARED;
+        //    $_POST['PES_STATUS'] = personRecord::PES_STATUS_CLEARED;
         } else {
             $_POST['REVALIDATION_STATUS'] = personRecord::REVALIDATED_PREBOARDER;
+        }
+        
+        switch (trim($_POST['ROLE_ON_THE_ACCOUNT'])) {
+            case 'Wipro':
+            case 'Cognizant':
+                $_POST['PES_STATUS'] = personRecord::PES_STATUS_CLEARED;
+            break;            
+            default:       ;
+            break;
         }
         
 
