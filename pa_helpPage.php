@@ -55,7 +55,7 @@ body {
 <h1 id='welcomeJumotron'>Training Links & Feedback</h1>
 
 <div class="alert alert-warning helplink">
-  <strong>Unexpected Results ? </strong>&nbsp;Please note only the <strong>Firefox</strong> browser is 100% supported for use with vBAC. Uf you experience <strong>"unexpected result"</strong> and are NOT using Firefox, then please retry using Firefox before you escalate for support.
+  <strong>Unexpected Results ? </strong>&nbsp;Please note only the <strong>Firefox</strong> browser is 100% supported for use with vBAC. If you experience <strong>"unexpected result"</strong> and are NOT using Firefox, then please retry using Firefox before you escalate for support.
 </div>
 
 
