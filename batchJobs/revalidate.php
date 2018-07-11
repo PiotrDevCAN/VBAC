@@ -35,7 +35,7 @@ $allVendors= null; // free up some storage
 
 
 
-$activeIbmErsPredicate = "   ( REVALIDATION_STATUS is null or REVALIDATION_STATUS =  '" . personRecord::REVALIDATED_FOUND . "') ";
+$activeIbmErsPredicate = "   ( trim(REVALIDATION_STATUS) = '' or REVALIDATION_STATUS is null or REVALIDATION_STATUS =  '" . personRecord::REVALIDATED_FOUND . "') ";
 $allNonLeavers = $loader->load('CNUM',allTables::$PERSON, $activeIbmErsPredicate ); //
 AuditTable::audit("Revalidation will check " . count($allNonLeavers) . " people currently flagged as found.",AuditTable::RECORD_TYPE_DETAILS);
 
