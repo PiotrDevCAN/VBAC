@@ -106,7 +106,7 @@ class assetRequestsTable extends DbTable{
         $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$REQUESTABLE_ASSET_LIST . " as RAL ";
         $sql .= " ON TRIM(RAL.ASSET_TITLE) = TRIM(AR.ASSET_TITLE) ";
         $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$DELEGATE . " as D ";
-        $sql .= " ON AR.CNUM = D.CNUM ";
+        $sql .= " ON F.CNUM = D.CNUM ";
 
 
         $sql .= " WHERE 1=1 ";
