@@ -100,6 +100,10 @@ function assetRequest() {
 		    var cnum_id = data.id.trim();
 		    var ctid_id = cnum2ctid[cnum_id];
 		    var ctbFlag = cnum2ctbflag[cnum_id];
+  
+		    var revalidationStatus = $(e.params.data.element).data('revalidationstatus');	 
+		    $('#revalidationStatus').val(revalidationStatus);
+				    
 		    if(!ctid_id){
 		    	console.log('prompt for CT ID');
 		    	$('.locationFor').val('').trigger('change');
@@ -107,7 +111,7 @@ function assetRequest() {
 		    	$('#ctbflag').val(ctbFlag);
 		    	$('#obtainCtid').modal('show');
 		    } else {
-		    	console.log('DONT rompt for CT ID');
+		    	console.log('DONT prompt for CT ID');
 				AssetRequest.recordCtidOnForm(data.text, ctid_id, ctbFlag);
 		    }
 		    console.log('now ajax get location for cnum');
@@ -192,7 +196,13 @@ function assetRequest() {
 		    } else {
 		    	AssetRequest.checkAssetsForShore('off');
 		    }
-
+		    
+		    var revalidationStatus = $('#revalidationStatus').val();
+		    var offboarding = revalidationStatus.substr(0,11)=='offboarding';
+		    if(offboarding){
+		    	  AssetRequest.enableOnlyReturns();  	
+		    }  
+		  
 			  console.log('is form valid NOW NOW listenForSelectLocation ?');
 		      var form = document.getElementById('assetRequestForm');
 		      var formValid = form.checkValidity();
@@ -532,6 +542,11 @@ function assetRequest() {
 		});
 
 
+  }
+  
+  this.enableOnlyReturns = function(){
+	  $('*[data-return="no"').attr('disabled',true);
+	  alert( "User is flagged as 'offboarding' therefore the only requests that can be made are to return assets");
   }
 
 }
