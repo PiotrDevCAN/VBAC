@@ -153,8 +153,7 @@ $notifyApprovingMgr && !empty($approvingMgrEmail) ? $assetRequestTable->notifyAp
 $assetRequestTable->linkPrereqs($assetReferences);
 
 $messages = ob_get_clean();
-
 $response = array('result'=>'success','messages'=>$messages,'requests'=>$assetRequests, 'post'=>$post,'approvingMgrEmail'=>$approvingMgrEmail, 'records'=>$records);
 AuditTable::audit("Concluded:<b>" . __FILE__ . "</b>Response:<pre>" . print_r($response,true) ."</pre>",AuditTable::RECORD_TYPE_DETAILS);
-ob_clean();
+
 echo json_encode($response);
