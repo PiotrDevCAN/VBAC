@@ -57,7 +57,8 @@ class delegateTable extends DbTable {
         $data = array();
 
         while (($row=db2_fetch_assoc($rs))==true) {
-            $display['EMAIL'] = $row['DELEGATE_EMAIL'];
+            $display['MANAGER'] = $row['EMAIL_ADDRESS'];
+            $display['DELEGATE'] = $row['DELEGATE_EMAIL'];
 
             $deleteButton  = "<button type='button' class='btn btn-default btn-xs btnDeleteDelegate btn-danger' aria-label='Left Align' ";
             $deleteButton .= "data-delegate='" .trim($row['DELEGATE_CNUM']) . "' ";
@@ -71,7 +72,7 @@ class delegateTable extends DbTable {
 
             $display['delete'] = $deleteButton;
 
-            $data[] = array($display['EMAIL'], $display['delete']);
+            $data[] = array($display['MANAGER'], $display['DELEGATE'],$display['delete']);
         }
 
         var_dump($data);

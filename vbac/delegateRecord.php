@@ -85,7 +85,7 @@ class delegateRecord extends DbRecord
 
           	<table id='myDelegatesTable' class='table table-striped table-bordered compact' cellspacing='0' width='100%'>
         	<thead>
-        	<tr><th>Email</th><th>Delete</th></tr>
+        	<tr><th>Manager Email</th><th>Delegate Email</th><th>Delete</th></tr>
         	</thead>
         	</table>
         </div>
