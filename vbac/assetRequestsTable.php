@@ -80,7 +80,7 @@ class assetRequestsTable extends DbTable{
         $amADelegateForRaw = $loader->load('EMAIL_ADDRESS',allTables::$DELEGATE," DELEGATE_CNUM='" . db2_escape_string($myCnum) . "' ");
         $amADelegateFor = array_map('strtolower',$amADelegateForRaw);
 
-        $sql  = " SELECT ";
+        $sql  = " SELECT distinct";
 //        $sql .= " concat('000000',AR.REQUEST_REFERNCE) as car,";
         $sql .= " AR.REQUEST_REFERENCE as reference, ";
         $sql .= " P.CT_ID as CT_ID, P.EMAIL_ADDRESS as REQUESTEE_EMAIL, P.NOTES_ID as REQUESTEE_NOTES, AR.ASSET_TITLE as ASSET, STATUS, ";
@@ -105,7 +105,7 @@ class assetRequestsTable extends DbTable{
         $sql .= " ON P.FM_CNUM = F.CNUM ";
         $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$REQUESTABLE_ASSET_LIST . " as RAL ";
         $sql .= " ON TRIM(RAL.ASSET_TITLE) = TRIM(AR.ASSET_TITLE) ";
-        $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$DELEGATE . " as D ";
+        $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$DELEGATE . " as D "; // needed for the predicate.
         $sql .= " ON F.CNUM = D.CNUM ";
 
 
