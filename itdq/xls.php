@@ -25,7 +25,8 @@ trait xls{
                 $columnCounter=$columnIndex;
             }
             foreach ($row as $columnName => $value){
-                $spreadsheet->getActiveSheet()->setCellValueByColumnAndRow($columnCounter++, $rowCounter, $value);
+                $strValue = " " . $value . " ";
+                $spreadsheet->getActiveSheet()->setCellValueByColumnAndRow($columnCounter++, $rowCounter, $strValue);
             }
             $rowCounter++;
             $columnCounter=$columnIndex;

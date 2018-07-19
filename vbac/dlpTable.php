@@ -70,7 +70,7 @@ class dlpTable extends DbTable {
 
     
     
-    function getForPortal($predicate=null, $withButtons=true){
+    function getForPortal($predicate=null, $withButtons=true, $resultSetOnly = false){
         $sql = "select distinct D.cnum ";
         $sql.= ", case when P.notes_id is not null then P.notes_id else A.CNUM end as Licensee ";
         $sql.= ", D.HOSTNAME ";
@@ -98,7 +98,7 @@ class dlpTable extends DbTable {
         $sql.= " on F.CNUM = G.CNUM  ";
         
         
-        $sql.= " where D.transferred_to_hostname is null ";
+        $sql.= " where 1=1 ";
         $sql.= !empty($predicate) ? $predicate : null;
         $sql.= " ; ";
         
@@ -109,8 +109,15 @@ class dlpTable extends DbTable {
             return false;
         }
         
+        if($resultSetOnly){
+            return $rs;
+        }
+        
         $report = array();
         while (($row=db2_fetch_assoc($rs))==true) {
+            
+            var_dump($row);
+            
             $report[] = $withButtons ? $this->addButtons(array_map('trim', $row)) : array_map('trim', $row);
         }
         

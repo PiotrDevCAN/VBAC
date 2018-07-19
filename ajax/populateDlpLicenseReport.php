@@ -5,6 +5,7 @@ use itdq\Loader;
 use vbac\dlpTable;
 use vbac\allTables;
 use vbac\personTable;
+use vbac\dlpRecord;
 
 set_time_limit(0);
 ob_start();
@@ -40,7 +41,31 @@ switch (true) {
         break;
 }
 
-$withButtons = isset($allDelegates[$myCnum]) ? true : $withButtons; // Delegates can have buttons
+switch ($_POST['showType']) {
+    case 'active' :
+        $predicate.= " AND D.STATUS in ('" . dlpRecord::STATUS_PENDING . "','" . dlpRecord::STATUS_APPROVED . "') ";
+        $predicate.= " AND D.TRANSFERRED_TO_HOSTNAME is null ";
+        break; 
+    case 'pending':
+        $predicate.= " AND D.STATUS='" . dlpRecord::STATUS_PENDING . "' ";
+        $predicate.= " AND D.TRANSFERRED_TO_HOSTNAME is null ";
+        break;
+    case 'rejected':
+        $predicate.= " AND D.STATUS='" . dlpRecord::STATUS_REJECTED . "' ";
+        $predicate.= " AND D.TRANSFERRED_TO_HOSTNAME is null ";
+        break;
+    case 'transferred':
+        $predicate.= " AND T.TRANSFERRED_TO_HOSTNAME is not null ";
+        break;
+    case 'all':
+    default:
+       
+        break;
+}
+
+$withButtons = isset($allDelegates[$myCnum]) && $withButtons ? true : $withButtons; // Delegates can have buttons, if we're doing buttons that is.
+
+$withButtons = $_POST['withButtons']=='true' ? $withButtons : false;  // Only if this report allows buttons.
 
 $dataAndSql = $dlpTable->getForPortal($predicate, $withButtons);
 $data = $dataAndSql['data'];

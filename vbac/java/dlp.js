@@ -93,7 +93,9 @@ function dlp() {
 	         });  
 	  },
 	  
-	  this.initialiseLicenseeReport = function(){
+	  this.initialiseLicenseeReport = function(showType,withButtons){
+		  showType = typeof(showType) == 'undefined'  ? 'active' : showType;
+		  withButtons = typeof(withButtons) == 'undefined'  ? 'true' : withButtons;
 		  // Setup - add a text input to each footer cell
 		  $('#dlpLicensesTable thead th').each( function () {
 			  var title = $(this).text();
@@ -103,7 +105,9 @@ function dlp() {
 		  Dlp.table = $('#dlpLicensesTable').DataTable({
 			  ajax: {
 				  url: 'ajax/populateDlpLicenseReport.php',
-		          type: 'POST'
+		          type: 'POST',
+		          data: { showType: showType,
+		        	      withButtons: withButtons}
 			  },
 		      columns: [
 		                { "data": "CNUM" ,"defaultContent": "" },
@@ -150,6 +154,60 @@ function dlp() {
 		  
 		  
 	  },
+
+	  this.listenForReportShowDlpActive = function(){
+			$(document).on('click','#reportShowDlpActive', function(e){
+				console.log('show active');
+				Dlp.table.destroy();
+				Dlp.initialiseLicenseeReport('active','true');
+		    	Dlp.table.columns().visible(false,false);
+		    	Dlp.table.columns([0,1,2,3,4,5,6,7,8,9,10]).visible(true);
+				$('#portalTitle').text('Licenses - Active');
+		  });
+	  },
+	  
+	  
+	  this.listenForReportShowDlpPending = function(){
+			$(document).on('click','#reportShowDlpPending', function(e){
+				console.log('show pending');
+				Dlp.table.destroy();
+				Dlp.initialiseLicenseeReport('pending','true');
+		    	Dlp.table.columns().visible(false,false);
+		    	Dlp.table.columns([0,1,2,3,4,5]).visible(true);
+				$('#portalTitle').text('Licenses - Pending');
+		  });
+	  },
+	  
+	  this.listenForReportShowDlpRejected = function(){
+			$(document).on('click','#reportShowDlpRejected', function(e){
+				Dlp.table.destroy();
+				Dlp.initialiseLicenseeReport('rejected','true');
+		    	Dlp.table.columns().visible(false,false);
+		    	Dlp.table.columns([0,1,2,3,4,5,6,7,8,9,10]).visible(true);
+				$('#portalTitle').text('Licenses - Rejected');
+		  });
+	  },
+	  
+	  this.listenForReportShowDlpTransferred = function(){
+			$(document).on('click','#reportShowDlpTransferred', function(e){
+				Dlp.table.destroy();
+				Dlp.initialiseLicenseeReport('transferred','false');
+		    	Dlp.table.columns().visible(false,false);
+		    	Dlp.table.columns([0,1,2,3,8,9,10]).visible(true);
+				$('#portalTitle').text('Licenses - Transferred');
+		  });
+	  },  
+
+	  this.listenForReportShowDlpAll = function(){
+			$(document).on('click','#reportShowDlpAll', function(e){
+				Dlp.table.destroy();
+				Dlp.initialiseLicenseeReport('all','false');
+		    	Dlp.table.columns().visible(false,false);
+		    	Dlp.table.columns([0,1,2,3,8,9,10]).visible(true);
+				$('#portalTitle').text('Licenses - All');
+		  });
+	  }, 
+	  
 	  
 	  this.listenForDeleteDlp = function(){
 			$(document).on('click','.btnDlpLicenseDelete', function(e){

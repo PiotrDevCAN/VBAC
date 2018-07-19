@@ -35,7 +35,22 @@ if(!$myCnum){
 </div>
 
 <div class='container-fluid'>
-<h3>Licenses</h3>
+<h3 id='portalTitle'>Licenses</h3>
+<div class='row'>
+&nbsp;
+<button id='reportShowDlpActive'  		class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Active Records</button>
+<button id='reportShowDlpPending'      class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Requires Approval</button>
+<button id='reportShowDlpTransferred'  class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Transferred Licenses</button>
+<button id='reportShowDlpRejected'     class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Rejected Records</button>
+<button id='reportShowDlpAll'		    class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>All Records</button>
+</div>
+<div class='row'>
+<a class='btn btn-sm btn-link accessBasedBtn accessPmo accessCdi' href='/dn_dlpActive.php'><i class="glyphicon glyphicon-download-alt"></i> DLP Download</a>
+</div>
+
+
+
+
 <div id='dlpLicencesReport'>
 <table id='dlpLicensesTable' class='table table-striped table-bordered compact' cellspacing='0' width='100%'>
 <thead>
@@ -62,6 +77,12 @@ $(document).ready(function() {
 	Dlp.listenForRejectDlp();
 	Dlp.listenForApproveDlp();
 	Dlp.listenForDeleteDlp();
+	Dlp.listenForReportShowDlpActive();
+	Dlp.listenForReportShowDlpPending();
+	Dlp.listenForReportShowDlpTransferred();
+	Dlp.listenForReportShowDlpRejected();
+	Dlp.listenForReportShowDlpAll();
+
 
 
 });
