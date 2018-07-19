@@ -38,6 +38,7 @@ try {
         switch (trim($_POST['ROLE_ON_THE_ACCOUNT'])) {
             case 'Wipro':
             case 'Cognizant':
+            case 'Densify':
                 $_POST['PES_STATUS'] = personRecord::PES_STATUS_CLEARED;
             break;            
             default:       ;
