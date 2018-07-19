@@ -39,14 +39,16 @@ class dlpRecord extends DbRecord
         $selectableEmailAddress = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON,$predicate);
         $selectableRevalidationStatus = $loader->loadIndexed('REVALIDATION_STATUS','CNUM',allTables::$PERSON,$predicate);   
         
-        $cnumFmcnum = $loader->loadIndexed('FM_CNUM','CNUM',allTables::$PERSON,$predicate);
-        
         $currentLicences = $loader->loadIndexed('HOSTNAME','CNUM', allTables::$DLP," TRANSFERRED_TO_HOSTNAME is null ");   
         JavaScript::buildObjectFromLoadIndexedPair($currentLicences,'licences');
-  
-      
+        
         $approvingMgrPredicate = " upper(FM_MANAGER_FLAG) like 'Y%' ";
-        $approvingMgrs = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON,$approvingMgrPredicate)
+        $approvingMgrs = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON,$approvingMgrPredicate);
+        
+        $cnumFm = $loader->loadIndexed('FM_CNUM','CNUM', allTables::$PERSON,$predicate);
+        JavaScript::buildObjectFromLoadIndexedPair($cnumFm,'cnumfm');
+        
+        
         
         ?>
         <form id='dlpRecordingForm'  class="form-horizontal"

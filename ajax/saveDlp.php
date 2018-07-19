@@ -20,7 +20,6 @@ $dlpTable = new dlpTable(allTables::$DLP);
 
 $licencedAlready = $dlpTable->licencedAlready($parms['licencee'], $parms['currentHostname']);
 
-var_dump($licencedAlready);
 
 if($licencedAlready){
     $actionsTaken.= "<br/>" . $licenceeNotes . " already holds a licence for Hostname:" .  $parms['currentHostname'];

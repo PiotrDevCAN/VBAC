@@ -33,8 +33,10 @@ function dlp() {
 			console.log(e.params.data.id);
 			console.log($('#licencee').val());
 			var cnum = e.params.data.id;
+			var fmcnum = cnumfm[cnum];
 		    var hostname = licences[cnum];
 		    $('#currentHostname').val(hostname);
+		    $('#approvingManager').val(fmcnum).trigger('change');
 		});
 	},
 	  

@@ -12,10 +12,7 @@ class dlpTable extends DbTable {
         $sql.= " WHERE CNUM='" . db2_escape_string($cnum) ."' ";
         $sql.= " AND HOSTNAME='" . strtoupper(db2_escape_string($hostname)) . "' ";
         $sql.= " AND TRANSFERRED_TO_HOSTNAME is null ";
-        
-        
-        var_dump($sql);
-        
+       
         $rs = db2_exec($_SESSION['conn'], $sql);
         
         if(!$rs){
@@ -39,10 +36,7 @@ class dlpTable extends DbTable {
         $sql.= " CNUM='" . db2_escape_string(trim($cnum)) . "' ";
         $sql.= " AND HOSTNAME='" . db2_escape_string(strtoupper(trim($fromHostname))) . "' ";
         $sql.= " AND TRANSFERRED_TO_HOSTNAME is null ";
-        
-        var_dump($sql);
-        
-        
+       
         $rs = db2_exec($_SESSION['conn'], $sql);
         
         if(!$rs){
@@ -62,9 +56,7 @@ class dlpTable extends DbTable {
         $sql.= ",'" . db2_escape_string($approvingEmail) . "', CURRENT DATE, '266'";
         $sql.= ",'" . dlpRecord::STATUS_PENDING . "' ";
         $sql.= " ) ";
-        
-        var_dump($sql);
-        
+       
         $rs = db2_exec($_SESSION['conn'], $sql);
         
         if(!$rs){
