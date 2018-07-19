@@ -52,6 +52,15 @@ class assetRequestRecord extends DbRecord {
     const CREATED_USER             = 'Yes';
     const CREATED_PMO              = 'No';
 
+    
+    static function ableToOwnAssets(){        
+        $predicate  = " and ((( REVALIDATION_STATUS = '" . personRecord::REVALIDATED_FOUND . "' or (REVALIDATION_STATUS is null ) or (REVALIDATION_STATUS='') ) and PES_STATUS in ('" . personRecord::PES_STATUS_CLEARED. "','" . personRecord::PES_STATUS_CLEARED_PERSONAL. "','" . personRecord::PES_STATUS_EXCEPTION. "') ) ";
+        $predicate .= " or  ( REVALIDATION_STATUS IN ('" . personRecord::REVALIDATED_VENDOR . "') and ( PES_STATUS_DETAILS not like 'Boarded%' or PES_STATUS_DETAILS is null) and PES_STATUS in ('" . personRecord::PES_STATUS_CLEARED. "','" . personRecord::PES_STATUS_CLEARED_PERSONAL. "','" . personRecord::PES_STATUS_EXCEPTION. "') )";
+        $predicate .= " or (REVALIDATION_STATUS like 'offboarding%' ) ";
+        $predicate .= " ) ";
+        return $predicate;
+    }
+    
 
     function displayForm(){
         $loader = new Loader();
@@ -78,11 +87,13 @@ class assetRequestRecord extends DbRecord {
                 $predicate = " ( CNUM='" . db2_escape_string($myCnum) . "' $iAmDelegateForPredicate  ) ";
             break;
         }
+        
+        $predicate .= self::ableToOwnAssets();
 
-        $predicate .= " and ((( REVALIDATION_STATUS = '" . personRecord::REVALIDATED_FOUND . "' or (REVALIDATION_STATUS is null ) or (REVALIDATION_STATUS='') ) and PES_STATUS in ('" . personRecord::PES_STATUS_CLEARED. "','" . personRecord::PES_STATUS_CLEARED_PERSONAL. "','" . personRecord::PES_STATUS_EXCEPTION. "') ) ";
-        $predicate .= " or  ( REVALIDATION_STATUS IN ('" . personRecord::REVALIDATED_VENDOR . "') and ( PES_STATUS_DETAILS not like 'Boarded%' or PES_STATUS_DETAILS is null) and PES_STATUS in ('" . personRecord::PES_STATUS_CLEARED. "','" . personRecord::PES_STATUS_CLEARED_PERSONAL. "','" . personRecord::PES_STATUS_EXCEPTION. "') )";
-        $predicate .= " or (REVALIDATION_STATUS like 'offboarding%' ) ";
-        $predicate .= " ) ";
+//         $predicate .= " and ((( REVALIDATION_STATUS = '" . personRecord::REVALIDATED_FOUND . "' or (REVALIDATION_STATUS is null ) or (REVALIDATION_STATUS='') ) and PES_STATUS in ('" . personRecord::PES_STATUS_CLEARED. "','" . personRecord::PES_STATUS_CLEARED_PERSONAL. "','" . personRecord::PES_STATUS_EXCEPTION. "') ) ";
+//         $predicate .= " or  ( REVALIDATION_STATUS IN ('" . personRecord::REVALIDATED_VENDOR . "') and ( PES_STATUS_DETAILS not like 'Boarded%' or PES_STATUS_DETAILS is null) and PES_STATUS in ('" . personRecord::PES_STATUS_CLEARED. "','" . personRecord::PES_STATUS_CLEARED_PERSONAL. "','" . personRecord::PES_STATUS_EXCEPTION. "') )";
+//         $predicate .= " or (REVALIDATION_STATUS like 'offboarding%' ) ";
+//         $predicate .= " ) ";
         $selectableNotesId = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON,$predicate);
         $selectableEmailAddress = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON,$predicate);
         $selectableRevalidationStatus = $loader->loadIndexed('REVALIDATION_STATUS','CNUM',allTables::$PERSON,$predicate);
