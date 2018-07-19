@@ -30,8 +30,6 @@ function dlp() {
 		  
 	this.listenForSelectLicencee = function(){
 		$(document).on('select2:select','#licencee', function (e) {
-			console.log(e.params.data.id);
-			console.log($('#licencee').val());
 			var cnum = e.params.data.id;
 			var fmcnum = cnumfm[cnum];
 		    var hostname = licences[cnum];
@@ -80,6 +78,9 @@ function dlp() {
 	        	  $('#dlpSaveResponseModal').modal('show');
 	    		  $('#saveDlpLicence').removeClass('spinning');
 	    		  $('#saveDlpLicence').attr('disabled',false);
+	    		  $('#licencee').val('').trigger('change');
+	    		  $('#approvingManager').val('').trigger('change');
+	    		  $('#hostname').val('');
 	    		  Dlp.table.ajax.reload();
 	            },
 	          error : function(jqXHR, textStatus, errorThrown){
