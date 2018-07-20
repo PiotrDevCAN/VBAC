@@ -1,6 +1,13 @@
 <?php
 use vbac\personTable;
 
+var_dump((ini_get('memory_limit')));
+
+ini_set('memory_limit','150M'); 
+
+var_dump((ini_get('memory_limit')));
+
+
 echo "<div class='container'>";
 
 
@@ -35,6 +42,8 @@ $_SESSION['isPes']  = !empty($isPes)  ? true : false;
 <h3>Session</h3>
 <?=print_r($GLOBALS)?>
 </pre>
+
+<?php ini_set('MEMORY_LIMIT','150M'); ?>
 
 <pre>
 <h3>phpInfo</h3>
