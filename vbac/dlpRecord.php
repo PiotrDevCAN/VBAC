@@ -29,6 +29,19 @@ class dlpRecord extends DbRecord
     const STATUS_REJECTED = 'rejected';
     const STATUS_TRANSFERRED = 'transferred';
     
+    private static $dlpEmailBody = "A DLP (DG&CB) License record has been created in vBAC for:<br/>
+                                   <br/>Licensee : &&licensee&&
+                                   <br/>Hostname : &&hostname&&
+                                    <b>Please Approve/Reject as appropriate</b><br/>
+                                    Access vbac <a href='" . $_SERVER[''] . "'>Here</a>";
+    
+    private static $dlpEmailPatterns = array(
+        '/&&licensee&&/',
+        '/&&hostname&&/',
+    );
+    
+    
+    
     
     function displayForm($mode){
         $loader = new Loader();
@@ -175,6 +188,12 @@ class dlpRecord extends DbRecord
         <?php
     }
     
+    
+    static function notifyApprover($licensee, $hostname, $approvingMgr){
+        $replacements = array($licensee, $hostname);
+        $message = preg_replace(self::$dlpEmailPatterns, $replacements, self::$dlpEmailBody);        
+        \itdq\BlueMail::send_mail($approvingMgr, 'DLP(BG&CB) License Approval Request ', $message, 'vbacNoReply@uk.ibm.com');
+    }
     
     
 }

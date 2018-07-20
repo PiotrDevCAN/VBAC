@@ -3,6 +3,7 @@ use itdq\AuditTable;
 use vbac\dlpTable;
 use vbac\allTables;
 use itdq\Loader;
+use vbac\dlpRecord;
 
 
 ob_start();
@@ -33,6 +34,12 @@ $actionsTaken.= $save ? "<p class='bg-success'>New Licence recorded for $licence
  
 $messages = ob_get_clean();
 $success = (trim($messages) == "");
+
+if($success){
+    dlpRecord::notifyApprover($licenceeNotes, $hostname, array($approvingMgr));
+}
+
+
 $response = array('success'=>$success,'actionsTaken'=>$actionsTaken,'messages'=>$messages,"post"=>print_r($parms,true));
 ob_clean();
 echo json_encode($response);
