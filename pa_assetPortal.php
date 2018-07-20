@@ -3,6 +3,8 @@ use vbac\assetRequestsTable;
 use vbac\allTables;
 use vbac\personTable;
 
+ini_set('MEMORY_LIMIT', '150MB');
+
 $assetTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
 ?>
 <div class='container'>
