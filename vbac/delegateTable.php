@@ -80,5 +80,49 @@ class delegateTable extends DbTable {
         return $data;
 
     }
+    
+    static function delegatesFromCnum($fmCnum){
+        $sql = " SELECT DELEGATE_EMAIL ";        
+        $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$DELEGATE ;
+        $sql.= " WHERE CNUM='" . db2_escape_string(trim($fmCnum)) . "' ";
+        
+        $rs = db2_exec($_SESSION['conn'], $sql);
+        
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+        
+        $ccAddresses = array();
+        
+        while(($row=db2_fetch_assoc($rs)==true)){
+            $ccAddresses[] = trim($row['DELEGATE_EMAIL']);
+        }
+        
+        return !empty($ccAddresses) ? $ccAddresses: false;       
+        
+    }
+    
+    static function delegatesFromEmail($fmEmail){
+        $sql = " SELECT DELEGATE_EMAIL ";
+        $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$DELEGATE ;
+        $sql.= " WHERE EMAIL_ADDRESS='" . db2_escape_string(trim($fmEmail)) . "' ";
+        
+        $rs = db2_exec($_SESSION['conn'], $sql);
+        
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+        
+        $ccAddresses = array();
+        
+        while(($row=db2_fetch_assoc($rs)==true)){
+            $ccAddresses[] = trim($row['DELEGATE_EMAIL']);
+        }
+        
+        return !empty($ccAddresses) ? $ccAddresses: false;
+        
+    }
 
 }

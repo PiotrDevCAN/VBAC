@@ -192,8 +192,14 @@ class dlpRecord extends DbRecord
     
     static function notifyApprover($licensee, $hostname, $approvingMgr){
         $replacements = array($licensee, $hostname, $_SERVER['HTTP_HOST']);
-        $message = preg_replace(self::$dlpEmailPatterns, $replacements, self::$dlpEmailBody);        
-        \itdq\BlueMail::send_mail($approvingMgr, 'DLP(BG&CB) License Approval Request ', $message, 'vbacNoReply@uk.ibm.com');
+        $message = preg_replace(self::$dlpEmailPatterns, $replacements, self::$dlpEmailBody);  
+        
+        $delegates = delegateTable::delegatesFromEmail($approvingMgr);
+        
+        $delegates = $delegates ? $delegates : array();
+        
+        
+        \itdq\BlueMail::send_mail(array($approvingMgr), 'DLP(BG&CB) License Approval Request ', $message, 'vbacNoReply@uk.ibm.com', $delegates);
     }
     
     

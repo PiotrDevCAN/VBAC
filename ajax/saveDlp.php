@@ -38,7 +38,7 @@ $messages = ob_get_clean();
 $success = (trim($messages) == "");
 
 if($success){
-    dlpRecord::notifyApprover($licenceeNotes, $parms['hostname'], array($approverEmail));
+    dlpRecord::notifyApprover($licenceeNotes, $parms['hostname'], $approverEmail);
 }
 
 
