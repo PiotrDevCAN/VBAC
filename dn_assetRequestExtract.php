@@ -17,7 +17,7 @@ echo "<pre>";
 
 // Create new Spreadsheet object
 
-ini_set('memory_limit', '150M');
+ini_set('memory_limit', '200M');
 
 $spreadsheet = new Spreadsheet();
 // Set document properties
