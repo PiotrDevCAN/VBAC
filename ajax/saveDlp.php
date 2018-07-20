@@ -8,6 +8,8 @@ use vbac\dlpRecord;
 
 ob_start();
 $parms = array_map('trim', $_POST);
+$parms['currentHostname'] = strtoupper($parms['currentHostname']);
+$parms['hostname'] = strtoupper($parms['hostname']);
 AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($parms,true) . "</b>",AuditTable::RECORD_TYPE_DETAILS);
 
 $actionsTaken = null;
@@ -36,7 +38,7 @@ $messages = ob_get_clean();
 $success = (trim($messages) == "");
 
 if($success){
-    dlpRecord::notifyApprover($licenceeNotes, $hostname, array($approvingMgr));
+    dlpRecord::notifyApprover($licenceeNotes, $parms['hostname'], array($approverEmail));
 }
 
 

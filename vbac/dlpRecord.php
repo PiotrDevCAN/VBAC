@@ -32,12 +32,13 @@ class dlpRecord extends DbRecord
     private static $dlpEmailBody = "A DLP (DG&CB) License record has been created in vBAC for:<br/>
                                    <br/>Licensee : &&licensee&&
                                    <br/>Hostname : &&hostname&&
-                                    <b>Please Approve/Reject as appropriate</b><br/>
-                                    Access vbac <a href='" . $_SERVER[''] . "'>Here</a>";
+                                   <br/><b>Please Approve/Reject as appropriate</b>
+                                   <br/>Access vBAC DLP Licence page <a href='&&server&&/pc_dlpRecord.php'>Here</a>";
     
     private static $dlpEmailPatterns = array(
         '/&&licensee&&/',
         '/&&hostname&&/',
+        '/&&server&&/',
     );
     
     
@@ -190,7 +191,7 @@ class dlpRecord extends DbRecord
     
     
     static function notifyApprover($licensee, $hostname, $approvingMgr){
-        $replacements = array($licensee, $hostname);
+        $replacements = array($licensee, $hostname, $_SERVER['HTTP_HOST']);
         $message = preg_replace(self::$dlpEmailPatterns, $replacements, self::$dlpEmailBody);        
         \itdq\BlueMail::send_mail($approvingMgr, 'DLP(BG&CB) License Approval Request ', $message, 'vbacNoReply@uk.ibm.com');
     }

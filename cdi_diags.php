@@ -7,6 +7,8 @@ ini_set('memory_limit','150M');
 
 var_dump((ini_get('memory_limit')));
 
+var_dump($_SERVER['HTTP_HOST']);
+
 
 echo "<div class='container'>";
 
