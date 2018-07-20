@@ -16,6 +16,9 @@ echo "<pre>";
 
 
 // Create new Spreadsheet object
+
+ini_set('MEMORY_LIMIT', '150MB');
+
 $spreadsheet = new Spreadsheet();
 // Set document properties
 $spreadsheet->getProperties()->setCreator('vBAC')
