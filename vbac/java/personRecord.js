@@ -60,8 +60,9 @@ function personRecord() {
   this.listenForEmail = function(){
 	  $(document).on('focusout','#resource_email',function(){
 		  var newEmail = $('#resource_email').val();
-		  console.log(newEmail);
-		  var allreadyExists = ($.inArray(newEmail, knownEmail) >= 0 );
+		  var trimmedEmail = newEmail.trim();
+		  console.log(trimmedEmail);
+		  var allreadyExists = ($.inArray(trimmedEmail, knownEmail) >= 0 );
           console.log(allreadyExists);
           if(allreadyExists){ // comes back with Position in array(true) or false is it's NOT in the array.
             $('#saveBoarding').attr('disabled',true);
@@ -1327,7 +1328,7 @@ function personRecord() {
 			  $('#role_on_account').val(Type).attr('disabled',true);
 		  } else {
 			  $('#saveBoarding').attr('disabled',true);
-			  $('#resource_email').val('').attr('disabled',false).attr('required',true);
+			  $('#resource_email').attr('disabled',false).attr('required',true);
 			  $('#resource_email').css("background-color","white").attr('placeholder','Email Address');	
 			  $('#open_seat').val('');
 			  $('#role_on_account').val('').attr('disabled',false);
