@@ -63,12 +63,18 @@ function personRecord() {
 		  var trimmedEmail = newEmail.trim();
 		  console.log(trimmedEmail);
 		  var allreadyExists = ($.inArray(trimmedEmail, knownEmail) >= 0 );
+		  var ibmEmailAddress = (trimmedEmail.search(/ibm/i) != -1);
+		  console.log(ibmEmailAddress);
           console.log(allreadyExists);
           if(allreadyExists){ // comes back with Position in array(true) or false is it's NOT in the array.
             $('#saveBoarding').attr('disabled',true);
             $('#resource_email').css("background-color","LightPink");
             alert('Email address already defined to VBAC');
             return false;
+          } else if(ibmEmailAddress){
+              $('#saveBoarding').attr('disabled',true);
+              $('#resource_email').css("background-color","Red");
+              alert('IBMers should NOT BE Pre-Boarded. Please board as an IBMer');        	  
           } else {
             $('#resource_email').css("background-color","LightGreen");
             $('#saveBoarding').attr('disabled',false);
@@ -247,13 +253,6 @@ function personRecord() {
 
   this.listenForHasBpEntry = function(){
     $(document).on('change','#hasBpEntry', function(){
-      console.log('clicked hasBpEntry');
-
-      console.log($('#hasBpEntry').is(':checked'));
-
-
-
-      console.log(this);
       $('#notAnIbmer').toggle();
       $('#existingIbmer').toggle();
       $('#linkToPreBoarded').toggle();
