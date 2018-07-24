@@ -89,9 +89,11 @@ $reports         = new NavbarMenu('Downloadable Reports');
 $original        = new NavbarOption('Person Details - Original', 'pr_personDetails.php','accessCdi accessPmo accessRepFullPerson');
 $fullExtract     = new NavbarOption('Person Details - Full', 'pr_personDetailsFull.php','accessCdi accessPmo accessRepFullPerson');
 $active          = new NavbarOption('Person Details - Active', 'pr_personDetailsActive.php','accessCdi accessPmo accessRepFullPerson');
+$activeOdc       = new NavbarOption('Person Details - Active(ODC)<span id="odcPopulation" class="badge">**</span>', 'pr_personDetailsActiveOdc.php','accessCdi accessPmo accessRepFullPerson');
 $inactive        = new NavbarOption('Person Details - Inactive', 'pr_personDetailsInactive.php','accessCdi accessPmo accessRepFullPerson');
 $reports->addOption($fullExtract);
 $reports->addOption($active);
+$reports->addOption($activeOdc);
 $reports->addOption($inactive);
 
 
@@ -129,6 +131,7 @@ $_SESSION['isUser'] = !empty($isUser) ? true : false;
 $_SESSION['isRep1'] = !empty($isRep1) ? true : false;
 
 $plannedOutagesId = str_replace(" ","_",$plannedOutagesLabel);
+$odcStaff = personTable::countOdcStaff();
 ?>
 <script>
 
@@ -151,7 +154,6 @@ $rep = null;
 !empty($isRep1) ? $rep .= '<small>(R1)</small>' : '';
 
 $requestor= $isRequestor ? "+" : null;
-
 ?>
 
 $(document).ready(function () {
@@ -167,6 +169,7 @@ $(document).ready(function () {
     var poContent = $('#<?=$plannedOutagesId?> a').html();
 	var badgedContent = poContent + "&nbsp;" + "<?=$plannedOutages->getBadge();?>";
 	$('#<?=$plannedOutagesId?> a').html(badgedContent);
+	$('#odcPopulation').html(<?=$odcStaff?>);
 });
 </script>
 

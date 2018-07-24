@@ -54,6 +54,11 @@ class personTable extends DbTable {
         $activePredicate.= " AND PES_STATUS in ('". personRecord::PES_STATUS_CLEARED ."','". personRecord::PES_STATUS_CLEARED_PERSONAL ."','". personRecord::PES_STATUS_EXCEPTION ."') ) ";
         return $activePredicate;    
     }
+    
+    static function odcPredicate(){
+        $odcPredicate = " ( lower(LBG_LOCATION) LIKE '%pune' or lower(LBG_LOCATION)  LIKE '%bangalore' ) ";
+        return $odcPredicate;
+    }
 
 
     function returnAsArray(){
@@ -898,6 +903,33 @@ class personTable extends DbTable {
             }
         }
         return true;
+    }
+    
+    
+    static function countOdcStaff(){
+        
+        
+        if(isset($_SESSION['Odcstaff'])){      
+            if(!empty($_SESSION['Odcstaff'])){
+                return $_SESSION['Odcstaff'];
+            }
+        }
+        
+        $odcActive = self::activePersonPredicate() . " AND " . self::odcPredicate();
+        $sql = " SELECT COUNT(*) as ACTIVE_ODC FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
+        $sql.= " WHERE 1=1 and  " . $odcActive;
+        
+        $rs = db2_exec($_SESSION['conn'], $sql);
+        
+        if(!$rs) {
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+        
+        $row = db2_fetch_assoc($rs);        
+        $_SESSION['Odcstaff'] = $row['ACTIVE_ODC'];        
+        return $_SESSION['Odcstaff'];
+        
     }
 
 
