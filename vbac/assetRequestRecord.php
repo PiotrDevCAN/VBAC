@@ -153,7 +153,7 @@ class assetRequestRecord extends DbRecord {
                               required
                      >
                      <?php
-                     $options = $this->buildLocationOptions();
+                     $options = self::buildLocationOptions();
                      echo $options;
                      ?>
                     </select>
@@ -420,7 +420,7 @@ class assetRequestRecord extends DbRecord {
 
 
 
-    function buildLocationOptions(){
+    static function buildLocationOptions($currentLocation=null){
         $loader = new Loader();
         $locationsByCity = $loader->loadIndexed('CITY','ADDRESS',allTables::$STATIC_LOCATIONS);
         $children = array();
@@ -428,7 +428,13 @@ class assetRequestRecord extends DbRecord {
 
         foreach ($locationsByCity as $location => $city){
             $children[trim($city)] = empty($children[trim($city)]) ? "" : $children[trim($city)];
-            $children[trim($city)] .= "<option id='$location'>$location,$city</option>";
+            
+            $preparedLocation = str_replace(array(','), array(''), strtolower(trim($location . $city)));
+            $preparedCurrLocation = str_replace(array(','), array(''), strtolower(trim($currentLocation)));
+            
+            $selected = $preparedLocation == $preparedCurrLocation ? ' selected ' : null;            
+           
+            $children[trim($city)] .= "<option id='$location' $selected >$location,$city</option>";
         }
 
         $options = "<option id=''></option>";

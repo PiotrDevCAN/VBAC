@@ -403,7 +403,7 @@ You are able to amend the Functional Manager of people assigned to you but who n
 
         $startDate = \DateTime::createFromFormat('Y-m-d', $this->START_DATE);
         $endDate = \DateTime::createFromFormat('Y-m-d', $this->PROJECTED_END_DATE);
-
+        
         ?>
         <form id='boardingForm'  class="form-horizontal" onsubmit="return false;">
     	<div class="panel panel-default">
@@ -526,8 +526,22 @@ You are able to amend the Functional Manager of people assigned to you but who n
                     };
                ?>
                </select>
-			</div>
-		</div>
+				</div>
+				<?php $allowEditLocation = empty($this->LBG_LOCATION) ? " style='display:none;' " : null; ?>
+				<div id='editLocationDiv' class='col-sm-6' <?=$allowEditLocation;?>>
+           	   	<select class='form-control select select2 locationFor '
+                			  id='LBG_LOCATION'
+                              name='LBG_LOCATION'                              
+                              required
+                     >
+                     <?php
+                     $options = assetRequestRecord::buildLocationOptions($this->LBG_LOCATION);
+                     echo $options;
+                     ?>
+                    </select>
+          			
+       			</div>
+		</div>		
 	</div>
 </div>
 
