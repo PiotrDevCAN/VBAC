@@ -267,11 +267,13 @@ function personRecord() {
         $('#resource_country').select2('destroy');
         $('#resource_country').select2();
         $('#person_preboarded').val('').trigger('change');  // incase they already selected a pre-boarder - we need to clear this field.
+        $('#editCtidDiv').show();
       } else {
     	$('.employeeTypeRadioBtn input[type=radio]').removeAttr('required');
     	$('#open_seat').attr('placeholder','Open Seat Number');
         $('#notAnIbmer :input').attr('required',false);
         $('#existingIbmer :input').attr('required',true);
+        $('#editCtidDiv').hide();
       }
       var currentHeading = $('#employeeResourceHeading').text();
       var newHeading = currentHeading=='Employee Details' ? 'Resource Details' : 'Employee Details';
