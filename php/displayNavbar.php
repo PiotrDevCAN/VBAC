@@ -41,6 +41,7 @@ $revalidation   = new NavbarOption('Revalidation Portal','pa_revalidation.php','
 $control        = new NavbarOption('Control', 'pa_control.php','accessCdi accessPmo');
 $audit          = new NavbarOption('Audit Report', 'pa_auditListing.php','accessCdi accessPmo');
 $requestableAssets  = new NavbarOption('Requestable Assets', 'pa_requestableAssets.php','accessCdi accessPmo');
+$ringFenced     = new NavbarOption('Ring Fencing', 'pa_ringFencing.php','accessRes');
 $delegate       = new NavbarOption('Delegates', 'pc_delegate.php','accessCdi accessPmo accessFm accessUser');
 
 
@@ -54,7 +55,8 @@ $adminMenu->addOption($control);
 $adminMenu->addOption($requestableAssets);
 $adminMenu->addOption( new NavbarDivider('accessPmo accessCdi accessUser accessFm'));
 $adminMenu->addOption($delegate);
-
+$adminMenu->addOption( new NavbarDivider('accessRes'));
+$adminMenu->addOption($ringFenced);
 
 $adminMenu->addOption( new NavbarDivider('accessCdi'));
 $adminMenu->addOption($audit);
@@ -115,6 +117,8 @@ $isCdi  = employee_in_group($_SESSION['cdiBg'],  $GLOBALS['ltcuser']['mail']) ? 
 $isPmo  = employee_in_group($_SESSION['pmoBg'],  $GLOBALS['ltcuser']['mail']) ? ".not('.accessPmo')" : null;
 $isPes  = employee_in_group($_SESSION['pesBg'],  $GLOBALS['ltcuser']['mail']) ? ".not('.accessPes')" : null;
 $isRep1  = employee_in_group('vbac_Reports_Full_Person',  $GLOBALS['ltcuser']['mail']) ? ".not('.accessRepFullPerson')" : null;
+$isRes   = employee_in_group('ventus_resource_strategy',  $GLOBALS['ltcuser']['mail'],3) ? ".not('.accessRes')" : null;
+
 $isUser = ".not('.accessUser')";
 $isRequestor = employee_in_group('vbac_requestor', $_SESSION['ssoEmail']);
 
@@ -122,6 +126,7 @@ $isCdi   = stripos($_SERVER['environment'], 'dev') ? ".not('.accessCdi')"  : $is
 $isPmo   = stripos($_SERVER['environment'], 'dev')  ? ".not('.accessPmo')" : $isPmo;
 $isPes   = stripos($_SERVER['environment'], 'dev')  ? ".not('.accessPes')" : $isPes;
 $isRep1   = stripos($_SERVER['environment'], 'dev')  ? ".not('.accessRepFullPerson')" : $isRep1;
+$isRes   = stripos($_SERVER['environment'], 'dev')  ? ".not('.accessRes')" : $isRes;
 
 $isFm = $isPmo ? null : $isFm; // If they are PMO it don't matter if they are FM
 
@@ -131,13 +136,15 @@ $_SESSION['isPmo']  = !empty($isPmo)  ? true : false;
 $_SESSION['isPes']  = !empty($isPes)  ? true : false;
 $_SESSION['isUser'] = !empty($isUser) ? true : false;
 $_SESSION['isRep1'] = !empty($isRep1) ? true : false;
+$_SESSION['isRes']  = !empty($isRes) ? true : false;
+
 
 $plannedOutagesId = str_replace(" ","_",$plannedOutagesLabel);
 $odcStaff = personTable::countOdcStaff();
 ?>
 <script>
 
-$('.navbarMenuOption')<?=$isFm?><?=$isPmo?><?=$isCdi?><?=$isUser?><?=$isRep1?>.remove();
+$('.navbarMenuOption')<?=$isFm?><?=$isPmo?><?=$isCdi?><?=$isUser?><?=$isRep1?><?=$isRes?>.remove();
 $('.navbarMenu').not(':has(li)').remove();
 
 $('li[data-pagename="<?=$page;?>"]').addClass('active').closest('li.dropdown').addClass('active');
@@ -167,7 +174,8 @@ $(document).ready(function () {
     <?=!empty($isFm)   ? '$("#userLevel").html("Func.Mgr.' . $requestor . '&nbsp;' . $rep . '");console.log("fm");' : null;?>
     <?=!empty($isPmo)  ? '$("#userLevel").html("PMO' . $requestor . '&nbsp;' . $rep . '");console.log("pmo");' : null;?>
     <?=!empty($isCdi)  ? '$("#userLevel").html("CDI' . $requestor . '&nbsp;' . $rep . '");console.log("cdi");' : null;?>
-
+    <?=!empty($isRes)  ? '$("#userLevel").html("RES' . $requestor . '&nbsp;' . $rep . '");console.log("res");' : null;?>
+    
     var poContent = $('#<?=$plannedOutagesId?> a').html();
 	var badgedContent = poContent + "&nbsp;" + "<?=$plannedOutages->getBadge();?>";
 	$('#<?=$plannedOutagesId?> a').html(badgedContent);

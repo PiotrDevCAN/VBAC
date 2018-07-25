@@ -59,6 +59,59 @@ class personTable extends DbTable {
         $odcPredicate = " ( lower(LBG_LOCATION) LIKE '%pune' or lower(LBG_LOCATION)  LIKE '%bangalore' ) ";
         return $odcPredicate;
     }
+    
+    function getForRfFlagReport($resultSetOnly = false, $withButtons = true){
+        $sql = "select P.cnum ";
+        $sql.= " ,P.NOTES_ID ";
+        $sql.= ", P.LOB ";
+        $sql.= ", P.CTB_RTB ";
+        $sql.= ", case when F.notes_id is not null then F.NOTES_ID else P.FM_CNUM end as FM ";
+        $sql.= ", P.REVALIDATION_STATUS as REVAL ";
+        $sql.= ", P.PROJECTED_END_DATE as EXP ";
+
+        $sql.= " from  ". $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
+        $sql.= " left join ". $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as F ";
+        $sql.= " on P.FM_CNUM = F.CNUM ";
+        $sql.= " WHERE P.RF_FLAG = '1' ";
+       
+        $rs = db2_exec($_SESSION['conn'],$sql);
+        
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+        
+        if($resultSetOnly){
+            return $rs;
+        }
+        
+        
+        $report = array();
+        while (($row=db2_fetch_assoc($rs))==true) {
+            //$report[] = array_map('trim', $row);
+            $report[] = $withButtons ?  $this->addRfflagButtons(array_map('trim', $row)) : array_map('trim', $row);
+        }
+        
+        return $report;
+        
+        // return !empty($report) ? array('data'=>$report,'sql'=>$sql) : false;
+    }
+    
+    function addRfflagButtons($row){
+        $deleteButton  = "<button type='button' class='btn btn-default btn-xs btnDeleteRfFlag btn-danger' aria-label='Left Align' ";
+        $deleteButton .= "data-cnum='" .trim($row['CNUM']) . "' ";
+        $deleteButton .= "data-toggle='tooltip' data-placement='top' title='Remove Ring Fence'";
+        $deleteButton .= " > ";
+        $deleteButton .= "<span class='glyphicon glyphicon-trash ' aria-hidden='true'></span>";
+        $deleteButton .= " </button> ";
+        $notesId = $row['NOTES_ID'];    
+            
+        $row['NOTES_ID'] = $deleteButton . "&nbsp;" . $notesId;
+        
+        return $row;
+        
+    }
+    
 
 
     function returnAsArray(){
@@ -930,6 +983,22 @@ class personTable extends DbTable {
         $_SESSION['Odcstaff'] = $row['ACTIVE_ODC'];        
         return $_SESSION['Odcstaff'];
         
+    }
+    
+    
+    function updateRfFlag($cnum,$rfFlag){
+        $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." .  $this->tableName;
+        $sql.= " SET RF_FLAG='" . db2_escape_string($rfFlag) . "' ";
+        $sql.= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
+        
+        $rs = db2_exec($_SESSION['conn'], $sql);
+        
+        if(!$rs){
+           DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+           return false;           
+        }
+        
+        return true;
     }
 
 

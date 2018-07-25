@@ -8,6 +8,7 @@ function personRecord() {
 
   var table;
   var personFinderTable;
+  var rfFlagTable;
   var dataTableElements;
   var currentXmlDoc;
   var spinner =  '<div id="overlay"><i class="fa fa-spinner fa-spin spin-big"></i></div>';
@@ -657,6 +658,57 @@ function personRecord() {
 		    }
 	    });
 	  },
+	  
+	  
+	  this.listenForSaveRfFlag = function(){
+		    $(document).on('click','#saveRfFlag', function(){
+			    console.log('listenForSaveRfFlag');
+			    $("#saveRfFlag").addClass('spinning');
+			    var form = $('#rfFlagForm');
+			    var formValid = form[0].checkValidity();
+			    if(formValid){
+			      var cnum = $('#personForRfFlag').val();
+			      console.log(cnum);
+			        $.ajax({
+			          url: "ajax/setRfFlag.php",
+			          type: 'POST',
+			            data : {cnum: cnum,
+			            	  rfFlag: 1 },
+			          success: function(result){
+			        	  $("#saveRfFlag").removeClass('spinning');
+			        	  console.log(result);
+			        	  var resultObj = JSON.parse(result);
+			        	  $('#personForRfFlag').val('');
+			        	  personRecord.rfFlagTable.ajax.reload();
+			          }
+			        });
+			    } else {
+			      $("#saveRfFlag").removeClass('spinning');
+			      console.log('invalid fields follow');
+			      console.log($(form).find( ":invalid" ));
+			    }
+		    });
+		  },	
+		  
+		  this.listenForDeleteRfFlag = function(){
+			    $(document).on('click','.btnDeleteRfFlag', function(e){
+				    console.log('listenForDeleteRfFlag');
+				    $(e.target).addClass('spinning');
+				    var cnum = $(e.target).data('cnum');
+				    console.log(cnum);
+				    $.ajax({
+				          url: "ajax/setRfFlag.php",
+				          type: 'POST',
+				          data : {cnum: cnum,
+				            	  rfFlag: 0 },
+				          success: function(result){
+				        	  console.log(result);
+				        	  var resultObj = JSON.parse(result);
+				        	  personRecord.rfFlagTable.ajax.reload();
+				          }
+				    });
+			    });
+			  },
 
 
   this.saveBoarding = function(mode){
@@ -794,6 +846,61 @@ function personRecord() {
           } );
       } );
   },
+
+  
+  this.initialiseRfFlagReport = function(){
+	  console.log('initialiseRfFlagReport');	  
+      // Setup - add a text input to each footer cell
+      $('#rfFlagTable tfoot th').each( function () {
+          var title = $(this).text();
+          $(this).html( '<input type="text" id="footer'+ title + '" placeholder="Search '+title+'" />' );
+      } );
+      
+      console.log('about to invoke DataTable');	 
+      // DataTable
+      personRecord.rfFlagTable = $('#rfFlagTable').DataTable({
+    	  ajax: {
+              url: 'ajax/populateRfFlagReport.php',
+              type: 'POST',
+          		},
+          columns: [
+                     { "data": "CNUM" , "defaultContent": "" },
+                     { "data": "NOTES_ID"       ,"defaultContent": "<i>unknown</i>"},
+                     { "data": "LOB", "defaultContent": "<i>unknown</i>" },
+                     { "data": "CTB_RTB", "defaultContent": "<i>unknown</i>" },
+                     { "data": "FM", "defaultContent": "<i>unknown</i>" },
+                     { "data": "REVAL", "defaultContent": "" },
+                     { "data": "EXP", "defaultContent": "" },
+                    ],
+          processing: true,
+          responsive: true,
+          dom: 'Blfrtip',
+          buttons: [
+                    'colvis',
+                    'print'
+                ],
+      });
+      
+      console.log('invoked over');
+      console.log(personRecord.rfFlagTable);
+      
+      // Apply the search
+      personRecord.rfFlagTable.columns().every( function () {
+          var that = this;
+
+          $( 'input', this.footer() ).on( 'keyup change', function () {
+              if ( that.search() !== this.value ) {
+                  that
+                      .search( this.value )
+                      .draw();
+              }
+          } );
+      } );
+
+
+  },
+  
+  
   
   this.initialisePersonTable = function(){
       $.ajax({

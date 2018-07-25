@@ -8,6 +8,7 @@ use itdq\JavaScript;
 use itdq\DbTable;
 use vbac\allTables;
 use itdq\AuditTable;
+use vbac\personTable;
 use DateTime;
 use DateInterval;
 
@@ -68,6 +69,7 @@ class personRecord extends DbRecord
     protected $PRE_BOARDED;
 
     protected $SECURITY_EDUCATION;
+    protected $RF_Flag;
 
     protected $person_bio;
 
@@ -771,6 +773,51 @@ You are able to amend the Functional Manager of people assigned to you but who n
 
     }
 
+    function displayRfFlagForm(){
+        $loader = new Loader();
+        $activePredicate = personTable::activePersonPredicate();
+        $notAlreadyFlagged = " AND RF_FLAG = '0' ";
+        $availableForRfFlag = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON, $activePredicate . $notAlreadyFlagged);
+        
+        ?>
+        <form id='rfFlagForm'  class="form-horizontal" onsubmit="return false;">
+    	<div class="panel panel-default">
+      		<div class="panel-heading">
+        	<h3 class="panel-title" id='ringFencing'>Ring Fencing</h3>
+      		</div>
+	    	<div class="panel-body">
+				<div class='form-group' id='ibmerForRfFlag'>
+	           		<div class="col-sm-3" id='ibmerSelect'>
+                	<select class='form-control select select2' id='personForRfFlag'
+                        name=personForRfFlag
+                        placeholder='Select Person:' >
+                	<option value=''>Person to Flag</option>
+                	<?php
+                	foreach ($availableForRfFlag as $cnum => $notesId){
+                        ?><option value='<?=$cnum?>'><?=$notesId . "(" . $cnum . ")" ?></option><?php
+                    };
+                    ?>
+               		</select>
+					</div>
+				</div>
+		</div>
+	</div>
+    <?php
+    $allButtons = null;
+    $submitButton =  $this->formButton('submit','Submit','saveRfFlag',null,'Ring Fence','btn btn-primary');
+    $allButtons[] = $submitButton;
+    $this->formBlueButtons($allButtons);
+    $this->formHiddenInput('requestor',$GLOBALS['ltcuser']['mail'],'requestor');
+    ?>
+
+  </form>
+    <?php
+
+
+
+    }
+    
+    
     
     function confirmTransferModal(){
         $myCnum = personTable::myCnum();
