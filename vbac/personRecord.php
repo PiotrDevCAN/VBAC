@@ -532,7 +532,7 @@ You are able to amend the Functional Manager of people assigned to you but who n
            	   	<select class='form-control select select2 locationFor '
                 			  id='LBG_LOCATION'
                               name='LBG_LOCATION'                              
-                              required
+                              
                      >
                      <?php
                      $options = assetRequestRecord::buildLocationOptions($this->LBG_LOCATION);
@@ -607,7 +607,7 @@ You are able to amend the Functional Manager of people assigned to you but who n
     	    <?php $allowEditCtid = empty($this->CT_ID) ? " style='display:none;' " : null; ?>
                	
             <div id='editCtidDiv' class='col-sm-6' <?=$allowEditCtid;?>>
-          		<input class="form-control" id="ct_id" name="CT_ID" type="number" min='999999' max='9999999'  value="<?=$this->CT_ID?>" placeholder='7-digit Contractor Id(CT Id)' >
+          		<input class="form-control" id="ct_id" name="CT_ID" type="number" min='999999' max='9999999'  value="<?=$this->CT_ID?>" placeholder='7-digit Contractor Id(CT Id) (If known)' >
        		</div>
     
     
