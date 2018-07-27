@@ -29,19 +29,6 @@ class slack {
         curl_setopt( $ch, CURLOPT_POST, true);
         # Send request.
         $result = curl_exec($ch);
-        
-        // # Print response.
-        echo "<pre>$result</pre>";
-        echo "completed.";
-        
-        
-        echo curl_errno($ch);
-        echo curl_error($ch);
-        
-        echo var_dump($messageToSlack);
-        
-        
-        
         return $result;
     }
 }
