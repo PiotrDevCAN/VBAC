@@ -41,11 +41,11 @@ if(!$myCnum){
 <div id='rfFlagReport'>
 <table id='rfFlagTable' class='table table-striped table-bordered compact' cellspacing='0' width='100%'>
 <thead>
-<tr><th>CNUM</th><th>NOTES_ID</th><th>LOB</th><th>CTB_RTB</th><th>FM</th><th>REVAL</th><th>EXP</th></tr></thead>
+<tr><th>CNUM</th><th>NOTES_ID</th><th>LOB</th><th>CTB_RTB</th><th>FM</th><th>REVAL</th><th>EXP</th><th>FROM</th><th>TO</th></tr></thead>
 <tbody>
 </tbody>
 <tfoot>
-<tr><th>CNUM</th><th>NOTES_ID</th><th>LOB</th><th>CTB_RTB</th><th>FM</th><th>REVAL</th><th>EXP</th></tr></thead>
+<tr><th>CNUM</th><th>NOTES_ID</th><th>LOB</th><th>CTB_RTB</th><th>FM</th><th>REVAL</th><th>EXP</th><th>FROM</th><th>TO</th></tr></thead>
 </tfoot>
 </table>
 
@@ -58,9 +58,11 @@ var Person = new personRecord();
 
 $(document).ready(function() {
 
+	Person.initialiseRfStartEndDate();
 	Person.initialiseRfFlagReport();
 	Person.listenForSaveRfFlag();
 	Person.listenForDeleteRfFlag();
+
 
 
 

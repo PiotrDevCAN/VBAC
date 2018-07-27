@@ -668,17 +668,26 @@ function personRecord() {
 			    var formValid = form[0].checkValidity();
 			    if(formValid){
 			      var cnum = $('#personForRfFlag').val();
+			      var rfStart = $('#rfStart_Date_Db2').val();
+			      var rfEnd = $('#rfEnd_Date_Db2').val();
 			      console.log(cnum);
 			        $.ajax({
 			          url: "ajax/setRfFlag.php",
 			          type: 'POST',
 			            data : {cnum: cnum,
-			            	  rfFlag: 1 },
+			            	  rfFlag: 1,
+			            	  rfStart: rfStart,
+			            	  rfEnd: rfEnd
+			            	  },
 			          success: function(result){
 			        	  $("#saveRfFlag").removeClass('spinning');
 			        	  console.log(result);
 			        	  var resultObj = JSON.parse(result);
 			        	  $('#personForRfFlag').val('');
+			        	  $('#rfStart_Date').val('');
+			        	  $('#rfStart_Date_Db2').val('');
+			        	  $('#rfEnd_Date').val('');
+			        	  $('#rfEnd_Date_Db2').val('');
 			        	  personRecord.rfFlagTable.ajax.reload();
 			          }
 			        });
@@ -871,6 +880,8 @@ function personRecord() {
                      { "data": "FM", "defaultContent": "<i>unknown</i>" },
                      { "data": "REVAL", "defaultContent": "" },
                      { "data": "EXP", "defaultContent": "" },
+                     { "data": "FROM", "defaultContent": "" },
+                     { "data": "TO", "defaultContent": "" },
                     ],
           processing: true,
           responsive: true,
@@ -1469,6 +1480,25 @@ function personRecord() {
 			   altField: '#end_date_db2',
 			   altFormat: 'yy-mm-dd',
 			   minDate: startDate }
+			  );
+  }
+  
+  this.initialiseRfStartEndDate = function(){
+
+      $('#rfStart_Date').datepicker({ dateFormat: 'dd M yy',
+			   altField: '#rfStart_Date_Db2',
+			   altFormat: 'yy-mm-dd' ,
+			   maxDate: +100,
+		       onSelect: function( selectedDate ) {
+		            $( "#rfEnd_Date" ).datepicker( "option", "minDate", selectedDate );}
+      	});
+
+      var rfStartDate = $('#rfStart_Date').datepicker('getDate');
+
+      $('#rfEnd_Date').datepicker({ dateFormat: 'dd M yy',
+			   altField: '#rfEnd_Date_Db2',
+			   altFormat: 'yy-mm-dd',
+			   minDate: rfStartDate }
 			  );
   }
 

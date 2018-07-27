@@ -62,12 +62,14 @@ class personTable extends DbTable {
     
     function getForRfFlagReport($resultSetOnly = false, $withButtons = true){
         $sql = "select P.cnum ";
-        $sql.= " ,P.NOTES_ID ";
+        $sql.= " ,P.NOTES_ID ";        
         $sql.= ", P.LOB ";
         $sql.= ", P.CTB_RTB ";
         $sql.= ", case when F.notes_id is not null then F.NOTES_ID else P.FM_CNUM end as FM ";
         $sql.= ", P.REVALIDATION_STATUS as REVAL ";
         $sql.= ", P.PROJECTED_END_DATE as EXP ";
+        $sql.= ", P.RF_Start as FROM ";
+        $sql.= ", P.RF_End as TO ";
 
         $sql.= " from  ". $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql.= " left join ". $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as F ";
@@ -986,9 +988,11 @@ class personTable extends DbTable {
     }
     
     
-    function updateRfFlag($cnum,$rfFlag){
+    function updateRfFlag($cnum,$rfFlag, $rfStart=null, $rfEnd=null){
         $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." .  $this->tableName;
         $sql.= " SET RF_FLAG='" . db2_escape_string($rfFlag) . "' ";
+        $sql.= !empty($rfStart) ? ", RF_START=DATE('" . db2_escape_string($rfStart) . "') " : null ;
+        $sql.= !empty($rfEnd) ? ", RF_END=DATE('" . db2_escape_string($rfEnd) . "') " :  null ;
         $sql.= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
         
         $rs = db2_exec($_SESSION['conn'], $sql);

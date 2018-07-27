@@ -70,7 +70,9 @@ class personRecord extends DbRecord
 
     protected $SECURITY_EDUCATION;
     protected $RF_Flag;
-
+    protected $RF_Start;
+    protected $RF_End;
+    
     protected $person_bio;
 
 
@@ -779,6 +781,9 @@ You are able to amend the Functional Manager of people assigned to you but who n
         $notAlreadyFlagged = " AND RF_FLAG = '0' ";
         $availableForRfFlag = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON, $activePredicate . $notAlreadyFlagged);
         
+        $rfStartDate = \DateTime::createFromFormat('Y-m-d', $this->RF_Start);
+        $rfEndDate = \DateTime::createFromFormat('Y-m-d', $this->RF_End);
+        
         ?>
         <form id='rfFlagForm'  class="form-horizontal" onsubmit="return false;">
     	<div class="panel panel-default">
@@ -799,6 +804,16 @@ You are able to amend the Functional Manager of people assigned to you but who n
                     ?>
                		</select>
 					</div>
+					<div class="col-sm-3" id='rfStartDate'>
+                	 <input class="form-control" id="rfStart_Date" value="<?=is_object($rfStartDate) ?  $rfStartDate->format('d M Y') : null?>" type="text" placeholder='RF Start Date' data-toggle='tooltip' title='RF Start Date'>
+          			 <input class="form-control" id="rfStart_Date_Db2" name="RF_Start" value="<?=$this->RF_Start?>" type="hidden" >         
+					</div>
+					<div class="col-sm-3" id='rfEndDate'>
+                	 <input class="form-control" id="rfEnd_Date" value="<?=is_object($rfEndDate) ?  $rfEndDate->format('d M Y') : null?>" type="text" placeholder='RF End Date' data-toggle='tooltip' title='RF End Date'>
+          			 <input class="form-control" id="rfEnd_Date_Db2" name="RF_End" value="<?=$this->RF_End?>" type="hidden" >         
+					</div>
+					
+					
 				</div>
 		</div>
 	</div>
