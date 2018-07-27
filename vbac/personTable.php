@@ -4,6 +4,7 @@ namespace vbac;
 use itdq\DbTable;
 use itdq\AuditTable;
 use itdq\Loader;
+use itdq\slack;
 
 class personTable extends DbTable {
 
@@ -18,6 +19,12 @@ class personTable extends DbTable {
     private $loader;
 
     private $thirtyDaysHence;
+    
+    private $slack;
+    
+    function __construct($table,$pwd=null,$log=true){
+        $this->slack = new slack();
+    }
 
     static function getNextVirtualCnum(){
         $sql  = " SELECT CNUM FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
@@ -732,7 +739,10 @@ class personTable extends DbTable {
             return false;
         }
 
-        AuditTable::audit("Revalidation has found leaver: $cnum      ",AuditTable::RECORD_TYPE_AUDIT);
+        AuditTable::audit("Revalidation has found leaver: $cnum      ",AuditTable::RECORD_TYPE_AUDIT);        
+        
+        $this->slack->sendMessageToChannel("Revalidation has found leaver: $cnum      ", slack::CHANNEL_SM_CDI);
+        
         return true;
     }
 
