@@ -24,6 +24,7 @@ class personTable extends DbTable {
     
     function __construct($table,$pwd=null,$log=true){
         $this->slack = new slack();
+        parent::__construct($table,$pwd,$log);
     }
 
     static function getNextVirtualCnum(){
