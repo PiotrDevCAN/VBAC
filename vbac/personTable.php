@@ -10,6 +10,7 @@ class personTable extends DbTable {
 
     private $preparedRevalidationStmt;
     private $preparedRevalidationLeaverStmt;
+    private $preparedRevalidationPotentialLeaverStmt;
     private $preparedLeaverProjectedEndDateStmt;
     private $preparedUpdateBluepagesFields;
     private $preparedUpdateLbgLocationStmt;
@@ -705,6 +706,22 @@ class personTable extends DbTable {
         }
         return $this->preparedRevalidationLeaverStmt;
     }
+    
+    private function prepareRevalidationPotentialLeaverStmt(){
+        if(empty($this->preparedRevalidationPotentialLeaverStmt)){
+            $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+            $sql .= " SET REVALIDATION_STATUS='" . personRecord::REVALIDATED_POTENTIAL . "' , REVALIDATION_DATE_FIELD = current date ";
+            $sql .= " WHERE CNUM=? ";
+            
+            $this->preparedRevalidationPotentialLeaverStmt = db2_prepare($_SESSION['conn'], $sql);
+            
+            if(!$this->preparedRevalidationPotentialLeaverStmt){
+                DbTable::displayErrorMessage($this->preparedRevalidationPotentialLeaverStmt, __CLASS__, __METHOD__, $sql);
+                return false;
+            }
+        }
+        return $this->preparedRevalidationPotentialLeaverStmt;
+    }
 
 
     function confirmRevalidation($notesId,$email,$cnum){
@@ -742,10 +759,28 @@ class personTable extends DbTable {
 
         AuditTable::audit("Revalidation has found leaver: $cnum      ",AuditTable::RECORD_TYPE_AUDIT);        
         
-        $this->slack->sendMessageToChannel("Revalidation has found leaver: $cnum      ", slack::CHANNEL_SM_CDI);
+        $this->slack->sendMessageToChannel("Revalidation has found leaver: $cnum      ", slack::CHANNEL_SM_CDI_AUDIT);
         
         return true;
     }
+    
+    function flagPotentialLeaver($cnum){
+        $preparedStmt = $this->prepareRevalidationPotentialLeaverStmt();
+        $data = array(trim($cnum));
+        $rs = db2_execute($preparedStmt,$data);
+        
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, "prepared: revalidationPotentialLeaverStmt");
+            return false;
+        }
+        
+        AuditTable::audit("Revalidation has found a potential leaver: $cnum ",AuditTable::RECORD_TYPE_AUDIT);
+        
+        $this->slack->sendMessageToChannel("Revalidation has found potential leaver: $cnum ", slack::CHANNEL_SM_CDI_AUDIT);
+        
+        return true;
+    }
+    
 
     function flagPreboarders (){
         $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;

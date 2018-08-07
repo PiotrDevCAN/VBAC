@@ -49,7 +49,7 @@ AuditTable::audit("Revalidation will check " . count($allNonLeavers) . " people 
 $slack->sendMessageToChannel("Revalidation will check " . count($allNonLeavers) . " people currently flagged as found.", slack::CHANNEL_SM_CDI_AUDIT);
 
 
-$chunkedCnum = array_chunk($allNonLeavers, 400);
+$chunkedCnum = array_chunk($allNonLeavers, 100);
 $detailsFromBp = "&notesid&mail";
 $bpEntries = array();
 
@@ -70,14 +70,20 @@ foreach ($chunkedCnum as $key => $cnumList){
     }
 }
 
-// At this stage, anyone still in the $allNonLeavers array - has NOT been found in BP and so is now a leaver and needs to be flagged as such.
-AuditTable::audit("Revalidation found " . count($allNonLeavers) . " leavers.",AuditTable::RECORD_TYPE_DETAILS);
-$slack->sendMessageToChannel("Revalidation found " . count($allNonLeavers) . " leavers.", slack::CHANNEL_SM_CDI_AUDIT);
+// At this stage, anyone still in the $allNonLeavers array - has NOT been found in BP and so is now POTENTIALLY a leaver and needs to be flagged as such.
+AuditTable::audit("Revalidation found " . count($allNonLeavers) . " potential leavers.",AuditTable::RECORD_TYPE_DETAILS);
+$slack->sendMessageToChannel("Revalidation found " . count($allNonLeavers) . " potential leavers.", slack::CHANNEL_SM_CDI_AUDIT);
 
 foreach ($allNonLeavers as $cnum){
     set_time_limit(10);
-    $personTable->flagLeaver($cnum);
+    $personTable->flagPotentialLeaver($cnum);
 }
+
+
+// foreach ($allNonLeavers as $cnum){
+//     set_time_limit(10);
+//     $personTable->flagLeaver($cnum);
+// }
 
 AuditTable::audit("Revalidation completed.",AuditTable::RECORD_TYPE_AUDIT);
 $slack->sendMessageToChannel("Revalidation completed.", slack::CHANNEL_SM_CDI_AUDIT);

@@ -36,6 +36,7 @@ class BluePages {
 
 
 	    $ch = curl_init ( $urlTemplate );
+	    AuditTable::audit(__FUNCTION__ . ":" . print_r($urlTemplate,true),AuditTable::RECORD_TYPE_DETAILS);
 	    curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, true );
 
 	    $curlReturn = curl_exec ( $ch );
@@ -44,6 +45,7 @@ class BluePages {
 
 	    //$xml = simplexml_load_string($curlReturn);
 	    $jsonObject = json_decode($curlReturn);
+	    AuditTable::audit(__FUNCTION__ . ":" . print_r($curlReturn,true),AuditTable::RECORD_TYPE_DETAILS);
 	    return $jsonObject;
 	}
 

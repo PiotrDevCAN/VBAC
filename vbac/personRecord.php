@@ -94,6 +94,7 @@ class personRecord extends DbRecord
     const REVALIDATED_FOUND = 'found';
     const REVALIDATED_VENDOR = 'vendor';
     const REVALIDATED_LEAVER = 'leaver';
+    const REVALIDATED_POTENTIAL = 'potentialLeaver';
     const REVALIDATED_PREBOARDER = 'preboarder';
     const REVALIDATED_OFFBOARDING = 'offboarding';
     const REVALIDATED_OFFBOARDED = 'offboarded';
