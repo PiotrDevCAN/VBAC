@@ -20,7 +20,7 @@ class delegateRecord extends DbRecord
 
     function displayForm(){
         $loader = new Loader();
-        $predicate = "  REVALIDATION_STATUS in ('". personRecord::REVALIDATED_FOUND . "','" . personRecord::REVALIDATED_VENDOR . "') or REVALIDATION_STATUS is null ";
+        $predicate = "  REVALIDATION_STATUS in ('". personRecord::REVALIDATED_FOUND . "','" . personRecord::REVALIDATED_VENDOR . "','" . personRecord::REVALIDATED_POTENTIAL . "') or REVALIDATION_STATUS is null ";
         $selectableNotesId = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON,$predicate);
 
         ?>

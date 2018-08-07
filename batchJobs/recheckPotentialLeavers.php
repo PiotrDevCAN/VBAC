@@ -54,9 +54,7 @@ AuditTable::audit("Revalidation re-check found " . count($allpotentialLeavers) .
 $slack->sendMessageToChannel("Revalidation re-check found " . count($allpotentialLeavers) . "  leavers.", slack::CHANNEL_SM_CDI_AUDIT);
 
 
-
-
-foreach ($allNonLeavers as $cnum){
+foreach ($allpotentialLeavers as $cnum){
     set_time_limit(10);
     $personTable->flagLeaver($cnum);
 }
