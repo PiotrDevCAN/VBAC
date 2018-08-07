@@ -17,11 +17,7 @@ set_time_limit(60);
 
 $personTable = new personTable(allTables::$PERSON);
 $slack = new slack();
-
 $loader = new Loader();
-
-$personTable->flagPreboarders();
-db2_commit($_SESSION['conn']);
 
 $potentialLeavers = " ( REVALIDATION_STATUS like  'potential%') ";
 $allpotentialLeavers = $loader->load('CNUM',allTables::$PERSON, $potentialLeavers ); //
