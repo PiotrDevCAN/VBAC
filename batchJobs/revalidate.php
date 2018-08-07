@@ -11,7 +11,7 @@ use itdq\slack;
 $slack = new slack();
 
 AuditTable::audit("Revalidation invoked.",AuditTable::RECORD_TYPE_AUDIT);
-$slack->sendMessageToChannel("Revalidation invoked.", slack::CHANNEL_SM_CDI);
+$slack->sendMessageToChannel("Revalidation invoked.", slack::CHANNEL_SM_CDI_AUDIT);
 
 set_time_limit(60);
 
@@ -26,19 +26,19 @@ db2_commit($_SESSION['conn']);
 $offboarders = " ( REVALIDATION_STATUS like  'offboard%') ";
 $allOffboarders = $loader->load('CNUM',allTables::$PERSON, $offboarders ); //
 AuditTable::audit("Revalidation will ignore " . count($allOffboarders) . " offboarding/ed.",AuditTable::RECORD_TYPE_DETAILS);
-$slack->sendMessageToChannel("Revalidation will ignore " . count($allOffboarders) . " offboarding/ed.", slack::CHANNEL_SM_CDI);
+$slack->sendMessageToChannel("Revalidation will ignore " . count($allOffboarders) . " offboarding/ed.", slack::CHANNEL_SM_CDI_AUDIT);
 $allOffboarders= null; // free up some storage
 
 $preBoardersPredicate = "   ( REVALIDATION_STATUS =  '" . personRecord::REVALIDATED_PREBOARDER . "') ";
 $allPreboarders = $loader->load('CNUM',allTables::$PERSON, $preBoardersPredicate ); //
 AuditTable::audit("Revalidation will ignore " . count($allPreboarders) . " pre-boarders.",AuditTable::RECORD_TYPE_DETAILS);
-$slack->sendMessageToChannel("Revalidation will ignore " . count($allPreboarders) . " pre-boarders.", slack::CHANNEL_SM_CDI);
+$slack->sendMessageToChannel("Revalidation will ignore " . count($allPreboarders) . " pre-boarders.", slack::CHANNEL_SM_CDI_AUDIT);
 $allPreboarders= null; // free up some storage
 
 $vendorsPredicate = "   ( REVALIDATION_STATUS =  '" . personRecord::REVALIDATED_VENDOR . "') ";
 $allVendors = $loader->load('CNUM',allTables::$PERSON, $preBoardersPredicate ); //
 AuditTable::audit("Revalidation will ignore " . count($allVendors) . " vendors.",AuditTable::RECORD_TYPE_DETAILS);
-$slack->sendMessageToChannel("Revalidation will ignore " . count($allVendors) . " vendors.", slack::CHANNEL_SM_CDI);
+$slack->sendMessageToChannel("Revalidation will ignore " . count($allVendors) . " vendors.", slack::CHANNEL_SM_CDI_AUDIT);
 $allVendors= null; // free up some storage
 
 
@@ -46,7 +46,7 @@ $allVendors= null; // free up some storage
 $activeIbmErsPredicate = "   ( trim(REVALIDATION_STATUS) = '' or REVALIDATION_STATUS is null or REVALIDATION_STATUS =  '" . personRecord::REVALIDATED_FOUND . "') ";
 $allNonLeavers = $loader->load('CNUM',allTables::$PERSON, $activeIbmErsPredicate ); //
 AuditTable::audit("Revalidation will check " . count($allNonLeavers) . " people currently flagged as found.",AuditTable::RECORD_TYPE_DETAILS);
-$slack->sendMessageToChannel("Revalidation will check " . count($allNonLeavers) . " people currently flagged as found.", slack::CHANNEL_SM_CDI);
+$slack->sendMessageToChannel("Revalidation will check " . count($allNonLeavers) . " people currently flagged as found.", slack::CHANNEL_SM_CDI_AUDIT);
 
 
 $chunkedCnum = array_chunk($allNonLeavers, 400);
@@ -72,7 +72,7 @@ foreach ($chunkedCnum as $key => $cnumList){
 
 // At this stage, anyone still in the $allNonLeavers array - has NOT been found in BP and so is now a leaver and needs to be flagged as such.
 AuditTable::audit("Revalidation found " . count($allNonLeavers) . " leavers.",AuditTable::RECORD_TYPE_DETAILS);
-$slack->sendMessageToChannel("Revalidation found " . count($allNonLeavers) . " leavers.", slack::CHANNEL_SM_CDI);
+$slack->sendMessageToChannel("Revalidation found " . count($allNonLeavers) . " leavers.", slack::CHANNEL_SM_CDI_AUDIT);
 
 foreach ($allNonLeavers as $cnum){
     set_time_limit(10);
@@ -80,6 +80,6 @@ foreach ($allNonLeavers as $cnum){
 }
 
 AuditTable::audit("Revalidation completed.",AuditTable::RECORD_TYPE_AUDIT);
-$slack->sendMessageToChannel("Revalidation completed.", slack::CHANNEL_SM_CDI);
+$slack->sendMessageToChannel("Revalidation completed.", slack::CHANNEL_SM_CDI_AUDIT);
 
 db2_commit($_SESSION['conn']);
