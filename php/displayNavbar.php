@@ -31,6 +31,7 @@ $cdiAdmin->addOption($trace);
 $cdiAdmin->addOption($traceControl);
 $cdiAdmin->addOption($traceDelete);
 $cdiAdmin->addOption($revalidation);
+$cdiAdmin->addOption($recheck);
 $cdiAdmin->addOption($link);
 
 
