@@ -445,6 +445,7 @@ function assetRequest() {
 
 
   this.recordCtidOnForm = function(email_address, ctid,ctbflag ){
+	  console.log('recordCtidOnForm');
 	  var ctb = ctbflag ?  ctbflag :  'unknown';
 	  var lastCtidInput = $('#allCtidHereDiv > :input').not('.select2').last();
  	  $(lastCtidInput).val(ctid);
@@ -452,7 +453,17 @@ function assetRequest() {
 	  var lastRequest = $('#requestDetailsDiv > .panel').last();
 	  $(lastRequest).find('.panel-title').html('Request For : ' + email_address + "(" + ctb + ")" );
 	  ctidAsset = $('*[data-asset="CT ID"]');
-	  if(ctid=='Required'){
+	  var alreadyDisabled = $(ctidAsset).attr('disabled');
+	  console.log('already disabled:');
+	  console.log(alreadyDisabled);
+	  if(alreadyDisabled=='disabled'){
+		  $('#obtainCtid').off('hidden.bs.modal');
+		  $('#obtainCtid').modal('hide');
+		  var assetReq = new assetRequest();
+		  assetReq.listenForEnteringCtid();
+		  return false;
+	  }
+	  if(ctid=='Required' ){
 		$(ctidAsset).attr('disabled',true).prop('checked',true);
 	  } else {
 		$(ctidAsset).attr('disabled',true).prop('checked',false);
@@ -534,6 +545,7 @@ function assetRequest() {
 	   * Now disable anything subject to an open request.
 	   */
 	  $('.subjectToOpenRequest').attr('disabled',true);
+	  $('.subjectToOpenRequest').prop('checked',false); // And untick it.
 
 	  $.each($('.subjectToOpenRequest'), function( index, value ) {
 		  console.log(value);
