@@ -142,7 +142,6 @@ foreach ($_POST as $key => $value){
         } catch (Exception $e) {
             $messages = ob_get_clean();
             $response = array('result'=>'failed','post'=>$post,'messages'=>$messages);
-            ob_clean();
             echo json_encode($response);
         }
     }
