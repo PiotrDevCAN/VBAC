@@ -58,9 +58,9 @@ class assetRequestRecord extends DbRecord {
 //         $predicate .= " or  ( REVALIDATION_STATUS IN ('" . personRecord::REVALIDATED_VENDOR . "') and ( PES_STATUS_DETAILS not like 'Boarded%' or PES_STATUS_DETAILS is null) and PES_STATUS in ('" . personRecord::PES_STATUS_CLEARED. "','" . personRecord::PES_STATUS_CLEARED_PERSONAL. "','" . personRecord::PES_STATUS_EXCEPTION. "') )";
 //         $predicate .= " or (REVALIDATION_STATUS like 'offboarding%' ) ";
 //         $predicate .= " ) ";
-        $predicate = " and PES_STATUS in ('Cleared','Cleared - Personal Reference','Exception') ";  // They must be PES Cleared.
-        $predicate.= " and ((REVALIDATION_STATUS = 'found' or REVALIDATION_STATUS is null or REVALIDATION_STATUS= 'potentialLeaver') "; // They are ACTIVE IBMer
-        $predicate.= "        or ( REVALIDATION_STATUS IN ('vendor') and ( PES_STATUS_DETAILS not like 'Boarded%' or PES_STATUS_DETAILS is null) )  "; // They are a vendor - who has not subsequently been boarded as an IBMer
+        $predicate = " and PES_STATUS in ('" . personRecord::PES_STATUS_CLEARED. "','" . personRecord::PES_STATUS_CLEARED_PERSONAL. "','" . personRecord::PES_STATUS_EXCEPTION. "') ";  // They must be PES Cleared.
+        $predicate.= " and ((REVALIDATION_STATUS = '" . personRecord::REVALIDATED_FOUND . "' or REVALIDATION_STATUS is null or REVALIDATION_STATUS= '" . personRecord::REVALIDATED_POTENTIAL . "') "; // They are ACTIVE IBMer
+        $predicate.= "        or ( REVALIDATION_STATUS IN ('" . personRecord::REVALIDATED_VENDOR . "') and ( PES_STATUS_DETAILS not like 'Boarded%' or PES_STATUS_DETAILS is null) )  "; // They are a vendor - who has not subsequently been boarded as an IBMer
 	    $predicate.= "        or REVALIDATION_STATUS like 'offboarding%' ) ";  // OR they are in the process of offboarding so need to be able to request things be returned.
         return $predicate;
     }
