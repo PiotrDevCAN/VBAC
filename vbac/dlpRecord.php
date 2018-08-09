@@ -83,21 +83,6 @@ class dlpRecord extends DbRecord
                               required
                               data-toggle="tooltip" title="Only PES Cleared IBMers & Vendors will appear in this list. If you feel someone is missing, please ensure they have a FULL Boarded record in the system."
                       >
-                    <option value=''></option>
-                    <?php
-                    foreach ($selectableNotesId as $cnum => $notesId){
-                            $isOffboarding = substr($selectableRevalidationStatus[$cnum],0,11)=='offboarding';
-                            $dataOffboarding = " data-revalidationstatus" . "='" . $selectableRevalidationStatus[$cnum] . "' ";
-                            $displayedName = !empty(trim($notesId)) ?  trim($notesId) : $selectableEmailAddress[$cnum];
-                            //$selected = !$isFm && trim($cnum)==trim($myCnum) ? ' selected ' : null    // If they don't select the user - we don't fire the CT ID & Education prompts.
-                            $hostname = isset($currentLicences[trim($cnum)]) ? "&nbsp;(" .  $currentLicences[trim($cnum)] . ")" : "&nbsp;(no licence)";
-                            
-                            $selected = null;
-                            if(!$isOffboarding){
-                                ?><option value='<?=trim($cnum);?>'<?=$selected?>  ><?=$displayedName?><?=$hostname?></option><?php
-                            }
-                        };
-                        ?>
             	</select>
             	</div>
             	<div class='col-sm-4'>

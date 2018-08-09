@@ -14,11 +14,7 @@ function dlp() {
 		console.log('+++ Function +++ dlp.init');		
 		$('.toggle').bootstrapToggle();
 
-	  	$('#licencee').select2({
-	  	  	width: '100%',
-		  	placeholder: 'Select licence holder',
-			allowClear: true,
-		    });
+		this.initialiseLicenseeDropDown();
 
 	  	$('#approvingManager').select2({
 	  	  	width: '100%',
@@ -27,12 +23,28 @@ function dlp() {
 		    });
 		console.log('--- Function --- dlp.init');
 	},
+	
+	this.initialiseLicenseeDropDown = function(){
+	  	$('#licencee').select2({
+			ajax: {
+				    url: 'ajax/populateDlpLicenseeDropdown.php',
+				    dataType: 'json'
+				    // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
+				  },
+	  		
+	  		
+	  	  	width: '100%',
+		  	placeholder: 'Select licence holder',
+			allowClear: true,
+		    });		
+	},
 		  
 	this.listenForSelectLicencee = function(){
 		$(document).on('select2:select','#licencee', function (e) {
+			console.log(e.params.data);
 			var cnum = e.params.data.id;
 			var fmcnum = cnumfm[cnum];
-		    var hostname = licences[cnum];
+		    var hostname = licences[cnum]; 
 		    $('#currentHostname').val(hostname);
 		    $('#approvingManager').val(fmcnum).trigger('change');
 		});
@@ -74,11 +86,17 @@ function dlp() {
 	          success: function(result){
 	        	  var resultObj = JSON.parse(result);
 	        	  console.log(resultObj);
+	        	  console.log(resultObj.licencee);
+	        	  console.log(resultObj.hostname);
+	        	  console.log(licences);
+	        	  licences[resultObj.licencee] = resultObj.hostname;
+	        	  console.log(licences);
+	        	  $('#licensee').val(null).trigger('change');
+	        	  Dlp.initialiseLicenseeDropDown();
 	        	  $('#dlpSaveResponseModal .modal-body').html(resultObj.actionsTaken + "<hr/><p class='bg-warning'>" + resultObj.messages + "</p>");
 	        	  $('#dlpSaveResponseModal').modal('show');
 	    		  $('#saveDlpLicence').removeClass('spinning');
-	    		  $('#saveDlpLicence').attr('disabled',false);
-	    		  $('#licencee').val('').trigger('change');
+	    		  $('#saveDlpLicence').attr('disabled',false);	    		 
 	    		  $('#approvingManager').val('').trigger('change');
 	    		  $('#hostname').val('');
 	    		  Dlp.table.ajax.reload();
@@ -98,7 +116,7 @@ function dlp() {
 		  showType = typeof(showType) == 'undefined'  ? 'active' : showType;
 		  withButtons = typeof(withButtons) == 'undefined'  ? 'true' : withButtons;
 		  // Setup - add a text input to each footer cell
-		  $('#dlpLicensesTable thead th').each( function () {
+		  $('#dlpLicensesTable tfoot th').each( function () {
 			  var title = $(this).text();
 		      $(this).html( title + '<br/><input type="text" id="footer'+ title + '" placeholder="Search '+title+'" />' );
 		  });
@@ -143,7 +161,7 @@ function dlp() {
 		  Dlp.table.columns().every( function () {
 		          var that = this;
 
-		          $( 'input', this.header() ).on( 'keyup change', function () {
+		          $( 'input', this.footer() ).on( 'keyup change', function () {
 		              if ( that.search() !== this.value ) {
 		                  that
 		                      .search( this.value )

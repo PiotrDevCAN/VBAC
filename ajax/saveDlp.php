@@ -42,6 +42,6 @@ if($success){
 }
 
 
-$response = array('success'=>$success,'actionsTaken'=>$actionsTaken,'messages'=>$messages,"post"=>print_r($parms,true));
+$response = array('success'=>$success,'licencee'=>$parms['licencee'],'hostname'=>$parms['hostname'],'actionsTaken'=>$actionsTaken,'messages'=>$messages,"post"=>print_r($parms,true));
 ob_clean();
 echo json_encode($response);

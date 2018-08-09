@@ -140,7 +140,7 @@ class dlpTable extends DbTable {
         $rejectButton .= "data-cnum='" .$cnum . "' ";
         $rejectButton .= "data-hostname='" .$hostname . "' ";
         $rejectButton .= " > ";
-        $rejectButton .= "<span class='glyphicon glyphicon-remove ' aria-hidden='true'></span>";
+        $rejectButton .= "<span class='glyphicon glyphicon-trash ' aria-hidden='true'></span>";
         $rejectButton .= " </button> ";
         
         $deleteButton  = "<button type='button' class='btn btn-default btn-xs btnDlpLicenseDelete ' aria-label='Left Align' ";
