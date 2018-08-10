@@ -72,6 +72,18 @@ function dlp() {
 
 		      var form = document.getElementById('dlpRecordingForm');
 		      var formValid = form.checkValidity();
+		      
+		      var currentHostname = $('#currentHostname').val();
+		      var hostname = $('#hostname').val();
+		      
+		      console.log(formValid);
+		      console.log(currentHostname);
+		      console.log(hostname);
+		      
+		      formValid = formValid ? currentHostname == hostname : formValid;
+		      console.log(formValid);
+		      
+
 		      if(formValid){
 		    	  var Dlp = new dlp();
 		    	  Dlp.saveRecord();

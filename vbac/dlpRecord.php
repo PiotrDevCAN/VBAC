@@ -88,7 +88,7 @@ class dlpRecord extends DbRecord
             	<div class='col-sm-4'>
             	<label for='hostname'>Hostname</label>
             	<input class="form-control " id='hostname' name='hostname' value=''  type='text' required placeholder='New Hostname' style="text-transform:uppercase">
-        		<input  id='currentHostname' name='currentHostname' value='<?= isset($currentLicences[trim($cnum)]) ? $currentLicences[trim($cnum)] : ""; ?>'  type='hidden' style="text-transform:uppercase">
+        		<input  id='currentHostname' name='currentHostname' value=''  type='hidden' style="text-transform:uppercase">
         		</div>
 
 
