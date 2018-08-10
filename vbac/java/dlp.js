@@ -89,7 +89,6 @@ function dlp() {
 		      
 		      formValid = formValid ? currentHostname != hostname : formValid;
 		      console.log(formValid);
-		      
 
 		      if(formValid){
 		    	  var Dlp = new dlp();
