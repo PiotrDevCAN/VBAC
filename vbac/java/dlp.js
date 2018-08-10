@@ -25,6 +25,7 @@ function dlp() {
 	},
 	
 	this.initialiseLicenseeDropDown = function(){
+		$('#saveDlpLicence').attr('disabled',true);  // Lock the Save Button - when the listener fires we unlock it. Saves duplicates.
 	  	$('#licencee').select2({
 			ajax: {
 				    url: 'ajax/populateDlpLicenseeDropdown.php',
@@ -42,6 +43,7 @@ function dlp() {
 	this.listenForSelectLicencee = function(){
 		$(document).off('select2:select','#licencee');
 		$(document).on('select2:select','#licencee', function (e) {
+			$('#saveDlpLicence').attr('disabled',false);
 			console.log(e.params.data);
 			var cnum = e.params.data.id;
 			var fmcnum = cnumfm[cnum];
