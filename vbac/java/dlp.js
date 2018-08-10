@@ -40,6 +40,7 @@ function dlp() {
 	},
 		  
 	this.listenForSelectLicencee = function(){
+		$(document).off('select2:select','#licencee');
 		$(document).on('select2:select','#licencee', function (e) {
 			console.log(e.params.data);
 			var cnum = e.params.data.id;
@@ -74,19 +75,23 @@ function dlp() {
 		      var formValid = form.checkValidity();
 		      
 		      var currentHostname = $('#currentHostname').val();
-		      var hostname = $('#hostname').val();
+		      var hostname = ($('#hostname').val()).toUpperCase();
 		      
 		      console.log(formValid);
 		      console.log(currentHostname);
 		      console.log(hostname);
 		      
-		      formValid = formValid ? currentHostname == hostname : formValid;
+		      formValid = formValid ? currentHostname != hostname : formValid;
 		      console.log(formValid);
 		      
 
 		      if(formValid){
 		    	  var Dlp = new dlp();
 		    	  Dlp.saveRecord();
+		      } else if(currentHostname == hostname) {
+		    	  alert('New Hostname(' + hostname  + ') matches current Hostname (' + currentHostname + ') for the licencee');
+	    		  $('#saveDlpLicence').removeClass('spinning');
+	    		  $('#saveDlpLicence').attr('disabled',false);
 		      } else {
 		    	  alert('Please correct form');
 	    		  $('#saveDlpLicence').removeClass('spinning');
@@ -117,6 +122,7 @@ function dlp() {
 	        	  console.log(licences);
 	        	  $('#licensee').val(null).trigger('change');
 	        	  Dlp.initialiseLicenseeDropDown();
+	        	  Dlp.listenForSelectLicencee();
 	        	  $('#dlpSaveResponseModal .modal-body').html(resultObj.actionsTaken + "<hr/><p class='bg-warning'>" + resultObj.messages + "</p>");
 	        	  $('#dlpSaveResponseModal').modal('show');
 	    		  $('#saveDlpLicence').removeClass('spinning');
