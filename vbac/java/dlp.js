@@ -126,7 +126,7 @@ function dlp() {
 	        	  console.log(licences);
 	        	  licences[resultObj.licencee] = resultObj.hostname;
 	        	  console.log(licences);
-	        	  $('#licensee').val(null).trigger('change');
+	        	  $('#licencee').val(null).trigger('change');
 	        	//  Dlp.initialiseLicenseeDropDown();
 	        	//  Dlp.listenForSelectLicencee();
 	        	  $('#dlpSaveResponseModal .modal-body').html(resultObj.actionsTaken + "<hr/><p class='bg-warning'>" + resultObj.messages + "</p>");
