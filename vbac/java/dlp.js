@@ -14,7 +14,11 @@ function dlp() {
 		console.log('+++ Function +++ dlp.init');		
 		$('.toggle').bootstrapToggle();
 
-		this.initialiseLicenseeDropDown();
+		$('#licencee').select2({
+	  	  	width: '100%',
+		  	placeholder: 'Select Licencee',
+			allowClear: true,			
+		});
 
 	  	$('#approvingManager').select2({
 	  	  	width: '100%',
@@ -123,14 +127,15 @@ function dlp() {
 	        	  licences[resultObj.licencee] = resultObj.hostname;
 	        	  console.log(licences);
 	        	  $('#licensee').val(null).trigger('change');
-	        	  Dlp.initialiseLicenseeDropDown();
-	        	  Dlp.listenForSelectLicencee();
+	        	//  Dlp.initialiseLicenseeDropDown();
+	        	//  Dlp.listenForSelectLicencee();
 	        	  $('#dlpSaveResponseModal .modal-body').html(resultObj.actionsTaken + "<hr/><p class='bg-warning'>" + resultObj.messages + "</p>");
 	        	  $('#dlpSaveResponseModal').modal('show');
 	    		  $('#saveDlpLicence').removeClass('spinning');
 	    		  $('#saveDlpLicence').attr('disabled',false);	    		 
 	    		  $('#approvingManager').val('').trigger('change');
 	    		  $('#hostname').val('');
+	    		  $('#currentHostname').val('');
 	    		  Dlp.table.ajax.reload();
 	            },
 	          error : function(jqXHR, textStatus, errorThrown){
@@ -140,6 +145,9 @@ function dlp() {
 	        	  $('#dlpSaveResponseModal').modal('show');
 	    		  $('#saveDlpLicence').removeClass('spinning');
 	    		  $('#saveDlpLicence').attr('disabled',false);
+	    		  $('#licensee').val(null).trigger('change');
+	    		  $('#hostname').val('');
+	    		  $('#currentHostname').val('');
 	         	}
 	         });  
 	  },
@@ -274,8 +282,8 @@ function dlp() {
 					 type: 'POST',
 					 success: function(result){
 						 var resultObj = JSON.parse(result);
-					     console.log(resultObj);
 					     Dlp.table.ajax.reload();
+					     delete licences[resultObj.cnum]; // Remove this entry from the licences object.
 					     }
 				  });
 				

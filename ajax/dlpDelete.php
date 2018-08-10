@@ -14,6 +14,6 @@ $dlp->delete($trimmedParms['cnum'], $trimmedParms['hostname'], $trimmedParms['tr
 
 $messages = ob_get_clean();
 $success = (trim($messages) == "");
-$response = array('success'=>$success,'messages'=>$messages,"post"=>print_r($_POST,true));
+$response = array('success'=>$success,'cnum'=>$trimmedParms['cnum'],'hostname'=>$trimmedParms['hostname'],'messages'=>$messages,"post"=>print_r($_POST,true));
 ob_clean();
 echo json_encode($response);

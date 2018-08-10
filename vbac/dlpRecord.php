@@ -83,12 +83,28 @@ class dlpRecord extends DbRecord
                               required
                               data-toggle="tooltip" title="Only PES Cleared IBMers & Vendors will appear in this list. If you feel someone is missing, please ensure they have a FULL Boarded record in the system."
                       >
+                      <option value=''></option>
+                <?php                
+                foreach ($selectableNotesId as $cnum => $notesId){
+                    $isOffboarding = substr($selectableRevalidationStatus[$cnum],0,11)=='offboarding';
+                    $dataOffboarding = " data-revalidationstatus" . "='" . $selectableRevalidationStatus[$cnum] . "' ";
+                    $displayedName = !empty(trim($notesId)) ?  trim($notesId) : $selectableEmailAddress[$cnum];
+                    $hostname = isset($currentLicences[trim($cnum)]) ? " (" .  $currentLicences[trim($cnum)] . ")" : " (no licence)";
+                    if(!$isOffboarding){
+                        ?><option value='<?=trim($cnum)?>'><?=$displayedName?></option><?php                    
+                    }
+                };
+                ?>    
             	</select>
             	</div>
             	<div class='col-sm-4'>
-            	<label for='hostname'>Hostname</label>
+            	<label for='hostname'>New Hostname</label>
             	<input class="form-control " id='hostname' name='hostname' value=''  type='text' required placeholder='New Hostname' style="text-transform:uppercase">
-        		<input  id='currentHostname' name='currentHostname' value=''  type='hidden' style="text-transform:uppercase">
+				</div>
+				
+            	<div class='col-sm-4'>
+            	<label for='currentHostname'>Current Hostname</label>  
+        		<input class="form-control"  id='currentHostname' name='currentHostname' value='' type='text'  placeholder='Current Hostname' style="text-transform:uppercase" disabled>
         		</div>
 
 
