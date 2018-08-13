@@ -62,6 +62,7 @@ function requestableAsset() {
 
                       { "data": "PROMPT", "defaultContent": "" },
                       { "data": "ORDER_IT_TYPE", "defaultContent": "" },
+                      { "data": "ORDER_IT_REQUIRED", "defaultContent": "" },
 
                       ],
         order: [[ 0, "asc" ]],

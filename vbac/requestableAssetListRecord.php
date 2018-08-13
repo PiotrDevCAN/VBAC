@@ -24,6 +24,7 @@ class requestableAssetListRecord extends DbRecord
     protected $LISTING_ENTRY_REMOVED_BY;
     protected $PROMPT;
     protected $ORDER_IT_TYPE;
+    protected $ORDER_IT_REQUIRED;
 
 
 
@@ -137,6 +138,9 @@ class requestableAssetListRecord extends DbRecord
 						</div>
 						<div class='col-sm-3'>
 						<input  data-toggle="toggle" type="checkbox" class='toggle' data-width='250' data-on="Record Date Returned" data-off="Do Not Record Date Returned" id='RecordDateReturned' name='RECORD_DATE_RETURNED' value='1' data-onstyle='success' data-offstyle='warning'>
+						</div>
+						<div class='col-sm-3'>
+						<input  data-toggle="toggle" type="checkbox" class='toggle' data-width='250' data-on="Order It Required" data-off="Order It Optional" id='requestByDefault' name='ORDER_IT_REQUIRED' value='1' data-onstyle='success' data-offstyle='warning'>
 						</div>
 					</div>
 
