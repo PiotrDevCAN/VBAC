@@ -55,6 +55,7 @@ $assetTable->setOitStatusModal();
 $assetTable->approveRejectModal();
 $assetTable->confirmReturnedModal();
 $assetTable->justificationEditModal();
+$assetTable->amendOrderItModal();
 
 $isFm   = $_SESSION['isFm']   ? ".not('.accessFm')"   : null;
 $isCdi  = $_SESSION['isCdi']  ? ".not('.accessCdi')"  : null;
@@ -113,6 +114,9 @@ $(document).ready(function(){
  	AssetPortal.listenForAssetRequestReject();
  	AssetPortal.listenForAssetRequestApproveRejectToggle();
  	AssetPortal.listenForAssetRequestApproveRejectConfirm();
+
+ 	AssetPortal.listenForAmendOrderIt();
+ 	AssetPortal.listenForSaveAmendedOrderIt();
 });
 
 </script>

@@ -179,6 +179,18 @@ class assetRequestsTable extends DbTable{
 
             $rejectButton = $withButtons ? $rejectButton : '';
             $rejectButton = $userRaised & $approved  ? '' : $rejectButton;
+            
+            $amendOITButton  = "<button type='button' class='btn btn-default btn-xs btnAmendOrderItNumber btn-warning' aria-label='Left Align' ";
+            $amendOITButton .= "data-reference='" .trim($reference) . "' ";
+            $amendOITButton .= "data-orderit='".trim($row['ORDERIT_NUMBER']) . "' ";
+            $amendOITButton .= "data-toggle='tooltip' data-placement='top' title='Amend Order IT Number'";
+            $amendOITButton .= " > ";
+            $amendOITButton .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
+            $amendOITButton .= " </button> ";
+           
+            $amendOITButton = $withButtons && $_SESSION['isPmo'] && !empty($row['ORDERIT_NUMBER']) ? "&nbsp;" . $amendOITButton : '';     
+            
+            $row['ORDERIT_NUMBER'] = $amendOITButton . $row['ORDERIT_NUMBER']; 
 
             $pmoOrFm = ($_SESSION['isFm'] || $_SESSION['isPmo']);
             $notTheirOwnRecord = ( trim(strtolower($row['REQUESTEE_EMAIL'])) != trim(strtolower($_SESSION['ssoEmail'])));
@@ -1150,6 +1162,67 @@ class assetRequestsTable extends DbTable{
         </div>
         </form>
     	<?php
+    }
+    
+    
+    function amendOrderItModal(){
+        ?>
+        <!-- Modal -->
+		<div id="amendOrderItModal" class="modal fade" role="dialog">
+  			<div class="modal-dialog">
+	        <!-- Modal content-->
+    		<div class="modal-content">
+      			<div class="modal-header">
+        		   <h4 class="modal-title">Amend Order IT</h4>
+      			</div>
+      			
+      			<div class="modal-body" >
+          	<form class="form-horizontal" role="form" id='amendOrderItForm' onSubmit='return false;' >
+                  <div class="form-group">
+                    <label  class="col-sm-2 control-label"
+                              for="amendOrderItRequestReference">Reference</label>
+                    <div class="col-sm-10">
+        				<input class='form-control' id='amendOrderItRequestReference' name='amendOrderItRequestReference'
+                				value=''
+                				type='text' disabled
+                		>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label"
+                          for="amendOrderItCurrent" >Current Order IT</label>
+                    <div class="col-sm-10">
+       					<input class='form-control' id='amendOrderItCurrent'  name='amendOrderItCurrent'
+                			   value=''
+                			   type='text' disabled
+                			>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label"
+                          for="amendOrderItNewOrderIt" >New Order IT</label>
+                    <div class="col-sm-10">
+          				<input class='form-control' id='amendOrderItNewOrderIt' name='amendOrderItNewOrderIt'
+                			value=''
+                			type='text' 
+                			placeholder = 'Enter new ORDER IT Number'
+                			>
+                    </div>
+                  </div>
+                </form>
+        		
+
+      			</div>
+      			
+      			<div class="modal-footer">      				
+      				<button type="button" class="btn btn-success" id='confirmedSaveOrderIt'>Save</button>
+      				<button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
+
+      			</div>
+    		</div>
+  			</div>
+		</div>
+        <?php
     }
 
 
@@ -2255,6 +2328,23 @@ class assetRequestsTable extends DbTable{
             return false;
         }
 
+        return true;
+    }
+    
+    function saveAmendedOit($reference, $orderIt){
+            
+        $sql = " UPDATE ";
+        $sql.= $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql.= " SET ORDERIT_NUMBER='" . db2_escape_string($orderIt) . "' ";
+        $sql.= " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' ";
+        
+        $rs = db2_exec($_SESSION['conn'], $sql);
+        
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+        
         return true;
     }
 

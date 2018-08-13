@@ -304,6 +304,51 @@ this.listenForReportShowUid = function(){
 	      });
 	  });
   },
+  
+  this.listenForAmendOrderIt = function(){
+	  $(document).on('click','.btnAmendOrderItNumber', function(e){
+		  console.log('wish to amend Order IT number');
+		  console.log(e);		 
+		  var reference = $(e.target).data('reference');
+		  var currentOit = $(e.target).data('orderit');
+		  $('#amendOrderItRequestReference').val(reference);
+		  $('#amendOrderItCurrent').val(currentOit);
+		  $('#amendOrderItNewOrderIt').val('');
+		  $('#amendOrderItModal').modal('show');
+	  });
+  },
+  
+  this.listenForSaveAmendedOrderIt = function(){
+	  $(document).on('click','#confirmedSaveOrderIt', function(e){
+		  $('#confirmedSaveOrderIt').addClass('spinning');
+		  $('#confirmedSaveOrderIt').attr('disabled',true);
+		  var reference = $('#amendOrderItRequestReference').val();
+		  var currentOit = $('#amendOrderItCurrent').val();		  
+		  var newOit = $('#amendOrderItNewOrderIt').val();
+	      $.ajax({
+		        url: "ajax/saveAmendedOrderIt.php",
+		        type: 'POST',
+		        data: { reference: reference,
+		        	    currentOit: currentOit,
+		        	    newOit: newOit },
+		        success: function(result){
+		        	console.log(result);
+		        	var resultObj = JSON.parse(result);
+			    	assetPortal.table.ajax.reload();
+		  		    $('#confirmedSaveOrderIt').removeClass('spinning');
+				    $('#confirmedSaveOrderIt').attr('disabled',false);
+					var reference = $('#amendOrderItRequestReference').val('');
+					var currentOit = $('#amendOrderItCurrent').val('');		  
+					var newOit = $('#amendOrderItNewOrderIt').val('');
+				    $('#amendOrderItModal').modal('hide');
+
+		        }
+	      });
+		  
+	  });
+
+  },
+  
 
 
 
