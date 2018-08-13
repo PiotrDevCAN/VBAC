@@ -483,6 +483,7 @@ class assetRequestRecord extends DbRecord {
             	data-default='<?=trim($requestableAsset['APPLICABLE_ONSHORE'])?>'
             	data-return='<?=$returnable ? "yes" : "no";?>'
             	data-ignore='<?=empty(trim($requestableAsset['ASSET_PREREQUISITE'])) ? 'Yes': 'No'?>'
+            	data-orderitreq='<?=empty(trim($requestableAsset['ORDER_IT_REQUIRED'])) ? 'No': 'Yes'?>'
             >
             <label class='form-check-label' for='person-<?=$personId?>-asset-<?=$assetId?>'><?=trim($requestableAsset['ASSET_TITLE'])?></label>
         	<?php
