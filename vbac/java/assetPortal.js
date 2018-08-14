@@ -174,7 +174,7 @@ function assetPortal() {
 	      });
   },
 
-  this.listenForReportShowAll = function(){
+this.listenForReportShowAll = function(){
 	  $(document).on('click','#reportShowAll', function(e){
 		  assetPortal.table.destroy();
 		  AssetPortal.initialiseAssetRequestDataTable('all');
@@ -182,7 +182,7 @@ function assetPortal() {
 	  });
 },
 
-  this.listenForReportShowExportable = function(){
+this.listenForReportShowExportable = function(){
 		$(document).on('click','#reportShowAwaitingIam', function(e){
 			assetPortal.table.destroy();
 			AssetPortal.initialiseAssetRequestDataTable('awaitingIam',true);
