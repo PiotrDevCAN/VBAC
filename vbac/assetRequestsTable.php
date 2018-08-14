@@ -146,7 +146,7 @@ class assetRequestsTable extends DbTable{
 
 
             $row['REFERENCE'] =  $startItalics . trim($row['ORDERIT_NUMBER']) . ":" . $reference;
-            $row['REFERENCE'] .= !empty($preReq) ? " <==" . $preReq : null;
+            $row['REFERENCE'] .= !empty($preReq) ? "<small> requires </small>" . $preReq : null;
             $row['REFERENCE'] .= $endItalics;
 
             $row['REFERENCE'] = empty($row['ORDERIT_VARB_REF']) ? array('display'=>$row['REFERENCE'],'reference'=>$sortableReference) : array('display'=>$row['REFERENCE'] . "<br/><small>" . $row['ORDERIT_VARB_REF'] . "</small>",'reference'=>$sortableReference);
@@ -160,6 +160,8 @@ class assetRequestsTable extends DbTable{
             $approveButton .= "data-requestee='" .trim($row['REQUESTEE_EMAIL']) . "' ";
             $approveButton .= "data-asset='"     .trim($row['ASSET']) . "' ";
             $approveButton .= "data-orderitstatus='".trim($row['ORDERIT_STATUS']) . "' ";
+            $approveButton .= "data-status='".trim($row['STATUS']) . "' ";
+            $approveButton .= "data-ispmo='".$_SESSION['isPmo'] . "' ";
             $approveButton .= "data-toggle='tooltip' data-placement='top' title='Approve the request'";
             $approveButton .= " > ";
             $approveButton .= "<span class='glyphicon glyphicon-ok ' aria-hidden='true'></span>";
@@ -211,6 +213,11 @@ class assetRequestsTable extends DbTable{
                     $rejectable = false;
                     $approvable = true;
                     break;
+                case $status == assetRequestRecord::STATUS_AWAITING_IAM:
+                    $rejectable = true;
+                    $approvable = $_SESSION['isPmo']; // Only PMO get the approve button now.
+                    break;
+                    
                 default:
                     $rejectable = false;
                     $approvable = false;
@@ -778,6 +785,8 @@ class assetRequestsTable extends DbTable{
                 $allButtons[] = $confirmButton;
                 $form->formBlueButtons($allButtons);
                 $form->formHiddenInput('assetRequestApproverRejector',$_SESSION['ssoEmail'],'assetRequestApproverRejector');
+                $form->formHiddenInput('approveRejectRequestStatus','','approveRejectRequestStatus');
+                $form->formHiddenInput('approveRejectRequestIsPmo','','approveRejectRequestIsPmo');
                 ?>
 	      		<button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
           	</div>
@@ -2212,6 +2221,10 @@ class assetRequestsTable extends DbTable{
                 // else - if they are rejecting then go to "Not to be Raised"
                 $orderItStatus = assetRequestRecord::STATUS_ORDERIT_YET;
                 break;
+            case trim($status)==assetRequestRecord::STATUS_AWAITING_IAM:
+                // else - if they are rejecting then go to "Not to be Raised"
+                $orderItStatus = assetRequestRecord::STATUS_ORDERIT_YET;
+                break;                
             default:
                 $orderItStatus = null;
                 break;

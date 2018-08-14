@@ -35,6 +35,7 @@ class assetRequestRecord extends DbRecord {
     protected $ORDERIT_RESPONDED;
 
     const STATUS_CREATED           = 'Created in vBAC';
+    const STATUS_AWAITING_IAM      = 'Awaiting IAM Approval';
     const STATUS_APPROVED          = 'Approved for Order IT';
     const STATUS_EXPORTED          = 'Exported for Order IT';
     const STATUS_RAISED_ORDERIT    = 'Raised in Order IT';

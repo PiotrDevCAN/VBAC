@@ -640,6 +640,8 @@ this.listenForSaveOrderItStatus = function(){
 	    	$('#approveRejectRequestee').val($(e.target).data('requestee'));
 	    	$('#approveRejectAssetTitle').val($(e.target).data('asset'));
 	    	$('#approveRejectRequestOrderItStatus').val($(e.target).data('orderitstatus'));
+	    	$('#approveRejectRequestStatus').val($(e.target).data('status'));
+	    	$('#approveRejectRequestIsPmo').val($(e.target).data('ispmo'));
 	    	$('#assetRequestApprovalToggle').prop('checked',true).change();
 
 	    	$('#approveRejectRequestComment').val('').attr('required',false);
@@ -739,7 +741,8 @@ this.listenForAssetRequestApproveRejectConfirm  = function(){
 	          	var reference = $('#approveRejectRequestReference').val();
 	          	var comment = $('#approveRejectRequestComment').val();
 	          	var orderItStatus = $('#approveRejectRequestOrderItStatus').val();
-
+	          	var status = $('#approveRejectRequestStatus').val();
+	          	var isPmo  = $('#approveRejectRequestIsPmo').val();
 	          	var approveReject = $('#assetRequestApprovalToggle').is(':checked' );
 	          	var raisedInOrderIt = orderItStatus == 'Raised in Order IT' ? true : false;
 	          	//var status = approveReject ? 'Approved for Order IT' : 'Rejected in vBAC';
@@ -749,8 +752,18 @@ this.listenForAssetRequestApproveRejectConfirm  = function(){
 	          	console.log(approveReject);
 	          	console.log(orderItStatus);
 	          	console.log(raisedInOrderIt);
+	          	
+	          	
+	          	
+	          	var iamApproval = (status == 'Awaiting IAM Approval') && (isPmo == 1);
 
-
+	          	console.log(status);
+	          	console.log(isPmo);
+	          	console.log(iamApproval);
+	          	
+	          	
+	          	
+	          	
 
 	          	switch(true) {
 	          	case approveReject && raisedInOrderIt:
@@ -759,10 +772,16 @@ this.listenForAssetRequestApproveRejectConfirm  = function(){
 	          		var status = 'Approved for Order IT';
 	          		var orderitstatus = 'Raised in Order IT';
 	          		break;
+	          	case iamApproval && approveReject && !raisedInOrderIt:
+	          		console.log('true and true and false');
+	          		// It's NOT already raised in order it - and has now been approved.
+	          		var status = 'Approved for Order IT';
+	          		var orderitstatus = 'Yet to be raised';
+	          		break;	
 	          	case approveReject && !raisedInOrderIt:
 	          		console.log('true and false');
 	          		// It's NOT already raised in order it - and has now been approved.
-	          		var status = 'Approved for Order IT';
+	          		var status = 'Awaiting IAM Approval';
 	          		var orderitstatus = 'Yet to be raised';
 	          		break;
 	          	case !approveReject && raisedInOrderIt:
