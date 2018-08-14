@@ -2059,8 +2059,11 @@ class assetRequestsTable extends DbTable{
                 DbTable::displayErrorMessage($preparedStmt, __CLASS__, __METHOD__, 'preparedStmt');
                 return false;
             }
+            
+            assetRequestsEventsTable::logEventForRequestWithDate(assetRequestsEventsTable::EVENT_ORDERIT_RESPONDED, $requestReference,$orderitResponded);
+            return true;
         }
-        return true;
+        return false;
     }
 
 

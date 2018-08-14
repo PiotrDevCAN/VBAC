@@ -62,6 +62,24 @@ class assetRequestsEventsTable extends DbTable{
         }
         return true;
     }
+    
+    static function logEventForRequestWithDate($event, $requestReference,$date){
+        $initator = empty($_SESSION['ssoEmail']) ? 'Unknown' : $_SESSION['ssoEmail'];
+        
+        $sql = " INSERT INTO " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS_EVENTS ;
+        $sql.= " ( REQUEST_REFERENCE, EVENT, OCCURED, INITIATED_BY ) ";
+        $sql.= " values ";
+        $sql.= "( ?, ?, ?, '$initator') ";
+        
+        $preparedStmt = db2_prepare($_SESSION['conn'], $sql);   
+        $data = array($requestReference, $event,$date);
+        $rs = db2_execute($preparedStmt,$data);
+        if(!$rs){
+            DbTable::displayErrorMessage($rs,__CLASS__, __METHOD__, $sql);
+            return false;
+        }
+        return true;
+    }
 
 
 }
