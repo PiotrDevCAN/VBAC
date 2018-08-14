@@ -4,6 +4,7 @@ use vbac\assetRequestsTable;
 
 ob_start();
 $assetTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
+$awaitingIam        = $assetTable->countRequestsAwaitingIam();
 $pmoForExportBau    = $assetTable->countRequestsForPmoExport('true');
 $pmoForExportNonBau = $assetTable->countRequestsForPmoExport('false');
 $pmoForExport       = $pmoForExportBau + $pmoForExportNonBau;
@@ -13,7 +14,7 @@ $bauRaised          = $assetTable->countRequestsRaised(true);
 $nonBauRaised       = $assetTable->countRequestsRaised(false);
 
 $messages = ob_get_clean();
-$response = array('pmoForExport'=>$pmoForExport,'nonPmoForExport'=>$nonPmoForExport
+$response = array('awaitingIam'=>$awaitingIam,'pmoForExport'=>$pmoForExport,'nonPmoForExport'=>$nonPmoForExport
     ,'pmoExported'=>$pmoExported,'bauForExport'=>$pmoForExportBau
     ,'nonBauForExport'=>$pmoForExportNonBau,'bauRaised'=>$bauRaised
     ,'nonBauRaised'=>$nonBauRaised,'messages'=>$messages);

@@ -14,6 +14,8 @@ function assetPortal() {
   },
 
   this.countRequestsForPortal = function(){
+
+	  $('#countAwaitingIam').html('**');
   	  $('#countPmoForExport').html('**');
 	  $('#countNonPmoForExport').html('**');
   	  $('#countBauForExport').html('**');
@@ -27,6 +29,7 @@ function assetPortal() {
 	        type: 'GET',
 	        success: function(result){
 	        	var resultObj = JSON.parse(result);
+	        	$('#countAwaitingIam').html(resultObj.awaitingIam);
 	        	$('#countPmoForExport').html(resultObj.pmoForExport);
 	        	$('#countNonPmoForExport').html(resultObj.nonPmoForExport);
 	        	$('#countBauForExport').html(resultObj.bauForExport);
@@ -180,11 +183,19 @@ function assetPortal() {
 },
 
   this.listenForReportShowExportable = function(){
-		$(document).on('click','#reportShowExportable', function(e){
+		$(document).on('click','#reportShowAwaitingIam', function(e){
 			assetPortal.table.destroy();
-			AssetPortal.initialiseAssetRequestDataTable('exportable',true);
-			$('#portalTitle').text('Asset Request Portal - Show Pmo To Raise Requests');
+			AssetPortal.initialiseAssetRequestDataTable('awaitingIam',true);
+			$('#portalTitle').text('Asset Request Portal - Awaiting IAM');
 	  });
+},
+
+this.listenForReportShowAwaitingIam = function(){
+	$(document).on('click','#reportShowExportable', function(e){
+		assetPortal.table.destroy();
+		AssetPortal.initialiseAssetRequestDataTable('exportable',true);
+		$('#portalTitle').text('Asset Request Portal - Show Pmo To Raise Requests');
+  });
 },
 
 

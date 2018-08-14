@@ -54,6 +54,9 @@ switch (true) {
         $assetRequestTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
 
         switch ($show) {
+            case 'awaitingIam':
+                $predicate .= " AND STATUS='" . assetRequestRecord::STATUS_AWAITING_IAM . "' ";
+            break;
             case 'exportable':
                 $predicate .= " AND (( 1=1 " . $assetRequestTable->predicateForPmoExportableRequest() . " ) ";
                 $predicate .= " OR ( 1=1 " . $assetRequestTable->predicateExportNonPmoRequests() . " )) ";
