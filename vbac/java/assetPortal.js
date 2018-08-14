@@ -745,26 +745,7 @@ this.listenForAssetRequestApproveRejectConfirm  = function(){
 	          	var isPmo  = $('#approveRejectRequestIsPmo').val();
 	          	var approveReject = $('#assetRequestApprovalToggle').is(':checked' );
 	          	var raisedInOrderIt = orderItStatus == 'Raised in Order IT' ? true : false;
-	          	//var status = approveReject ? 'Approved for Order IT' : 'Rejected in vBAC';
-	          	//var orderitstatus = raisedInOrderIt ? orderItStatus : 'Yet to be raised';
-	          	// var status = approveReject && raisedInOrderIt ? 'Raised in Order IT' : status;   --> We are now saying - even for the 'raised in order it' they need to go throufg 'Approved for Order IT' status
-
-	          	console.log(approveReject);
-	          	console.log(orderItStatus);
-	          	console.log(raisedInOrderIt);
-	          	
-	          	
-	          	
 	          	var iamApproval = (status == 'Awaiting IAM Approval') && (isPmo == 1);
-
-	          	console.log(status);
-	          	console.log(isPmo);
-	          	console.log(iamApproval);
-	          	
-	          	
-	          	
-	          	
-
 	          	switch(true) {
 	          	case approveReject && raisedInOrderIt:
 	          		console.log('true and true');
