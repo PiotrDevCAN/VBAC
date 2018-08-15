@@ -758,22 +758,24 @@ this.listenForAssetRequestApproveRejectConfirm  = function(){
 	          	var raisedInOrderIt = orderItStatus == 'Raised in Order IT' ? true : false;
 	          	var iamApproval = (status == 'Awaiting IAM Approval') && (isPmo == 1);
 	          	switch(true) {
-	          	case approveReject && raisedInOrderIt:
-	          		console.log('true and true');
-	          		// It was already raised in order it - and now it's approved.
-	          		var status = 'Approved for Order IT';
-	          		var orderitstatus = 'Raised in Order IT';
-	          		break;
-	          	case iamApproval && approveReject && !raisedInOrderIt:
+	          	case iamApproval && approveReject && raisedInOrderIt:
 	          		console.log('true and true and false');
-	          		// It's NOT already raised in order it - and has now been approved.
+	          		// It's already raised in order it - and has now been approved BY IAM.
 	          		var status = 'Approved for Order IT';
 	          		var orderitstatus = 'Yet to be raised';
-	          		break;	
+	          		break;
+	          	case approveReject && raisedInOrderIt:
+	          		console.log('true and true');
+	          		// It was already raised in order it - and now it's approved - so pass it to IAM for their approval next
+	          		// var status = 'Approved for Order IT';
+	          		var status = 'Awaiting IAM Approval';
+	          		var orderitstatus = 'Raised in Order IT';
+	          		break;
 	          	case approveReject && !raisedInOrderIt:
 	          		console.log('true and false');
 	          		// It's NOT already raised in order it - and has now been approved.
-	          		var status = 'Awaiting IAM Approval';
+	          		//var status = 'Awaiting IAM Approval';
+	          		var status = 'Approved for Order IT';
 	          		var orderitstatus = 'Yet to be raised';
 	          		break;
 	          	case !approveReject && raisedInOrderIt:
