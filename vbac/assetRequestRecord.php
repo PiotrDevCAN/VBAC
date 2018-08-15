@@ -223,7 +223,7 @@ class assetRequestRecord extends DbRecord {
             	</div>
             	<div class='col-sm-4' >
             	<label for='orderItNumber'>Order IT Number (If already created)</label>
-            	<input type="number" name='ORDERIT_NUMBER' id=orderItNumber' placeholder="Order IT Number" min="999999" max="9999999" class='form-control' >
+            	<input type="number" name='ORDERIT_NUMBER' id='orderItNumber' placeholder="Order IT Number" min="999999" max="9999999" class='form-control' >
 
             	</div>
             	<div class='col-sm-4' >

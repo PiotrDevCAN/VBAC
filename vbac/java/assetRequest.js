@@ -283,18 +283,6 @@ function assetRequest() {
 
   this.saveAssetRequestRecords = function(){
 	  console.log('would save all the records now');
-	  
-	  var anyRequireOrderIt = $('.requestableAsset:checked').filter('*[data-orderitreq="Yes"]');
-
-	  if(anyRequireOrderIt.length>0){		  
-		  $('#orderItNumber').attr('required',true);
-		  if(typeof($('#orderItNumber').val()) == 'undefined' ){
-			  alert('You have selected assets that require an ORDER IT number be supplied');
-		  }
-	  } else {
-		  $('#orderItNumber').attr('required',false);
-	  }
-	  
 	  var allDisabledFields = ($("#assetRequestForm input:disabled"));
       $(allDisabledFields).attr('disabled',false);
       var formData = $('#assetRequestForm').serialize();
@@ -319,12 +307,26 @@ function assetRequest() {
   this.listenForSaveAssetRequest = function(){
 	  $(document).on('click','#saveAssetRequest', function(){
 		  console.log('they want to save');
-
 		  $('#saveAssetRequest').addClass('spinning');
 		  $('#saveAssetRequest').attr('disabled',true);
+		  
+		  var anyRequireOrderIt = $('.requestableAsset:checked').filter('*[data-orderitreq="Yes"]');
+		  if(anyRequireOrderIt.length>0){		  
+			  $('#orderItNumber').attr('required',true);
+			  if(typeof($('#orderItNumber').val()) == 'undefined' ){
+				  alert('You have selected assets that require an ORDER IT number be supplied');
+			  }
+		  } else {
+			  $('#orderItNumber').attr('required',false);
+		  }
+		  
+		  console.log($('#orderItNumber'));
 
 	      var form = document.getElementById('assetRequestForm');
 	      var formValid = form.checkValidity();
+	      
+	      console.log(formValid);
+	      
 	      if(formValid){
 //	    	  var AssetRequest = new assetRequest();
 	    	  AssetRequest.saveAssetRequestRecords();
