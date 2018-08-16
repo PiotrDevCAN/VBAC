@@ -320,8 +320,8 @@ this.listenForReportShowUid = function(){
 	  $(document).on('click','.btnAmendOrderItNumber', function(e){
 		  console.log('wish to amend Order IT number');
 		  console.log(e);		 
-		  var reference = $(e.target).data('reference');
-		  var currentOit = $(e.target).data('orderit');
+		  var reference = $(this).data('reference');
+		  var currentOit = $(this).data('orderit');
 		  $('#amendOrderItRequestReference').val(reference);
 		  $('#amendOrderItCurrent').val(currentOit);
 		  $('#amendOrderItNewOrderIt').val('');
@@ -366,13 +366,13 @@ this.listenForReportShowUid = function(){
 
   this.listenForEditUid = function(){
 	  $(document).on('click','.btnEditUid', function(e){
-		  $('#asset').val($(e.target).data('asset'));
-		  $('#userid').val($(e.target).data('requestee'));
+		  $('#asset').val($(this).data('asset'));
+		  $('#userid').val($(this).data('requestee'));
 
-		  var primaryUid   = $(e.target).data('primaryuid');
-		  var secondaryUid = $(e.target).data('secondaryuid');
+		  var primaryUid   = $(this).data('primaryuid');
+		  var secondaryUid = $(this).data('secondaryuid');
 
-		  var primaryTitle = $(e.target).data('primarytitle');
+		  var primaryTitle = $(this).data('primarytitle');
 		  $('#primaryLabel').text(primaryTitle);
 		  $('#primaryUid').attr('placeholder',primaryTitle);
 
@@ -382,7 +382,7 @@ this.listenForReportShowUid = function(){
 			  $('#primaryUid').val('');
 		  }
 
-		  var secondaryTitle = $(e.target).data('secondarytitle');
+		  var secondaryTitle = $(this).data('secondarytitle');
 		  if(secondaryTitle) {
 			 $('#secondaryLabel').text(secondaryTitle);
 			 $('#secondaryUid').attr('placeholder',secondaryTitle);
@@ -402,7 +402,7 @@ this.listenForReportShowUid = function(){
 
 
 
-		  $('#reference').val($(e.target).data('reference'));
+		  $('#reference').val($(this).data('reference'));
 //		  $('#primaryUid').val('');
 //		  $('#secondaryUid').val('');
 		  $('#editUidModal').modal('show');
@@ -647,12 +647,12 @@ this.listenForSaveOrderItStatus = function(){
 
   this.listenForAssetRequestApprove  = function(){
 	    $(document).on('click','.btnAssetRequestApprove', function(e){
-	    	$('#approveRejectRequestReference').val($(e.target).data('reference'));
-	    	$('#approveRejectRequestee').val($(e.target).data('requestee'));
-	    	$('#approveRejectAssetTitle').val($(e.target).data('asset'));
-	    	$('#approveRejectRequestOrderItStatus').val($(e.target).data('orderitstatus'));
-	    	$('#approveRejectRequestStatus').val($(e.target).data('status'));
-	    	$('#approveRejectRequestIsPmo').val($(e.target).data('ispmo'));
+	    	$('#approveRejectRequestReference').val($(this).data('reference'));
+	    	$('#approveRejectRequestee').val($(this).data('requestee'));
+	    	$('#approveRejectAssetTitle').val($(this).data('asset'));
+	    	$('#approveRejectRequestOrderItStatus').val($(this).data('orderitstatus'));
+	    	$('#approveRejectRequestStatus').val($(this).data('status'));
+	    	$('#approveRejectRequestIsPmo').val($(this).data('ispmo'));
 	    	$('#assetRequestApprovalToggle').prop('checked',true).change();
 
 	    	$('#approveRejectRequestComment').val('').attr('required',false);
@@ -663,7 +663,7 @@ this.listenForSaveOrderItStatus = function(){
 
 this.listenForAddToJustification  = function(){
     $(document).on('click','.btnAddToJustification', function(e){
-    	var reference = $(e.target).data('reference');
+    	var reference = $(this).data('reference');
       	$.ajax({
 	        url: "ajax/getDetailsForEditJustification.php",
 	        type: 'GET',
@@ -672,12 +672,12 @@ this.listenForAddToJustification  = function(){
 
 	        	var resultObj = JSON.parse(result);
 	        	console.log(resultObj);
-	        	console.log($(e.target));
+	        	console.log($(this));
 
-	        	$('#editJustificationRequestReference').html($(e.target).data('reference'));
-	        	$('#editJustificationRequestee').html($(e.target).data('requestee'));
-	        	$('#editJustificationAssetTitle').html($(e.target).data('asset'));
-	        	$('#editJustificationStatus').val($(e.target).data('status'));
+	        	$('#editJustificationRequestReference').html($(this).data('reference'));
+	        	$('#editJustificationRequestee').html($(this).data('requestee'));
+	        	$('#editJustificationAssetTitle').html($(this).data('asset'));
+	        	$('#editJustificationStatus').val($(this).data('status'));
 
 	        	$('#editJustificationJustification').val(resultObj.justification);
 	        	$('#editJustificationComment').html(resultObj.comment);
@@ -722,10 +722,10 @@ this.listenForSaveAmendedJustification = function(){
 
 this.listenForAssetRequestReject  = function(){
     $(document).on('click','.btnAssetRequestReject', function(e){
-    	$('#approveRejectRequestReference').val($(e.target).data('reference'));
-    	$('#approveRejectRequestee').val($(e.target).data('requestee'));
-    	$('#approveRejectAssetTitle').val($(e.target).data('asset'));
-    	$('#approveRejectRequestOrderItStatus').val($(e.target).data('orderitstatus'));
+    	$('#approveRejectRequestReference').val($(this).data('reference'));
+    	$('#approveRejectRequestee').val($(this).data('requestee'));
+    	$('#approveRejectAssetTitle').val($(this).data('asset'));
+    	$('#approveRejectRequestOrderItStatus').val($(this).data('orderitstatus'));
     	$('#assetRequestApprovalToggle').prop('checked',false).change();
 
     	console.log($('#assetRequestApprovalToggle'));
@@ -832,14 +832,14 @@ this.listenForAssetRequestApproveRejectToggle  = function(){
 this.listenForAssetReturned = function(){
 	  $(document).on('click','.btnAssetReturned', function(e){
 
-		  $('#assetRet').val($(e.target).data('asset'));
-		  $('#useridRet').val($(e.target).data('requestee'));
+		  $('#assetRet').val($(this).data('asset'));
+		  $('#useridRet').val($(this).data('requestee'));
 
-		  var primaryUid   = $(e.target).data('primaryuid');
-		  var secondaryUid = $(e.target).data('secondaryuid');
+		  var primaryUid   = $(this).data('primaryuid');
+		  var secondaryUid = $(this).data('secondaryuid');
 
 
-		  var primaryTitle = $(e.target).data('primarytitle');
+		  var primaryTitle = $(this).data('primarytitle');
 		  if(primaryTitle) {
 			  $('#primaryLabelRet').text(primaryTitle);
 			  $('#primaryUidRet').attr('placeholder',primaryTitle);
@@ -858,7 +858,7 @@ this.listenForAssetReturned = function(){
 			  $('#primaryUidRet').attr('disabled',false);
 		  }
 
-		  var secondaryTitle = $(e.target).data('secondarytitle');
+		  var secondaryTitle = $(this).data('secondarytitle');
 		  if(secondaryTitle) {
 			 $('#secondaryLabelRet').text(secondaryTitle);
 			 $('#secondaryUidRet').attr('placeholder',secondaryTitle);
@@ -877,7 +877,7 @@ this.listenForAssetReturned = function(){
 			  $('#secondaryUidRet').attr('disabled',false);
 		  }
 
-		  $('#referenceRet').val($(e.target).data('reference'));
+		  $('#referenceRet').val($(this).data('reference'));
 		  $('#confirmAssetReturned').attr('disabled',false);
 		  $('#confirmReturnedModal').modal('show');
 	  });

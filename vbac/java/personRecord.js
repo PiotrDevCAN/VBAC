@@ -427,7 +427,7 @@ function personRecord() {
 
   this.listenForSerial = function(){
     $(document).on('keyup change','#person_serial',function(e){
-      var cnum = $(e.target).val();
+      var cnum = $(this).val();
       console.log(cnum);
       if(cnum.length==9){
         console.log(this);
@@ -702,8 +702,8 @@ function personRecord() {
 		  this.listenForDeleteRfFlag = function(){
 			    $(document).on('click','.btnDeleteRfFlag', function(e){
 				    console.log('listenForDeleteRfFlag');
-				    $(e.target).addClass('spinning');
-				    var cnum = $(e.target).data('cnum');
+				    $(this).addClass('spinning');
+				    var cnum = $(this).data('cnum');
 				    console.log(cnum);
 				    $.ajax({
 				          url: "ajax/setRfFlag.php",
@@ -722,8 +722,8 @@ function personRecord() {
 	this.listenForClearCtid = function(){
 				  $(document).on('click','.btnClearCtid', function(e){
 					    console.log('listenForClearCtid');
-					    $(e.target).addClass('spinning');
-					    var cnum = $(e.target).data('cnum');
+					    $(this).addClass('spinning');
+					    var cnum = $(this).data('cnum');
 					    console.log(cnum);
 					    $.ajax({
 					          url: "ajax/clearCtid.php",
@@ -1044,10 +1044,10 @@ function personRecord() {
   
   this.listenForBtnTransfer = function(){
 	  $(document).on('click','.btnTransfer', function(e){  
-		  var cnum 			= $(e.target).data('cnum');
-		  var notesid 		= $(e.target).data('notesid');
-		  var fromCnum 		=  $(e.target).data('fromcnum');
-		  var fromNotesid 	=  $(e.target).data('fromnotesid');
+		  var cnum 			= $(this).data('cnum');
+		  var notesid 		= $(this).data('notesid');
+		  var fromCnum 		=  $(this).data('fromcnum');
+		  var fromNotesid 	=  $(this).data('fromnotesid');
 		 
 		  $('#transferNotes_id').val(notesid);
 		  $('#transferCnum').val(cnum);
@@ -1259,7 +1259,9 @@ function personRecord() {
 
   this.listenForEditPerson = function(){
     $(document).on('click','.btnEditPerson', function(e){
-           var cnum = ($(e.target).data('cnum'));
+           var cnum = ($(this).data('cnum'));
+           console.log(cnum);
+           
            var spinner =  '<div id="overlay"><i class="fa fa-spinner fa-spin spin-big"></i></div>';
            $('#editPersonModal .modal-body').html(spinner);
            $('#editPersonModal').modal('show');
@@ -1364,11 +1366,11 @@ function personRecord() {
 
   this.listenForEditPesStatus = function(){
     $(document).on('click','.btnPesStatus', function(e){
-           var cnum = ($(e.target).data('cnum'));
-           var notesid = ($(e.target).data('notesid'));
-           var email = ($(e.target).data('email'));
+           var cnum = ($(this).data('cnum'));
+           var notesid = ($(this).data('notesid'));
+           var email = ($(this).data('email'));
            notesid = notesid.trim() != "" ? notesid : email;
-           var status  = ($(e.target).data('pesstatus'));
+           var status  = ($(this).data('pesstatus'));
            $('#psm_notesid').val(notesid);
            $('#psm_cnum').val(cnum);
            $('#amendPesStatusModal').on('shown.bs.modal', { status: status}, function (e) {
