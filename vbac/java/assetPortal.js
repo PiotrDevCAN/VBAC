@@ -762,7 +762,7 @@ this.listenForAssetRequestApproveRejectConfirm  = function(){
 	          		console.log('true and true and false');
 	          		// It's already raised in order it - and has now been approved BY IAM.
 	          		var status = 'Approved for Order IT';
-	          		var orderitstatus = 'Yet to be raised';
+	          		var orderitstatus = 'Raised in Order IT';
 	          		break;
 	          	case approveReject && raisedInOrderIt:
 	          		console.log('true and true');
