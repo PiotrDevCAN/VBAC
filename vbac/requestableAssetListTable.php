@@ -37,6 +37,7 @@ class requestableAssetListTable extends DbTable {
                 $trimmedData['RECORD_DATE_ISSUED_TO_IBM']       = trim($trimmedData['RECORD_DATE_ISSUED_TO_IBM'])=='1'  ? 'Yes' : 'No';
                 $trimmedData['RECORD_DATE_ISSUED_TO_USER']      = trim($trimmedData['RECORD_DATE_ISSUED_TO_USER'])=='1' ? 'Yes' : 'No';
                 $trimmedData['RECORD_DATE_RETURNED']            = trim($trimmedData['RECORD_DATE_RETURNED'])=='1'       ? 'Yes' : 'No';
+                $trimmedData['ORDER_IT_REQUIRED']               = trim($trimmedData['ORDER_IT_REQUIRED'])=='1'       ? 'Yes' : 'No';
                 $rowWithButtonsAdded = $withButtons ?  $this->addButtons($trimmedData) : $trimmedData ;
                 $data[] = $rowWithButtonsAdded;
             }
@@ -70,6 +71,7 @@ class requestableAssetListTable extends DbTable {
             $row['LISTING_ENTRY_CREATED'] .= "data-just='" .trim($row['BUSINESS_JUSTIFICATION_REQUIRED']) . "' ";
             $row['LISTING_ENTRY_CREATED'] .= "data-prompt='" . urldecode(trim($row['PROMPT'])) . "' ";
             $row['LISTING_ENTRY_CREATED'] .= "data-type='" . urldecode(trim($row['ORDER_IT_TYPE'])) . "' ";
+            $row['LISTING_ENTRY_CREATED'] .= "data-orderitreq='" . urldecode(trim($row['ORDER_IT_REQUIRED'])) . "' ";
 
             $row['LISTING_ENTRY_CREATED'] .= " > ";
             $row['LISTING_ENTRY_CREATED'] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";

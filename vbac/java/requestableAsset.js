@@ -161,6 +161,7 @@ function requestableAsset() {
 		        $(this).data('dteret')   == 'Yes' ? $('#RecordDateReturned').bootstrapToggle('on') : $('#RecordDateReturned').bootstrapToggle('off');
 		        $(this).data('onshore')   == 'Yes' ? $('#applicableOnShore').bootstrapToggle('on') : $('#applicableOnShore').bootstrapToggle('off');
 		        $(this).data('offshore')   == 'Yes' ? $('#applicableOffShore').bootstrapToggle('on') : $('#applicableOffShore').bootstrapToggle('off');
+		        $(this).data('orderitreq') == 'Yes' ? $('#OrderItRequired').bootstrapToggle('on') : $('#OrderItRequired').bootstrapToggle('off');
 		        $(this).data('just')   == 'Yes' ? $('#businessJustification').bootstrapToggle('on') : $('#businessJustification').bootstrapToggle('off');
 		        $(this).data('just')   == 'Yes' ? $('#promptDiv').show() : $('#promptDiv').hide();
 		        $(this).data('just')   == 'Yes' ? $('#prompt').attr('required',true) : $('#prompt').attr('required',false);
