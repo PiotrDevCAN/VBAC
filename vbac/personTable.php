@@ -258,6 +258,7 @@ class personTable extends DbTable {
         $potentialForOffboarding = substr(trim($row['REVALIDATION_STATUS']),0,10)==personRecord::REVALIDATED_OFFBOARDED ? false : $potentialForOffboarding;
         $potentialForOffboarding = substr(trim($row['REVALIDATION_STATUS']),0,11)==personRecord::REVALIDATED_OFFBOARDING ? false : $potentialForOffboarding;
         $revalidationStatus = trim($row['REVALIDATION_STATUS']);
+        $ctid = trim($row['CT_ID']);
 
 
 
@@ -364,9 +365,17 @@ class personTable extends DbTable {
              $row['REVALIDATION_STATUS'] .= " </button> ";
              $row['REVALIDATION_STATUS'] .= $revalidationStatus;
          }
-
-
-
+         
+         if( ($_SESSION['isPmo'] || $_SESSION['isCdi']) && !empty($ctid)  )  {
+             $row['CT_ID']  = "<button type='button' class='btn btn-default btn-xs btnClearCtid btn-danger' aria-label='Left Align' ";
+             $row['CT_ID'] .= "data-cnum='" .$cnum . "'";
+             $row['CT_ID'] .= "title='Delete CT ID.'";
+             $row['CT_ID'] .= " > ";
+             $row['CT_ID'] .= "<span class='glyphicon glyphicon-trash ' aria-hidden='true'></span>";
+             $row['CT_ID'] .= " </button> ";
+             $row['CT_ID'] .= $ctid;
+         }
+         
         return $row;
     }
 
@@ -443,6 +452,22 @@ class personTable extends DbTable {
         }
         AuditTable::audit("Set FM_MANAGER_FLAG to $flag for $cnum",AuditTable::RECORD_TYPE_AUDIT);
 
+        return true;
+    }
+    
+    function clearCtid($cnum){
+        $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql .= " SET CT_ID = null ";
+        $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
+        
+        $result = db2_exec($_SESSION['conn'], $sql);
+        
+        if(!$result){
+            DbTable::displayErrorMessage($result, __CLASS__,__METHOD__, $sql);
+            return false;
+        }
+        AuditTable::audit("Clear CT ID for $cnum",AuditTable::RECORD_TYPE_AUDIT);
+        
         return true;
     }
     

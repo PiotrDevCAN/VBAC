@@ -57,5 +57,6 @@ $(document).ready(function(){
 	person.listenForDeoffBoarding();
 	person.listenForOffBoardingCompleted();
 	person.listenForBtnOffboarding();
+	person.listenForClearCtid();
 });
 </script>

@@ -718,7 +718,27 @@ function personRecord() {
 				    });
 			    });
 			  },
-
+			  
+	this.listenForClearCtid = function(){
+				  $(document).on('click','.btnClearCtid', function(e){
+					    console.log('listenForClearCtid');
+					    $(e.target).addClass('spinning');
+					    var cnum = $(e.target).data('cnum');
+					    console.log(cnum);
+					    $.ajax({
+					          url: "ajax/clearCtid.php",
+					          type: 'POST',
+					          data : {cnum: cnum
+					        	     },
+					          success: function(result){
+					        	  console.log(result);
+					        	  var resultObj = JSON.parse(result);
+					        	  personRecord.table.ajax.reload();
+					          }
+					   });
+				 });
+  },
+			  
 
   this.saveBoarding = function(mode){
     console.log('saveBoarding mode:' + mode);
