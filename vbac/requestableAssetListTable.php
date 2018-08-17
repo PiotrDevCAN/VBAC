@@ -44,7 +44,8 @@ class requestableAssetListTable extends DbTable {
         }
 
         AuditTable::audit("Diag:" . __METHOD__ . __LINE__ . ":" . print_r($data,true),AuditTable::RECORD_TYPE_DETAILS);
-
+      
+        
         return $data;
     }
 
