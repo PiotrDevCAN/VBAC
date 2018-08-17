@@ -2207,7 +2207,7 @@ class assetRequestsTable extends DbTable{
         \itdq\BlueMail::send_mail(array($emailAddress), 'vBAC Request : ' . $orderItStatus , $message , 'vbacNoReply@uk.ibm.com');
     }
 
-    function setStatus($reference, $status, $comment=null,$dateReturned=null, $orderItStatus=null){
+    function setStatus($reference, $status, $comment=null,$dateReturned=null, $orderItStatus=null, $isPmo = 'No' ){
 
         if(!empty($comment)){
             $now = new \DateTime();
@@ -2254,7 +2254,8 @@ class assetRequestsTable extends DbTable{
         $sql .= " SET STATUS='" . db2_escape_string($status) . "' ";
         $sql .= !empty($orderItStatus) ? " ,ORDERIT_STATUS='" . db2_escape_string($orderItStatus) . "' " : null ;
         $sql .= !empty($newComment) ? ", COMMENT='" . db2_escape_string(substr($newComment,0,500)) . "' " : null;
-        $sql .= trim($status)==assetRequestRecord::STATUS_APPROVED ? ", APPROVER_EMAIL='" . $_SESSION['ssoEmail'] . "' , APPROVED = current timestamp " : null;
+        $sql .= trim($status)==assetRequestRecord::STATUS_AWAITING_IAM ? ", APPROVER_EMAIL='" . $_SESSION['ssoEmail'] . "' , APPROVED = current timestamp " : null;
+        $sql .= $isPmo == 'Yes' && trim($status)==assetRequestRecord::STATUS_APPROVED ? ", APPROVER_EMAIL='" . $_SESSION['ssoEmail'] . "' , APPROVED = current timestamp " : null;
         $sql .= trim($status)==assetRequestRecord::STATUS_RETURNED ? ", DATE_RETURNED = DATE('" . db2_escape_string($dateReturned). "') " : null;
         $sql .= " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' ";
         $sql .= trim($status)==assetRequestRecord::STATUS_REJECTED ? " OR PRE_REQ_REQUEST='" . db2_escape_string($reference) . "' " : null;
