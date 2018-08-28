@@ -11,7 +11,7 @@ $assetRequestsTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
 $comment = !empty($_POST['comment']) ? trim($_POST['comment']) : null;
 $dateReturned = null;
 $orderItStatus = !empty($_POST['orderitstatus']) ? trim($_POST['orderitstatus']) : null;
-$assetRequestsTable->setStatus($_POST['reference'], $_POST['status'],$comment,$dateReturned,$orderItStatus);
+$assetRequestsTable->setStatus($_POST['reference'], $_POST['status'],$comment,$dateReturned,$orderItStatus, $_POST['ispmo']);
 
 $messages = ob_get_clean();
 

@@ -802,7 +802,8 @@ this.listenForAssetRequestApproveRejectConfirm  = function(){
 			        data: {reference: reference,
 			        	   status : status,
 			        	   orderitstatus : orderitstatus,
-			        	   comment : comment },
+			        	   comment : comment,
+			        	   ispmo: isPmo },
 			        success: function(result){
 			        	console.log(result);
 			        	var resultObj = JSON.parse(result);
