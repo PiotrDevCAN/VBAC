@@ -62,7 +62,7 @@ echo "</div>";
  })
 
 $('#accordion .accordion-toggle').click(function (e){
-var chevState = $(e.target).siblings("i.indicator").toggleClass('glyphicon-chevron-down glyphicon-chevron-up');
+var chevState = $(this).siblings("i.indicator").toggleClass('glyphicon-chevron-down glyphicon-chevron-up');
 $("i.indicator").not(chevState).removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-up");
 });
 </script>

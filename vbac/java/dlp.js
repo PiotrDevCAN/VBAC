@@ -269,9 +269,9 @@ function dlp() {
 	  
 	  this.listenForDeleteDlp = function(){
 			$(document).on('click','.btnDlpLicenseDelete', function(e){
-				  var cnum = $(e.target).data('cnum');
-				  var hostname = $(e.target).data('hostname');		
-				  var transferred = $(e.target).data('transferred');
+				  var cnum = $(this).data('cnum');
+				  var hostname = $(this).data('hostname');		
+				  var transferred = $(this).data('transferred');
 				  $.ajax({
 					  url: "ajax/dlpDelete.php",
 		   		      data : { cnum: cnum,
@@ -304,8 +304,8 @@ function dlp() {
 			
 			
 	  this.approveRejectDlp = function(e, approveReject){
-		  var cnum = $(e.target).data('cnum');
-		  var hostname = $(e.target).data('hostname');				
+		  var cnum = $(this).data('cnum');
+		  var hostname = $(this).data('hostname');				
 		  $.ajax({
 			  url: "ajax/dlpApproveReject.php",
    		      data : { cnum: cnum,

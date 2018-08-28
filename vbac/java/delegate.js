@@ -51,9 +51,9 @@ function delegate() {
 
 		  this.listenForDeleteDelegate = function(){
 			  $(document).on('click','.btnDeleteDelegate', function(e){
-				  $(e.target).addClass('spinning');
-				  var cnum   = $(e.target).data('cnum');
-				  var delegateCnum = $(e.target).data('delegate');
+				  $(this).addClass('spinning');
+				  var cnum   = $(this).data('cnum');
+				  var delegateCnum = $(this).data('delegate');
 
 			       $.ajax({
 						  url: "ajax/deleteDelegate.php",
@@ -62,7 +62,7 @@ function delegate() {
 					    	      delegateCnum: delegateCnum
 					    	    },
 					      success: function(result){
-					    	  $(e.target).removeClass('spinning');
+					    	  $(this).removeClass('spinning');
 					    	  var resultObj = JSON.parse(result);
 					    	  console.log(resultObj);
 					    	  delegate.myDelegatesTable.ajax.reload();

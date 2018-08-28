@@ -66,9 +66,9 @@ function EmailLog() {
 
 	this.listenForcheckStatus = function(){
 		$(document).on('click','.statusCheck', function(e){
-			var recordId = $(e.target).data('reference');
-			var url = $(e.target).data('url');
-			var prevStatus = $(e.target).data('prevstatus');
+			var recordId = $(this).data('reference');
+			var url = $(this).data('url');
+			var prevStatus = $(this).data('prevstatus');
 		    EmailLog.table.clear();
 		    EmailLog.table.draw();
 		    $('.dataTables_processing', $('#emailLogTable').closest('.dataTables_wrapper')).show();
@@ -87,8 +87,8 @@ function EmailLog() {
 
 	this.listenForResendEmail = function(){
 		$(document).on('click','.resendEmail', function(e){
-			var recordId = $(e.target).data('reference');
-			var url = $(e.target).data('url');
+			var recordId = $(this).data('reference');
+			var url = $(this).data('url');
 		    EmailLog.table.clear();
 		    EmailLog.table.draw();
 		    $('.dataTables_processing', $('#emailLogTable').closest('.dataTables_wrapper')).show();

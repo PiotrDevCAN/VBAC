@@ -2,26 +2,50 @@
 use vbac\allTables;
 
 ?>
-<div class='container greyablePage'>
 
-<?php 
+<form id='boardingForm'  class="form-horizontal" onsubmit="return false;">
+<div class="form-group">
+<div class="col-sm-6">
+<input class="form-control typeahead" id="person_name" name="person_name"
+	              			   value="hello"
+	              			   type="text" placeholder='Start typing name/serial/email' 
+	              			   data-name='robdaniel'
+	              			   >
+<button type="button" class="btn btn-success" id='test' data-name='alanJones'><span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>Test</button>              			   
+	                           
+</div>
+</div>
+</form>
+
+<script>
+
+	  $(document).on('click','#test', function(e){
+		  console.log(e);
+		  console.log($(e));
+
+		  console.log(this);
+
+		  console.log($(this));
+		  console.log($(this).data('name'));
+		  
 
 
-// $loader = new Loader();
-// $allStatus = $loader->load('ORDERIT_STATUS',allTables::$ASSET_REQUESTS," AR.REQUEST_RETURN = 'No' or AR.REQUEST_RETURN is null ");
-// array_map('trim',$allStatus);
+		  
 
-// var_dump($allStatus);
+		  console.log($(e).parent());
+		  
+		  console.log($(this));
+		  console.log($(this).data('name'));
+		  var name = $(this).data('name');
+		  $('#person_name').val(name);
+
+		  console.log($('#person_name').data('name'));
+		  console.log($('#person_name').val());
+
+	  });
 
 
-$date = '2018-04-12 12:12:14.0';
-$date = '2018-04-11 10:43:25.0';
 
+</script>
 
-
-
-$start = new DateTime($date);
-
-
-echo $start->format('YmdHis');
 
