@@ -20,9 +20,14 @@ class BlueMail
         // $attachments=array('filename'=>'filename.txt','content_type'=>'text/plain','data'=>'base64 encoded data here')
         $emailLogRecordID = null;
 
-        $cleanedTo = self::validateIbmEmailArray($to);
-        $cleanedCc = self::validateIbmEmailArray($cc);
-        $cleanedBcc= self::validateIbmEmailArray($bcc);
+//         $cleanedTo = self::validateIbmEmailArray($to);
+//         $cleanedCc = self::validateIbmEmailArray($cc);
+//         $cleanedBcc= self::validateIbmEmailArray($bcc);
+
+        $cleanedTo = $to;
+        $cleanedCc = $cc;
+        $cleanedBcc = $bcc;
+        
 
         $recipients = array();
         foreach ($cleanedTo as $emailAddress){
