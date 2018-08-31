@@ -8,5 +8,10 @@ set_include_path("./" . PATH_SEPARATOR . "../" . PATH_SEPARATOR . "../../" . PAT
 include "vendor/autoload.php";
 include "splClassLoader.php";
 session_start();
+$token = 'soEkCfj8zGNDLZ8yXH2YJjpehd8ijzlS';
+
+if($_GET['token']!= $token){
+    return;
+}
 
 include "connect.php";

@@ -1,51 +1,53 @@
 <?php
+
+
+use itdq\BlueGroups;
+use vbac\personTable;
 use vbac\allTables;
 
-?>
 
-<form id='boardingForm'  class="form-horizontal" onsubmit="return false;">
-<div class="form-group">
-<div class="col-sm-6">
-<input class="form-control typeahead" id="person_name" name="person_name"
-	              			   value="hello"
-	              			   type="text" placeholder='Start typing name/serial/email' 
-	              			   data-name='robdaniel'
-	              			   >
-<button type="button" class="btn btn-success" id='test' data-name='alanJones'><span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>Test</button>              			   
-	                           
-</div>
-</div>
-</form>
+ob_start();
 
-<script>
-
-	  $(document).on('click','#test', function(e){
-		  console.log(e);
-		  console.log($(e));
-
-		  console.log(this);
-
-		  console.log($(this));
-		  console.log($(this).data('name'));
-		  
+$bgMembers = BlueGroups::listMembers('ODCRequests_FunctionalManagers');
 
 
-		  
+$sql = " SELECT P.EMAIL_ADDRESS  FROM " . $_SERVER['environment'] . "." . allTables::$PERSON . " AS P ";
 
-		  console.log($(e).parent());
-		  
-		  console.log($(this));
-		  console.log($(this).data('name'));
-		  var name = $(this).data('name');
-		  $('#person_name').val(name);
+$sql.= " WHERE 1=1 AND trim(NOTES_ID) != ''  AND " . personTable::activePersonPredicate();
+$sql.= " AND FM_MANAGER_FLAG='Yes' ";
+$sql.= " ORDER BY 1 ";
 
-		  console.log($('#person_name').data('name'));
-		  console.log($('#person_name').val());
+$rs = db2_exec($_SESSION['conn'], $sql);
 
-	  });
+if($rs){
+    while(($row = db2_fetch_assoc($rs))==true){
+        $functionalMgrs[] = trim($row['EMAIL_ADDRESS']);
+    }
+} else {
+    ob_clean();
+    DbTable::displayErrorMessage($rs, 'class', 'method', $sql);
+    $errorMessage = ob_get_clean();
+    echo json_encode($errorMessage);
+}
+
+natcasesort($bgMembers);
+natcasesort($functionalMgrs);
+
+$leavers = array_diff($bgMembers,$functionalMgrs);
+$joiners = array_diff($functionalMgrs, $bgMembers);
+
+foreach ($joiners as $joiner){
+    var_dump("adding $joiner");
+    $res = BlueGroups::addMember('ODCRequests_FunctionalManagers', $joiner);    
+}
+
+
+$bgMembers = BlueGroups::listMembers('ODCRequests_FunctionalManagers');
+
+echo "<pre>";
+var_dump($bgMembers);
 
 
 
-</script>
 
 

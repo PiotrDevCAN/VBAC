@@ -53,3 +53,13 @@ alter table "VBAC_UT"."PERSON"
  alter table "ROB_DEV"."REQUESTABLE_ASSET_LIST"
  alter column "ASSET_TITLE"
  	  set NOT NULL;
+
+ 	  
+ 	  
+ 	  
+ 	  
+
+alter table "ROB_DEV"."PERSON"
+ add column "PMO_STATUS" char(15);
+
+ 	  
