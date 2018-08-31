@@ -111,38 +111,46 @@ class BlueMail
                 }
 
                 $responseObject = json_decode($resp);
-
-                $statusUrl = $responseObject->link[0]->href;
-                $status = self::getStatus($emailLogRecordID, $statusUrl);
-                $statusObject = json_decode($status);
-
-                if (! $asynchronous) {
-
-                    sleep(5);
-                    $prevStatus = $status;
-                    $status = self::getStatus($emailLogRecordID, $statusUrl, $prevStatus);
+                
+                if(is_object($responseObject)){
+                    $statusUrl = $responseObject->link[0]->href;
+                    $status = self::getStatus($emailLogRecordID, $statusUrl);
                     $statusObject = json_decode($status);
-                    $iteration = 0;
-                    $attempts = 0;
-
-                    $statusObjects = array();
-                    $statusObjects[] = $statusObject;
-
-                    while (! self::checkStatus($statusObjects) && ! $statusObject->locked) {
-                        if ($attempts ++ > 20) {
-                            throw new \Exception($attempts . " unsuccessful attempts to send email. Abandoning process");
-                        }
-                        $iteration = ++ $iteration < 10 ? $iteration : 9; // wait a little longer each time up till 50 seconds wait. so if they are busy we're not hitting too frequently
-                        $response = self::resend($emailLogRecordID, $responseObject->link[1]->href);
+                    
+                    if (! $asynchronous) {
+                        
+                        sleep(5);
                         $prevStatus = $status;
-
-                        $responseObject = json_decode($response);
-                        $statusUrl = $responseObject->link[0]->href;
-                        $status = self::getStatus($emailLogRecordID, $statusUrl);
+                        $status = self::getStatus($emailLogRecordID, $statusUrl, $prevStatus);
                         $statusObject = json_decode($status);
+                        $iteration = 0;
+                        $attempts = 0;
+                        
+                        $statusObjects = array();
                         $statusObjects[] = $statusObject;
-                        sleep(5 + $iteration * 5);
+                        
+                        while (! self::checkStatus($statusObjects) && ! $statusObject->locked) {
+                            if ($attempts ++ > 20) {
+                                throw new \Exception($attempts . " unsuccessful attempts to send email. Abandoning process");
+                            }
+                            $iteration = ++ $iteration < 10 ? $iteration : 9; // wait a little longer each time up till 50 seconds wait. so if they are busy we're not hitting too frequently
+                            $response = self::resend($emailLogRecordID, $responseObject->link[1]->href);
+                            $prevStatus = $status;
+                            
+                            $responseObject = json_decode($response);
+                            $statusUrl = $responseObject->link[0]->href;
+                            $status = self::getStatus($emailLogRecordID, $statusUrl);
+                            $statusObject = json_decode($status);
+                            $statusObjects[] = $statusObject;
+                            sleep(5 + $iteration * 5);
+                        }
                     }
+                    
+                    
+                    
+                } else {
+                    var_dump($resp);
+                    die('Call to bluemail has failed');
                 }
             break;
 
