@@ -1,6 +1,22 @@
+<script>
+
+function msieversion() {
+	alert ('checking browser');
+    var ua = window.navigator.userAgent;
+    var msie = ua.indexOf("MSIE ");
+
+    if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))  // If Internet Explorer, return version number
+    {
+        alert('vBAC is not supported by the IE Browser, please use Firefox, Chrome or Safari');
+        window.location.replace('../nopage/noPage.php');
+    }
+}
+msieversion();
+</script>
+
 <script type="text/javascript" src="itdq/java/form.js"></script>
-<script type="text/javascript" src="itdq/java/traceControlRecord.js"></script>
-<script type="text/javascript" src="itdq/java/bubbleChart.js"></script>
 <script type="text/javascript" src="itdq/java/sortableList.js"></script>
 <script type="text/javascript" src="itdq/java/emailLog.js"></script>
 <script type="text/javascript" src="itdq/java/auditRecord.js"></script>
+
+
