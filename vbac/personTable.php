@@ -311,10 +311,11 @@ class personTable extends DbTable {
         }
 
         if($_SESSION['isPes'] || $_SESSION['isPmo'] || $_SESSION['isFm'] || $_SESSION['isCdi']){
+            $row['PES_STATUS'] = '';
             switch (true) {
                 case $status == personRecord::PES_STATUS_NOT_REQUESTED:
-                    $row['PES_STATUS']  = "<button type='button' class='btn btn-default btn-xs btnPesInitiate accessRestrict accessPmo accessFm' ";
-                    $row['PES_STATUS']  .= "aria-label='Left Align' ";
+                    $row['PES_STATUS'] .= "<button type='button' class='btn btn-default btn-xs btnPesInitiate accessRestrict accessPmo accessFm' ";
+                    $row['PES_STATUS'] .= "aria-label='Left Align' ";
                     $row['PES_STATUS'] .= " data-cnum='" .$cnum . "' ";
                     $row['PES_STATUS'] .= " data-pesstatus='$status' ";
                     $row['PES_STATUS'] .= " > ";
@@ -322,25 +323,37 @@ class personTable extends DbTable {
                     $row['PES_STATUS'] .= "</button>&nbsp;";
                     $row['PES_STATUS'] .= $status;
                     break;
+                case $status == personRecord::PES_STATUS_INITIATED && $_SESSION['isPes'] ;
+                     $country = $row['COUNTRY'];
+                     $intExt = stripos($row['EMAIL_ADDRESS'], 'ibm.com') !== false ? 'Internal' : 'External';
+                    
+                     $row['PES_STATUS'] .= "<button type='button' class='btn btn-default btn-xs btnPesConfirm accessRestrict accessPmo accessFm' ";
+                     $row['PES_STATUS'] .= "aria-label='Left Align' ";
+                     $row['PES_STATUS'] .= " data-cnum='" .$cnum . "' ";
+                     $row['PES_STATUS'] .= " data-pesstatus='$status' ";
+                     $row['PES_STATUS'] .= " data-country='$country' ";
+                     $row['PES_STATUS'] .= " data-intext='$intExt' ";
+                     $row['PES_STATUS'] .= " > ";
+                     $row['PES_STATUS'] .= "<span class='glyPesInitiate glyphicon glyphicon-send ' aria-hidden='true'></span>";
+                     $row['PES_STATUS'] .= "</button>&nbsp;";
                 case $status == personRecord::PES_STATUS_CLEARED_PERSONAL && $_SESSION['isPes'] :
                 case $status == personRecord::PES_STATUS_CLEARED && $_SESSION['isPes'] :
                 case $status == personRecord::PES_STATUS_EXCEPTION && $_SESSION['isPes'] :
                 case $status == personRecord::PES_STATUS_DECLINED && $_SESSION['isPes'] ;
                 case $status == personRecord::PES_STATUS_FAILED && $_SESSION['isPes'] ;
-                case $status == personRecord::PES_STATUS_INITIATED && $_SESSION['isPes'] ;
                 case $status == personRecord::PES_STATUS_REMOVED && $_SESSION['isPes'] ;
-                $row['PES_STATUS']  = "<button type='button' class='btn btn-default btn-xs btnPesStatus' aria-label='Left Align' ";
-                $row['PES_STATUS'] .= " data-cnum='" .$cnum . "' ";
-                $row['PES_STATUS'] .= " data-notesid='" . $notesId . "' ";
-                $row['PES_STATUS'] .= " data-email='" . $email . "' ";
-                $row['PES_STATUS'] .= " data-pesdaterequested='" .trim($row['PES_DATE_REQUESTED']) . "' ";
-                $row['PES_STATUS'] .= " data-pesrequestor='" .trim($row['PES_REQUESTOR']) . "' ";
-                $row['PES_STATUS'] .= " data-pesstatus='" .$status . "' ";
-                $row['PES_STATUS'] .= " > ";
-                $row['PES_STATUS'] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
-                $row['PES_STATUS'] .= "</button>&nbsp;";
-                $row['PES_STATUS'] .= $status;
-                break;
+                    $row['PES_STATUS'] .= "<button type='button' class='btn btn-default btn-xs btnPesStatus' aria-label='Left Align' ";
+                    $row['PES_STATUS'] .= " data-cnum='" .$cnum . "' ";
+                    $row['PES_STATUS'] .= " data-notesid='" . $notesId . "' ";
+                    $row['PES_STATUS'] .= " data-email='" . $email . "' ";
+                    $row['PES_STATUS'] .= " data-pesdaterequested='" .trim($row['PES_DATE_REQUESTED']) . "' ";
+                    $row['PES_STATUS'] .= " data-pesrequestor='" .trim($row['PES_REQUESTOR']) . "' ";
+                    $row['PES_STATUS'] .= " data-pesstatus='" .$status . "' ";
+                    $row['PES_STATUS'] .= " > ";
+                    $row['PES_STATUS'] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
+                    $row['PES_STATUS'] .= "</button>&nbsp;";
+                    $row['PES_STATUS'] .= $status;
+                    break;
                 default:
                     break;
             }

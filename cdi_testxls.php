@@ -90,7 +90,7 @@ switch (true) {
                                ,array('filename'=>'Overseas Consent Form Owens (2).pdf','content_type'=>'application/pdf','data'=>$encodedConsentForm)
         );
         break; 
-    case $intExt=='Internal' && $country=='core_4':
+    case $country=='core_4':
         include_once 'emailBodies/Internal_core_4.php';
         $emailBody = preg_replace($pesEmailPattern, $replacements, $pesEmail);
         $encodedApplicationForm = getLloydsGlobalApplicationForm();
@@ -98,7 +98,7 @@ switch (true) {
         );
         break; 
     case $intExt=='Internal' && $country=='India':
-        include_once 'emailBodies/Internal_India.php';
+        include_once 'emailBodies/' . $intExt . '_India.php';
         $emailBody = preg_replace($pesEmailPattern, $replacements, $pesEmail);
         $encodedApplicationForm = getLloydsGlobalApplicationForm();
         $encodedXlsAttachment = getOdcApplicationForm();
@@ -115,8 +115,8 @@ switch (true) {
                                ,array('filename'=>'Overseas Consent Form Owens (2).pdf','content_type'=>'application/pdf','data'=>$encodedConsentForm)
         );
         break;
-    case $intExt=='Internal' && $country=='International_with_Criminal_Check':
-        include_once 'emailBodies/Internal_International_with_Criminal_Check.php';
+    case $intExt=='Internal' && $country=='International_Credit_Check':
+        include_once 'emailBodies/Internal_International_Credit_Check.php';
         $emailBody = preg_replace($pesEmailPattern, $replacements, $pesEmail);
         $encodedApplicationForm = getLloydsGlobalApplicationForm();
         $encodedConsentForm = getOverseasConsentForm();
