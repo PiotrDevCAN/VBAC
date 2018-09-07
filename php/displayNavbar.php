@@ -176,9 +176,10 @@ $(document).ready(function () {
     <?=!empty($isUser) ? '$("#userLevel").html("User' . $requestor . '&nbsp;' . $rep . '");console.log("user");' : null;?>
 
     <?=!empty($isFm)   ? '$("#userLevel").html("Func.Mgr.' . $requestor . '&nbsp;' . $rep . '");console.log("fm");' : null;?>
+    <?=!empty($isRes)  ? '$("#userLevel").html("Req' . $requestor . '&nbsp;' . $rep . '");console.log("req");' : null;?>
     <?=!empty($isPmo)  ? '$("#userLevel").html("PMO' . $requestor . '&nbsp;' . $rep . '");console.log("pmo");' : null;?>
     <?=!empty($isCdi)  ? '$("#userLevel").html("CDI' . $requestor . '&nbsp;' . $rep . '");console.log("cdi");' : null;?>
-    <?=!empty($isRes)  ? '$("#userLevel").html("Req' . $requestor . '&nbsp;' . $rep . '");console.log("req");' : null;?>
+
     
     var poContent = $('#<?=$plannedOutagesId?> a').html();
 	var badgedContent = poContent + "&nbsp;" + "<?=$plannedOutages->getBadge();?>";
