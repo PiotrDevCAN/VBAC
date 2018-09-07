@@ -73,6 +73,8 @@ class personRecord extends DbRecord
     protected $RF_Start;
     protected $RF_End;
     
+    protected $PMO_STATUS;
+    
     protected $person_bio;
 
 
@@ -101,6 +103,9 @@ class personRecord extends DbRecord
 
     const SECURITY_EDUCATION_COMPLETED = 'Yes';
     const SECURITY_EDUCATION_NOT_COMPLETED = 'No';
+    
+    const PMO_STATUS_CONFIRMED = 'Confirmed';
+    const PMO_STATUS_AWARE     = 'Aware';
 
     public static $employeeTypeMapping = array('A'=>'Regular','B'=>'Contractor','C'=>'Contractor','I'=>'Regular','L'=>'Regular','O'=>'Regular','P'=>'Regular','V'=>'Contractor','X'=>'Regular');
 

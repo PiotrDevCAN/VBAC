@@ -59,7 +59,7 @@ alter table "VBAC_UT"."PERSON"
  	  
  	  
 
-alter table "ROB_DEV"."PERSON"
+alter table "VBAC"."PERSON"
  add column "PMO_STATUS" char(15);
 
  	  

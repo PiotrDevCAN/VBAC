@@ -58,5 +58,6 @@ $(document).ready(function(){
 	person.listenForOffBoardingCompleted();
 	person.listenForBtnOffboarding();
 	person.listenForClearCtid();
+	person.listenForSetPmoStatus();
 });
 </script>

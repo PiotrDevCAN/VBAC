@@ -260,8 +260,33 @@ class personTable extends DbTable {
         $revalidationStatus = trim($row['REVALIDATION_STATUS']);
         $ctid = trim($row['CT_ID']);
 
-
-
+        // PMO_STATUS
+        if($_SESSION['isPmo'] || $_SESSION['isCdi']){
+            // depending on what the current status is - well give buttons to set to "Confirmed" or "Aware";
+            $pmoStatus = trim($row['PMO_STATUS']);
+            $pmoStatus = empty($pmoStatus) ? 'To be assessed' : $pmoStatus;   
+            $row['PMO_STATUS']  = "";
+            
+            if($pmoStatus=='To be assessed' || $pmoStatus==personRecord::PMO_STATUS_AWARE){
+                $row['PMO_STATUS'] .= "<button type='button' class='btn btn-default btn-xs btnSetPmoStatus' aria-label='Left Align' ";
+                $row['PMO_STATUS'] .= "data-cnum='" .$cnum . "' ";
+                $row['PMO_STATUS'] .= "data-setpmostatusto='" .personRecord::PMO_STATUS_CONFIRMED . "' ";
+                $row['PMO_STATUS'] .= " > ";
+                $row['PMO_STATUS'] .= "<span class='glyphicon glyphicon-thumbs-up ' aria-hidden='true'></span>";
+                $row['PMO_STATUS'] .= " </button> ";
+            }
+            
+            if($pmoStatus=='To be assessed' || $pmoStatus==personRecord::PMO_STATUS_CONFIRMED){
+                $row['PMO_STATUS'] .= "<button type='button' class='btn btn-default btn-xs btnSetPmoStatus' aria-label='Left Align' ";
+                $row['PMO_STATUS'] .= "data-cnum='" .$cnum . "' ";
+                $row['PMO_STATUS'] .= "data-setpmostatusto='" .personRecord::PMO_STATUS_AWARE . "' ";
+                $row['PMO_STATUS'] .= " > ";
+                $row['PMO_STATUS'] .= "<span class='glyphicon glyphicon-thumbs-down ' aria-hidden='true'></span>";
+                $row['PMO_STATUS'] .= " </button> ";                
+            }           
+           
+            $row['PMO_STATUS'] .= "&nbsp;" . $pmoStatus;
+        }
 
         // FM_MANAGER_FLAG
         if($_SESSION['isPmo'] || $_SESSION['isCdi']){
@@ -422,6 +447,35 @@ class personTable extends DbTable {
         return true;
 
     }
+    
+    function setPmoStatus($cnum=null,$status=null,$requestor=null){
+        if(!$cnum){
+            throw new \Exception('No CNUM provided in ' . __METHOD__);
+        }
+        
+        $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql .= " SET PMO_STATUS='" . db2_escape_string($status)  . "' ";
+        $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
+        
+        
+        echo $sql;
+        
+        try {
+            $result = db2_exec($_SESSION['conn'], $sql);
+        } catch (\Exception $e) {
+            var_dump($e);
+        }
+        
+        if(!$result){
+            DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+        
+        AuditTable::audit("PMO Status for cnum: $cnum set to : $status by " . $_SESSION['ssoEmail'], AuditTable::RECORD_TYPE_AUDIT );
+        return true;
+        
+    }
+    
 
     function saveCtid($cnum,$ctid){
         $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;

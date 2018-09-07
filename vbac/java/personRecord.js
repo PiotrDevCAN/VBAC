@@ -437,6 +437,28 @@ function personRecord() {
 
     });
   },
+  
+  
+  this.listenForSetPmoStatus = function(){
+	  $(document).on('click','.btnSetPmoStatus', function(e){
+		  console.log('listenForSetPmoStatus');
+		  $(this).addClass('spinning');
+		  var cnum = $(this).data('cnum');
+		  var setpmostatusto = $(this).data('setpmostatusto');
+		  $.ajax({
+		        url: "ajax/setPmoStatus.php",
+		        type: 'POST',
+		        data : {cnum: cnum,
+		      	      setpmostatusto: setpmostatusto },
+		        success: function(result){
+		      	  console.log(result);
+		      	  var resultObj = JSON.parse(result);
+		      	  personRecord.table.ajax.reload();
+		        }
+		    });
+	    });
+	  },
+  
 
   this.fetchBluepagesDetailsForCnum = function(cnum){
     console.log(cnum);
@@ -1004,9 +1026,10 @@ function personRecord() {
                       { "data": "CIO_ALIGNMENT", "defaultContent": "" },
                       { "data": "PRE_BOARDED", "defaultContent": "" },
                       { "data": "SECURITY_EDUCATION", "defaultContent": "" },
+                      { "data": "PMO_STATUS", "defaultContent": "" },
                   ],
           columnDefs: [
-                         { "visible": false, "targets": [1,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,26,27,28,29,30,31,32,33,34] }
+                         { "visible": false, "targets": [1,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,26,27,28,29,30,31,32,33,34,35,36] }
                   ] ,
 //	        colReorder: {
 //	            order: [ 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34]
@@ -1093,7 +1116,6 @@ function personRecord() {
     	$.fn.dataTableExt.afnFiltering.pop();
     	personRecord.table.columns().visible(false,false);
     	personRecord.table.columns([5,21,22,23,25,27,34]).visible(true);
-    	console.log(personRecord.table);
     	personRecord.table.order([21,'desc'],[5,"asc"]).draw();
       });
   },
@@ -1111,7 +1133,7 @@ function personRecord() {
     	$('#portalTitle').text('Person Portal - Action Mode');
     	$.fn.dataTableExt.afnFiltering.pop();
     	personRecord.table.columns().visible(false,false);
-    	personRecord.table.columns([0,1,5,9,25]).visible(true);
+    	personRecord.table.columns([0,1,5,9,25,36]).visible(true);
     	personRecord.table.order([5,'asc']).draw();
       });
   },
@@ -1121,7 +1143,7 @@ function personRecord() {
     	$('#portalTitle').text('Person Portal - Revalidation Report');
     	$.fn.dataTableExt.afnFiltering.pop();
     	personRecord.table.columns().visible(false,false);
-    	personRecord.table.columns([5,8,15,16,26,27]).visible(true);
+    	personRecord.table.columns([5,8,15,16,26,27,36]).visible(true);
     	personRecord.table.search('').order([5,'asc']).draw();
     });
   },
@@ -1156,7 +1178,7 @@ function personRecord() {
 	    		});
 
 	      personRecord.table.columns().visible(false,false);
-	      personRecord.table.columns([5,8,11,12,16,27]).visible(true);
+	      personRecord.table.columns([5,8,11,12,16,27,36]).visible(true);
 	      personRecord.table.order([16,'asc'],[5,'asc']);
 
 	      personRecord.table.draw();
