@@ -2,6 +2,11 @@
 use vbac\allTables;
 use vbac\staticDataWorkstreamTable;
 
+if($_REQUEST['token']!= $token){
+    return;
+}
+
+
 
 switch ($_GET['data']) {
     case 'workstream':

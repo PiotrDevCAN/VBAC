@@ -2,6 +2,13 @@
 
 use vbac\allTables;
 
+
+if($_REQUEST['token']!= $token){
+    return;
+}
+
+
+
 $emailID = !empty($_GET['emailid']) ? $_GET['emailid'] : null;
 $notesId = !empty($_GET['notesid']) ? $_GET['notesid'] : null;
 $cnum    = !empty($_GET['cnum']) ? $_GET['cnum'] : null;

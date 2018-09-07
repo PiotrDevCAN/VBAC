@@ -4,6 +4,12 @@ use vbac\allTables;
 use vbac\personTable;
 use itdq\DbTable;
 
+if($_REQUEST['token']!= $token){
+    return;
+}
+
+
+
 $sql = " SELECT P.NOTES_ID  FROM " . $_SERVER['environment'] . "." . allTables::$PERSON . " AS P ";
 
 $sql.= " WHERE 1=1 AND trim(NOTES_ID) != ''  AND " . personTable::activePersonPredicate();

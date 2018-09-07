@@ -34,6 +34,10 @@ class BluePages {
 
 // 	    echo $urlTemplate;
 
+	    var_dump($urlTemplate);
+	    die('here');
+	    
+
 
 	    $ch = curl_init ( $urlTemplate );
 	    AuditTable::audit(__FUNCTION__ . ":" . print_r($urlTemplate,true),AuditTable::RECORD_TYPE_DETAILS);
@@ -605,6 +609,10 @@ class BluePages {
 	            $urlTemplate .= "(workloc=" . trim($loc) . ")";
 	        }
 	        $urlTemplate .= ").list/byJson?";
+	        
+	        var_dump($urlTemplate);
+	        die('here');
+	        
 
 	    $ch = curl_init ( $urlTemplate );
 	    curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, true );

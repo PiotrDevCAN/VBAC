@@ -1,5 +1,10 @@
 <?php
 
+if($_REQUEST['token']!= $token){
+    return;
+}
+
+
 $sql = "INSERT INTO " . $_SERVER['environment'] . ".FEB_TRAVEL_REQUEST_TEMPLATES ";
 $sql.= " (EMAIL_ADDRESS, TITLE, TEMPLATE) VALUES ('" . db2_escape_string($_GET['email_address']) . "','" .  db2_escape_string($_GET['title']) . "','" . db2_escape_string(print_r($_GET['template'],true)) . "') ";
 

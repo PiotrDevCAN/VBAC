@@ -10,9 +10,4 @@ include "splClassLoader.php";
 session_start();
 $token = 'soEkCfj8zGNDLZ8yXH2YJjpehd8ijzlS';
 $_SESSION['Db2Schema'] = $_SERVER['environment'];
-
-if($_GET['token']!= $token){
-    return;
-}
-
 include "connect.php";
