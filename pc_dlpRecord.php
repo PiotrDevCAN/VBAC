@@ -11,7 +11,7 @@ ob_start();
 <div class='col-sm-2'></div>
 <div class='col-sm-8'>
 <h2>Data Leakage Protection - DG&CB Licence Tracking</h2>
-<h5>Install DG&CB from :<a href='https://ibm.ent.box.com/s/bzzq07z0dj08exsudctkbwlgr1vwzcp7/folder/49286077657'>https://ibm.ent.box.com/s/bzzq07z0dj08exsudctkbwlgr1vwzcp7/folder/49286077657</a></h5>
+<h5>Install DG&CB from :<a href='http://ibm.biz/BdYzHY'>http://ibm.biz/BdYzHY</a></h5>
 </div>
 </div>
 
