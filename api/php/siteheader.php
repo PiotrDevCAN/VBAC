@@ -9,5 +9,5 @@ include "vendor/autoload.php";
 include "splClassLoader.php";
 session_start();
 $token = $_SERVER['api_token'];
-$_SESSION['Db2Schema'] = $_SERVER['environment'];
+$_SESSION['Db2Schema'] = strtoupper($_SERVER['environment']);
 include "connect.php";
