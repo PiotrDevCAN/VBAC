@@ -292,20 +292,22 @@ function dlp() {
 	  
 	  this.listenForApproveDlp = function(){
 			$(document).on('click','.btnDlpLicenseApprove', function(e){
-				Dlp.approveRejectDlp(e,'approved');
+				Dlp.approveRejectDlp($(this),'approved');
 			});
 	  },
 	  
 	  this.listenForRejectDlp = function(){
 			$(document).on('click','.btnDlpLicenseReject', function(e){
-				Dlp.approveRejectDlp(e,'rejected');
+				Dlp.approveRejectDlp($(this),'rejected');
 			});
 	  },
 			
 			
-	  this.approveRejectDlp = function(e, approveReject){
-		  var cnum = $(this).data('cnum');
-		  var hostname = $(this).data('hostname');				
+	  this.approveRejectDlp = function(button, approveReject){
+		  
+		  console.log(button);
+		  var cnum = $(button).data('cnum');
+		  var hostname = $(button).data('hostname');				
 		  $.ajax({
 			  url: "ajax/dlpApproveReject.php",
    		      data : { cnum: cnum,
