@@ -14,8 +14,10 @@ if ($helper->isCli()) {
 
 echo "<pre>";
 
-
 // Create new Spreadsheet object
+ini_set('memory_limit', '256M');
+
+
 $spreadsheet = new Spreadsheet();
 // Set document properties
 $spreadsheet->getProperties()->setCreator('vBAC')
