@@ -1,22 +1,199 @@
 <?php
+namespace vbac;
 
 use itdq\DbTable;
 use vbac\allTables;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use itdq\BlueMail;
 
 class pesEmail {
     
-    function determineInternalExternal($emailAddress){
-        $ibmEmail = stripos(strtolower($emailAddress), "ibm.com") !== false;
-        
-        return $ibmEmail ? 'internal' : 'external';
+    private function getLloydsGlobalApplicationForm(){
+        $filename = "./emailAttachments/Lloyds Global Application Form v1.4.doc";
+        $handle = fopen($filename, "r");
+        $applicationForm = fread($handle, filesize($filename));
+        fclose($handle);
+        $encodedApplicationForm = base64_encode($applicationForm);
+        return $encodedApplicationForm;
     }
     
-    function getEmailBody($emailAddress, $country){
-        $countryCodeTable = new DbTable(allTables::$STATIC_COUNTRY_CODES);
-        
-        $sql = ' SELECT '
-        
+    private function getOverseasConsentForm(){
+        $filename = "./emailAttachments/Overseas Consent Form Owens (2).pdf";
+        $handle = fopen($filename, "r");
+        $applicationForm = fread($handle, filesize($filename));
+        fclose($handle);
+        $encodedApplicationForm = base64_encode($applicationForm);
+        return $encodedApplicationForm;
     }
+    
+    private function getOdcApplicationForm(){
+        $inputFileName = './emailAttachments/ODC application form V2.0.xls';
+        
+        /** Load $inputFileName to a Spreadsheet Object  **/
+        $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($inputFileName);
+        
+        // $spreadsheet = new Spreadsheet();
+        // Set document properties
+        $spreadsheet->getProperties()->setCreator('vBAC')
+        ->setLastModifiedBy('vBAC')
+        ->setTitle('Ventus PES application generated from vBAC')
+        ->setSubject('Ventus PES application')
+        ->setDescription('Ventus PES application generated from vBAC')
+        ->setKeywords('office 2007 openxml php vbac tracker')
+        ->setCategory('testing 1 2 3');
+        
+        $spreadsheet->getActiveSheet()
+        ->getCell('C17')
+        ->setValue('Emp no. here');
+        
+        $spreadsheet->setActiveSheetIndex(0);
+        ob_clean();
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        ob_start();
+        $writer->save('php://output');
+        $xlsAttachment = ob_get_clean();
+        
+        $encodedXlsAttachment = base64_encode($xlsAttachment);
+        return $encodedXlsAttachment;
+    }
+    
+    
+    private function determineInternalExternal($emailAddress){
+        $ibmEmail = stripos(strtolower($emailAddress), "ibm.com") !== false;
+        
+        return $ibmEmail ? 'Internal' : 'External';
+    }
+    
+    private function getAttachments($intExt,$emailType){
+        switch (true) {
+            case $intExt=='External' && $emailType=='UK':
+                $encodedApplicationForm = $this->getLloydsGlobalApplicationForm();
+                $pesAttachments        = array(array('filename'=>'Lloyds Global Application Form v1.4.doc','content_type'=>'application/msword','data'=>$encodedApplicationForm)
+                );
+                break;
+            case $intExt=='Internal' && $emailType=='UK':
+                $encodedApplicationForm = $this->getLloydsGlobalApplicationForm();
+                $pesAttachments = array(array('filename'=>'Lloyds Global Application Form v1.4.doc','content_type'=>'application/msword','data'=>$encodedApplicationForm)
+                );
+                break;
+            case $intExt=='External' && $emailType=='India':
+                $encodedXlsAttachment = $this->getOdcApplicationForm();
+                $encodedApplicationForm = $this->getLloydsGlobalApplicationForm();
+                $pesAttachments = array(array('filename'=>'ODC application form V2.0.xlsx','content_type'=>'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','data'=>$encodedXlsAttachment)
+                    ,array('filename'=>'Lloyds Global Application Form v1.4.doc','content_type'=>'application/msword','data'=>$encodedApplicationForm)
+                );
+                break;
+            case $intExt=='Internal' && $emailType=='India':
+                $encodedApplicationForm = $this->getLloydsGlobalApplicationForm();
+                $encodedXlsAttachment = $this->getOdcApplicationForm();
+                $pesAttachments = array(array('filename'=>'Lloyds Global Application Form v1.4.doc','content_type'=>'application/msword','data'=>$encodedApplicationForm)
+                    ,array('filename'=>'ODC application form V2.0.xlsx','content_type'=>'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','data'=>$encodedXlsAttachment)
+                );
+                break;
+            case $emailType=='Czech':
+                $encodedApplicationForm = $this->getLloydsGlobalApplicationForm();
+                $pesAttachments = array(array('filename'=>'Lloyds Global Application Form v1.4.doc','content_type'=>'application/msword','data'=>$encodedApplicationForm)
+                );
+                break;
+            case $emailType=='USA':
+                $encodedConsentForm = $this->getOverseasConsentForm();
+                $encodedApplicationForm = $this->getLloydsGlobalApplicationForm();
+                $pesAttachments = array(array('filename'=>'Lloyds Global Application Form v1.4.doc','content_type'=>'application/msword','data'=>$encodedApplicationForm)
+                    ,array('filename'=>'Overseas Consent Form Owens (2).pdf','content_type'=>'application/pdf','data'=>$encodedConsentForm)
+                );
+                break;
+            case $emailType=='core_4':
+                $encodedApplicationForm = $this->getLloydsGlobalApplicationForm();
+                $pesAttachments = array(array('filename'=>'Lloyds Global Application Form v1.4.doc','content_type'=>'application/msword','data'=>$encodedApplicationForm)
+                );
+                break;
+            case $intExt=='Internal' && $emailType=='International_CRC':
+                $encodedApplicationForm = $this->getLloydsGlobalApplicationForm();
+                $encodedConsentForm = $this->getOverseasConsentForm();
+                $pesAttachments = array(array('filename'=>'Lloyds Global Application Form v1.4.doc','content_type'=>'application/msword','data'=>$encodedApplicationForm)
+                    ,array('filename'=>'Overseas Consent Form Owens (2).pdf','content_type'=>'application/pdf','data'=>$encodedConsentForm)
+                );
+                break;
+            case $intExt=='Internal' && $emailType=='International_Credit_Check':
+                $encodedApplicationForm = $this->getLloydsGlobalApplicationForm();
+                $encodedConsentForm = $this->getOverseasConsentForm();
+                $pesAttachments = array(array('filename'=>'Lloyds Global Application Form v1.4.doc','content_type'=>'application/msword','data'=>$encodedApplicationForm)
+                    ,array('filename'=>'Overseas Consent Form Owens (2).pdf','content_type'=>'application/pdf','data'=>$encodedConsentForm)
+                );
+                break;
+            default:
+                throw new \Exception('No matches found for ' . $intExt . ' and ' . $emailType);
+                ;
+                break;                
+        }
+        
+        return $pesAttachments;
+    }
+    
+    private function getEmailDetails($emailAddress, $country){
+        $countryCodeTable = new DbTable(allTables::$STATIC_COUNTRY_CODES);
+        $intExt = $this->determineInternalExternal($emailAddress);
+        
+        $sql = ' SELECT PES_EMAIL ';
+        $sql.= ' FROM ' . strtoupper($_SERVER['environment']) . "." . allTables::$STATIC_COUNTRY_CODES;
+        $sql.= " WHERE  upper(country_name)= '" . db2_escape_string(strtoupper($country)) . "' ";
+        
+        $rs = db2_exec($_SESSION['conn'], $sql);
+        
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+        
+        $row = db2_fetch_assoc($rs);
+        
+        $pesEmail = trim($row['PES_EMAIL']);
+        
+        if(empty($pesEmail)){
+            throw new \Exception('PES_EMAIL not defined for country : ' . $country);           
+        }
+        
+        $results = preg_split('/[-.]/', $pesEmail);
+        
+        $locationType = $results[0];
+        $emailType  = isset($results[1]) ? $results[1] : null;
+        
+        switch ($locationType) {
+            case 'xxx':
+                // Need to know if Internal or External
+                
+                $pesEmailBodyFilename = $intExt . "-" . $emailType . ".php";
+            break;
+            case 'unknown':
+                throw new \Exception('No email defined for ' . $country);
+                break;
+            default:
+                // We don't need to further clarify the PES EMAIL Body file;
+                $pesEmailBodyFilename = $pesEmail; 
+            break;
+        }
+        
+        
+        $attachments = $this->getAttachments($intExt, $emailType);
+        
+        return array('filename'=> $pesEmailBodyFilename, 'attachments'=>$attachments);
+    }
+    
+    
+    function sendPesEmail($firstName, $lastName, $emailAddress, $country ){
+        $emailDetails = $this->getEmailDetails($emailAddress, $country);
+        $emailBodyFileName = $emailDetails['filename'];
+        $pesAttachments = $emailDetails['attachments'];
+        $replacements = array($firstName);
+        
+        include_once 'emailBodies/' . $emailBodyFileName;
+        $emailBody = preg_replace($pesEmailPattern, $replacements, $pesEmail);
+        
+        $sendResponse = BlueMail::send_mail(array('rob.daniel@uk.ibm.com'), "NEW URGENT - Pre Employment Screening - $firstName, $lastName>", $emailBody,'LBGVETPR@uk.ibm.com',array(),array(),false,$pesAttachments);
+//         return $sendResponse;
+    }
+    
     
     
 }
