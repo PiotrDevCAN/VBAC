@@ -196,7 +196,7 @@ class pesEmail {
         $emailBody = preg_replace($pesEmailPattern, $replacements, $pesEmail);
         
         $sendResponse = BlueMail::send_mail(array('rob.daniel@uk.ibm.com'), "NEW URGENT - Pre Employment Screening - $firstName, $lastName>", $emailBody,'LBGVETPR@uk.ibm.com',array(),array(),false,$pesAttachments);
-//         return $sendResponse;
+        return $sendResponse;
     }
     
     

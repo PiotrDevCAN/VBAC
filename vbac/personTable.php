@@ -328,14 +328,29 @@ class personTable extends DbTable {
                      $firstName    = trim($row['FIRST_NAME']);
                      $lastName     = trim($row['LAST_NAME']);
                      $country      = trim($row['COUNTRY']);
+                     
+                     $missing = !empty($emailAddress) ? '' : ' Email Address';
+                     $missing.= !empty($firstName) ? '' : ' First Name';
+                     $missing.= !empty($lastName) ? '' : ' Last Name';
+                     $missing.= !empty($country) ? '' : ' Country';
+                     
+                     $valid = empty(trim($missing));
+                     
+                     $disabled = $valid ? '' : 'disabled';
+                     $tooltip = $valid ? 'Confirm PES Email details' : "Missing $missing";
+                     
+                     
                      $row['PES_STATUS'] .= "<button type='button' class='btn btn-default btn-xs btnSendPesEmail accessRestrict accessPmo accessFm' ";
                      $row['PES_STATUS'] .= "aria-label='Left Align' ";
                      $row['PES_STATUS'] .= " data-emailaddress='$emailAddress' ";
                      $row['PES_STATUS'] .= " data-firstname='$firstName' ";
                      $row['PES_STATUS'] .= " data-lastname='$lastName' ";
                      $row['PES_STATUS'] .= " data-country='$country' ";
+                     $row['PES_STATUS'] .= " data-toggle='tooltip' data-placement='top' title='$tooltip'";
+                     $row['PES_STATUS'] .= " $disabled  ";
                      $row['PES_STATUS'] .= " > ";
-                     $row['PES_STATUS'] .= "<span class='glyphicon glyphicon-send ' aria-hidden='true'></span>";
+                     $row['PES_STATUS'] .= "<span class='glyphicon glyphicon-send ' aria-hidden='true' ></span>";
+ 
                      $row['PES_STATUS'] .= "</button>&nbsp;";
                 case $status == personRecord::PES_STATUS_CLEARED_PERSONAL && $_SESSION['isPes'] :
                 case $status == personRecord::PES_STATUS_CLEARED && $_SESSION['isPes'] :

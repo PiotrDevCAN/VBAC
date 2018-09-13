@@ -165,6 +165,7 @@ function personRecord() {
 			           var resultObj = JSON.parse(result);
 			           if(resultObj.success==true){
 			   			$('#pesEmailFirstName').val(data.firstname);
+			   			$('#pesEmailLastName').val(data.lastname);
 						$('#pesEmailAddress').val(data.emailaddress);
 						$('#pesEmailCountry').val(data.country);
 						$('#pesEmailFilename').val(resultObj.filename);
@@ -186,35 +187,25 @@ function personRecord() {
   
   this.listenforConfirmSendPesEmail = function(){ 
 		$(document).on('click','#confirmSendPesEmail', function(e){
-			   console.log(this);
-				var data = $(this).data();
-				console.log(data);
+			$('#confirmSendPesEmail').addClass('spinning');
+   			var firstname = $('#pesEmailFirstName').val();
+   			var lastname = $('#pesEmailLastName').val();
+			var emailAddress = $('#pesEmailAddress').val();
+			var country = $('#pesEmailCountry').val();
 			   $.ajax({
 				   url: "ajax/sendPesEmail.php",
 			       type: 'POST',
-			       data : {emailaddress:data.emailaddress,
-			    	   	   firstname:data.firstname,
-			    	       lastname:data.lastname,
-			    	       country:data.country,
+			       data : {emailaddress:emailAddress,
+			    	   	   firstname:firstname,
+			    	       lastname:lastname,
+			    	       country:country
 			    	       },
 			       success: function(result){
-			    	   personRecord.table.ajax.reload();
-			           console.log(result);
-			           var resultObj = JSON.parse(result);
+			    	   $('#confirmSendPesEmail').removeClass('spinning');
+			    	   var resultObj = JSON.parse(result);			           
 			           if(resultObj.success==true){
-			        	   var message = "<div class=panel-heading><h3 class=panel-title>Success</h3>";
-			               message += "<br/><h4>PES Initiation Email with attachments - Sent</h4></br>";
-			               $('#confirmOffboardingModal  .panel').html(message);
-			               $('#confirmOffboardingModal  .panel').addClass('panel-success');
-			               $('#confirmOffboardingModal  .panel').removeClass('panel-danger');
-			             } else {
-				           var message = "<div class=panel-heading><h3 class=panel-title>Failure</h3>";
-				           message += "<br/><h4>Offboarding has <b>NOT</b> been STOPPED</h4></br>";
-			               $('#confirmOffboardingModal  .panel').html(message);
-			               $('#confirmOffboardingModal  .panel').addClass('panel-danger');
-			               $('#confirmOffboardingModal  .panel').removeClass('panel-success');
-			             };
-	                	 $('#confirmOffboardingModal').modal('show');
+			        	   $('#confirmSendPesEmailModal').modal('hide');
+			           }
 			       }
 			   });
 			});	  
