@@ -1029,6 +1029,61 @@ You are able to amend the Functional Manager of people assigned to you but who n
       </div>
     <?php
     }
+    
+    function confirmSendPesEmailModal(){
+        ?>
+       <!-- Modal -->
+    <div id="confirmSendPesEmailModal" class="modal fade" role="dialog">
+          <div class="modal-dialog">
+          <div class="modal-content">
+          <div class="modal-header">
+             <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Confirm PES Email Details</h4>
+            </div>
+             <div class="modal-body" >
+             <div class="panel panel-default">
+  <div class="panel-heading">Applicant Details</div>
+  <div class="panel-body">
+  <form>
+  <div class="form-group">
+    <label for="pesEmailAddress">Email address</label>
+    <input type="text" class="form-control" id="pesEmailAddress" name="pesEmailAddress" disabled >
+  </div>
+  <div class="form-group">
+    <label for="pesEmailCountry">Country</label>
+    <input type="text" class="form-control" id="pesEmailCountry" name="pesEmailCountry" disabled >
+  </div>
+  <div class="form-group">
+    <label for="pesEmailFilename">Filename</label>
+    <input type="text" class="form-control" id="pesEmailFilename" name="pesEmailFilename" disabled >
+  </div>
+
+  <div class="form-group">
+    <label for="pesEmailAttachments">Attachments</label>
+    <textarea class="form-control" id="pesEmailAttachments" name="pesEmailAttachments" disabled ></textarea>
+  </div>
+
+
+
+</form>
+</div>
+</div>
+            </div>
+             <div class='modal-footer'>
+                    <?php
+                    $allButtons = null;
+                    $submitButton = $this->formButton('submit','confirmSendPesEmail','confirmSendPesEmail',null,'Confirm','btn-primary');
+                    $allButtons[] = $submitButton;
+                    $this->formBlueButtons($allButtons);
+                    ?>             
+              <button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
+             </div>
+            </div>
+        </div>
+      </div>
+    <?php
+    }
+    
 
 
     function portalReportSaveModal(){

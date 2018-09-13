@@ -10,7 +10,7 @@ use itdq\BlueMail;
 class pesEmail {
     
     private function getLloydsGlobalApplicationForm(){
-        $filename = "./emailAttachments/Lloyds Global Application Form v1.4.doc";
+        $filename = "../emailAttachments/Lloyds Global Application Form v1.4.doc";
         $handle = fopen($filename, "r");
         $applicationForm = fread($handle, filesize($filename));
         fclose($handle);
@@ -19,7 +19,7 @@ class pesEmail {
     }
     
     private function getOverseasConsentForm(){
-        $filename = "./emailAttachments/Overseas Consent Form Owens (2).pdf";
+        $filename = "../emailAttachments/Overseas Consent Form Owens (2).pdf";
         $handle = fopen($filename, "r");
         $applicationForm = fread($handle, filesize($filename));
         fclose($handle);
@@ -28,7 +28,7 @@ class pesEmail {
     }
     
     private function getOdcApplicationForm(){
-        $inputFileName = './emailAttachments/ODC application form V2.0.xls';
+        $inputFileName = '../emailAttachments/ODC application form V2.0.xls';
         
         /** Load $inputFileName to a Spreadsheet Object  **/
         $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($inputFileName);
@@ -131,7 +131,7 @@ class pesEmail {
         return $pesAttachments;
     }
     
-    private function getEmailDetails($emailAddress, $country){
+    function getEmailDetails($emailAddress, $country){
         $countryCodeTable = new DbTable(allTables::$STATIC_COUNTRY_CODES);
         $intExt = $this->determineInternalExternal($emailAddress);
         
@@ -177,7 +177,12 @@ class pesEmail {
         
         $attachments = $this->getAttachments($intExt, $emailType);
         
-        return array('filename'=> $pesEmailBodyFilename, 'attachments'=>$attachments);
+        foreach ($attachments as $attachment) {
+            $attachmentFileNames[] = $attachment['filename'];
+        }
+        
+        
+        return array('filename'=> $pesEmailBodyFilename, 'attachments'=>$attachments, 'attachmentFileNames'=> $attachmentFileNames,'emailType'=>$emailType,'splitResults'=>$results);
     }
     
     

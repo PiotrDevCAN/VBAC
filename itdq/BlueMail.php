@@ -105,12 +105,13 @@ class BlueMail
                 curl_setopt($ch, CURLOPT_POSTFIELDS,$data_json);
 
                 $resp = curl_exec($ch);
-
+                
                 if ($emailLogRecordID) {
                     self::updatelog($emailLogRecordID, $resp);
                 }
 
                 $responseObject = json_decode($resp);
+               
                 
                 if(is_object($responseObject)){
                     $statusUrl = $responseObject->link[0]->href;
@@ -118,7 +119,7 @@ class BlueMail
                     $statusObject = json_decode($status);
                     
                     if (! $asynchronous) {
-                        
+                       
                         sleep(5);
                         $prevStatus = $status;
                         $status = self::getStatus($emailLogRecordID, $statusUrl, $prevStatus);
@@ -150,7 +151,7 @@ class BlueMail
                     
                 } else {
                     var_dump($resp);
-                    die('Call to bluemail has failed');
+                    throw new \Exception('Call to bluemail has failed.See above for response.');
                 }
             break;
 
@@ -176,7 +177,6 @@ class BlueMail
     static function checkStatus(array $statusObjects){
         $status = false;
         foreach ($statusObjects as $statusObject){
-            print_r($statusObject);
             if($statusObject->status){
                 $status = true;
                 break;

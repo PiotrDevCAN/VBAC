@@ -29,6 +29,7 @@ $person->editPersonModal();
 $person->portalReportSaveModal();
 $person->confirmChangeFmFlagModal();
 $person->confirmOffboardingModal();
+$person->confirmSendPesEmailModal();
 ?>
 
 <script>
@@ -59,5 +60,7 @@ $(document).ready(function(){
 	person.listenForBtnOffboarding();
 	person.listenForClearCtid();
 	person.listenForSetPmoStatus();
+	person.listenforSendPesEmail();
+	person.listenforConfirmSendPesEmail();
 });
 </script>

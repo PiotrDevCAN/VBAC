@@ -324,17 +324,18 @@ class personTable extends DbTable {
                     $row['PES_STATUS'] .= $status;
                     break;
                 case $status == personRecord::PES_STATUS_INITIATED && $_SESSION['isPes'] ;
-                     $country = $row['COUNTRY'];
-                     $intExt = stripos($row['EMAIL_ADDRESS'], 'ibm.com') !== false ? 'Internal' : 'External';
-                    
-                     $row['PES_STATUS'] .= "<button type='button' class='btn btn-default btn-xs btnPesConfirm accessRestrict accessPmo accessFm' ";
+                     $emailAddress = trim($row['EMAIL_ADDRESS']);
+                     $firstName    = trim($row['FIRST_NAME']);
+                     $lastName     = trim($row['LAST_NAME']);
+                     $country      = trim($row['COUNTRY']);
+                     $row['PES_STATUS'] .= "<button type='button' class='btn btn-default btn-xs btnSendPesEmail accessRestrict accessPmo accessFm' ";
                      $row['PES_STATUS'] .= "aria-label='Left Align' ";
-                     $row['PES_STATUS'] .= " data-cnum='" .$cnum . "' ";
-                     $row['PES_STATUS'] .= " data-pesstatus='$status' ";
+                     $row['PES_STATUS'] .= " data-emailaddress='$emailAddress' ";
+                     $row['PES_STATUS'] .= " data-firstname='$firstName' ";
+                     $row['PES_STATUS'] .= " data-lastname='$lastName' ";
                      $row['PES_STATUS'] .= " data-country='$country' ";
-                     $row['PES_STATUS'] .= " data-intext='$intExt' ";
                      $row['PES_STATUS'] .= " > ";
-                     $row['PES_STATUS'] .= "<span class='glyPesInitiate glyphicon glyphicon-send ' aria-hidden='true'></span>";
+                     $row['PES_STATUS'] .= "<span class='glyphicon glyphicon-send ' aria-hidden='true'></span>";
                      $row['PES_STATUS'] .= "</button>&nbsp;";
                 case $status == personRecord::PES_STATUS_CLEARED_PERSONAL && $_SESSION['isPes'] :
                 case $status == personRecord::PES_STATUS_CLEARED && $_SESSION['isPes'] :

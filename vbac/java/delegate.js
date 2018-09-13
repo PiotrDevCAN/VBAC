@@ -62,7 +62,7 @@ function delegate() {
 					    	      delegateCnum: delegateCnum
 					    	    },
 					      success: function(result){
-					    	  $(this).removeClass('spinning');
+					    	  $('.btnDeleteDelegate').removeClass('spinning');
 					    	  var resultObj = JSON.parse(result);
 					    	  console.log(resultObj);
 					    	  delegate.myDelegatesTable.ajax.reload();
