@@ -1,9 +1,24 @@
 <?php
 
 use vbac\pesEmail;
+use \Exception;
 ob_start();
 $pesEmailObj = new pesEmail();
-$emailDetails = $pesEmailObj->getEmailDetails($_GET['emailaddress'], $_GET['country']);
+
+
+try {
+    $emailDetails = $pesEmailObj->getEmailDetails($_GET['emailaddress'], $_GET['country']);
+} catch (Exception $e) {
+    switch ($e->getCode()) {
+        case 803:
+            $emailDetails['warning']['filename'] = 'No email exists for combination of Internal/External and Country';
+            echo "Warning";
+        break;
+        default:
+            var_dump($e);
+        break;
+    }
+}
 
 $messages = ob_get_clean();
 $success = strlen($messages)==0;

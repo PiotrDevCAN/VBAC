@@ -352,6 +352,7 @@ class personTable extends DbTable {
                      $row['PES_STATUS'] .= "<span class='glyphicon glyphicon-send ' aria-hidden='true' ></span>";
  
                      $row['PES_STATUS'] .= "</button>&nbsp;";
+                case $status == personRecord::PES_STATUS_REQUESTED && $_SESSION['isPes'] :
                 case $status == personRecord::PES_STATUS_CLEARED_PERSONAL && $_SESSION['isPes'] :
                 case $status == personRecord::PES_STATUS_CLEARED && $_SESSION['isPes'] :
                 case $status == personRecord::PES_STATUS_EXCEPTION && $_SESSION['isPes'] :
@@ -440,6 +441,15 @@ class personTable extends DbTable {
         $result =  self::setPesStatus($cnum,personRecord::PES_STATUS_INITIATED, $requestor);
         return $result;
     }
+    
+    function setPesEvidence($cnum=null, $requestor=null){
+        if(!$cnum){
+            throw new \Exception('No CNUM provided in ' . __METHOD__);
+        }
+        $requestor = empty($requestor) ? $_SESSION['ssoEmail'] : $requestor;
+        $result =  self::setPesStatus($cnum,personRecord::PES_STATUS_REQUESTED, $requestor);
+        return $result;
+    }
 
     function setPesStatus($cnum=null,$status=null,$requestor=null){
         if(!$cnum){
@@ -453,6 +463,9 @@ class personTable extends DbTable {
                 $requestor = empty($requestor) ? 'Unknown' : $requestor;
                 $dateField = 'PES_DATE_REQUESTED';
                 break;
+            case personRecord::PES_STATUS_REQUESTED:
+                $dateField = 'PES_DATE_EVIDENCE';
+                break;
             default:
                 $dateField = 'PES_DATE_RESPONDED';
             break;
@@ -462,19 +475,16 @@ class personTable extends DbTable {
         $sql .= empty($requestor) ? null : ", PES_REQUESTOR='" . db2_escape_string($requestor) . "' ";
         $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
+var_dump($sql);
+        
+        
+        $result = db2_exec($_SESSION['conn'], $sql);
 
-        try {
-            $result = db2_exec($_SESSION['conn'], $sql);
-        } catch (\Exception $e) {
-            var_dump($e);
-        }
-
-       if(!$result){
+        if(!$result){
            DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
            return false;
-       }
+        }
         return true;
-
     }
     
     function setPmoStatus($cnum=null,$status=null,$requestor=null){

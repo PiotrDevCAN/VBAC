@@ -164,21 +164,41 @@ function personRecord() {
 			           console.log(result);
 			           var resultObj = JSON.parse(result);
 			           if(resultObj.success==true){
-			   			$('#pesEmailFirstName').val(data.firstname);
-			   			$('#pesEmailLastName').val(data.lastname);
-						$('#pesEmailAddress').val(data.emailaddress);
-						$('#pesEmailCountry').val(data.country);
-						$('#pesEmailFilename').val(resultObj.filename);
-						 $('#pesEmailAttachments').val(''); // clear it out the first time.
-						var arrayLength = resultObj.attachmentFileNames.length;
-						for (var i = 0; i < arrayLength; i++) {
-							var attachments = $('#pesEmailAttachments').val();
-							$('#pesEmailAttachments').val(resultObj.attachmentFileNames[i] + "\n" + attachments);
-						}
-						
-				        $('#confirmSendPesEmailModal').modal('show');
+			   				$('#pesEmailFirstName').val(data.firstname);
+			   				$('#pesEmailLastName').val(data.lastname);
+			   				$('#pesEmailAddress').val(data.emailaddress);
+			   				$('#pesEmailCountry').val(data.country);
+			   				$('#pesEmailFilename').val(resultObj.filename);
+			   				$('#pesEmailFilename').css('background-color','#eeeeee');
+			   				$('#pesEmailAttachments').val(''); // clear it out the first time.
+			   				var arrayLength = resultObj.attachmentFileNames.length;
+			   				for (var i = 0; i < arrayLength; i++) {
+			   					var attachments = $('#pesEmailAttachments').val();
+			   					$('#pesEmailAttachments').val(resultObj.attachmentFileNames[i] + "\n" + attachments);
+			   				}		
+			   				$('#confirmSendPesEmail').prop('disabled',false);
+			   				$('#confirmSendPesEmailModal').modal('show');
 			             } else {
-
+			            	 $('#confirmSendPesEmail').prop('disabled',true);
+					   		 $('#pesEmailFirstName').val(data.firstname);
+					   		 $('#pesEmailLastName').val(data.lastname);
+							 $('#pesEmailAddress').val(data.emailaddress);
+							 $('#pesEmailCountry').val(data.country);
+							 $('#pesEmailAttachments').val(''); // clear it out the first time.
+							 if(resultObj.attachmentFileNames){
+					   			var arrayLength = resultObj.attachmentFileNames.length;
+					   			for (var i = 0; i < arrayLength; i++) {
+					   				var attachments = $('#pesEmailAttachments').val();
+					   				$('#pesEmailAttachments').val(resultObj.attachmentFileNames[i] + "\n" + attachments);
+					   			}									 
+							 }							 
+							 if(resultObj.warning.filename){
+								 $('#pesEmailFilename').val(resultObj.warning.filename);	
+								 $('#pesEmailFilename').css('background-color','red');
+							 };
+							 
+							
+							 $('#confirmSendPesEmailModal').modal('show');
 			             };
 			       }
 			   });	
@@ -203,10 +223,9 @@ function personRecord() {
 			       success: function(result){
 			    	   $('#confirmSendPesEmail').removeClass('spinning');
 			    	   var resultObj = JSON.parse(result);			           
-			           if(resultObj.success==true){
-			        	   $('#confirmSendPesEmailModal').modal('hide');
-			           }
-			       }
+			    	   console.log(resultObj);
+			           $('#confirmSendPesEmailModal').modal('hide');
+			      }
 			   });
 			});	  
   },
@@ -1098,9 +1117,10 @@ function personRecord() {
                       { "data": "PRE_BOARDED", "defaultContent": "" },
                       { "data": "SECURITY_EDUCATION", "defaultContent": "" },
                       { "data": "PMO_STATUS", "defaultContent": "" },
+                      { "data": "PES_DATE_EVIDENCE", "defaultContent": "" },
                   ],
           columnDefs: [
-                         { "visible": false, "targets": [1,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,26,27,28,29,30,31,32,33,34,35,36] }
+                         { "visible": false, "targets": [1,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,26,27,28,29,30,31,32,33,34,35,36,37] }
                   ] ,
 //	        colReorder: {
 //	            order: [ 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34]
@@ -1186,7 +1206,7 @@ function personRecord() {
     	$('#portalTitle').text('Person Portal - PES Report');
     	$.fn.dataTableExt.afnFiltering.pop();
     	personRecord.table.columns().visible(false,false);
-    	personRecord.table.columns([5,21,22,23,25,27,34]).visible(true);
+    	personRecord.table.columns([5,21,22,23,25,27,34,37]).visible(true);
     	personRecord.table.order([21,'desc'],[5,"asc"]).draw();
       });
   },

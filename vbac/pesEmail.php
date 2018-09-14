@@ -6,6 +6,7 @@ use vbac\allTables;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use itdq\BlueMail;
+use \Exception;
 
 class pesEmail {
     
@@ -123,7 +124,8 @@ class pesEmail {
                 );
                 break;
             default:
-                throw new \Exception('No matches found for ' . $intExt . ' and ' . $emailType);
+                
+                throw new \Exception('No matches found for ' . $intExt . ' and ' . $emailType, 803);
                 ;
                 break;                
         }
@@ -151,7 +153,7 @@ class pesEmail {
         $pesEmail = trim($row['PES_EMAIL']);
         
         if(empty($pesEmail)){
-            throw new \Exception('PES_EMAIL not defined for country : ' . $country);           
+            throw new Exception('PES_EMAIL not defined for country : ' . $country,800);           
         }
         
         $results = preg_split('/[-.]/', $pesEmail);
@@ -166,14 +168,13 @@ class pesEmail {
                 $pesEmailBodyFilename = $intExt . "-" . $emailType . ".php";
             break;
             case 'unknown':
-                throw new \Exception('No email defined for ' . $country);
+                throw new Exception('No email defined for ' . $country, 801);
                 break;
             default:
                 // We don't need to further clarify the PES EMAIL Body file;
                 $pesEmailBodyFilename = $pesEmail; 
             break;
         }
-        
         
         $attachments = $this->getAttachments($intExt, $emailType);
         
@@ -187,16 +188,18 @@ class pesEmail {
     
     
     function sendPesEmail($firstName, $lastName, $emailAddress, $country ){
-        $emailDetails = $this->getEmailDetails($emailAddress, $country);
-        $emailBodyFileName = $emailDetails['filename'];
-        $pesAttachments = $emailDetails['attachments'];
-        $replacements = array($firstName);
-        
-        include_once 'emailBodies/' . $emailBodyFileName;
-        $emailBody = preg_replace($pesEmailPattern, $replacements, $pesEmail);
-        
-        $sendResponse = BlueMail::send_mail(array('rob.daniel@uk.ibm.com'), "NEW URGENT - Pre Employment Screening - $firstName, $lastName>", $emailBody,'LBGVETPR@uk.ibm.com',array(),array(),false,$pesAttachments);
-        return $sendResponse;
+
+            $emailDetails = $this->getEmailDetails($emailAddress, $country);
+            $emailBodyFileName = $emailDetails['filename'];
+            $pesAttachments = $emailDetails['attachments'];
+            $replacements = array($firstName);
+            
+            include_once 'emailBodies/' . $emailBodyFileName;
+            $emailBody = preg_replace($pesEmailPattern, $replacements, $pesEmail);
+            
+            $sendResponse = BlueMail::send_mail(array('rob.daniel@uk.ibm.com'), "NEW URGENT - Pre Employment Screening - $firstName, $lastName>", $emailBody,'LBGVETPR@uk.ibm.com',array(),array(),false,$pesAttachments);
+            return $sendResponse;       
+
     }
     
     

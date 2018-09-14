@@ -74,6 +74,7 @@ class personRecord extends DbRecord
     protected $RF_End;
     
     protected $PMO_STATUS;
+    protected $PES_DATE_EVIDENCE;
     
     protected $person_bio;
 
@@ -274,6 +275,7 @@ You are able to amend the Functional Manager of people assigned to you but who n
     const PES_STATUS_EXCEPTION = 'Exception';
     const PES_STATUS_FAILED    = 'Failed';
     const PES_STATUS_INITIATED = 'Initiated';
+    const PES_STATUS_REQUESTED = 'Evidence Requested';
     const PES_STATUS_REMOVED   = 'Removed';
 
 
@@ -963,6 +965,7 @@ You are able to amend the Functional Manager of people assigned to you but who n
                     <option value='<?=personRecord::PES_STATUS_EXCEPTION;?>'><?=personRecord::PES_STATUS_EXCEPTION?></option>
                     <option value='<?=personRecord::PES_STATUS_FAILED;?>'><?=personRecord::PES_STATUS_FAILED?></option>
                     <option value='<?=personRecord::PES_STATUS_INITIATED;?>'><?=personRecord::PES_STATUS_INITIATED?></option>
+                    <option value='<?=personRecord::PES_STATUS_REQUESTED;?>'><?=personRecord::PES_STATUS_REQUESTED?></option>
                     <option value='<?=personRecord::PES_STATUS_REMOVED;?>'><?=personRecord::PES_STATUS_REMOVED?></option>
                        </select>
                  </div>

@@ -36,7 +36,8 @@ CREATE TABLE "VBAC_UT"."PERSON" (
 		"CT_ID" CHAR(10),
 		"CIO_ALIGNMENT" CHAR(30),
 		"PRE_BOARDED" CHAR(9),
-		"SECURITY_EDUCATION" CHAR(3) default 'No'
+		"SECURITY_EDUCATION" CHAR(3) default 'No',
+		"PES_DATE_EVIDENCE" DATE
 	)
 	DATA CAPTURE NONE;
 
@@ -157,5 +158,9 @@ rename column "CT_ID_REQUIRED" to "CONTRACTOR_ID_REQUIRED";
 alter table "VBAC".PERSON
 rename column "CT_ID" to "CONTRACTOR_ID";
 
+
+alter table "VBAC".PERSON
+	 add column "PES_DATE_EVIDENCE"
+	   date;
 
 

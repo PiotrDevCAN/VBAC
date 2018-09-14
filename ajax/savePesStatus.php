@@ -36,6 +36,7 @@ try {
             case personRecord::PES_STATUS_DECLINED:
             case personRecord::PES_STATUS_FAILED:
             case personRecord::PES_STATUS_INITIATED:
+            case personRecord::PES_STATUS_REQUESTED:
             case personRecord::PES_STATUS_EXCEPTION:
                 $notificationStatus = 'Email not applicable';
                  break;  
