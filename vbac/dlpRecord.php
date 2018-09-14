@@ -156,7 +156,7 @@ class dlpRecord extends DbRecord
             $submitButton =   $this->formButton('submit','Submit','saveDlpLicence',null, 'Save','btn btn-primary');
             $allButtons[] = $submitButton;
             $this->formBlueButtons($allButtons);
-            $this->formHiddenInput('requestor',$GLOBALS['ltcuser']['mail'],'requestor');
+            $this->formHiddenInput('requestor',$_SESSION['ssoEmail'],'requestor');
             ?>
         </div>
         </div> <!--  Panel     -->

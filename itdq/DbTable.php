@@ -1905,7 +1905,7 @@ class DbTable
 
     static function logDb2Error($data = null)
     {
-        $userid = isset($GLOBALS['ltcuser']['mail']) ? $GLOBALS['ltcuser']['mail'] : 'userNotDefined';
+        $userid = isset($_SESSION['ssoEmail']) ? $_SESSION['ssoEmail'] : 'userNotDefined';
         $elapsed = isset($_SESSION['tracePageOpenTime']) ? microtime(true) - $_SESSION['tracePageOpenTime'] : null;
 
         $sql = " INSERT INTO " . $_SESSION['Db2Schema'] . "." . AllItdqTables::$DB2_ERRORS . " ( USERID, PAGE, DB2_ERROR, DB2_MESSAGE, BACKTRACE, REQUEST ) ";

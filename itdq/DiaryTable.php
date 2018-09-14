@@ -12,7 +12,7 @@ class DiaryTable  extends DbTable {
 
 	static function insertEntry( $entry) {
 		$sql = "INSERT INTO " . $_SESSION['Db2Schema'] . "." . AllItdqTables::$DIARY . " ( ENTRY, INTRANET_ID) ";
-		$sql .= " Values ('" . db2_escape_string(trim($entry)) . "','" . db2_escape_string($GLOBALS['ltcuser']['mail']) . "' ) ";
+		$sql .= " Values ('" . db2_escape_string(trim($entry)) . "','" . db2_escape_string($_SESSION['ssoEmail']) . "' ) ";
 
 		$rs = DB2_EXEC ( $_SESSION ['conn'], $sql );
 		if (! $rs) {

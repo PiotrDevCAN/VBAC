@@ -14,7 +14,7 @@ class personPortalReportsTable extends DbTable{
         parent::__construct($table,$pwd,$log);
 
         $loader = new Loader();
-        $predicate = " upper(EMAIL_ADDRESS) = '" . db2_escape_string(strtoupper($GLOBALS['ltcuser']['mail'])) . "' ";
+        $predicate = " upper(EMAIL_ADDRESS) = '" . db2_escape_string(strtoupper($_SESSION['ssoEmail'])) . "' ";
         $this->myReports = $loader->loadIndexed('SETINGS','REPORT_NAME',$table,$predicate);
 
     }

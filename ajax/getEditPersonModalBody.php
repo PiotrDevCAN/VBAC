@@ -7,7 +7,7 @@ use vbac\allTables;
 ob_start();
 
 
-$GLOBALS['ltcuser']['mail'] = $_SESSION['ssoEmail'];
+$_SESSION['ssoEmail'] = $_SESSION['ssoEmail'];
 
 ini_set('display_errors',1);
 ini_set('display_startup_errors',1);

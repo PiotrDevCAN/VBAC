@@ -971,7 +971,7 @@ class assetRequestsTable extends DbTable{
                 $submitButton = $form->formButton('submit','Submit','confirmAssetReturned','enabled','Confirm','btn btn-success');
                 $allButtons[] = $submitButton;
                 $form->formBlueButtons($allButtons);
-                $form->formHiddenInput('user',$GLOBALS['ltcuser']['mail'],'user');
+                $form->formHiddenInput('user',$_SESSION['ssoEmail'],'user');
             ?>
 
 
@@ -1073,7 +1073,7 @@ class assetRequestsTable extends DbTable{
                 $submitButton = $form->formButton('submit','Submit','saveEditUid','enabled','Save','btn btn-primary');
                 $allButtons[] = $submitButton;
                 $form->formBlueButtons($allButtons);
-                $form->formHiddenInput('user',$GLOBALS['ltcuser']['mail'],'user');
+                $form->formHiddenInput('user',$_SESSION['ssoEmail'],'user');
             ?>
 
 
@@ -1114,7 +1114,7 @@ class assetRequestsTable extends DbTable{
                 $submitButton =   $form->formButton('submit','Submit','saveMapVarbToOrderIT','enabled','Save','btn btn-primary');
                 $allButtons[] = $submitButton;
                 $form->formBlueButtons($allButtons);
-                $form->formHiddenInput('mapper',$GLOBALS['ltcuser']['mail'],'mapper');
+                $form->formHiddenInput('mapper',$_SESSION['ssoEmail'],'mapper');
             ?>
              <button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
              </div>
@@ -1357,7 +1357,7 @@ class assetRequestsTable extends DbTable{
                 $submitButton =   $form->formButton('submit','Submit','saveOrderItStatus','enabled','Save','btn btn-primary');
                 $allButtons[] = $submitButton;
                 $form->formBlueButtons($allButtons);
-                $form->formHiddenInput('mapper',$GLOBALS['ltcuser']['mail'],'mapper');
+                $form->formHiddenInput('mapper',$_SESSION['ssoEmail'],'mapper');
             ?>
              <button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
              </div>
@@ -2207,8 +2207,16 @@ class assetRequestsTable extends DbTable{
         \itdq\BlueMail::send_mail(array($emailAddress), 'vBAC Request : ' . $orderItStatus , $message , 'vbacNoReply@uk.ibm.com');
     }
 
-    function setStatus($reference, $status, $comment=null,$dateReturned=null, $orderItStatus=null, $isPmo = 'No' ){
+    function setStatus($reference, $status, $comment=null,$dateReturned=null, $orderItStatus=null, $isPmo = false ){
 
+        var_dump($isPmo);
+        var_dump($isPmo != true);
+        var_dump($isPmo == true);
+        var_dump(trim($status));
+        
+        die('here');
+        
+        
         if(!empty($comment)){
             $now = new \DateTime();
             $sql = " SELECT COMMENT FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' ";
@@ -2255,7 +2263,7 @@ class assetRequestsTable extends DbTable{
         $sql .= !empty($orderItStatus) ? " ,ORDERIT_STATUS='" . db2_escape_string($orderItStatus) . "' " : null ;
         $sql .= !empty($newComment) ? ", COMMENT='" . db2_escape_string(substr($newComment,0,500)) . "' " : null;
         $sql .= trim($status)==assetRequestRecord::STATUS_AWAITING_IAM ? ", APPROVER_EMAIL='" . $_SESSION['ssoEmail'] . "' , APPROVED = current timestamp " : null;
-        $sql .= $isPmo == 'Yes' && trim($status)==assetRequestRecord::STATUS_APPROVED ? ", APPROVER_EMAIL='" . $_SESSION['ssoEmail'] . "' , APPROVED = current timestamp " : null;
+        $sql .= $isPmo != true  && trim($status)==assetRequestRecord::STATUS_APPROVED ? ", APPROVER_EMAIL='" . $_SESSION['ssoEmail'] . "' , APPROVED = current timestamp " : null;
         $sql .= trim($status)==assetRequestRecord::STATUS_RETURNED ? ", DATE_RETURNED = DATE('" . db2_escape_string($dateReturned). "') " : null;
         $sql .= " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' ";
         $sql .= trim($status)==assetRequestRecord::STATUS_REJECTED ? " OR PRE_REQ_REQUEST='" . db2_escape_string($reference) . "' " : null;

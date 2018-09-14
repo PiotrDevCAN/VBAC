@@ -967,13 +967,13 @@ class OldFormClass {
 
 
         function standardInputFields(){
-       		echo "<INPUT type='hidden' name='LAST_UPDATER' value='" . $GLOBALS['ltcuser']['mail'] . "' />";
+       		echo "<INPUT type='hidden' name='LAST_UPDATER' value='" . $_SESSION['ssoEmail'] . "' />";
 			$now = new \DateTime();
 			echo "<INPUT type='hidden' name='LAST_UPDATED' value='" . $now->format('Y-m-d H:i:s') . "' />";
 
 			if(!isset($this->CREATED)){
 				echo "<INPUT type='hidden' name='CREATED' value='" . $now->format('Y-m-d H:i:s') . "' />";
-				echo "<INPUT type='hidden' name='CREATOR' value='" . $GLOBALS['ltcuser']['mail'] . "' />";
+				echo "<INPUT type='hidden' name='CREATOR' value='" . $_SESSION['ssoEmail'] . "' />";
 			} else {
 				echo "<INPUT type='hidden' name='CREATED' value='" . $this->CREATED . "' />";
 				echo "<INPUT type='hidden' name='CREATOR' value='" . $this->CREATOR . "' />";

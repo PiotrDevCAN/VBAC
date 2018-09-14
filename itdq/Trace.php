@@ -76,7 +76,7 @@ class Trace extends Log{
 		if(isset($_SESSION['trace']) or (isset($_SESSION['methodInclude'][$method])) or (isset($_SESSION['classInclude'][$class]))){ // Are we tracing ?
 			if(!isset($_SESSION['methodExclude'][$method]) and !isset($_SESSION['classExclude'][$class])){ // Is this Class/Method one we're ignoring ?
 				$now = new \DateTime();
-				// $additionalText .= "\n<<USER>>" . $GLOBALS['ltcuser']['mail'] . " <<TIME>>" . $now->format('Y-m-d H:i:s');
+				// $additionalText .= "\n<<USER>>" . $_SESSION['ssoEmail'] . " <<TIME>>" . $now->format('Y-m-d H:i:s');
 				$traceString = "<B>" . $methodParm . "-" . $line . "</B>:<br/> " . htmlspecialchars($additionalText);
 				self::logEntry($traceString,$class,$method,$page);
 			}
@@ -120,7 +120,7 @@ class Trace extends Log{
  	* @param string $pwd		Password for encrypted logs or null
  	*/
 	static function logEntry($entry,$class=null, $method=null, $page=null, $pwd=null){
-		$userid = isset($GLOBALS['ltcuser']['mail']) ? db2_escape_string($GLOBALS['ltcuser']['mail']) : "unknown";
+		$userid = isset($_SESSION['ssoEmail']) ? db2_escape_string($_SESSION['ssoEmail']) : "unknown";
 		$elapsed = isset($_SESSION['tracePageOpenTime']) ? microtime(true) - $_SESSION['tracePageOpenTime'] : null;
 		$elapsed =  ($elapsed > 3600) ? 0 : $elapsed ; // Fix for long page opening times.
 

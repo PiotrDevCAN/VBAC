@@ -389,8 +389,8 @@ You are able to amend the Functional Manager of people assigned to you but who n
         $countryCodes = $loader->loadIndexed('COUNTRY_NAME','COUNTRY_CODE',allTables::$STATIC_COUNTRY_CODES);
 
        //  $allManagers = empty($allManagers)? array('VBAC00001'=>'Dummy Fm') : $allManagers;
-        $userDetails = $loader->loadIndexed('CNUM','EMAIL_ADDRESS',allTables::$PERSON, " EMAIL_ADDRESS='" . db2_escape_string($GLOBALS['ltcuser']['mail']) . "' ");
-        $userCnum = isset($userDetails[$GLOBALS['ltcuser']['mail']]) ? $userDetails[$GLOBALS['ltcuser']['mail']] : false;
+        $userDetails = $loader->loadIndexed('CNUM','EMAIL_ADDRESS',allTables::$PERSON, " EMAIL_ADDRESS='" . db2_escape_string($_SESSION['ssoEmail']) . "' ");
+        $userCnum = isset($userDetails[$_SESSION['ssoEmail']]) ? $userDetails[$_SESSION['ssoEmail']] : false;
         //$allWorkStream = array('Work Stream 1'=>'ws001','Work Stream 2'=>'ws002','Work Stream 3'=>'ws003','Work Stream 4'=>'ws004');
         $allWorkstream = $workstreamTable->getallWorkstream();
         JavaScript::buildSelectArray($allWorkstream, 'workStream');
@@ -711,7 +711,7 @@ You are able to amend the Functional Manager of people assigned to you but who n
     $allButtons[] = $submitButton;
     $allButtons[] = $pesButton;
   $this->formBlueButtons($allButtons);
-  $this->formHiddenInput('requestor',$GLOBALS['ltcuser']['mail'],'requestor');
+  $this->formHiddenInput('requestor',$_SESSION['ssoEmail'],'requestor');
   ?>
 
   </form>
@@ -771,7 +771,7 @@ You are able to amend the Functional Manager of people assigned to you but who n
     $submitButton =  $this->formButton('submit','Submit','saveLinking',null,'Save','btn btn-primary');
     $allButtons[] = $submitButton;
     $this->formBlueButtons($allButtons);
-    $this->formHiddenInput('requestor',$GLOBALS['ltcuser']['mail'],'requestor');
+    $this->formHiddenInput('requestor',$_SESSION['ssoEmail'],'requestor');
     ?>
 
   </form>
@@ -828,7 +828,7 @@ You are able to amend the Functional Manager of people assigned to you but who n
     $submitButton =  $this->formButton('submit','Submit','saveRfFlag',null,'Ring Fence','btn btn-primary');
     $allButtons[] = $submitButton;
     $this->formBlueButtons($allButtons);
-    $this->formHiddenInput('requestor',$GLOBALS['ltcuser']['mail'],'requestor');
+    $this->formHiddenInput('requestor',$_SESSION['ssoEmail'],'requestor');
     ?>
 
   </form>
@@ -1052,7 +1052,7 @@ You are able to amend the Functional Manager of people assigned to you but who n
                   </div>
 
                   <input type='hidden' id='reportSettings' name='SETTINGS'>
-                  <input type='hidden' id='reportCreator' name='EMAIL_ADDRESS' value='<?=$GLOBALS['ltcuser']['mail']?>'>
+                  <input type='hidden' id='reportCreator' name='EMAIL_ADDRESS' value='<?=$_SESSION['ssoEmail']?>'>
 
                 </div>
              </div>

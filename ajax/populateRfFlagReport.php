@@ -9,7 +9,7 @@ set_time_limit(0);
 ob_start();
 
 
-$GLOBALS['ltcuser']['mail'] = $_SESSION['ssoEmail'];
+$_SESSION['ssoEmail'] = $_SESSION['ssoEmail'];
 
 $loader = new Loader();
 $personTable = new personTable(allTables::$PERSON);

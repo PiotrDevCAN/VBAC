@@ -21,10 +21,10 @@ unset($_SESSION['isPmo']);
 unset($_SESSION['isUser']);
 unset($_SESSION['isPes']);
 
-$isFm   = personTable::isManager($GLOBALS['ltcuser']['mail'])                 ? ".not('.accessFm')" : null;
-$isCdi  = employee_in_group($_SESSION['cdiBg'],  $GLOBALS['ltcuser']['mail']) ? ".not('.accessCdi')" : null;
-$isPmo  = employee_in_group($_SESSION['pmoBg'],  $GLOBALS['ltcuser']['mail']) ? ".not('.accessPmo')" : null;
-$isPes  = employee_in_group($_SESSION['pesBg'],  $GLOBALS['ltcuser']['mail']) ? ".not('.accessPes')" : null;
+$isFm   = personTable::isManager($_SESSION['ssoEmail'])                 ? ".not('.accessFm')" : null;
+$isCdi  = employee_in_group($_SESSION['cdiBg'],  $_SESSION['ssoEmail']) ? ".not('.accessCdi')" : null;
+$isPmo  = employee_in_group($_SESSION['pmoBg'],  $_SESSION['ssoEmail']) ? ".not('.accessPmo')" : null;
+$isPes  = employee_in_group($_SESSION['pesBg'],  $_SESSION['ssoEmail']) ? ".not('.accessPes')" : null;
 $isUser = ".not('.accessUser')";
 
 

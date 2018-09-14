@@ -80,7 +80,7 @@ class requestableAssetListTable extends DbTable {
             if(empty($removed)){
                 $row['LISTING_ENTRY_CREATED'] .= "<button type='button' class='btn btn-default btn-xs btnDeleteAsset' aria-label='Left Align' ";
                 $row['LISTING_ENTRY_CREATED'] .= "data-asset='" . trim($row['ASSET_TITLE']) . "' ";
-                $row['LISTING_ENTRY_CREATED'] .= "data-deleter='" . trim($GLOBALS['ltcuser']['mail']) . "' ";
+                $row['LISTING_ENTRY_CREATED'] .= "data-deleter='" . trim($_SESSION['ssoEmail']) . "' ";
                 $row['LISTING_ENTRY_CREATED'] .= " > ";
                 $row['LISTING_ENTRY_CREATED'] .= "<span class='glyphicon glyphicon-trash ' aria-hidden='true'></span>";
                 $row['LISTING_ENTRY_CREATED'] .= " </button> ";

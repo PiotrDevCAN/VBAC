@@ -11,7 +11,7 @@ set_time_limit(0);
 ob_start();
 
 
-$GLOBALS['ltcuser']['mail'] = $_SESSION['ssoEmail'];
+$_SESSION['ssoEmail'] = $_SESSION['ssoEmail'];
 
 $loader = new Loader();
 $dlpTable = new dlpTable(allTables::$DLP);

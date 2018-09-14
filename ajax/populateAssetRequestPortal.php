@@ -10,7 +10,7 @@ set_time_limit(0);
 ob_start();
 
 
-$GLOBALS['ltcuser']['mail'] = $_SESSION['ssoEmail'];
+$_SESSION['ssoEmail'] = $_SESSION['ssoEmail'];
 
 $loader = new Loader();
 // $_SESSION['isFm']   = !empty($isFm)   ? true : false;
@@ -35,7 +35,7 @@ switch (true) {
 //         $amADelegateFor = array_map('strtolower',$amADelegateForRaw);
 
 
-        $myEmail = trim(strtolower($GLOBALS['ltcuser']['mail']));
+        $myEmail = trim(strtolower($_SESSION['ssoEmail']));
         $myPeople = $loader->load("CNUM",allTables::$PERSON," FM_CNUM='" . trim($myCnum) . "' ");
         $myPeopleListed = "'";
         foreach ($myPeople as $personCnum){

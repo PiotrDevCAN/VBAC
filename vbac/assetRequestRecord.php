@@ -71,7 +71,7 @@ class assetRequestRecord extends DbRecord {
         $loader = new Loader();
         $myCnum = personTable::myCnum();
         $myManagersCnum = personTable::myManagersCnum();
-        $isFm   = personTable::isManager($GLOBALS['ltcuser']['mail']);
+        $isFm   = personTable::isManager($_SESSION['ssoEmail']);
         $isPmo  = $_SESSION['isPmo'];
         $isRequestor = employee_in_group('vbac_requestor', $_SESSION['ssoEmail']);
         
@@ -240,7 +240,7 @@ class assetRequestRecord extends DbRecord {
             $submitButton =   $this->formButton('submit','Submit','saveAssetRequest','disabled','Save','btn btn-primary');
             $allButtons[] = $submitButton;
             $this->formBlueButtons($allButtons);
-            $this->formHiddenInput('requestor',$GLOBALS['ltcuser']['mail'],'requestor');
+            $this->formHiddenInput('requestor',$_SESSION['ssoEmail'],'requestor');
             ?>
         </div>
         </div> <!--  Panel     -->
@@ -319,7 +319,7 @@ class assetRequestRecord extends DbRecord {
         <h3 class="panel-title" id='requestableAssetListTitle'>Asset Request</h3>
         </div>
 		<div class="panel-body">
-      	<p>User <?=$GLOBALS['ltcuser']['mail']?> is not known to this tool</p>
+      	<p>User <?=$_SESSION['ssoEmail']?> is not known to this tool</p>
        	<p>Your Functional Manager needs to Onboard you onto vBAC. </p>
        	<p>Boarding education for your manager can be found at this URL: http://w3.tap.ibm.com/medialibrary/media_set_view?id=47864</p>
        	<p>If you already have a Preboarder record in vBAC your manager will need to onboard you as an IBMer AND link it to your Preboarder Record.</p>

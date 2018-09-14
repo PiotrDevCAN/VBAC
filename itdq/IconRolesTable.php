@@ -347,7 +347,7 @@ class IconRolesTable extends DbTable {
 	 * If $fullAccessBluegroup is specified - will check if they are a member and if so, returns null, as they have FULL access.
 	 * If $verbose is TRUE - then messages are issued about the access control decision.
 	 * $jobRoleColumn - is the column name in the table that will be used in an $jobRoleColumn in ('first_role','second_role') element of the predicate
-	 * If $intranetColumn is NOT null, then it's used to prevent people seeing their own records by the inclusion of $intranetColumn != $GLOBALS['ltcuser']['mail'] in the returned predicate.
+	 * If $intranetColumn is NOT null, then it's used to prevent people seeing their own records by the inclusion of $intranetColumn != $_SESSION['ssoEmail'] in the returned predicate.
 	 *
 	 *
 	 * @param string $fullAccessBluegroup
@@ -359,23 +359,23 @@ class IconRolesTable extends DbTable {
 	static function calculateAccessPredicate($verbose= true, $jobRoleColumn='JOB_ROLE', $intranetColumn=null, $fullAccessBluegroup=null){
 
 		if($fullAccessBluegroup!=null){
-			if(employee_in_group($fullAccessBluegroup, $GLOBALS['ltcuser']['mail'])){
-				echo $verbose ? "<h4 style='color:blue'>" . $GLOBALS['ltcuser']['mail'] . " is a member of " . $fullAccessBluegroup . ", therefore you have full access to this view</h4>" : null;
+			if(employee_in_group($fullAccessBluegroup, $_SESSION['ssoEmail'])){
+				echo $verbose ? "<h4 style='color:blue'>" . $_SESSION['ssoEmail'] . " is a member of " . $fullAccessBluegroup . ", therefore you have full access to this view</h4>" : null;
 				return null;
 			}
 		}
 
-		$employeeRoles = IconRolesTable::getMyRoles($GLOBALS['ltcuser']['mail']);
+		$employeeRoles = IconRolesTable::getMyRoles($_SESSION['ssoEmail']);
 
 		if(empty($employeeRoles)){
-			$accessMessage = "<h4 style='color:red'>" . $GLOBALS['ltcuser']['mail'] . " has no roles defined in ICON ";
+			$accessMessage = "<h4 style='color:red'>" . $_SESSION['ssoEmail'] . " has no roles defined in ICON ";
 			$accessMessage .= !empty($fullAccessBluegroup) ? " and you are not a member of ". $fullAccessBluegroup : null;
 			$accessMessage .= " therefore you are not permitted access to this view</h4>";
 			echo $verbose ?   $accessMessage : null;
 			return " AND 1 > 1 ";  // They are not allowed any access.
 		}
-		$accessMessage = "<h4 style='color:blue'>" . $GLOBALS['ltcuser']['mail'] . " is defined in ICON as having these roles : ";
-		$accessPredicate = !empty($intranetColumn) ?  " AND lower(" . $intranetColumn . ") != '" . strtolower($GLOBALS['ltcuser']['mail']) ."' ": Null;
+		$accessMessage = "<h4 style='color:blue'>" . $_SESSION['ssoEmail'] . " is defined in ICON as having these roles : ";
+		$accessPredicate = !empty($intranetColumn) ?  " AND lower(" . $intranetColumn . ") != '" . strtolower($_SESSION['ssoEmail']) ."' ": Null;
 		$accessPredicate .= " AND " . $jobRoleColumn . " in (";
 		foreach ($employeeRoles as $employee){
 			$accessMessage .= $employee .",";

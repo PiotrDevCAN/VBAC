@@ -146,7 +146,7 @@ class requestableAssetListRecord extends DbRecord
 
 				</div>
 			</div>
-			<input type='hidden' name='LISTING_ENTRY_CREATED_BY' id='listingEntryCreatedBy' value='<?=$GLOBALS['ltcuser']['mail']?>'>
+			<input type='hidden' name='LISTING_ENTRY_CREATED_BY' id='listingEntryCreatedBy' value='<?=$_SESSION['ssoEmail']?>'>
 			<input type='hidden' name='LISTING_ENTRY_CREATED' id='listingEntryCreated' value='<?=$created?>'>
 		</form>
 
@@ -156,7 +156,7 @@ class requestableAssetListRecord extends DbRecord
             $submitButton = $mode==FormClass::$modeEDIT ?  $this->formButton('submit','Submit','updateRequestableAsset',null,'Update','btn btn-primary') :  $this->formButton('submit','Submit','saveRequestableAsset',null,'Save','btn btn-primary');
             $allButtons[] = $submitButton;
             $this->formBlueButtons($allButtons);
-            $this->formHiddenInput('requestor',$GLOBALS['ltcuser']['mail'],'requestor');
+            $this->formHiddenInput('requestor',$_SESSION['ssoEmail'],'requestor');
      }
 
 }

@@ -116,21 +116,21 @@ $navbar->addOption($outages);
 
 $navbar->createNavbar($page);
 
-$isFm   = personTable::isManager($GLOBALS['ltcuser']['mail'])                 ? ".not('.accessFm')" : null;
-$isCdi  = employee_in_group($_SESSION['cdiBg'],  $GLOBALS['ltcuser']['mail']) ? ".not('.accessCdi')" : null;
-$isPmo  = employee_in_group($_SESSION['pmoBg'],  $GLOBALS['ltcuser']['mail']) ? ".not('.accessPmo')" : null;
-$isPes  = employee_in_group($_SESSION['pesBg'],  $GLOBALS['ltcuser']['mail']) ? ".not('.accessPes')" : null;
-$isRep1  = employee_in_group('vbac_Reports_Full_Person',  $GLOBALS['ltcuser']['mail']) ? ".not('.accessRepFullPerson')" : null;
-$isRes   = employee_in_group('ventus_resource_strategy',  $GLOBALS['ltcuser']['mail'],3) ? ".not('.accessRes')" : null;
+$isFm   = personTable::isManager($_SESSION['ssoEmail'])                 ? ".not('.accessFm')" : null;
+$isCdi  = employee_in_group($_SESSION['cdiBg'],  $_SESSION['ssoEmail']) ? ".not('.accessCdi')" : null;
+$isPmo  = employee_in_group($_SESSION['pmoBg'],  $_SESSION['ssoEmail']) ? ".not('.accessPmo')" : null;
+$isPes  = employee_in_group($_SESSION['pesBg'],  $_SESSION['ssoEmail']) ? ".not('.accessPes')" : null;
+$isRep1  = employee_in_group('vbac_Reports_Full_Person',  $_SESSION['ssoEmail']) ? ".not('.accessRepFullPerson')" : null;
+$isRes   = employee_in_group('ventus_resource_strategy',  $_SESSION['ssoEmail'],3) ? ".not('.accessRes')" : null;
 
 $isUser = ".not('.accessUser')";
 $isRequestor = employee_in_group('vbac_requestor', $_SESSION['ssoEmail']);
 
-$isCdi   = stripos($_SERVER['environment'], 'dev') ? ".not('.accessCdi')"  : $isCdi;
-$isPmo   = stripos($_SERVER['environment'], 'dev')  ? ".not('.accessPmo')" : $isPmo;
-$isPes   = stripos($_SERVER['environment'], 'dev')  ? ".not('.accessPes')" : $isPes;
-$isRep1   = stripos($_SERVER['environment'], 'dev')  ? ".not('.accessRepFullPerson')" : $isRep1;
-$isRes   = stripos($_SERVER['environment'], 'dev')  ? ".not('.accessRes')" : $isRes;
+// $isCdi   = stripos($_SERVER['environment'], 'dev') ? ".not('.accessCdi')"  : $isCdi;
+// $isPmo   = stripos($_SERVER['environment'], 'dev')  ? ".not('.accessPmo')" : $isPmo;
+// $isPes   = stripos($_SERVER['environment'], 'dev')  ? ".not('.accessPes')" : $isPes;
+// $isRep1   = stripos($_SERVER['environment'], 'dev')  ? ".not('.accessRepFullPerson')" : $isRep1;
+// $isRes   = stripos($_SERVER['environment'], 'dev')  ? ".not('.accessRes')" : $isRes;
 
 $isFm = $isPmo ? null : $isFm; // If they are PMO it don't matter if they are FM
 

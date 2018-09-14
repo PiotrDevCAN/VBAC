@@ -17,7 +17,7 @@ static function logEntry($entry,$pwd=null){
 
 
 
-	$userid = $GLOBALS['ltcuser']['mail'];
+	$userid = $_SESSION['ssoEmail'];
 
 	$sql = " INSERT INTO " . $_SESSION['Db2Schema'] . "." . AllItdqTables::$LOG . " ( LOG_ENTRY,LASTUPDATER) ";
 	$db2Entry = db2_escape_string($entry);
