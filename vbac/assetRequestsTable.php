@@ -2209,14 +2209,6 @@ class assetRequestsTable extends DbTable{
 
     function setStatus($reference, $status, $comment=null,$dateReturned=null, $orderItStatus=null, $isPmo = false ){
 
-        var_dump($isPmo);
-        var_dump($isPmo != true);
-        var_dump($isPmo == true);
-        var_dump(trim($status));
-        
-        die('here');
-        
-        
         if(!empty($comment)){
             $now = new \DateTime();
             $sql = " SELECT COMMENT FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' ";
