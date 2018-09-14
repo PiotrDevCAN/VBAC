@@ -99,6 +99,7 @@ $(document).ready(function(){
  	AssetPortal.listenForReportReload();
  	AssetPortal.listenForReportShowAll();
  	AssetPortal.listenForReportShowExportable();
+ 	AssetPortal.listenForReportShowAwaitingIam();
  	AssetPortal.listenForReportExported();
  	AssetPortal.listenForReportBauRaised();
  	AssetPortal.listenForReportNonBauRaised();
