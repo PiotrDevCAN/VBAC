@@ -80,6 +80,7 @@ $response['success'] = $success;
 $response['messages'] = $messages;
 
 if(!$success){
+    ob_clean();
     http_response_code(404);
 }
 
