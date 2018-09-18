@@ -53,7 +53,17 @@ switch ($_SERVER['REQUEST_METHOD']) {
                     $allElements = explode(",", $template);
                     foreach ($allElements as $element){
                         $keyValuePair = explode(":", $element);
-                        $templateArray[$keyValuePair[0]] = $keyValuePair[1];
+                        
+                        if(is_integer($keyValuePair[1])){
+                            $value = (int)$keyValuePair[1];
+                        } elseif (is_float($keyValuePair[1])){
+                            $value = (float)$keyValuePair[1];
+                        } else {
+                            $value = $keyValuePair[1];
+                        }
+                        
+                        
+                        $templateArray[$keyValuePair[0]] = $value;
                     }
                 }
                 
