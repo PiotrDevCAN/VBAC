@@ -63,15 +63,6 @@ switch ($_SERVER['REQUEST_METHOD']) {
                         }
                     }
                 }
-                
-                var_dump($templateArray);
-                
-                $response = $templateArray;
-
-                var_dump($response);
-                
-                die('here');
-                
                 echo empty($row['TEMPLATE']) ? "No Template found for Email:" . $_GET['email_address'] . " Title:" . $_GET['title'] : null;
             break;
 
@@ -115,4 +106,4 @@ if(!$success){
     http_response_code(404);
 }
 
-echo json_encode($response);
+echo json_encode($response , JSON_NUMERIC_CHECK);
