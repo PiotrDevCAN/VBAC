@@ -57,7 +57,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
                     }
                 }
                 
-                $response[] = $templateArray;
+                $response = $templateArray;
                 echo empty($row['TEMPLATE']) ? "No Template found for Email:" . $_GET['email_address'] . " Title:" . $_GET['title'] : null;
             break;
 
