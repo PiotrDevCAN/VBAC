@@ -45,7 +45,19 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 }
                 
                 $row = db2_fetch_assoc($rs);
-                $response['template'] = $row['TEMPLATE'];
+                
+                $templateArray = array();
+                
+                $template = $row['TEMPLATE'];
+                if(!empty($template)){
+                    $allElements = explode(",", $template);
+                    foreach ($allElements as $element){
+                        $keyValuePair = explode(":", $element);
+                        $templateArray[$keyValuePair[0]] = $keyValuePair[1];
+                    }
+                }
+                
+                $response[] = $templateArray;
                 echo empty($row['TEMPLATE']) ? "No Template found for Email:" . $_GET['email_address'] . " Title:" . $_GET['title'] : null;
             break;
 
