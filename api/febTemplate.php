@@ -9,15 +9,23 @@ ob_start();
 
 switch ($_SERVER['REQUEST_METHOD']) {
     case 'POST':
-        // Save a template to the database
-        $sql = "INSERT INTO " . $_SERVER['environment'] . "." . \vbac\allTables::$FEB_TRAVEL_REQUEST_TEMPLATES ; 
-        $sql.= " (EMAIL_ADDRESS, TITLE, TEMPLATE) VALUES ('" . db2_escape_string($_POST['email_address']) . "','" .  db2_escape_string($_POST['title']) . "','" . db2_escape_string(print_r($_GET['template'],true)) . "') ";
-        $rs = db2_exec($_SESSION['conn'], $sql);     
-
-        if(!$rs){
-            echo db2_stmt_error();
-            echo db2_stmt_errormsg();
-            var_dump($sql);
+        switch (true) {
+            case !empty($_POST['email_address']) && !empty($_POST['title']) && !empty($_POST['template']):
+                // Save a template to the database
+                $sql = "INSERT INTO " . $_SERVER['environment'] . "." . \vbac\allTables::$FEB_TRAVEL_REQUEST_TEMPLATES ;
+                $sql.= " (EMAIL_ADDRESS, TITLE, TEMPLATE) VALUES ('" . db2_escape_string($_POST['email_address']) . "','" .  db2_escape_string($_POST['title']) . "','" . db2_escape_string(print_r($_POST['template'],true)) . "') ";
+                $rs = db2_exec($_SESSION['conn'], $sql);
+                
+                if(!$rs){
+                    echo db2_stmt_error();
+                    echo db2_stmt_errormsg();
+                    var_dump($sql);
+                }               
+            break;            
+            default:
+                http_response_code(405);
+                die(); 
+            break;
         }
         break;
     case 'GET':
@@ -64,9 +72,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 die(); 
             break;
         }
-
-    break;
-    
+    break;    
     default:
         http_response_code(405);
         die();
