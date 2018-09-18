@@ -55,19 +55,23 @@ switch ($_SERVER['REQUEST_METHOD']) {
                         $keyValuePair = explode(":", $element);
                         
                         if(is_integer($keyValuePair[1])){
-                            $value = (int)$keyValuePair[1];
+                            $templateArray[$keyValuePair[0]] = (int)$keyValuePair[1];
                         } elseif (is_float($keyValuePair[1])){
-                            $value = (float)$keyValuePair[1];
+                            $templateArray[$keyValuePair[0]] = (float)$keyValuePair[1];
                         } else {
-                            $value = $keyValuePair[1];
+                            $templateArray[$keyValuePair[0]] = $keyValuePair[1];
                         }
-                        
-                        
-                        $templateArray[$keyValuePair[0]] = $value;
                     }
                 }
                 
+                var_dump($templateArray);
+                
                 $response = $templateArray;
+
+                var_dump($response);
+                
+                die('here');
+                
                 echo empty($row['TEMPLATE']) ? "No Template found for Email:" . $_GET['email_address'] . " Title:" . $_GET['title'] : null;
             break;
 
