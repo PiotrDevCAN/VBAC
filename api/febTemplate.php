@@ -82,10 +82,9 @@ switch ($_SERVER['REQUEST_METHOD']) {
 $messages = ob_get_clean();
 $success = empty($messages);
 
-$response['success'] = $success;
-$response['messages'] = $messages;
-
 if(!$success){
+    $response['success'] = $success;
+    $response['messages'] = $messages;
     ob_clean();
     http_response_code(404);
 }
