@@ -38,7 +38,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 
                 $row = db2_fetch_assoc($rs);
                 $response['template'] = $row['TEMPLATE'];
-                echo empty($row['TEMPLATE']) ? "No Template found for " . $_GET['email_address'] . " " . $_GET['title'] : null;
+                echo empty($row['TEMPLATE']) ? "No Template found for Email:" . $_GET['email_address'] . " Title:" . $_GET['title'] : null;
             break;
 
             case isset($_GET['email_address']):
@@ -57,7 +57,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 while(($row = db2_fetch_assoc($rs))==true){
                     $response['titles'][] = $row['TITLE'];
                 }
-                echo empty($response['titles']) ? "No Titles found for " . $_GET['email_address'] : null;
+                echo empty($response['titles']) ? "No Titles found for Email:" . $_GET['email_address'] : null;
             break;
             default:
                 http_response_code(405); 
@@ -78,5 +78,9 @@ $success = empty($messages);
 
 $response['success'] = $success;
 $response['messages'] = $messages;
+
+if(!$success){
+    http_response_code(404);
+}
 
 echo json_encode($response);
