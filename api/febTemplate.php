@@ -57,6 +57,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 while(($row = db2_fetch_assoc($rs))==true){
                     $response['titles'][] = $row['TITLE'];
                 }
+                echo empty($response['titles']) ? "No Titles found for " . $_GET['email_address'] : null;
             break;
             default:
                 http_response_code(405); 
