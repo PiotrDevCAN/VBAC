@@ -17,6 +17,8 @@ class allTables
     public static $DB2_ERRORS         = 'DB2_ERRORS';
     public static $DELEGATE           = 'DELEGATE';
     public static $DLP                = 'DLP';
+    
+    public static $FEB_TRAVEL_REQUEST_TEMPLATES = 'FEB_TRAVEL_REQUEST_TEMPLATES';
 
     public static $ORDER_IT_VARB_TRACKER = 'ORDER_IT_VARB_TRACKER';
 
