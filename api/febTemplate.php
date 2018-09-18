@@ -38,7 +38,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 
                 $row = db2_fetch_assoc($rs);
                 $response['template'] = $row['TEMPLATE'];
-                echo empty($row['TEMPLATE']) ? "No Template found for " . $_GET['email_address'] : null;
+                echo empty($row['TEMPLATE']) ? "No Template found for " . $_GET['email_address'] . " " . $_GET['title'] : null;
             break;
 
             case isset($_GET['email_address']):
