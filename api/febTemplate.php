@@ -1,7 +1,8 @@
 <?php
 
 if($_REQUEST['token']!= $token){
-    return;
+    http_response_code(405);
+    die(); 
 }
 
 ob_start();  
@@ -37,6 +38,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 
                 $row = db2_fetch_assoc($rs);
                 $response['template'] = $row['TEMPLATE'];
+                echo empty($row['TEMPLATE']) ? "No Template found for " . $_GET['email_address'] : null;
             break;
 
             case isset($_GET['email_address']):
