@@ -663,7 +663,14 @@ this.listenForSaveOrderItStatus = function(){
 
 this.listenForAddToJustification  = function(){
     $(document).on('click','.btnAddToJustification', function(e){
+    	
+    	console.log($(this));
+    	
+    	
     	var reference = $(this).data('reference');
+    	var requestee = $(this).data('requestee');
+    	var asset     = $(this).data('asset');
+    	var status    = $(this).data('status');
       	$.ajax({
 	        url: "ajax/getDetailsForEditJustification.php",
 	        type: 'GET',
@@ -673,11 +680,12 @@ this.listenForAddToJustification  = function(){
 	        	var resultObj = JSON.parse(result);
 	        	console.log(resultObj);
 	        	console.log($(this));
+	        	console.log(reference);
 
-	        	$('#editJustificationRequestReference').html($(this).data('reference'));
-	        	$('#editJustificationRequestee').html($(this).data('requestee'));
-	        	$('#editJustificationAssetTitle').html($(this).data('asset'));
-	        	$('#editJustificationStatus').val($(this).data('status'));
+	        	$('#editJustificationRequestReference').html(reference);
+	        	$('#editJustificationRequestee').html(requestee);
+	        	$('#editJustificationAssetTitle').html(asset);
+	        	$('#editJustificationStatus').val(status);
 
 	        	$('#editJustificationJustification').val(resultObj.justification);
 	        	$('#editJustificationComment').html(resultObj.comment);
