@@ -1482,7 +1482,7 @@ class assetRequestsTable extends DbTable{
                     $sql.= " AND ( ";
                     $sql.= "      ( USER_CREATED = 'No' AND AR.STATUS in ('" . assetRequestRecord::STATUS_RAISED_ORDERIT . "') )";
                     $sql.= "      OR ";
-                    $sql.= "      ( USER_CREATED = 'Yes' AND AR.APPROVED is not null )";
+                    $sql.= "      ( USER_CREATED = 'Yes' AND (AR.APPROVED is not null AND AR.STATUS not in ('" . assetRequestRecord::STATUS_AWAITING_IAM . "') ) )";
                     $sql.= "    ) ";
                     $sql.= $isThisCtb ? " AND upper(P.CTB_RTB='CTB') " : " AND (upper(P.CTB_RTB != 'CTB') or P.CTB_RTB is null ) ";
                     $sql.= " ORDER BY AR.REQUESTED asc ";
