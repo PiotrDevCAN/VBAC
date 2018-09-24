@@ -609,11 +609,6 @@ class BluePages {
 	            $urlTemplate .= "(workloc=" . trim($loc) . ")";
 	        }
 	        $urlTemplate .= ").list/byJson?";
-	        
-	        var_dump($urlTemplate);
-	        die('here');
-	        
-
 	    $ch = curl_init ( $urlTemplate );
 	    curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, true );
 	    $curlReturn = curl_exec ( $ch );
