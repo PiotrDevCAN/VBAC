@@ -7,8 +7,12 @@ if($_REQUEST['token']!= $token){
 
 ob_start();  
 
-switch ($_SERVER['REQUEST_METHOD']) {
-    case 'POST':
+// Problem with FEB when using API - you need to perform a "fetch", that's how FEB understands what the API returnes, but this "FETCH" is always a GET - so we can't distinguish POST from GET as we can't configure the api in FEB
+
+
+
+switch ($_REQUEST['mode']) {
+    case 'write':
         switch (true) {
             case !empty($_POST['email_address']) && !empty($_POST['title']) && !empty($_POST['template']):
                 // Save a template to the database
@@ -28,7 +32,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
             break;
         }
         break;
-    case 'GET':
+    case 'read':
         switch (true) {
             case isset($_GET['email_address']) && isset($_GET['title']):
                 // Get a specific template
