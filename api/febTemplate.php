@@ -103,6 +103,7 @@ $success = empty($messages);
 if(!$success){
     $response['success'] = $success;
     $response['messages'] = $messages;
+    $response['REQUEST_METHOD'] = $_SERVER['REQUEST_METHOD'];
     ob_clean();
     http_response_code(404);
 }
