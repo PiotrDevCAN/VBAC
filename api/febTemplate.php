@@ -14,21 +14,28 @@ ob_start();
 switch ($_REQUEST['mode']) {
     case 'write':
         switch (true) {
-            case !empty($_POST['email_address']) && !empty($_POST['title']) && !empty($_POST['template']):
+            case !empty($_REQUEST['email_address']) && !empty($_REQUEST['title']) && !empty($_REQUEST['template']):
                 // Save a template to the database
                 $sql = "INSERT INTO " . $_SERVER['environment'] . "." . \vbac\allTables::$FEB_TRAVEL_REQUEST_TEMPLATES ;
-                $sql.= " (EMAIL_ADDRESS, TITLE, TEMPLATE) VALUES ('" . db2_escape_string($_POST['email_address']) . "','" .  db2_escape_string($_POST['title']) . "','" . db2_escape_string(print_r($_POST['template'],true)) . "') ";
+                $sql.= " (EMAIL_ADDRESS, TITLE, TEMPLATE) VALUES ('" . db2_escape_string($_REQUEST['email_address']) . "','" .  db2_escape_string($_REQUEST['title']) . "','" . db2_escape_string(print_r($_REQUEST['template'],true)) . "') ";
                 $rs = db2_exec($_SESSION['conn'], $sql);
                 
                 if(!$rs){
                     echo db2_stmt_error();
                     echo db2_stmt_errormsg();
-                    var_dump($sql);
+                    $messages = ob_get_clean();
+                    $success = empty($messages);
+                    $response['success'] = $success;
+                    $response['messages'] = $messages;
+                    $response['REQUEST_METHOD'] = $_SERVER['REQUEST_METHOD'];
+                    http_response_code(409);
+                    echo json_encode($response , JSON_NUMERIC_CHECK);
+                    die(); 
                 }               
             break;            
             default:
-                http_response_code(405);
-                die(); 
+                http_response_code(406);
+
             break;
         }
         break;
@@ -74,8 +81,12 @@ switch ($_REQUEST['mode']) {
             case isset($_GET['email_address']):
                 // Get list of titles for this person
                 $sql = " SELECT DISTINCT TITLE FROM " . $_SERVER['environment'] . "." . \vbac\allTables::$FEB_TRAVEL_REQUEST_TEMPLATES ;
-                $sql.= " WHERE EMAIL_ADDRESS='" . db2_escape_string(trim($_GET['email_address'])) . "' ";
+                $sql.= " WHERE UPPER(EMAIL_ADDRESS)='" . db2_escape_string(strtoupper(trim($_GET['email_address']))) . "' ";
                 ob_start();
+                
+                $response['sql']= $sql;
+                
+                
                 $rs = db2_exec($_SESSION['conn'], $sql);
                 
                 if(!$rs){
@@ -86,28 +97,29 @@ switch ($_REQUEST['mode']) {
                 
                 while(($row = db2_fetch_assoc($rs))==true){
                     $response['titles'][] = $row['TITLE'];
+                    var_dump($response);
                 }
                 echo empty($response['titles']) ? "No Titles found for Email:" . $_GET['email_address'] : null;
             break;
             default:
-                http_response_code(405); 
+                http_response_code(407); 
                 die(); 
             break;
         }
     break;    
     default:
-        http_response_code(405);
+        http_response_code(408);
         die();
     break;
 }
 
 $messages = ob_get_clean();
-$success = empty($messages);
+$success = true;
+$response['success'] = empty($messages);
+$response['messages'] = $messages;
+$response['REQUEST_METHOD'] = $_SERVER['REQUEST_METHOD'];
 
 if(!$success){
-    $response['success'] = $success;
-    $response['messages'] = $messages;
-    $response['REQUEST_METHOD'] = $_SERVER['REQUEST_METHOD'];
     ob_clean();
     http_response_code(404);
 }
