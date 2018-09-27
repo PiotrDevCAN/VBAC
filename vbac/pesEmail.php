@@ -6,7 +6,6 @@ use vbac\allTables;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use itdq\BlueMail;
-use \Exception;
 
 class pesEmail {
     
@@ -49,7 +48,7 @@ class pesEmail {
         ->setValue('Emp no. here');
         
         $spreadsheet->setActiveSheetIndex(0);
-        ob_clean();
+//         ob_clean();
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
         ob_start();
         $writer->save('php://output');
@@ -125,7 +124,7 @@ class pesEmail {
                 break;
             default:
                 
-                throw new \Exception('No matches found for ' . $intExt . ' and ' . $emailType, 803);
+                throw new Exception('No matches found for ' . $intExt . ' and ' . $emailType, 803);
                 ;
                 break;                
         }
@@ -157,14 +156,11 @@ class pesEmail {
         }
         
         $results = preg_split('/[-.]/', $pesEmail);
-        
         $locationType = $results[0];
         $emailType  = isset($results[1]) ? $results[1] : null;
-        
         switch ($locationType) {
             case 'xxx':
-                // Need to know if Internal or External
-                
+                // Need to know if Internal or External            
                 $pesEmailBodyFilename = $intExt . "-" . $emailType . ".php";
             break;
             case 'unknown':
@@ -175,8 +171,8 @@ class pesEmail {
                 $pesEmailBodyFilename = $pesEmail; 
             break;
         }
-        
-        $attachments = $this->getAttachments($intExt, $emailType);
+       
+        $attachments = $this->getAttachments($intExt, $emailType);   
         
         foreach ($attachments as $attachment) {
             $attachmentFileNames[] = $attachment['filename'];

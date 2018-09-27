@@ -1,7 +1,7 @@
 <?php
 
 use vbac\pesEmail;
-use \Exception;
+
 ob_start();
 $pesEmailObj = new pesEmail();
 
