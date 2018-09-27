@@ -222,9 +222,11 @@ function personRecord() {
 			    	       },
 			       success: function(result){
 			    	   $('#confirmSendPesEmail').removeClass('spinning');
+			    	   personRecord.table.ajax.reload();
 			    	   var resultObj = JSON.parse(result);			           
 			    	   console.log(resultObj);
 			           $('#confirmSendPesEmailModal').modal('hide');
+			           
 			      }
 			   });
 			});	  
