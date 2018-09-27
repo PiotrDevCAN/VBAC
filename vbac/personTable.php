@@ -474,9 +474,6 @@ class personTable extends DbTable {
         $sql .= " SET $dateField = current date, PES_STATUS='" . db2_escape_string($status)  . "' ";
         $sql .= empty($requestor) ? null : ", PES_REQUESTOR='" . db2_escape_string($requestor) . "' ";
         $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
-
-var_dump($sql);
-        
         
         $result = db2_exec($_SESSION['conn'], $sql);
 
