@@ -533,7 +533,14 @@ function personRecord() {
               case 'ismanager':
                    var isMgr =  document.getElementById('person_is_mgr');
                    console.log($(isMgr) + ":" + value);
-                         if(typeof(isMgr) !== 'undefined'){ isMgr.value = value ;};
+                         if(typeof(isMgr) !== 'undefined'){
+                        	 if(value.sustr(0,1)=='Y' ){
+                        		 isMgr.value = 'Yes';
+                        	 } else {
+                        		 isMgr.value = 'No';
+                        	 }
+                         };                     	 
+                         // isMgr.value = value ;};
                        break;
               case 'employeetype':
                    var employeeeType =  document.getElementById('person_employee_type');
