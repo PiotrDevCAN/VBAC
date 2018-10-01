@@ -534,7 +534,7 @@ function personRecord() {
                    var isMgr =  document.getElementById('person_is_mgr');
                    console.log($(isMgr) + ":" + value);
                          if(typeof(isMgr) !== 'undefined'){
-                        	 if(value.sustr(0,1)=='Y' ){
+                        	 if(value=='Y' || value=='Yes' ){
                         		 isMgr.value = 'Yes';
                         	 } else {
                         		 isMgr.value = 'No';

@@ -14,7 +14,9 @@ switch ($_REQUEST['mode']) {
             echo db2_stmt_error();
             echo db2_stmt_errormsg();
         }
-                
+        
+        db2_commit($_SESSION['conn']);
+        
         $sql = "INSERT INTO " . $_SERVER['environment'] . "." . \vbac\allTables::$FEB_TRAVEL_REQUEST_TEMPLATES ;
         $sql.= " (EMAIL_ADDRESS, TITLE, TEMPLATE) VALUES ('" . db2_escape_string($_REQUEST['email_address']) . "','" . db2_escape_string($_REQUEST['title']) . "','" . db2_escape_string($_REQUEST['template']) . "') ";
         
@@ -42,6 +44,7 @@ $response['messages'] = $messages;
 
 if(!$success){
     ob_clean();
+    echo json_encode($response , JSON_NUMERIC_CHECK);
     http_response_code(404);
 }
 
