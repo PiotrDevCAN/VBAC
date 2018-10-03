@@ -9,6 +9,10 @@ switch ($_REQUEST['mode']) {
 
         $rs = db2_exec($_SESSION['conn'], $sql);
         
+        
+        error_log("Sql:" . $sql);
+        
+        
         if(!$rs){
             echo $sql;
             echo db2_stmt_error();
@@ -44,7 +48,7 @@ $response['messages'] = $messages;
 
 if(!$success){
     ob_clean();
-    echo json_encode($response , JSON_NUMERIC_CHECK);
+    error_log('SaveTemplateError:' . json_encode($response , JSON_NUMERIC_CHECK));;
     http_response_code(404);
 }
 
