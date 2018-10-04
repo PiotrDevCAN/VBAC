@@ -9,14 +9,10 @@ switch ($_REQUEST['mode']) {
 
         $rs = db2_exec($_SESSION['conn'], $sql);
         
-        
-        error_log("Sql:" . $sql);
-        
-        
         if(!$rs){
-            echo $sql;
-            echo db2_stmt_error();
-            echo db2_stmt_errormsg();
+            error_log("Sql:" . $sql);
+            error_log(db2_stmt_error());
+            error_log(db2_stmt_errormsg());
         }
         
         db2_commit($_SESSION['conn']);
@@ -27,10 +23,10 @@ switch ($_REQUEST['mode']) {
         $rs = db2_exec($_SESSION['conn'], $sql);
         
         if(!$rs){
-            echo $sql;
-            echo db2_stmt_error();
-            echo db2_stmt_errormsg();
-        }        
+            error_log("Sql:" . $sql);
+            error_log(db2_stmt_error());
+            error_log(db2_stmt_errormsg());
+        }
         
     break;
     case 'read':
