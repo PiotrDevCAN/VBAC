@@ -10,9 +10,9 @@ use itdq\BlueMail;
 class pesEmail {
     
     private function getLloydsGlobalApplicationForm(){
-          
+        // LLoyds Global Application Form v1.4.doc
         $filename = "../emailAttachments/LLoyds Global Application Form v1.4.doc";
-        $handle = fopen($filename, "r");        
+        $handle = fopen($filename, "r");            
         $applicationForm = fread($handle, filesize($filename));
         fclose($handle);
         $encodedApplicationForm = base64_encode($applicationForm);
