@@ -1,6 +1,18 @@
 <?php
 
-$db = new PDO('mysql:host=169.53.241.185;port=3307;dbname=d5345ec8910de43eb96957f43169231a8', 'uN6t4CsnA7sPB', 'p090M2UV8Qvwu');
+echo "<pre>";
+
+var_dump(scandir('..'));
+
+var_dump(scandir('../'));
+
+var_dump(scandir(('../public')));
+
+var_dump(scandir(('../public/emailAttachments')));
 
 
-var_dump($db);
+$filename = "emailAttachments/Overseas Consent Form Owens (2).pdf";
+$handle = fopen($filename, "r");
+var_dump($handle);
+
+
