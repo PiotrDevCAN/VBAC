@@ -328,6 +328,7 @@ class personTable extends DbTable {
                      $firstName    = trim($row['FIRST_NAME']);
                      $lastName     = trim($row['LAST_NAME']);
                      $country      = trim($row['COUNTRY']);
+                     $openSeat     = trim($row['OPEN_SEAT_NUMBER']);
                      
                      $missing = !empty($emailAddress) ? '' : ' Email Address';
                      $missing.= !empty($firstName) ? '' : ' First Name';
@@ -346,6 +347,7 @@ class personTable extends DbTable {
                      $row['PES_STATUS'] .= " data-firstname='$firstName' ";
                      $row['PES_STATUS'] .= " data-lastname='$lastName' ";
                      $row['PES_STATUS'] .= " data-country='$country' ";
+                     $row['PES_STATUS'] .= " data-openseat='$openSeat' ";
                      $row['PES_STATUS'] .= " data-toggle='tooltip' data-placement='top' title='$tooltip'";
                      $row['PES_STATUS'] .= " $disabled  ";
                      $row['PES_STATUS'] .= " > ";

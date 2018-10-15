@@ -157,7 +157,7 @@ function personRecord() {
 				   url: "ajax/pesEmailDetails.php",
 			       type: 'GET',
 			       data : {emailaddress:data.emailaddress,
-			    	       country:data.country,
+			    	       country:data.country
 			    	       },
 			       success: function(result){
 			    	   $('.btnSendPesEmail').removeClass('spinning');		    	 
@@ -168,6 +168,7 @@ function personRecord() {
 			   				$('#pesEmailLastName').val(data.lastname);
 			   				$('#pesEmailAddress').val(data.emailaddress);
 			   				$('#pesEmailCountry').val(data.country);
+			   				$('#pesEmailOpenSeat').val(data.openseat);
 			   				$('#pesEmailFilename').val(resultObj.filename);
 			   				$('#pesEmailFilename').css('background-color','#eeeeee');
 			   				$('#pesEmailAttachments').val(''); // clear it out the first time.
@@ -184,6 +185,7 @@ function personRecord() {
 					   		 $('#pesEmailLastName').val(data.lastname);
 							 $('#pesEmailAddress').val(data.emailaddress);
 							 $('#pesEmailCountry').val(data.country);
+							 $('#pesEmailOpenSeat').val(data.openseat);
 							 $('#pesEmailAttachments').val(''); // clear it out the first time.
 							 if(resultObj.attachmentFileNames){
 					   			var arrayLength = resultObj.attachmentFileNames.length;
@@ -212,13 +214,16 @@ function personRecord() {
    			var lastname = $('#pesEmailLastName').val();
 			var emailAddress = $('#pesEmailAddress').val();
 			var country = $('#pesEmailCountry').val();
+			var openseat = $('#pesEmailOpenSeat').val();
 			   $.ajax({
 				   url: "ajax/sendPesEmail.php",
 			       type: 'POST',
 			       data : {emailaddress:emailAddress,
 			    	   	   firstname:firstname,
 			    	       lastname:lastname,
-			    	       country:country
+			    	       country:country,
+			    	       openseat:openseat
+			    	       
 			    	       },
 			       success: function(result){
 			    	   $('#confirmSendPesEmail').removeClass('spinning');

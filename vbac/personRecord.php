@@ -1056,6 +1056,10 @@ You are able to amend the Functional Manager of people assigned to you but who n
     <label for="pesEmailLastName">Last Name</label>
     <input type="text" class="form-control" id="pesEmailLastName" name="pesEmailLastName" disabled >
   </div>
+    <div class="form-group">
+    <label for="pesEmailOpenSeat">Open Seat</label>
+    <input type="text" class="form-control" id="pesEmailOpenSeat" name="pesEmailOpenSeat" disabled >
+  </div>
   <div class="form-group">
     <label for="pesEmailAddress">Email address</label>
     <input type="text" class="form-control" id="pesEmailAddress" name="pesEmailAddress" disabled >

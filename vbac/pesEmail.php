@@ -133,7 +133,7 @@ class pesEmail {
         return $pesAttachments;
     }
     
-    function getEmailDetails($emailAddress, $country){
+    function getEmailDetails($emailAddress, $country,$openSeat=null){
         $countryCodeTable = new DbTable(allTables::$STATIC_COUNTRY_CODES);
         $intExt = $this->determineInternalExternal($emailAddress);
         
@@ -184,12 +184,12 @@ class pesEmail {
     }
     
     
-    function sendPesEmail($firstName, $lastName, $emailAddress, $country ){
+    function sendPesEmail($firstName, $lastName, $emailAddress, $country, $openseat){
 
             $emailDetails = $this->getEmailDetails($emailAddress, $country);
             $emailBodyFileName = $emailDetails['filename'];
             $pesAttachments = $emailDetails['attachments'];
-            $replacements = array($firstName);
+            $replacements = array($firstName,$openseat);
             
             include_once 'emailBodies/' . $emailBodyFileName;
             $emailBody = preg_replace($pesEmailPattern, $replacements, $pesEmail);
