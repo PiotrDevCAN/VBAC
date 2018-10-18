@@ -51,7 +51,7 @@ class delegateRecord extends DbRecord
             	</select>
             	</div>
             	<div id='resultHere'></div>
-           	</div>
+        </div>
 
 
         <div class='panel-footer'>
@@ -67,9 +67,6 @@ class delegateRecord extends DbRecord
         </div>
 
         </div>
-
-        </div> <!--  Panel     -->
-
 		<?php
     }
 

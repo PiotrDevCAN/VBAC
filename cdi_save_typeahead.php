@@ -39,8 +39,8 @@ $(document).ready(function(){
 });  
 </script>
 <style type="text/css">
-
 #custom-templates .empty-message {
   padding: 5px 10px;
  text-align: center;
 }
+</style>

@@ -35,22 +35,22 @@ $_SESSION['isUser'] = !empty($isUser) ? true : false;
 $_SESSION['isPes']  = !empty($isPes)  ? true : false;
 
 ?>
-<pre>
+
 <h3>Session</h3>
+<pre>
 <?=print_r($_SESSION)?>
 </pre>
 
-<pre>
+
 <h3>Session</h3>
+<pre>
 <?=print_r($GLOBALS)?>
 </pre>
 
 <?php ini_set('MEMORY_LIMIT','150M'); ?>
 
-<pre>
+
 <h3>phpInfo</h3>
+<pre>
 <?=phpinfo()?>
 </pre>
-
-
-</div>

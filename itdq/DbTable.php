@@ -2152,8 +2152,6 @@ class DbTable
              </div>
             </div>
         </div>
-      </div>
-        
         <?php
     }
     

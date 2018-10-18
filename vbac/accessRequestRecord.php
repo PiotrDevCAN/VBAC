@@ -101,19 +101,14 @@ class accessRequestRecord extends DbRecord
     <h3 class="panel-title">End User Details</h3>
   </div>
   <div class="panel-body">
-
-
         <form id='displayBpDetails'  class="form-horizontal">
-
-
-
-				<div class="form-group">
+		<div class="form-group">
         <div class="col-sm-9">
-        <input class="form-control" id="NAME" name="NAME" value="<?=$this->NAME?>" required="required" type="text" placeholder='Start typing a name to perform a lookup if request for someone else' >
+        <input class="form-control" id="NAME" name="NAME" value="<?=$this->NAME?>" required="required" type="text" placeholder='Start typing a name to perform a lookup if request for someone else' />
         </div>
-
-</div>
-</div>
+        </div>
+        </form>
+	</div>
 
 </div>
 

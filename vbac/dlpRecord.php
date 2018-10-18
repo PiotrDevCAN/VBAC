@@ -148,7 +148,7 @@ class dlpRecord extends DbRecord
             	</select>
             	</div>
         		</div>
-
+		</div>
 
         <div class='panel-footer'>
         	<?php

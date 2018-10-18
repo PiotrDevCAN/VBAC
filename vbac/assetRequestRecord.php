@@ -422,8 +422,9 @@ class assetRequestRecord extends DbRecord {
         		<div class='modal-footer'>
       		  		<button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
       			</div>
-        </div>
-        </div>
+                </div>
+            </div>
+            </div>
         </div>
         <?php
     }
@@ -491,7 +492,7 @@ class assetRequestRecord extends DbRecord {
         	if($requestableAsset['BUSINESS_JUSTIFICATION_REQUIRED']=='Yes'){
         	    $rowsRequired = (int)strlen(trim(urldecode($requestableAsset['PROMPT'])))/30;
         	    $rowsRequired = $rowsRequired < 2 ? 2 : $rowsRequired;
-        	    ?><div class='justificationDiv'  id='person-<?=$personId?>-justification-div-<?=$assetId?>' style='display:none'><textarea class='form-control justification' rows='<?=$rowsRequired?>' style='min-width: 100%' id='person-<?=$personId?>-justification-<?=$assetId?>' name='person-<?=$personId?>-justification-<?=$assetId?>' placeholder='<?=trim(urldecode($requestableAsset['PROMPT']));?>' min=1  max='255' ' ></textarea><span disabled>255 chars max</span></div><?php
+        	    ?><div class='justificationDiv'  id='person-<?=$personId?>-justification-div-<?=$assetId?>' style='display:none'><textarea class='form-control justification' rows='<?=$rowsRequired?>' style='min-width: 100%' id='person-<?=$personId?>-justification-<?=$assetId?>' name='person-<?=$personId?>-justification-<?=$assetId?>' placeholder='<?=trim(urldecode($requestableAsset['PROMPT']));?>' min=1  max='255' ></textarea><span disabled>255 chars max</span></div><?php
         	}
         	?>
         	</div>

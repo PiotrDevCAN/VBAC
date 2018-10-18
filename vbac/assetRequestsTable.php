@@ -791,7 +791,7 @@ class assetRequestsTable extends DbTable{
 
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-						 <textarea class='form-control justification' rows='4' style='min-width: 100%' id='approveRejectRequestComment' name='approveRejectRequestComment' placeholder='Please provide comment if rejecting' min='0' max='500' ' ></textarea><span disabled>500 characters max</span>
+						 <textarea class='form-control justification' rows='4' style='min-width: 100%' id='approveRejectRequestComment' name='approveRejectRequestComment' placeholder='Please provide comment if rejecting' min='0' max='500' ></textarea><span disabled>500 characters max</span>
                     </div>
                   </div>
                 </form>
@@ -1165,15 +1165,6 @@ class assetRequestsTable extends DbTable{
                         ?>
 				</select>
             	</div>
-<!--          		<div class='col-sm-2 align-middle'> -->
-<!--          		<h4 class='text-center align-middle'>Maps to Order IT</h4> -->
-         		</div>
-<!--          		<div class='col-sm-5'> -->
-<!--         			<input type="number" name='ORDERIT_NUMBER' id=orderItNumber' placeholder="Order IT Number" min="999999" max="9999999" class='form-control' required > -->
-<!--          		</div> -->
-
-
-
         	</div>
         	<div class='form-group required'>
         	<div class='col-sm-12'>
@@ -2410,7 +2401,7 @@ class assetRequestsTable extends DbTable{
 
         <div class='container-fluid'>
 
-        <table class='table table-striped table-bordered compact' '>
+        <table class='table table-striped table-bordered compact' >
         <thead>
         <tr>
         <th>IBMer</th>

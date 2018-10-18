@@ -1152,7 +1152,6 @@ class OldFormClass {
 
         				</div>
         			</div>
-        		</div>
                 <?php
         }
 
