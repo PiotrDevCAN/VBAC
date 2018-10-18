@@ -655,7 +655,7 @@ You are able to amend the Functional Manager of people assigned to you but who n
     <div class='form-group' >
         <div class='col-sm-6'>
             <div class="radio">
-        <label><input type="radio" name="TT_BAU"  class='accountOrganisation' value='T&T' required <?=substr($this->TT_BAU,0,3)=='T&T'? 'checked' : null ?>>T&T</label>
+        <label><input type="radio" name="TT_BAU"  class='accountOrganisation' value='T&T' required <?=substr($this->TT_BAU,0,3)=='T&T'? 'checked' : null ?>>T&amp;T</label>
         <label><input type="radio" name="TT_BAU"  class='accountOrganisation' value='BAU' required <?=substr($this->TT_BAU,0,3)=='BAU'? 'checked' : null ?>>BAU</label>
       </div>
         </div>
@@ -679,7 +679,7 @@ You are able to amend the Functional Manager of people assigned to you but who n
                               disabled
                               placeholder='Select T&T/BAU First'
             >
-                <option value=''>Select T&T/BAU First</option>
+                <option value=''>Select T&amp;T/BAU First</option>
             </select>
 
     </div>

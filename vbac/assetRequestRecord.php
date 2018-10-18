@@ -296,10 +296,10 @@ class assetRequestRecord extends DbRecord {
         		   <h4 class="modal-title">Security Education Confirmation</h4>
       			</div>
       			<div class="modal-body" >
-      				<p><center>Please confirm <b><span id='educationNotesid'></span></b> has successfully completed the mandatory Aurora Security Education Modules for IBMers before continuing</center></p>
-      				<p><center>Access to these self paced online courses is via the following link <a href='https://lt.be.ibm.com/aurora' target='_blank'>https://lt.be.ibm.com/aurora</a></center></p>
-      				<p><center>Please contact <a href='mailto:Aurora.Central.PMO@uk.ibm.com'>Aurora Central PMO/UK/IBM</a> if you do not have access.</center></p>
-					<p><center>Please note a false declaration of completion constitutes a breach of IBM Business Conduct Guidelines and may lead to disciplinary action.</center></p>
+      				<p style="text-align:center">Please confirm <b><span id='educationNotesid'></span></b> has successfully completed the mandatory Aurora Security Education Modules for IBMers before continuing</p>
+      				<p style="text-align:center">Access to these self paced online courses is via the following link <a href='https://lt.be.ibm.com/aurora' target='_blank'>https://lt.be.ibm.com/aurora</a></p>
+      				<p style="text-align:center">Please contact <a href='mailto:Aurora.Central.PMO@uk.ibm.com'>Aurora Central PMO/UK/IBM</a> if you do not have access.</p>
+					<p style="text-align:center">Please note a false declaration of completion constitutes a breach of IBM Business Conduct Guidelines and may lead to disciplinary action.</p>
       			</div>
       			<div class="modal-footer">
       		  		<button type="button" class="btn btn-success" id='confirmedEducation'>Education Completed</button>
@@ -392,9 +392,9 @@ class assetRequestRecord extends DbRecord {
         		   <h4 class="modal-title">Missing Pre-Req</h4>
       			</div>
       			<div class="modal-body" >
-      				<p><center>You have requested Asset : <b><span id='requestedAssetTitle'></span></b></center></p>
-      				<p><center>However, this asset has a pre-req of : <b><span id='prereqAssetTitle'></span></b> which you have <b>NOT</b> selected.</p>
-      				<p><center>If <b><span id='requesteeNotesid'></span></b> already has that asset, then simply close this window, and continue</center>
+      				<p style="text-align:center">You have requested Asset : <b><span id='requestedAssetTitle'></span></b></p>
+      				<p style="text-align:center">However, this asset has a pre-req of : <b><span id='prereqAssetTitle'></span></b> which you have <b>NOT</b> selected.</p>
+      				<p style="text-align:center">If <b><span id='requesteeNotesid'></span></b> already has that asset, then simply close this window, and continue</p>
 
       			</div>
       			<div class="modal-footer">

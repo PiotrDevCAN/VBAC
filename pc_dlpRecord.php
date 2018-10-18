@@ -10,8 +10,8 @@ ob_start();
 <div class='row'>
 <div class='col-sm-2'></div>
 <div class='col-sm-8'>
-<h2>Data Leakage Protection - DG&CB Licence Tracking</h2>
-<h5>Install DG&CB from :<a href='http://ibm.biz/BdYzHY'>http://ibm.biz/BdYzHY</a></h5>
+<h2>Data Leakage Protection - DG&amp;CB Licence Tracking</h2>
+<h5>Install DG&amp;CB from :<a href='http://ibm.biz/BdYzHY'>http://ibm.biz/BdYzHY</a></h5>
 </div>
 </div>
 

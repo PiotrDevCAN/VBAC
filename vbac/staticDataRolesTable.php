@@ -14,13 +14,13 @@ class staticDataRolesTable extends staticDataTable {
 
     static function editGroupsForRoles(){
         ?>
-        <div id='editGroupsForRoles' hidden >
+        <div id='editGroupsForRoles'  >
 			<div class="panel panel-default">
   				<div class="panel-heading">
     				<h3 class="panel-title">Manage Groups for Roles</h3>
   				</div>
   			<div class="panel-body">
-  				<table class='table table-striped table-bordered'   width='50%' id='groupRolesValues'>
+  				<table class='table table-striped table-bordered'   style='width:50%' id='groupRolesValues'>
 				<thead><tr><th>Table Name</th><th>Entry</th></tr></thead>
 				<tbody>
 <!-- 				will be populated by ajax all when DataTables is initiated by JS functiom -->

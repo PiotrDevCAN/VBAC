@@ -809,7 +809,7 @@ class assetRequestsTable extends DbTable{
                 ?>
 	      		<button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
           	</div>
-          	<input type=-'hidden' val='' id='approveRejectRequestOrderItStatus' name='approveRejectRequestOrderItStatus' />
+          	<input type='hidden' val='' id='approveRejectRequestOrderItStatus' name='approveRejectRequestOrderItStatus' />
           </form>
           </div>
         </div>
@@ -1177,7 +1177,7 @@ class assetRequestsTable extends DbTable{
         	</div>
         	<div class='form-group required'>
         	<div class='col-sm-12'>
-        		<table class='table table-striped table-bordered '   width='90%' id='requestsWithinVarb'>
+        		<table class='table table-striped table-bordered '   style='width:90%' id='requestsWithinVarb'>
         		<thead><tr><th>Devarb</th><th>Ref</th><th>Order IT</th><th>Requestee</th><th>Asset</th><th>Comment</th></tr></thead>
         		<tbody>
         		</tbody>

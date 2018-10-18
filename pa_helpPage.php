@@ -52,7 +52,7 @@ body {
 
 
 <div class="container">
-<h1 id='welcomeJumotron'>Training Links & Feedback</h1>
+<h1 id='welcomeJumotron'>Training Links &amp; Feedback</h1>
 
 <div class="alert alert-warning helplink">
   <strong>Unexpected Results ? </strong>&nbsp;Please note only the <strong>Firefox</strong> browser is 100% supported for use with vBAC. If you experience an <strong>"unexpected result"</strong> and are NOT using Firefox, then please retry using Firefox before you escalate for support.
@@ -88,7 +88,7 @@ body {
 </div>
 </div>
 
-<<script type="text/javascript">
+<script type="text/javascript">
 
 
 $(document).click('#feedbackSend',function (){

@@ -181,7 +181,7 @@ class SelectionBar
         }
         $var = 'sbif' . strtr($label, ' ', '_');
         $value = $$var;
-        echo "<TD><INPUT type='text' id='$var' name='$var' value='$value' $state width='$width' $onChange $color /></TD>";
+        echo "<TD><INPUT type='text' id='$var' name='$var' value='$value' $state style='width:$width' $onChange $color /></TD>";
         if ($value != null) {
             $this->predicate .= " AND ";
             $this->predicate .= $caseSensitive ? $column : " upper($column) ";

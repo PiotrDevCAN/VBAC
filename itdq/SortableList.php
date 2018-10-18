@@ -881,7 +881,7 @@ class SortableList
     {
         Trace::traceComment(null, __METHOD__);
         if ($show) {
-            echo "<TABLE class=bar-blue-med-light width=$width>";
+            echo "<TABLE class=bar-blue-med-light style='width:$width' >";
             echo "<TR bgcolor='#99bbee'>";
         }
         $cell = 1;
@@ -960,7 +960,7 @@ class SortableList
     function multiRecordButtons($width = '50%')
     {
         Trace::traceComment(null, __METHOD__);
-        echo "<TABLE class=bar-blue-med-light width=$width>";
+        echo "<TABLE class=bar-blue-med-light style='width:$width'>";
         echo "<TR bgcolor='#99bbee'><TD colspan='8'><span style='font-size: 0.85em;font-weight: normal;'>Select multiple records,using the 'Select' checkbox in the Action column prior to clicking one of these buttons. <BR/>OR<BR/>Use a specific button in the Action column to perform an Action on that 1 record</span></TD></TR> ";
         echo "<TR bgcolor='#99bbee'><TD><span class='button-blue'>";
         $cell = 1;
@@ -1639,7 +1639,7 @@ class SortableList
         if ($this->profileSaveable && isset(AllITdqTables::$PROFILES)) { // They are setup to have saved profiles.
             $loader = new Loader();
             $myProfiles = $loader->load('PROFILE_NAME', AllITdqTables::$PROFILES, " (INTRANET='" . db2_escape_string(trim($_SESSION['ssoEmail'])) . "' or INTRANET='global' ) AND PAGE='" . db2_escape_string(trim($_SERVER['PHP_SELF'])) . "' ");
-            echo "<TABLE class=$this->dropSelectTableClass width='25%'>";
+            echo "<TABLE class=$this->dropSelectTableClass style='width:25%'>";
             if (! empty($myProfiles)) {
                 $this->profileSelectionBar->selectBox('Load Profile', 'Select...', 'SELECTED_PROFILE', $myProfiles);
                 echo "<TR></TR>";

@@ -32,7 +32,7 @@
 
 <div class="container">
 <!--  <div class="jumbotron"> -->
-<h1 id='welcomeJumotron'>Ventus Boarding & Access Control</h1>
+<h1 id='welcomeJumotron'>Ventus Boarding &amp; Access Control</h1>
 <div>
 <p>vBAC has been coded to the ECMAScript 2015 standard. This is not supported by older browsers, such as Internet Explorer(IE).</p>
 <p>It has detected that you are using an old browser that does not support vBAC.</p>
