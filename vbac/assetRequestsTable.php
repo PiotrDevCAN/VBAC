@@ -1435,7 +1435,7 @@ class assetRequestsTable extends DbTable{
 
         	<div class='form-group required'>
         	<div class='col-sm-12'>
-        		<table class='table table-striped table-bordered '   width='100%' id='requestsWithStatus'>
+        		<table class='table table-striped table-bordered '   style='width:100%' id='requestsWithStatus'>
         		<thead><tr><th>Ref</th><th>Person</th><th>Asset</th><th>vbac<br/>Status</th><th>Order IT<br/>Status</th><th>Primary UID</th><th>Comment</th><th>Order IT Responded</th></tr></thead>
         		<tbody>
         		</tbody>

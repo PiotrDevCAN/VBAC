@@ -1,7 +1,7 @@
 <?php
 ?>
 <div class='container'>
-<table id='testTable'  class='table table-striped table-bordered compact'   width='100%'>
+<table id='testTable'  class='table table-striped table-bordered compact'   style='width:100%'>
 <thead><tr><th> Col 1</th><th>Col 2</th><th>Col 3</th></tr></thead>
 <tbody>
 <tr><td>Data 1a</td><td>Data 2a</td><td>Data 3a</td></tr>

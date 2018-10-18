@@ -10,7 +10,7 @@ $headerCells = $requestableAsset->htmlHeaderCells();
 
 ob_clean();
 ?>
-<table id='requestableAssetTable' class='table table-striped table-bordered compact'   width='100%'>
+<table id='requestableAssetTable' class='table table-striped table-bordered compact'   style='width:100%'>
 <thead>
 <tr><?=$headerCells;?></tr></thead>
 <tbody>
