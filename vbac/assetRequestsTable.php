@@ -1177,7 +1177,7 @@ class assetRequestsTable extends DbTable{
         	</div>
         	<div class='form-group required'>
         	<div class='col-sm-12'>
-        		<table class='table table-striped table-bordered ' cellspacing='0' width='90%' id='requestsWithinVarb'>
+        		<table class='table table-striped table-bordered '   width='90%' id='requestsWithinVarb'>
         		<thead><tr><th>Devarb</th><th>Ref</th><th>Order IT</th><th>Requestee</th><th>Asset</th><th>Comment</th></tr></thead>
         		<tbody>
         		</tbody>
@@ -1435,7 +1435,7 @@ class assetRequestsTable extends DbTable{
 
         	<div class='form-group required'>
         	<div class='col-sm-12'>
-        		<table class='table table-striped table-bordered ' cellspacing='0' width='100%' id='requestsWithStatus'>
+        		<table class='table table-striped table-bordered '   width='100%' id='requestsWithStatus'>
         		<thead><tr><th>Ref</th><th>Person</th><th>Asset</th><th>vbac<br/>Status</th><th>Order IT<br/>Status</th><th>Primary UID</th><th>Comment</th><th>Order IT Responded</th></tr></thead>
         		<tbody>
         		</tbody>

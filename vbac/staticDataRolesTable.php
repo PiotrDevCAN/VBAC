@@ -20,7 +20,7 @@ class staticDataRolesTable extends staticDataTable {
     				<h3 class="panel-title">Manage Groups for Roles</h3>
   				</div>
   			<div class="panel-body">
-  				<table class='table table-striped table-bordered' cellspacing='0' width='50%' id='groupRolesValues'>
+  				<table class='table table-striped table-bordered'   width='50%' id='groupRolesValues'>
 				<thead><tr><th>Table Name</th><th>Entry</th></tr></thead>
 				<tbody>
 <!-- 				will be populated by ajax all when DataTables is initiated by JS functiom -->

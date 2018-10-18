@@ -43,7 +43,7 @@ Trace::pageOpening($_SERVER['PHP_SELF']);
 <div class='container-fluid'>
 <h3>Email Log</h3>
 <div id='emailLogDiv'>
-<table id='emailLogTable' class='table table-striped table-bordered compact' cellspacing='0' width='100%'>
+<table id='emailLogTable' class='table table-striped table-bordered compact'   width='100%'>
 <thead>
 <tr><th>Id</th><th>Details</th><th>Message</th><th>Status</th><th>Sent Timestamp</th><th>Status Timestamp</th></tr></thead>
 <tbody>

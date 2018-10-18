@@ -83,7 +83,7 @@ class delegateRecord extends DbRecord
 
 		<div class="panel-body">
 
-          	<table id='myDelegatesTable' class='table table-striped table-bordered compact' cellspacing='0' width='100%'>
+          	<table id='myDelegatesTable' class='table table-striped table-bordered compact'   width='100%'>
         	<thead>
         	<tr><th>Manager Email</th><th>Delegate Email</th><th>Delete</th></tr>
         	</thead>

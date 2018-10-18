@@ -52,7 +52,7 @@ if(!$myCnum){
 
 
 <div id='dlpLicencesReport'>
-<table id='dlpLicensesTable' class='table table-striped table-bordered compact' cellspacing='0' width='100%'>
+<table id='dlpLicensesTable' class='table table-striped table-bordered compact'   width='100%'>
 <thead>
 <tr><th>CNUM</th><th>LICENSEE<th>HOSTNAME</th><th>APPROVER</th><th>APPROVED</th><th>FUNCTIONAL_MGR</th><th>CREATION_DATE</th><th>EXCEPTION_CODE</th><th>OLD_HOSTNAME</th><th>TRANSFERRED_DATE</th><th>TRANSFERRED_BY</th><th>STATUS</th></tr></thead>
 <tbody>

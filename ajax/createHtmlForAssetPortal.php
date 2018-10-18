@@ -7,7 +7,7 @@ $headerCells = assetRequestsTable::portalHeaderCells();
 
 ob_clean();
 ?>
-<table id='assetPortalTable' class='table table-striped table-bordered compact' cellspacing='0' width='100%'>
+<table id='assetPortalTable' class='table table-striped table-bordered compact'   width='100%'>
 <thead>
 <tr><?=$headerCells;?></tr></thead>
 <tbody>
