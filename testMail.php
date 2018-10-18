@@ -64,7 +64,7 @@ use vbac\personRecord;
 
 //     var_dump($info);
 
-$message = '<table width="100%" border="0" cellspacing="0" cellpadding="0">
+$message = '<table width="100%" border="0"   cellpadding="0">
     <tr>
         <td align="center">
             <table width="50%">

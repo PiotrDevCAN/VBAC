@@ -27,7 +27,7 @@ class staticDataTable extends DbTable {
   			</div>
   			<div class="panel-body">
   			<div class='table-responsive'>
-				<table class="table table-striped table-bordered" cellspacing="0" width="50%" id='staticDataValues'>
+				<table class="table table-striped table-bordered"   width="50%" id='staticDataValues'>
 				<thead><tr><th>Table Name</th><th>Entry</th></tr></thead>
 				<tbody>
 <!-- 				will be populated by ajax all when DataTables is initiated by JS functiom -->

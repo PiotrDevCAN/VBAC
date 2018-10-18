@@ -120,7 +120,7 @@ class personRecord extends DbRecord
     public static $orderITNonBauTaskId = array('Aurora.On.and.Off.Boarding.support@uk.ibm.com');
     //private static $pesTaskId = 'rob.daniel@uk.ibm.com';
     //private static $pesTaskId    = array('rob.daniel@uk.ibm.com', 'carrabooth@uk.ibm.com');
-//     private static $pesEmailBody = '<table width="100%" border="0" cellspacing="0" cellpadding="0">
+//     private static $pesEmailBody = '<table width="100%" border="0"   cellpadding="0">
 //                              <tr><td align="center">
 //                                 <table width="50%">
 //                                     <tr><td colspan="2" style="font-size:16px;padding-bottom:10px"">Please initiate PES check for the following individual:</td></tr>
@@ -154,7 +154,7 @@ class personRecord extends DbRecord
     );
 
 
-//     private static $pesStatusChangeEmailBody = '<table width="100%" border="0" cellspacing="0" cellpadding="0">
+//     private static $pesStatusChangeEmailBody = '<table width="100%" border="0"   cellpadding="0">
 //                              <tr><td align="center">
 //                                 <table width="50%">
 //                                     <tr><td colspan="2" style="font-size:16px;padding-bottom:10px"">Please Note the<b>PES STATUS</b> has changed for the following individual:</td></tr>
