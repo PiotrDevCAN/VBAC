@@ -112,16 +112,22 @@ class pesTrackerTable extends DbTable{
             // $age = !empty($row['PES_DATE_REQUESTED']) ? $interval->format('%R%a days') : null;
             $cnum = $row['CNUM']; 
             
-           
-            $proofOfId = $row['PROOF_OF_ID'] == 'Yes' ? "<div class='alert alert-success text-center' role='alert'>Yes</div>": "<div class='alert alert-warning text-center' role='alert'>TBD</div>";
-            $proofOfResidency = $row['PROOF_OF_ID'] == 'Yes' ? "<div class='alert alert-success text-center' role='alert'>Yes</div>": "<div class='alert alert-info text-center' role='alert'>Prov</div>";
-            
-            
             $consentValue = !empty($row['CONSENT']) ? trim($row['CONSENT']) : 'TBD';
             $consentAlertClass = self::getAlertClassForPesStage($consentValue);
             
             $rightToWorkValue = !empty($row['RIGHT_TO_WORK']) ? trim($row['RIGHT_TO_WORK']) : 'TBD';
             $rightToWorkAlertClass = self::getAlertClassForPesStage($rightToWorkValue);
+            
+            $proofOfIdValue = !empty($row['PROOF_OF_ID']) ? trim($row['PROOF_OF_ID']) : 'TBD';
+            $proofOfIdAlertClass = self::getAlertClassForPesStage($proofOfIdValue);
+            
+            $proofOfResidencyValue = !empty($row['PROOF_OF_RESIDENCY']) ? trim($row['PROOF_OF_RESIDENCY']) : 'TBD';
+            $proofOfResidencyAlertClass = self::getAlertClassForPesStage($proofOfResidencyValue);
+            
+            $creditCheckValue = !empty($row['CREDIT_CHECK']) ? trim($row['CREDIT_CHECK']) : 'TBD';
+            $creditCheckAlertValue = self::getAlertClassForPesStage($creditCheckValue);
+            
+            
 
             
             
@@ -141,51 +147,26 @@ class pesTrackerTable extends DbTable{
             <td><?=trim($row['COUNTRY'])?></td>
             <td><?=$row['JML']?></td>
             <td id='consent_<?=$cnum?>'> 
-                <div class='alert <?=$consentAlertClass;?> text-center pesStageDisplay' role='alert'><?=$consentValue;?></div>
-                <div class='text-center'
-                <span style='white-space:nowrap'>
-            	<button class='btn btn-success btn-xs btnPesStageCleared accessPes accessCdi' data-toggle="tooltip" data-placement="top" title="Cleared" ><span class="glyphicon glyphicon-ok-sign" ></span></button> 
-  				<button class='btn btn-warning btn-xs btnPesStageProvisional accessPes accessCdi' data-toggle="tooltip"  title="Stage Cleared Provisionally"><span class="glyphicon glyphicon-alert" ></span></button>
-				<button class='btn btn-info btn-xs btnPesStageNotApplicable accessPes accessCdi' data-toggle="tooltip"  title="Not applicable"><span class="glyphicon glyphicon-remove-sign" ></span></button>
-				</span>
-				</div>
+            	<?=self::getButtonsForPesStage($consentValue, $consentAlertClass);?>
             </td>
             <td><?=$row['RIGHT_TO_WORK']?> 
-            	<div class='alert <?=$rightToWorkAlertClass;?> text-center pesStageDisplay' role='alert'><?=$rightToWorkValue;?></div>              
-                <div class='text-center'>
-                <span style='white-space:nowrap' >
-                <button class='btn btn-success btn-xs btnPesStageCleared accessPes accessCdi' data-toggle="tooltip" data-placement="top" title="Cleared" ><span class="glyphicon glyphicon-ok-sign" ></span></button> 
-  				<button class='btn btn-warning btn-xs btnPesStageProvisional accessPes accessCdi' data-toggle="tooltip"  title="Stage Cleared Provisionally"><span class="glyphicon glyphicon-alert" ></span></button>
-	     		<button class='btn btn-info btn-xs btnPesStageNotApplicable accessPes accessCdi' data-toggle="tooltip"  title="Not applicable"><span class="glyphicon glyphicon-remove-sign" ></span></button>
-	     		</span>
-	     		</div>
+				<?=self::getButtonsForPesStage($rightToWorkValue, $rightToWorkAlertClass);?>
             </td>
-            <td><?=$row['PROOF_OF_ID']?><?=$proofOfId;?>
-            	<span style='white-space:nowrap'>
-                <button class='btn btn-success btn-xs btnPesStageCleared accessPes accessCdi' data-toggle="tooltip" data-placement="top" title="Cleared" ><span class="glyphicon glyphicon-ok-sign" ></span></button> 
-  				<button class='btn btn-warning btn-xs btnPesStageProvisional accessPes accessCdi' data-toggle="tooltip"  title="Stage Cleared Provisionally"><span class="glyphicon glyphicon-alert" ></span></button>
-				<button class='btn btn-info btn-xs btnPesStageNotApplicable accessPes accessCdi' data-toggle="tooltip"  title="Not applicable"><span class="glyphicon glyphicon-remove-sign" ></span></button>
-				</span>
+            <td><?=$row['PROOF_OF_ID']?>
+				<?=self::getButtonsForPesStage($proofOfIdValue, $proofOfIdAlertClass);?>
             </td>
-            <td><?=$row['PROOF_OF_RESIDENCY']?><?=$proofOfResidency;?>
-            	<span style='white-space:nowrap'>
-                <button class='btn btn-success btn-xs btnPesStageCleared accessPes accessCdi' data-toggle="tooltip" data-placement="top" title="Cleared" ><span class="glyphicon glyphicon-ok-sign" ></span></button> 
-  				<button class='btn btn-warning btn-xs btnPesStageProvisional accessPes accessCdi' data-toggle="tooltip"  title="Stage Cleared Provisionally"><span class="glyphicon glyphicon-alert" ></span></button>
-				<button class='btn btn-info btn-xs btnPesStageNotApplicable accessPes accessCdi' data-toggle="tooltip"  title="Not applicable"><span class="glyphicon glyphicon-remove-sign" ></span></button>
-				</span>
+            <td><?=$row['PROOF_OF_RESIDENCY']?>
+				<?=self::getButtonsForPesStage($proofOfResidencyValue, $proofOfResidencyAlertClass);?>
             </td>
             <td><?=$row['CREDIT_CHECK']?>
-            	<span style='white-space:nowrap'>
-                <button class='btn btn-success btn-xs btnPesStageCleared accessPes accessCdi' data-toggle="tooltip" data-placement="top" title="Cleared" ><span class="glyphicon glyphicon-ok-sign" ></span></button> 
-  				<button class='btn btn-warning btn-xs btnPesStageProvisional accessPes accessCdi' data-toggle="tooltip"  title="Stage Cleared Provisionally"><span class="glyphicon glyphicon-alert" ></span></button>
-				<button class='btn btn-info btn-xs btnPesStageNotApplicable accessPes accessCdi' data-toggle="tooltip"  title="Not applicable"><span class="glyphicon glyphicon-remove-sign" ></span></button>
-				</span>
+				<?=self::getButtonsForPesStage($creditCheckValue, $creditCheckAlertValue);?>
             </td>
             <td><?=$row['FINANCIAL_SANCTIONS']?>
             	<span style='white-space:nowrap'>
                 <button class='btn btn-success btn-xs btnPesStageCleared accessPes accessCdi' data-toggle="tooltip" data-placement="top" title="Cleared" ><span class="glyphicon glyphicon-ok-sign" ></span></button> 
   				<button class='btn btn-warning btn-xs btnPesStageProvisional accessPes accessCdi' data-toggle="tooltip"  title="Stage Cleared Provisionally"><span class="glyphicon glyphicon-alert" ></span></button>
 				<button class='btn btn-info btn-xs btnPesStageNotApplicable accessPes accessCdi' data-toggle="tooltip"  title="Not applicable"><span class="glyphicon glyphicon-remove-sign" ></span></button>
+								<button class='btn btn-info btn-xs btnPesStageClear accessPes accessCdi' data-toggle="tooltip"  title="Clear Field"><span class="glyphicon glyphicon-erase" ></span></button>
 				</span>
 				</td>
             <td><?=$row['CRIMINAL_RECORDS_CHECK']?>
@@ -193,6 +174,7 @@ class pesTrackerTable extends DbTable{
                 <button class='btn btn-success btn-xs btnPesStageCleared accessPes accessCdi' data-toggle="tooltip" data-placement="top" title="Cleared" ><span class="glyphicon glyphicon-ok-sign" ></span></button> 
   				<button class='btn btn-warning btn-xs btnPesStageProvisional accessPes accessCdi' data-toggle="tooltip"  title="Stage Cleared Provisionally"><span class="glyphicon glyphicon-alert" ></span></button>
 				<button class='btn btn-info btn-xs btnPesStageNotApplicable accessPes accessCdi' data-toggle="tooltip"  title="Not applicable"><span class="glyphicon glyphicon-remove-sign" ></span></button>
+								<button class='btn btn-info btn-xs btnPesStageClear accessPes accessCdi' data-toggle="tooltip"  title="Clear Field"><span class="glyphicon glyphicon-erase" ></span></button>
 				</span>
             </td>
             <td><?=$row['PROOF_OF_ACTIVITY']?>
@@ -264,5 +246,22 @@ class pesTrackerTable extends DbTable{
         }
         return $alertClass;
     }
+    
+    
+    
+    static function getButtonsForPesStage($value, $alertClass){
+        ?>
+        <div class='alert <?=$alertClass;?> text-center pesStageDisplay' role='alert'><?=$value;?></div>              
+        <div class='text-center'>
+        <span style='white-space:nowrap' >
+        <button class='btn btn-success btn-xs btnPesStageCleared accessPes accessCdi' data-toggle="tooltip" data-placement="top" title="Cleared" ><span class="glyphicon glyphicon-ok-sign" ></span></button> 
+  		<button class='btn btn-warning btn-xs btnPesStageProvisional accessPes accessCdi' data-toggle="tooltip"  title="Stage Cleared Provisionally"><span class="glyphicon glyphicon-alert" ></span></button>
+	  	<button class='btn btn-info btn-xs btnPesStageNotApplicable accessPes accessCdi' data-toggle="tooltip"  title="Not applicable"><span class="glyphicon glyphicon-remove-sign" ></span></button>
+	  	<button class='btn btn-info btn-xs btnPesStageClear accessPes accessCdi' data-toggle="tooltip"  title="Clear Field"><span class="glyphicon glyphicon-erase" ></span></button>
+	  	</span>
+	  	</div>
+        <?php 
+    }
+        
     
 }
