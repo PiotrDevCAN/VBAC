@@ -148,6 +148,8 @@ function personRecord() {
   },
   
   this.listenforSendPesEmail = function(){
+	   console.log('set listener');
+	   console.log($('.btnSendPesEmail'));
 		$(document).on('click','.btnSendPesEmail', function(e){
 			console.log(e);
 			$(this).addClass('spinning');

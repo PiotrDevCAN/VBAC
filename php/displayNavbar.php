@@ -47,6 +47,7 @@ $audit          = new NavbarOption('Audit Report', 'pa_auditListing.php','access
 $requestableAssets  = new NavbarOption('Requestable Assets', 'pa_requestableAssets.php','accessCdi accessPmo');
 $ringFenced     = new NavbarOption('Ring Fencing', 'pa_ringFencing.php','accessRes');
 $delegate       = new NavbarOption('Delegates', 'pc_delegate.php','accessCdi accessPmo accessFm accessUser');
+$pesTracker     = new NavbarOption('PES Tracker', 'pc_pesTracker.php','accessCdi accessPes');
 
 
 $email          = new NavbarOption('Email Log', 'pi_emailLog.php','accessCdi');
@@ -65,6 +66,8 @@ $adminMenu->addOption($ringFenced);
 $adminMenu->addOption( new NavbarDivider('accessCdi'));
 $adminMenu->addOption($audit);
 $adminMenu->addOption($email);
+$adminMenu->addOption( new NavbarDivider('accessPes accessCdi'));
+$adminMenu->addOption($pesTracker);
 
 
 $boarding       = new NavbarMenu('Boarding');
@@ -94,7 +97,7 @@ $access->addOption($iamAdmin);
 
 
 $reports         = new NavbarMenu('Downloadable Reports');
-$original        = new NavbarOption('Person Details - Original', 'pr_personDetails.php','accessCdi accessPmo accessRepFullPerson');
+// $original        = new NavbarOption('Person Details - Original', 'pr_personDetails.php','accessCdi accessPmo accessRepFullPerson');
 $fullExtract     = new NavbarOption('Person Details - Full', 'pr_personDetailsFull.php','accessCdi accessPmo accessRepFullPerson');
 $active          = new NavbarOption('Person Details - Active', 'pr_personDetailsActive.php','accessCdi accessPmo accessRepFullPerson');
 $activeOdc       = new NavbarOption('Person Details - Active(ODC)<span id="odcPopulation" class="badge">**</span>', 'pr_personDetailsActiveOdc.php','accessCdi accessPmo accessRepFullPerson');

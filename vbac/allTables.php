@@ -24,6 +24,9 @@ class allTables
 
     public static $PERSON             = 'PERSON';
     public static $PERSON_PORTAL_REPORTS = 'PERSON_PORTAL_REPORTS';
+    
+    public static $PES_EVENTS         = 'PES_EVENTS';
+    public static $PES_TRACKER        = 'PES_TRACKER';
 
     public static $REQUESTABLE_ASSET_LIST = 'REQUESTABLE_ASSET_LIST';
 
