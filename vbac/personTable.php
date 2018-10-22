@@ -311,72 +311,72 @@ class personTable extends DbTable {
         }
 
         if($_SESSION['isPes'] || $_SESSION['isPmo'] || $_SESSION['isFm'] || $_SESSION['isCdi']){
-            $row['PES_STATUS'] = '';
-            switch (true) {
-                case $status == personRecord::PES_STATUS_NOT_REQUESTED:
-                    $row['PES_STATUS'] .= "<button type='button' class='btn btn-default btn-xs btnPesInitiate accessRestrict accessPmo accessFm' ";
-                    $row['PES_STATUS'] .= "aria-label='Left Align' ";
-                    $row['PES_STATUS'] .= " data-cnum='" .$cnum . "' ";
-                    $row['PES_STATUS'] .= " data-pesstatus='$status' ";
-                    $row['PES_STATUS'] .= " > ";
-                    $row['PES_STATUS'] .= "<span class='glyPesInitiate glyphicon glyphicon-plane ' aria-hidden='true'></span>";
-                    $row['PES_STATUS'] .= "</button>&nbsp;";
-                    $row['PES_STATUS'] .= $status;
-                    break;
-                case $status == personRecord::PES_STATUS_INITIATED && $_SESSION['isPes'] ;
-                     $emailAddress = trim($row['EMAIL_ADDRESS']);
-                     $firstName    = trim($row['FIRST_NAME']);
-                     $lastName     = trim($row['LAST_NAME']);
-                     $country      = trim($row['COUNTRY']);
-                     $openSeat     = trim($row['OPEN_SEAT_NUMBER']);
+           // $row['PES_STATUS'] = '';
+            $row['PES_STATUS'] = self::getPesStatusWithButtons($row);
+//             switch (true) {
+//                 case $status == personRecord::PES_STATUS_NOT_REQUESTED:
+//                     $row['PES_STATUS'] .= "<button type='button' class='btn btn-default btn-xs btnPesInitiate accessRestrict accessPmo accessFm' ";
+//                     $row['PES_STATUS'] .= "aria-label='Left Align' ";
+//                     $row['PES_STATUS'] .= " data-cnum='" .$cnum . "' ";
+//                     $row['PES_STATUS'] .= " data-pesstatus='$status' ";
+//                     $row['PES_STATUS'] .= " > ";
+//                     $row['PES_STATUS'] .= "<span class='glyPesInitiate glyphicon glyphicon-plane ' aria-hidden='true'></span>";
+//                     $row['PES_STATUS'] .= "</button>&nbsp;";
+//                     $row['PES_STATUS'] .= $status;
+//                     break;
+//                 case $status == personRecord::PES_STATUS_INITIATED && $_SESSION['isPes'] ;
+//                      $emailAddress = trim($row['EMAIL_ADDRESS']);
+//                      $firstName    = trim($row['FIRST_NAME']);
+//                      $lastName     = trim($row['LAST_NAME']);
+//                      $country      = trim($row['COUNTRY']);
+//                      $openSeat     = trim($row['OPEN_SEAT_NUMBER']);
                      
-                     $missing = !empty($emailAddress) ? '' : ' Email Address';
-                     $missing.= !empty($firstName) ? '' : ' First Name';
-                     $missing.= !empty($lastName) ? '' : ' Last Name';
-                     $missing.= !empty($country) ? '' : ' Country';
+//                      $missing = !empty($emailAddress) ? '' : ' Email Address';
+//                      $missing.= !empty($firstName) ? '' : ' First Name';
+//                      $missing.= !empty($lastName) ? '' : ' Last Name';
+//                      $missing.= !empty($country) ? '' : ' Country';
                      
-                     $valid = empty(trim($missing));
+//                      $valid = empty(trim($missing));
                      
-                     $disabled = $valid ? '' : 'disabled';
-                     $tooltip = $valid ? 'Confirm PES Email details' : "Missing $missing";
+//                      $disabled = $valid ? '' : 'disabled';
+//                      $tooltip = $valid ? 'Confirm PES Email details' : "Missing $missing";
                      
                      
-                     $row['PES_STATUS'] .= "<button type='button' class='btn btn-default btn-xs btnSendPesEmail accessRestrict accessPmo accessFm' ";
-                     $row['PES_STATUS'] .= "aria-label='Left Align' ";
-                     $row['PES_STATUS'] .= " data-emailaddress='$emailAddress' ";
-                     $row['PES_STATUS'] .= " data-firstname='$firstName' ";
-                     $row['PES_STATUS'] .= " data-lastname='$lastName' ";
-                     $row['PES_STATUS'] .= " data-country='$country' ";
-                     $row['PES_STATUS'] .= " data-openseat='$openSeat' ";
-                     $row['PES_STATUS'] .= " data-toggle='tooltip' data-placement='top' title='$tooltip'";
-                     $row['PES_STATUS'] .= " $disabled  ";
-                     $row['PES_STATUS'] .= " > ";
-                     $row['PES_STATUS'] .= "<span class='glyphicon glyphicon-send ' aria-hidden='true' ></span>";
- 
-                     $row['PES_STATUS'] .= "</button>&nbsp;";
-                case $status == personRecord::PES_STATUS_REQUESTED && $_SESSION['isPes'] :
-                case $status == personRecord::PES_STATUS_CLEARED_PERSONAL && $_SESSION['isPes'] :
-                case $status == personRecord::PES_STATUS_CLEARED && $_SESSION['isPes'] :
-                case $status == personRecord::PES_STATUS_EXCEPTION && $_SESSION['isPes'] :
-                case $status == personRecord::PES_STATUS_DECLINED && $_SESSION['isPes'] ;
-                case $status == personRecord::PES_STATUS_FAILED && $_SESSION['isPes'] ;
-                case $status == personRecord::PES_STATUS_REMOVED && $_SESSION['isPes'] ;
-                    $row['PES_STATUS'] .= "<button type='button' class='btn btn-default btn-xs btnPesStatus' aria-label='Left Align' ";
-                    $row['PES_STATUS'] .= " data-cnum='" .$cnum . "' ";
-                    $row['PES_STATUS'] .= " data-notesid='" . $notesId . "' ";
-                    $row['PES_STATUS'] .= " data-email='" . $email . "' ";
-                    $row['PES_STATUS'] .= " data-pesdaterequested='" .trim($row['PES_DATE_REQUESTED']) . "' ";
-                    $row['PES_STATUS'] .= " data-pesrequestor='" .trim($row['PES_REQUESTOR']) . "' ";
-                    $row['PES_STATUS'] .= " data-pesstatus='" .$status . "' ";
-                    $row['PES_STATUS'] .= " > ";
-                    $row['PES_STATUS'] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
-                    $row['PES_STATUS'] .= "</button>&nbsp;";
-                    $row['PES_STATUS'] .= $status;
-                    break;
-                default:
-                    $row['PES_STATUS'] .= $status;
-                    break;
-            }
+//                      $row['PES_STATUS'] .= "<button type='button' class='btn btn-default btn-xs btnSendPesEmail accessRestrict accessPmo accessFm' ";
+//                      $row['PES_STATUS'] .= "aria-label='Left Align' ";
+//                      $row['PES_STATUS'] .= " data-emailaddress='$emailAddress' ";
+//                      $row['PES_STATUS'] .= " data-firstname='$firstName' ";
+//                      $row['PES_STATUS'] .= " data-lastname='$lastName' ";
+//                      $row['PES_STATUS'] .= " data-country='$country' ";
+//                      $row['PES_STATUS'] .= " data-openseat='$openSeat' ";
+//                      $row['PES_STATUS'] .= " data-toggle='tooltip' data-placement='top' title='$tooltip'";
+//                      $row['PES_STATUS'] .= " $disabled  ";
+//                      $row['PES_STATUS'] .= " > ";
+//                      $row['PES_STATUS'] .= "<span class='glyphicon glyphicon-send ' aria-hidden='true' ></span>"; 
+//                      $row['PES_STATUS'] .= "</button>&nbsp;";
+//                 case $status == personRecord::PES_STATUS_REQUESTED && $_SESSION['isPes'] :
+//                 case $status == personRecord::PES_STATUS_CLEARED_PERSONAL && $_SESSION['isPes'] :
+//                 case $status == personRecord::PES_STATUS_CLEARED && $_SESSION['isPes'] :
+//                 case $status == personRecord::PES_STATUS_EXCEPTION && $_SESSION['isPes'] :
+//                 case $status == personRecord::PES_STATUS_DECLINED && $_SESSION['isPes'] ;
+//                 case $status == personRecord::PES_STATUS_FAILED && $_SESSION['isPes'] ;
+//                 case $status == personRecord::PES_STATUS_REMOVED && $_SESSION['isPes'] ;
+//                     $row['PES_STATUS'] .= "<button type='button' class='btn btn-default btn-xs btnPesStatus' aria-label='Left Align' ";
+//                     $row['PES_STATUS'] .= " data-cnum='" .$cnum . "' ";
+//                     $row['PES_STATUS'] .= " data-notesid='" . $notesId . "' ";
+//                     $row['PES_STATUS'] .= " data-email='" . $email . "' ";
+//                     $row['PES_STATUS'] .= " data-pesdaterequested='" .trim($row['PES_DATE_REQUESTED']) . "' ";
+//                     $row['PES_STATUS'] .= " data-pesrequestor='" .trim($row['PES_REQUESTOR']) . "' ";
+//                     $row['PES_STATUS'] .= " data-pesstatus='" .$status . "' ";
+//                     $row['PES_STATUS'] .= " > ";
+//                     $row['PES_STATUS'] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
+//                     $row['PES_STATUS'] .= "</button>&nbsp;";
+//                     $row['PES_STATUS'] .= $status;
+//                     break;
+//                 default:
+//                     $row['PES_STATUS'] .= $status;
+//                     break;
+//             }
         }
 
         if(($_SESSION['isPes'] || $_SESSION['isPmo'] || $_SESSION['isFm'] || $_SESSION['isCdi']) && ($revalidationStatus!=personRecord::REVALIDATED_OFFBOARDED))  {
@@ -1169,7 +1169,78 @@ class personTable extends DbTable {
         return true;
     }
 
-
+    static function getPesStatusWithButtons($row){
+        $notesId = trim($row['NOTES_ID']);
+        $email   = trim($row['EMAIL_ADDRESS']);
+        $cnum    = trim($row['CNUM']);
+        $status  = trim($row['PES_STATUS']);
+        $cnum    = trim($row['CNUM']);
+        $pesStatusWithButton = '';
+        $pesStatusWithButton.= $status . "<br/>";
+        switch (true) {
+            case $status == personRecord::PES_STATUS_NOT_REQUESTED:
+                $pesStatusWithButton.= "<button type='button' class='btn btn-default btn-xs btnPesInitiate accessRestrict accessPmo accessFm' ";
+                $pesStatusWithButton.= "aria-label='Left Align' ";
+                $pesStatusWithButton.= " data-cnum='" .$cnum . "' ";
+                $pesStatusWithButton.= " data-pesstatus='$status' ";
+                $pesStatusWithButton.= " > ";
+                $pesStatusWithButton.= "<span class='glyPesInitiate glyphicon glyphicon-plane ' aria-hidden='true'></span>";
+                $pesStatusWithButton.= "</button>&nbsp;";
+                $pesStatusWithButton.= $status;
+                break;
+            case $status == personRecord::PES_STATUS_INITIATED && $_SESSION['isPes'] ;
+            $emailAddress = trim($row['EMAIL_ADDRESS']);
+            $firstName    = trim($row['FIRST_NAME']);
+            $lastName     = trim($row['LAST_NAME']);
+            $country      = trim($row['COUNTRY']);
+            
+            $missing = !empty($emailAddress) ? '' : ' Email Address';
+            $missing.= !empty($firstName) ? '' : ' First Name';
+            $missing.= !empty($lastName) ? '' : ' Last Name';
+            $missing.= !empty($country) ? '' : ' Country';
+            
+            $valid = empty(trim($missing));
+            
+            $disabled = $valid ? '' : 'disabled';
+            $tooltip = $valid ? 'Confirm PES Email details' : "Missing $missing";
+            
+            
+            $pesStatusWithButton.= "<button type='button' class='btn btn-default btn-xs btnSendPesEmail accessRestrict accessPmo accessFm' ";
+            $pesStatusWithButton.= "aria-label='Left Align' ";
+            $pesStatusWithButton.= " data-emailaddress='$emailAddress' ";
+            $pesStatusWithButton.= " data-firstname='$firstName' ";
+            $pesStatusWithButton.= " data-lastname='$lastName' ";
+            $pesStatusWithButton.= " data-country='$country' ";
+            $pesStatusWithButton.= " data-toggle='tooltip' data-placement='top' title='$tooltip'";
+            $pesStatusWithButton.= " $disabled  ";
+            $pesStatusWithButton.= " > ";
+            $pesStatusWithButton.= "<span class='glyphicon glyphicon-send ' aria-hidden='true' ></span>";
+            
+            $pesStatusWithButton.= "</button>&nbsp;";
+            case $status == personRecord::PES_STATUS_REQUESTED && $_SESSION['isPes'] :
+            case $status == personRecord::PES_STATUS_CLEARED_PERSONAL && $_SESSION['isPes'] :
+            case $status == personRecord::PES_STATUS_CLEARED && $_SESSION['isPes'] :
+            case $status == personRecord::PES_STATUS_EXCEPTION && $_SESSION['isPes'] :
+            case $status == personRecord::PES_STATUS_DECLINED && $_SESSION['isPes'] ;
+            case $status == personRecord::PES_STATUS_FAILED && $_SESSION['isPes'] ;
+            case $status == personRecord::PES_STATUS_REMOVED && $_SESSION['isPes'] ;
+            $pesStatusWithButton.= "<button type='button' class='btn btn-default btn-xs btnPesStatus' aria-label='Left Align' ";
+            $pesStatusWithButton.= " data-cnum='" .$cnum . "' ";
+            $pesStatusWithButton.= " data-notesid='" . $notesId . "' ";
+            $pesStatusWithButton.= " data-email='" . $email . "' ";
+            $pesStatusWithButton.= " data-pesdaterequested='" .trim($row['PES_DATE_REQUESTED']) . "' ";
+            $pesStatusWithButton.= " data-pesrequestor='" .trim($row['PES_REQUESTOR']) . "' ";
+            $pesStatusWithButton.= " data-pesstatus='" .$status . "' ";
+            $pesStatusWithButton.= " > ";
+            $pesStatusWithButton.= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
+            $pesStatusWithButton.= "</button>";
+            break;
+            default:            
+                break;
+        }
+        return $pesStatusWithButton;
+        
+    }
 
 
 
