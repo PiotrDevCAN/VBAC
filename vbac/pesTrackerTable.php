@@ -9,6 +9,8 @@ use \DateTime;
 
 class pesTrackerTable extends DbTable{
     
+    protected $preparedStageUpdateStmts;
+    
     const PES_TRACKER_RECORDS_ACTIVE     = 'Active';
     const PES_TRACKER_RECORDS_NOT_ACTIVE = 'Not Active';
     const PES_TRACKER_RECORDS_ALL        = 'All';
@@ -132,12 +134,9 @@ class pesTrackerTable extends DbTable{
             
             
             ?>
-            <tr>
+            <tr data-cnum='<?=$cnum?>' >
             <td>
-            <!--  <button class='btn btn-default btn-xs btnPesTrackerEditRecord accessPes accessCdi' data-toggle="tooltip"  title="Edit Record" >
-                  <span class="glyphicon glyphicon-edit" ></span>
-            -->
-            </button>&nbsp;<?=$row['EMAIL_ADDRESS']?>
+			<?=$row['EMAIL_ADDRESS']?>
             <br/><small>
             <i><?=$row['PASSPORT_FIRST_NAME']?><b><?=$row['PASSPORT_SURNAME']?></b></i><br/>
             <?=$row['FIRST_NAME']?><b><?=$row['LAST_NAME']?></b>            
@@ -146,13 +145,13 @@ class pesTrackerTable extends DbTable{
             <td><?=$row['PES_REQUESTOR']?><br/><small><?=$row['PES_DATE_REQUESTED']?><br/><?=$age?></small></td>
             <td><?=trim($row['COUNTRY'])?></td>
             <td><?=$row['JML']?></td>
-            <td id='consent_<?=$cnum?>'> 
+            <td  data-pescolumn='consent'> 
             	<?=self::getButtonsForPesStage($consentValue, $consentAlertClass);?>
             </td>
-            <td><?=$row['RIGHT_TO_WORK']?> 
+            <td  data-pescolumn='right_to_work'> 
 				<?=self::getButtonsForPesStage($rightToWorkValue, $rightToWorkAlertClass);?>
             </td>
-            <td><?=$row['PROOF_OF_ID']?>
+            <td  data-pescolumn='proof_of_id'>
 				<?=self::getButtonsForPesStage($proofOfIdValue, $proofOfIdAlertClass);?>
             </td>
             <td><?=$row['PROOF_OF_RESIDENCY']?>
@@ -163,10 +162,10 @@ class pesTrackerTable extends DbTable{
             </td>
             <td><?=$row['FINANCIAL_SANCTIONS']?>
             	<span style='white-space:nowrap'>
-                <button class='btn btn-success btn-xs btnPesStageCleared accessPes accessCdi' data-toggle="tooltip" data-placement="top" title="Cleared" ><span class="glyphicon glyphicon-ok-sign" ></span></button> 
-  				<button class='btn btn-warning btn-xs btnPesStageProvisional accessPes accessCdi' data-toggle="tooltip"  title="Stage Cleared Provisionally"><span class="glyphicon glyphicon-alert" ></span></button>
-				<button class='btn btn-info btn-xs btnPesStageNotApplicable accessPes accessCdi' data-toggle="tooltip"  title="Not applicable"><span class="glyphicon glyphicon-remove-sign" ></span></button>
-								<button class='btn btn-info btn-xs btnPesStageClear accessPes accessCdi' data-toggle="tooltip"  title="Clear Field"><span class="glyphicon glyphicon-erase" ></span></button>
+                <button class='btn btn-success btn-xs btnPesStageCleared accessPes accessCdi'  data-toggle="tooltip" data-placement="top" title="Cleared" ><span class="glyphicon glyphicon-ok-sign" ></span></button> 
+  				<button class='btn btn-warning btn-xs btnPesStageProvisional accessPes accessCdi' data-setpesto='Prov' data-toggle="tooltip"  title="Stage Cleared Provisionally"><span class="glyphicon glyphicon-alert" ></span></button>
+				<button class='btn btn-info btn-xs btnPesStageNotApplicable accessPes accessCdi' data-setpesto='N/A' data-toggle="tooltip"  title="Not applicable"><span class="glyphicon glyphicon-remove-sign" ></span></button>
+				<button class='btn btn-info btn-xs btnPesStageReset accessPes accessCdi' data-setpesto='TBD' data-toggle="tooltip"  title="Clear Field"><span class="glyphicon glyphicon-erase" ></span></button>
 				</span>
 				</td>
             <td><?=$row['CRIMINAL_RECORDS_CHECK']?>
@@ -174,7 +173,7 @@ class pesTrackerTable extends DbTable{
                 <button class='btn btn-success btn-xs btnPesStageCleared accessPes accessCdi' data-toggle="tooltip" data-placement="top" title="Cleared" ><span class="glyphicon glyphicon-ok-sign" ></span></button> 
   				<button class='btn btn-warning btn-xs btnPesStageProvisional accessPes accessCdi' data-toggle="tooltip"  title="Stage Cleared Provisionally"><span class="glyphicon glyphicon-alert" ></span></button>
 				<button class='btn btn-info btn-xs btnPesStageNotApplicable accessPes accessCdi' data-toggle="tooltip"  title="Not applicable"><span class="glyphicon glyphicon-remove-sign" ></span></button>
-								<button class='btn btn-info btn-xs btnPesStageClear accessPes accessCdi' data-toggle="tooltip"  title="Clear Field"><span class="glyphicon glyphicon-erase" ></span></button>
+				<button class='btn btn-info btn-xs btnPesStageReset accessPes accessCdi' data-toggle="tooltip"  title="Clear Field"><span class="glyphicon glyphicon-erase" ></span></button>
 				</span>
             </td>
             <td><?=$row['PROOF_OF_ACTIVITY']?>
@@ -254,14 +253,46 @@ class pesTrackerTable extends DbTable{
         <div class='alert <?=$alertClass;?> text-center pesStageDisplay' role='alert'><?=$value;?></div>              
         <div class='text-center'>
         <span style='white-space:nowrap' >
-        <button class='btn btn-success btn-xs btnPesStageCleared accessPes accessCdi' data-toggle="tooltip" data-placement="top" title="Cleared" ><span class="glyphicon glyphicon-ok-sign" ></span></button> 
-  		<button class='btn btn-warning btn-xs btnPesStageProvisional accessPes accessCdi' data-toggle="tooltip"  title="Stage Cleared Provisionally"><span class="glyphicon glyphicon-alert" ></span></button>
-	  	<button class='btn btn-info btn-xs btnPesStageNotApplicable accessPes accessCdi' data-toggle="tooltip"  title="Not applicable"><span class="glyphicon glyphicon-remove-sign" ></span></button>
-	  	<button class='btn btn-info btn-xs btnPesStageClear accessPes accessCdi' data-toggle="tooltip"  title="Clear Field"><span class="glyphicon glyphicon-erase" ></span></button>
+        <button class='btn btn-success btn-xs btnPesStageValueChange accessPes accessCdi' data-setpesto='Yes' data-toggle="tooltip" data-placement="top" title="Cleared" ><span class="glyphicon glyphicon-ok-sign" ></span></button> 
+  		<button class='btn btn-warning btn-xs btnPesStageValueChange accessPes accessCdi'  data-setpesto='Prov' data-toggle="tooltip"  title="Stage Cleared Provisionally"><span class="glyphicon glyphicon-alert" ></span></button>
+	  	<button class='btn btn-info btn-xs btnPesStageValueChange accessPes accessCdi' data-setpesto='N/A' data-toggle="tooltip"  title="Not applicable"><span class="glyphicon glyphicon-remove-sign" ></span></button>
+	  	<button class='btn btn-info btn-xs btnPesStageValueChange accessPes accessCdi' data-setpesto='TBD'data-toggle="tooltip"  title="Clear Field"><span class="glyphicon glyphicon-erase" ></span></button>
 	  	</span>
 	  	</div>
         <?php 
     }
+    
+    function prepareStageUpdate($stage){
         
+        if(isset($this->preparedStageUpdateStmts[strtoupper(db2_escape_string($stage))] )) {
+            return $this->preparedStageUpdateStmts[strtoupper(db2_escape_string($stage))];
+        }
+        
+        
+        $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql.= " SET " . strtoupper(db2_escape_string($stage)) . " =? ";
+        $sql.= " WHERE CNUM=? ";
+        
+         $preparedStmt = db2_prepare($_SESSION['conn'], $sql);
+        
+         if($preparedStmt){
+             $this->preparedStageUpdateStmts[strtoupper(db2_escape_string($stage))] = $preparedStmt;
+         }
+         
+         return $preparedStmt;    }
+    
+    function setPesStageValue($cnum,$stage,$stageValue){
+        $preparedStmt = $this->prepareStageUpdate($stage);
+        $data = array($stageValue,$cnum);
+        
+        $rs = db2_execute($preparedStmt,$data);
+        
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared sql');
+            throw new \Exception("Failed to update PES Stage: $stage to $stageValue for $cnum");
+        }
+        
+        return true;
+    }   
     
 }

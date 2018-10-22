@@ -35,6 +35,58 @@ function pesEvent() {
   }
 
   
+  this.listenForPesStageValueChange = function(){
+	  $(document).on('click','.btnPesStageValueChange', function(){
+		
+		  console.log($(this).data());
+		  console.log($(this).parents('td').data());
+		  console.log($(this).parents('tr').data());
+		  
+		  console.log($(this).parents('div').prev('div.pesStageDisplay').html());
+		  
+		  
+		  $(this).parents('div').prev('div.pesStageDisplay').html()
+		  
+		  
+		  
+		  var setPesTo = $(this).data('setpesto');	
+		  var column = $(this).parents('td').data('pescolumn');
+		  var cnum = $(this).parents('tr').data('cnum');
+		  
+		  var pesevent = new pesEvent();
+		  var alertClass = pesevent.getAlertClassForPesStage(setPesTo);
+		   
+		  
+		  console.log( column + ":" +  cnum + ':'  + setPesTo + ":" + alertClass );
+		  
+		  $(this).parents('div').prev('div.pesStageDisplay').html(setPesTo);
+		  $(this).parents('div').prev('div.pesStageDisplay').removeClass('alert-info').removeClass('alert-warning').removeClass('alert-success').addClass(alertClass);
+		  $(this).addClass('spinning');
+		  
+		  
+		  
+		  
+		  
+		  
+	  });
+  }
+  
+  
+  this.getAlertClassForPesStage = function(pesStageValue){
+      switch (pesStageValue) {
+      case 'Yes':
+          var alertClass = ' alert-success ';
+          break;
+      case 'Prov':
+          var alertClass = ' alert-warning ';
+          break;
+      default:
+          var alertClass = ' alert-info ';
+          break;
+  }
+  return alertClass;
+}
+  
   
   
 }

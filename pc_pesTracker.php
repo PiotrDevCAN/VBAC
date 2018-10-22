@@ -37,6 +37,10 @@ $(document).ready(function(){
 	person.listenForInitiatePesFromPortal();
 	person.listenforSendPesEmail();
 	person.listenforConfirmSendPesEmail();
+
+
+	var pesevent = new pesEvent();
+	pesevent.listenForPesStageValueChange();
 });
 </script>
 
