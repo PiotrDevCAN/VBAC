@@ -374,6 +374,7 @@ class personTable extends DbTable {
                     $row['PES_STATUS'] .= $status;
                     break;
                 default:
+                    $row['PES_STATUS'] .= $status;
                     break;
             }
         }
