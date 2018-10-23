@@ -316,7 +316,7 @@ class pesTrackerTable extends DbTable{
         $sql.= " SET PASSPORT_FIRST_NAME=";
         $sql.= !empty($passportFirstname) ? "'" . db2_escape_string($passportFirstname) . "', " : " null, ";
         $sql.= " PASSPORT_SURNAME=";
-        $sql.= !empty($passportSurname) ? "'" . db2_escape_string($passportSurname) . "', " : " null ";
+        $sql.= !empty($passportSurname) ? "'" . db2_escape_string($passportSurname) . "'  " : " null ";
         $sql.= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
                                
         $rs = db2_exec($_SESSION['conn'],$sql);
