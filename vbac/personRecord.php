@@ -941,7 +941,7 @@ You are able to amend the Functional Manager of people assigned to you but who n
                 </div>
              </div>
            </div>
-           <div class='row'>
+           <div class='row' id='passportNameDetails' >
               <div class='form-group' >
                 <div class='col-sm-6'>
                     <input class="form-control" id="psm_passportFirst" name="psm_passportFirst" value="" type="text" placeholder='Passport First Name' >

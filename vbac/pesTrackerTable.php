@@ -170,7 +170,6 @@ class pesTrackerTable extends DbTable{
             foreach (self::PES_TRACKER_STAGES as $stage) {
                 $stageValue         = !empty($row[$stage]) ? trim($row[$stage]) : 'TBD';
                 $stageAlertValue    = self::getAlertClassForPesStage($stageValue);
-                
                 ?>
                 <td  data-pescolumn='<?=$stage?>	'> 
             	<?=self::getButtonsForPesStage($stageValue, $stageAlertValue);?>
@@ -220,7 +219,7 @@ class pesTrackerTable extends DbTable{
         <span style='white-space:nowrap' >
         <button class='btn btn-success btn-xs btnPesStageValueChange accessPes accessCdi' data-setpesto='Yes' data-toggle="tooltip" data-placement="top" title="Cleared" ><span class="glyphicon glyphicon-ok-sign" ></span></button> 
   		<button class='btn btn-warning btn-xs btnPesStageValueChange accessPes accessCdi'  data-setpesto='Prov' data-toggle="tooltip"  title="Stage Cleared Provisionally"><span class="glyphicon glyphicon-alert" ></span></button>
-	  	<button class='btn btn-info btn-xs btnPesStageValueChange accessPes accessCdi' data-setpesto='N/A' data-toggle="tooltip"  title="Not applicable"><span class="glyphicon glyphicon-remove-sign" ></span></button>
+	  	<button class='btn btn-default btn-xs btnPesStageValueChange accessPes accessCdi' data-setpesto='N/A' data-toggle="tooltip"  title="Not applicable"><span class="glyphicon glyphicon-remove-sign" ></span></button>
 	  	<button class='btn btn-info btn-xs btnPesStageValueChange accessPes accessCdi' data-setpesto='TBD'data-toggle="tooltip"  title="Clear Field"><span class="glyphicon glyphicon-erase" ></span></button>
 	  	</span>
 	  	</div>
@@ -303,6 +302,31 @@ class pesTrackerTable extends DbTable{
         }
         
        return true;
-    }   
+    } 
+    
+    function setPesPassportNames($cnum,$passportFirstname=null,$passportSurname=null){
+        $trackerRecord = new pesTrackerRecord();
+        $trackerRecord->setFromArray(array('CNUM'=>$cnum));
+        
+        if (!$this->existsInDb($trackerRecord)) {
+            $this->createNewTrackerRecord($cnum);
+        }
+        
+        $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql.= " SET PASSPORT_FIRST_NAME=";
+        $sql.= !empty($passportFirstname) ? "'" . db2_escape_string($passportFirstname) . "', " : " null, ";
+        $sql.= " PASSPORT_SURNAME=";
+        $sql.= !empty($passportSurname) ? "'" . db2_escape_string($passportSurname) . "', " : " null ";
+        $sql.= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
+                               
+        $rs = db2_exec($_SESSION['conn'],$sql);
+        
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared sql');
+            throw new \Exception("Failed to update Passport Names: $passportFirstname  / $passportSurname for $cnum");
+        }
+        
+        return true;
+    } 
     
 }

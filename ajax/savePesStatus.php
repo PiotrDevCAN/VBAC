@@ -1,6 +1,7 @@
 <?php
 use vbac\personRecord;
 use vbac\personTable;
+use vbac\pesTrackerTable;
 use vbac\allTables;
 use itdq\AuditTable;
 
@@ -8,6 +9,9 @@ ob_start();
 AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_POST,true) . "</b>",AuditTable::RECORD_TYPE_DETAILS);
 
 try {
+    
+    $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER   );
+    $pesTracker->setPesPassportNames($_POST['psm_cnum'],$_POST['psm_passportFirst'], $_POST['psm_passportSurname']);
 
     $person = new personRecord();
     $person->setFromArray(array('CNUM'=>$_POST['psm_cnum'],'PES_STATUS'=>$_POST['psm_status'],'PES_STATUS_DETAILS'=>$_POST['psm_detail'],'PES_DATE_RESPONDED'=>$_POST['PES_DATE_RESPONDED']));
@@ -53,6 +57,7 @@ try {
         AuditTable::audit("PES Status Email:" . $notificationStatus ,AuditTable::RECORD_TYPE_DETAILS);
         
         $success = true;
+        
     }
 } catch (Exception $e) {
     echo $e->getCode();

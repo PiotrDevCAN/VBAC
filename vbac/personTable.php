@@ -1175,6 +1175,9 @@ class personTable extends DbTable {
         $cnum    = trim($row['CNUM']);
         $status  = trim($row['PES_STATUS']);
         $cnum    = trim($row['CNUM']);
+        $passportFirst   = array_key_exists('PASSPORT_FIRST_NAME', $row) ? $row['PASSPORT_FIRST_NAME'] : null;
+        $passportSurname = array_key_exists('PASSPORT_SURNAME', $row)    ? $row['PASSPORT_SURNAME'] : null;
+        
         $pesStatusWithButton = '';
         $pesStatusWithButton.= $status . "<br/>";
         switch (true) {
@@ -1231,6 +1234,8 @@ class personTable extends DbTable {
             $pesStatusWithButton.= " data-pesdaterequested='" .trim($row['PES_DATE_REQUESTED']) . "' ";
             $pesStatusWithButton.= " data-pesrequestor='" .trim($row['PES_REQUESTOR']) . "' ";
             $pesStatusWithButton.= " data-pesstatus='" .$status . "' ";
+            $pesStatusWithButton.= array_key_exists('PASSPORT_FIRST_NAME', $row) ?  " data-passportfirst='" .$passportFirst . "' " : null;
+            $pesStatusWithButton.= array_key_exists('PASSPORT_SURNAME', $row) ? " data-passportsurname='" .$passportSurname . "' " : null;
             $pesStatusWithButton.= " > ";
             $pesStatusWithButton.= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
             $pesStatusWithButton.= "</button>";
