@@ -1,6 +1,7 @@
 <?php
 namespace vbac;
 
+use itdq\DbRecord;
 
 //   CNUM CHAR(9) NOT NULL WITH DEFAULT 'cnum'
 // , Passport_First_Name CHAR(200)

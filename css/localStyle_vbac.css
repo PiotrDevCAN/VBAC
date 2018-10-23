@@ -223,3 +223,9 @@ dropdown-menu > li > a {
       top: 64px !important;
       z-index: 11000 !important;
 }
+
+
+.alert-secondary {
+	background-color:light-grey;
+	color: black;
+}

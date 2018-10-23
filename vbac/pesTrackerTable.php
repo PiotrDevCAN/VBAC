@@ -10,6 +10,7 @@ use \DateTime;
 class pesTrackerTable extends DbTable{
     
     protected $preparedStageUpdateStmts;
+    protected $preparedTrackerInsert;
     
     const PES_TRACKER_RECORDS_ACTIVE     = 'Active';
     const PES_TRACKER_RECORDS_NOT_ACTIVE = 'Not Active';
@@ -17,6 +18,19 @@ class pesTrackerTable extends DbTable{
     
     const PES_TRACKER_RETURN_RESULTS_AS_ARRAY      = 'array';
     const PES_TRACKER_RETURN_RESULTS_AS_RESULT_SET = 'resultSet';
+    
+    
+    const PES_TRACKER_STAGE_CONSENT = 'Consent Form';
+    const PES_TRACKER_STAGE_WORK    = 'Right to Work';
+    const PES_TRACKER_STAGE_ID      = 'Proof of Id';
+    const PES_TRACKER_STAGE_RESIDENCY = 'Residency';
+    const PES_TRACKER_STAGE_CREDIT  = 'Credit Check';
+    const PES_TRACKER_STAGE_SANCTIONS = 'Financial Sanctions';
+    const PES_TRACKER_STAGE__CRIMINAL = 'Criminal Records Check';
+    const PES_TRACKER_STAGE__ACTIVITY = 'Activity';
+    
+    
+    const PES_TRACKER_STAGES =  array('CONSENT','RIGHT_TO_WORK','PROOF_OF_ID','PROOF_OF_RESIDENCY','CREDIT_CHECK','FINANCIAL_SANCTIONS','CRIMINAL_RECORDS_CHECK','PROOF_OF_ACTIVITY');
     
     
     static function returnPesEventsTable($records='Active',$returnResultsAs='array'){
@@ -114,21 +128,26 @@ class pesTrackerTable extends DbTable{
             // $age = !empty($row['PES_DATE_REQUESTED']) ? $interval->format('%R%a days') : null;
             $cnum = $row['CNUM']; 
             
-            $consentValue = !empty($row['CONSENT']) ? trim($row['CONSENT']) : 'TBD';
-            $consentAlertClass = self::getAlertClassForPesStage($consentValue);
+//             $consentValue = !empty($row['CONSENT']) ? trim($row['CONSENT']) : 'TBD';
+//             $consentAlertClass = self::getAlertClassForPesStage($consentValue);
             
-            $rightToWorkValue = !empty($row['RIGHT_TO_WORK']) ? trim($row['RIGHT_TO_WORK']) : 'TBD';
-            $rightToWorkAlertClass = self::getAlertClassForPesStage($rightToWorkValue);
+//             $rightToWorkValue = !empty($row['RIGHT_TO_WORK']) ? trim($row['RIGHT_TO_WORK']) : 'TBD';
+//             $rightToWorkAlertClass = self::getAlertClassForPesStage($rightToWorkValue);
             
-            $proofOfIdValue = !empty($row['PROOF_OF_ID']) ? trim($row['PROOF_OF_ID']) : 'TBD';
-            $proofOfIdAlertClass = self::getAlertClassForPesStage($proofOfIdValue);
+//             $proofOfIdValue = !empty($row['PROOF_OF_ID']) ? trim($row['PROOF_OF_ID']) : 'TBD';
+//             $proofOfIdAlertClass = self::getAlertClassForPesStage($proofOfIdValue);
             
-            $proofOfResidencyValue = !empty($row['PROOF_OF_RESIDENCY']) ? trim($row['PROOF_OF_RESIDENCY']) : 'TBD';
-            $proofOfResidencyAlertClass = self::getAlertClassForPesStage($proofOfResidencyValue);
+//             $proofOfResidencyValue = !empty($row['PROOF_OF_RESIDENCY']) ? trim($row['PROOF_OF_RESIDENCY']) : 'TBD';
+//             $proofOfResidencyAlertClass = self::getAlertClassForPesStage($proofOfResidencyValue);
             
-            $creditCheckValue = !empty($row['CREDIT_CHECK']) ? trim($row['CREDIT_CHECK']) : 'TBD';
-            $creditCheckAlertValue = self::getAlertClassForPesStage($creditCheckValue);
+//             $creditCheckValue = !empty($row['CREDIT_CHECK']) ? trim($row['CREDIT_CHECK']) : 'TBD';
+//             $creditCheckAlertValue = self::getAlertClassForPesStage($creditCheckValue);
+
+//             $creditCheckValue = !empty($row['CREDIT_CHECK']) ? trim($row['CREDIT_CHECK']) : 'TBD';
+//             $creditCheckAlertValue = self::getAlertClassForPesStage($creditCheckValue);
             
+            
+ 
             
 
             
@@ -140,87 +159,30 @@ class pesTrackerTable extends DbTable{
             <br/><small>
             <i><?=$row['PASSPORT_FIRST_NAME']?><b><?=$row['PASSPORT_SURNAME']?></b></i><br/>
             <?=$row['FIRST_NAME']?><b><?=$row['LAST_NAME']?></b>            
-            </small>            
+            </small>      
+            <?=$row['CNUM']?>      
             </td>
             <td><?=$row['PES_REQUESTOR']?><br/><small><?=$row['PES_DATE_REQUESTED']?><br/><?=$age?></small></td>
             <td><?=trim($row['COUNTRY'])?></td>
             <td><?=$row['JML']?></td>
-            <td  data-pescolumn='consent'> 
-            	<?=self::getButtonsForPesStage($consentValue, $consentAlertClass);?>
-            </td>
-            <td  data-pescolumn='right_to_work'> 
-				<?=self::getButtonsForPesStage($rightToWorkValue, $rightToWorkAlertClass);?>
-            </td>
-            <td  data-pescolumn='proof_of_id'>
-				<?=self::getButtonsForPesStage($proofOfIdValue, $proofOfIdAlertClass);?>
-            </td>
-            <td><?=$row['PROOF_OF_RESIDENCY']?>
-				<?=self::getButtonsForPesStage($proofOfResidencyValue, $proofOfResidencyAlertClass);?>
-            </td>
-            <td><?=$row['CREDIT_CHECK']?>
-				<?=self::getButtonsForPesStage($creditCheckValue, $creditCheckAlertValue);?>
-            </td>
-            <td><?=$row['FINANCIAL_SANCTIONS']?>
-            	<span style='white-space:nowrap'>
-                <button class='btn btn-success btn-xs btnPesStageCleared accessPes accessCdi'  data-toggle="tooltip" data-placement="top" title="Cleared" ><span class="glyphicon glyphicon-ok-sign" ></span></button> 
-  				<button class='btn btn-warning btn-xs btnPesStageProvisional accessPes accessCdi' data-setpesto='Prov' data-toggle="tooltip"  title="Stage Cleared Provisionally"><span class="glyphicon glyphicon-alert" ></span></button>
-				<button class='btn btn-info btn-xs btnPesStageNotApplicable accessPes accessCdi' data-setpesto='N/A' data-toggle="tooltip"  title="Not applicable"><span class="glyphicon glyphicon-remove-sign" ></span></button>
-				<button class='btn btn-info btn-xs btnPesStageReset accessPes accessCdi' data-setpesto='TBD' data-toggle="tooltip"  title="Clear Field"><span class="glyphicon glyphicon-erase" ></span></button>
-				</span>
-				</td>
-            <td><?=$row['CRIMINAL_RECORDS_CHECK']?>
-            	<span style='white-space:nowrap'>
-                <button class='btn btn-success btn-xs btnPesStageCleared accessPes accessCdi' data-toggle="tooltip" data-placement="top" title="Cleared" ><span class="glyphicon glyphicon-ok-sign" ></span></button> 
-  				<button class='btn btn-warning btn-xs btnPesStageProvisional accessPes accessCdi' data-toggle="tooltip"  title="Stage Cleared Provisionally"><span class="glyphicon glyphicon-alert" ></span></button>
-				<button class='btn btn-info btn-xs btnPesStageNotApplicable accessPes accessCdi' data-toggle="tooltip"  title="Not applicable"><span class="glyphicon glyphicon-remove-sign" ></span></button>
-				<button class='btn btn-info btn-xs btnPesStageReset accessPes accessCdi' data-toggle="tooltip"  title="Clear Field"><span class="glyphicon glyphicon-erase" ></span></button>
-				</span>
-            </td>
-            <td><?=$row['PROOF_OF_ACTIVITY']?>
-            	<span style='white-space:nowrap'>
-                <button class='btn btn-success btn-xs btnPesStageCleared accessPes accessCdi' data-toggle="tooltip" data-placement="top" title="Cleared" ><span class="glyphicon glyphicon-ok-sign" ></span></button> 
-  				<button class='btn btn-warning btn-xs btnPesStageProvisional accessPes accessCdi' data-toggle="tooltip"  title="Stage Cleared Provisionally"><span class="glyphicon glyphicon-alert" ></span></button>
-				<button class='btn btn-info btn-xs btnPesStageNotApplicable accessPes accessCdi' data-toggle="tooltip"  title="Not applicable"><span class="glyphicon glyphicon-remove-sign" ></span></button>
-				</span>
-				</td>
-				
+            
+            <?php 
+            foreach (self::PES_TRACKER_STAGES as $stage) {
+                $stageValue         = !empty($row[$stage]) ? trim($row[$stage]) : 'TBD';
+                $stageAlertValue    = self::getAlertClassForPesStage($stageValue);
+                
+                ?>
+                <td  data-pescolumn='<?=$stage?>	'> 
+            	<?=self::getButtonsForPesStage($stageValue, $stageAlertValue);?>
+                </td>
+                <?php 
+            }
+        ?>				
             <td><?=$row['PROCESSING_STATUS']?><br/><?=$row['PROCESSING_STATUS_CHANGED']?></td>
             <td><?=$row['DATE_LAST_CHASED']?></td>
             <td><?=personTable::getPesStatusWithButtons($row)?></td>
             <td><textarea rows="3" cols="20"></textarea><br/><small><?=$row['COMMENT']?></small></td>
             </tr>
-                                                            
-            
-<!--         $sql = " SELECT P.CNUM "; -->
-<!--         $sql.= ", P.EMAIL_ADDRESS  ";     -->
-<!--         $sql.= ", PT.PASSPORT_FIRST_NAME "; -->
-<!--         $sql.= ", PT.PASSPORT_SURNAME ";         -->
-<!--         $sql.= ", P.FIRST_NAME "; -->
-<!--         $sql.= ", P.LAST_NAME "; -->
-<!--         $sql.= ", P.COUNTRY "; -->
-<!--         $sql.= ", P.PES_DATE_REQUESTED "; -->
-<!--         $sql.= ", P.PES_REQUESTOR "; -->
-<!--         $sql.= ", PT.JML "; -->
-<!--         $sql.= ", PT.CONSENT_FORM "; -->
-<!--         $sql.= ", PT.RIGHT_TO_WORK "; -->
-<!--         $sql.= ", PT.PROOF_OF_ID "; -->
-<!--         $sql.= ", PT.PROOF_OF_RESIDENCY "; -->
-<!--         $sql.= ", PT.CREDIT_CHECK "; -->
-<!--         $sql.= ", PT.FINANCIAL_SANCTIONS "; -->
-<!--         $sql.= ", PT.CRIMINAL_RECORDS_CHECK "; -->
-<!--         $sql.= ", PT.PROOF_OF_ACTIVITY "; -->
-<!--         $sql.= ", PT.PROCESSING_STATUS "; -->
-<!--         $sql.= ", PT.PROCESSING_STATUS_CHANGED "; -->
-<!--         $sql.= ", PT.DATE_LAST_CHASED "; -->
-            
-            
-            
-            
-<!--                <td style="white-space:nowrap"> -->
-<!-- 				<button class='btn btn-dark btn-sm btnPesStageCleared accessPes accessCdi' data-toggle="tooltip"  title="Cleared" disabled><span class="glyphicon glyphicon-ok-sign" ></span></button>  -->
-<!-- 				<button class='btn btn-dark btn-sm btnPesStageNotApplicable accessPes accessCdi' data-toggle="tooltip"  title="Not applicable"><span class="glyphicon glyphicon-ok-sign" ></span></button> -->
-<!--   				<button class='btn btn-dark btn-sm btnPesStageProvisional accessPes accessCdi' data-toggle="tooltip"  title="Stage Cleared Provisionally"><span class="glyphicon glyphicon-alert" ></span></button> -->
-<!--                </td> -->
         <?php 
         }        
         ?>
@@ -238,6 +200,9 @@ class pesTrackerTable extends DbTable{
                 break;
             case 'Prov':
                 $alertClass = ' alert-warning ';
+                break;
+            case 'N/A':
+                $alertClass = ' alert-secondary ';
                 break;
             default:
                 $alertClass = ' alert-info ';
@@ -273,17 +238,62 @@ class pesTrackerTable extends DbTable{
         $sql.= " SET " . strtoupper(db2_escape_string($stage)) . " =? ";
         $sql.= " WHERE CNUM=? ";
         
+        $this->preparedSelectSQL = $sql;
+        
+        echo $sql;
+        
+        
          $preparedStmt = db2_prepare($_SESSION['conn'], $sql);
         
          if($preparedStmt){
              $this->preparedStageUpdateStmts[strtoupper(db2_escape_string($stage))] = $preparedStmt;
          }
          
-         return $preparedStmt;    }
+         return $preparedStmt;
+    }
+    
+    function prepareTrackerInsert($cnum){        
+        if(isset($this->preparedTrackerInsert )) {
+            return $this->preparedTrackerInsert;
+        }
+        $sql = " INSERT INTO " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql.= " ( CNUM ) VALUES (?) ";        
+        $preparedStmt = db2_prepare($_SESSION['conn'], $sql);
+        
+        if($preparedStmt){
+            $this->preparedTrackerInsert = $preparedStmt;            
+            return $preparedStmt;
+        }
+
+        return false;
+        
+    }
+    
+    function createNewTrackerRecord($cnum){
+        $preparedStmt = $this->prepareTrackerInsert();
+        $data = array($cnum);
+        
+        $rs = db2_execute($preparedStmt,$data);
+        
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared sql');
+            throw new \Exception('Unable to create blank Tracker record for ' . $cnum);
+        }
+        
+        return;        
+        
+    }
+    
     
     function setPesStageValue($cnum,$stage,$stageValue){
+        $trackerRecord = new pesTrackerRecord();
+        $trackerRecord->setFromArray(array('CNUM'=>$cnum));
+        
+        if (!$this->existsInDb($trackerRecord)) {
+            $this->createNewTrackerRecord($cnum);            
+        }         
         $preparedStmt = $this->prepareStageUpdate($stage);
-        $data = array($stageValue,$cnum);
+        $data = array($stageValue,$cnum);       
         
         $rs = db2_execute($preparedStmt,$data);
         
@@ -292,7 +302,7 @@ class pesTrackerTable extends DbTable{
             throw new \Exception("Failed to update PES Stage: $stage to $stageValue for $cnum");
         }
         
-        return true;
+       return true;
     }   
     
 }

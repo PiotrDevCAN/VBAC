@@ -36,26 +36,13 @@ function pesEvent() {
 
   
   this.listenForPesStageValueChange = function(){
-	  $(document).on('click','.btnPesStageValueChange', function(){
-		
-		  console.log($(this).data());
-		  console.log($(this).parents('td').data());
-		  console.log($(this).parents('tr').data());
-		  
-		  console.log($(this).parents('div').prev('div.pesStageDisplay').html());
-		  
-		  
-		  $(this).parents('div').prev('div.pesStageDisplay').html()
-		  
-		  
-		  
+	  $(document).on('click','.btnPesStageValueChange', function(){  
 		  var setPesTo = $(this).data('setpesto');	
 		  var column = $(this).parents('td').data('pescolumn');
 		  var cnum = $(this).parents('tr').data('cnum');
 		  
 		  var pesevent = new pesEvent();
 		  var alertClass = pesevent.getAlertClassForPesStage(setPesTo);
-		   
 		  
 		  console.log( column + ":" +  cnum + ':'  + setPesTo + ":" + alertClass );
 		  
@@ -63,11 +50,26 @@ function pesEvent() {
 		  $(this).parents('div').prev('div.pesStageDisplay').removeClass('alert-info').removeClass('alert-warning').removeClass('alert-success').addClass(alertClass);
 		  $(this).addClass('spinning');
 		  
+		  var buttonObj = this;
 		  
-		  
-		  
-		  
-		  
+		   $.ajax({
+			   url: "ajax/savePesStageValue.php",
+		       type: 'POST',
+		       data : {cnum:cnum,
+		    	   	   stageValue:setPesTo,
+		    	   	   stage:column,
+		    	   	   },
+		       success: function(result){
+		           console.log(result);
+		           var resultObj = JSON.parse(result);
+		           if(resultObj.success==true){
+		        	   console.log(buttonObj);
+		             } else {
+		       		  $(this).parents('div').prev('div.pesStageDisplay').html(resultObj.message);	 
+		             };
+		           $(buttonObj).removeClass('spinning');
+		       }
+		   });
 	  });
   }
   
@@ -80,6 +82,9 @@ function pesEvent() {
       case 'Prov':
           var alertClass = ' alert-warning ';
           break;
+      case 'N/A':
+          var alertClass = ' alert-secondary ';
+          break; 
       default:
           var alertClass = ' alert-info ';
           break;

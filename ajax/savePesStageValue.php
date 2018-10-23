@@ -9,13 +9,12 @@ AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_POST,
 
 try {
     
-    $pesTracker = new pesTrackerTable(allTables::$PES_EVENTS);
-    $pesTracker->setPesStageValue($_GET['cnum'],$_GET['stage'], $_GET['stageValue']);
+    $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER   );
+    $pesTracker->setPesStageValue($_POST['cnum'],$_POST['stage'], $_POST['stageValue']);
     
     $messages  = ob_get_clean();
     $success   = empty($messages);
- 
-    return;    
+   
 } catch (Exception $e){
     $success = false;
     $messages = $pesTracker->lastDb2StmtErrorMsg;
