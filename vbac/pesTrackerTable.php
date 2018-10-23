@@ -110,12 +110,23 @@ class pesTrackerTable extends DbTable{
     function displayTable($records='Active'){
         $allRows = self::returnPesEventsTable($records,self::PES_TRACKER_RETURN_RESULTS_AS_ARRAY);
         ?>
-        <table id='pesTrackerTable' class='table table-striped table-bordered compact'  style='width:100%'>
+        <div class='container-fluid'>
+         <form class="form-horizontal">
+  			<div class="form-group">
+    			<label class="control-label col-sm-2" for="pesTrackerTableSearch">Table Search:</label>
+    			<div class="col-sm-10">
+      			<input type="text" id="pesTrackerTableSearch" placeholder="Search"  onkeyup=searchTable()  />
+    			</div>
+  			</div>
+		</form> 
+		</div>
+       
+        <table id='pesTrackerTable' class='table table-striped table-bordered display compact nowrap '  style='width:100%'>
 		<thead>
 		<tr><th>Email Address</th><th>Requestor</th><th>Country</th><th>JML</th>
 		<th>Consent Form</th><th>Proof of Right to Work</th><th>Proof of ID</th><th>Proof of Residency</th><th>Credit Check</th>
 		<th>Financial Sanctions</th><th>Criminal Records Check</th><th>Proof of Activity</th>
-		<th>Process Status</th><th>Date Last Chased</th><th>PES Status</th><th>Comment</th>		
+		<th>Process Status</th><th>PES Status</th><th>Comment</th>		
 		</tr>
 		</thead>
 		<tbody>
@@ -153,7 +164,7 @@ class pesTrackerTable extends DbTable{
             
             
             ?>
-            <tr data-cnum='<?=$cnum?>' >
+            <tr>
             <td>
 			<?=$row['EMAIL_ADDRESS']?>
             <br/><small>
@@ -171,14 +182,13 @@ class pesTrackerTable extends DbTable{
                 $stageValue         = !empty($row[$stage]) ? trim($row[$stage]) : 'TBD';
                 $stageAlertValue    = self::getAlertClassForPesStage($stageValue);
                 ?>
-                <td  data-pescolumn='<?=$stage?>	'> 
-            	<?=self::getButtonsForPesStage($stageValue, $stageAlertValue);?>
+                <td> 
+            	<?=self::getButtonsForPesStage($stageValue, $stageAlertValue, $stage, $cnum);?>
                 </td>
                 <?php 
             }
         ?>				
-            <td><?=$row['PROCESSING_STATUS']?><br/><?=$row['PROCESSING_STATUS_CHANGED']?></td>
-            <td><?=$row['DATE_LAST_CHASED']?></td>
+            <td><?=$row['PROCESSING_STATUS']?><br/><?=$row['PROCESSING_STATUS_CHANGED']?><br/><?=$row['DATE_LAST_CHASED']?></td>
             <td><?=personTable::getPesStatusWithButtons($row)?></td>
             <td><textarea rows="3" cols="20"></textarea><br/><small><?=$row['COMMENT']?></small></td>
             </tr>
@@ -212,10 +222,10 @@ class pesTrackerTable extends DbTable{
     
     
     
-    static function getButtonsForPesStage($value, $alertClass){
+    static function getButtonsForPesStage($value, $alertClass, $stage, $cnum){
         ?>
-        <div class='alert <?=$alertClass;?> text-center pesStageDisplay' role='alert'><?=$value;?></div>              
-        <div class='text-center'>
+        <div class='alert <?=$alertClass;?> text-center pesStageDisplay' role='alert' ><?=$value;?></div>              
+        <div class='text-center' data-pescolumn='<?=$stage?>' data-cnum='<?=$cnum?>'>
         <span style='white-space:nowrap' >
         <button class='btn btn-success btn-xs btnPesStageValueChange accessPes accessCdi' data-setpesto='Yes' data-toggle="tooltip" data-placement="top" title="Cleared" ><span class="glyphicon glyphicon-ok-sign" ></span></button> 
   		<button class='btn btn-warning btn-xs btnPesStageValueChange accessPes accessCdi'  data-setpesto='Prov' data-toggle="tooltip"  title="Stage Cleared Provisionally"><span class="glyphicon glyphicon-alert" ></span></button>

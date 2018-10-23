@@ -14,9 +14,6 @@ use vbac\personRecord;
 <div class='container-fluid'>
 <h3>Pes Tracker</h3>
 <?php
-// $pesEventTable = new pesEventTable(allTables::$PES_EVENTS);
-// $pesEventTable::displayPesEventsTable();
-
 $pesTrackerTable = new pesTrackerTable(allTables::$PES_TRACKER);
 $pesTrackerTable->displayTable(pesTrackerTable::PES_TRACKER_RECORDS_ACTIVE);
 
@@ -32,6 +29,9 @@ $person->confirmSendPesEmailModal();
 $(document).ready(function(){
 	var pesevent = new pesEvent();	
 	var person = new personRecord();
+
+	person.initialisePesTrackerTable();
+	
 	person.listenForEditPesStatus();
 	person.listenForSavePesStatus();
 	person.listenForInitiatePesFromPortal();

@@ -4,10 +4,34 @@
  *
  */
 
+function searchTable(){
+	  // Declare variables
+	  var input, filter, table, tr, td, i;
+	  input = document.getElementById("pesTrackerTableSearch");
+	  filter = input.value.toUpperCase();
+	  table = document.getElementById("pesTrackerTable");
+	  tr = table.getElementsByTagName("tr");
+
+	  // Loop through all table rows, and hide those who don't match the search query
+	  for (i = 0; i < tr.length; i++) {
+	    td = tr[i].getElementsByTagName("td")[0];
+	    if (td) {
+	      if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+	        tr[i].style.display = "";
+	      } else {
+	        tr[i].style.display = "none";
+	      }
+	    }
+	  }
+	
+}
+
+
 function personRecord() {
 
   var table;
   var personFinderTable;
+  var pesTrackerTable;
   var rfFlagTable;
   var dataTableElements;
   var currentXmlDoc;
@@ -1065,6 +1089,20 @@ function personRecord() {
           Person.initialiseDataTable();
         }
       });
+
+  },
+  
+  this.initialisePesTrackerTable = function(){	  
+	  console.log('initialisePesTrackerTable');
+	  
+      // Setup - add a text input to each footer cell
+//      $('#pesTrackerTable thead th').each( function () {
+//          var title = $(this).text();
+//          var width = $(this).width();
+//          console.log(title);
+//          console.log($(this).width());
+//          $(this).html( '' );
+//      } );
 
   },
   

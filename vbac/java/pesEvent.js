@@ -38,8 +38,8 @@ function pesEvent() {
   this.listenForPesStageValueChange = function(){
 	  $(document).on('click','.btnPesStageValueChange', function(){  
 		  var setPesTo = $(this).data('setpesto');	
-		  var column = $(this).parents('td').data('pescolumn');
-		  var cnum = $(this).parents('tr').data('cnum');
+		  var column   = $(this).parents('div').data('pescolumn');		  
+		  var cnum     = $(this).parents('div').data('cnum');
 		  
 		  var pesevent = new pesEvent();
 		  var alertClass = pesevent.getAlertClassForPesStage(setPesTo);
