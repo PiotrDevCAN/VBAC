@@ -160,7 +160,7 @@ class pesTrackerTable extends DbTable{
             <i><?=$row['PASSPORT_FIRST_NAME']?><b><?=$row['PASSPORT_SURNAME']?></b></i><br/>
             <?=$row['FIRST_NAME']?><b><?=$row['LAST_NAME']?></b>            
             </small>      
-            <?=$row['CNUM']?>      
+            <br/><?=$row['CNUM']?>      
             </td>
             <td><?=$row['PES_REQUESTOR']?><br/><small><?=$row['PES_DATE_REQUESTED']?><br/><?=$age?></small></td>
             <td><?=trim($row['COUNTRY'])?></td>
@@ -252,7 +252,7 @@ class pesTrackerTable extends DbTable{
          return $preparedStmt;
     }
     
-    function prepareTrackerInsert($cnum){        
+    function prepareTrackerInsert(){        
         if(isset($this->preparedTrackerInsert )) {
             return $this->preparedTrackerInsert;
         }

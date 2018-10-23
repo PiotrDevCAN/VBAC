@@ -935,12 +935,23 @@ You are able to amend the Functional Manager of people assigned to you but who n
               <div class='form-group' >
                 <div class='col-sm-6'>
                     <input class="form-control" id="psm_notesid" name="psm_notesid" value="" type="text" disabled>
-                  </div>
+                </div>
                 <div class='col-sm-6'>
                     <input class="form-control" id="psm_cnum" name="psm_cnum" value="" type="text" disabled>
-                  </div>
+                </div>
              </div>
            </div>
+           <div class='row'>
+              <div class='form-group' >
+                <div class='col-sm-6'>
+                    <input class="form-control" id="psm_passportFirst" name="psm_passportFirst" value="" type="text" placeholder='Passport First Name' >
+                </div>
+                <div class='col-sm-6'>
+                    <input class="form-control" id="psm_passportSurname" name="psm_passportSurname" value="" type="text" placeholder='Passport Surname'>
+               </div>
+             </div>
+           </div>
+           
          </div>
           </div>
 
