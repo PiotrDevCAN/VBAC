@@ -20,15 +20,27 @@ function pesEvent() {
   
   
   this.listenForSavePesComment = function() {
-	  $(document).on('click','.btnSavePesEventComment', function(){
+	  $(document).on('click','.btnPesSaveComment', function(){
+		  
+		  var cnum =  $(this).siblings('textarea').data('cnum');
+		  var comment = $(this).siblings('textarea').val();
+		  var button = $(this);
+		  
+		  console.log(button.siblings('div'));
+		  console.log(button.siblings('div.pesComments'));
+		  
+		  button.addClass('spinning');
 		  $.ajax({
 			  	url: "ajax/savePesComment.php",
 			  	type: 'POST',
-			  	data : { cnum: $(this).data('cnum'),
- 	        	         event:$(this).data('event'),
+			  	data : { cnum: cnum,
+			  		     comment: comment,
 			  			},
 			  	success: function(result){
-			  		console.log(result);
+			        var resultObj = JSON.parse(result);
+			  		button.removeClass('spinning');
+			  		button.siblings('div.pesComments').html(resultObj.comment);
+			  		button.siblings('textarea').val('');
 		      		}
 	        	});
 	  	});

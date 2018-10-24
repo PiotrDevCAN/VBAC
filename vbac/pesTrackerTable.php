@@ -11,6 +11,7 @@ class pesTrackerTable extends DbTable{
     
     protected $preparedStageUpdateStmts;
     protected $preparedTrackerInsert;
+    protected $preparedGetPesCommentStmt;
     
     const PES_TRACKER_RECORDS_ACTIVE     = 'Active';
     const PES_TRACKER_RECORDS_NOT_ACTIVE = 'Not Active';
@@ -138,30 +139,7 @@ class pesTrackerTable extends DbTable{
             $age  = !empty($row['PES_DATE_REQUESTED']) ?  $date->diff($today)->format('%R%a days') : null ;
             // $age = !empty($row['PES_DATE_REQUESTED']) ? $interval->format('%R%a days') : null;
             $cnum = $row['CNUM']; 
-            
-//             $consentValue = !empty($row['CONSENT']) ? trim($row['CONSENT']) : 'TBD';
-//             $consentAlertClass = self::getAlertClassForPesStage($consentValue);
-            
-//             $rightToWorkValue = !empty($row['RIGHT_TO_WORK']) ? trim($row['RIGHT_TO_WORK']) : 'TBD';
-//             $rightToWorkAlertClass = self::getAlertClassForPesStage($rightToWorkValue);
-            
-//             $proofOfIdValue = !empty($row['PROOF_OF_ID']) ? trim($row['PROOF_OF_ID']) : 'TBD';
-//             $proofOfIdAlertClass = self::getAlertClassForPesStage($proofOfIdValue);
-            
-//             $proofOfResidencyValue = !empty($row['PROOF_OF_RESIDENCY']) ? trim($row['PROOF_OF_RESIDENCY']) : 'TBD';
-//             $proofOfResidencyAlertClass = self::getAlertClassForPesStage($proofOfResidencyValue);
-            
-//             $creditCheckValue = !empty($row['CREDIT_CHECK']) ? trim($row['CREDIT_CHECK']) : 'TBD';
-//             $creditCheckAlertValue = self::getAlertClassForPesStage($creditCheckValue);
 
-//             $creditCheckValue = !empty($row['CREDIT_CHECK']) ? trim($row['CREDIT_CHECK']) : 'TBD';
-//             $creditCheckAlertValue = self::getAlertClassForPesStage($creditCheckValue);
-            
-            
- 
-            
-
-            
             
             ?>
             <tr>
@@ -190,7 +168,10 @@ class pesTrackerTable extends DbTable{
         ?>				
             <td><?=$row['PROCESSING_STATUS']?><br/><?=$row['PROCESSING_STATUS_CHANGED']?><br/><?=$row['DATE_LAST_CHASED']?></td>
             <td><?=personTable::getPesStatusWithButtons($row)?></td>
-            <td><textarea rows="3" cols="20"></textarea><br/><small><?=$row['COMMENT']?></small></td>
+            <td><textarea rows="3" cols="20"  data-cnum='<?=$cnum?>'></textarea><br/>
+            <button class='btn btn-default btn-xs btnPesSaveComment accessPes accessCdi' data-setpesto='Yes' data-toggle="tooltip" data-placement="top" title="Save Comment" ><span class="glyphicon glyphicon-save" ></span></button>
+            <div class='pesComments'><small><?=$row['COMMENT']?></small></div>
+            </td>
             </tr>
         <?php 
         }        
@@ -338,5 +319,73 @@ class pesTrackerTable extends DbTable{
         
         return true;
     } 
+    
+    function savePesComment($cnum,$comment){
+        $trackerRecord = new pesTrackerRecord();
+        $trackerRecord->setFromArray(array('CNUM'=>$cnum));
+        
+        if (!$this->existsInDb($trackerRecord)) {
+            $this->createNewTrackerRecord($cnum);
+        }
+        
+        $existingComment = $this->getPesComment($cnum);
+        $now = new \DateTime();
+        
+        $newComment = trim($comment) . "<br/><small>" . $_SESSION['ssoEmail'] . ":" . $now->format('Y-m-d H:i:s') . "</small></br/>" . $existingComment;
+        
+        $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql.= " SET COMMENT='" . db2_escape_string($newComment) . "' ";
+        $sql.= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
+        
+        $rs = db2_exec($_SESSION['conn'], $sql);
+
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+            throw new \Exception("Failed to update PES Comment for $cnum. Comment was " . $comment);
+        }
+        
+        return $newComment;
+    }
+    
+    function prepareGetPesCommentStmt(){
+        if(!empty($this->preparedGetPesCommentStmt)){
+            return $this->preparedGetPesCommentStmt;
+        }
+        
+        $sql = " SELECT COMMENT FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql.= " WHERE CNUM=? ";
+        
+        $preparedStmt = db2_prepare($_SESSION['conn'], $sql);
+        
+        if($preparedStmt){
+            $this->preparedGetPesCommentStmt = $preparedStmt;
+            return $preparedStmt;
+        }
+        
+        throw new \Exception('Unable to prepare GetPesComment');
+        return false;
+        
+    }
+    
+    
+    function getPesComment($cnum){
+        $preparedStmt = $this->prepareGetPesCommentStmt();
+        
+        $data = array($cnum);
+        
+        $rs = db2_execute($preparedStmt,$data);
+        
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'Prepared Stmt');
+            throw new \Exception('Unable to getPesComment for ' . $cnum);
+        }
+        
+        $row = db2_fetch_assoc($preparedStmt);        
+        return $row['COMMENT'];
+    }
+    
+
+        
+    
     
 }

@@ -41,6 +41,7 @@ $(document).ready(function(){
 
 	var pesevent = new pesEvent();
 	pesevent.listenForPesStageValueChange();
+	pesevent.listenForSavePesComment();
 });
 </script>
 
