@@ -151,7 +151,7 @@ $odcStaff = personTable::countOdcStaff();
 ?>
 <script>
 
-$('.navbarMenuOption')<?=$isFm?><?=$isPmo?><?=$isCdi?><?=$isUser?><?=$isRep1?><?=$isRes?>.remove();
+$('.navbarMenuOption')<?=$isFm?><?=$isPmo?><?=$isPes?><?=$isCdi?><?=$isUser?><?=$isRep1?><?=$isRes?>.remove();
 $('.navbarMenu').not(':has(li)').remove();
 
 $('li[data-pagename="<?=$page;?>"]').addClass('active').closest('li.dropdown').addClass('active');
@@ -174,7 +174,7 @@ $requestor= $isRequestor ? "+" : null;
 
 $(document).ready(function () {
 
-    $('button.accessRestrict')<?=$isFm?><?=$isPmo?><?=$isCdi?><?=$isUser?><?=$isRep1?>.remove();
+    $('button.accessRestrict')<?=$isFm?><?=$isPmo?><?=$isPes?><?=$isCdi?><?=$isUser?><?=$isRep1?><?=$isRes?>.remove();   
 
     <?=!empty($isUser) ? '$("#userLevel").html("User' . $requestor . '&nbsp;' . $rep . '");console.log("user");' : null;?>
 
@@ -182,6 +182,7 @@ $(document).ready(function () {
     <?=!empty($isRes)  ? '$("#userLevel").html("Req' . $requestor . '&nbsp;' . $rep . '");console.log("req");' : null;?>
     <?=!empty($isPmo)  ? '$("#userLevel").html("PMO' . $requestor . '&nbsp;' . $rep . '");console.log("pmo");' : null;?>
     <?=!empty($isCdi)  ? '$("#userLevel").html("CDI' . $requestor . '&nbsp;' . $rep . '");console.log("cdi");' : null;?>
+    <?=!empty($isPes)  ? '$("#userLevel").html("PES' . $requestor . '&nbsp;' . $rep . '");console.log("pes");' : null;?>
 
     
     var poContent = $('#<?=$plannedOutagesId?> a').html();
