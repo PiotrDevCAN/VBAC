@@ -38,10 +38,10 @@ $(document).ready(function(){
 	person.listenforSendPesEmail();
 	person.listenforConfirmSendPesEmail();
 
-
 	var pesevent = new pesEvent();
 	pesevent.listenForPesStageValueChange();
 	pesevent.listenForSavePesComment();
+	pesevent.listenForPesProcessStatusChange();
 });
 </script>
 

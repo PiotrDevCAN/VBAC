@@ -12,14 +12,14 @@ class pesTrackerTable extends DbTable{
     protected $preparedStageUpdateStmts;
     protected $preparedTrackerInsert;
     protected $preparedGetPesCommentStmt;
+    protected $preparedProcessStatusUpdate;
     
     const PES_TRACKER_RECORDS_ACTIVE     = 'Active';
     const PES_TRACKER_RECORDS_NOT_ACTIVE = 'Not Active';
     const PES_TRACKER_RECORDS_ALL        = 'All';
     
     const PES_TRACKER_RETURN_RESULTS_AS_ARRAY      = 'array';
-    const PES_TRACKER_RETURN_RESULTS_AS_RESULT_SET = 'resultSet';
-    
+    const PES_TRACKER_RETURN_RESULTS_AS_RESULT_SET = 'resultSet';    
     
     const PES_TRACKER_STAGE_CONSENT = 'Consent Form';
     const PES_TRACKER_STAGE_WORK    = 'Right to Work';
@@ -28,8 +28,7 @@ class pesTrackerTable extends DbTable{
     const PES_TRACKER_STAGE_CREDIT  = 'Credit Check';
     const PES_TRACKER_STAGE_SANCTIONS = 'Financial Sanctions';
     const PES_TRACKER_STAGE__CRIMINAL = 'Criminal Records Check';
-    const PES_TRACKER_STAGE__ACTIVITY = 'Activity';
-    
+    const PES_TRACKER_STAGE__ACTIVITY = 'Activity';    
     
     const PES_TRACKER_STAGES =  array('CONSENT','RIGHT_TO_WORK','PROOF_OF_ID','PROOF_OF_RESIDENCY','CREDIT_CHECK','FINANCIAL_SANCTIONS','CRIMINAL_RECORDS_CHECK','PROOF_OF_ACTIVITY');
     
@@ -162,7 +161,18 @@ class pesTrackerTable extends DbTable{
                 <?php 
             }
         ?>				
-            <td><?=$row['PROCESSING_STATUS']?><br/><?=$row['PROCESSING_STATUS_CHANGED']?><br/><?=$row['DATE_LAST_CHASED']?></td>
+            <td>
+            <div class='alert alert-info text-center pesProcessStatusDisplay' role='alert' ><?=self::formatProcessingStatusCell($row);?></div>              
+            <div class='text-center'  data-cnum='<?=$cnum?>'>        
+            <span style='white-space:nowrap' >
+            <a class="btn btn-xs btn-info  btnProcessStatusChange accessPes accessCdi" 		data-processstatus='PES' data-toggle="tooltip" data-placement="top" title="With PES Team" ><i class="fas fa-users"></i></a>
+            <a class="btn btn-xs btn-info  btnProcessStatusChange accessPes accessCdi" 		data-processstatus='User' data-toggle="tooltip" data-placement="top" title="With Applicant" ><i class="fas fa-user"></i></a>
+            <a class="btn btn-xs btn-info   btnProcessStatusChange accessPes accessCdi" 	data-processstatus='CRC' data-toggle="tooltip" data-placement="top" title="Awaiting CRC"><i class="fas fa-gavel"></i></a>
+            <button class='btn btn-info btn-xs  btnProcessStatusChange accessPes accessCdi' data-processstatus='Unkown' data-toggle="tooltip"  title="Unknown"><span class="glyphicon glyphicon-erase" ></span></button>
+            </span>
+            <hr/>
+            <?=trim($row['DATE_LAST_CHASED']);?>
+            </div></td>
             <td><?=personTable::getPesStatusWithButtons($row)?></td>
             <td><textarea rows="3" cols="20"  data-cnum='<?=$cnum?>'></textarea><br/>
             <button class='btn btn-default btn-xs btnPesSaveComment accessPes accessCdi' data-setpesto='Yes' data-toggle="tooltip" data-placement="top" title="Save Comment" ><span class="glyphicon glyphicon-save" ></span></button>
@@ -184,8 +194,16 @@ class pesTrackerTable extends DbTable{
         $formattedField.= trim($row['FIRST_NAME']) . "&nbsp;<b>" . trim($row['LAST_NAME']) . "</b></small><br/>" . trim($row['CNUM']);
         
         return $formattedField;
+    }   
+    
+    static function formatProcessingStatusCell($row){
+        $processingStatus = empty($row['PROCESSING_STATUS']) ? 'Unknown' : trim($row['PROCESSING_STATUS']) ;
+        $today = new \DateTime();
+        $date = DateTime::createFromFormat('Y-m-d H:i:s', substr($row['PROCESSING_STATUS_CHANGED'],0,19));
+        $age  = !empty($row['PROCESSING_STATUS_CHANGED']) ?  $date->diff($today)->format('%R%a days') : null ;        
+
+        echo $processingStatus;?><br/><small><?=substr(trim($row['PROCESSING_STATUS_CHANGED']),0,10);?><br/><?=$age?></small><?php 
     }
-     
     
     static function getAlertClassForPesStage($pesStageValue=null){
         switch ($pesStageValue) {
@@ -246,6 +264,25 @@ class pesTrackerTable extends DbTable{
          return $preparedStmt;
     }
     
+    function prepareProcessStatusUpdate(){
+        if(isset($this->preparedProcessStatusUpdate )) {
+            return $this->prepareProcessStatusUpdate;
+        }
+        $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql.= " SET PROCESSING_STATUS =?, PROCESSING_STATUS_CHANGED = current timestamp ";
+        $sql.= " WHERE CNUM=? ";
+        
+        $this->preparedSelectSQL = $sql;
+       
+        $preparedStmt = db2_prepare($_SESSION['conn'], $sql);
+        
+        if($preparedStmt){
+            $this->prepareProcessStatusUpdate = $preparedStmt;
+        }
+        
+        return $preparedStmt;
+    }
+    
     function prepareTrackerInsert(){        
         if(isset($this->preparedTrackerInsert )) {
             return $this->preparedTrackerInsert;
@@ -298,6 +335,27 @@ class pesTrackerTable extends DbTable{
         
        return true;
     } 
+    
+    function setPesProcessStatus($cnum,$processStatus){
+        $trackerRecord = new pesTrackerRecord();
+        $trackerRecord->setFromArray(array('CNUM'=>$cnum));
+        
+        if (!$this->existsInDb($trackerRecord)) {
+            $this->createNewTrackerRecord($cnum);
+        }
+        $preparedStmt = $this->prepareProcessStatusUpdate();
+        $data = array($processStatus,$cnum);
+        
+        $rs = db2_execute($preparedStmt,$data);
+        
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared sql');
+            throw new \Exception("Failed to update PES Process Status $processStatus for $cnum");
+        }
+        
+        return true;
+    } 
+    
     
     function setPesPassportNames($cnum,$passportFirstname=null,$passportSurname=null){
         $trackerRecord = new pesTrackerRecord();

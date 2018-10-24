@@ -104,6 +104,44 @@ function pesEvent() {
   return alertClass;
 }
   
+  this.listenForPesProcessStatusChange = function(){
+	  $(document).on('click','.btnProcessStatusChange', function(){  
+		  
+		  var buttonObj = $(this);
+		  console.log(buttonObj);
+		  
+		  
+		  var processStatus = $(this).data('processstatus');					  
+		  var cnum     = $(this).parents('div').data('cnum');
+		  
+	  
+//		  $(this).parents('div').prev('div.pesProcessStatusDisplay').html(processStatus);
+		  $(this).addClass('spinning');
+		  
+		 
+		  
+		   $.ajax({
+			   url: "ajax/savePesProcessStatus.php",
+		       type: 'POST',
+		       data : {cnum:cnum,
+		    	       processStatus:processStatus,
+		    	   	   },
+		       success: function(result){
+		           console.log(result);
+		           var resultObj = JSON.parse(result);
+		           if(resultObj.success==true){
+		        	   console.log(resultObj.formattedStatusField);
+		        	   console.log(buttonObj);
+		        	   console.log(buttonObj.parents('div:first'));		        	   
+		        	   console.log(buttonObj.parents('div:first').siblings('div.pesProcessStatusDisplay:first').html());
+		        	   buttonObj.parents('div:first').siblings('div.pesProcessStatusDisplay').html(resultObj.formattedStatusField);	
+		           }
+		           $(buttonObj).removeClass('spinning');
+		       }
+		   });
+	  });
+  }
+  
   
   
 }
