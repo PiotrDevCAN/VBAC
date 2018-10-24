@@ -139,17 +139,13 @@ class pesTrackerTable extends DbTable{
             $age  = !empty($row['PES_DATE_REQUESTED']) ?  $date->diff($today)->format('%R%a days') : null ;
             // $age = !empty($row['PES_DATE_REQUESTED']) ? $interval->format('%R%a days') : null;
             $cnum = $row['CNUM']; 
-
+            
+            $formattedIdentityField = self::formatEmailFieldOnTracker($row);
             
             ?>
-            <tr>
-            <td>
-			<?=$row['EMAIL_ADDRESS']?>
-            <br/><small>
-            <i><?=$row['PASSPORT_FIRST_NAME']?><b><?=$row['PASSPORT_SURNAME']?></b></i><br/>
-            <?=$row['FIRST_NAME']?><b><?=$row['LAST_NAME']?></b>            
-            </small>      
-            <br/><?=$row['CNUM']?>      
+            <tr class='<?=$cnum;?>'>
+            <td class='formattedEmailTd'>
+            <div class='formattedEmailDiv'><?=$formattedIdentityField;?></div>
             </td>
             <td><?=$row['PES_REQUESTOR']?><br/><small><?=$row['PES_DATE_REQUESTED']?><br/><?=$age?></small></td>
             <td><?=trim($row['COUNTRY'])?></td>
@@ -180,6 +176,14 @@ class pesTrackerTable extends DbTable{
 		</table>
 		<?php 
 
+    }
+    
+    static function formatEmailFieldOnTracker($row){
+        $formattedField = trim($row['EMAIL_ADDRESS']) . "<br/><small>";
+        $formattedField.= "<i>" . trim($row['PASSPORT_FIRST_NAME']) . "&nbsp;<b>" . trim($row['PASSPORT_SURNAME']) . "</b></i><br/>";
+        $formattedField.= trim($row['FIRST_NAME']) . "&nbsp;<b>" . trim($row['LAST_NAME']) . "</b></small><br/>" . trim($row['CNUM']);
+        
+        return $formattedField;
     }
      
     

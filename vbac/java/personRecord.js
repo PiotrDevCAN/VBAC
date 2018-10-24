@@ -1533,10 +1533,10 @@ function personRecord() {
            console.log($(this).data('passportfirst'));
            
            if(typeof($(this).data('passportfirst'))!='undefined'){
-        	   var passportFirst = ($(this).data('passportfirst'));
-        	   var passportSurname = ($(this).data('passportsurname'));
-               $('#psm_passportFirst').val(passportFirst);
-               $('#psm_passportSurname').val(passportSurname);
+        	   var passportFirst = $(this).data('passportfirst');
+        	   var passportSurname = $(this).data('passportsurname');
+               $('#psm_passportFirst').val($.trim(passportFirst));
+               $('#psm_passportSurname').val($.trim(passportSurname));
            } else {
         	   $('#passportNameDetails').hide();
            }
@@ -1578,11 +1578,24 @@ function personRecord() {
               type: 'POST',
               success: function(result){
                 console.log(result);
+                var resultObj = JSON.parse(result);
                 $('#savePesStatus').attr('disabled',false);
                
                 if(typeof(personRecord.table) != 'undefined'){
+                    // We came from the PERSON PORTAL
                 	personRecord.table.ajax.reload();	
-                }               
+                }  else {
+                	// We came from the PES TRACKER
+                	console.log('find and amend the email details');
+                	var cnum = resultObj.cnum;
+                	var formattedEmail = resultObj.formattedEmailField;
+                	
+                	console.log($('#pesTrackerTable tr.' + cnum).children('.formattedEmailTd').children('.formattedEmailDiv'));
+                	console.log($('#pesTrackerTable tr.' + cnum).children('.formattedEmailTd').children('.formattedEmailDiv').html());
+                	console.log(formattedEmail);
+                	
+                	$('#pesTrackerTable tr.' + cnum).children('.formattedEmailTd:first').children('.formattedEmailDiv:first').html(formattedEmail);                	
+                }             
                 
                 $('#amendPesStatusModal').modal('hide');
               }
