@@ -14,6 +14,7 @@ try {
     
     $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER   );
     $pesTracker->setPesDateLastChased($_POST['cnum'],$chasedDate->format('Y-m-d'));
+    $comment = $pesTracker->savePesComment($_POST['cnum'],"Date last chased set to :" . $chasedDate->format('Y-m-d') );
     
     $messages  = ob_get_clean();
     $success   = empty($messages);
@@ -23,5 +24,5 @@ try {
     $messages = $pesTracker->lastDb2StmtErrorMsg;
     
 }
-$response = array('success'=>$success,'messages'=>$messages);
+$response = array('success'=>$success,'messages'=>$messages, "comment"=>$comment);
 echo json_encode($response);   

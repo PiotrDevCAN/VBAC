@@ -196,7 +196,7 @@ class pesTrackerTable extends DbTable{
             </div>
             </td>
             <td><?=personTable::getPesStatusWithButtons($row)?></td>
-            <td><textarea rows="3" cols="20"  data-cnum='<?=$cnum?>'></textarea><br/>
+            <td class='pesCommentsTd'><textarea rows="3" cols="20"  data-cnum='<?=$cnum?>'></textarea><br/>
             <button class='btn btn-default btn-xs btnPesSaveComment accessPes accessCdi' data-setpesto='Yes' data-toggle="tooltip" data-placement="top" title="Save Comment" ><span class="glyphicon glyphicon-save" ></span></button>
             <div class='pesComments'><small><?=$row['COMMENT']?></small></div>
             </td>
@@ -312,22 +312,16 @@ class pesTrackerTable extends DbTable{
     }
     
     function prepareStageUpdate($stage){
-        
         if(isset($this->preparedStageUpdateStmts[strtoupper(db2_escape_string($stage))] )) {
             return $this->preparedStageUpdateStmts[strtoupper(db2_escape_string($stage))];
         }
-        
-        
         $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
         $sql.= " SET " . strtoupper(db2_escape_string($stage)) . " =? ";
         $sql.= " WHERE CNUM=? ";
         
         $this->preparedSelectSQL = $sql;
-        
-        echo $sql;
-        
-        
-         $preparedStmt = db2_prepare($_SESSION['conn'], $sql);
+       
+        $preparedStmt = db2_prepare($_SESSION['conn'], $sql);
         
          if($preparedStmt){
              $this->preparedStageUpdateStmts[strtoupper(db2_escape_string($stage))] = $preparedStmt;

@@ -11,6 +11,7 @@ try {
     
     $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER   );
     $pesTracker->savePesPriority($_POST['cnum'],$_POST['pespriority']);
+    $comment = $pesTracker->savePesComment($_POST['cnum'],"Priority set to : " . $_POST['pespriority']);
     
     $messages  = ob_get_clean();
     $success   = empty($messages);
@@ -20,5 +21,5 @@ try {
     $messages = $pesTracker->lastDb2StmtErrorMsg;
     
 }
-$response = array('success'=>$success,'messages'=>$messages);
+$response = array('success'=>$success,'messages'=>$messages, 'comment'=>$comment);
 echo json_encode($response);  

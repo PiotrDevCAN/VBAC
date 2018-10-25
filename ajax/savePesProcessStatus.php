@@ -11,6 +11,9 @@ try {
     
     $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER   );
     $pesTracker->setPesProcessStatus($_POST['cnum'],$_POST['processStatus']);
+
+    $comment = $pesTracker->savePesComment($_POST['cnum'],"Process Status set to " . $_POST['processStatus']);
+    
     
     $messages  = ob_get_clean();
     $success   = empty($messages);
@@ -27,5 +30,5 @@ try {
     $messages = $pesTracker->lastDb2StmtErrorMsg;
     
 }
-$response = array('success'=>$success,'messages'=>$messages, 'formattedStatusField'=>$formattedStatusField);
+$response = array('success'=>$success,'messages'=>$messages, 'formattedStatusField'=>$formattedStatusField, "comment"=>$comment);
 echo json_encode($response);    

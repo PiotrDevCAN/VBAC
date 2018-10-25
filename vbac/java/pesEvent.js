@@ -43,6 +43,7 @@ function pesEvent() {
 		    	var resultObj = JSON.parse(result);
 		    	pesevent = new pesEvent();
 		    	pesevent.getAlertClassForPesChasedDate(field);
+		    	buttonObj.parents('td').parent('tr').children('td.pesCommentsTd').children('div.pesComments').html(resultObj.comment);
 		    }
 	  });
   }
@@ -91,14 +92,12 @@ function pesEvent() {
 		  
 		  var pesevent = new pesEvent();
 		  var alertClass = pesevent.getAlertClassForPesStage(setPesTo);
-		  
-		  console.log( column + ":" +  cnum + ':'  + setPesTo + ":" + alertClass );
-		  
+		  		  
 		  $(this).parents('div').prev('div.pesStageDisplay').html(setPesTo);
 		  $(this).parents('div').prev('div.pesStageDisplay').removeClass('alert-info').removeClass('alert-warning').removeClass('alert-success').addClass(alertClass);
 		  $(this).addClass('spinning');
 		  
-		  var buttonObj = this;
+		  var buttonObj = $(this);
 		  
 		   $.ajax({
 			   url: "ajax/savePesStageValue.php",
@@ -111,11 +110,11 @@ function pesEvent() {
 		           console.log(result);
 		           var resultObj = JSON.parse(result);
 		           if(resultObj.success==true){
-		        	   console.log(buttonObj);
-		             } else {
+		        	   buttonObj.parents('td').parent('tr').children('td.pesCommentsTd').children('div.pesComments').html(resultObj.comment);
+		           } else {
 		       		  $(this).parents('div').prev('div.pesStageDisplay').html(resultObj.message);	 
-		             };
-		           $(buttonObj).removeClass('spinning');
+		           };
+		           buttonObj.removeClass('spinning');
 		       }
 		   });
 	  });
@@ -157,6 +156,7 @@ function pesEvent() {
 		           var resultObj = JSON.parse(result);
 		           if(resultObj.success==true){
 		        	   buttonObj.parents('div:first').siblings('div.pesProcessStatusDisplay').html(resultObj.formattedStatusField);	
+		        	   buttonObj.parents('td').parent('tr').children('td.pesCommentsTd').children('div.pesComments').html(resultObj.comment);
 		           }
 		           $(buttonObj).removeClass('spinning');
 		       }
@@ -184,6 +184,10 @@ function pesEvent() {
 		        	   buttonObj.parent('span').siblings('div.priorityDiv:first').html("Priority:" + pespriority);
 		        	   var pesevent = new pesEvent();
 		        	   pesevent.setAlertClassForPesPriority(buttonObj.parent('span').siblings('div.priorityDiv:first'),pespriority);
+		        	           	   
+		        	   buttonObj.parents('td').parent('tr').children('td.pesCommentsTd').children('div.pesComments').html(resultObj.comment);
+		        	   
+		        	   
 		           }
 		           $(buttonObj).removeClass('spinning');
 		       }

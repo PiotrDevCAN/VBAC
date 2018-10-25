@@ -243,3 +243,9 @@ dropdown-menu > li > a {
 	color: black;
 	
 }
+
+
+.pesComments {
+	overflow-y: auto;
+    height: 100px;
+}
