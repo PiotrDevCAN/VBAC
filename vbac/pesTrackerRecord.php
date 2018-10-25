@@ -39,6 +39,8 @@ class pesTrackerRecord extends DbRecord
     protected $PROCESSING_STATUS;
     protected $PROCESSING_STATUS_CHANGED;
     protected $DATE_LAST_CHASED;
+    protected $COMMENT;
+    protected $PRIORITY;
 
 }
     

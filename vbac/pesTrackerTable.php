@@ -76,6 +76,7 @@ class pesTrackerTable extends DbTable{
         $sql.= ", PT.DATE_LAST_CHASED ";
         $sql.= ", P.PES_STATUS ";
         $sql.= ", PT.COMMENT ";
+        $sql.= ", PT.PRIORITY ";
         
         $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";        
         $sql.= " left join " . $_SESSION['Db2Schema'] . "." . \vbac\allTables::$PES_TRACKER . " as PT ";
@@ -170,9 +171,16 @@ class pesTrackerTable extends DbTable{
             <a class="btn btn-xs btn-info   btnProcessStatusChange accessPes accessCdi" 	data-processstatus='CRC' data-toggle="tooltip" data-placement="top" title="Awaiting CRC"><i class="fas fa-gavel"></i></a>
             <button class='btn btn-info btn-xs  btnProcessStatusChange accessPes accessCdi' data-processstatus='Unknown' data-toggle="tooltip"  title="Unknown"><span class="glyphicon glyphicon-erase" ></span></button>
             </span>
-            <hr/>
-            <?=trim($row['DATE_LAST_CHASED']);?>
-            </div></td>
+            <?php 
+            $dateLastChased = !empty($row['DATE_LAST_CHASED']) ? DateTime::createFromFormat('Y-m-d', $row['DATE_LAST_CHASED']) : null;
+            $dateLastChasedFormatted = !empty($row['DATE_LAST_CHASED']) ? $dateLastChased->format('d M Y') : null;
+            $alertClass = !empty($row['DATE_LAST_CHASED']) ? self::getAlertClassForPesChasedDate($row['DATE_LAST_CHASED']) : 'alert-info';
+            ?>
+            <div class='alert <?=$alertClass;?>'>
+            <input class="form-control input-sm pesDateLastChased" value="<?=$dateLastChasedFormatted?>" type="text" placeholder='Last Chased' data-toggle='tooltip' title='PES Date Last Chased' data-cnum='<?=$cnum?>'> 
+            </div>           
+            </div>
+            </td>
             <td><?=personTable::getPesStatusWithButtons($row)?></td>
             <td><textarea rows="3" cols="20"  data-cnum='<?=$cnum?>'></textarea><br/>
             <button class='btn btn-default btn-xs btnPesSaveComment accessPes accessCdi' data-setpesto='Yes' data-toggle="tooltip" data-placement="top" title="Save Comment" ><span class="glyphicon glyphicon-save" ></span></button>
@@ -189,9 +197,39 @@ class pesTrackerTable extends DbTable{
     }
     
     static function formatEmailFieldOnTracker($row){
+        
+        $priority = !empty($row['PRIORITY']) ? ucfirst(trim($row['PRIORITY'])) : 'TBD';
+        
+        switch (trim($row['PRIORITY'])){
+            case 'High':
+            case 1:
+                $alertClass='alert-danger';
+                break;
+            case 'Medium':
+            case 2:
+                $alertClass='alert-warning';
+                break;
+            case 'Low':
+            case 3:
+                $alertClass='alert-success';
+                break;
+            default:
+                $alertClass='alert-info';
+                break;
+        }
+        
         $formattedField = trim($row['EMAIL_ADDRESS']) . "<br/><small>";
         $formattedField.= "<i>" . trim($row['PASSPORT_FIRST_NAME']) . "&nbsp;<b>" . trim($row['PASSPORT_SURNAME']) . "</b></i><br/>";
         $formattedField.= trim($row['FIRST_NAME']) . "&nbsp;<b>" . trim($row['LAST_NAME']) . "</b></small><br/>" . trim($row['CNUM']);
+        $formattedField.= "<div class='alert $alertClass priorityDiv'>Priority:" . $priority . "</div>";
+        
+        $formattedField.="<span style='white-space:nowrap' >
+            <button class='btn btn-xs btn-info  btnPesPriority accessPes accessCdi' data-pespriority='High'   data-toggle='tooltip'  title='High' ><span class='glyphicon glyphicon-king' ></span></i></button>
+            <button class='btn btn-xs btn-info  btnPesPriority accessPes accessCdi' data-pespriority='Medium' data-toggle='tooltip'  title='Medium' ><span class='glyphicon glyphicon-knight' ></span></button>
+            <button class='btn btn-xs btn-info  btnPesPriority accessPes accessCdi' data-pespriority='Low'    data-toggle='tooltip'  title='Low'><span class='glyphicon glyphicon-pawn' ></span></button>
+            <button class='btn btn-info btn-xs  btnPesPriority accessPes accessCdi' data-pespriority='TBD'    data-toggle='tooltip'  title='Unknown'><span class='glyphicon glyphicon-erase' ></span></button>
+            </span>";
+        
         
         return $formattedField;
     }   
@@ -218,6 +256,25 @@ class pesTrackerTable extends DbTable{
                 break;
             default:
                 $alertClass = ' alert-info ';
+                break;
+        }
+        return $alertClass;
+    }
+    
+    static function getAlertClassForPesChasedDate($pesChasedDate){
+        $today = new \DateTime();
+        $date = DateTime::createFromFormat('Y-m-d', $pesChasedDate);
+        $age  = $date->diff($today)->d;           
+        
+        switch (true) {
+            case $age < 7 :
+                $alertClass = ' alert-success ';
+                break;
+            case $age < 14:
+                $alertClass = ' alert-warning ';
+                break;
+            default:
+                $alertClass = ' alert-danger ';
                 break;
         }
         return $alertClass;
@@ -381,6 +438,28 @@ class pesTrackerTable extends DbTable{
         
         return true;
     } 
+    
+    function setPesDateLastChased($cnum,$dateLastChased){
+        $trackerRecord = new pesTrackerRecord();
+        $trackerRecord->setFromArray(array('CNUM'=>$cnum));
+        
+        if (!$this->existsInDb($trackerRecord)) {
+            $this->createNewTrackerRecord($cnum);
+        }
+        
+        $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql.= " SET DATE_LAST_CHASED=DATE('" . db2_escape_string($dateLastChased) . "') ";
+        $sql.= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
+        
+        $rs = db2_exec($_SESSION['conn'],$sql);
+        
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared sql');
+            throw new \Exception("Failed to update Date Last Chased to : $dateLastChased for $cnum");
+        }
+        
+        return true;
+    }
     
     function savePesComment($cnum,$comment){
         $trackerRecord = new pesTrackerRecord();

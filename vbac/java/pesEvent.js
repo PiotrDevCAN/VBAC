@@ -1,4 +1,4 @@
-/*
+	/*
  *
  *
  *
@@ -8,8 +8,44 @@ function pesEvent() {
 
   this.init = function(){
     console.log('+++ Function +++ pesEvent.init');
+    
+    $('.pesDateLastChased').datepicker({
+    	dateFormat: 'dd M yy',
+		maxDate:0,
+        onSelect: function(dateText) {
+        	console.log(this);
+        	var cnum = $(this).data('cnum');
+        	var pesevent = new pesEvent();
+        	pesevent.saveDateLastChased(dateText, cnum, this);
+          }		
+		}
+    ).on("change", function() {
+        alert("Got change event from field");
+    });
+    
+    
+    
+    
     console.log('--- Function --- pesEvent.init');
   },
+  
+  this.saveDateLastChased = function(date,cnum, field){
+	  console.log(field);
+	  console.log($(field));
+	  var parentDiv = $(field).parent('div');
+	  $.ajax({
+		  	url: "ajax/savePesDateLastChased.php",
+		  	type: 'POST',
+		  	data : { cnum: cnum,
+		  		     date: date
+		  			},
+		    success: function(result){
+		    	var resultObj = JSON.parse(result);
+		    	pesevent = new pesEvent();
+		    	pesevent.getAlertClassForPesChasedDate(field);
+		    }
+	  });
+  }
   
   this.listenForComment = function() {
 	  $('textarea').on('input', function(){
@@ -140,10 +176,45 @@ function pesEvent() {
 		       }
 		   });
 	  });
-  }
+  },
   
   
+  this.getAlertClassForPesChasedDate = function(dateField){
+	  
+	  $(dateField).parent('div').removeClass('alert-success');
+	  $(dateField).parent('div').removeClass('alert-warning');
+	  $(dateField).parent('div').removeClass('alert-danger');
+	  $(dateField).parent('div').removeClass('alert-info');
+	  
+	  
+	  var today = new Date();
+//	  var date1 = new Date("7/13/2010");
   
+	  var dateValue = $(dateField).val();	  
+	  var lastChased = new Date(dateValue);	  
+	  
+	  if(typeof(lastChased)=='object'){
+		  var timeDiff = Math.abs(today.getTime() - lastChased.getTime());
+		  var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
+	  
+		  
+		  switch(true){
+		  case diffDays < 7:
+			  $(dateField).parent('div').addClass('alert-success');	  
+			  break;
+		  case diffDays < 14:
+			  $(dateField).parent('div').addClass('alert-warning');
+			  break;
+		  default :
+			  $(dateField).parent('div').addClass('alert-danger');
+			  break;
+		  }		  
+		  
+	  } else {
+		  $(dateField).parent('div').removeClass('alert-info');		  
+		  return;
+	  } 
+  }  
 }
 
 $( document ).ready(function() {
