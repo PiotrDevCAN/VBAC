@@ -39,7 +39,7 @@ class pesTrackerTable extends DbTable{
             case self::PES_TRACKER_RECORDS_ACTIVE :
                 $pesStatusPredicate = "  P.PES_STATUS in('" . personRecord::PES_STATUS_REQUESTED . "','" . personRecord::PES_STATUS_INITIATED. "') ";
                 break;
-            case self::PES_TRACKER_RECORDS_NOT_ACTIVETR :
+            case self::PES_TRACKER_RECORDS_NOT_ACTIVE :
                 $pesStatusPredicate = " P.PES_STATUS !in ('" . personRecord::PES_STATUS_REQUESTED . "','" . personRecord::PES_STATUS_INITIATED. "') ";
                 break;
             case self::PES_TRACKER_RECORDS_ALL :
