@@ -46,5 +46,84 @@ $(document).ready(function(){
 	pesevent.listenForFilterProcess();
 });
 </script>
+<style>
+
+.alert-secondary {
+	background-color:light-grey;
+	color: black;
+}
+
+
+.pesComments {
+	overflow-y: auto;
+    height: 100px;
+}
+
+.btn-success:focus, .btn-success.focus {
+    color: #ffffff;
+    background-color: #2c8d3a;
+    border-color: #1a5322;
+
+}
+
+.btn-warning:focus, .btn-warning.focus {
+
+    color: #ffffff;
+    background-color: #e7a413;
+    border-color: #a0720d;
+
+}
+
+.btn-default {
+
+    color: #ffffff;
+    background-color: #aea79f;
+    border-color: #aea79f;
+
+}
+
+.btn-info:focus, .btn-info.focus {
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+    color: #3a87ad;
+
+}
+
+.alert-info {
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+    color: #3a87ad;
+
+}
+
+.alert-warning {
+    background-color: #fcf8e3;
+    border-color: #fbeed5;
+    color: #c09853;
+
+}
+
+
+.alert-success {
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+    color: #468847;
+
+}
+
+.alert-danger {
+    background-color: #f2dede;
+    border-color: #eed3d7;
+    color: #b94a48;
+
+}
+
+
+
+
+
+
+
+</style>
 
 
