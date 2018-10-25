@@ -235,3 +235,11 @@ dropdown-menu > li > a {
 	overflow-y: auto;
     height: 100px;
 }
+
+
+.alert-info {
+	background-color: #d9edf7;
+	border-color: #bce8f1;
+	color: #3a87ad;
+}
+
