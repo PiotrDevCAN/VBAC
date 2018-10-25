@@ -12,7 +12,6 @@ use vbac\personRecord;
 </div>
 
 <div class='container-fluid'>
-<h3>Pes Tracker</h3>
 <?php
 $pesTrackerTable = new pesTrackerTable(allTables::$PES_TRACKER);
 $pesTrackerTable->displayTable(pesTrackerTable::PES_TRACKER_RECORDS_ACTIVE);
@@ -43,6 +42,8 @@ $(document).ready(function(){
 	pesevent.listenForSavePesComment();
 	pesevent.listenForPesProcessStatusChange();
 	pesevent.listenForPesPriorityChange();
+	pesevent.listenForFilterPriority();
+	pesevent.listenForFilterProcess();
 });
 </script>
 

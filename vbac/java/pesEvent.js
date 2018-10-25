@@ -216,9 +216,8 @@ function pesEvent() {
 		  $(priorityField).addClass('alert-info');
 		  break;
 	  }			  
-  }  
+  } ,
 
-  
   
   this.getAlertClassForPesChasedDate = function(dateField){
 	  
@@ -252,7 +251,30 @@ function pesEvent() {
 		  $(dateField).parent('div').removeClass('alert-info');		  
 		  return;
 	  } 
-  }  
+  },
+  
+  this.listenForFilterPriority = function(){
+	  $(document).on('click','.btnSelectPriority', function(){
+		  var priority = $(this).data('pespriority');
+		  if(priority!=0){
+			  $('tr').hide();
+			  $(".priorityDiv:contains('" + priority + "')").parents('tr').show();
+			  $('th').parent('tr').show();			  
+		  } else {
+			  $('tr').show();
+		  }
+	  });
+  },
+  
+  this.listenForFilterProcess = function(){
+	  $(document).on('click','.btnSelectProcess', function(){
+		  var pesprocess = $(this).data('pesprocess');
+		  $('tr').hide();
+		  $(".pesProcessStatusDisplay:contains('" + pesprocess + "')").parents('tr').show();
+		  $('th').parent('tr').show();			  
+	  });
+  }
+  
 }
 
 $( document ).ready(function() {

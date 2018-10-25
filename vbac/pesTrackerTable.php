@@ -112,17 +112,32 @@ class pesTrackerTable extends DbTable{
         $allRows = self::returnPesEventsTable($records,self::PES_TRACKER_RETURN_RESULTS_AS_ARRAY);
         ?>
         <div class='container-fluid'>
-         <form class="form-horizontal">
+          <form class="form-horizontal">
   			<div class="form-group">
     			<label class="control-label col-sm-2" for="pesTrackerTableSearch">Table Search:</label>
-    			<div class="col-sm-10">
+    			<div class="col-sm-3">
       			<input type="text" id="pesTrackerTableSearch" placeholder="Search"  onkeyup=searchTable()  />
     			</div>
-  			</div>
-		</form> 
+    			<label class="control-label col-sm-2" for="pesPriorityFilter">Filters:</label>
+    			<div class="col-sm-5">
+  				<span style='white-space:nowrap' id='pesPriorityFilter' >
+  				<button class='btn btn-sm btn-danger  btnSelectPriority accessPes accessCdi' data-pespriority='1'  data-toggle='tooltip'  title='Filter on High'  type='button' onclick='return false;'><span class='glyphicon glyphicon-king' ></span></button>
+            	<button class='btn btn-sm btn-warning btnSelectPriority accessPes accessCdi' data-pespriority='2'  data-toggle='tooltip'  title='Filter on Medium' type='button' onclick='return false;'><span class='glyphicon glyphicon-knight' ></span></button>
+            	<button class='btn btn-sm btn-success btnSelectPriority accessPes accessCdi' data-pespriority='3'  data-toggle='tooltip'  title='Filter on Low' type='button' onclick='return false;'><span class='glyphicon glyphicon-pawn' ></span></button>
+            	<button class='btn btn-sm btn-info    btnSelectPriority accessPes accessCdi' data-pespriority='0'  data-toggle='tooltip'  title='Filter off' type='button' onclick='return false;'><span class='glyphicon glyphicon-ban-circle' ></span></button>
+            	<br/><br/>
+            	<a class="btn btn-sm btn-info  btnSelectProcess accessPes accessCdi" 		data-pesprocess='PES' data-toggle="tooltip" data-placement="top" title="With PES Team" ><i class="fas fa-users"></i></a>
+                <a class="btn btn-sm btn-info  btnSelectProcess accessPes accessCdi" 		data-pesprocess='User' data-toggle="tooltip" data-placement="top" title="With Applicant" ><i class="fas fa-user"></i></a>
+                <a class="btn btn-sm btn-info   btnSelectProcess accessPes accessCdi" 	    data-pesprocess='CRC' data-toggle="tooltip" data-placement="top" title="Awaiting CRC"><i class="fas fa-gavel"></i></a>
+                <button class='btn btn-info btn-sm  btnSelectProcess accessPes accessCdi'   data-pesprocess='Unknown' data-toggle="tooltip"  title="Status Unknown" type='button' onclick='return false;'><span class="glyphicon glyphicon-erase" ></span></button>
+              	</span> 
+            	</div>         
+  			</div>  			
+		  </form> 
 		</div>
        
-        <table id='pesTrackerTable' class='table table-striped table-bordered display compact nowrap '  style='width:100%'>
+		<div id='pesTrackerTableDiv'>
+		<table id='pesTrackerTable' class='table table-striped table-bordered display compact nowrap '  style='width:100%'>
 		<thead>
 		<tr><th>Email Address</th><th>Requestor</th><th>Country</th>
 		<th>Consent Form</th><th>Proof of Right to Work</th><th>Proof of ID</th><th>Proof of Residency</th><th>Credit Check</th>
@@ -191,8 +206,9 @@ class pesTrackerTable extends DbTable{
         ?>
         </tbody>
 		</table>
+		
+		</div> 
 		<?php 
-
     }
     
     static function formatEmailFieldOnTracker($row){
@@ -223,10 +239,10 @@ class pesTrackerTable extends DbTable{
         $formattedField.= "<div class='alert $alertClass priorityDiv'>Priority:" . $priority . "</div>";
         
         $formattedField.="<span style='white-space:nowrap' >
-            <button class='btn btn-xs btn-danger  btnPesPriority accessPes accessCdi' data-pespriority='1' data-cnum='" . $row['CNUM'] ."'  data-toggle='tooltip'  title='High' ><span class='glyphicon glyphicon-king' ></span></i></button>
-            <button class='btn btn-xs btn-warning  btnPesPriority accessPes accessCdi' data-pespriority='2' data-cnum='" . $row['CNUM'] ."' data-toggle='tooltip'  title='Medium' ><span class='glyphicon glyphicon-knight' ></span></button>
-            <button class='btn btn-xs btn-success  btnPesPriority accessPes accessCdi' data-pespriority='3' data-cnum='" . $row['CNUM'] ."' data-toggle='tooltip'  title='Low'><span class='glyphicon glyphicon-pawn' ></span></button>
-            <button class='btn btn-xs btn-info btnPesPriority accessPes accessCdi' data-pespriority='99' data-cnum='" . $row['CNUM'] ."'data-toggle='tooltip'  title='Unknown'><span class='glyphicon glyphicon-erase' ></span></button>
+            <button class='btn btn-xs btn-danger  btnPesPriority accessPes accessCdi' data-pespriority='1' data-cnum='" . $row['CNUM'] ."'  data-toggle='tooltip'  title='High' ><span class='glyphicon glyphicon-king' ></button>
+            <button class='btn btn-xs btn-warning  btnPesPriority accessPes accessCdi' data-pespriority='2' data-cnum='" . $row['CNUM'] ."' data-toggle='tooltip'  title='Medium' ><span class='glyphicon glyphicon-knight' ></button>
+            <button class='btn btn-xs btn-success  btnPesPriority accessPes accessCdi' data-pespriority='3' data-cnum='" . $row['CNUM'] ."' data-toggle='tooltip'  title='Low'><span class='glyphicon glyphicon-pawn' ></button>
+            <button class='btn btn-xs btn-info btnPesPriority accessPes accessCdi' data-pespriority='99' data-cnum='" . $row['CNUM'] ."'data-toggle='tooltip'  title='Unknown'><span class='glyphicon glyphicon-erase' ></button>
             </span>";
         
         
