@@ -124,7 +124,7 @@ class pesTrackerTable extends DbTable{
        
         <table id='pesTrackerTable' class='table table-striped table-bordered display compact nowrap '  style='width:100%'>
 		<thead>
-		<tr><th>Email Address</th><th>Requestor</th><th>Country</th><th>JML</th>
+		<tr><th>Email Address</th><th>Requestor</th><th>Country</th>
 		<th>Consent Form</th><th>Proof of Right to Work</th><th>Proof of ID</th><th>Proof of Residency</th><th>Credit Check</th>
 		<th>Financial Sanctions</th><th>Criminal Records Check</th><th>Proof of Activity</th>
 		<th>Process Status</th><th>PES Status</th><th>Comment</th>		
@@ -149,8 +149,7 @@ class pesTrackerTable extends DbTable{
             </td>
             <td><?=$row['PES_REQUESTOR']?><br/><small><?=$row['PES_DATE_REQUESTED']?><br/><?=$age?></small></td>
             <td><?=trim($row['COUNTRY'])?></td>
-            <td><?=$row['JML']?></td>
-            
+                        
             <?php 
             foreach (self::PES_TRACKER_STAGES as $stage) {
                 $stageValue         = !empty($row[$stage]) ? trim($row[$stage]) : 'TBD';
@@ -224,10 +223,10 @@ class pesTrackerTable extends DbTable{
         $formattedField.= "<div class='alert $alertClass priorityDiv'>Priority:" . $priority . "</div>";
         
         $formattedField.="<span style='white-space:nowrap' >
-            <button class='btn btn-xs btn-info  btnPesPriority accessPes accessCdi' data-pespriority='High'   data-toggle='tooltip'  title='High' ><span class='glyphicon glyphicon-king' ></span></i></button>
-            <button class='btn btn-xs btn-info  btnPesPriority accessPes accessCdi' data-pespriority='Medium' data-toggle='tooltip'  title='Medium' ><span class='glyphicon glyphicon-knight' ></span></button>
-            <button class='btn btn-xs btn-info  btnPesPriority accessPes accessCdi' data-pespriority='Low'    data-toggle='tooltip'  title='Low'><span class='glyphicon glyphicon-pawn' ></span></button>
-            <button class='btn btn-info btn-xs  btnPesPriority accessPes accessCdi' data-pespriority='TBD'    data-toggle='tooltip'  title='Unknown'><span class='glyphicon glyphicon-erase' ></span></button>
+            <button class='btn btn-xs btn-danger  btnPesPriority accessPes accessCdi' data-pespriority='1' data-cnum='" . $row['CNUM'] ."'  data-toggle='tooltip'  title='High' ><span class='glyphicon glyphicon-king' ></span></i></button>
+            <button class='btn btn-xs btn-warning  btnPesPriority accessPes accessCdi' data-pespriority='2' data-cnum='" . $row['CNUM'] ."' data-toggle='tooltip'  title='Medium' ><span class='glyphicon glyphicon-knight' ></span></button>
+            <button class='btn btn-xs btn-success  btnPesPriority accessPes accessCdi' data-pespriority='3' data-cnum='" . $row['CNUM'] ."' data-toggle='tooltip'  title='Low'><span class='glyphicon glyphicon-pawn' ></span></button>
+            <button class='btn btn-xs btn-info btnPesPriority accessPes accessCdi' data-pespriority='99' data-cnum='" . $row['CNUM'] ."'data-toggle='tooltip'  title='Unknown'><span class='glyphicon glyphicon-erase' ></span></button>
             </span>";
         
         
@@ -412,6 +411,30 @@ class pesTrackerTable extends DbTable{
         
         return true;
     } 
+    
+    function savePesPriority($cnum,$pesPriority=null){
+        $trackerRecord = new pesTrackerRecord();
+        $trackerRecord->setFromArray(array('CNUM'=>$cnum));
+        
+        if (!$this->existsInDb($trackerRecord)) {
+            $this->createNewTrackerRecord($cnum);
+        }
+        
+        $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql.= " SET PRIORITY=";
+        $sql.= !empty($pesPriority) ? "'" . db2_escape_string($pesPriority) . "' " : " null, ";
+        $sql.= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
+        
+        $rs = db2_exec($_SESSION['conn'],$sql);
+        
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared sql');
+            throw new \Exception("Failed to update Pes Priority: $pesPriority for $cnum");
+        }
+        
+        return true;
+    } 
+    
     
     
     function setPesPassportNames($cnum,$passportFirstname=null,$passportSurname=null){

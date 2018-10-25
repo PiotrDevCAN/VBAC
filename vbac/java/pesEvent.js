@@ -142,20 +142,11 @@ function pesEvent() {
   
   this.listenForPesProcessStatusChange = function(){
 	  $(document).on('click','.btnProcessStatusChange', function(){  
-		  
 		  var buttonObj = $(this);
-		  console.log(buttonObj);
-		  
-		  
 		  var processStatus = $(this).data('processstatus');					  
 		  var cnum     = $(this).parents('div').data('cnum');
-		  
-	  
 //		  $(this).parents('div').prev('div.pesProcessStatusDisplay').html(processStatus);
 		  $(this).addClass('spinning');
-		  
-		 
-		  
 		   $.ajax({
 			   url: "ajax/savePesProcessStatus.php",
 		       type: 'POST',
@@ -163,13 +154,8 @@ function pesEvent() {
 		    	       processStatus:processStatus,
 		    	   	   },
 		       success: function(result){
-		           console.log(result);
 		           var resultObj = JSON.parse(result);
 		           if(resultObj.success==true){
-		        	   console.log(resultObj.formattedStatusField);
-		        	   console.log(buttonObj);
-		        	   console.log(buttonObj.parents('div:first'));		        	   
-		        	   console.log(buttonObj.parents('div:first').siblings('div.pesProcessStatusDisplay:first').html());
 		        	   buttonObj.parents('div:first').siblings('div.pesProcessStatusDisplay').html(resultObj.formattedStatusField);	
 		           }
 		           $(buttonObj).removeClass('spinning');
@@ -179,24 +165,76 @@ function pesEvent() {
   },
   
   
+  this.listenForPesPriorityChange = function(){
+	  $(document).on('click','.btnPesPriority', function(){  
+		  var buttonObj = $(this);
+		  var pespriority = $(this).data('pespriority');					  
+		  var cnum        = $(this).data('cnum');
+//		  $(this).parents('div').prev('div.pesProcessStatusDisplay').html(processStatus);
+		  $(this).addClass('spinning');
+		   $.ajax({
+			   url: "ajax/savePesPriority.php",
+		       type: 'POST',
+		       data : {cnum:cnum,
+		    	       pespriority:pespriority,
+		    	   	   },
+		       success: function(result){
+		           var resultObj = JSON.parse(result);
+		           if(resultObj.success==true){
+		        	   buttonObj.parent('span').siblings('div.priorityDiv:first').html("Priority:" + pespriority);
+		        	   var pesevent = new pesEvent();
+		        	   pesevent.setAlertClassForPesPriority(buttonObj.parent('span').siblings('div.priorityDiv:first'),pespriority);
+		           }
+		           $(buttonObj).removeClass('spinning');
+		       }
+		   });
+	  });
+  },
+  
+  this.setAlertClassForPesPriority = function(priorityField, priority){
+	  
+	  $(priorityField).removeClass('alert-success');
+	  $(priorityField).removeClass('alert-warning');
+	  $(priorityField).removeClass('alert-danger');
+	  $(priorityField).removeClass('alert-info'); 
+
+	  
+	  
+	  switch(priority){
+	  case 1:
+		  console.log('danger');
+		  $(priorityField).addClass('alert-danger');	  
+		  break;
+	  case 2:
+		  console.log('warning');
+		  $(priorityField).addClass('alert-warning');
+		  break;
+	  case 3:
+		  $(priorityField).addClass('alert-success');
+		  break;			  
+	  default :
+		  $(priorityField).addClass('alert-info');
+		  break;
+	  }			  
+  }  
+
+  
+  
   this.getAlertClassForPesChasedDate = function(dateField){
 	  
 	  $(dateField).parent('div').removeClass('alert-success');
 	  $(dateField).parent('div').removeClass('alert-warning');
 	  $(dateField).parent('div').removeClass('alert-danger');
-	  $(dateField).parent('div').removeClass('alert-info');
-	  
+	  $(dateField).parent('div').removeClass('alert-info');  
 	  
 	  var today = new Date();
-//	  var date1 = new Date("7/13/2010");
-  
+//	  var date1 = new Date("7/13/2010");  
 	  var dateValue = $(dateField).val();	  
 	  var lastChased = new Date(dateValue);	  
 	  
 	  if(typeof(lastChased)=='object'){
 		  var timeDiff = Math.abs(today.getTime() - lastChased.getTime());
-		  var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
-	  
+		  var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 	  
 		  
 		  switch(true){
 		  case diffDays < 7:
@@ -221,6 +259,3 @@ $( document ).ready(function() {
 	  var pesevent = new pesEvent();
 	  pesevent.init();
 	});
-
-
-

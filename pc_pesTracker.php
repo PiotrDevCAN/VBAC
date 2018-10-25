@@ -42,6 +42,7 @@ $(document).ready(function(){
 	pesevent.listenForPesStageValueChange();
 	pesevent.listenForSavePesComment();
 	pesevent.listenForPesProcessStatusChange();
+	pesevent.listenForPesPriorityChange();
 });
 </script>
 
