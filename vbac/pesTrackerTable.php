@@ -176,7 +176,7 @@ class pesTrackerTable extends DbTable{
                 <?php 
             }
         ?>				
-            <td>
+            <td class='nonSearchable'>
             <div class='alert alert-info text-center pesProcessStatusDisplay' role='alert' ><?=self::formatProcessingStatusCell($row);?></div>              
             <div class='text-center'  data-cnum='<?=$cnum?>'>        
             <span style='white-space:nowrap' >
@@ -195,7 +195,7 @@ class pesTrackerTable extends DbTable{
             </div>           
             </div>
             </td>
-            <td><?=personTable::getPesStatusWithButtons($row)?></td>
+            <td class='nonSearchable'><?=personTable::getPesStatusWithButtons($row)?></td>
             <td class='pesCommentsTd'><textarea rows="3" cols="20"  data-cnum='<?=$cnum?>'></textarea><br/>
             <button class='btn btn-default btn-xs btnPesSaveComment accessPes accessCdi' data-setpesto='Yes' data-toggle="tooltip" data-placement="top" title="Save Comment" ><span class="glyphicon glyphicon-save" ></span></button>
             <div class='pesComments'><small><?=$row['COMMENT']?></small></div>
