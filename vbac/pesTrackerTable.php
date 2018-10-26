@@ -170,7 +170,7 @@ class pesTrackerTable extends DbTable{
                 $stageValue         = !empty($row[$stage]) ? trim($row[$stage]) : 'TBD';
                 $stageAlertValue    = self::getAlertClassForPesStage($stageValue);
                 ?>
-                <td> 
+                <td class='nonSearchable'> 
             	<?=self::getButtonsForPesStage($stageValue, $stageAlertValue, $stage, $cnum);?>
                 </td>
                 <?php 

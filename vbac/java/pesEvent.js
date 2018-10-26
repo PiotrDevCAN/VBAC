@@ -4,6 +4,24 @@
  *
  */
 
+function searchTable(){
+	  var filter = $('#pesTrackerTableSearch').val().toUpperCase();
+
+	  if(filter.length > 3){
+		  $('#pesTrackerTable tr').hide();
+		  $('#pesTrackerTable th').parent('tr').show();
+		  
+		  $('#pesTrackerTable tbody tr').children('td').not('.nonSearchable').each(function(){
+			  var text = $(this).text().trim().replace(/[\xA0]/gi, ' ').replace(/  /g,'').toUpperCase();
+			  if(text.indexOf(filter) > -1){
+				  var tr = $(this).parent('tr').show();
+			  }
+		  });		  
+	  } else {
+		  $('#pesTrackerTable tr').show	()
+	  }
+}
+
 function pesEvent() {
 
   this.init = function(){
