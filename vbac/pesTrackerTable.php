@@ -6,8 +6,12 @@ use itdq\Loader;
 use vbac\pesTrackerRecord;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use \DateTime;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use itdq\xls;
 
 class pesTrackerTable extends DbTable{
+    
+    use xls;
     
     protected $preparedStageUpdateStmts;
     protected $preparedTrackerInsert;
@@ -107,6 +111,13 @@ class pesTrackerTable extends DbTable{
         }
     }   
     
+    static function preProcessRowForWriteToXls($row){       
+        $breaks = array("<br/>","</br/>");
+        $comment = str_ireplace($breaks, "\r\n", $row['COMMENT']);         
+        $row['COMMENT'] = strip_tags($comment);
+        return $row;
+    }
+    
     
     function displayTable($records='Active'){
         $allRows = self::returnPesEventsTable($records,self::PES_TRACKER_RETURN_RESULTS_AS_ARRAY);
@@ -117,6 +128,11 @@ class pesTrackerTable extends DbTable{
     			<label class="control-label col-sm-2" for="pesTrackerTableSearch">Table Search:</label>
     			<div class="col-sm-3">
       			<input type="text" id="pesTrackerTableSearch" placeholder="Search"  onkeyup=searchTable()  />
+      			<br/>
+      			<span style='white-space:nowrap' id='pesDownload' >              	
+				<a class='btn btn-sm btn-link accessBasedBtn accessPes accessCdi' href='/dn_pesTracker.php'><i class="glyphicon glyphicon-download-alt"></i> PES Tracker</a>
+				</span>     			
+      			
     			</div>
     			<label class="control-label col-sm-2" for="pesPriorityFilter">Filters:</label>
     			<div class="col-sm-5">
@@ -131,6 +147,7 @@ class pesTrackerTable extends DbTable{
                 <a class="btn btn-sm btn-info   btnSelectProcess accessPes accessCdi" 	    data-pesprocess='CRC' data-toggle="tooltip" data-placement="top" title="Awaiting CRC"><i class="fas fa-gavel"></i></a>
                 <button class='btn btn-info btn-sm  btnSelectProcess accessPes accessCdi'   data-pesprocess='Unknown' data-toggle="tooltip"  title="Status Unknown" type='button' onclick='return false;'><span class="glyphicon glyphicon-erase" ></span></button>
               	</span> 
+             	
             	</div>         
   			</div>  			
 		  </form> 
@@ -505,7 +522,7 @@ class pesTrackerTable extends DbTable{
         $existingComment = $this->getPesComment($cnum);
         $now = new \DateTime();
         
-        $newComment = trim($comment) . "<br/><small>" . $_SESSION['ssoEmail'] . ":" . $now->format('Y-m-d H:i:s') . "</small></br/>" . $existingComment;
+        $newComment = trim($comment) . "<br/><small>" . $_SESSION['ssoEmail'] . ":" . $now->format('Y-m-d H:i:s') . "</small><br/>" . $existingComment;
         
         $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
         $sql.= " SET COMMENT='" . db2_escape_string($newComment) . "' ";
@@ -558,8 +575,33 @@ class pesTrackerTable extends DbTable{
         return $row['COMMENT'];
     }
     
-
+    
+    
+    function getTracker($records=self::PES_TRACKER_RECORDS_ACTIVE, Spreadsheet $spreadsheet){
+        $sheet = 1;
         
-    
-    
+        $rs = self::returnPesEventsTable($records, pesTrackerTable::PES_TRACKER_RETURN_RESULTS_AS_RESULT_SET);
+        
+        if($rs){
+            $recordsFound = static::writeResultSetToXls($rs, $spreadsheet);
+            
+            if($recordsFound){
+                static::autoFilter($spreadsheet);
+                static::autoSizeColumns($spreadsheet);
+                static::setRowColor($spreadsheet,'105abd19',1);
+            }
+        }
+        
+        if(!$recordsFound){
+            $spreadsheet->getActiveSheet()->setCellValueByColumnAndRow(1, 1, "Warning");
+            $spreadsheet->getActiveSheet()->setCellValueByColumnAndRow(1, 2,"No records found");
+        }
+        // Rename worksheet & create next.
+
+        $spreadsheet->getActiveSheet()->setTitle('Record ' . $records);
+        $spreadsheet->createSheet();
+        $spreadsheet->setActiveSheetIndex($sheet++);
+        
+        return true;
+    }
 }

@@ -151,14 +151,28 @@ $odcStaff = personTable::countOdcStaff();
 ?>
 <script>
 
+console.log('in navbar');
+
 $('.navbarMenuOption')<?=$isFm?><?=$isPmo?><?=$isPes?><?=$isCdi?><?=$isUser?><?=$isRep1?><?=$isRes?>.remove();
 $('.navbarMenu').not(':has(li)').remove();
 
 $('li[data-pagename="<?=$page;?>"]').addClass('active').closest('li.dropdown').addClass('active');
 <?php
+
+
+
 if($page != "index.php" && substr($page,0,3)!='cdi'){
     ?>
+
+    console.log('<?=$page;?>');
+    
 	var pageAllowed = $('li[data-pagename="<?=$page;?>"]').length;
+
+    console.log('li[data-pagename="<?=$page;?>"]');
+    console.log($('li[data-pagename="<?=$page;?>"]'));
+    
+
+	
 	if(pageAllowed==0 ){
 		window.location.replace('index.php');
 		alert("You do not have access to:<?=$page?>");

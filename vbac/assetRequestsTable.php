@@ -1483,12 +1483,12 @@ class assetRequestsTable extends DbTable{
 
 
                     if($rs){
-                        $recordsFound = DbTable::writeResultSetToXls($rs, $spreadsheet);
+                        $recordsFound = static::writeResultSetToXls($rs, $spreadsheet);
 
                         if($recordsFound){
-                            DbTable::autoFilter($spreadsheet);
-                            DbTable::autoSizeColumns($spreadsheet);
-                            DbTable::setRowColor($spreadsheet,'105abd19',1);
+                            statiic::autoFilter($spreadsheet);
+                            static::autoSizeColumns($spreadsheet);
+                            static::setRowColor($spreadsheet,'105abd19',1);
                         }
                     }
 

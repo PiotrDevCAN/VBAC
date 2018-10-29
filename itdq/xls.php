@@ -15,6 +15,7 @@ trait xls{
         while (($rawRow=db2_fetch_assoc($resultSet))==true) {
             $rowsWritten = true;
             $row = array_map('trim', $rawRow);
+            $row = static::preProcessRowForWriteToXls($row);
             if($headerRow && $withColumnHeadings){
                 foreach ($row as $columnName => $value){
                     $columnHeading = ucwords(str_replace("_", " ", $columnName));
@@ -32,6 +33,10 @@ trait xls{
             $columnCounter=$columnIndex;
         }
         return $rowsWritten;
+    }
+    
+    static function preProcessRowForWriteToXls($row){
+        return $row;
     }
 
     static function autoSizeColumns(Spreadsheet $spreadsheet){
