@@ -26,26 +26,27 @@ try {
     if(array_key_exists('psm_passportFirst', $_POST)){
         /// We've been called from the PES TRACKER Screen;
         $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER   );
-        $pesTracker->setPesPassportNames($_POST['psm_cnum'],trim($_POST['psm_passportFirst']), trim($_POST['psm_passportSurname']));
         
         $pesTrackeRecord = new pesTrackerRecord();
         $pesTrackeRecord->setFromArray(array('CNUM'=>$_POST['psm_cnum']));
         
+        if (!$pesTracker->existsInDb($pesTrackeRecord)) {
+             $pesTracker->createNewTrackerRecord($_POST['psm_cnum']);
+        }
+        
+        
+        $pesTracker->setPesPassportNames($_POST['psm_cnum'],trim($_POST['psm_passportFirst']), trim($_POST['psm_passportSurname']));
+     
         $pesTrackerData = $pesTracker->getRecord($pesTrackeRecord);
         $row = $pesTrackerData;
-        $row['EMAIL_ADDRESS'] = $personData['EMAIL_ADDRESS'];
-        $row['FIRST_NAME'] = $personData['FIRST_NAME'];
-        $row['LAST_NAME'] = $personData['LAST_NAME'];
+        $row['EMAIL_ADDRESS'] = $pesTrackerData['EMAIL_ADDRESS'];
+        $row['FIRST_NAME']    = $pesTrackerData['FIRST_NAME'];
+        $row['LAST_NAME']     = $pesTrackerData['LAST_NAME'];
         $formattedEmailField = pesTrackerTable::formatEmailFieldOnTracker($row);        
     } 
     
     $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER   );
-    $comment = $pesTracker->savePesComment($_POST['psm_cnum'],"PES STATUS set to : " . $_POST['psm_status']);
-
-
-
-    
-    
+    $comment = $pesTracker->savePesComment($_POST['psm_cnum'],"PES STATUS set to : " . $_POST['psm_status']);    
 
     AuditTable::audit("Saved Person <pre>" . print_r($person,true) . "</pre>", AuditTable::RECORD_TYPE_DETAILS);
 
