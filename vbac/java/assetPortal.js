@@ -763,38 +763,38 @@ this.listenForAssetRequestApproveRejectConfirm  = function(){
 	          	var status = $('#approveRejectRequestStatus').val();
 	          	var isPmo  = $('#approveRejectRequestIsPmo').val();
 	          	var approveReject = $('#assetRequestApprovalToggle').is(':checked' );
-	          	var raisedInOrderIt = orderItStatus == 'Raised in Order IT' ? true : false;
+	          	var raisedInOrderIt = orderItStatus == 'Raised with LBG' ? true : false;
 	          	var iamApproval = (status == 'Awaiting IAM Approval') && (isPmo == 1);
 	          	switch(true) {
 	          	case iamApproval && approveReject && raisedInOrderIt:
 	          		console.log('true and true and false');
-	          		// It's already raised in order it - and has now been approved BY IAM.
-	          		var status = 'Approved for Order IT';
-	          		var orderitstatus = 'Raised in Order IT';
+	          		// It's already Raised with LBG - and has now been approved BY IAM.
+	          		var status = 'Approved for LBG';
+	          		var orderitstatus = 'Raised with LBG';
 	          		break;
 	          	case approveReject && raisedInOrderIt:
 	          		console.log('true and true');
-	          		// It was already raised in order it - and now it's approved - so pass it to IAM for their approval next
-	          		// var status = 'Approved for Order IT';
+	          		// It was already Raised with LBG - and now it's approved - so pass it to IAM for their approval next
+	          		// var status = 'Approved for LBG';
 	          		var status = 'Awaiting IAM Approval';
-	          		var orderitstatus = 'Raised in Order IT';
+	          		var orderitstatus = 'Raised with LBG';
 	          		break;
 	          	case approveReject && !raisedInOrderIt:
 	          		console.log('true and false');
-	          		// It's NOT already raised in order it - and has now been approved.
+	          		// It's NOT already Raised with LBG - and has now been approved.
 	          		//var status = 'Awaiting IAM Approval';
-	          		var status = 'Approved for Order IT';
+	          		var status = 'Approved for LBG';
 	          		var orderitstatus = 'Yet to be raised';
 	          		break;
 	          	case !approveReject && raisedInOrderIt:
 	          		console.log('false and true');
-	          		// It was already raised in order it - but has now been rejected in vbac.
+	          		// It was already Raised with LBG - but has now been rejected in vbac.
 	          		var status = 'Rejected in vBAC';
-	          		var orderitstatus = 'Raised in Order IT';
+	          		var orderitstatus = 'Raised with LBG';
 	          		break;
 	          	case !approveReject && !raisedInOrderIt:
 	          		console.log('false and false');
-	          		// It's NOT raised in order it - but has now been rejected in vbac, so we WON'T Raise it in Order IT.
+	          		// It's NOT Raised with LBG - but has now been rejected in vbac, so we WON'T Raise it in Order IT.
 	          		var status = 'Rejected in vBAC';
 	          		var orderitstatus = 'Not to be raised';
 	          		break;

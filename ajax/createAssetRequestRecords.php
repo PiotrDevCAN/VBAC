@@ -37,27 +37,27 @@ $notifyApprovingMgr = false;
 
 switch (true) {
     case isset($_POST['REQUEST_RETURN']) && !empty($_POST['ORDERIT_NUMBER']) :
-        // Raising a Return request that has already been raised in ORDER IT.
+        // Raising a Return request that has already been Raised with LBG.
         $approvingMgrEmail = $_SESSION['ssoEmail'];
         $orderItStatus = assetRequestRecord::STATUS_ORDERIT_RAISED;
         $status = assetRequestRecord::STATUS_RAISED_ORDERIT;
         $userCreated = assetRequestRecord::CREATED_USER;
         break;
     case isset($_POST['REQUEST_RETURN']) && empty($_POST['ORDERIT_NUMBER']) :
-        // Raising a Return request that has NOT already been raised in ORDER IT.
+        // Raising a Return request that has NOT already been Raised with LBG.
         $approvingMgrEmail = $_SESSION['ssoEmail'];
         $orderItStatus = assetRequestRecord::STATUS_ORDERIT_YET;
         $status = assetRequestRecord::STATUS_APPROVED;
         $userCreated = assetRequestRecord::CREATED_PMO;
         break;
     case $autoApproved && !empty($_POST['ORDERIT_NUMBER']) :
-        // This is a manager, entering details of a request that has already been raised in ORDER IT.
+        // This is a manager, entering details of a request that has already been Raised with LBG.
         $orderItStatus = assetRequestRecord::STATUS_ORDERIT_RAISED;
         $status = assetRequestRecord::STATUS_AWAITING_IAM;
         $userCreated = assetRequestRecord::CREATED_USER;
     break;
     case !$autoApproved && !empty($_POST['ORDERIT_NUMBER']) :
-        // Someone (Not the approving mgr) raising a request that has already been raised in ORDER IT.
+        // Someone (Not the approving mgr) raising a request that has already been Raised with LBG.
         $orderItStatus = assetRequestRecord::STATUS_ORDERIT_RAISED;
         $status = assetRequestRecord::STATUS_CREATED;
         $userCreated = assetRequestRecord::CREATED_USER;

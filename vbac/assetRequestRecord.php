@@ -36,16 +36,16 @@ class assetRequestRecord extends DbRecord {
 
     const STATUS_CREATED           = 'Created in vBAC';
     const STATUS_AWAITING_IAM      = 'Awaiting IAM Approval';
-    const STATUS_APPROVED          = 'Approved for Order IT';
-    const STATUS_EXPORTED          = 'Exported for Order IT';
-    const STATUS_RAISED_ORDERIT    = 'Raised in Order IT';
-    const STATUS_PROVISIONED       = 'Provisioned by Order IT';
+    const STATUS_APPROVED          = 'Approved for LBG';
+    const STATUS_EXPORTED          = 'Exported for LBG';
+    const STATUS_RAISED_ORDERIT    = 'Raised with LBG';
+    const STATUS_PROVISIONED       = 'Provisioned by LBG';
     const STATUS_RETURNED          = 'Returned to LBG';
     const STATUS_REJECTED          = 'Rejected in vBAC';
 
     const STATUS_ORDERIT_YET       = 'Yet to be raised';
     const STATUS_ORDERIT_NOT       = 'Not to be raised';
-    const STATUS_ORDERIT_RAISED    = 'Raised in Order IT';
+    const STATUS_ORDERIT_RAISED    = 'Raised with LBG';
     const STATUS_ORDERIT_APPROVED  = 'Approved in Order IT';
     const STATUS_ORDERIT_CANCELLED = 'Cancelled in Order IT';
     const STATUS_ORDERIT_REJECTED  = 'Rejected in Order IT';
