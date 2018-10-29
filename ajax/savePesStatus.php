@@ -39,6 +39,8 @@ try {
         $formattedEmailField = pesTrackerTable::formatEmailFieldOnTracker($row);        
     } 
     
+    $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER   );
+    $comment = $pesTracker->savePesComment($_POST['psm_cnum'],"PES STATUS set to : " . $_POST['psm_status']);
 
 
 
@@ -90,6 +92,6 @@ try {
 }
 
 $messages = ob_get_clean();
-$response = array('success'=>$success,'messages'=>$messages, "emailResponse"=>$notificationStatus,"cnum"=>$_POST['psm_cnum'], "formattedEmailField"=>$formattedEmailField);
+$response = array('success'=>$success,'messages'=>$messages, "emailResponse"=>$notificationStatus,"cnum"=>$_POST['psm_cnum'], "formattedEmailField"=>$formattedEmailField,'comment'=>$comment);
 $jse = json_encode($response);
 echo $jse ? $jse : json_encode(array('success'=>false,'messages'=>'Failed to json_encode : ' . json_last_error() . json_last_error_msg()));
