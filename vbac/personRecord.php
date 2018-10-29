@@ -273,6 +273,7 @@ You are able to amend the Functional Manager of people assigned to you but who n
     const PES_STATUS_CLEARED_PERSONAL   = 'Cleared - Personal Reference';
     const PES_STATUS_DECLINED  = 'Declined';
     const PES_STATUS_EXCEPTION = 'Exception';
+    const PES_STATUS_PROVISIONAL = 'Provisional Clearance';
     const PES_STATUS_FAILED    = 'Failed';
     const PES_STATUS_INITIATED = 'Initiated';
     const PES_STATUS_REQUESTED = 'Evidence Requested';
@@ -972,6 +973,7 @@ You are able to amend the Functional Manager of people assigned to you but who n
                     <option value=''>Status</option>
                     <option value='<?=personRecord::PES_STATUS_CLEARED_PERSONAL;?>'><?=personRecord::PES_STATUS_CLEARED_PERSONAL?></option>
                     <option value='<?=personRecord::PES_STATUS_CLEARED;?>'><?=personRecord::PES_STATUS_CLEARED?></option>
+                    <option value='<?=personRecord::PES_STATUS_PROVISIONAL;?>'><?=personRecord::PES_STATUS_PROVISIONAL?></option>
                     <option value='<?=personRecord::PES_STATUS_DECLINED;?>'><?=personRecord::PES_STATUS_DECLINED?></option>
                     <option value='<?=personRecord::PES_STATUS_EXCEPTION;?>'><?=personRecord::PES_STATUS_EXCEPTION?></option>
                     <option value='<?=personRecord::PES_STATUS_FAILED;?>'><?=personRecord::PES_STATUS_FAILED?></option>
