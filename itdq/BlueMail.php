@@ -16,7 +16,7 @@ class BlueMail
         , $asynchronous = true
         , array $attachments=array())
     {
-
+        
         // $attachments=array('filename'=>'filename.txt','content_type'=>'text/plain','data'=>'base64 encoded data here')
         $emailLogRecordID = null;
 
@@ -63,10 +63,6 @@ class BlueMail
             }
         }
 
-
-
-
-
         switch (trim($_SERVER['email'])) {
             case 'dev':
             case 'user':
@@ -109,7 +105,11 @@ class BlueMail
                 if ($emailLogRecordID) {
                     self::updatelog($emailLogRecordID, $resp);
                 }
-
+                
+                if(!$resp){
+                    throw new \Exception('Error trying to send email :' . $subject);
+                }
+                
                 $responseObject = json_decode($resp);
                
                 
