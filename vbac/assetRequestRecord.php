@@ -222,8 +222,8 @@ class assetRequestRecord extends DbRecord {
             	</select>
             	</div>
             	<div class='col-sm-4' >
-            	<label for='orderItNumber'>Order IT Number (If already created)</label>
-            	<input type="number" name='ORDERIT_NUMBER' id='orderItNumber' placeholder="Order IT Number" min="999999" max="9999999" class='form-control' >
+            	<label for='orderItNumber'>LBG Ref Number (If pre-raised)</label>
+            	<input type="number" name='ORDERIT_NUMBER' id='orderItNumber' placeholder="LBG Ref Number" min="999999" max="9999999" class='form-control' >
 
             	</div>
             	<div class='col-sm-4' >
