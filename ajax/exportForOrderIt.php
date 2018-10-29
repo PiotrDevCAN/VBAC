@@ -77,7 +77,7 @@ foreach ($allOrderItTypes as $orderItType){
 
        // $lastSql[] = $assetRequestTable->getLastSql();
     }
-    echo "<h5>Total requests for Order IT Type " . $orderItType . " :" . $totalRequestsForType;
+    echo "<h5>Total requests for LBG Type " . $orderItType . " :" . $totalRequestsForType;
     $lastSql[] = $assetRequestTable->getLastSql();
 
 }
@@ -116,8 +116,8 @@ if(empty($base64EncodedData) && empty($base64EncodedDataNonPmo)){
     $attachments[] = $bau && !empty($nonPmoRequestData) ? array('filename'=>$csvNameNonPmo,'content_type'=>'text/plain','data'=>$base64EncodedDataNonPmo) : null;
 
     $actualAttachments = 'Details of attachments to this email<br/> ';
-    $actualAttachments.= !empty($requestData) ? " Attachment : $csvName contains records for PMO to raise in Order IT<br/>" : " There are no records for PMO to raise, hence no attachment of those records<br/>";
-    $actualAttachments.= $bau && !empty($nonPmoRequestData) ? " Attachment : $csvNameNonPmo contains details of User Created Order IT records for PMO to check in Order IT<br/>" : " There are no User Created Order IT records, hence no attachment of those records<br/>";
+    $actualAttachments.= !empty($requestData) ? " Attachment : $csvName contains records for PMO to raise with LBG<br/>" : " There are no records for PMO to raise, hence no attachment of those records<br/>";
+    $actualAttachments.= $bau && !empty($nonPmoRequestData) ? " Attachment : $csvNameNonPmo contains details of User Created LBG records for PMO to check in LBG<br/>" : " There are no User Created LBG records, hence no attachment of those records<br/>";
     $actualAttachments.= !$bau ? " This is the non-BAU Export, so there is no attachment of User Created records, check the BAU export for those records<br/>" : null;
 
     if(empty($attachments[0])){

@@ -16,7 +16,7 @@ $assetRequestTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
 
 foreach ($_POST['orderit'] as $requestReference => $orderIt){
     if(!empty(trim($orderIt))){
-        echo "Order it : $orderIt Ref: $requestReference ";
+        echo "LBG : $orderIt Ref: $requestReference ";
         $assetRequestTable->saveRefToOrderItMapping($orderIt, $requestReference);
     }
 }

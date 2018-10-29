@@ -24,11 +24,11 @@ $assetTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
 <button id='reportShowUserRaised'   class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>User Raised&nbsp;<span class="badge" id='countNonPmoForExport'>**</span></button>
 <button id='reportShowUid' 		    class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi accessUser'>Show UID</button>
 &nbsp;
-<button id='exportBauForOrderIt' 	class='btn btn-dark btn-sm accessBasedBtn accessPmo accessCdi'><span class="glyphicon glyphicon-envelope" >&nbsp;</span>Export BAU for Order IT&nbsp;<span class="badge" id='countBauForExport'>**</span></button>
-<button id='exportNonBauForOrderIt'	class='btn btn-dark btn-sm accessBasedBtn accessPmo accessCdi'><span class="glyphicon glyphicon-envelope" >&nbsp;</span>Export non-BAU for Order IT&nbsp;<span class="badge" id='countNonBauExport'>**</span></button>
+<button id='exportBauForOrderIt' 	class='btn btn-dark btn-sm accessBasedBtn accessPmo accessCdi'><span class="glyphicon glyphicon-envelope" >&nbsp;</span>Export BAU for LBG&nbsp;<span class="badge" id='countBauForExport'>**</span></button>
+<button id='exportNonBauForOrderIt'	class='btn btn-dark btn-sm accessBasedBtn accessPmo accessCdi'><span class="glyphicon glyphicon-envelope" >&nbsp;</span>Export non-BAU for LBG&nbsp;<span class="badge" id='countNonBauExport'>**</span></button>
 &nbsp;
-<button id='mapVarbToOrderIt' 		class='btn btn-info btn-sm accessBasedBtn accessPmo accessCdi'><span class="glyphicon glyphicon-modal-window" >&nbsp;</span>Map to Order IT</button>
-<button id='setOrderItStatus' 		class='btn btn-info btn-sm accessBasedBtn accessPmo accessCdi'><span class="glyphicon glyphicon-modal-window" >&nbsp;</span>Set Order IT Status</button>
+<button id='mapVarbToOrderIt' 		class='btn btn-info btn-sm accessBasedBtn accessPmo accessCdi'><span class="glyphicon glyphicon-modal-window" >&nbsp;</span>Map to LBG Ref</button>
+<button id='setOrderItStatus' 		class='btn btn-info btn-sm accessBasedBtn accessPmo accessCdi'><span class="glyphicon glyphicon-modal-window" >&nbsp;</span>Set LBG Status</button>
 &nbsp;
 <button id='reportReload'  		class='btn btn-warning btn-sm '>Reload Data</button>
 <button id='reportReset'  		class='btn btn-warning btn-sm '>Reset</button>

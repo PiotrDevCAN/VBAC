@@ -482,7 +482,7 @@ this.listenForReportShowUid = function(){
   this.listenForSetOitStatusModalShown = function(){
 	  $('#setOitStatusModal').on('shown.bs.modal',function(){
 			$('#orderit').select2({
-		         placeholder:"Select Order IT",
+		         placeholder:"Select LBG",
 		         allowClear:true,
 		         });
 
@@ -1016,7 +1016,7 @@ this.listenForConfirmedAssetReturned = function(){
 	          pageLength: 20,
 	          order: [[ 1, "asc" ]],
 	          language: {
-	        	    "emptyTable": "Please select Order IT/Varb or Request Reference"
+	        	    "emptyTable": "Please select LBG/Varb or Request Reference"
 	          		},
 	          dom: 'Bfrtip',
 //		      colReorder: true,

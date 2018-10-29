@@ -38,7 +38,7 @@ class assetRequestsTable extends DbTable{
     private static $statusChangeEmail = "This is to inform you that your vBAC Request<b>&&requestReference&& (&&assetTitle&&)</b> has now moved to status :<b>&&status&&</b>.
 <br/>The associated comment is :
 <br/>&&comment&&
-<br/>Reference Information : Request:<b>&&requestReference&&</b> Varb:<b>&&varbNumber&&</b> Order IT Number:<b>&&orderItNumber&&</b> Vbac Status:<b>&&vbacStatus&&</b> </b> Order IT Status:<b>&&orderItStatus&&";
+<br/>Reference Information : Request:<b>&&requestReference&&</b> Varb:<b>&&varbNumber&&</b> LBG Number:<b>&&orderItNumber&&</b> Vbac Status:<b>&&vbacStatus&&</b> </b> Order IT Status:<b>&&orderItStatus&&";
 
     private static $statusChangeEmailPattern = array('/&&requestReference&&/','/&&assetTitle&&/','/&&status&&/','/&&comment&&/','/&&varbNumber&&/','/&&orderItNumber&&/','/&&vbacStatus&&/','/&&orderItStatus&&/');
 
@@ -185,7 +185,7 @@ class assetRequestsTable extends DbTable{
             $amendOITButton  = "<button type='button' class='btn btn-default btn-xs btnAmendOrderItNumber btn-warning' aria-label='Left Align' ";
             $amendOITButton .= "data-reference='" .trim($reference) . "' ";
             $amendOITButton .= "data-orderit='".trim($row['ORDERIT_NUMBER']) . "' ";
-            $amendOITButton .= "data-toggle='tooltip' data-placement='top' title='Amend Order IT Number'";
+            $amendOITButton .= "data-toggle='tooltip' data-placement='top' title='Amend LBG Number'";
             $amendOITButton .= " > ";
             $amendOITButton .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
             $amendOITButton .= " </button> ";
@@ -529,7 +529,7 @@ class assetRequestsTable extends DbTable{
 
         $data = array();
         //         $data[] = "";
-        $data[] = '"VARB","ORDER IT","REQUEST","CT ID","CTB/RTB","TT/BAU","LOB","WORK STREAM","ASSET TITLE","REQUESTEE EMAIL","JUSTIFICATION","STATUS","LOCATION","REQUESTOR","REQUESTED","APPROVER","APPROVED","FM EMAIL","EXPORTED"';
+        $data[] = '"VARB","LBG","REQUEST","CT ID","CTB/RTB","TT/BAU","LOB","WORK STREAM","ASSET TITLE","REQUESTEE EMAIL","JUSTIFICATION","STATUS","LOCATION","REQUESTOR","REQUESTED","APPROVER","APPROVED","FM EMAIL","EXPORTED"';
 
         $rs2 = db2_exec($_SESSION['conn'],$sql);
         if(!$rs2){
@@ -1134,7 +1134,7 @@ class assetRequestsTable extends DbTable{
 
 		<div class="panel panel-primary">
 		<div class="panel-heading">
-			<h3 class="panel-title">Map VARB to Order IT</h3>
+			<h3 class="panel-title">Map VARB to LBG</h3>
 		</div>
 
 		<div class="panel-body">
@@ -1169,7 +1169,7 @@ class assetRequestsTable extends DbTable{
         	<div class='form-group required'>
         	<div class='col-sm-12'>
         		<table class='table table-striped table-bordered '   style='width:90%' id='requestsWithinVarb'>
-        		<thead><tr><th>Devarb</th><th>Ref</th><th>Order IT</th><th>Requestee</th><th>Asset</th><th>Comment</th></tr></thead>
+        		<thead><tr><th>Devarb</th><th>Ref</th><th>LBG</th><th>Requestee</th><th>Asset</th><th>Comment</th></tr></thead>
         		<tbody>
         		</tbody>
         		</table>
@@ -1192,7 +1192,7 @@ class assetRequestsTable extends DbTable{
 	        <!-- Modal content-->
     		<div class="modal-content">
       			<div class="modal-header">
-        		   <h4 class="modal-title">Amend Order IT</h4>
+        		   <h4 class="modal-title">Amend LBG</h4>
       			</div>
       			
       			<div class="modal-body" >
@@ -1209,7 +1209,7 @@ class assetRequestsTable extends DbTable{
                   </div>
                   <div class="form-group">
                     <label class="col-sm-2 control-label"
-                          for="amendOrderItCurrent" >Current Order IT</label>
+                          for="amendOrderItCurrent" >Current LBG</label>
                     <div class="col-sm-10">
        					<input class='form-control' id='amendOrderItCurrent'  name='amendOrderItCurrent'
                 			   value=''
@@ -1219,12 +1219,12 @@ class assetRequestsTable extends DbTable{
                   </div>
                   <div class="form-group">
                     <label class="col-sm-2 control-label"
-                          for="amendOrderItNewOrderIt" >New Order IT</label>
+                          for="amendOrderItNewOrderIt" >New LBG</label>
                     <div class="col-sm-10">
           				<input class='form-control' id='amendOrderItNewOrderIt' name='amendOrderItNewOrderIt'
                 			value=''
                 			type='text' 
-                			placeholder = 'Enter new ORDER IT Number'
+                			placeholder = 'Enter new LBG Number'
                 			>
                     </div>
                   </div>
@@ -1371,7 +1371,7 @@ class assetRequestsTable extends DbTable{
 
 		<div class="panel panel-primary">
 		<div class="panel-heading">
-			<h3 class="panel-title">Set Order IT Status</h3>
+			<h3 class="panel-title">Set LBG Status</h3>
 		</div>
 
 		<div class="panel-body">
@@ -1427,7 +1427,7 @@ class assetRequestsTable extends DbTable{
         	<div class='form-group required'>
         	<div class='col-sm-12'>
         		<table class='table table-striped table-bordered '   style='width:100%' id='requestsWithStatus'>
-        		<thead><tr><th>Ref</th><th>Person</th><th>Asset</th><th>vbac<br/>Status</th><th>Order IT<br/>Status</th><th>Primary UID</th><th>Comment</th><th>Order IT Responded</th></tr></thead>
+        		<thead><tr><th>Ref</th><th>Person</th><th>Asset</th><th>vbac<br/>Status</th><th>LBG<br/>Status</th><th>Primary UID</th><th>Comment</th><th>LBG Responded</th></tr></thead>
         		<tbody>
         		</tbody>
         		</table>
@@ -1998,7 +1998,7 @@ class assetRequestsTable extends DbTable{
             $orderItResponded = \DateTime::createFromFormat('Y-m-d', $row['ORDERIT_RESPONDED']);
             $orderItRespondedDisplay = is_object($orderItResponded) ?  $orderItResponded->format('d M Y') : null;
             
-            $row['ORDERIT_RESPONDED'] = "<div class='form-check'><input class='form-check' name='orderit_responded[" . $reference . "]' id='orderit_responded[". $reference ."]' value='$orderItRespondedDisplay' type='date' size='10' maxlength='10' placeholder='OrderIt Resp.' data-toggle='tooltip' title='Order IT Responded'>";
+            $row['ORDERIT_RESPONDED'] = "<div class='form-check'><input class='form-check' name='orderit_responded[" . $reference . "]' id='orderit_responded[". $reference ."]' value='$orderItRespondedDisplay' type='date' size='10' maxlength='10' placeholder='OrderIt Resp.' data-toggle='tooltip' title='LBG Responded'>";
             $row['ORDERIT_RESPONDED'].= "</div>";
             
 
@@ -2067,7 +2067,7 @@ class assetRequestsTable extends DbTable{
             $preparedStmt = $this->prepareUpdateOrderitRespondedField();
             
             if(!$preparedStmt){
-                echo "Prepare for Order IT Responded has failed.";
+                echo "Prepare for LBG Responded has failed.";
                 die('here');
             }
             
@@ -2196,7 +2196,7 @@ class assetRequestsTable extends DbTable{
 
         $emailAddress = personTable::getEmailFromCnum($actualCnum);
 
-        $message = "vBAC Requests for : $actualAsset ($reference) -  has been set to $orderItStatus status in Order IT.<br/>";
+        $message = "vBAC Requests for : $actualAsset ($reference) -  has been set to $orderItStatus status in LBG.<br/>";
         $message .= !empty($comment) ? "<b>Comment</b>&nbsp;" . $comment : "&nbsp;<b>No comment was provided</b>";
         $message .= "<br/>You can access the tool here  <a href='" . $_SERVER['HTTP_HOST'] . "/pa_assetPortal.php'  target='_blank' >vBAC Asset Portal</a>";
 
@@ -2412,8 +2412,8 @@ class assetRequestsTable extends DbTable{
         <th>IBMer</th>
         <th>CT ID</th>
         <th>Asset</th>
-        <th>Order IT Number</th>
-        <th>Order IT Status</th>
+        <th>LBG Number</th>
+        <th>LBG Status</th>
         <th>VBAC Status</th>
         <th>VBAC Approver</th>
         <th>VBAC Approved</th>

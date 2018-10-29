@@ -46,9 +46,9 @@ class assetRequestRecord extends DbRecord {
     const STATUS_ORDERIT_YET       = 'Yet to be raised';
     const STATUS_ORDERIT_NOT       = 'Not to be raised';
     const STATUS_ORDERIT_RAISED    = 'Raised with LBG';
-    const STATUS_ORDERIT_APPROVED  = 'Approved in Order IT';
-    const STATUS_ORDERIT_CANCELLED = 'Cancelled in Order IT';
-    const STATUS_ORDERIT_REJECTED  = 'Rejected in Order IT';
+    const STATUS_ORDERIT_APPROVED  = 'Approved in LBG';
+    const STATUS_ORDERIT_CANCELLED = 'Cancelled in LBG';
+    const STATUS_ORDERIT_REJECTED  = 'Rejected in LBG';
 
     const CREATED_USER             = 'Yes';
     const CREATED_PMO              = 'No';
@@ -360,7 +360,7 @@ class assetRequestRecord extends DbRecord {
       			</div>
       			<div class="modal-body" >
       			<h1 class='text-center' style='font-size:56px;background-color:red;color:white'>STOP</h1>
-        		<p>Before requests can be made on Order IT, the individual needs to have a Contractor ID (CT ID/LBG ID).</p>
+        		<p>Before requests can be made on LBG, the individual needs to have a Contractor ID (CT ID/LBG ID).</p>
         		<p>We do not have a record of the CT ID/LBG ID for:</p>
         		<input id='requesteeName' value='' disabled>
         		<input id='ctbflag' value='' type='hidden'></p></p>

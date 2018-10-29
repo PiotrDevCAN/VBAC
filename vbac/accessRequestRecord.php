@@ -73,7 +73,7 @@ class accessRequestRecord extends DbRecord
 			</select>
         </div>
 
-		<label class='col-sm-3 label-centre' for='order_it_request_number'>Order IT Request Number</label>
+		<label class='col-sm-3 label-centre' for='order_it_request_number'>LBG Request Number</label>
         <div class='col-sm-3'>
         <input class='form-control' id='order_it_request_number' name='order_it_request_number' value='' required='required' type='text' placeholder=''>
         </div>

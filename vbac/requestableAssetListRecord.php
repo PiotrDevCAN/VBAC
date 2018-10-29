@@ -94,10 +94,10 @@ class requestableAssetListRecord extends DbRecord
 						<div class="col-sm-6">
 							<input class="form-control" id="ORDER_IT_TYPE" name="ORDER_IT_TYPE"
 								value="<?=trim($this->ORDER_IT_TYPE)?>"
-								type="number" placeholder='Order IT Grouping Number'
+								type="number" placeholder='LBG Grouping Number'
 								data-toggle="tooltip" 
 								data-placement="right"
-								title='Requests for Assets with the Same Order IT Grouping Number may be grouped together, in the same "batch", when creating Order IT requests'
+								title='Requests for Assets with the Same LBG Grouping Number may be grouped together, in the same "batch", when creating LBG requests'
 								min=1
 						        >
 						</div>
@@ -140,7 +140,7 @@ class requestableAssetListRecord extends DbRecord
 						<input  data-toggle="toggle" type="checkbox" class='toggle' data-width='250' data-on="Record Date Returned" data-off="Do Not Record Date Returned" id='RecordDateReturned' name='RECORD_DATE_RETURNED' value='1' data-onstyle='success' data-offstyle='warning'>
 						</div>
 						<div class='col-sm-3'>
-						<input  data-toggle="toggle" type="checkbox" class='toggle' data-width='250' data-on="Order It Required" data-off="Order It Optional" id='OrderItRequired' name='ORDER_IT_REQUIRED' value='1' data-onstyle='success' data-offstyle='warning'>
+						<input  data-toggle="toggle" type="checkbox" class='toggle' data-width='250' data-on="LBG Required" data-off="LBG Optional" id='OrderItRequired' name='ORDER_IT_REQUIRED' value='1' data-onstyle='success' data-offstyle='warning'>
 						</div>
 					</div>
 

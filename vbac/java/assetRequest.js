@@ -314,7 +314,7 @@ function assetRequest() {
 		  if(anyRequireOrderIt.length>0){		  
 			  $('#orderItNumber').attr('required',true);
 			  if(typeof($('#orderItNumber').val()) == 'undefined' ){
-				  alert('You have selected assets that require an ORDER IT number be supplied');
+				  alert('You have selected assets that require an LBG number be supplied');
 			  }
 		  } else {
 			  $('#orderItNumber').attr('required',false);

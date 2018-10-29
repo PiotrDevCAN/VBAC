@@ -26,7 +26,7 @@ foreach ($_POST['status'] as $reference => $statusIndicator){
     $orderItResponded = isset($_POST["orderit_responded"][$ref]) ? $_POST["orderit_responded"][$ref] : null ;
 
     $success = $assetRequestTable->setRequestsOrderItStatus($reference,$status,$comment);
-    echo "Ref:$reference Status:$status Comment:$comment Order IT Responded : $orderItResponded Success:" . $success;
+    echo "Ref:$reference Status:$status Comment:$comment LBG Responded : $orderItResponded Success:" . $success;
     if($success && !empty($comment)){
         $success = $assetRequestTable->updateCommentForOrderItStatus($reference, $comment);
     }
