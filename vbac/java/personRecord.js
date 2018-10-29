@@ -1566,11 +1566,6 @@ function personRecord() {
                 	console.log('find and amend the email details');
                 	var cnum = resultObj.cnum;
                 	var formattedEmail = resultObj.formattedEmailField;
-                	
-                	console.log($('#pesTrackerTable tr.' + cnum).children('.formattedEmailTd').children('.formattedEmailDiv'));
-                	console.log($('#pesTrackerTable tr.' + cnum).children('.formattedEmailTd').children('.formattedEmailDiv').html());
-                	console.log(formattedEmail);
-                	
                 	$('#pesTrackerTable tr.' + cnum).children('.formattedEmailTd:first').children('.formattedEmailDiv:first').html(formattedEmail);                	
                 }             
                 
