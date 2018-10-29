@@ -1227,6 +1227,7 @@ class personTable extends DbTable {
             case $status == personRecord::PES_STATUS_DECLINED && $_SESSION['isPes'] ;
             case $status == personRecord::PES_STATUS_FAILED && $_SESSION['isPes'] ;
             case $status == personRecord::PES_STATUS_REMOVED && $_SESSION['isPes'] ;
+            case $status == personRecord::PES_STATUS_PROVISIONAL && $_SESSION['isPes'] ;
             $pesStatusWithButton.= "<button type='button' class='btn btn-default btn-xs btnPesStatus' aria-label='Left Align' ";
             $pesStatusWithButton.= " data-cnum='" .$cnum . "' ";
             $pesStatusWithButton.= " data-notesid='" . $notesId . "' ";
