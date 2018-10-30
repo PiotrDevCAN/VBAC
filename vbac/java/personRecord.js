@@ -1616,8 +1616,8 @@ function personRecord() {
 		  var type = $('input[name=employeeType]:checked').data('type');
 		  
 		  if(employeeType != 'preboarder'){
-			  $('#resource_email').val('').attr('disabled',true).attr('required',false);
-			  $('#resource_email').css("background-color","LightGray").attr('placeholder','Not required - GPDR');
+			  $('#resource_email').val('').attr('disabled',false).attr('required',false);
+			  $('#resource_email').css("background-color","white").attr('placeholder','Enter EMAIL if PES required, else blank');
 			  $('#saveBoarding').attr('disabled',false);
 			  var Type = type[0].toUpperCase() + type.slice(1).toLowerCase();
 			  console.log(Type);
