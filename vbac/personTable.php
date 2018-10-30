@@ -1181,6 +1181,7 @@ class personTable extends DbTable {
         $pesStatusWithButton = '';
         $pesStatusWithButton.= $status . "<br/>";
         switch (true) {
+            case $status == personRecord::PES_STATUS_TBD:
             case $status == personRecord::PES_STATUS_NOT_REQUESTED:
                 $pesStatusWithButton.= "<button type='button' class='btn btn-default btn-xs btnPesInitiate accessRestrict accessPmo accessFm' ";
                 $pesStatusWithButton.= "aria-label='Left Align' ";
