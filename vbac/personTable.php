@@ -1181,7 +1181,7 @@ class personTable extends DbTable {
         $pesStatusWithButton = '';
         $pesStatusWithButton.= $status . "<br/>";
         switch (true) {
-            case $status == personRecord::PES_STATUS_TBD:
+            case $status == personRecord::PES_STATUS_TBD && !$_SESSION['isPes']:
             case $status == personRecord::PES_STATUS_NOT_REQUESTED:
                 $pesStatusWithButton.= "<button type='button' class='btn btn-default btn-xs btnPesInitiate accessRestrict accessPmo accessFm' ";
                 $pesStatusWithButton.= "aria-label='Left Align' ";
@@ -1227,9 +1227,9 @@ class personTable extends DbTable {
             case $status == personRecord::PES_STATUS_EXCEPTION && $_SESSION['isPes'] :
             case $status == personRecord::PES_STATUS_DECLINED && $_SESSION['isPes'] ;
             case $status == personRecord::PES_STATUS_FAILED && $_SESSION['isPes'] ;
-            case $status == personRecord::PES_STATUS_REMOVED && $_SESSION['isPes'] ;
-            case $status == personRecord::PES_STATUS_PROVISIONAL && $_SESSION['isPes'] ;
-            case $status == personRecord::PES_STATUS_TBD && $_SESSION['isPes'] ;
+            case $status == personRecord::PES_STATUS_REMOVED && $_SESSION['isPes'] :
+            case $status == personRecord::PES_STATUS_PROVISIONAL && $_SESSION['isPes'] :
+            case $status == personRecord::PES_STATUS_TBD && $_SESSION['isPes'] :
             $pesStatusWithButton.= "<button type='button' class='btn btn-default btn-xs btnPesStatus' aria-label='Left Align' ";
             $pesStatusWithButton.= " data-cnum='" .$cnum . "' ";
             $pesStatusWithButton.= " data-notesid='" . $notesId . "' ";
