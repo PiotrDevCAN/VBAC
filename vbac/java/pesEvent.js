@@ -47,6 +47,29 @@ function pesEvent() {
     console.log('--- Function --- pesEvent.init');
   },
   
+  this.populatePesTracker = function(records){
+	  var buttons = $('.btnRecordSelection');	  
+	  console.log(buttons);
+	  
+	  $('#pesTrackerTableDiv').html('<i class="fa fa-spinner fa-spin" style="font-size:68px"></i>');
+
+	  $.ajax({
+		  	url: "ajax/populatePesTrackerTable.php",
+		  	type: 'POST',
+		  	data : { records: records,
+		  			},
+		    success: function(result){
+		    	var resultObj = JSON.parse(result);
+		    	
+		    	console.log(resultObj.sucess);
+		    	console.log(resultObj.messages);
+		    	
+		    	$('#pesTrackerTableDiv').html(resultObj.table);
+		    }
+	  });
+  }
+  
+  
   this.saveDateLastChased = function(date,cnum, field){
 	  console.log(field);
 	  console.log($(field));

@@ -48,7 +48,7 @@ class pesTrackerTable extends DbTable{
                 break;
             case self::PES_TRACKER_RECORDS_ALL :
             default:
-                $pesStatusPredicate = '';
+                $pesStatusPredicate = 'pass a parm muppet ';
                 break;
         }        
         
@@ -118,43 +118,11 @@ class pesTrackerTable extends DbTable{
         return $row;
     }
     
-    
-    function displayTable($records='Active'){
+    function buildTable($records='Active'){
         $allRows = self::returnPesEventsTable($records,self::PES_TRACKER_RETURN_RESULTS_AS_ARRAY);
+        ob_start();
         ?>
-        <div class='container-fluid'>
-          <form class="form-horizontal">
-  			<div class="form-group">
-    			<label class="control-label col-sm-2" for="pesTrackerTableSearch">Table Search:</label>
-    			<div class="col-sm-3">
-      			<input type="text" id="pesTrackerTableSearch" placeholder="Search"  onkeyup=searchTable()  />
-      			<br/>
-      			<span style='white-space:nowrap' id='pesDownload' >              	
-				<a class='btn btn-sm btn-link accessBasedBtn accessPes accessCdi' href='/dn_pesTracker.php'><i class="glyphicon glyphicon-download-alt"></i> PES Tracker</a>
-				</span>     			
-      			
-    			</div>
-    			<label class="control-label col-sm-2" for="pesPriorityFilter">Filters:</label>
-    			<div class="col-sm-5">
-  				<span style='white-space:nowrap' id='pesPriorityFilter' >
-  				<button class='btn btn-sm btn-danger  btnSelectPriority accessPes accessCdi' data-pespriority='1'  data-toggle='tooltip'  title='Filter on High'  type='button' onclick='return false;'><span class='glyphicon glyphicon-king' ></span></button>
-            	<button class='btn btn-sm btn-warning btnSelectPriority accessPes accessCdi' data-pespriority='2'  data-toggle='tooltip'  title='Filter on Medium' type='button' onclick='return false;'><span class='glyphicon glyphicon-knight' ></span></button>
-            	<button class='btn btn-sm btn-success btnSelectPriority accessPes accessCdi' data-pespriority='3'  data-toggle='tooltip'  title='Filter on Low' type='button' onclick='return false;'><span class='glyphicon glyphicon-pawn' ></span></button>
-            	<button class='btn btn-sm btn-info    btnSelectPriority accessPes accessCdi' data-pespriority='0'  data-toggle='tooltip'  title='Filter off' type='button' onclick='return false;'><span class='glyphicon glyphicon-ban-circle' ></span></button>
-            	<br/><br/>
-            	<a class="btn btn-sm btn-info  btnSelectProcess accessPes accessCdi" 		data-pesprocess='PES' data-toggle="tooltip" data-placement="top" title="With PES Team" ><i class="fas fa-users"></i></a>
-                <a class="btn btn-sm btn-info  btnSelectProcess accessPes accessCdi" 		data-pesprocess='User' data-toggle="tooltip" data-placement="top" title="With Applicant" ><i class="fas fa-user"></i></a>
-                <a class="btn btn-sm btn-info   btnSelectProcess accessPes accessCdi" 	    data-pesprocess='CRC' data-toggle="tooltip" data-placement="top" title="Awaiting CRC"><i class="fas fa-gavel"></i></a>
-                <button class='btn btn-info btn-sm  btnSelectProcess accessPes accessCdi'   data-pesprocess='Unknown' data-toggle="tooltip"  title="Status Unknown" type='button' onclick='return false;'><span class="glyphicon glyphicon-erase" ></span></button>
-              	</span> 
-             	
-            	</div>         
-  			</div>  			
-		  </form> 
-		</div>
-       
-		<div id='pesTrackerTableDiv'>
-		<table id='pesTrackerTable' class='table table-striped table-bordered display compact nowrap '  style='width:100%'>
+        <table id='pesTrackerTable' class='table table-striped table-bordered display compact nowrap '  style='width:100%'>
 		<thead>
 		<tr><th>Email Address</th><th>Requestor</th><th>Country</th>
 		<th>Consent Form</th><th>Proof of Right to Work</th><th>Proof of ID</th><th>Proof of Residency</th><th>Credit Check</th>
@@ -223,7 +191,61 @@ class pesTrackerTable extends DbTable{
         ?>
         </tbody>
 		</table>
-		
+		<?php 
+		$table = ob_get_clean();
+		return $table;
+    }
+    
+    
+    
+    
+    function displayTable($records='Active'){       
+        ?>
+        <div class='container-fluid' >
+        <div class='col-sm-8 col-sm-offset-2'>
+          <form class="form-horizontal">
+  			<div class="form-group">
+    			<label class="control-label col-sm-1" for="pesTrackerTableSearch">Table Search:</label>
+    			<div class="col-sm-3" >
+      			<input type="text" id="pesTrackerTableSearch" placeholder="Search"  onkeyup=searchTable()  />
+      			<br/>
+
+				</div>
+    			
+    			<label class="control-label col-sm-1" for="pesRecordFilter">Records:</label>
+    			<div class="col-sm-3" >    			
+    			<div class="btn-group" role="group" aria-label="Record Selection">
+  					<button type="button" role='button'  class="btn btn-info btnRecordSelection" data-pesrecords='Active'   >Active</button>
+  					<button type="button" role='button'  class="btn btn-info btnRecordSelection" data-pesrecords='Completed'>Completed</button>
+  					<button type="button" role='button'  class="btn btn-info btnRecordSelection" data-pesrecords='All'      >All</button>
+				</div>
+				</div>    			
+    			
+    			<label class="control-label col-sm-1" for="pesPriorityFilter">Filters:</label>
+    			<div class="col-sm-2" >
+  				<span style='white-space:nowrap' id='pesPriorityFilter' >
+  				<button class='btn btn-sm btn-danger  btnSelectPriority accessPes accessCdi' data-pespriority='1'  data-toggle='tooltip'  title='Filter on High'  type='button' onclick='return false;'><span class='glyphicon glyphicon-king' ></span></button>
+            	<button class='btn btn-sm btn-warning btnSelectPriority accessPes accessCdi' data-pespriority='2'  data-toggle='tooltip'  title='Filter on Medium' type='button' onclick='return false;'><span class='glyphicon glyphicon-knight' ></span></button>
+            	<button class='btn btn-sm btn-success btnSelectPriority accessPes accessCdi' data-pespriority='3'  data-toggle='tooltip'  title='Filter on Low' type='button' onclick='return false;'><span class='glyphicon glyphicon-pawn' ></span></button>
+            	<button class='btn btn-sm btn-info    btnSelectPriority accessPes accessCdi' data-pespriority='0'  data-toggle='tooltip'  title='Filter off' type='button' onclick='return false;'><span class='glyphicon glyphicon-ban-circle' ></span></button>
+            	<br/><br/>
+            	<a class="btn btn-sm btn-info  btnSelectProcess accessPes accessCdi" 		data-pesprocess='PES' data-toggle="tooltip" data-placement="top" title="With PES Team" ><i class="fas fa-users"></i></a>
+                <a class="btn btn-sm btn-info  btnSelectProcess accessPes accessCdi" 		data-pesprocess='User' data-toggle="tooltip" data-placement="top" title="With Applicant" ><i class="fas fa-user"></i></a>
+                <a class="btn btn-sm btn-info   btnSelectProcess accessPes accessCdi" 	    data-pesprocess='CRC' data-toggle="tooltip" data-placement="top" title="Awaiting CRC"><i class="fas fa-gavel"></i></a>
+                <button class='btn btn-info btn-sm  btnSelectProcess accessPes accessCdi'   data-pesprocess='Unknown' data-toggle="tooltip"  title="Status Unknown" type='button' onclick='return false;'><span class="glyphicon glyphicon-erase" ></span></button>
+              	</span>
+              	</div>
+              	<div class="col-sm-1"  >              
+              	<span style='white-space:nowrap' id='pesDownload' >              	
+				<a class='btn btn-sm btn-link accessBasedBtn accessPes accessCdi' href='/dn_pesTracker.php'><i class="glyphicon glyphicon-download-alt"></i> PES Tracker</a>
+				</span>
+            	</div>         
+  			</div>  			
+		  </form> 
+		  </div>	
+		</div>
+       
+		<div id='pesTrackerTableDiv' class='center-block'>		
 		</div> 
 		<?php 
     }

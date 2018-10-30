@@ -8,7 +8,15 @@ use vbac\personRecord;
 
 ?>
 <div class='container'>
-<h1 id='portalTitle'>Pes Tracker.</h1>
+<div class='row'>
+<div class='col-sm-4'>
+</div>
+<div class='col-sm-4'>
+<h1 id='portalTitle' class='text-centre' >Pes Tracker.</h1>
+</div>
+<div class='col-sm-4'>
+</div>
+</div>
 </div>
 
 <div class='container-fluid'>
@@ -38,6 +46,7 @@ $(document).ready(function(){
 	person.listenforConfirmSendPesEmail();
 
 	var pesevent = new pesEvent();
+	pesevent.populatePesTracker('Active');
 	pesevent.listenForPesStageValueChange();
 	pesevent.listenForSavePesComment();
 	pesevent.listenForPesProcessStatusChange();
