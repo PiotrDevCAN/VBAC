@@ -922,6 +922,9 @@ function personRecord() {
             if(resultObj.employeetype=='vendor'){
             	 $('#initiatePes').attr('disabled',true);
             }
+            if(resultObj.pesstatus=='TBD'){
+           	 $('#initiatePes').attr('disabled',false);
+           }
 
           }
         });

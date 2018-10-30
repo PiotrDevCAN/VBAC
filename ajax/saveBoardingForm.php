@@ -40,8 +40,10 @@ try {
             case 'Cognizant':
             case 'Densify':
                 $_POST['PES_STATUS'] = personRecord::PES_STATUS_CLEARED;
-            break;            
-            default:       ;
+            break; 
+            case 'Other':
+                $_POST['PES_STATUS'] = personRecord::PES_STATUS_TBD;            
+            default:      
             break;
         }
         
@@ -98,6 +100,6 @@ try {
 }
 
 $messages = ob_get_clean();
-$response = array('boarding'=>$_POST['boarding'], 'boardingIbmer'=>$boardingIbmer, 'employeetype'=>$_POST['EMPLOYEE_TYPE'], 'success'=>$success,'messages'=>$messages,"saveRecord"=>$saveRecordResult,'cnum'=>$_POST['CNUM'], 'post'=>print_r($_POST,true),'sendWarning'=>print_r($timeToWarnPmo,true));
+$response = array('boarding'=>$_POST['boarding'], 'boardingIbmer'=>$boardingIbmer, 'employeetype'=>$_POST['EMPLOYEE_TYPE'],'pesstatus'=>$_POST['PES_STATUS'], 'success'=>$success,'messages'=>$messages,"saveRecord"=>$saveRecordResult,'cnum'=>$_POST['CNUM'], 'post'=>print_r($_POST,true),'sendWarning'=>print_r($timeToWarnPmo,true));
 ob_clean();
 echo json_encode($response);

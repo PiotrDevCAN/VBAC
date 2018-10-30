@@ -269,15 +269,16 @@ You are able to amend the Functional Manager of people assigned to you but who n
 
 
     const PES_STATUS_NOT_REQUESTED = 'Not Requested';
-    const PES_STATUS_CLEARED   = 'Cleared';
+    const PES_STATUS_CLEARED       = 'Cleared';
     const PES_STATUS_CLEARED_PERSONAL   = 'Cleared - Personal Reference';
-    const PES_STATUS_DECLINED  = 'Declined';
-    const PES_STATUS_EXCEPTION = 'Exception';
-    const PES_STATUS_PROVISIONAL = 'Provisional Clearance';
-    const PES_STATUS_FAILED    = 'Failed';
-    const PES_STATUS_INITIATED = 'Initiated';
-    const PES_STATUS_REQUESTED = 'Evidence Requested';
-    const PES_STATUS_REMOVED   = 'Removed';
+    const PES_STATUS_DECLINED      = 'Declined';
+    const PES_STATUS_EXCEPTION     = 'Exception';
+    const PES_STATUS_PROVISIONAL   = 'Provisional Clearance';
+    const PES_STATUS_FAILED        = 'Failed';
+    const PES_STATUS_INITIATED     = 'Initiated';
+    const PES_STATUS_REQUESTED     = 'Evidence Requested';
+    const PES_STATUS_REMOVED       = 'Removed';
+    const PES_STATUS_TBD           = 'TBD';
 
 
 //     function htmlHeaderCells(){
@@ -521,7 +522,7 @@ You are able to amend the Functional Manager of people assigned to you but who n
 						<label class="radio-inline employeeTypeRadioBtn"><input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_VENDOR?>' data-type='cognizant' >Cognizant </label>
 						<label class="radio-inline employeeTypeRadioBtn"><input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_VENDOR?>' data-type='densify'   >Densify </label>
 						<label class="radio-inline employeeTypeRadioBtn"><input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_VENDOR?>' data-type='wipro'     >Wipro </label>
-						<label class="radio-inline employeeTypeRadioBtn"><input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_VENDOR?>' data-type='other'     >Other (Non IBM employee)</label>
+						<label class="radio-inline employeeTypeRadioBtn"><input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_VENDOR?>' data-type='other'     >Other (Vendor)</label>
 		        	</div>
         		</div>
 			</div>
