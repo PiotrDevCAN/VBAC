@@ -42,11 +42,15 @@ class pesTrackerTable extends DbTable{
         switch ($records){
             case self::PES_TRACKER_RECORDS_ACTIVE :
                 $pesStatusPredicate = "  P.PES_STATUS in('" . personRecord::PES_STATUS_REQUESTED . "','" . personRecord::PES_STATUS_INITIATED. "','" . personRecord::PES_STATUS_PROVISIONAL. "') ";
+                
                 break;
             case self::PES_TRACKER_RECORDS_NOT_ACTIVE :
-                $pesStatusPredicate = " P.PES_STATUS !in ('" . personRecord::PES_STATUS_REQUESTED . "','" . personRecord::PES_STATUS_INITIATED. "','" . personRecord::PES_STATUS_PROVISIONAL. "') ";
+                $pesStatusPredicate = " P.PES_STATUS not in ('" . personRecord::PES_STATUS_REQUESTED . "','" . personRecord::PES_STATUS_INITIATED. "','" . personRecord::PES_STATUS_PROVISIONAL. "')  ";
+                $pesStatusPredicate.= " AND PT.PROCESSING_STATUS_CHANGED > current timestamp - 31 days AND PT.CNUM is not null ";
                 break;
             case self::PES_TRACKER_RECORDS_ALL :
+                $pesStatusPredicate = " PT.CNUM is not null ";
+                break;
             default:
                 $pesStatusPredicate = 'pass a parm muppet ';
                 break;
@@ -215,8 +219,8 @@ class pesTrackerTable extends DbTable{
     			<label class="control-label col-sm-1" for="pesRecordFilter">Records:</label>
     			<div class="col-sm-3" >    			
     			<div class="btn-group" role="group" aria-label="Record Selection">
-  					<button type="button" role='button'  class="btn btn-info btnRecordSelection" data-pesrecords='Active'   >Active</button>
-  					<button type="button" role='button'  class="btn btn-info btnRecordSelection" data-pesrecords='Completed'>Completed</button>
+  					<button type="button" role='button'  class="btn btn-info btnRecordSelection active" data-pesrecords='Active'  data-toggle='tooltip'  title='Active Records'     >Active</button>
+  					<button type="button" role='button'  class="btn btn-info btnRecordSelection" data-pesrecords='Not Active'     data-toggle='tooltip'  title='Recently Closed'  >Recent</button>
   					<button type="button" role='button'  class="btn btn-info btnRecordSelection" data-pesrecords='All'      >All</button>
 				</div>
 				</div>    			

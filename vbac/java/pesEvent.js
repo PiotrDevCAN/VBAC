@@ -40,12 +40,22 @@ function pesEvent() {
     ).on("change", function() {
         alert("Got change event from field");
     });
-    
-    
-    
-    
     console.log('--- Function --- pesEvent.init');
   },
+  
+  this.listenForBtnRecordSelection = function() {
+	  $(document).on('click','.btnRecordSelection', function(){
+		  $('.btnRecordSelection').removeClass('active');
+		  $(this).addClass('active');
+		  
+		  var pesevent = new pesEvent();
+		  pesevent.populatePesTracker($(this).data('pesrecords'));
+	  });
+  }, 
+  
+  
+  
+  
   
   this.populatePesTracker = function(records){
 	  var buttons = $('.btnRecordSelection');	  
@@ -63,8 +73,12 @@ function pesEvent() {
 		    	
 		    	console.log(resultObj.sucess);
 		    	console.log(resultObj.messages);
+		    	if(resultObj.sucess){
+		    		$('#pesTrackerTableDiv').html(resultObj.table);	
+		    	} else {
+		    		$('#pesTrackerTableDiv').html(resultObj.messages);
+		    	}
 		    	
-		    	$('#pesTrackerTableDiv').html(resultObj.table);
 		    }
 	  });
   }

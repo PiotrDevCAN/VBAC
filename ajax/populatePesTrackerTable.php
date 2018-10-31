@@ -6,7 +6,7 @@ set_time_limit(0);
 ob_start();
 
 $pesTrackerTable = new pesTrackerTable(allTables::$PES_TRACKER);
-$table = $pesTrackerTable->buildTable($_POST['records']);
+$table = $pesTrackerTable->buildTable(ucfirst($_POST['records']));
 
 $dataJsonAble = json_encode($table);
 

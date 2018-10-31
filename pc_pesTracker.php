@@ -12,7 +12,7 @@ use vbac\personRecord;
 <div class='col-sm-4'>
 </div>
 <div class='col-sm-4'>
-<h1 id='portalTitle' class='text-centre' >Pes Tracker.</h1>
+<h1 id='portalTitle' class='text-centre' >PES Tracker.</h1>
 </div>
 <div class='col-sm-4'>
 </div>
@@ -47,6 +47,7 @@ $(document).ready(function(){
 
 	var pesevent = new pesEvent();
 	pesevent.populatePesTracker('Active');
+	pesevent.listenForBtnRecordSelection();
 	pesevent.listenForPesStageValueChange();
 	pesevent.listenForSavePesComment();
 	pesevent.listenForPesProcessStatusChange();
