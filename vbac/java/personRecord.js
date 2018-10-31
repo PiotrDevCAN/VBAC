@@ -1613,17 +1613,21 @@ function personRecord() {
 	  $(document).on('click','.employeeTypeRadioBtn', function(e){
 		  var employeeType = $('input[name=employeeType]:checked').val();
 		  $('#resource_employee_type').val(employeeType);
-		  console.log(employeeType);
-		  
-		  console.log($('input[name=employeeType]:checked').data('type'));
 		  var type = $('input[name=employeeType]:checked').data('type');
 		  
 		  if(employeeType != 'preboarder'){
-			  $('#resource_email').val('').attr('disabled',false).attr('required',false);
-			  $('#resource_email').css("background-color","white").attr('placeholder','Enter EMAIL if PES required, else blank');
+			  
+			  if(type!='other'){
+				  $('#resource_email').val('').attr('disabled',true).attr('required',false);
+				  $('#resource_email').css("background-color","#eeeeee").attr('placeholder','Not required - GDPR');
+				  
+			  } else {
+				  $('#resource_email').val('').attr('disabled',false).attr('required',false);
+				  $('#resource_email').css("background-color","white").attr('placeholder','Enter EMAIL if PES required, else blank');
+				  
+			  }
 			  $('#saveBoarding').attr('disabled',false);
 			  var Type = type[0].toUpperCase() + type.slice(1).toLowerCase();
-			  console.log(Type);
 			  $('#open_seat').val(Type);
 			  $('#role_on_account').val(Type).attr('disabled',true);
 		  } else {

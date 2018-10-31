@@ -492,7 +492,8 @@ You are able to amend the Functional Manager of people assigned to you but who n
             			<div class='col-sm-6'>
               			<input class='form-control' id='resource_email'
                 			   name='resEMAIL_ADDRESS' value='<?=$this->EMAIL_ADDRESS?>'
-                			   type='text' placeholder="Email Address"	>
+                			   type='text' placeholder="Email Address"
+                			   disabled	>
 		            	</div>
         		    	<div class='col-sm-6'>
 		                <select class='form-control select select2 ' id='resource_country'
