@@ -542,19 +542,17 @@ You are able to amend the Functional Manager of people assigned to you but who n
                ?>
                </select>
 				</div>
-				<?php $allowEditLocation = empty($this->LBG_LOCATION) ? " style='display:none;' " : null; ?>
+				<?php $allowEditLocation = " style='display:block' "; ?>
 				<div id='editLocationDiv' class='col-sm-6' <?=$allowEditLocation;?>>
            	   	<select class='form-control select select2 locationFor '
                 			  id='LBG_LOCATION'
-                              name='LBG_LOCATION'                              
-                              
-                     >
-                     <?php
-                     $options = assetRequestRecord::buildLocationOptions($this->LBG_LOCATION);
-                     echo $options;
-                     ?>
-                    </select>
-          			
+                              name='LBG_LOCATION'  
+                >
+                <?php
+                   $options = assetRequestRecord::buildLocationOptions($this->LBG_LOCATION);
+                   echo $options;
+                ?>
+                </select>          			
        			</div>
 		</div>		
 	</div>

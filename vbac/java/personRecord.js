@@ -1440,6 +1440,11 @@ function personRecord() {
                       break;
                     }
                     person.initialiseStartEndDate();
+                	$('.locationFor').select2({
+                		width:'100%',
+                		placeholder: 'Approved Location',
+                		allowClear: true
+                	});
                 } else {
                     $('#editPersonModal .modal-body').html(resultObj.messages);
                 }
