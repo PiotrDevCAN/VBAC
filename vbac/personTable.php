@@ -1196,6 +1196,7 @@ class personTable extends DbTable {
             $firstName    = trim($row['FIRST_NAME']);
             $lastName     = trim($row['LAST_NAME']);
             $country      = trim($row['COUNTRY']);
+            $openseat     = trim($row['OPEN_SEAT_NUMBER']);
             
             $missing = !empty($emailAddress) ? '' : ' Email Address';
             $missing.= !empty($firstName) ? '' : ' First Name';
@@ -1214,6 +1215,7 @@ class personTable extends DbTable {
             $pesStatusWithButton.= " data-firstname='$firstName' ";
             $pesStatusWithButton.= " data-lastname='$lastName' ";
             $pesStatusWithButton.= " data-country='$country' ";
+            $pesStatusWithButton.= " data-openseat='$openseat' ";
             $pesStatusWithButton.= " data-toggle='tooltip' data-placement='top' title='$tooltip'";
             $pesStatusWithButton.= " $disabled  ";
             $pesStatusWithButton.= " > ";
