@@ -1190,7 +1190,6 @@ class personTable extends DbTable {
                 $pesStatusWithButton.= " > ";
                 $pesStatusWithButton.= "<span class='glyPesInitiate glyphicon glyphicon-plane ' aria-hidden='true'></span>";
                 $pesStatusWithButton.= "</button>&nbsp;";
-                $pesStatusWithButton.= $status;
                 break;
             case $status == personRecord::PES_STATUS_INITIATED && $_SESSION['isPes'] ;
             $emailAddress = trim($row['EMAIL_ADDRESS']);

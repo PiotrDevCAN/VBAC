@@ -702,10 +702,9 @@ You are able to amend the Functional Manager of people assigned to you but who n
      </div>
      </div>
 
-     <input id='pes_date_requested'   name='PES_DATE_REQUESTED'     value='<?=$this->PES_DATE_REQUESTED?>'		type='Hidden'  >
+   <input id='pes_date_requested'   name='PES_DATE_REQUESTED'     value='<?=$this->PES_DATE_REQUESTED?>'		type='Hidden'  >
    <input id='pes_date_responded'   name='PES_DATE_RESPONDED'     value='<?=$this->PES_DATE_RESPONDED?>'      type='hidden'  >
    <input id='pes_requestor'        name='PES_REQUESTOR'          value='<?=$this->PES_REQUESTOR?>'           type='hidden'  >
-   <input id='pes_status'           name='PES_STATUS'             value='<?=$this->PES_STATUS?>'              type='hidden'  >
    <input id='pes_status_details'   name='PES_STATUS_DETAILS'     value='<?=$this->PES_STATUS_DETAILS?>'      type='hidden'  >
 
 
