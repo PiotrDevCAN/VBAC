@@ -11,3 +11,4 @@ session_start();
 $token = $_SERVER['api_token'];
 $_SESSION['Db2Schema'] = strtoupper($_SERVER['environment']);
 include "connect.php";
+personRecord::employeeTypeMappingToDb2();

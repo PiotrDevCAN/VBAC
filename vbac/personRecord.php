@@ -1407,6 +1407,30 @@ You are able to amend the Functional Manager of people assigned to you but who n
             \itdq\BlueMail::send_mail(self::$pmoTaskId, 'CBN Initiation Request' , self::$cbnEmailBody, 'vbacNoReply@uk.ibm.com',array(),$groupOfFmEmail);
         }
    }
+   
+   static function employeeTypeMappingToDb2(){
+       $sqlDrop  = "DROP TABLE SESSION.EMPLOYEE_TYPE_MAPPING;";
+       $sqlCreate = "Create global temporary table SESSION.EMPLOYEE_TYPE_MAPPING  (code char(1) not null, description char(20) not null) ON COMMIT PRESERVE ROWS;";
+       $sqlInsert = array();
+       
+       foreach (self::$employeeTypeMapping as $code => $description){
+           $sqlInsert[] = "INSERT into SESSION.EMPLOYEE_TYPE_MAPPING  ( code, description ) values ('$code','$description') ";
+       }
+       
+        db2_exec($_SESSION['conn'], $sqlDrop);
+        $created = db2_exec($_SESSION['conn'], $sqlCreate);
+        
+        if(!$created){
+            throw new \Exception('Unable to create EmployeeTypeMapping Temp Table');
+        }
+        
+        foreach ($sqlInsert as $insertStatement){
+            $inserted = db2_exec($_SESSION['conn'], $insertStatement);
+            if(!$inserted){
+                throw new \Exception('Unable to populate EmployeeTypeMapping Temp Table');
+            }            
+        }
+   }
 
 
 }
