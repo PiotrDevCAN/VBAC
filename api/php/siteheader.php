@@ -5,8 +5,11 @@ error_reporting(E_ALL);
 date_default_timezone_set('UTC');
 set_include_path("./" . PATH_SEPARATOR . "../" . PATH_SEPARATOR . "../../" . PATH_SEPARATOR . "../../../" . PATH_SEPARATOR);
 
+use vbac\personRecord;
+
 include "vendor/autoload.php";
 include "splClassLoader.php";
+
 session_start();
 $token = $_SERVER['api_token'];
 $_SESSION['Db2Schema'] = strtoupper($_SERVER['environment']);
