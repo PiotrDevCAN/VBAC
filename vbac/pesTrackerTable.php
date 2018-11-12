@@ -85,6 +85,7 @@ class pesTrackerTable extends DbTable{
         $sql.= ", P.PES_STATUS ";
         $sql.= ", PT.COMMENT ";
         $sql.= ", PT.PRIORITY ";
+        $sql.= ", P.OPEN_SEAT_NUMBER ";
         
         $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";        
         $sql.= " left join " . $_SESSION['Db2Schema'] . "." . \vbac\allTables::$PES_TRACKER . " as PT ";
