@@ -8,7 +8,16 @@ if($_REQUEST['token']!= $token){
     return;
 }
 
-$sql = " SELECT P.NOTES_ID ";
+$additionalFields = !empty($_REQUEST['plus']) ? explode(",", $_REQUEST['plus']) : null;
+$additionalSelect = null;
+$employees = array();
+
+foreach ($additionalFields as $field) {
+    $additionalSelect .= ", " . db2_escape_string($field);
+}
+
+
+$sql = " SELECT P.NOTES_ID " . $additionalSelect;
 $sql.= " FROM " . $_SERVER['environment'] . "." . allTables::$PERSON . " AS P ";
 
 $sql.= " WHERE 1=1 AND trim(NOTES_ID) != ''  AND " . personTable::activePersonPredicate();
@@ -17,8 +26,8 @@ $sql.= " ORDER BY P.NOTES_ID ";
 $rs = db2_exec($_SESSION['conn'], $sql);
 
 if($rs){
-    while(($row = db2_fetch_assoc($rs))==true){         
-        $employees[] = trim($row['NOTES_ID']);        
+    while(($row = db2_fetch_assoc($rs))==true){
+        $employees[] = $row;
     }
 } else {
     ob_clean();
