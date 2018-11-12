@@ -239,6 +239,7 @@ class personTable extends DbTable {
         $preparedRow = array_map('trim', $row);
         $fmNotesid = isset($this->allNotesIdByCnum[trim($row['FM_CNUM'])]) ? $this->allNotesIdByCnum[trim($row['FM_CNUM'])]  :  trim($row['FM_CNUM']);
         $preparedRow['FM_CNUM'] = $fmNotesid;
+        $preparedRow['EMPLOYEE_TYPE'] = isset(personRecord::$employeeTypeMapping[trim($row['EMPLOYEE_TYPE'])]) ?  personRecord::$employeeTypeMapping[trim($row['EMPLOYEE_TYPE'])] : $row['EMPLOYEE_TYPE'];
         
         var_dump($fmNotesid);
         
