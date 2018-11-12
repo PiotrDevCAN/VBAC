@@ -240,9 +240,7 @@ class personTable extends DbTable {
         $fmNotesid = isset($this->allNotesIdByCnum[trim($row['FM_CNUM'])]) ? $this->allNotesIdByCnum[trim($row['FM_CNUM'])]  :  trim($row['FM_CNUM']);
         $preparedRow['FM_CNUM'] = $fmNotesid;
         $preparedRow['EMPLOYEE_TYPE'] = isset(personRecord::$employeeTypeMapping[strtoupper(trim($row['EMPLOYEE_TYPE']))]) ?  personRecord::$employeeTypeMapping[strtoupper(trim($row['EMPLOYEE_TYPE']))] : $row['EMPLOYEE_TYPE'];
-        
-        var_dump($fmNotesid);
-        
+        $preparedRow['EMPLOYEE_TYPE'] = ucwords($preparedRow['EMPLOYEE_TYPE'],' -');
         return $preparedRow;
     }
 
