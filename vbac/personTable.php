@@ -15,6 +15,8 @@ class personTable extends DbTable {
     private $preparedUpdateBluepagesFields;
     private $preparedUpdateLbgLocationStmt;
     private $preparedUpdateSecurityEducationStmt;
+    
+    public $employeeTypeMapping;
 
     private $allNotesIdByCnum;
     private $loader;
@@ -230,19 +232,35 @@ class personTable extends DbTable {
             }
         }
    }
+   
+   function loadEmployeeTypeMapping(){
+       if(empty($this->employeeTypeMapping)){
+           $loader = new Loader();
+                   
+       }
+       return $this->employeeTypeMapping;
+   }
+   
+   
 
 
     function  prepareFields($row){
         $this->loader = empty($this->loader) ? new Loader() : $this->loader;
         $this->allNotesIdByCnum = empty($this->allNotesIdByCnum) ? $this->loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON) : $this->allNotesIdByCnum;
+        $this->employeeTypeMapping = empty($this->employeeTypeMapping) ? $this->loader->loadIndexed('DESCRIPTION','CODE',allTables::$EMPLOYEE_TYPE_MAPPING) : $this->employeeTypeMapping ;  
        
         $preparedRow = array_map('trim', $row);
         $fmNotesid = isset($this->allNotesIdByCnum[trim($row['FM_CNUM'])]) ? $this->allNotesIdByCnum[trim($row['FM_CNUM'])]  :  trim($row['FM_CNUM']);
         $preparedRow['FM_CNUM'] = $fmNotesid;
-        $preparedRow['EMPLOYEE_TYPE'] = isset(personRecord::$employeeTypeMapping[strtoupper(trim($row['EMPLOYEE_TYPE']))]) ?  personRecord::$employeeTypeMapping[strtoupper(trim($row['EMPLOYEE_TYPE']))] : $row['EMPLOYEE_TYPE'];
-        $preparedRow['EMPLOYEE_TYPE'] = ucwords($preparedRow['EMPLOYEE_TYPE'],' -');
+        if (isset($preparedRow['EMPLOYEE_TYPE'])){
+            $preparedRow['EMPLOYEE_TYPE'] = isset($this->employeeTypeMapping[strtoupper($preparedRow['EMPLOYEE_TYPE'])]) ? $this->employeeTypeMapping[strtoupper($preparedRow['EMPLOYEE_TYPE'])]  : $preparedRow['EMPLOYEE_TYPE'];
+            $preparedRow['EMPLOYEE_TYPE'] = ucwords($preparedRow['EMPLOYEE_TYPE'],' -');            
+        }
         return $preparedRow;
     }
+    
+    
+
 
     function addButtons($row){
         // save some fields before we change the,

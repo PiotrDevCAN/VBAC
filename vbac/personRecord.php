@@ -108,7 +108,7 @@ class personRecord extends DbRecord
     const PMO_STATUS_CONFIRMED = 'Confirmed';
     const PMO_STATUS_AWARE     = 'Aware';
 
-    public static $employeeTypeMapping = array('A'=>'Regular','B'=>'Contractor','C'=>'Contractor','I'=>'Regular','J'=>'Pre-Hire','L'=>'Regular','O'=>'Regular','P'=>'Regular','V'=>'Contractor','X'=>'Regular');
+//    public static $employeeTypeMapping = array('A'=>'Regular','B'=>'Contractor','C'=>'Contractor','I'=>'Regular','J'=>'Pre-Hire','L'=>'Regular','O'=>'Regular','P'=>'Regular','V'=>'Contractor','X'=>'Regular');
 
     public static $cio = array('Commercial','Cross CIO Leadership','Cyber', 'Digital','Divestment','GOFE','IT 4 IT','Insurance','Retail','Sandbox','TRP','tbc');
 
@@ -1408,29 +1408,29 @@ You are able to amend the Functional Manager of people assigned to you but who n
         }
    }
    
-   static function employeeTypeMappingToDb2(){
-       $sqlDrop  = "DROP TABLE SESSION.EMPLOYEE_TYPE_MAPPING;";
-       $sqlCreate = "Create global temporary table SESSION.EMPLOYEE_TYPE_MAPPING  (code char(1) not null, description char(20) not null) ON COMMIT PRESERVE ROWS;";
-       $sqlInsert = array();
+//    static function employeeTypeMappingToDb2(){
+//        $sqlDrop  = "DROP TABLE SESSION.EMPLOYEE_TYPE_MAPPING;";
+//        $sqlCreate = "Create global temporary table SESSION.EMPLOYEE_TYPE_MAPPING  (code char(1) not null, description char(20) not null) ON COMMIT PRESERVE ROWS;";
+//        $sqlInsert = array();
        
-       foreach (self::$employeeTypeMapping as $code => $description){
-           $sqlInsert[] = "INSERT into SESSION.EMPLOYEE_TYPE_MAPPING  ( code, description ) values ('$code','$description') ";
-       }
+//        foreach (self::$employeeTypeMapping as $code => $description){
+//            $sqlInsert[] = "INSERT into SESSION.EMPLOYEE_TYPE_MAPPING  ( code, description ) values ('$code','$description') ";
+//        }
        
-        db2_exec($_SESSION['conn'], $sqlDrop);
-        $created = db2_exec($_SESSION['conn'], $sqlCreate);
+//         db2_exec($_SESSION['conn'], $sqlDrop);
+//         $created = db2_exec($_SESSION['conn'], $sqlCreate);
         
-        if(!$created){
-            throw new \Exception('Unable to create EmployeeTypeMapping Temp Table');
-        }
+//         if(!$created){
+//             throw new \Exception('Unable to create EmployeeTypeMapping Temp Table');
+//         }
         
-        foreach ($sqlInsert as $insertStatement){
-            $inserted = db2_exec($_SESSION['conn'], $insertStatement);
-            if(!$inserted){
-                throw new \Exception('Unable to populate EmployeeTypeMapping Temp Table');
-            }            
-        }
-   }
+//         foreach ($sqlInsert as $insertStatement){
+//             $inserted = db2_exec($_SESSION['conn'], $insertStatement);
+//             if(!$inserted){
+//                 throw new \Exception('Unable to populate EmployeeTypeMapping Temp Table');
+//             }            
+//         }
+//    }
 
 
 }

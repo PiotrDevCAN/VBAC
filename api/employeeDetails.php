@@ -20,8 +20,8 @@ $sql.= " , CASE WHEN T.DESCRIPTION is not null then T.DESCRIPTION else P.EMPLOYE
 $sql.= " FROM " . $_SERVER['environment'] . "." . allTables::$PERSON . " AS P ";
 $sql.= " LEFT JOIN " . $_SERVER['environment'] . "." . allTables::$PERSON . " AS M ";
 $sql.= " ON P.FM_CNUM = M.CNUM ";
-$sql.= " LEFT JOIN SESSION.EMPLOYEE_TYPE_MAPPING AS T ";
-$sql.= " ON P.EMPLOYEE_TYPE = T.CODE ";
+$sql.= " LEFT JOIN " . $_SERVER['environment'] . "." . allTables::$EMPLOYEE_TYPE_MAPPING .  " AS T ";
+$sql.= " ON upper(P.EMPLOYEE_TYPE) = upper(T.CODE) ";
 $sql.= " WHERE 1=1 ";
 $sql.= !empty($emailID) ? " AND lower(P.EMAIL_ADDRESS) = '" . db2_escape_string(strtolower($emailID)) . "'; " : null;
 $sql.= !empty($notesId) ? " AND lower(P.NOTES_ID) = '" . db2_escape_string(strtolower($notesId)) . "'; " : null;
