@@ -62,6 +62,7 @@ $(document).ready(function(){
 	person.listenForSetPmoStatus();
 	person.listenforSendPesEmail();
 	person.listenforConfirmSendPesEmail();
+	person.listenForCancelPes();
 	
 });
 

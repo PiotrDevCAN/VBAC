@@ -137,6 +137,18 @@ $isRes   = stripos($_SERVER['environment'], 'dev')  ? ".not('.accessRes')" : $is
 
 $isFm = $isPmo ? null : $isFm; // If they are PMO it don't matter if they are FM
 
+
+
+// Test PES Cancel
+$isPmo = false;
+$isCdi = false;
+$isPes = false;
+$isRep1 = false;
+$isRes = false;
+$isFm = ".not('.accessFm')";
+
+
+
 $_SESSION['isFm']   = !empty($isFm)   ? true : false;
 $_SESSION['isCdi']  = !empty($isCdi)  ? true : false;
 $_SESSION['isPmo']  = !empty($isPmo)  ? true : false;

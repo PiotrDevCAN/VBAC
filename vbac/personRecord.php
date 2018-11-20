@@ -200,6 +200,15 @@ class personRecord extends DbRecord
 
                                               <br/>Many Thanks for your cooperation,';
     private static $pesClearedEmailPattern = array('/&&candidate&&/','/&&effectiveDate&&/','/&&taskid&&/');
+    
+    
+    private static $pesCancelPesEmail = 'PES Team,
+                                              <br/>Please stop processing the PES Clearance for : &&candidateFirstName&& <b>&&candidateSurname&&</b> CNUM:( &&cnum&& )
+                                              <br/>This action has been requested by  &&requestor&&.';
+    private static $pesCancelPesEmailPattern = array('/&&candidateFirstName&&/','/&&candidateSurname&&/','/&&cnum&&/','/&&requestor&&/');
+    
+    
+    
 
     private static $offboardingEmail = 'Please initiate OFFBOARDING for the following individual:\n
                                     Name : &&name&&
@@ -278,6 +287,8 @@ You are able to amend the Functional Manager of people assigned to you but who n
     const PES_STATUS_INITIATED     = 'Initiated';
     const PES_STATUS_REQUESTED     = 'Evidence Requested';
     const PES_STATUS_REMOVED       = 'Removed';
+    const PES_STATUS_CANCEL_REQ     = 'Cancel Requested';
+    const PES_STATUS_CANCEL_CONFIRMED     = 'Cancel Confirmed';
     const PES_STATUS_TBD           = 'TBD';
 
 
@@ -1321,20 +1332,35 @@ You are able to amend the Functional Manager of people assigned to you but who n
         }
 
         $to = array();
-        !empty($emailAddress) ? $to[] = $emailAddress : null;
-        !empty($fmEmail)      ? $to[] = $fmEmail : null;
-
-        $replacements = array($this->FIRST_NAME,$this->PES_DATE_RESPONDED,personRecord::$pesTaskId[0]);
+        $cc = array();
 
         switch ($this->PES_STATUS) {
             case self::PES_STATUS_CLEARED_PERSONAL:
                 $pattern   = self::$pesClearedPersonalEmailPattern;
                 $emailBody = self::$pesClearedPersonalEmail;
-            break;
+                $replacements = array($this->FIRST_NAME,$this->PES_DATE_RESPONDED,personRecord::$pesTaskId[0]);
+                $title = 'vBAC PES Status Change';
+                !empty($emailAddress) ? $to[] = $emailAddress : null;
+                !empty($fmEmail)      ? $to[] = $fmEmail : null;
+                break;
             case self::PES_STATUS_CLEARED:
                 $pattern   = self::$pesClearedEmailPattern;
                 $emailBody = self::$pesClearedEmail;
+                $replacements = array($this->FIRST_NAME,$this->PES_DATE_RESPONDED,personRecord::$pesTaskId[0]);
+                $title = 'vBAC PES Status Change';
+                !empty($emailAddress) ? $to[] = $emailAddress : null;
+                !empty($fmEmail)      ? $to[] = $fmEmail : null;
                 break;
+            case self::PES_STATUS_CANCEL_REQ:
+                $pattern   = self::$pesCancelPesEmailPattern;
+                $emailBody = self::$pesCancelPesEmail;
+                $title = 'vBAC Cancel Request';
+                $replacements = array($this->FIRST_NAME,$this->LAST_NAME,$this->CNUM, $_SESSION['ssoEmail']);               
+                $to[] = personRecord::$pesTaskId[0];
+                !empty($fmEmail) ? $cc[] = $fmEmail : null;                
+                $cc[] = $_SESSION['ssoEmail'];
+                
+                
             default:
 
             break;
@@ -1349,7 +1375,7 @@ You are able to amend the Functional Manager of people assigned to you but who n
 
         AuditTable::audit(print_r($message,true),AuditTable::RECORD_TYPE_DETAILS);
 
-        $response = \itdq\BlueMail::send_mail($to, 'vBAC PES Status Change',$message, self::$pesTaskId[0]);
+        $response = \itdq\BlueMail::send_mail($to, $title ,$message, self::$pesTaskId[0], $cc);
 
 
         return $response;
