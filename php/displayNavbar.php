@@ -139,13 +139,13 @@ $isFm = $isPmo ? null : $isFm; // If they are PMO it don't matter if they are FM
 
 
 
-// // Test PES Cancel
-// $isPmo = false;
-// $isCdi = false;
-// $isPes = false;
-// $isRep1 = false;
-// $isRes = false;
-// $isFm = ".not('.accessFm')";
+// Test PES Cancel
+$isPmo = false;
+$isCdi = false;
+$isPes = false;
+$isRep1 = false;
+$isRes = false;
+$isFm = ".not('.accessFm')";
 
 
 
