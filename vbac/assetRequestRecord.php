@@ -223,7 +223,7 @@ class assetRequestRecord extends DbRecord {
             	</div>
             	<div class='col-sm-4' >
             	<label for='orderItNumber'>LBG Ref Number (If pre-raised)</label>
-            	<input type="number" name='ORDERIT_NUMBER' id='orderItNumber' placeholder="LBG Ref Number" min="999999" max="9999999" class='form-control' >
+            	<input name='ORDERIT_NUMBER' id='orderItNumber' placeholder="LBG Ref Number" maxlength=20 class='form-control' >
 
             	</div>
             	<div class='col-sm-4' >
