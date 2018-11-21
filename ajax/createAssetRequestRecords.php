@@ -140,9 +140,12 @@ foreach ($_POST as $key => $value){
 
 
         } catch (Exception $e) {
+            echo "Exception:" .  $e->getMessage();
+            echo "Code:" . $e->getCode();            
             $messages = ob_get_clean();
             $response = array('result'=>'failed','post'=>$post,'messages'=>$messages);
             echo json_encode($response);
+            return;
         }
     }
 }
