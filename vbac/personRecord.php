@@ -991,6 +991,9 @@ You are able to amend the Functional Manager of people assigned to you but who n
                     <option value='<?=personRecord::PES_STATUS_PROVISIONAL;?>'><?=personRecord::PES_STATUS_PROVISIONAL?></option> 
                     <option value='<?=personRecord::PES_STATUS_REMOVED;?>'><?=personRecord::PES_STATUS_REMOVED?></option>
                     <option value='<?=personRecord::PES_STATUS_TBD;?>'><?=personRecord::PES_STATUS_TBD?></option>
+                    <option value='<?=personRecord::PES_STATUS_CANCEL_REQ;?>'><?=personRecord::PES_STATUS_CANCEL_REQ?></option>
+                    <option value='<?=personRecord::PES_STATUS_CANCEL_CONFIRMED;?>'><?=personRecord::PES_STATUS_CANCEL_CONFIRMED?></option>
+                    
                        </select>
                  </div>
                  <label for='ped_dsate' class='col-md-1 control-label '>Date</label>
