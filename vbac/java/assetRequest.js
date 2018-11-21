@@ -295,8 +295,14 @@ function assetRequest() {
           success: function(result){
         	  var resultObj = JSON.parse(result);
         	  console.log(resultObj);
-        	  var assetRequests = resultObj.requests;
-        	  $('#saveFeedbackModal .modal-body').html("<h3>Requests Created</h3>" + assetRequests);
+        	  
+        	  if(resultObj.result=='success'){
+            	  var assetRequests = resultObj.requests;
+            	  $('#saveFeedbackModal .modal-body').html("<h3>Requests Created</h3>" + assetRequests);        		  
+        	  } else {
+            	  var errorMessages = resultObj.messagse;
+            	  $('#saveFeedbackModal .modal-body').html("<h3>An error has occured</h3>" + errorMessages);
+        	  }
         	  $('#saveFeedbackModal').modal('show');
             },
           complete : function(xhr, status){
