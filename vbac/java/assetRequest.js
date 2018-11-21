@@ -300,7 +300,9 @@ function assetRequest() {
             	  var assetRequests = resultObj.requests;
             	  $('#saveFeedbackModal .modal-body').html("<h3>Requests Created</h3>" + assetRequests);        		  
         	  } else {
-            	  var errorMessages = resultObj.messagse;
+            	  var errorMessages = resultObj.messages;
+            	  console.log(resultObj);
+            	  console.log(resultObj.messages);
             	  $('#saveFeedbackModal .modal-body').html("<h3>An error has occured</h3>" + errorMessages);
         	  }
         	  $('#saveFeedbackModal').modal('show');
