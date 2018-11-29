@@ -9,6 +9,15 @@ use itdq\AuditTable;
 ob_start();
 AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_REQUEST,true) . "</b>",AuditTable::RECORD_TYPE_DETAILS);
 
+if($_REQUEST['token']!= $token){
+    return;
+}
+
+
+
+
+
+
 // validate parameters will fit into the columns, without hard coding the column length here.
 
 $personTable = new personTable(allTables::$PERSON);
