@@ -76,6 +76,9 @@ class personRecord extends DbRecord
     protected $PMO_STATUS;
     protected $PES_DATE_EVIDENCE;
     
+    protected $RSA_TOKEN;
+    protected $CALLSIGN_ID;
+    
     protected $person_bio;
 
 
