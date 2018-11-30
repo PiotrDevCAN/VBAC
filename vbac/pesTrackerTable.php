@@ -83,6 +83,7 @@ class pesTrackerTable extends DbTable{
         $sql.= ", PT.PROCESSING_STATUS_CHANGED ";
         $sql.= ", PT.DATE_LAST_CHASED ";
         $sql.= ", P.PES_STATUS ";
+        $sql.= ", P.PES_STATUS_DETAILS ";
         $sql.= ", PT.COMMENT ";
         $sql.= ", PT.PRIORITY ";
         $sql.= ", P.OPEN_SEAT_NUMBER ";

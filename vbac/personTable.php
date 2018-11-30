@@ -186,11 +186,12 @@ class personTable extends DbTable {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         } else {
-            while(($row=db2_fetch_assoc($rs))==true){              
+            while(($row=db2_fetch_assoc($rs))==true){      
+                $cnum = trim($row['CNUM']); 
                 $preparedRow = $this->prepareFields($row);
                 $fmCnumField = $preparedRow['FM_CNUM'];                
                 $transferButton = "<button type='button' class='btn btn-default btn-xs btnTransfer' aria-label='Left Align' ";
-                $transferButton.= "data-cnum='" .trim($row['CNUM']) . "' ";
+                $transferButton.= "data-cnum='" .$cnum . "' ";
                 $transferButton.= "data-notesid='" .trim($row['NOTES_ID']) . "' ";
                 $transferButton.= "data-fromCnum ='" .trim($row['FM_CNUM']) . "' ";
                 $transferButton.= "data-fromNotesid ='" .$preparedRow['FM_CNUM'] . "' ";
@@ -281,6 +282,12 @@ class personTable extends DbTable {
         $potentialForOffboarding = substr(trim($row['REVALIDATION_STATUS']),0,11)==personRecord::REVALIDATED_OFFBOARDING ? false : $potentialForOffboarding;
         $revalidationStatus = trim($row['REVALIDATION_STATUS']);
         $ctid = trim($row['CT_ID']);
+        
+        
+        
+        if(!empty($row['PRE_BOARDED'])){
+            $row['CNUM'] = $cnum . "<br/><small>" . $row['PRE_BOARDED'] .  "</small>";
+        }
 
         // PMO_STATUS
         if($_SESSION['isPmo'] || $_SESSION['isCdi']){
@@ -333,72 +340,7 @@ class personTable extends DbTable {
         }
 
         if($_SESSION['isPes'] || $_SESSION['isPmo'] || $_SESSION['isFm'] || $_SESSION['isCdi']){
-           // $row['PES_STATUS'] = '';
             $row['PES_STATUS'] = self::getPesStatusWithButtons($row);
-//             switch (true) {
-//                 case $status == personRecord::PES_STATUS_NOT_REQUESTED:
-//                     $row['PES_STATUS'] .= "<button type='button' class='btn btn-default btn-xs btnPesInitiate accessRestrict accessPmo accessFm' ";
-//                     $row['PES_STATUS'] .= "aria-label='Left Align' ";
-//                     $row['PES_STATUS'] .= " data-cnum='" .$cnum . "' ";
-//                     $row['PES_STATUS'] .= " data-pesstatus='$status' ";
-//                     $row['PES_STATUS'] .= " > ";
-//                     $row['PES_STATUS'] .= "<span class='glyPesInitiate glyphicon glyphicon-plane ' aria-hidden='true'></span>";
-//                     $row['PES_STATUS'] .= "</button>&nbsp;";
-//                     $row['PES_STATUS'] .= $status;
-//                     break;
-//                 case $status == personRecord::PES_STATUS_INITIATED && $_SESSION['isPes'] ;
-//                      $emailAddress = trim($row['EMAIL_ADDRESS']);
-//                      $firstName    = trim($row['FIRST_NAME']);
-//                      $lastName     = trim($row['LAST_NAME']);
-//                      $country      = trim($row['COUNTRY']);
-//                      $openSeat     = trim($row['OPEN_SEAT_NUMBER']);
-                     
-//                      $missing = !empty($emailAddress) ? '' : ' Email Address';
-//                      $missing.= !empty($firstName) ? '' : ' First Name';
-//                      $missing.= !empty($lastName) ? '' : ' Last Name';
-//                      $missing.= !empty($country) ? '' : ' Country';
-                     
-//                      $valid = empty(trim($missing));
-                     
-//                      $disabled = $valid ? '' : 'disabled';
-//                      $tooltip = $valid ? 'Confirm PES Email details' : "Missing $missing";
-                     
-                     
-//                      $row['PES_STATUS'] .= "<button type='button' class='btn btn-default btn-xs btnSendPesEmail accessRestrict accessPmo accessFm' ";
-//                      $row['PES_STATUS'] .= "aria-label='Left Align' ";
-//                      $row['PES_STATUS'] .= " data-emailaddress='$emailAddress' ";
-//                      $row['PES_STATUS'] .= " data-firstname='$firstName' ";
-//                      $row['PES_STATUS'] .= " data-lastname='$lastName' ";
-//                      $row['PES_STATUS'] .= " data-country='$country' ";
-//                      $row['PES_STATUS'] .= " data-openseat='$openSeat' ";
-//                      $row['PES_STATUS'] .= " data-toggle='tooltip' data-placement='top' title='$tooltip'";
-//                      $row['PES_STATUS'] .= " $disabled  ";
-//                      $row['PES_STATUS'] .= " > ";
-//                      $row['PES_STATUS'] .= "<span class='glyphicon glyphicon-send ' aria-hidden='true' ></span>"; 
-//                      $row['PES_STATUS'] .= "</button>&nbsp;";
-//                 case $status == personRecord::PES_STATUS_REQUESTED && $_SESSION['isPes'] :
-//                 case $status == personRecord::PES_STATUS_CLEARED_PERSONAL && $_SESSION['isPes'] :
-//                 case $status == personRecord::PES_STATUS_CLEARED && $_SESSION['isPes'] :
-//                 case $status == personRecord::PES_STATUS_EXCEPTION && $_SESSION['isPes'] :
-//                 case $status == personRecord::PES_STATUS_DECLINED && $_SESSION['isPes'] ;
-//                 case $status == personRecord::PES_STATUS_FAILED && $_SESSION['isPes'] ;
-//                 case $status == personRecord::PES_STATUS_REMOVED && $_SESSION['isPes'] ;
-//                     $row['PES_STATUS'] .= "<button type='button' class='btn btn-default btn-xs btnPesStatus' aria-label='Left Align' ";
-//                     $row['PES_STATUS'] .= " data-cnum='" .$cnum . "' ";
-//                     $row['PES_STATUS'] .= " data-notesid='" . $notesId . "' ";
-//                     $row['PES_STATUS'] .= " data-email='" . $email . "' ";
-//                     $row['PES_STATUS'] .= " data-pesdaterequested='" .trim($row['PES_DATE_REQUESTED']) . "' ";
-//                     $row['PES_STATUS'] .= " data-pesrequestor='" .trim($row['PES_REQUESTOR']) . "' ";
-//                     $row['PES_STATUS'] .= " data-pesstatus='" .$status . "' ";
-//                     $row['PES_STATUS'] .= " > ";
-//                     $row['PES_STATUS'] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
-//                     $row['PES_STATUS'] .= "</button>&nbsp;";
-//                     $row['PES_STATUS'] .= $status;
-//                     break;
-//                 default:
-//                     $row['PES_STATUS'] .= $status;
-//                     break;
-//             }
         }
 
         if(($_SESSION['isPes'] || $_SESSION['isPmo'] || $_SESSION['isFm'] || $_SESSION['isCdi']) && ($revalidationStatus!=personRecord::REVALIDATED_OFFBOARDED))  {
@@ -467,12 +409,11 @@ class personTable extends DbTable {
         return $result;
     }
     
-    function setPesEvidence($cnum=null, $requestor=null){
+    function setPesEvidence($cnum=null){
         if(!$cnum){
             throw new \Exception('No CNUM provided in ' . __METHOD__);
         }
-        $requestor = empty($requestor) ? $_SESSION['ssoEmail'] : $requestor;
-        $result =  self::setPesStatus($cnum,personRecord::PES_STATUS_REQUESTED, $requestor);
+        $result =  self::setPesStatus($cnum,personRecord::PES_STATUS_REQUESTED);
         return $result;
     }
 
