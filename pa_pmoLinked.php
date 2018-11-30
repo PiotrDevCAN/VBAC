@@ -23,6 +23,7 @@ use vbac\personTable;
 
 <?php
 $person = new personRecord();
+$person->amendPesStatusModal();
 $person->editPersonModal();
 
 ?>
