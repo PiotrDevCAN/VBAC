@@ -8,10 +8,12 @@ class slack {
     
     const CHANNEL_SM_CDI = 'sm_cognitive_delivery';
     const CHANNEL_SM_CDI_AUDIT = 'sm_cdi_audit';
+    const CHANNEL_GENERAL = 'general';
     
     function __construct(){
-        $this->url[self::CHANNEL_SM_CDI] = 'https://hooks.slack.com/services/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';
+        $this->url[self::CHANNEL_SM_CDI]       = 'https://hooks.slack.com/services/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';
         $this->url[self::CHANNEL_SM_CDI_AUDIT] = 'https://hooks.slack.com/services/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';
+        $this->url[self::CHANNEL_GENERAL]      = 'https://hooks.slack.com/services/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';
     }
     
     function sendMessageToChannel($message,$channel){
