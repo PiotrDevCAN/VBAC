@@ -37,6 +37,8 @@ $(document).ready(function(){
 	person.listenForReportReload();
 	person.listenForReportAll();
 	person.listenForEditPerson();
+	person.listenForEditPesStatus();
+	person.listenForSavePesStatus();
 	
 });
 
