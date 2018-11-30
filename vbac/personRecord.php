@@ -947,7 +947,7 @@ You are able to amend the Functional Manager of people assigned to you but who n
            <div class='row' id='passportNameDetails' >
               <div class='form-group' >
                 <div class='col-sm-6'>
-                    <input class="form-control" id="psm_passportFirst" name="psm_passportFirst" value="" type="text" placeholder='Passport First Name' >
+                    <input class="form-control" id="psm_passportFirst" name="psm_passportFirst" value="" type="text" placeholder='Passport First Name' disabled >
                 </div>
                 <div class='col-sm-6'>
                     <input class="form-control" id="psm_passportSurname" name="psm_passportSurname" value="" type="text" placeholder='Passport Surname'>
@@ -985,7 +985,7 @@ You are able to amend the Functional Manager of people assigned to you but who n
                     <option value='<?=personRecord::PES_STATUS_TBD;?>'><?=personRecord::PES_STATUS_TBD?></option>
                        </select>
                  </div>
-                 <label for='ped_dsate' class='col-md-1 control-label '>Date</label>
+                 <label for='pes_date' class='col-md-1 control-label '>Date</label>
                  <div class='col-md-3'>
                   <input class="form-control" id="pes_date" value="<?=$now->format('d M Y')?>" type="text" placeholder='Pes Status Changed' data-toggle='tooltip' title='PES Date Responded'>
                   <input class="form-control" id="pes_date_db2"  value="<?=$now->format('Y-m-d')?>" name="PES_DATE_RESPONDED" type='hidden' >

@@ -1524,8 +1524,12 @@ function personRecord() {
         	   var passportSurname = $(this).data('passportsurname');
                $('#psm_passportFirst').val($.trim(passportFirst));
                $('#psm_passportSurname').val($.trim(passportSurname));
+        	   $('#psm_passportFirst').prop('disabled',false);
+        	   $('#psm_passportSurname').prop('disabled',false);
            } else {
         	   $('#passportNameDetails').hide();
+        	   $('#psm_passportFirst').prop('disabled',true);
+        	   $('#psm_passportSurname').prop('disabled',true);
            }
            
            notesid = notesid.trim() != "" ? notesid : email;
@@ -1555,7 +1559,7 @@ function personRecord() {
         var formValid = form.checkValidity();
         if(formValid){
           var allDisabledFields = ($("input:disabled"));
-          $(allDisabledFields).attr('disabled',false);
+          $(allDisabledFields).not('#psm_passportFirst').not('#psm_passportSurname').attr('disabled',false);
           var formData = $('#amendPesStatusModal form').serialize();
           console.log(formData);
           $(allDisabledFields).attr('disabled',true);
@@ -1567,19 +1571,27 @@ function personRecord() {
                 console.log(result);
                 var resultObj = JSON.parse(result);
                 $('#savePesStatus').attr('disabled',false);
-               
-                if(typeof(personRecord.table) != 'undefined'){
-                    // We came from the PERSON PORTAL
-                	personRecord.table.ajax.reload();	
-                }  else {
-                	// We came from the PES TRACKER
-                	console.log('find and amend the email details');
-                	var cnum = resultObj.cnum;
-                	var formattedEmail = resultObj.formattedEmailField;
-                	$('#pesTrackerTable tr.' + cnum).children('.formattedEmailTd:first').children('.formattedEmailDiv:first').html(formattedEmail);                	
-                }             
                 
-                $('#amendPesStatusModal').modal('hide');
+                var success = resultObj.status;
+                
+                if(success=='false'){
+                	alert('Save PES Status, may not have been successful');
+                	alert(resultObj.messages);
+                	
+                } else {
+                    if(typeof(personRecord.table) != 'undefined'){
+                        // We came from the PERSON PORTAL
+                    	personRecord.table.ajax.reload();	
+                    }  else {
+                    	// We came from the PES TRACKER
+                    	console.log('find and amend the email details');
+                    	var cnum = resultObj.cnum;
+                    	var formattedEmail = resultObj.formattedEmailField;
+                    	$('#pesTrackerTable tr.' + cnum).children('.formattedEmailTd:first').children('.formattedEmailDiv:first').html(formattedEmail);                	
+                    }             
+                    
+                    $('#amendPesStatusModal').modal('hide');
+                }
               }
             });
 
