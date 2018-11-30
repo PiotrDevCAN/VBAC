@@ -1058,15 +1058,16 @@ function personRecord() {
   
   
   
-  this.initialisePersonTable = function(){
+  this.initialisePersonTable = function(preBoardersAction){
+	  preBoardersAction = typeof(preBoardersAction) == 'undefined' ? null : preBoardersAction;
       $.ajax({
         url: "ajax/createHtmlForPersonTable.php",
-        type: 'POST',
+        type: 'POST',        
         success: function(result){
           var Person = new personRecord();
           $('#personDatabaseDiv').html(result);
           $('#assetRequestsDatatablesDiv').html(result);
-          Person.initialiseDataTable();
+          Person.initialiseDataTable(preBoardersAction);
         }
       });
 
@@ -1088,7 +1089,8 @@ function personRecord() {
   
   
 
-  this.initialiseDataTable = function(){
+  this.initialiseDataTable = function(preBoardersAction){
+	  preBoardersAction = typeof(preBoardersAction) == 'undefined' ? null : preBoardersAction;	  
       // Setup - add a text input to each footer cell
       $('#personTable tfoot th').each( function () {
           var title = $(this).text();
@@ -1098,6 +1100,7 @@ function personRecord() {
       personRecord.table = $('#personTable').DataTable({
         ajax: {
               url: 'ajax/populatePersonDatatable.php',
+              data: { preBoardersAction:preBoardersAction },
               type: 'GET',
           }	,
 //	        CNUM         0

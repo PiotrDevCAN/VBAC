@@ -25,6 +25,10 @@ class personTable extends DbTable {
     
     private $slack;
     
+    const PORTAL_PRE_BOARDER_EXCLUDE = 'exclude';
+    const PORTAL_PRE_BOARDER_INCLUDE = 'include';
+    const PORTAL_PRE_BOARDER_WITH_LINKED = 'withLinked';
+    
     function __construct($table,$pwd=null,$log=true){
         $this->slack = new slack();
         parent::__construct($table,$pwd,$log);
@@ -127,13 +131,12 @@ class personTable extends DbTable {
     
 
 
-    function returnAsArray(){
-//         $this->loader = empty($this->loader) ? new Loader() : $this->loader;
-//         $this->allNotesIdByCnum = empty($this->allNotesIdByCnum) ? $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON) : $this->allNotesIdByCnum;
-
+    function returnAsArray($preboadersAction=self::PORTAL_PRE_BOARDER_EXCLUDE){
+        
+        $preboadersAction = empty($preboadersAction) ? self::PORTAL_PRE_BOARDER_EXCLUDE : $preboadersAction;
+        
         $this->thirtyDaysHence = new \DateTime();
         $this->thirtyDaysHence->add(new \DateInterval('P31D'));
-
 
         $data = array();
 
@@ -147,10 +150,12 @@ class personTable extends DbTable {
 
         $predicate .= $isFM ? " AND FM_CNUM='" . db2_escape_string(trim($myCnum)) . "' " : "";
         $predicate .= $justaUser ? " AND CNUM='" . db2_escape_string(trim($myCnum)) . "' " : ""; // FM Can only see their own people.
-
+        $predicate .= $preboadersAction==self::PORTAL_PRE_BOARDER_EXCLUDE ? " AND ( PES_STATUS_DETAILS not like 'Boarded as%' or PES_STATUS_DETAILS is null) " : null;
+        $predicate .= $preboadersAction==self::PORTAL_PRE_BOARDER_WITH_LINKED ? " AND ( PES_STATUS_DETAILS like 'Boarded as%' or PRE_BOARDED  is not  null) " : null;
+        
+        
         $sql  = " SELECT * FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName ;
         $sql .= " WHERE " . $predicate;
-
         $rs = db2_exec($_SESSION['conn'], $sql);
 
         if(!$rs){
@@ -1192,12 +1197,16 @@ class personTable extends DbTable {
         $cnum    = trim($row['CNUM']);
         $status  = trim($row['PES_STATUS']);
         $cnum    = trim($row['CNUM']);
+        $boarder = stripos(trim($row['PES_STATUS_DETAILS']),'Boarded as')!== false ;
         $passportFirst   = array_key_exists('PASSPORT_FIRST_NAME', $row) ? $row['PASSPORT_FIRST_NAME'] : null;
         $passportSurname = array_key_exists('PASSPORT_SURNAME', $row)    ? $row['PASSPORT_SURNAME'] : null;
         
         $pesStatusWithButton = '';
         $pesStatusWithButton.= $status . "<br/>";
         switch (true) {
+            case $boarder:
+                // Don't add buttons if this is a boarded - pre-boarder record.
+                break;                
             case $status == personRecord::PES_STATUS_TBD && !$_SESSION['isPes']:
             case $status == personRecord::PES_STATUS_NOT_REQUESTED:
                 $pesStatusWithButton.= "<button type='button' class='btn btn-default btn-xs btnPesInitiate accessRestrict accessPmo accessFm' ";
@@ -1209,36 +1218,36 @@ class personTable extends DbTable {
                 $pesStatusWithButton.= "</button>&nbsp;";
                 break;
             case $status == personRecord::PES_STATUS_INITIATED && $_SESSION['isPes'] ;
-            $emailAddress = trim($row['EMAIL_ADDRESS']);
-            $firstName    = trim($row['FIRST_NAME']);
-            $lastName     = trim($row['LAST_NAME']);
-            $country      = trim($row['COUNTRY']);
-            $openseat     = trim($row['OPEN_SEAT_NUMBER']);
+                $emailAddress = trim($row['EMAIL_ADDRESS']);
+                $firstName    = trim($row['FIRST_NAME']);
+                $lastName     = trim($row['LAST_NAME']);
+                $country      = trim($row['COUNTRY']);
+                $openseat     = trim($row['OPEN_SEAT_NUMBER']);
             
-            $missing = !empty($emailAddress) ? '' : ' Email Address';
-            $missing.= !empty($firstName) ? '' : ' First Name';
-            $missing.= !empty($lastName) ? '' : ' Last Name';
-            $missing.= !empty($country) ? '' : ' Country';
+                $missing = !empty($emailAddress) ? '' : ' Email Address';
+                $missing.= !empty($firstName) ? '' : ' First Name';
+                $missing.= !empty($lastName) ? '' : ' Last Name';
+                $missing.= !empty($country) ? '' : ' Country';
             
-            $valid = empty(trim($missing));
+                $valid = empty(trim($missing));
+                
+                $disabled = $valid ? '' : 'disabled';
+                $tooltip = $valid ? 'Confirm PES Email details' : "Missing $missing";
             
-            $disabled = $valid ? '' : 'disabled';
-            $tooltip = $valid ? 'Confirm PES Email details' : "Missing $missing";
             
+                $pesStatusWithButton.= "<button type='button' class='btn btn-default btn-xs btnSendPesEmail accessRestrict accessPmo accessFm' ";
+                $pesStatusWithButton.= "aria-label='Left Align' ";
+                $pesStatusWithButton.= " data-emailaddress='$emailAddress' ";
+                $pesStatusWithButton.= " data-firstname='$firstName' ";
+                $pesStatusWithButton.= " data-lastname='$lastName' ";
+                $pesStatusWithButton.= " data-country='$country' ";
+                $pesStatusWithButton.= " data-openseat='$openseat' ";
+                $pesStatusWithButton.= " data-toggle='tooltip' data-placement='top' title='$tooltip'";
+                $pesStatusWithButton.= " $disabled  ";
+                $pesStatusWithButton.= " > ";
+                $pesStatusWithButton.= "<span class='glyphicon glyphicon-send ' aria-hidden='true' ></span>";
             
-            $pesStatusWithButton.= "<button type='button' class='btn btn-default btn-xs btnSendPesEmail accessRestrict accessPmo accessFm' ";
-            $pesStatusWithButton.= "aria-label='Left Align' ";
-            $pesStatusWithButton.= " data-emailaddress='$emailAddress' ";
-            $pesStatusWithButton.= " data-firstname='$firstName' ";
-            $pesStatusWithButton.= " data-lastname='$lastName' ";
-            $pesStatusWithButton.= " data-country='$country' ";
-            $pesStatusWithButton.= " data-openseat='$openseat' ";
-            $pesStatusWithButton.= " data-toggle='tooltip' data-placement='top' title='$tooltip'";
-            $pesStatusWithButton.= " $disabled  ";
-            $pesStatusWithButton.= " > ";
-            $pesStatusWithButton.= "<span class='glyphicon glyphicon-send ' aria-hidden='true' ></span>";
-            
-            $pesStatusWithButton.= "</button>&nbsp;";
+                $pesStatusWithButton.= "</button>&nbsp;";
             case $status == personRecord::PES_STATUS_REQUESTED && $_SESSION['isPes'] :
             case $status == personRecord::PES_STATUS_CLEARED_PERSONAL && $_SESSION['isPes'] :
             case $status == personRecord::PES_STATUS_CLEARED && $_SESSION['isPes'] :
@@ -1248,19 +1257,19 @@ class personTable extends DbTable {
             case $status == personRecord::PES_STATUS_REMOVED && $_SESSION['isPes'] :
             case $status == personRecord::PES_STATUS_PROVISIONAL && $_SESSION['isPes'] :
             case $status == personRecord::PES_STATUS_TBD && $_SESSION['isPes'] :
-            $pesStatusWithButton.= "<button type='button' class='btn btn-default btn-xs btnPesStatus' aria-label='Left Align' ";
-            $pesStatusWithButton.= " data-cnum='" .$cnum . "' ";
-            $pesStatusWithButton.= " data-notesid='" . $notesId . "' ";
-            $pesStatusWithButton.= " data-email='" . $email . "' ";
-            $pesStatusWithButton.= " data-pesdaterequested='" .trim($row['PES_DATE_REQUESTED']) . "' ";
-            $pesStatusWithButton.= " data-pesrequestor='" .trim($row['PES_REQUESTOR']) . "' ";
-            $pesStatusWithButton.= " data-pesstatus='" .$status . "' ";
-            $pesStatusWithButton.= array_key_exists('PASSPORT_FIRST_NAME', $row) ?  " data-passportfirst='" .$passportFirst . "' " : null;
-            $pesStatusWithButton.= array_key_exists('PASSPORT_SURNAME', $row) ? " data-passportsurname='" .$passportSurname . "' " : null;
-            $pesStatusWithButton.= " > ";
-            $pesStatusWithButton.= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
-            $pesStatusWithButton.= "</button>";
-            break;
+                $pesStatusWithButton.= "<button type='button' class='btn btn-default btn-xs btnPesStatus' aria-label='Left Align' ";
+                $pesStatusWithButton.= " data-cnum='" .$cnum . "' ";
+                $pesStatusWithButton.= " data-notesid='" . $notesId . "' ";
+                $pesStatusWithButton.= " data-email='" . $email . "' ";
+                $pesStatusWithButton.= " data-pesdaterequested='" .trim($row['PES_DATE_REQUESTED']) . "' ";
+                $pesStatusWithButton.= " data-pesrequestor='" .trim($row['PES_REQUESTOR']) . "' ";
+                $pesStatusWithButton.= " data-pesstatus='" .$status . "' ";
+                $pesStatusWithButton.= array_key_exists('PASSPORT_FIRST_NAME', $row) ?  " data-passportfirst='" .$passportFirst . "' " : null;
+                $pesStatusWithButton.= array_key_exists('PASSPORT_SURNAME', $row) ? " data-passportsurname='" .$passportSurname . "' " : null;
+                $pesStatusWithButton.= " > ";
+                $pesStatusWithButton.= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
+                $pesStatusWithButton.= "</button>";
+                break;
             default:            
                 break;
         }
