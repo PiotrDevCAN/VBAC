@@ -27,30 +27,30 @@ $rsaTokenValidated=true; // If they've supplied RSA Token we will validate and s
 $callSignIdValidated = true;
 $cnumValidated = true;
 
-if(isset($_POST['CNUM'])){
+if(isset($_REQUEST['CNUM'])){
     $activePeople = $personTable->activePersonPredicate();
-    $cnumArray = $loader->load('CNUM',allTables::$PERSON, $activePeople . " AND (CNUM='" . db2_escape_string(trim($_POST['CNUM'])) . "') ");    
-    $cnumValidated = isset($cnumArray[trim($_POST['CNUM'])]); 
+    $cnumArray = $loader->load('CNUM',allTables::$PERSON, $activePeople . " AND (CNUM='" . db2_escape_string(trim($_REQUEST['CNUM'])) . "') ");    
+    $cnumValidated = isset($cnumArray[trim($_REQUEST['CNUM'])]); 
 } else {
     $cnumValidated = false;
 }
 
-if(isset($_POST['RSA_TOKEN'])){
+if(isset($_REQUEST['RSA_TOKEN'])){
     $rsaTokenLength = (int)$personTable->getColumnLength('RSA_TOKEN');
-    $validRsaTokenLength = (strlen(trim($_POST['RSA_TOKEN']))==$rsaTokenLength);
+    $validRsaTokenLength = (strlen(trim($_REQUEST['RSA_TOKEN']))==$rsaTokenLength);
     
     $allRsaToken = $loader->load('RSA_TOKEN',allTables::$PERSON);
-    $duplicateRsaToken = isset($allRsaToken[trim($_POST['RSA_TOKEN'])]);
+    $duplicateRsaToken = isset($allRsaToken[trim($_REQUEST['RSA_TOKEN'])]);
 
     $rsaTokenValidated = ($validRsaTokenLength && !$duplicateRsaToken);   
 }
 
-if(isset($_POST['CALLSIGN_ID'])){
+if(isset($_REQUEST['CALLSIGN_ID'])){
     $callSignIdLength = (int)$personTable->getColumnLength('CALLSIGN_ID');
-    $validCallSignIdLength = (strlen(trim($_POST['CALLSIGN_ID']))==$callSignIdLength);
+    $validCallSignIdLength = (strlen(trim($_REQUEST['CALLSIGN_ID']))==$callSignIdLength);
     
     $allCallSIgnId = $loader->load('CALLSIGN_ID',allTables::$PERSON);
-    $duplicateCallSignId = isset($allCallSIgnId[trim($_POST['CALLSIGN_ID'])]);
+    $duplicateCallSignId = isset($allCallSIgnId[trim($_REQUEST['CALLSIGN_ID'])]);
     
     $callSignIdValidated = ($validCallSignIdLength && !$duplicateCallSignId);
 }
@@ -70,13 +70,13 @@ if( !$rsaTokenValidated or !$callSignIdValidated or !$cnumValidated ){
         $response['messages'].= !$validCallSignIdLength ? " Call Sign ID supplied is not $callSignIdLength bytes long": null;
     } 
     if(!$cnumValidated){
-        $response['messages'].= !isset($_POST['CNUM']) ? " No CNUM parameter passed" : null;
-        if(isset($_POST['CNUM'])){
-            $response['messages'].= !isset($cnumArray[$_POST['CNUM']]) ? " CNUM not found as an 'active' person in the PERSON table " : null;
+        $response['messages'].= !isset($_REQUEST['CNUM']) ? " No CNUM parameter passed" : null;
+        if(isset($_REQUEST['CNUM'])){
+            $response['messages'].= !isset($cnumArray[$_REQUEST['CNUM']]) ? " CNUM not found as an 'active' person in the PERSON table " : null;
         }
     }
     
-    $response['parameters'] = print_r($_POST,true);
+    $response['parameters'] = print_r($_REQUEST,true);
     error_log('Invalid Parameters provided :' . json_encode($response , JSON_NUMERIC_CHECK));
     http_response_code(422);
     echo json_encode($response);
@@ -87,10 +87,10 @@ if( !$rsaTokenValidated or !$callSignIdValidated or !$cnumValidated ){
 
 $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON ;    
 $sql.= " SET ";
-$sql.= isset($_POST['RSA_TOKEN']) ? " RSA_TOKEN='" . db2_escape_string(trim($_POST['RSA_TOKEN'])) . "' " : null;
-$sql.= isset($_POST['RSA_TOKEN']) && isset($_POST['CALLSIGN_ID']) ? " , " : null;
-$sql.= isset($_POST['CALLSIGN_ID']) ? " CALLSIGN_ID='" .  db2_escape_string(trim($_POST['CALLSIGN_ID'])) . "' " : null;
-$sql.= " WHERE CNUM='" . db2_escape_string($_POST['CNUM']) . "' ";
+$sql.= isset($_REQUEST['RSA_TOKEN']) ? " RSA_TOKEN='" . db2_escape_string(trim($_REQUEST['RSA_TOKEN'])) . "' " : null;
+$sql.= isset($_REQUEST['RSA_TOKEN']) && isset($_REQUEST['CALLSIGN_ID']) ? " , " : null;
+$sql.= isset($_REQUEST['CALLSIGN_ID']) ? " CALLSIGN_ID='" .  db2_escape_string(trim($_REQUEST['CALLSIGN_ID'])) . "' " : null;
+$sql.= " WHERE CNUM='" . db2_escape_string($_REQUEST['CNUM']) . "' ";
   
 $rs = db2_exec($_SESSION['conn'], $sql);
     
