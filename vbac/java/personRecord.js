@@ -327,12 +327,23 @@ function personRecord() {
 		           if(resultObj.initiated==true){
 		        	   var message = "<div class=panel-heading><h3 class=panel-title>Success</h3>";
 		               message += "<br/><h4>Offboarding has been initiated</h4></br>";
+		               var panelclass = 'panel-success';
+		               if(resultObj.success!=true){
+		            	   message += "<br/>But a problem was encountered details follow :";
+		            	   message += resultObj.messages;
+		            	   var panelclass = 'panel-warning';
+		               }
 		               $('#confirmOffboardingModal  .panel').html(message);
-		               $('#confirmOffboardingModal  .panel').addClass('panel-success');
-		               $('#confirmOffboardingModal  .panel').removeClass('panel-danger');
+		               $('#confirmOffboardingModal  .panel').removeClass('panel-danger').removeClass=('panel-warning').removeClass('panel-success');
+		               $('#confirmOffboardingModal  .panel').addClass(panelclass);
+		               
 		             } else {
 			           var message = "<div class=panel-heading><h3 class=panel-title>Failure</h3>";
 			           message += "<br/><h4>Offboarding has <b>NOT</b> been initiated</h4></br>";
+		               if(resultObj.success!=true){
+		            	   message += "<br/>Other problems were also encountered details follow :";
+		            	   message += resultObj.messages;
+		               }			           
 		               $('#confirmOffboardingModal  .panel').html(message);
 		               $('#confirmOffboardingModal  .panel').addClass('panel-danger');
 		               $('#confirmOffboardingModal  .panel').removeClass('panel-success');
