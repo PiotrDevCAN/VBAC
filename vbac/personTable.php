@@ -29,6 +29,16 @@ class personTable extends DbTable {
     const PORTAL_PRE_BOARDER_INCLUDE = 'include';
     const PORTAL_PRE_BOARDER_WITH_LINKED = 'withLinked';
     
+    private static $revalStatusChangeEmail = 'Functional Manager,' 
+                                           . '<br/>You have been identified from VBAC as being the functional manager of :  &&leaversNotesid&&'
+                                           . '<br/>This is to inform you that their Revalidation Status has been set to : &&revalidationStatus&&'
+                                           . '<br/>This status means : &&statusDescription&&'
+                                           . '<br/>If you feel this is an error, please contact your local PMO Team ';                            
+    private static $revalStatusChangeEmailPattern = array('/&&leaversNotesid&&/','/&&revalidationStatus&&/','/&&statusDescription&&/');
+    
+    
+    
+    
     function __construct($table,$pwd=null,$log=true){
         $this->slack = new slack();
         parent::__construct($table,$pwd,$log);
@@ -890,6 +900,10 @@ class personTable extends DbTable {
                 DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
                 return false;
             }
+            
+            
+            $this->notifyFmOfRevalStatusChange($cnum, personRecord::REVALIDATED_OFFBOARDING);            
+            
             AuditTable::audit("CNUM: $cnum  has been flagged as :" . personRecord::REVALIDATED_OFFBOARDING,AuditTable::RECORD_TYPE_AUDIT);
             return true;
         }
@@ -908,6 +922,8 @@ class personTable extends DbTable {
                 DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
                 return false;
             }
+            
+            $this->notifyFmOfRevalStatusChange($cnum, personRecord::REVALIDATED_OFFBOARDED);            
             AuditTable::audit("CNUM: $cnum  has been flagged as :" . personRecord::REVALIDATED_OFFBOARDED,AuditTable::RECORD_TYPE_AUDIT);
             return true;
         }
@@ -926,6 +942,10 @@ class personTable extends DbTable {
                 DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
                 return false;
             }
+            
+            $this->notifyFmOfRevalStatusChange($cnum, 'Offboarding Stopped');
+            
+            
             AuditTable::audit("CNUM: $cnum  has been been STOPPED from Offboarding",AuditTable::RECORD_TYPE_AUDIT);
             return true;
         }
@@ -944,10 +964,54 @@ class personTable extends DbTable {
                 DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
                 return false;
             }
+            
+            $this->notifyFmOfRevalStatusChange($cnum, 'Offboarded Reversed');
             AuditTable::audit("CNUM: $cnum  has been been REVERSED from Offboarded",AuditTable::RECORD_TYPE_AUDIT);
             return true;
         }
 
+    }
+    
+    function notifyFmOfRevalStatusChange($employeeCnum, $revalidationStatus){
+        $this->loader = new Loader();
+        $empsFm = $this->loader->loadIndexed('FM_CNUM','CNUM',allTables::$PERSON," CNUM='" . db2_escape_string($employeeCnum) . "' ");
+        $empsNotesid = $this->loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON," CNUM='" . db2_escape_string($employeeCnum) . "' ");
+        $fmCnum = !empty($empsFm[$employeeCnum]) ? $empsFm[$employeeCnum] : false;
+        
+        
+        if($fmCnum){
+            $fmsEmail = $this->loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON," CNUM='" . db2_escape_string($fmCnum) . "' ");
+            $fmsEmailAddress = !empty($fmsEmail[$fmCnum]) ? $fmsEmail[$fmCnum] : false;
+            if(!$fmsEmailAddress){
+                throw new \Exception("Unable to find email address for Functional Manager for $employeeCnum");
+            }
+            switch ($revalidationStatus){
+                case personRecord::REVALIDATED_LEAVER:
+                    $statusDescription = " The employee's cnum has not been found in Bluepages, this is interpretted as meaning they are no longer an IBM Employee, the offboarding process will be initiated.";
+                    break;
+                case personRecord::REVALIDATED_OFFBOARDING:
+                    $statusDescription = " The offboarding process has been initiated for your employee.";
+                    break;
+                case personRecord::REVALIDATED_OFFBOARDED:
+                    $statusDescription = "The individual has been offboarded from the account.";
+                default:
+                    $statusDescription =" Status not recognised!!";
+            }
+            
+            //array('/&&leaversNotesid&&/','/&&revalidationStatus&&/','/&&statusDescription&&/');
+            $replacements = array($empsNotesid, $revalidationStatus, $statusDescription);
+            $message = preg_replace(self::$revalStatusChangeEmailPattern, $replacements, self::$revalStatusChangeEmail);
+            
+            \itdq\BlueMail::send_mail($fmsEmailAddress, "vBAC Revalidation Status Change Notification", $message, 'vbacNoReply@uk.ibm.com');
+            
+            
+
+        } else {
+            throw new \Exception("Unable to find Functional Manager for $employeeCnum");
+        }
+        
+        // ('FM_CNUM','CNUM');
+        
     }
 
 

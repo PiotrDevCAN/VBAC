@@ -632,4 +632,21 @@ class pesTrackerTable extends DbTable{
         
         return true;
     }
+    
+    
+    function changeCnum($fromCnum,$toCnum){
+        $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql.= " SET CNUM='" . db2_escape_string(trim($fromCnum)) . "' ";
+        $sql.= " WHERE CNUM='" . db2_escape_string(trim($toCnum)) . "' ";
+       
+        $rs = db2_exec($_SESSION['conn'], $sql);
+        
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__,__METHOD__, $sql);
+        }
+        
+        return;
+        
+     }
+    
 }
