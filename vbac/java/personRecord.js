@@ -334,7 +334,7 @@ function personRecord() {
 		            	   var panelclass = 'panel-warning';
 		               }
 		               $('#confirmOffboardingModal  .panel').html(message);
-		               $('#confirmOffboardingModal  .panel').removeClass('panel-danger').removeClass=('panel-warning').removeClass('panel-success');
+		               $('#confirmOffboardingModal  .panel').removeClass('panel-danger').removeClass('panel-warning').removeClass('panel-success');
 		               $('#confirmOffboardingModal  .panel').addClass(panelclass);
 		               
 		             } else {
@@ -344,9 +344,9 @@ function personRecord() {
 		            	   message += "<br/>Other problems were also encountered details follow :";
 		            	   message += resultObj.messages;
 		               }			           
-		               $('#confirmOffboardingModal  .panel').html(message);
-		               $('#confirmOffboardingModal  .panel').addClass('panel-danger');
-		               $('#confirmOffboardingModal  .panel').removeClass('panel-success');
+		               $('#confirmOffboardingModal  .panel').html(message);		
+		               $('#confirmOffboardingModal  .panel').removeClass('panel-danger').removeClass('panel-warning').removeClass('panel-success');
+		               $('#confirmOffboardingModal  .panel').addClass('panel-danger');		               
 		             };
                 	 $('#confirmOffboardingModal').modal('show');
   		    	   personRecord.table.ajax.reload();
