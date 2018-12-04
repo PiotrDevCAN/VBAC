@@ -7,7 +7,7 @@ use itdq\DbTable;
 use itdq\AuditTable;
 
 ob_start();
-AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_REQUEST,true) . "</b>",AuditTable::RECORD_TYPE_DETAILS);
+AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_REQUEST,true) . "</pre>",AuditTable::RECORD_TYPE_DETAILS);
 
 if($_REQUEST['token']!= $token){
     return;
@@ -23,8 +23,8 @@ if($_REQUEST['token']!= $token){
 $personTable = new personTable(allTables::$PERSON);
 $loader = new Loader();
 
-$rsaTokenValidated=true; // If they've supplied RSA Token we will validate and set this BOOL as appropriate. This covers us if it's NOT supplied.
-$callSignIdValidated = true;
+$rsaTokenSupplied=true; // If they've supplied RSA Token we will validate and set this BOOL as appropriate. This covers us if it's NOT supplied.
+$callSignIdSupplied = true;
 $cnumValidated = true;
 
 if(isset($_REQUEST['CNUM'])){
@@ -42,7 +42,7 @@ if(isset($_REQUEST['RSA_TOKEN'])){
     $allRsaToken = $loader->load('RSA_TOKEN',allTables::$PERSON);
     $duplicateRsaToken = isset($allRsaToken[trim($_REQUEST['RSA_TOKEN'])]);
 
-    $rsaTokenValidated = ($validRsaTokenLength && !$duplicateRsaToken);   
+    $rsaTokenSupplied = ($validRsaTokenLength && !$duplicateRsaToken);   
 }
 
 if(isset($_REQUEST['CALLSIGN_ID'])){
@@ -52,20 +52,20 @@ if(isset($_REQUEST['CALLSIGN_ID'])){
     $allCallSIgnId = $loader->load('CALLSIGN_ID',allTables::$PERSON);
     $duplicateCallSignId = isset($allCallSIgnId[trim($_REQUEST['CALLSIGN_ID'])]);
     
-    $callSignIdValidated = ($validCallSignIdLength && !$duplicateCallSignId);
+    $callSignIdSupplied = ($validCallSignIdLength && !$duplicateCallSignId);
 }
 
 
-if( !$rsaTokenValidated or !$callSignIdValidated or !$cnumValidated ){
+if( !$rsaTokenSupplied or !$callSignIdSupplied or !$cnumValidated ){
     ob_clean();
     $response = array();
     $response['success'] = 'false';
     $response['messages'] = 'Invalid Parameters provided. Details follow:';    
-    if(!$rsaTokenValidated){
+    if(!$rsaTokenSupplied){
         $response['messages'].= $duplicateRsaToken ? " RSA Token is already allocated" : null;
         $response['messages'].= !$validRsaTokenLength ? " RSA Token supplied is not $rsaTokenLength bytes long": null;
     } 
-    if(!$callSignIdValidated){
+    if(!$callSignIdSupplied){
         $response['messages'].= $duplicateCallSignId ? " Call Sign ID is already allocated" : null;
         $response['messages'].= !$validCallSignIdLength ? " Call Sign ID supplied is not $callSignIdLength bytes long": null;
     } 
