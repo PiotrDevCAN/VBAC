@@ -643,9 +643,10 @@ class pesTrackerTable extends DbTable{
         
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__,__METHOD__, $sql);
+            return false;
         }
         
-        return;
+        return $rs;
         
      }
     

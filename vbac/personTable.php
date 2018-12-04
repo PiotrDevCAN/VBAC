@@ -1281,6 +1281,62 @@ class personTable extends DbTable {
         return $pesStatusWithButton;
         
     }
+    
+    
+    function linkPreBoarderToIbmer($preboarderCnum, $ibmerCnum){
+        
+        db2_autocommit($_SESSION[conn],DB2_AUTOCOMMIT_OFF);
+        
+        $preBoarder = new personRecord();
+        $preBoarder->setFromArray(array('CNUM'=>$preboarderCnum));
+        $preBoarderData = $this->getFromDb($preBoarder);
+        
+        $preboarderPesStatus = $preBoarderData['PES_STATUS'];
+        $preboarderPesStatusD = $preBoarderData['PES_STATUS_DETAILS'];
+        $preBoarderPesEvidence = $preBoarderData['PES_DATE_EVIDENCE'];
+        
+        $ibmer = new personRecord();
+        $ibmer->setFromArray(array('CNUM'=>$ibmerCnum));
+        $ibmerData = $this->getFromDb($ibmer);
+        $ibmerData['PRE_BOARDED'] = $preboarderCnum;        
+        
+        $ibmerPesStatus = $ibmerData['PES_STATUS'];
+        $ibmerPesStatusD = $ibmerData['PES_STATUS_DETAILS'];
+        
+        if(trim($ibmerPesStatus) == personRecord::PES_STATUS_INITIATED || trim($ibmerPesStatus) == personRecord::PES_STATUS_REQUESTED ){
+            $ibmerData['PES_STATUS'] = $preboarderPesStatus;
+            $ibmerData['PES_STATUS_DETAILS'] = $ibmerPesStatusD . ":" . $preboarderPesStatusD;
+            $ibmerData['PES_DATE_EVIDENCE'] = $preBoarderPesEvidence;
+        }
+        $ibmer->setFromArray($ibmerData);
+        if(!$this->update($ibmer)){
+            db2_rollback($_SESSION['conn']);
+            throw new \Exception("Failed to update IBMer record for CNUM: $ibmerCnum when linking to $preboarderCnum");
+            return false;
+        }
+        
+        $preBoarderData['PES_STATUS_DETAILS'] = 'Boarded as ' . $ibmerData['CNUM'] . ":" . $ibmerData['NOTES_ID'] . " Status was:" . $preboarderPesStatus;
+        $preBoarderData['EMAIL_ADDRESS'] = str_replace('ibm.com', '###.com', strtolower($preBoarderData['EMAIL_ADDRESS']));
+        $preBoarder->setFromArray($preBoarderData);
+        if(!$this->update($preBoarder)){
+            db2_rollback($_SESSION['conn']);
+            throw new \Exception("Failed to update Preboarder record for CNUM: $preboarderCnum when linking to $ibmerCnum");
+            return false;   
+        }
+        
+        
+        $pesTrackerTable = new pesTrackerTable(allTables::$PES_TRACKER);
+        if(!$pesTrackerTable->changeCnum($preboarderCnum,$ibmerCnum)){
+            db2_rollback($_SESSION['conn']);
+            throw new \Exception("Failed amending PES TRACKER Table to reflect that pre-boarder($preboarderCnum has been boarded as ($ibmerCnum) ");
+            return false;
+        }
+        
+        db2_commit($_SESSION['conn']);
+        
+        db2_autocommit($_SESSION[conn],DB2_AUTOCOMMIT_ON);        
+   
+    }
 
 
 
