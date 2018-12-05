@@ -43,5 +43,7 @@ if($rs){
     echo json_encode($errorMessage);
 }
 
+$employees = count($employees)==1 ? $employees[0] : $employees;
+
 ob_clean();
 echo json_encode($employees);
