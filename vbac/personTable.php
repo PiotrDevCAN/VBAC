@@ -1285,7 +1285,7 @@ class personTable extends DbTable {
     
     function linkPreBoarderToIbmer($preboarderCnum, $ibmerCnum){
         
-        db2_autocommit($_SESSION[conn],DB2_AUTOCOMMIT_OFF);
+        db2_autocommit($_SESSION['conn'],DB2_AUTOCOMMIT_OFF);
         
         $preBoarder = new personRecord();
         $preBoarder->setFromArray(array('CNUM'=>$preboarderCnum));
@@ -1303,12 +1303,15 @@ class personTable extends DbTable {
         $ibmerPesStatus = $ibmerData['PES_STATUS'];
         $ibmerPesStatusD = $ibmerData['PES_STATUS_DETAILS'];
         
-        if(trim($ibmerPesStatus) == personRecord::PES_STATUS_INITIATED || trim($ibmerPesStatus) == personRecord::PES_STATUS_REQUESTED ){
+        if(trim($ibmerPesStatus) == personRecord::PES_STATUS_INITIATED 
+                                          || trim($ibmerPesStatus) == personRecord::PES_STATUS_REQUESTED 
+                                          || trim($ibmerPesStatus) == personRecord::PES_STATUS_NOT_REQUESTED ){            
             $ibmerData['PES_STATUS'] = $preboarderPesStatus;
             $ibmerData['PES_STATUS_DETAILS'] = $ibmerPesStatusD . ":" . $preboarderPesStatusD;
             $ibmerData['PES_DATE_EVIDENCE'] = $preBoarderPesEvidence;
         }
         $ibmer->setFromArray($ibmerData);
+        
         if(!$this->update($ibmer)){
             db2_rollback($_SESSION['conn']);
             throw new \Exception("Failed to update IBMer record for CNUM: $ibmerCnum when linking to $preboarderCnum");
@@ -1334,7 +1337,7 @@ class personTable extends DbTable {
         
         db2_commit($_SESSION['conn']);
         
-        db2_autocommit($_SESSION[conn],DB2_AUTOCOMMIT_ON);        
+        db2_autocommit($_SESSION['conn'],DB2_AUTOCOMMIT_ON);        
    
     }
 

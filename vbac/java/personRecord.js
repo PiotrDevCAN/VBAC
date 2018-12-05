@@ -898,31 +898,31 @@ function personRecord() {
             console.log(result);
             var resultObj = JSON.parse(result);
             if(resultObj.success==true){
-              $('#person_uid').val(resultObj.cnum);
-              var message = "<div class=panel-heading><h3 class=panel-title>Success</h3>" + resultObj.messages
-              message += resultObj.offboarding ? "<br/><h4>Offboarding has been initiated</h4></br>" : '';
-              $('#savingBoardingDetailsModal  .panel').html(message);
-
-              if(resultObj.offboarding){
-                  $('#savingBoardingDetailsModal  .panel').removeClass('panel-success');
-                  $('#savingBoardingDetailsModal  .panel').removeClass('panel-danger');
-                  $('#savingBoardingDetailsModal  .panel').addClass('panel-warning');
-              } else {
-                  $('#savingBoardingDetailsModal  .panel').addClass('panel-success');
-                  $('#savingBoardingDetailsModal  .panel').removeClass('panel-danger');
-                  $('#savingBoardingDetailsModal  .panel').removeClass('panel-warning');
-              }
-              $('#boardingForm :input').attr('disabled',true);
-              $('#saveBoarding').attr('disabled',true);
-              $('#initiatePes').attr('disabled',false);
+            	$('#person_uid').val(resultObj.cnum);
+            	var message = "<div class=panel-heading><h3 class=panel-title>Success</h3>" + resultObj.messages
+            	message += resultObj.offboarding ? "<br/><h4>Offboarding has been initiated</h4></br>" : '';
+            	$('#savingBoardingDetailsModal  .panel').html(message);
+            	
+            	if(resultObj.offboarding){
+            		$('#savingBoardingDetailsModal  .panel').removeClass('panel-success');
+            		$('#savingBoardingDetailsModal  .panel').removeClass('panel-danger');
+            		$('#savingBoardingDetailsModal  .panel').addClass('panel-warning');
+            	} else {
+            		$('#savingBoardingDetailsModal  .panel').addClass('panel-success');
+            		$('#savingBoardingDetailsModal  .panel').removeClass('panel-danger');
+            		$('#savingBoardingDetailsModal  .panel').removeClass('panel-warning');
+            	}
+            	$('#boardingForm :input').attr('disabled',true);
+            	$('#saveBoarding').attr('disabled',true);
+            	$('#initiatePes').attr('disabled',false);
             } else {
-              var message = "<div class=panel-heading><h3 class=panel-title>Error : Please inform vBAC Support</h3>" + resultObj.messages
-              $('#savingBoardingDetailsModal  .panel').html(message);
-              $('#savingBoardingDetailsModal  .panel').addClass('panel-danger');
-              $('#savingBoardingDetailsModal  .panel').removeClass('panel-success');
-              $('#savingBoardingDetailsModal  .panel').removeClass('panel-warning');
-              $('#saveBoarding').attr('disabled',false);
-              $('#initiatePes').attr('disabled',true);
+            	var message = "<div class=panel-heading><h3 class=panel-title>Error : Please inform vBAC Support</h3>" + resultObj.messages
+            	$('#savingBoardingDetailsModal  .panel').html(message);
+            	$('#savingBoardingDetailsModal  .panel').addClass('panel-danger');
+            	$('#savingBoardingDetailsModal  .panel').removeClass('panel-success');
+            	$('#savingBoardingDetailsModal  .panel').removeClass('panel-warning');
+            	$('#saveBoarding').attr('disabled',false);
+            	$('#initiatePes').attr('disabled',true);
             };
             $('#editPersonModal').modal('hide');
             $('#savingBoardingDetailsModal').modal('show');

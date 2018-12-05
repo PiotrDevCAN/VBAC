@@ -91,6 +91,15 @@ try {
         }
     } else {
        AuditTable::audit("Db2 Error in " . __FILE__ . " POST:" . print_r($_POST,true) , AuditTable::RECORD_TYPE_DETAILS);
+       if($saveRecordResult && $_POST['mode']=='Save'){
+           echo "Expecting to create a new record, we ended up UPDATING a record that already existed.";           
+       }
+       if((!$saveRecordResult && $_POST['mode']=='Update')){
+           echo "Expecting to update an existing record, we ended up INSERTING a new one";
+       }
+       
+       echo "saveRecordResult:";
+       var_dump($saveRecordResult);
        $success = false;
     }
 } catch (Exception $e) {
@@ -101,6 +110,7 @@ try {
 }
 
 $messages = ob_get_clean();
+
 $response = array('boarding'=>$_POST['boarding'], 'boardingIbmer'=>$boardingIbmer, 'employeetype'=>$_POST['EMPLOYEE_TYPE'],'pesstatus'=>$_POST['PES_STATUS'], 'success'=>$success,'messages'=>$messages,"saveRecord"=>$saveRecordResult,'cnum'=>$_POST['CNUM'], 'post'=>print_r($_POST,true),'sendWarning'=>print_r($timeToWarnPmo,true));
 ob_clean();
 echo json_encode($response);

@@ -636,18 +636,36 @@ class pesTrackerTable extends DbTable{
     
     function changeCnum($fromCnum,$toCnum){
         $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
-        $sql.= " SET CNUM='" . db2_escape_string(trim($fromCnum)) . "' ";
-        $sql.= " WHERE CNUM='" . db2_escape_string(trim($toCnum)) . "' ";
+        $sql.= " SET CNUM='" . db2_escape_string(trim($toCnum)) . "' ";
+        $sql.= " WHERE CNUM='" . db2_escape_string(trim($fromCnum)) . "' ";
        
         $rs = db2_exec($_SESSION['conn'], $sql);
-        
+         
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__,__METHOD__, $sql);
             return false;
         }
         
-        return $rs;
+        $sql = " DELETE FROM  " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql.= " WHERE CNUM='" . db2_escape_string(trim($fromCnum)) . "' ";
         
+        $rs = db2_exec($_SESSION['conn'], $sql);
+
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__,__METHOD__, $sql);
+            return false;
+        }
+        
+        $loader = new Loader();
+        $emailAddress = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON," CNUM in('" . db2_escape_string(trim($fromCnum)), "','" . db2_escape_string(trim($toCnum)) . "') ");
+        
+        var_dump($emailAddress);
+        die('here');
+        
+        $this->savePesComment($toCnum, "Serial Number changed from $fromCnum to $toCnum");        
+        $this->savePesComment($toCnum, "Email Address changed from $emailAddress[$fromCnum] to $emailAddress[$toCnum] ");
+        
+        return true;        
      }
     
 }
