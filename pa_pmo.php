@@ -34,6 +34,10 @@ $person->confirmSendPesEmailModal();
 
 <script>
 $(document).ready(function(){
+
+	$('[data-toggle="tooltip"]').tooltip();
+
+	
 	var person = new personRecord();
 	person.initialisePersonTable();
 	person.listenForReportPes();
@@ -62,6 +66,7 @@ $(document).ready(function(){
 	person.listenForSetPmoStatus();
 	person.listenforSendPesEmail();
 	person.listenforConfirmSendPesEmail();
+	person.listenForbtnTogglePesTrackerStatusDetails();
 	
 });
 

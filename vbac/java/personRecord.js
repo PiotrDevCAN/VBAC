@@ -1193,6 +1193,13 @@ function personRecord() {
           } );
       } );
   },
+
+  this.listenForbtnTogglePesTrackerStatusDetails = function(){
+	  $(document).on('click','.btnTogglePesTrackerStatusDetails', function(e){  
+		  $(this).parent().children('.pesProcessStatusDisplay').toggle();
+
+      });
+  }, 
   
   
   this.listenForBtnTransfer = function(){
@@ -1382,10 +1389,6 @@ function personRecord() {
           $('#savingBoardingDetailsModal').on('hidden.bs.modal', function () { // When they close the modal this time, reload the page.
             $('#savingBoardingDetailsModal').off('hidden.bs.modal');  // only do this once.
             var boardingForm = $('#boardingForm');
-            console.log(boardingForm);
-
-            console.log(personRecord.table);
-
             // location.reload();
           });
           if(resultObj.success==true){
