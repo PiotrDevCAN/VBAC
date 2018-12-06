@@ -164,8 +164,12 @@ class personTable extends DbTable {
         $predicate .= $preboadersAction==self::PORTAL_PRE_BOARDER_WITH_LINKED ? " AND ( PES_STATUS_DETAILS like 'Boarded as%' or PRE_BOARDED  is not  null) " : null;
         
         
-        $sql  = " SELECT * FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName ;
+        $sql  = " SELECT P.*, PT.PROCESSING_STATUS , PT.PROCESSING_STATUS_CHANGED ";
+        $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName . " as P ";
+        $sql .= " LEFT JOIN " .  $_SESSION['Db2Schema'] . "." . allTables::$PES_TRACKER . " as PT ";
+        $sql .= " ON PT.CNUM = P.CNUM ";
         $sql .= " WHERE " . $predicate;
+        
         $rs = db2_exec($_SESSION['conn'], $sql);
 
         if(!$rs){
@@ -179,6 +183,7 @@ class personTable extends DbTable {
                 $data[] = $rowWithButtonsAdded;
             }
         }
+       
         return $data;
     }
     
@@ -1277,7 +1282,16 @@ class personTable extends DbTable {
                 break;
             default:            
                 break;
+        }        
+        
+        if(isset($row['PROCESSING_STATUS']) && $row['PES_STATUS']== personRecord::PES_STATUS_INITIATED){
+            $pesStatusWithButton .= "<div class='alert alert-info text-center pesProcessStatusDisplay' role='alert' >";
+            ob_start();
+            \vbac\pesTrackerTable::formatProcessingStatusCell($row);
+            $pesStatusWithButton .= ob_get_clean();
+            $pesStatusWithButton .= "</div>";
         }
+        
         return $pesStatusWithButton;
         
     }
