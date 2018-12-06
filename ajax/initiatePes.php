@@ -3,6 +3,7 @@ use vbac\personTable;
 use vbac\allTables;
 use vbac\personRecord;
 use itdq\AuditTable;
+use vbac\pesTrackerTable;
 
 ob_start();
 
@@ -19,6 +20,10 @@ try {
     $person->setFromArray($personData);
     $person->sendPesRequest();
     $success = $person->setPesRequested();
+    
+    $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER);
+    $pesTracker->createNewTrackerRecord($_POST['cnum']);
+    
     echo $success ? "PES Check initiated" : "Problem Initiating PES check";
 } catch (Exception $e) {
     echo $e->getCode();
