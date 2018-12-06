@@ -926,7 +926,6 @@ function personRecord() {
             };
             $('#editPersonModal').modal('hide');
             $('#savingBoardingDetailsModal').modal('show');
-            console.log(typeof(personRecord.table));
             if(typeof(personRecord.table) != "undefined") {
               personRecord.table.ajax.reload();
             }
@@ -1352,7 +1351,7 @@ function personRecord() {
   this.listenForInitiatePesFromBoarding = function(){
     $(document).on('click','.btnPesInitiate', function(e){
       console.log('initiatePes PES from boarding');
-      $(".btnPesInitiate").addClass('spinning');
+      $(this).addClass('spinning');
       var cnum = $('#person_uid').val();
       var person = new personRecord;
       person.initiatePes(cnum);
@@ -1363,7 +1362,7 @@ function personRecord() {
     $(document).on('click','.btnPesInitiate', function(e){
     	$('#portalTitle').text('Person Portal - PES Report');
     	console.log('initiatePes PES from Portal');
-    	$(".btnPesInitiate").addClass('spinning');
+    	$(this).addClass('spinning');
     	console.log(this);
     	var cnum = $(this).data('cnum');
     	var person = new personRecord;
@@ -1404,10 +1403,11 @@ function personRecord() {
         $("#initiatePes").removeClass('spinning');
         $(".btnPesInitiate").removeClass('spinning');
         $('#initiatePes').attr('disabled',true);
-        personRecord.table.ajax.reload();
-
-        }
-      });
+        if(typeof(personRecord.table)!='undefined'){
+        	personRecord.table.ajax.reload();	
+        }      
+      }
+    });
   },
 
   this.listenForEditPerson = function(){

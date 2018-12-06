@@ -17,6 +17,7 @@ class pesTrackerTable extends DbTable{
     protected $preparedTrackerInsert;
     protected $preparedGetPesCommentStmt;
     protected $preparedProcessStatusUpdate;
+    protected $preparedGetProcessingStatusStmt;
     
     const PES_TRACKER_RECORDS_ACTIVE     = 'Active';
     const PES_TRACKER_RECORDS_NOT_ACTIVE = 'Not Active';
@@ -92,6 +93,7 @@ class pesTrackerTable extends DbTable{
         $sql.= " left join " . $_SESSION['Db2Schema'] . "." . \vbac\allTables::$PES_TRACKER . " as PT ";
         $sql.= " ON P.CNUM = PT.CNUM ";        
         $sql.= " WHERE 1=1 ";
+        $sql.= " and PT.CNUM is not null "; // it has a tracker record
         $sql.= " AND " . $pesStatusPredicate;
         
         $rs = db2_exec($_SESSION['conn'], $sql);
@@ -303,6 +305,24 @@ class pesTrackerTable extends DbTable{
         echo $processingStatus;?><br/><small><?=substr(trim($row['PROCESSING_STATUS_CHANGED']),0,10);?><br/><?=$age?></small><?php 
     }
     
+    function getProcessingStatusCell($cnum){
+        $preparedStmt = $this->preparedGetProcessingStatusStmt();
+        
+        $data = array($cnum);
+        $rs = db2_execute($preparedStmt,$data);
+        
+        if($rs){
+            $row = db2_fetch_assoc($preparedStmt);
+            ob_start();
+            self::formatProcessingStatusCell($row);
+            $cellContents = ob_get_clean();
+            return $cellContents;
+        }
+        return false;
+    }
+    
+    
+     
     static function getAlertClassForPesStage($pesStageValue=null){
         switch ($pesStageValue) {
             case 'Yes':
@@ -374,6 +394,22 @@ class pesTrackerTable extends DbTable{
          
          return $preparedStmt;
     }
+    
+    function prepareGetProcessingStatusStmt(){
+        if(isset($this->preparedGetProcessingStatusStmt)){
+            return $this->preparedGetProcessingStatusStmt;
+        }
+        
+        $sql = " SELECT PROCESSING_STATUS, PROCESSING_STATUS_CHANGED ";
+        $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql.= " WHERE CNUM=? ";
+        
+        $preparedStmt = db2_prepare($_SESSION['conn'], $sql);
+        
+        $this->preparedGetProcessingStatusStmt = $preparedStmt ? $preparedStmt : false;
+        return $this->preparedGetProcessingStatusStmt;        
+    }
+    
     
     function prepareProcessStatusUpdate(){
         if(isset($this->preparedProcessStatusUpdate )) {
@@ -638,7 +674,7 @@ class pesTrackerTable extends DbTable{
         $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
         $sql.= " SET CNUM='" . db2_escape_string(trim($toCnum)) . "' ";
         $sql.= " WHERE CNUM='" . db2_escape_string(trim($fromCnum)) . "' ";
-       
+        
         $rs = db2_exec($_SESSION['conn'], $sql);
          
         if(!$rs){
@@ -646,22 +682,21 @@ class pesTrackerTable extends DbTable{
             return false;
         }
         
-        $sql = " DELETE FROM  " . $_SESSION['Db2Schema'] . "." . $this->tableName;
-        $sql.= " WHERE CNUM='" . db2_escape_string(trim($fromCnum)) . "' ";
+        db2_commit($_SESSION['conn']);
         
-        $rs = db2_exec($_SESSION['conn'], $sql);
+//         $sql = " DELETE FROM  " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+//         $sql.= " WHERE CNUM='" . db2_escape_string(trim($fromCnum)) . "' ";
+        
+//         $rs = db2_exec($_SESSION['conn'], $sql);
 
-        if(!$rs){
-            DbTable::displayErrorMessage($rs, __CLASS__,__METHOD__, $sql);
-            return false;
-        }
+//         if(!$rs){
+//             DbTable::displayErrorMessage($rs, __CLASS__,__METHOD__, $sql);
+//             return false;
+//         }
         
         $loader = new Loader();
-        $emailAddress = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON," CNUM in('" . db2_escape_string(trim($fromCnum)), "','" . db2_escape_string(trim($toCnum)) . "') ");
-        
-        var_dump($emailAddress);
-        die('here');
-        
+        $emailAddress = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON," CNUM in('" . db2_escape_string(trim($fromCnum)) . "','" . db2_escape_string(trim($toCnum)) . "') ");
+ 
         $this->savePesComment($toCnum, "Serial Number changed from $fromCnum to $toCnum");        
         $this->savePesComment($toCnum, "Email Address changed from $emailAddress[$fromCnum] to $emailAddress[$toCnum] ");
         
