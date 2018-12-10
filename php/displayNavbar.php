@@ -26,12 +26,14 @@ $traceControl   = new NavbarOption('Trace Control','pi_traceControl.php','access
 $traceDelete    = new NavbarOption('Trace Deletion', 'pi_traceDelete.php','accessCdi');
 $revalidation   = new NavbarOption('Batch Reval','batchJobs/revalidate.php','accessCdi');
 $recheck        = new NavbarOption('Batch ReCheck','batchJobs/recheckPotentialLeavers.php','accessCdi');
+$cbn            = new NavbarOption('Initiate CBN','batchJobs/sendCbnEmail.php','accessCdi');
 $link           = new NavbarOption('Link IBMer to PreB','pi_linkIbmerToPreboarder.php','accessCdi');
 $emailDlp       = new NavbarOption('Email DLP','batchJobs/emailWorkflowTracker.php','accessCdi');
 $cdiAdmin->addOption($trace);
 $cdiAdmin->addOption($traceControl);
 $cdiAdmin->addOption($traceDelete);
 $cdiAdmin->addOption($revalidation);
+$cdiAdmin->addOption($cbn);
 $cdiAdmin->addOption($recheck);
 $cdiAdmin->addOption($link);
 $cdiAdmin->addOption($emailDlp);

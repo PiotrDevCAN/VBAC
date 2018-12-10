@@ -272,8 +272,16 @@ class personRecord extends DbRecord
         );
 
 
-    private static $cbnEmailBody = 'You are recorded in the vBAC tool, as a Functional Manager for one of more people. Please review the people assigned to you in vBAC and ensure it accurately reflects the current situation.
-You are able to amend the Functional Manager of people assigned to you but who now report to someone else. If you have people who are no longer working on the account, then please initiate Offboarding for them by amending their end date in vBac. If you are missing people that should be assigned to you, please contact their current FM to have them re-assigned to you';
+    private static $cbnEmailBody = "You are recorded in the <a href='&&host&&'>vBAC</a> tool, as a Functional Manager for one of more people.<h3>Please review the people assigned to you in vBAC and ensure the tool accurately reflects the current situation.</h3>"
+                                 . "<ul><li>If someone has moved to a new Functional Manager, you can amend their FM from the standard <a href='&&host&&/pa_pmo.php'>People Portal</a> Page. Using the Edit Icon in the Notes_ID column</li>"
+                                 . "<li>If you have people who are no longer working on the account, then please initiate Offboarding for them by amending their end date in <a href='&&host&&/pa_pmo.php'>vBac</a> (again this field is reached from the Edit Icon in the Notes Id Column)</li>"
+                                 . "<li>If you are missing people, first check if they've been boarded to the account using the <a href='&&host&&/pa_peopleFinder.php'>People Finder</a> screen</li>"
+                                 . "<li>If you find them, you can use that screen to transer them to yourself.(by clicking the Transfer Icon in the FM Column)</li>"
+                                 . "<li>If they need to be boarded, then please use the <a href='&&host&&/pb_onboard.php'>boarding screen</a></li></ul>";      
+
+    private static $cbnEmailPattern = array('/&&host&&/'); 
+                                 
+                                 
 
     private static  $lobValue = array('GTS','GBS','IMI','Cloud','Security','Other');
 
@@ -1436,8 +1444,10 @@ You are able to amend the Functional Manager of people assigned to you but who n
         $loader = new Loader();
         $allFm = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON, " UPPER(FM_MANAGER_FLAG) like 'Y%' ");
         $emailableFmLists = array_chunk($allFm, 75);
+        $replacements = array($_SERVER['HTTP_HOST']);
+        $emailMessage = preg_replace(self::$cbnEmailPattern, $replacements, self::$cbnEmailBody);
         foreach ($emailableFmLists as $groupOfFmEmail){
-            \itdq\BlueMail::send_mail(self::$pmoTaskId, 'CBN Initiation Request' , self::$cbnEmailBody, 'vbacNoReply@uk.ibm.com',array(),$groupOfFmEmail);
+            \itdq\BlueMail::send_mail(self::$pmoTaskId, 'CBN Initiation Request' , $emailMessage, 'vbacNoReply@uk.ibm.com',array(),$groupOfFmEmail);
         }
    }
    
