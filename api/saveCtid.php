@@ -20,6 +20,9 @@ $loader = new Loader();
 
 $ctidTokenSupplied = false; // If they've supplied CT ID we will validate and set this BOOL as appropriate. This covers us if it's NOT supplied.
 $cnumValidated = false;
+$duplicateCtid = false;
+$validCtidLength = false;
+$ctidLength = 0;
 
 if(isset($_REQUEST['CNUM'])){
     $activePeople = $personTable->activePersonPredicate();
@@ -29,25 +32,32 @@ if(isset($_REQUEST['CNUM'])){
     $cnumValidated = false;
 }
 
-if(isset($_REQUEST['CT_ID'])){
-    $ctidLength = (int)$personTable->getColumnLength('CT_ID');
-    $validCtidLength = (strlen(trim($_REQUEST['CT_ID']))<=$ctidLength);
-    
+$ctidLength = (int)$personTable->getColumnLength('CT_ID');
+if(isset($_REQUEST['CT_ID'])){  
+    $ctidTokenSupplied = true;
+    $validCtidLength = !empty($_REQUEST['CT_ID']) ? (strlen(trim($_REQUEST['CT_ID']))<=$ctidLength) : false;    
     $allCtidToken = $loader->load('CT_ID',allTables::$PERSON);
     $duplicateCtid = isset($allCtidToken[trim($_REQUEST['CT_ID'])]);
     
-    $ctidTokenSupplied = ($validCtidLength && !$duplicateCtid);
+    $ctidValidated = ($validCtidLength && !$duplicateCtid);
 }
 
-if( !$ctidTokenSupplied or !$cnumValidated ){
+if( !$ctidValidated or !$cnumValidated ){
     ob_clean();
     $response = array();
     $response['success'] = 'false';
     $response['messages'] = 'Invalid Parameters provided. Details follow:';
+    
     if(!$ctidTokenSupplied){
-        $response['messages'].= $duplicateCtid ? " CT ID is already allocated" : null;
-        $response['messages'].= !$validCtidLength ? " CT ID supplied is too long(>$ctidLength)": null;
+        $response['messages'].= " CT_ID not supplied";
+    }    
+    if($duplicateCtid){
+        $response['messages'].=" CT ID is already allocated";
     }
+    if($ctidTokenSupplied && !$validCtidLength){
+        $response['messages'].=" CT ID supplied is the wrong length";
+    }
+    
     if(!$cnumValidated){
         $response['messages'].= !isset($_REQUEST['CNUM']) ? " No CNUM parameter passed" : null;
         if(isset($_REQUEST['CNUM'])){
