@@ -13,8 +13,10 @@ use vbac\personRecord;
 <button id='reportOffboarding' 	class='btn btn-primary btn-sm '>Offboarding Report</button>
 <button id='reportPes'    		class='btn btn-primary btn-sm '>PES Report</button>
 <button id='reportRevalidation' class='btn btn-primary btn-sm '>Revalidation Report</button>
+<button id='reportMgrsCbn'      class='btn btn-primary btn-sm '>Mgrs CBN Report</button>
 <button id='reportAll'  		class='btn btn-primary btn-sm '>Show all Columns</button>
 &nbsp;
+<button id='reportRemoveOffb' class='btn btn-warning btn-sm '>Remove Offboarded/ing</button>
 <button id='reportReload'  		class='btn btn-warning btn-sm '>Reload Data</button>
 <button id='reportReset'  		class='btn btn-warning btn-sm '>Reset</button>
 <div id='personDatabaseDiv' class='portalDiv'>
@@ -44,6 +46,8 @@ $(document).ready(function(){
 	person.listenForReportAction();
 	person.listenForReportRevalidation();
 	person.listenForReportOffboarding();
+	person.listenForReportMgrsCbn();
+	person.listenForReportRemoveOffb();
 	person.listenForReportReset();
 	person.listenForReportReload();
 	person.listenForReportAll();
@@ -69,11 +73,19 @@ $(document).ready(function(){
 	person.listenForbtnTogglePesTrackerStatusDetails();
 	person.listenForCancelPes();
 	
+
+
+<?php 
+if(!empty($_GET['mgrsCbn'])){
+    ?>
+		var person2 = new personRecord();
+		person2.showReportMgrsCbn();
+    <?php 
+} else {
+    ?>
+    <?php 
+}
+?>
+
 });
-
-
-
-
-
-
 </script>
