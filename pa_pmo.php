@@ -16,7 +16,7 @@ use vbac\personRecord;
 <button id='reportMgrsCbn'      class='btn btn-primary btn-sm '>Mgrs CBN Report</button>
 <button id='reportAll'  		class='btn btn-primary btn-sm '>Show all Columns</button>
 &nbsp;
-<button id='reportRemoveOffb' class='btn btn-warning btn-sm '>Remove Offboarded/ing</button>
+<button id='reportRemoveOffb' class='btn btn-warning btn-sm '>Hide Offboarded/ing</button>
 <button id='reportReload'  		class='btn btn-warning btn-sm '>Reload Data</button>
 <button id='reportReset'  		class='btn btn-warning btn-sm '>Reset</button>
 <div id='personDatabaseDiv' class='portalDiv'>
@@ -78,8 +78,8 @@ $(document).ready(function(){
 <?php 
 if(!empty($_GET['mgrsCbn'])){
     ?>
-		var person2 = new personRecord();
-		person2.showReportMgrsCbn();
+//		var person2 = new personRecord();
+		person.showReportMgrsCbn();
     <?php 
 } else {
     ?>

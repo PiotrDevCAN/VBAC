@@ -1291,7 +1291,7 @@ function personRecord() {
   
   this.listenForReportRemoveOffb = function(){
 	  $(document).on('click','#reportRemoveOffb', function(e){
-		  	$('#portalTitle').html($('#portalTitle').text() + "<span style='color:red;font-size:14px'>&nbsp;Offboarding & offboarded removed</span>");
+		  	$('#portalTitle').html($('#portalTitle').text() + "<span style='color:red;font-size:14px'><br/>Offboarding & Offboarded hidden</span>");
 		    $.fn.dataTable.ext.search.push(
 		    	      function(settings, data, dataIndex) {
 		    	          return data[27].trim().substring(0,3) != "off";

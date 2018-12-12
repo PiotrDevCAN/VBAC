@@ -272,12 +272,11 @@ class personRecord extends DbRecord
         );
 
 
-    private static $cbnEmailBody = "You are recorded in the <a href='&&host&&'>vBAC</a> tool, as a Functional Manager for one of more people.<h3>Please review the people assigned to you in vBAC and ensure the tool accurately reflects the current situation.</h3>"
-                                 . "<ul><li>If someone has moved to a new Functional Manager, you can amend their FM from the standard <a href='&&host&&/pa_pmo.php'>People Portal</a> Page. Using the Edit Icon in the Notes_ID column</li>"
-                                 . "<li>If you have people who are no longer working on the account, then please initiate Offboarding for them by amending their end date in <a href='&&host&&/pa_pmo.php'>vBac</a> (again this field is reached from the Edit Icon in the Notes Id Column)</li>"
-                                 . "<li>If you are missing people, first check if they've been boarded to the account using the <a href='&&host&&/pa_peopleFinder.php'>People Finder</a> screen</li>"
-                                 . "<li>If you find them, you can use that screen to transer them to yourself.(by clicking the Transfer Icon in the FM Column)</li>"
-                                 . "<li>If they need to be boarded, then please use the <a href='&&host&&/pb_onboard.php'>boarding screen</a></li></ul>";      
+    private static $cbnEmailBody = "You are recorded in the <a href='&&host&&'>vBAC</a> tool, as a Functional Manager for one of more people.<h3>Please review the details of the people assigned to you and correct any inaccuracies <a href='&&host&&/pa_pmo.php?mgrsCbn=yes'>Link here</a></h3>"
+                                 . "<ul><li>If your reportee has moved to a new functional manager or changed roles, you can amend their details using the <b>Edit Icon</b> in the <em>Notes ID</em> column to do this. All mandatory information must be completed to save the person record. </li>"
+                                 . "<li>If you have people who no longer work on the account  please initiate offboarding by amending their <b>Projected End Date</b>.  Use the <b>Edit Icon</b> in the <em>Notes ID</em> column to do this</li>"
+                                 . "<li> If you are missing people who should report to you<br/>Ensure they have been boarded to the account using the vBAC <a href='&&host&&/pa_personFinder.php'>People Finder</a> screen<br/>You can transfer someone to yourself from another manager by clicking the <b>Transfer Icon</b> in the <em>FM Column</em></li>"
+                                 . "<li>If the person needs to be boarded, then please use the <a href='&&host&&/pb_onboard.php'>Boarding<a> screen</li></ul>";      
 
     private static $cbnEmailPattern = array('/&&host&&/'); 
                                  
@@ -1446,7 +1445,8 @@ class personRecord extends DbRecord
         $emailableFmLists = array_chunk($allFm, 75);
         $replacements = array($_SERVER['HTTP_HOST']);
         $emailMessage = preg_replace(self::$cbnEmailPattern, $replacements, self::$cbnEmailBody);
-        foreach ($emailableFmLists as $groupOfFmEmail){
+        foreach ($emailableFmLists as $groupOfFmEmail){            
+            set_time_limit(60);            
             \itdq\BlueMail::send_mail(self::$pmoTaskId, 'CBN Initiation Request' , $emailMessage, 'vbacNoReply@uk.ibm.com',array(),$groupOfFmEmail);
         }
    }
