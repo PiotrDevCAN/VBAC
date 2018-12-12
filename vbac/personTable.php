@@ -301,6 +301,7 @@ class personTable extends DbTable {
         
         
         if(!empty($row['PRE_BOARDED'])){
+            $row['actualCNUM'] = $cnum;
             $row['CNUM'] = $cnum . "<br/><small>" . $row['PRE_BOARDED'] .  "</small>";
         }
 
@@ -1213,10 +1214,9 @@ class personTable extends DbTable {
 
     static function getPesStatusWithButtons($row){
         $notesId = trim($row['NOTES_ID']);
-        $email   = trim($row['EMAIL_ADDRESS']);
-        $cnum    = trim($row['CNUM']);
+        $email   = trim($row['EMAIL_ADDRESS']);      
+        $actualCnum = trim($row['actualCNUM']);
         $status  = trim($row['PES_STATUS']);
-        $cnum    = trim($row['CNUM']);
         $boarder = stripos(trim($row['PES_STATUS_DETAILS']),'Boarded as')!== false ;
         $passportFirst   = array_key_exists('PASSPORT_FIRST_NAME', $row) ? $row['PASSPORT_FIRST_NAME'] : null;
         $passportSurname = array_key_exists('PASSPORT_SURNAME', $row)    ? $row['PASSPORT_SURNAME'] : null;
@@ -1231,7 +1231,7 @@ class personTable extends DbTable {
             case $status == personRecord::PES_STATUS_NOT_REQUESTED:
                 $pesStatusWithButton.= "<button type='button' class='btn btn-default btn-xs btnPesInitiate accessRestrict accessPmo accessFm' ";
                 $pesStatusWithButton.= "aria-label='Left Align' ";
-                $pesStatusWithButton.= " data-cnum='" .$cnum . "' ";
+                $pesStatusWithButton.= " data-cnum='" .$actualCnum . "' ";
                 $pesStatusWithButton.= " data-pesstatus='$status' ";
                 $pesStatusWithButton.= " data-toggle='tooltip' data-placement='top' title='Initiate PES Request'";
                 $pesStatusWithButton.= " > ";
@@ -1279,7 +1279,7 @@ class personTable extends DbTable {
             case $status == personRecord::PES_STATUS_PROVISIONAL && $_SESSION['isPes'] :
             case $status == personRecord::PES_STATUS_TBD && $_SESSION['isPes'] :
                 $pesStatusWithButton.= "<button type='button' class='btn btn-default btn-xs btnPesStatus' aria-label='Left Align' ";
-                $pesStatusWithButton.= " data-cnum='" .$cnum . "' ";
+                $pesStatusWithButton.= " data-cnum='" .$actualCnum . "' ";
                 $pesStatusWithButton.= " data-notesid='" . $notesId . "' ";
                 $pesStatusWithButton.= " data-email='" . $email . "' ";
                 $pesStatusWithButton.= " data-pesdaterequested='" .trim($row['PES_DATE_REQUESTED']) . "' ";
@@ -1295,7 +1295,7 @@ class personTable extends DbTable {
             case $status == personRecord::PES_STATUS_REQUESTED && !$_SESSION['isPes'] :
             case $status == personRecord::PES_STATUS_INITIATED && !$_SESSION['isPes'] ;
                 $pesStatusWithButton.= "<button type='button' class='btn btn-default btn-xs btnPesCancel accessRestrict accessFm' aria-label='Left Align' ";
-                $pesStatusWithButton.= " data-cnum='" .$cnum . "' ";
+                $pesStatusWithButton.= " data-cnum='" .$actualCnum . "' ";
                 $pesStatusWithButton.= " data-notesid='" . $notesId . "' ";
                 $pesStatusWithButton.= " data-email='" . $email . "' ";
                 $pesStatusWithButton.= " data-pesdaterequested='" .trim($row['PES_DATE_REQUESTED']) . "' ";
