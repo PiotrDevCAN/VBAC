@@ -61,6 +61,7 @@ class AuditTable extends DbTable {
         $sql .= !empty($predicate)   ? "  $predicate " : null;
         $sql .= " ) as tmp ";
         $sql .= " WHERE ROWNUM >= $fromRecord AND ROWNUM < " .  $end ;
+        $sql .= " ORDER BY TIMESTAMP DESC ";
      
         set_time_limit(0);
         
