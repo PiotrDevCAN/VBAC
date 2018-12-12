@@ -93,6 +93,7 @@ try {
     echo $e->getMessage();
     AuditTable::audit("Exception" . __FILE__ . " Code:<b>" . $e->getCode() . "</b> Msg:<b>" . $e->getMessage() . "</b>", AuditTable::RECORD_TYPE_DETAILS);
     $success = false;
+    $notificationStatus = "Email not applicable(error)";
 }
 
 $messages = ob_get_clean();
