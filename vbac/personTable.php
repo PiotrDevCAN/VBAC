@@ -1215,7 +1215,7 @@ class personTable extends DbTable {
     static function getPesStatusWithButtons($row){
         $notesId = trim($row['NOTES_ID']);
         $email   = trim($row['EMAIL_ADDRESS']);      
-        $actualCnum = trim($row['actualCNUM']);
+        $actualCnum = isset($row['actualCNUM']) ? trim($row['actualCNUM']) : trim($row['CNUM']);
         $status  = trim($row['PES_STATUS']);
         $boarder = stripos(trim($row['PES_STATUS_DETAILS']),'Boarded as')!== false ;
         $passportFirst   = array_key_exists('PASSPORT_FIRST_NAME', $row) ? $row['PASSPORT_FIRST_NAME'] : null;
