@@ -47,7 +47,15 @@ try {
     } 
     
     $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER   );
-    $comment = $pesTracker->savePesComment($_POST['psm_cnum'],"PES STATUS set to : " . $_POST['psm_status']);    
+    
+    try {
+        $comment = $pesTracker->savePesComment($_POST['psm_cnum'],"PES STATUS set to : " . $_POST['psm_status']); 
+    } catch (Exception $e) {
+        // Don't give up just because we didn't save the comment.
+        echo $e->getMessage();        
+    }
+    
+       
 
     AuditTable::audit("Saved Person <pre>" . print_r($person,true) . "</pre>", AuditTable::RECORD_TYPE_DETAILS);
 

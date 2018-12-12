@@ -8,6 +8,7 @@ use PhpOffice\PhpSpreadsheet\Shared\Date;
 use \DateTime;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use itdq\xls;
+use itdq\AuditTable;
 
 class pesTrackerTable extends DbTable{
     
@@ -587,6 +588,15 @@ class pesTrackerTable extends DbTable{
         $now = new \DateTime();
         
         $newComment = trim($comment) . "<br/><small>" . $_SESSION['ssoEmail'] . ":" . $now->format('Y-m-d H:i:s') . "</small><br/>" . $existingComment;
+        
+        
+        $commentFieldSize = (int)$this->getColumnLength('COMMENT');
+        
+        if(strlen($newComment)>$commentFieldSize){
+            AuditTable::audit("PES Tracker Comment too long. Will be truncated.<b>Old:</b>$existingComment <br>New:$comment");
+            $newComment = substr($newComment,0,$commentFieldSize-20);
+        }
+        
         
         $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
         $sql.= " SET COMMENT='" . db2_escape_string($newComment) . "' ";
