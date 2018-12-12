@@ -74,6 +74,7 @@ try {
                  break;  
             case personRecord::PES_STATUS_CLEARED:
             case personRecord::PES_STATUS_CLEARED_PERSONAL:
+            case personRecord::PES_STATUS_CANCEL_REQ:
                 $emailResponse = $person->sendPesStatusChangedEmail();   
                 $notificationStatus = $emailResponse ? 'Email sent' : 'No email sent';
                 break;

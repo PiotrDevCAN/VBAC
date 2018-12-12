@@ -67,6 +67,7 @@ $(document).ready(function(){
 	person.listenforSendPesEmail();
 	person.listenforConfirmSendPesEmail();
 	person.listenForbtnTogglePesTrackerStatusDetails();
+	person.listenForCancelPes();
 	
 });
 

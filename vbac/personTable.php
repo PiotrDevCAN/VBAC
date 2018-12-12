@@ -315,6 +315,7 @@ class personTable extends DbTable {
                 $row['PMO_STATUS'] .= "<button type='button' class='btn btn-default btn-xs btnSetPmoStatus' aria-label='Left Align' ";
                 $row['PMO_STATUS'] .= "data-cnum='" .$cnum . "' ";
                 $row['PMO_STATUS'] .= "data-setpmostatusto='" .personRecord::PMO_STATUS_CONFIRMED . "' ";
+                $row['PMO_STATUS'] .= " data-toggle='tooltip' data-placement='top' title='Set PMO Status Aware'";
                 $row['PMO_STATUS'] .= " > ";
                 $row['PMO_STATUS'] .= "<span class='glyphicon glyphicon-thumbs-up ' aria-hidden='true'></span>";
                 $row['PMO_STATUS'] .= " </button> ";
@@ -324,6 +325,7 @@ class personTable extends DbTable {
                 $row['PMO_STATUS'] .= "<button type='button' class='btn btn-default btn-xs btnSetPmoStatus' aria-label='Left Align' ";
                 $row['PMO_STATUS'] .= "data-cnum='" .$cnum . "' ";
                 $row['PMO_STATUS'] .= "data-setpmostatusto='" .personRecord::PMO_STATUS_AWARE . "' ";
+                $row['PMO_STATUS'] .= " data-toggle='tooltip' data-placement='top' title='Set PMO Status Confirmed'";
                 $row['PMO_STATUS'] .= " > ";
                 $row['PMO_STATUS'] .= "<span class='glyphicon glyphicon-thumbs-down ' aria-hidden='true'></span>";
                 $row['PMO_STATUS'] .= " </button> ";                
@@ -339,6 +341,7 @@ class personTable extends DbTable {
                 $row['FM_MANAGER_FLAG'] .= "data-cnum='" .$cnum . "' ";
                 $row['FM_MANAGER_FLAG'] .= "data-notesid='" .$notesId . "' ";
                 $row['FM_MANAGER_FLAG'] .= "data-fmflag='Yes' ";
+                $row['FM_MANAGER_FLAG'] .= " data-toggle='tooltip' data-placement='top' title='Toggle FM Flag'";
                 $row['FM_MANAGER_FLAG'] .= " > ";
                 $row['FM_MANAGER_FLAG'] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
                 $row['FM_MANAGER_FLAG'] .= " </button> ";
@@ -347,6 +350,7 @@ class personTable extends DbTable {
                 $row['FM_MANAGER_FLAG'] .= "data-cnum='" .$cnum . "' ";
                 $row['FM_MANAGER_FLAG'] .= "data-notesid='" .$notesId . "' ";
                 $row['FM_MANAGER_FLAG'] .= "data-fmflag='No' ";
+                $row['FM_MANAGER_FLAG'] .= " data-toggle='tooltip' data-placement='top' title='Toggle FM Flag'";
                 $row['FM_MANAGER_FLAG'] .= " > ";
                 $row['FM_MANAGER_FLAG'] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
                 $row['FM_MANAGER_FLAG'] .= " </button> ";
@@ -361,6 +365,7 @@ class personTable extends DbTable {
         if(($_SESSION['isPes'] || $_SESSION['isPmo'] || $_SESSION['isFm'] || $_SESSION['isCdi']) && ($revalidationStatus!=personRecord::REVALIDATED_OFFBOARDED))  {
             $row['NOTES_ID']  = "<button type='button' class='btn btn-default btn-xs btnEditPerson' aria-label='Left Align' ";
             $row['NOTES_ID'] .= "data-cnum='" .$cnum . "'";
+            $row['NOTES_ID'] .= " data-toggle='tooltip' data-placement='top' title='Edit Person Record'";
             $row['NOTES_ID'] .= " > ";
             $row['NOTES_ID'] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
             $row['NOTES_ID'] .= " </button> ";
@@ -370,6 +375,7 @@ class personTable extends DbTable {
         if( ($_SESSION['isPmo'] || $_SESSION['isCdi']) && (substr(trim($row['REVALIDATION_STATUS']),0,11)==personRecord::REVALIDATED_OFFBOARDING))  {
             $row['REVALIDATION_STATUS']  = "<button type='button' class='btn btn-default btn-xs btnStopOffboarding btn-danger' aria-label='Left Align' ";
             $row['REVALIDATION_STATUS'] .= "data-cnum='" .$cnum . "'";
+            $row['REVALIDATION_STATUS'] .= " data-toggle='tooltip' data-placement='top' title='Stop Offboarding Process'";
             $row['REVALIDATION_STATUS'] .= "title='Stop Offboarding'";
             $row['REVALIDATION_STATUS'] .= " > ";
             $row['REVALIDATION_STATUS'] .= "<span class='glyphicon glyphicon-remove-sign ' aria-hidden='true'></span>";
@@ -387,6 +393,7 @@ class personTable extends DbTable {
             $row['REVALIDATION_STATUS']  = "<button type='button' class='btn btn-default btn-xs btnOffboarding btn-warning' aria-label='Left Align' ";
             $row['REVALIDATION_STATUS'] .= "data-cnum='" .$cnum . "'";
             $row['REVALIDATION_STATUS'] .= "title='Initiate Offboarding.'";
+            $row['REVALIDATION_STATUS'] .= " data-toggle='tooltip' data-placement='top' title='Initiate Offboarding'";
             $row['REVALIDATION_STATUS'] .= " > ";
             $row['REVALIDATION_STATUS'] .= "<span class='glyphicon glyphicon-log-out ' aria-hidden='true'></span>";
             $row['REVALIDATION_STATUS'] .= " </button> ";
@@ -397,6 +404,7 @@ class personTable extends DbTable {
              $row['REVALIDATION_STATUS']  = "<button type='button' class='btn btn-default btn-xs btnDeoffBoarding btn-danger' aria-label='Left Align' ";
              $row['REVALIDATION_STATUS'] .= "data-cnum='" .$cnum . "'";
              $row['REVALIDATION_STATUS'] .= "title='Bring back from Offboarding.'";
+             $row['REVALIDATION_STATUS'] .= " data-toggle='tooltip' data-placement='top' title='Recover person from Offboarding'";
              $row['REVALIDATION_STATUS'] .= " > ";
              $row['REVALIDATION_STATUS'] .= "<span class='glyphicon glyphicon-log-in ' aria-hidden='true'></span>";
              $row['REVALIDATION_STATUS'] .= " </button> ";
@@ -407,6 +415,7 @@ class personTable extends DbTable {
              $row['CT_ID']  = "<button type='button' class='btn btn-default btn-xs btnClearCtid btn-danger' aria-label='Left Align' ";
              $row['CT_ID'] .= "data-cnum='" .$cnum . "'";
              $row['CT_ID'] .= "title='Delete CT ID.'";
+             $row['CT_ID'] .= " data-toggle='tooltip' data-placement='top' title='Clear CT ID'";
              $row['CT_ID'] .= " > ";
              $row['CT_ID'] .= "<span class='glyphicon glyphicon-trash ' aria-hidden='true'></span>";
              $row['CT_ID'] .= " </button> ";
@@ -424,11 +433,12 @@ class personTable extends DbTable {
         return $result;
     }
     
-    function setPesEvidence($cnum=null){
+    function setPesEvidence($cnum=null, $requestor=null){
         if(!$cnum){
             throw new \Exception('No CNUM provided in ' . __METHOD__);
         }
-        $result =  self::setPesStatus($cnum,personRecord::PES_STATUS_REQUESTED);
+        $requestor = empty($requestor) ? $_SESSION['ssoEmail'] : $requestor;
+        $result =  self::setPesStatus($cnum,personRecord::PES_STATUS_REQUESTED, $requestor);
         return $result;
     }
 
@@ -1223,6 +1233,7 @@ class personTable extends DbTable {
                 $pesStatusWithButton.= "aria-label='Left Align' ";
                 $pesStatusWithButton.= " data-cnum='" .$cnum . "' ";
                 $pesStatusWithButton.= " data-pesstatus='$status' ";
+                $pesStatusWithButton.= " data-toggle='tooltip' data-placement='top' title='Initiate PES Request'";
                 $pesStatusWithButton.= " > ";
                 $pesStatusWithButton.= "<span class='glyPesInitiate glyphicon glyphicon-plane ' aria-hidden='true'></span>";
                 $pesStatusWithButton.= "</button>&nbsp;";
@@ -1276,10 +1287,28 @@ class personTable extends DbTable {
                 $pesStatusWithButton.= " data-pesstatus='" .$status . "' ";
                 $pesStatusWithButton.= array_key_exists('PASSPORT_FIRST_NAME', $row) ?  " data-passportfirst='" .$passportFirst . "' " : null;
                 $pesStatusWithButton.= array_key_exists('PASSPORT_SURNAME', $row) ? " data-passportsurname='" .$passportSurname . "' " : null;
+				$pesStatusWithButton.= " data-toggle='tooltip' data-placement='top' title='Amend PES Status'";
                 $pesStatusWithButton.= " > ";
                 $pesStatusWithButton.= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
                 $pesStatusWithButton.= "</button>";
                 break;
+            case $status == personRecord::PES_STATUS_REQUESTED && !$_SESSION['isPes'] :
+            case $status == personRecord::PES_STATUS_INITIATED && !$_SESSION['isPes'] ;
+                $pesStatusWithButton.= "<button type='button' class='btn btn-default btn-xs btnPesCancel accessRestrict accessFm' aria-label='Left Align' ";
+                $pesStatusWithButton.= " data-cnum='" .$cnum . "' ";
+                $pesStatusWithButton.= " data-notesid='" . $notesId . "' ";
+                $pesStatusWithButton.= " data-email='" . $email . "' ";
+                $pesStatusWithButton.= " data-pesdaterequested='" .trim($row['PES_DATE_REQUESTED']) . "' ";
+                $pesStatusWithButton.= " data-pesrequestor='" .trim($row['PES_REQUESTOR']) . "' ";
+                $pesStatusWithButton.= " data-pesstatus='" .$status . "' ";
+                $pesStatusWithButton.= array_key_exists('PASSPORT_FIRST_NAME', $row) ?  " data-passportfirst='" .$passportFirst . "' " : null;
+                $pesStatusWithButton.= array_key_exists('PASSPORT_SURNAME', $row) ? " data-passportsurname='" .$passportSurname . "' " : null;
+                $pesStatusWithButton.= " data-toggle='tooltip' data-placement='top' title='Cancel PES Request'";
+                $pesStatusWithButton.= " > ";
+                $pesStatusWithButton.= "<span class='glyphicon glyphicon-erase ' aria-hidden='true' ></span>";
+                $pesStatusWithButton.= "</button>";
+            break;
+            case $status == personRecord::PES_STATUS_CANCEL_CONFIRMED && $_SESSION['isPes'] : 
             default:            
                 break;
         }        

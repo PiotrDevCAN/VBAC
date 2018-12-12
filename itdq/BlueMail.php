@@ -111,7 +111,6 @@ class BlueMail
                 }
                 
                 $responseObject = json_decode($resp);
-               
                 
                 if(is_object($responseObject)){
                     $statusUrl = $responseObject->link[0]->href;
