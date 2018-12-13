@@ -197,7 +197,7 @@ class personTable extends DbTable {
         $sql = " SELECT CNUM, FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, NOTES_ID, FM_CNUM ";
         $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName ;
         $sql.= " WHERE " . $activePredicate;
-        $sql.= " OR ";
+
         
         $rs = db2_exec($_SESSION['conn'], $sql);
         
