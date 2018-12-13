@@ -36,7 +36,8 @@ class personTable extends DbTable {
                                            . '<br/>If you feel this is an error, please contact your local PMO Team ';                            
     private static $revalStatusChangeEmailPattern = array('/&&leaversNotesid&&/','/&&revalidationStatus&&/','/&&statusDescription&&/');
     
-    
+    const ACTIVE_WITH_PROVISIONAL_CLEARANCE = true;
+    const ACTIVE_WITHOUT_PROVISIONAL_CLEARANCE = false;
     
     
     function __construct($table,$pwd=null,$log=true){
@@ -71,12 +72,14 @@ class personTable extends DbTable {
 
     }
     
-    static function activePersonPredicate(){
+    static function activePersonPredicate($includeProvisionalClearance = false){
         $activePredicate = " ((( REVALIDATION_STATUS in ('" . personRecord::REVALIDATED_FOUND . "','" . personRecord::REVALIDATED_VENDOR . "','" . personRecord::REVALIDATED_POTENTIAL . "') or trim(REVALIDATION_STATUS) is null or REVALIDATION_STATUS like '" . personRecord::REVALIDATED_OFFBOARDING . "%') ";
         $activePredicate.= "   OR ";
         $activePredicate.= " ( trim(REVALIDATION_STATUS) is null ) )";
         $activePredicate.= " AND REVALIDATION_STATUS not like '" . personRecord::REVALIDATED_OFFBOARDING . ":" .personRecord::REVALIDATED_LEAVER . "%' " ;
-        $activePredicate.= " AND PES_STATUS in ('". personRecord::PES_STATUS_CLEARED ."','". personRecord::PES_STATUS_CLEARED_PERSONAL ."','". personRecord::PES_STATUS_EXCEPTION ."') ) ";
+        $activePredicate.= " AND PES_STATUS in ('". personRecord::PES_STATUS_CLEARED ."','". personRecord::PES_STATUS_CLEARED_PERSONAL ."','". personRecord::PES_STATUS_EXCEPTION ."'";
+        $activePredicate.= $includeProvisionalClearance ? ",'" . personRecord::PES_STATUS_PROVISIONAL . "'" : null ;
+        $activePredicate.= " ) ) ";
         return $activePredicate;    
     }
     
@@ -187,13 +190,14 @@ class personTable extends DbTable {
         return $data;
     }
     
-    function returnPersonFinderArray(){
-        $activePredicate = $this->activePersonPredicate();
+    function returnPersonFinderArray($includeProvisionalClearance = false){
+        $activePredicate = $this->activePersonPredicate($includeProvisionalClearance);
         $data = array();        
         
         $sql = " SELECT CNUM, FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, NOTES_ID, FM_CNUM ";
         $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName ;
-        $sql.= " WHERE 1=1 AND " . $activePredicate;
+        $sql.= " WHERE " . $activePredicate;
+        $sql.= " OR ";
         
         $rs = db2_exec($_SESSION['conn'], $sql);
         

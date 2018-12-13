@@ -1,6 +1,7 @@
 <?php
 use vbac\personTable;
 use vbac\allTables;
+use vbac\personRecord;
 
 set_time_limit(0);
 ob_start();
@@ -8,7 +9,7 @@ ob_start();
 // session_start();
 
 $personTable = new personTable(allTables::$PERSON);
-$data = $personTable->returnPersonFinderArray();
+$data = $personTable->returnPersonFinderArray(personTable::ACTIVE_WITH_PROVISIONAL_CLEARANCE);
 
 $dataJsonAble = json_encode($data);
 
