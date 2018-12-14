@@ -402,12 +402,7 @@ class personTable extends DbTable {
         if( $potentialForOffboarding && ($_SESSION['isPmo'] || $_SESSION['isCdi']) && substr(trim($row['REVALIDATION_STATUS']),0,11)!=personRecord::REVALIDATED_OFFBOARDING )  {
             $row['REVALIDATION_STATUS']  = "<button type='button' class='btn btn-default btn-xs btnOffboarding btn-warning' aria-label='Left Align' ";
             $row['REVALIDATION_STATUS'] .= "data-cnum='" .$cnum . "'";
-<<<<<<< Upstream, based on user-testing
-            $row['REVALIDATION_STATUS'] .= "title='Initiate Offboarding.'";
-            $row['REVALIDATION_STATUS'] .= " data-toggle='tooltip' data-placement='top' title='Initiate Offboarding'";
-=======
-            $row['REVALIDATION_STATUS'] .= "title='Initiate Offboarding." . $offboardingHint . "' ";
->>>>>>> a5eb65b CBN Report written
+            $row['REVALIDATION_STATUS'] .= " data-toggle='tooltip' data-placement='top' title='Initiate Offboarding." . $offboardingHint . "' ";
             $row['REVALIDATION_STATUS'] .= " > ";
             $row['REVALIDATION_STATUS'] .= "<span class='glyphicon glyphicon-log-out ' aria-hidden='true'></span>";
             $row['REVALIDATION_STATUS'] .= " </button> ";
