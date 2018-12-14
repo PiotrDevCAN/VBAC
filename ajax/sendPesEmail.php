@@ -13,7 +13,7 @@ $pesEmailObj = new pesEmail();
 $emailResponse = $pesEmailObj->sendPesEmail($_POST['firstname'],$_POST['lastname'],$_POST['emailaddress'], $_POST['country'], $_POST['openseat']);
 $messages = ob_get_contents();
 $success = strlen($messages)==0; 
-
+$response = array();
 $response['success'] = $success;
 $response['messages'] = $messages;
 $response['emailResponse'] = $emailResponse;
@@ -28,6 +28,17 @@ if($success){
     
     $response['success'] = $success;
     $response['messages'] = $messages;
+    
+    $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER   );
+    
+    try {
+        $pesTracker->savePesComment($_POST['psm_cnum'],"Automated PES Email requesting evidence sent to " . $_POST['emailaddress']);
+        $pesTracker->savePesComment($_POST['psm_cnum'],"PES STATUS set to : " . $_POST['psm_status']); 
+    } catch (Exception $e) {
+        // Don't give up just because we didn't save the comment.
+        echo $e->getMessage();
+    }
+    
 }
 
 ob_clean();
