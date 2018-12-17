@@ -57,6 +57,8 @@ try {
     }
     $_POST['PRE_BOARDED'] = !empty($_POST['person_preboarded']) ? $_POST['person_preboarded']  : null;  // Save the link to the pre-boarded person
 
+    $_POST['EMAIL_ADDRESS'] = preg_replace('/[\x00-\x1F\x7F-\xFF]/', '', trim($_POST['EMAIL_ADDRESS'])); // remove special characters 
+    
     $person->setFromArray($_POST);
     $person->convertCountryCodeToName();
     $saveRecordResult = $table->saveRecord($person,false,false);

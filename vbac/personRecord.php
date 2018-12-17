@@ -347,7 +347,8 @@ class personRecord extends DbRecord
 
     static function loadKnownEmail($predicate=null){
         $sql = " SELECT EMAIL_ADDRESS FROM " . $_SESSION['Db2Schema'] . "." .  allTables::$PERSON;
-        $sql .= " WHERE CNUM like '%XXX' ";
+        $sql.= " WHERE CNUM like '%XXX' ";
+        $sql.= " ORDER BY 1 ";
 
 
         $rs = db2_exec($_SESSION['conn'], $sql);

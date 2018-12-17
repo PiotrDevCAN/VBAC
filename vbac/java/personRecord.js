@@ -64,6 +64,7 @@ function personRecord() {
 		  var newEmail = $('#resource_email').val();
 		  var trimmedEmail = newEmail.trim();
 		  console.log(trimmedEmail);
+		  console.log(knownEmail);
 		  var allreadyExists = ($.inArray(trimmedEmail, knownEmail) >= 0 );
 		  var ibmEmailAddress = (trimmedEmail.search(/ibm/i) != -1);
 		  console.log(ibmEmailAddress);
