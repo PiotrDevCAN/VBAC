@@ -94,7 +94,7 @@ class pesTrackerTable extends DbTable{
         $sql.= " left join " . $_SESSION['Db2Schema'] . "." . \vbac\allTables::$PES_TRACKER . " as PT ";
         $sql.= " ON P.CNUM = PT.CNUM ";        
         $sql.= " WHERE 1=1 ";
-//        $sql.= " and PT.CNUM is not null "; // it has a tracker record
+        $sql.= " and PT.CNUM is not null or ( PT.CNUM is null  AND PES_STATUS_DETAILS is null )"; // it has a tracker record
         $sql.= " AND " . $pesStatusPredicate;
         
         
