@@ -618,10 +618,10 @@ You are able to amend the Functional Manager of people assigned to you but who n
 
     <div class='form-group' >
 
-        <div class='col-sm-6'>
+        <div class='col-sm-6 form-required'>
                <select class='form-control select select2' id='lob'
                               name='LOB'
-                              placeholder='Select Lob'
+                              required="true"
               >
                 <option value=''>Select Lob</option>
                 <?php
