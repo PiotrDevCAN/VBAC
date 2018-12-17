@@ -272,7 +272,7 @@ class personRecord extends DbRecord
         );
 
 
-    private static $cbnEmailBody = "You are recorded in the <a href='&&host&&'>vBAC</a> tool, as a Functional Manager for one of more people.<h3>Please review the details of the people assigned to you and correct any inaccuracies <a href='&&host&&/pa_pmo.php?mgrsCbn=yes'>Link here</a></h3>"
+    private static $cbnEmailBody = "You are recorded in the <a href='&&host&&'>vBAC</a> tool, as a Functional Manager for one of more people.<h3>Please review the people assigned to you for continued business need and/or to correct any inaccuracies. <a href='&&host&&/pa_pmo.php?mgrsCbn=yes'>Link here</a></h3>"
                                  . "<ul><li>If your reportee has moved to a new functional manager or changed roles, you can amend their details using the <b>Edit Icon</b> in the <em>Notes ID</em> column to do this. All mandatory information must be completed to save the person record. </li>"
                                  . "<li>If you have people who no longer work on the account  please initiate offboarding by amending their <b>Projected End Date</b>.  Use the <b>Edit Icon</b> in the <em>Notes ID</em> column to do this</li>"
                                  . "<li> If you are missing people who should report to you<br/>Ensure they have been boarded to the account using the vBAC <a href='&&host&&/pa_personFinder.php'>People Finder</a> screen<br/>You can transfer someone to yourself from another manager by clicking the <b>Transfer Icon</b> in the <em>FM Column</em></li>"
