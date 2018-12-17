@@ -72,20 +72,6 @@ $(document).ready(function(){
 	person.listenforConfirmSendPesEmail();
 	person.listenForbtnTogglePesTrackerStatusDetails();
 	person.listenForCancelPes();
-	
-
-
-<?php 
-if(!empty($_GET['mgrsCbn'])){
-    ?>
-//		var person2 = new personRecord();
-		person.showReportMgrsCbn();
-    <?php 
-} else {
-    ?>
-    <?php 
-}
-?>
 
 });
 </script>
