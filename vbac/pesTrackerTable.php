@@ -97,6 +97,9 @@ class pesTrackerTable extends DbTable{
         $sql.= " and PT.CNUM is not null "; // it has a tracker record
         $sql.= " AND " . $pesStatusPredicate;
         
+        
+        AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
+        
         $rs = db2_exec($_SESSION['conn'], $sql);
         
         if(!$rs){
