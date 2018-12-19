@@ -71,7 +71,7 @@ $(document).ready(function(){
 	person.listenforSendPesEmail();
 	person.listenforConfirmSendPesEmail();
 	person.listenForbtnTogglePesTrackerStatusDetails();
-	person.listenForCancelPes();
+//	person.listenForCancelPes(); Don't let them cancel 2018/12/19
 
 });
 </script>
