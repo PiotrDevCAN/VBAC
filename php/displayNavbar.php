@@ -121,6 +121,10 @@ $navbar->addMenu($reports);
 $outages = new NavbarOption($plannedOutagesLabel, 'ppo_PlannedOutages.php','accessCdi accessPmo accessFm accessUser ');
 $navbar->addOption($outages);
 
+$privacy = new NavbarOption('Privacy','https://w3.ibm.com/w3publisher/w3-privacy-notice','accessCdi accessPmo accessFm accessUser ');
+$navbar->addOption($privacy);
+
+
 $navbar->createNavbar($page);
 
 $isFm   = personTable::isManager($_SESSION['ssoEmail'])                 ? ".not('.accessFm')" : null;
