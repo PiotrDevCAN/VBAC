@@ -35,7 +35,6 @@ switch (true) {
             
             for ($i = $totalElements; $i >= 0; $i--) {
                 if(strpos($allElements[$i],"F_") === false){
-                    echo "<h5>Comma found</h5>";
                     $allElements[$i-1] =  $allElements[$i-1] . "," . $allElements[$i];
                     unset($allElements[$i]);
                 }
