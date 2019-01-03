@@ -1,18 +1,62 @@
 <?php
 
-// use itdq\Email;
-
-// Email::send_mail('rob.daniel@uk.ibm.com','', 'Test', 'Testing 1 2 3', 'rob.daniel@uk.ibm.com');
-
-
-$message = 'Testing 1 2 3 4' . chr(13) . chr(10) . '13 10 6 7 8 9';
-
-$response = \itdq\BlueMail::send_mail(array('rob.daniel@uk.ibm.com'),'Testing Off',$message, 'vbacNoReply@uk.ibm.com');
+$sql = " SELECT TEMPLATE, TITLE, EMAIL_ADDRESS FROM VBAC.FEB_TRAVEL_REQUEST_TEMPLATES ";
+$sql .= " WHERE 1=1 "; 
+// $sql .= " AND EMAIL_ADDRESS='elliotre@uk.ibm.com' ";
+// $sql .= " AND TITLE='R3 OAT' ";
+$rs = db2_exec($_SESSION['conn'], $sql);
 
 echo "<pre>";
-print_r($response);
 
-echo $message;
+while(($row = db2_fetch_assoc($rs))==true){
+    $templateArray = array();
+    
+    $template = $row['TEMPLATE'];
+    
 
-echo "</pre>";
+    var_dump($row['TITLE']);
+    var_dump($row['EMAIL_ADDRESS']);
+    var_dump($template);
+   
+    
+    if (! empty($template)) {
+        $allElements = explode(",",$template);
+       
+        $totalElements = count($allElements)-1;
+        
+        for ($i = $totalElements; $i >= 0; $i--) {
+            if(strpos($allElements[$i],"F_") === false){
+                echo "<h5>Comma found</h5>";
+                $allElements[$i-1] =  $allElements[$i-1] . "," . $allElements[$i];
+                unset($allElements[$i]);
+            }
+        }
+        
+        foreach ($allElements as $key => $element) {
+            echo "<br/>Key:$key Element:$element";
+        }
+        
+        echo "<hr/>";
+        
+        
+        foreach ($allElements as $element) {
+            $keyValuePair = explode(":", $element);
+            if (is_integer($keyValuePair[1])) {
+                $templateArray[$keyValuePair[0]] = (int) $keyValuePair[1];
+            } elseif (is_float($keyValuePair[1])) {
+                $templateArray[$keyValuePair[0]] = (float) $keyValuePair[1];
+            } else {
+                $templateArray[$keyValuePair[0]] = $keyValuePair[1];
+            }
+        }
+    }
+    $response = $templateArray;
+    
+    
+    var_dump($response);
+    
+    
+}
+
+
 

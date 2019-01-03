@@ -29,6 +29,18 @@ switch (true) {
         $template = $row['TEMPLATE'];
         if (! empty($template)) {
             $allElements = explode(",", $template);
+            
+            
+            $totalElements = count($allElements)-1;
+            
+            for ($i = $totalElements; $i >= 0; $i--) {
+                if(strpos($allElements[$i],"F_") === false){
+                    echo "<h5>Comma found</h5>";
+                    $allElements[$i-1] =  $allElements[$i-1] . "," . $allElements[$i];
+                    unset($allElements[$i]);
+                }
+            }
+            
             foreach ($allElements as $element) {
                 $keyValuePair = explode(":", $element);
                 
