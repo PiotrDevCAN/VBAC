@@ -24,7 +24,7 @@ $mode = dlpRecord::$modeDEFINE;
 $dlpRecord = new dlpRecord();
 $myCnum = personTable::myCnum();
 if(!$myCnum){
-    $assetRequest->unknownUser();
+   throw new Exception("Didnt find user in PERSON table.");
 } else {
     $dlpRecord->displayForm($mode);
 }
