@@ -11,7 +11,7 @@ $length = isset($_POST['length']) ? $_POST['length'] : 5;
 
 switch ($type){
     case 'revalidation':
-        $predicate =" AND DATA like 'Revalidation %' " ;
+        $predicate =" AND TYPE = 'Revalidation' " ;
         break;
     default:
         $predicate = null;
