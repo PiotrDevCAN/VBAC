@@ -872,7 +872,7 @@ class personTable extends DbTable {
             return false;
         }
 
-        AuditTable::audit("Revalidation has found leaver: $cnum      ",AuditTable::RECORD_TYPE_AUDIT);        
+        AuditTable::audit("Revalidation has found leaver: $cnum      ",AuditTable::RECORD_TYPE_REVALIDATION);        
         
         $this->slack->sendMessageToChannel("Revalidation has found leaver: $cnum      ", slack::CHANNEL_SM_CDI_AUDIT);
         
@@ -889,7 +889,7 @@ class personTable extends DbTable {
             return false;
         }
         
-        AuditTable::audit("Revalidation has found a potential leaver: $cnum ",AuditTable::RECORD_TYPE_AUDIT);
+        AuditTable::audit("Revalidation has found a potential leaver: $cnum ",AuditTable::RECORD_TYPE_REVALIDATION);
         
         $this->slack->sendMessageToChannel("Revalidation has found potential leaver: $cnum ", slack::CHANNEL_SM_CDI_AUDIT);
         
@@ -908,7 +908,7 @@ class personTable extends DbTable {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         }
-        AuditTable::audit("Revalidation has flagged Pre-Boarders",AuditTable::RECORD_TYPE_AUDIT);
+        AuditTable::audit("Revalidation has flagged Pre-Boarders",AuditTable::RECORD_TYPE_REVALIDATION);
         return true;
     }
 

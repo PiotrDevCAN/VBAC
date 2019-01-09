@@ -7,6 +7,7 @@ use itdq\AllItdqTables;
 class AuditTable extends DbTable {
     const RECORD_TYPE_AUDIT = 'Audit';
     const RECORD_TYPE_DETAILS = 'Details';
+    const RECORD_TYPE_REVALIDATION = 'Revalidation';
 
 
     static function audit($statement,$type='Details'){

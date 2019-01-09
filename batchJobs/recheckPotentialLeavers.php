@@ -10,7 +10,7 @@ use itdq\slack;
 
 $slack = new slack();
 
-AuditTable::audit("Revalidation recheck potential leavers invoked.",AuditTable::RECORD_TYPE_AUDIT);
+AuditTable::audit("Revalidation recheck potential leavers invoked.",AuditTable::RECORD_TYPE_REVALIDATION);
 $slack->sendMessageToChannel("Revalidation recheck potential leavers invoked.", slack::CHANNEL_SM_CDI_AUDIT);
 
 set_time_limit(60);
@@ -21,7 +21,7 @@ $loader = new Loader();
 
 $potentialLeavers = " ( REVALIDATION_STATUS like  'potential%') ";
 $allpotentialLeavers = $loader->load('CNUM',allTables::$PERSON, $potentialLeavers ); //
-AuditTable::audit("Revalidation re-check will re-check " . count($allpotentialLeavers) . " potential leavers.",AuditTable::RECORD_TYPE_DETAILS);
+AuditTable::audit("Revalidation re-check will re-check " . count($allpotentialLeavers) . " potential leavers.",AuditTable::RECORD_TYPE_REVALIDATION);
 $slack->sendMessageToChannel("Revalidation re-check will re-check " . count($allpotentialLeavers) . " potential leavers.", slack::CHANNEL_SM_CDI_AUDIT);
 
 $chunkedCnum = array_chunk($allpotentialLeavers, 400);
@@ -46,7 +46,7 @@ foreach ($chunkedCnum as $key => $cnumList){
 }
 
 // At this stage, anyone still in the $allNonLeavers array - has NOT been found in BP TWICE and so is now a leaver and needs to be flagged as such.
-AuditTable::audit("Revalidation re-check found " . count($allpotentialLeavers) . "  leavers.",AuditTable::RECORD_TYPE_DETAILS);
+AuditTable::audit("Revalidation re-check found " . count($allpotentialLeavers) . "  leavers.",AuditTable::RECORD_TYPE_REVALIDATION);
 $slack->sendMessageToChannel("Revalidation re-check found " . count($allpotentialLeavers) . "  leavers.", slack::CHANNEL_SM_CDI_AUDIT);
 
 
@@ -55,7 +55,7 @@ foreach ($allpotentialLeavers as $cnum){
     $personTable->flagLeaver($cnum);
 }
 
-AuditTable::audit("Revalidation re-check completed.",AuditTable::RECORD_TYPE_AUDIT);
+AuditTable::audit("Revalidation re-check completed.",AuditTable::RECORD_TYPE_REVALIDATION);
 $slack->sendMessageToChannel("Revalidation re-check completed.", slack::CHANNEL_SM_CDI_AUDIT);
 
 db2_commit($_SESSION['conn']);
