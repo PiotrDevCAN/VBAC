@@ -58,6 +58,7 @@ class AuditTable extends DbTable {
         $sql = " SELECT TIMESTAMP, EMAIL_ADDRESS, DATA, TYPE FROM ( ";
         $sql .= " SELECT ROW_NUMBER() OVER() AS rownum,A.* FROM " . $_SESSION['Db2Schema'] . "." . AllItdqTables::$AUDIT . " AS A ";
         $sql .= " WHERE 1=1 ";
+        $sql .= " AND TIMESTAMP >= (CURRENT TIMESTAMP - 31 days) ";
         $sql .= !empty($predicate)   ? "  $predicate " : null;
         $sql .= " ) as tmp ";
         $sql .= " WHERE ROWNUM >= $fromRecord AND ROWNUM < " .  $end ;
@@ -84,6 +85,7 @@ class AuditTable extends DbTable {
      static function recordsFiltered($predicate){
          $sql = " SELECT count(*) as recordsFiltered FROM " . $_SESSION['Db2Schema'] . "." . AllItdqTables::$AUDIT . " AS A ";
          $sql .= " WHERE 1=1 ";
+         $sql .= " AND TIMESTAMP >= (CURRENT TIMESTAMP - 31 days) ";
          $sql .= !empty($predicate)   ? "  $predicate " : null;
          
          $rs = db2_exec($_SESSION['conn'],$sql);
