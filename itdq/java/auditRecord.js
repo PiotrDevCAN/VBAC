@@ -67,7 +67,7 @@ function auditRecord() {
 	             	console.log($('#auditTable_processing').is(":visible")); 
 	            	
 	            	$.each(xhrPool, function(idx, jqXHR) {
-	            	          jqXHR.abort();
+	            	          jqXHR.abort();  // basically, cancel any existing request, so this one is the only one running
 	            	          xhrPool.splice(idx, 1);
 	            	});
 	                xhrPool.push(jqXHR);
@@ -105,17 +105,6 @@ function auditRecord() {
 	        });
 	    });
 	    
-//	    auditRecord.table.on( 'search.dt', function () {
-//	    	console.log('caught search.dt');
-//	    	$('.dataTables_processing').show();  
-//	    	$('#auditTable_processing').show();	    	
-//	    	console.log($('#auditTable_processing').is(":visible")); 
-//	    	
-//	    	console.log($('.dataTables_processing'));
-//	    	
-//	    	
-//	    } );
-	    
 	    auditRecord.table.on( 'processing.dt', function ( e, settings, processing ) {
 	    	var processing =( xhrPool[0].readyState!=4 );
 	    	if(processing){
@@ -131,16 +120,6 @@ function auditRecord() {
 	    
 	},
 	        
-
-//	        $( 'input', this.footer() ).on( 'keyup change', function () {
-//	            if ( that.search() !== this.value ) {
-//	                that
-//	                    .search( this.value )
-//	                    .draw();
-//	            }
-//	        } );
-
-
 	this.initialiseRevalidationAuditTable = function(){
 		console.log('initialiseRevalidationAuditTable');
 	    $.ajax({
@@ -157,38 +136,56 @@ function auditRecord() {
 
 	this.initialiseRevalidationTable = function(){
 	    // Setup - add a text input to each footer cell
-	    $('#auditTable tfoot th').each( function () {
+		var columnNumber = 1;
+	    $('#auditTable tfoot th').each( function () {	    	
 	        var title = $(this).text();
-	        $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+	        $(this).html( '<input type="text" placeholder="Search '+title+'"  id="dtSearch_' + columnNumber++ + '"  />');
 	    } );
 		// DataTable
 	    auditRecord.table = $('#auditTable').DataTable({
+	        processing: true,
+	        serverSide: true,
+	        scrollColapse: false,
+	    	searchDelay: 500,
 	    	ajax: {
 	            url: 'ajax/populateAuditDatatable.php',
+	            type: 'POST',
+	            
+	            data: function ( d ) {
+	            	console.log(d);
+	                d.type = "Revalidation";
+	            },
 	            dataSrc: function ( json ) {
 	            	console.log('dataSrc');
-	            	consoel.log(json);
+	            	console.log(json);
 	            	console.log($('#auditTable_processing').is(":visible"));  
 	                //Make your callback here.
 	            	if(json.messages.length != 0){
 		            	$('#db2ErrorModal .modal-body').html(json.messages);
 		            	$('#db2ErrorModal').modal('show');	            		
 	            	}  
+	            	console.log(json.data);
 	                return json.data;
 	            	},
-	            
-	            data : { type : 'revalidation'},
-	            type: 'POST',
-	        }	,
-	        
-	        order: [[ 0, "desc" ]],
-	    	autoWidth: false,
-	    	deferRender: true,
-	    	responsive: false,
-	    	// scrollX: true,
-	    	processing: true,
-	    	responsive: true,
-	    	colReorder: true,
+	            beforeSend: function (jqXHR, settings) {	
+	            	console.log('before send');
+	             	console.log($('.dataTables_processing'));
+	             	console.log($('#auditTable_processing').is(":visible")); 
+	            	
+	            	$.each(xhrPool, function(idx, jqXHR) {
+	            	          jqXHR.abort();  // basically, cancel any existing request, so this one is the only one running
+	            	          xhrPool.splice(idx, 1);
+	            	});
+	                xhrPool.push(jqXHR);
+	            	},
+	        	},
+	        language: {
+	                    searchPlaceholder: "Search ALL fields - Very slow",
+	                    emptyTable: "No records found",
+	                    processing: "Processing<i class='fas fa-spinner fa-spin '></i>"
+	        },
+	    	autoWidth: true,
+	        responsive: false,
 	    	dom: 'Blfrtip',
 	        buttons: [
 	                  'colvis',
@@ -197,19 +194,36 @@ function auditRecord() {
 	                  'print'
 	              ],
 	    });
-
+	    
+	    var searchAt = $.fn.dataTable.util.throttle(
+	      	    function ( val, col ) {
+	      	    	auditRecord.table.columns(col).search( val ).draw();
+	      	    },
+	       	    500
+	    );
+	    
 	    // Apply the search
 	    auditRecord.table.columns().every( function () {
-	        var that = this;
-
 	        $( 'input', this.footer() ).on( 'keyup change', function () {
-	            if ( that.search() !== this.value ) {
-	                that
-	                    .search( this.value )
-	                    .draw();
-	            }
-	        } );
+	        	var id = $(this).attr('id');
+	        	var column = id.substr(9);
+        		searchAt( this.value,column );
+	        });
+	    });
+	    
+	    auditRecord.table.on( 'processing.dt', function ( e, settings, processing ) {
+	    	var processing =( xhrPool[0].readyState!=4 );
+	    	if(processing){
+	    		$('#auditTable_processing').show(); 
+	    		$('tbody').hide();
+	    	} else {
+	    		$('#auditTable_processing').hide(); 
+	    		$('tbody').show();
+	    	}
+	    	
 	    } );
+	    
+
 
 
 	}

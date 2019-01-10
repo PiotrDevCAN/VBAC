@@ -9,15 +9,13 @@ ob_start();
 $type = isset($_POST['type']) ? $_POST['type'] : null;
 $length = isset($_POST['length']) ? $_POST['length'] : 5;
 
-switch ($type){
+switch (strtolower($type)){    
     case 'revalidation':
         $predicate =" AND TYPE = 'Revalidation' " ;
         break;
     default:
         $predicate = null;
 }
-
-$fromRecord = 1;
 
 $draw = isset($_POST['draw']) ? $_POST['draw'] * 1 : 1 ;
 $start = isset($_POST['start']) ? $_POST['start'] * 1 : 1 ;
