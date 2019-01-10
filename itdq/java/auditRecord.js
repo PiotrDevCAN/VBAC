@@ -51,7 +51,7 @@ function auditRecord() {
 	            type: 'POST',
 	            dataSrc: function ( json ) {
 	            	console.log('dataSrc');
-	            	consoel.log(json);
+	            	console.log(json);
 	            	console.log($('#auditTable_processing').is(":visible"));  
 	                //Make your callback here.
 	            	if(json.messages.length != 0){
