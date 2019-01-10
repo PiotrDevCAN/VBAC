@@ -68,7 +68,7 @@ class AuditTable extends DbTable {
         set_time_limit(0);
         
         
-        echo $sql;
+        // echo $sql;
         
         $rs = db2_exec($_SESSION['conn'],$sql);
 

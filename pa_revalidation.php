@@ -1,7 +1,7 @@
 <?php
 ?>
 <div class='container'>
-<h1>Revalidation Audit</h1>
+<h1>Revalidation Audit<small>(last 31 days)</small></h1>
 </div>
 
 

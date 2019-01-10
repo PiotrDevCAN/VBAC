@@ -5,7 +5,7 @@ use itdq\DbTable;
 
 ?>
 <div class='container'>
-<h1>vBAC Audit Trail</h1>
+<h1>vBAC Audit Trail<small>(last 31 days)</small></h1>
 </div>
 
 <div class='container-fluid'>
