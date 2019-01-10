@@ -51,12 +51,14 @@ function auditRecord() {
 	            type: 'POST',
 	            dataSrc: function ( json ) {
 	            	console.log('dataSrc');
+	            	consoel.log(json);
 	            	console.log($('#auditTable_processing').is(":visible"));  
 	                //Make your callback here.
 	            	if(json.messages.length != 0){
 		            	$('#db2ErrorModal .modal-body').html(json.messages);
 		            	$('#db2ErrorModal').modal('show');	            		
 	            	}  
+	            	console.log(json.data);
 	                return json.data;
 	            	},
 	            beforeSend: function (jqXHR, settings) {	
@@ -163,9 +165,22 @@ function auditRecord() {
 	    auditRecord.table = $('#auditTable').DataTable({
 	    	ajax: {
 	            url: 'ajax/populateAuditDatatable.php',
+	            dataSrc: function ( json ) {
+	            	console.log('dataSrc');
+	            	consoel.log(json);
+	            	console.log($('#auditTable_processing').is(":visible"));  
+	                //Make your callback here.
+	            	if(json.messages.length != 0){
+		            	$('#db2ErrorModal .modal-body').html(json.messages);
+		            	$('#db2ErrorModal').modal('show');	            		
+	            	}  
+	                return json.data;
+	            	},
+	            
 	            data : { type : 'revalidation'},
 	            type: 'POST',
 	        }	,
+	        
 	        order: [[ 0, "desc" ]],
 	    	autoWidth: false,
 	    	deferRender: true,

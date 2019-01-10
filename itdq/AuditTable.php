@@ -105,8 +105,11 @@ class AuditTable extends DbTable {
          
      }
      
-     static function totalRows(){
+     static function totalRows($type=null){
          $sql = " SELECT count(*) as totalRows FROM " . $_SESSION['Db2Schema'] . "." . AllItdqTables::$AUDIT . " AS A ";
+         $sql .= " WHERE 1=1 ";
+         $sql .= " AND TIMESTAMP >= (CURRENT TIMESTAMP - 31 days) ";
+         $sql .= $type=='Revalidation' ? " AND TYPE='Revalidation' " : null; 
          $rs = db2_exec($_SESSION['conn'],$sql);
         
          if(!$rs){
