@@ -100,58 +100,58 @@ class BlueMail
                 curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json','Content-Length: ' . strlen($data_json)));
                 curl_setopt($ch, CURLOPT_POSTFIELDS,$data_json);
 
-                $resp = curl_exec($ch);
+//                 $resp = curl_exec($ch);
                 
-                if ($emailLogRecordID) {
-                    self::updatelog($emailLogRecordID, $resp);
-                }
+//                 if ($emailLogRecordID) {
+//                     self::updatelog($emailLogRecordID, $resp);
+//                 }
                 
-                if(!$resp){
-                    throw new \Exception('Error trying to send email :' . $subject);
-                }
+//                 if(!$resp){
+//                     throw new \Exception('Error trying to send email :' . $subject);
+//                 }
                 
-                $responseObject = json_decode($resp);
+//                 $responseObject = json_decode($resp);
                 
-                if(is_object($responseObject)){
-                    $statusUrl = $responseObject->link[0]->href;
-                    $status = self::getStatus($emailLogRecordID, $statusUrl);
-                    $statusObject = json_decode($status);
+//                 if(is_object($responseObject)){
+//                     $statusUrl = $responseObject->link[0]->href;
+//                     $status = self::getStatus($emailLogRecordID, $statusUrl);
+//                     $statusObject = json_decode($status);
                     
-                    if (! $asynchronous) {
+//                     if (! $asynchronous) {
                        
-                        sleep(5);
-                        $prevStatus = $status;
-                        $status = self::getStatus($emailLogRecordID, $statusUrl, $prevStatus);
-                        $statusObject = json_decode($status);
-                        $iteration = 0;
-                        $attempts = 0;
+//                         sleep(5);
+//                         $prevStatus = $status;
+//                         $status = self::getStatus($emailLogRecordID, $statusUrl, $prevStatus);
+//                         $statusObject = json_decode($status);
+//                         $iteration = 0;
+//                         $attempts = 0;
                         
-                        $statusObjects = array();
-                        $statusObjects[] = $statusObject;
+//                         $statusObjects = array();
+//                         $statusObjects[] = $statusObject;
                         
-                        while (! self::checkStatus($statusObjects) && ! $statusObject->locked) {
-                            if ($attempts ++ > 20) {
-                                throw new \Exception($attempts . " unsuccessful attempts to send email. Abandoning process");
-                            }
-                            $iteration = ++ $iteration < 10 ? $iteration : 9; // wait a little longer each time up till 50 seconds wait. so if they are busy we're not hitting too frequently
-                            $response = self::resend($emailLogRecordID, $responseObject->link[1]->href);
-                            $prevStatus = $status;
+//                         while (! self::checkStatus($statusObjects) && ! $statusObject->locked) {
+//                             if ($attempts ++ > 20) {
+//                                 throw new \Exception($attempts . " unsuccessful attempts to send email. Abandoning process");
+//                             }
+//                             $iteration = ++ $iteration < 10 ? $iteration : 9; // wait a little longer each time up till 50 seconds wait. so if they are busy we're not hitting too frequently
+//                             $response = self::resend($emailLogRecordID, $responseObject->link[1]->href);
+//                             $prevStatus = $status;
                             
-                            $responseObject = json_decode($response);
-                            $statusUrl = $responseObject->link[0]->href;
-                            $status = self::getStatus($emailLogRecordID, $statusUrl);
-                            $statusObject = json_decode($status);
-                            $statusObjects[] = $statusObject;
-                            sleep(5 + $iteration * 5);
-                        }
-                    }
+//                             $responseObject = json_decode($response);
+//                             $statusUrl = $responseObject->link[0]->href;
+//                             $status = self::getStatus($emailLogRecordID, $statusUrl);
+//                             $statusObject = json_decode($status);
+//                             $statusObjects[] = $statusObject;
+//                             sleep(5 + $iteration * 5);
+//                         }
+//                     }
                     
                     
                     
-                } else {
-                    var_dump($resp);
-                    throw new \Exception('Call to bluemail has failed.See above for response.');
-                }
+//                 } else {
+//                     var_dump($resp);
+//                     throw new \Exception('Call to bluemail has failed.See above for response.');
+//                 }
             break;
 
             default:
@@ -170,7 +170,8 @@ class BlueMail
                 }
             break;
         }
-        return array('sendResponse' => $responseObject, 'Status'=>$statusObject);
+//        return array('sendResponse' => $responseObject, 'Status'=>$statusObject);
+        return;
     }
 
     static function checkStatus(array $statusObjects){
@@ -187,16 +188,26 @@ class BlueMail
 
 
 
-    static function prelog(array $to, $subject, $message, $data_json)
+    static function prelog(array $to, $subject, $message, $data_json, $cc=null, $bcc=null)
     {
         AuditTable::audit("Invoked:<b>" . __METHOD__ . "</b>To:" . strlen(db2_escape_string(serialize($to))) . "-" .  serialize($to) . "</br>Subject:" . strlen(db2_escape_string($subject)) . "-" . $subject . "</br>Message:" . strlen(db2_escape_string($message)) . "</br>DataJson:" . strlen(db2_escape_string($data_json)) . "</br>",AuditTable::RECORD_TYPE_DETAILS);
 
-        $sql  = " INSERT INTO " . $_SESSION['Db2Schema'] . "." . AllItdqTables::$EMAIL_LOG;
-        $sql .= " (TO, SUBJECT, MESSAGE, DATA_JSON ) VALUES ( ?,?,?,?); ";
+        $sql = " INSERT INTO " . $_SESSION['Db2Schema'] . "." . AllItdqTables::$EMAIL_LOG;
+        $sql.= " (TO, SUBJECT, MESSAGE, DATA_JSON ";
+        $sql.= !empty($cc) ? " ,CC " : null ;
+        $sql.= !empty($bcc) ? " ,BCC " : null ;
+        $sql.= " ) VALUES ( ";
+        $sql.= " ?,?,?,? ";
+        $sql.= !empty($cc) ? " ,? " : null ;
+        $sql.= !empty($bcc) ? " ,? " : null ;
+        $sql.= " ); ";
 
         $preparedStatement = db2_prepare($_SESSION['conn'], $sql);
 
         $data = array(serialize($to),$subject,$message,$data_json);
+        
+        !empty($cc)  ? $data[] = serialize($cc) : null;
+        !empty($bcc) ? $data[] = serialize($bcc) : null; 
 
         $rs = db2_execute($preparedStatement,$data);
 

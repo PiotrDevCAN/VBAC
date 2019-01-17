@@ -1441,8 +1441,12 @@ class personRecord extends DbRecord
 
     function sendCbnEmail(){
         $loader = new Loader();
-        $allFm = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON, " UPPER(FM_MANAGER_FLAG) like 'Y%' ");
-        $emailableFmLists = array_chunk($allFm, 75);
+        $personTable = new personTable(allTables::$PERSON);
+//        $allFm = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON, " UPPER(FM_MANAGER_FLAG) like 'Y%' ");
+
+        
+        $allFm = $personTable->activeFmEmailAddressesByCnum();
+        $emailableFmLists = array_chunk($allFm, 49);
         $replacements = array($_SERVER['HTTP_HOST']);
         $emailMessage = preg_replace(self::$cbnEmailPattern, $replacements, self::$cbnEmailBody);
         foreach ($emailableFmLists as $groupOfFmEmail){            
