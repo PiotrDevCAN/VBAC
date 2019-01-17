@@ -1,18 +1,15 @@
 <?php
 
+use vbac\personTable;
+use vbac\allTables;
+
 echo "<pre>";
 
-var_dump(scandir('..'));
+$_SESSION['Db2Schema'] = 'VBAC';
 
-var_dump(scandir('../'));
+$personTable = new personTable(allTables::$PERSON);
 
-var_dump(scandir(('../public')));
+$allMgrs = $personTable->activeFmEmailAddressesByCnum();
 
-var_dump(scandir(('../public/emailAttachments')));
-
-
-$filename = "emailAttachments/Overseas Consent Form Owens (2).pdf";
-$handle = fopen($filename, "r");
-var_dump($handle);
-
-
+echo "<pre>";
+print_r($allMgrs);

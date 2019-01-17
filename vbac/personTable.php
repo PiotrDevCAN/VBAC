@@ -653,6 +653,18 @@ class personTable extends DbTable {
         return $_SESSION['myManagersCnum'];
     }
 
+    function activeFmEmailAddressesByCnum(){
+        $loader = new Loader();
+        $allActivePeople = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',$this->tableName,personTable::activePersonPredicate());
+        $allFuncMgr      = $loader->loadIndexed('FM_CNUM','FM_CNUM',$this->tableName,personTable::activePersonPredicate());
+
+        
+        $activeManagers = array_intersect_key($allActivePeople, $allFuncMgr);
+        
+        return $activeManagers;
+        
+        
+    }
 
 
 
