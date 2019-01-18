@@ -121,6 +121,7 @@ class personRecord extends DbRecord
     public static $orderITNonCtbTaskId = array('Aurora.On.and.Off.Boarding.support@uk.ibm.com');
     public static $orderITBauTaskId = array('Aurora.On.and.Off.Boarding.support@uk.ibm.com');
     public static $orderITNonBauTaskId = array('Aurora.On.and.Off.Boarding.support@uk.ibm.com');
+    public static $smCdiAuditEmail = 'e3h3j0u9u6l2q3a3@ventusdelivery.slack.com';
     //private static $pesTaskId = 'rob.daniel@uk.ibm.com';
     //private static $pesTaskId    = array('rob.daniel@uk.ibm.com', 'carrabooth@uk.ibm.com');
 //     private static $pesEmailBody = '<table width="100%" border="0"   cellpadding="0">
@@ -272,12 +273,12 @@ class personRecord extends DbRecord
         );
 
 
-    private static $cbnEmailBody = "You are recorded in the <a href='&&host&&'>vBAC</a> tool, as a Functional Manager for one of more people.<h3>Please review the people assigned to you for continued business need and/or to correct any inaccuracies. <a href='&&host&&/pa_pmo.php'>Link here</a></h3>"
+    private static $cbnEmailBody = "You are recorded in the <a href='&&host&&'>vBAC</a> tool, as a Functional Manager for one or more people.<h3>Please review the people assigned to you for continued business need and/or to correct any inaccuracies. <a href='&&host&&/pa_pmo.php'>Link here</a></h3>"
                                  . "<p>Select the <b><em>Mgrs CBN Report</em></b> and use the <b><em>Hide Offboarded/ing</em></b> option, both are buttons on the Person Portal page.</p>"
                                  . "<ul><li>If your reportee has moved to a new functional manager or changed roles, you can amend their details using the <b>Edit Icon</b> in the <em>Notes ID</em> column to do this. All mandatory information must be completed to save the person record. </li>"
                                  . "<li>If you have people who no longer work on the account  please initiate offboarding by amending their <b>Projected End Date</b>.  Use the <b>Edit Icon</b> in the <em>Notes ID</em> column to do this</li>"
                                  . "<li> If you are missing people who should report to you<br/>Ensure they have been boarded to the account using the vBAC <a href='&&host&&/pa_personFinder.php'>People Finder</a> screen<br/>You can transfer someone to yourself from another manager by clicking the <b>Transfer Icon</b> in the <em>FM Column</em></li>"
-                                 . "<li>If the person needs to be boarded, then please use the <a href='&&host&&/pb_onboard.php'>Boarding<a> screen</li></ul>";      
+                                 . "<li>If the person needs to be boarded, then please use the <a href='&&host&&/pb_onboard.php'>Boarding</a> screen</li></ul>";      
 
     private static $cbnEmailPattern = array('/&&host&&/'); 
                                  
@@ -1440,18 +1441,34 @@ class personRecord extends DbRecord
 
 
     function sendCbnEmail(){
-        $loader = new Loader();
+//         $loader = new Loader();
         $personTable = new personTable(allTables::$PERSON);
 //        $allFm = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON, " UPPER(FM_MANAGER_FLAG) like 'Y%' ");
 
-        
-        $allFm = $personTable->activeFmEmailAddressesByCnum();
+        $allFm = $personTable->activeFmEmailAddressesByCnum();      
         $emailableFmLists = array_chunk($allFm, 49);
         $replacements = array($_SERVER['HTTP_HOST']);
         $emailMessage = preg_replace(self::$cbnEmailPattern, $replacements, self::$cbnEmailBody);
-        foreach ($emailableFmLists as $groupOfFmEmail){            
-            set_time_limit(60);            
-            \itdq\BlueMail::send_mail(self::$pmoTaskId, 'CBN Initiation Request' , $emailMessage, 'vbacNoReply@uk.ibm.com',array(),$groupOfFmEmail);
+        foreach ($emailableFmLists as $groupOfFmEmail){     
+            $to = self::$pmoTaskId;  
+            $cc = array();
+            $bcc = $groupOfFmEmail;
+            /*
+             * 
+             * Next few lines - use for Testing. Comment out for Live.
+             * 
+             */
+//             $to  = array('rob.daniel@uk.ibm.com');     
+//             $cc  = array('jayhunter@uk.ibm.com');
+//             $bcc = array('daniero@uk.ibm.com','antstark@uk.ibm.com');
+            /*
+             * 
+             * Lines above - use for testing. Comment out for Live.
+             * 
+             */
+            $bcc[] = self::$smCdiAuditEmail;  // Always copy the slack channel.           
+            set_time_limit(60);       
+            \itdq\BlueMail::send_mail($to, 'CBN Initiation Request' , $emailMessage, 'vbacNoReply@uk.ibm.com',$cc,$bcc);
         }
    }
    
