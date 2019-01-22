@@ -11,9 +11,9 @@ class slack {
     const CHANNEL_GENERAL = 'general';
     
     function __construct(){
-        $this->url[self::CHANNEL_SM_CDI]       = 'https://hooks.slack.com/services/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';
-        $this->url[self::CHANNEL_SM_CDI_AUDIT] = 'https://hooks.slack.com/services/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';
-        $this->url[self::CHANNEL_GENERAL]      = 'https://hooks.slack.com/services/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';
+        $this->url[self::CHANNEL_SM_CDI]       = 'https://hooks.slack.com/services/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';
+        $this->url[self::CHANNEL_SM_CDI_AUDIT] = 'https://hooks.slack.com/services/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';
+        $this->url[self::CHANNEL_GENERAL]      = 'https://hooks.slack.com/services/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';
     }
     
     function sendMessageToChannel($message,$channel){
