@@ -187,8 +187,8 @@ class BlueMail
         $auditString.= !empty($cc) ? "CC:" . db2_escape_string(serialize($cc)) ."<br/>" : null;
         $auditString.= !empty($cc) ? "BCC:" . db2_escape_string(serialize($bcc)) . "<br/>" : null;
         $auditString.= "Subject:" . db2_escape_string($subject) . "-" . $subject . "</br>";
-        $auditString.= "Message:" . db2_escape_string($message) . "</br>";
-        $auditString.= "DataJson:" . db2_escape_string(serialize($data_json)) . "</br>";        
+        $auditString.= "Message:" . db2_escape_string(substr($message,0,200)) . "</br>";
+//         $auditString.= "DataJson:" . db2_escape_string(substr(serialize($data_json),0,20));        
         
         AuditTable::audit($auditString,AuditTable::RECORD_TYPE_DETAILS);
 

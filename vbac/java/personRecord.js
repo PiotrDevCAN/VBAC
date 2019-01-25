@@ -230,10 +230,16 @@ function personRecord() {
 			    	       
 			    	       },
 			       success: function(result){
-			    	   $('#confirmSendPesEmail').removeClass('spinning');
-			    	   personRecord.table.ajax.reload();
-			    	   var resultObj = JSON.parse(result);			           
-			    	   console.log(resultObj);
+			    	   $('#confirmSendPesEmail').removeClass('spinning');	  		    	   
+			    	   
+			    	   var resultObj = JSON.parse(result);		  	           
+			    	   console.log(resultObj);			    	   
+			    	   console.log(personRecord);
+			    	   console.log(personRecord.table);
+			    	   
+			    	   if(typeof(personRecord.table)!='undefined'){
+			    		   personRecord.table.ajax.reload();
+			    	   }			    	   
 			           $('#confirmSendPesEmailModal').modal('hide');
 			           
 			      }

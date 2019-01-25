@@ -2,13 +2,14 @@
 
 use vbac\pesEmail;
 
+
 ob_start();
 $pesEmailObj = new pesEmail();
 
 
-try {
+try { 
     $emailDetails = $pesEmailObj->getEmailDetails($_GET['emailaddress'], $_GET['country']);
-} catch (Exception $e) {
+} catch ( \Exception $e) {
     switch ($e->getCode()) {
         case 803:
             $emailDetails['warning']['filename'] = 'No email exists for combination of Internal/External and Country';

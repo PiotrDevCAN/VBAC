@@ -151,9 +151,10 @@ class pesEmail {
         $row = db2_fetch_assoc($rs);
         
         $pesEmail = trim($row['PES_EMAIL']);
-        
+
         if(empty($pesEmail)){
-            throw new Exception('PES_EMAIL not defined for country : ' . $country,800);           
+           
+            throw new \Exception('PES_EMAIL not defined for country : ' . $country,800);           
         }
         
         $results = preg_split('/[-.]/', $pesEmail);
