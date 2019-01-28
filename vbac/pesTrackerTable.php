@@ -452,17 +452,25 @@ class pesTrackerTable extends DbTable{
     }
     
     function createNewTrackerRecord($cnum){
-        $preparedStmt = $this->prepareTrackerInsert();
-        $data = array($cnum);
+        $trackerRecord = new pesTrackerRecord();
+        $trackerRecord->setFromArray(array('CNUM'=>$cnum));
         
-        $rs = db2_execute($preparedStmt,$data);
-        
-        if(!$rs){
-            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared sql');
-            throw new \Exception('Unable to create blank Tracker record for ' . $cnum);
+        if (!$this->existsInDb($trackerRecord)) {
+
+            $preparedStmt = $this->prepareTrackerInsert();
+            $data = array($cnum);
+            
+            $rs = db2_execute($preparedStmt,$data);
+            
+            if(!$rs){
+                DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared sql');
+                throw new \Exception('Unable to create blank Tracker record for ' . $cnum);
+            }
+            
+            return;
+            
         }
-        
-        return;        
+        return false;   
         
     }
     

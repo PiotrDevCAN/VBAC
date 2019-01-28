@@ -481,6 +481,12 @@ class personTable extends DbTable {
            DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
            return false;
         }
+        
+        $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER);
+        $pesTracker->savePesComment($cnum, "PES_STATUS set to :" . $status );
+        
+        AuditTable::audit("PES Status set for:" . $cnum ." To : " . $status . " By:" . $requestor,AuditTable::RECORD_TYPE_AUDIT);
+        
         return true;
     }
     

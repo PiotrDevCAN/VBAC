@@ -12,14 +12,14 @@ AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_POST,
 $formattedEmailField= null;
 
 try {
+    $personTable= new personTable(allTables::$PERSON);
+    $personTable->setPesStatus($_POST['psm_cnum'],$_POST['psm_status'],$_SESSION['ssoEmail']);
     
     $person = new personRecord();
-    $person->setFromArray(array('CNUM'=>$_POST['psm_cnum'],'PES_STATUS'=>$_POST['psm_status'],'PES_STATUS_DETAILS'=>$_POST['psm_detail'],'PES_DATE_RESPONDED'=>$_POST['PES_DATE_RESPONDED']));
-    
-    $table = new personTable(allTables::$PERSON);
-    $updateRecordResult = $table->update($person,false,false);
-    
-    $personData = $table->getRecord($person);
+    $person->setFromArray(array('CNUM'=>$_POST['psm_cnum'],'PES_STATUS_DETAILS'=>$_POST['psm_detail'],'PES_DATE_RESPONDED'=>$_POST['PES_DATE_RESPONDED']));
+    $updateRecordResult = $personTable->update($person,false,false);
+        
+    $personData = $personTable->getRecord($person);
     $person->setFromArray($personData);
     
     
@@ -46,17 +46,6 @@ try {
         $formattedEmailField = pesTrackerTable::formatEmailFieldOnTracker($row);        
     } 
     
-    $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER   );
-    
-    try {
-        $comment = $pesTracker->savePesComment($_POST['psm_cnum'],"PES STATUS set to : " . $_POST['psm_status']); 
-    } catch (Exception $e) {
-        // Don't give up just because we didn't save the comment.
-        echo $e->getMessage();        
-    }
-    
-       
-
     AuditTable::audit("Saved Person <pre>" . print_r($person,true) . "</pre>", AuditTable::RECORD_TYPE_DETAILS);
 
     if(!$updateRecordResult){
@@ -68,7 +57,7 @@ try {
 //         echo "<br/>PES Status set to : " . $_POST['psm_status'];
 //         echo "<br/>Detail : " . $_POST['psm_detail'];
 
-        AuditTable::audit("PES Status set for:" . $_POST['psm_cnum'] ." To : " . $_POST['psm_status'] . " Detail :" . $_POST['psm_detail'] . "Date : " . $_POST['PES_DATE_RESPONDED'],AuditTable::RECORD_TYPE_AUDIT);
+
        
         switch ($_POST['psm_status']) {
             case personRecord::PES_STATUS_REMOVED:

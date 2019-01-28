@@ -233,9 +233,9 @@ function personRecord() {
 			    	   $('#confirmSendPesEmail').removeClass('spinning');	  		    	   
 			    	   
 			    	   var resultObj = JSON.parse(result);		  	           
-			    	   console.log(resultObj);			    	   
-			    	   console.log(personRecord);
-			    	   console.log(personRecord.table);
+			    	   console.log(resultObj);	
+			    	   console.log(resultObj.emailResponse.Status.status);
+
 			    	   
 			    	   if(typeof(personRecord.table)!='undefined'){
 			    		   personRecord.table.ajax.reload();
