@@ -5,6 +5,7 @@ use vbac\personTable;
 use vbac\allTables;
 use itdq\AuditTable;
 use vbac\pesTrackerTable;
+use vbac\personRecord;
 
 ob_start();
 
@@ -22,6 +23,7 @@ $response = array();
 $response['success'] = $success;
 $response['messages'] = $messages;
 $response['emailResponse'] = $emailResponse;
+$response['pesStatus'] = personRecord::PES_STATUS_REQUESTED;
 
 $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER   );
 
@@ -39,6 +41,10 @@ if($success){
     try {
         $pesTracker->savePesComment($cnum,"Automated PES Email requesting evidence sent to " . $_POST['emailaddress']);
         $pesTracker->savePesComment($cnum,"Automated PES Email Status :  " . $emailStatus);
+        
+        $comment = $pesTracker->getPesComment($cnum);        
+        $response['comment'] = $comment;       
+        
     } catch (Exception $e) {
         // Don't give up just because we didn't save the comment.
         echo $e->getMessage();

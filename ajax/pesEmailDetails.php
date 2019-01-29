@@ -27,6 +27,7 @@ $success = strlen($messages)==0;
 unset($emailDetails['attachments']); // dont need them at this point.
 $emailDetails['success'] = $success;
 $emailDetails['messages'] = $messages;
+$emailDetails['cnum'] = $_GET['cnum'];
 
 
 ob_clean();

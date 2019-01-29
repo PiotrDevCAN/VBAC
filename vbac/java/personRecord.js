@@ -161,7 +161,8 @@ function personRecord() {
 				   url: "ajax/pesEmailDetails.php",
 			       type: 'GET',
 			       data : {emailaddress:data.emailaddress,
-			    	       country:data.country
+			    	       country:data.country,
+			    	       cnum:data.cnum
 			    	       },
 			       success: function(result){
 			    	   $('.btnSendPesEmail').removeClass('spinning');		    	 
@@ -174,6 +175,7 @@ function personRecord() {
 			   				$('#pesEmailCountry').val(data.country);
 			   				$('#pesEmailOpenSeat').val(data.openseat);
 			   				$('#pesEmailFilename').val(resultObj.filename);
+			   				$('#pesEmailCnum').val(resultObj.cnum);
 			   				$('#pesEmailFilename').css('background-color','#eeeeee');
 			   				$('#pesEmailAttachments').val(''); // clear it out the first time.
 			   				var arrayLength = resultObj.attachmentFileNames.length;
@@ -219,6 +221,7 @@ function personRecord() {
 			var emailAddress = $('#pesEmailAddress').val();
 			var country = $('#pesEmailCountry').val();
 			var openseat = $('#pesEmailOpenSeat').val();
+			var cnum = $('#pesEmailCnum').val();
 			   $.ajax({
 				   url: "ajax/sendPesEmail.php",
 			       type: 'POST',
@@ -226,7 +229,8 @@ function personRecord() {
 			    	   	   firstname:firstname,
 			    	       lastname:lastname,
 			    	       country:country,
-			    	       openseat:openseat
+			    	       openseat:openseat,
+			    	       cnum:cnum
 			    	       
 			    	       },
 			       success: function(result){
@@ -234,13 +238,15 @@ function personRecord() {
 			    	   
 			    	   var resultObj = JSON.parse(result);		  	           
 			    	   console.log(resultObj);	
-			    	   console.log(resultObj.emailResponse.Status.status);
-
 			    	   
 			    	   if(typeof(personRecord.table)!='undefined'){
 			    		   personRecord.table.ajax.reload();
-			    	   }			    	   
-			           $('#confirmSendPesEmailModal').modal('hide');
+			    	   }	
+			    	   
+			    	  $('.pesComments[data-cnum="' + cnum + '"]').html('<small>' + resultObj.comment + '</small>');
+			    	  $('.pesStatusField[data-cnum="' + cnum + '"]').text(resultObj.pesStatus);			    	   
+			    	   
+			          $('#confirmSendPesEmailModal').modal('hide');
 			           
 			      }
 			   });

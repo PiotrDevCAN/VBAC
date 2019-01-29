@@ -1248,7 +1248,7 @@ class personTable extends DbTable {
         $passportSurname = array_key_exists('PASSPORT_SURNAME', $row)    ? $row['PASSPORT_SURNAME'] : null;
         
         $pesStatusWithButton = '';
-        $pesStatusWithButton.= $status . "<br/>";
+        $pesStatusWithButton.= "<span class='pesStatusField' data-cnum='" . $actualCnum . "'>" .  $status . "</span><br/>";
         switch (true) {
             case $boarder:
                 // Don't add buttons if this is a boarded - pre-boarder record.
@@ -1270,6 +1270,7 @@ class personTable extends DbTable {
                 $lastName     = trim($row['LAST_NAME']);
                 $country      = trim($row['COUNTRY']);
                 $openseat     = trim($row['OPEN_SEAT_NUMBER']);
+                $cnum         = trim($row['CNUM']);
             
                 $missing = !empty($emailAddress) ? '' : ' Email Address';
                 $missing.= !empty($firstName) ? '' : ' First Name';
@@ -1289,6 +1290,7 @@ class personTable extends DbTable {
                 $pesStatusWithButton.= " data-lastname='$lastName' ";
                 $pesStatusWithButton.= " data-country='$country' ";
                 $pesStatusWithButton.= " data-openseat='$openseat' ";
+                $pesStatusWithButton.= " data-cnum='$cnum' ";
                 $pesStatusWithButton.= " data-toggle='tooltip' data-placement='top' title='$tooltip'";
                 $pesStatusWithButton.= " $disabled  ";
                 $pesStatusWithButton.= " > ";

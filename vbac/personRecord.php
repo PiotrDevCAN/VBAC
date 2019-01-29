@@ -1087,6 +1087,7 @@ class personRecord extends DbRecord
   <div class="panel-heading">Applicant Details</div>
   <div class="panel-body">
   <form>
+    <input type='hidden' id='pesEmailCnum' name='pesEmailCnum' >
     <div class="form-group">
     <label for="pesEmailFirstName">First Name</label>
     <input type="text" class="form-control" id="pesEmailFirstName" name="pesEmailFirstName" disabled >
