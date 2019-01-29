@@ -240,13 +240,13 @@ function personRecord() {
 			    	   console.log(resultObj);	
 			    	   
 			    	   if(typeof(personRecord.table)!='undefined'){
-			    		   personRecord.table.ajax.reload();
+			    		//   personRecord.table.ajax.reload();
 			    	   }	
 			    	   
 			    	  $('.pesComments[data-cnum="' + cnum + '"]').html('<small>' + resultObj.comment + '</small>');
-			    	  $('.pesStatusField[data-cnum="' + cnum + '"]').text(resultObj.pesStatus);			    	   
-			    	   
-			          $('#confirmSendPesEmailModal').modal('hide');
+			    	  $('.pesStatusField[data-cnum="' + cnum + '"]').text(resultObj.pesStatus);	
+			    	  $('.pesStatusField[data-cnum="' + cnum + '"]').siblings('.btnSendPesEmail').remove();
+			    	  $('#confirmSendPesEmailModal').modal('hide');
 			           
 			      }
 			   });
