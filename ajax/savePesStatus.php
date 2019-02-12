@@ -95,6 +95,6 @@ try {
 
 $messages = ob_get_clean();
 $success = $success && empty($messages);
-$response = array('success'=>$success,'messages'=>$messages, "emailResponse"=>$notificationStatus,"cnum"=>$_POST['psm_cnum'], "formattedEmailField"=>$formattedEmailField,'comment'=>$comment);
+$response = array('success'=>$success,'messages'=>$messages, "emailResponse"=>$notificationStatus,"cnum"=>$_POST['psm_cnum'], "formattedEmailField"=>$formattedEmailField);
 $jse = json_encode($response);
 echo $jse ? $jse : json_encode(array('success'=>false,'messages'=>'Failed to json_encode : ' . json_last_error() . json_last_error_msg()));
