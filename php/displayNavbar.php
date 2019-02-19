@@ -51,6 +51,7 @@ $requestableAssets  = new NavbarOption('Requestable Assets', 'pa_requestableAsse
 $ringFenced     = new NavbarOption('Ring Fencing', 'pa_ringFencing.php','accessRes');
 $delegate       = new NavbarOption('Delegates', 'pc_delegate.php','accessCdi accessPmo accessFm accessUser');
 $pesTracker     = new NavbarOption('PES Tracker', 'pc_pesTracker.php','accessCdi accessPes');
+$odcDataUpload  = new NavbarOption('ODC Access Upload', 'pc_odcAccessUpload.php','accessCdi accessPmo');
 
 
 $email          = new NavbarOption('Email Log', 'pi_emailLog.php','accessCdi');
@@ -72,6 +73,9 @@ $adminMenu->addOption($audit);
 $adminMenu->addOption($email);
 $adminMenu->addOption( new NavbarDivider('accessPes accessCdi'));
 $adminMenu->addOption($pesTracker);
+$adminMenu->addOption( new NavbarDivider('accessPmo accessCdi'));
+$adminMenu->addOption($odcDataUpload);
+
 
 
 $boarding       = new NavbarMenu('Boarding');
