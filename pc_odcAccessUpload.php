@@ -134,7 +134,7 @@ function preventDefaults (e) {
 
 
 	function uploadFile(file) {
-		  var url = 'upload.php'
+		  var url = 'ajax/upload.php'
 		  var xhr = new XMLHttpRequest()
 		  var formData = new FormData()
 		  xhr.open('POST', url, true)
@@ -142,6 +142,8 @@ function preventDefaults (e) {
 		  xhr.addEventListener('readystatechange', function(e) {
 		    if (xhr.readyState == 4 && xhr.status == 200) {
 		      // Done. Inform the user
+		      var responseText = xhr.responseText;
+			      $('#drop-area').html(responseText);
 		    }
 		    else if (xhr.readyState == 4 && xhr.status != 200) {
 		      // Error. Inform the user
