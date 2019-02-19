@@ -15,8 +15,9 @@ var_dump($_FILES);
 
 // Check if file already exists
 if (file_exists($target_file)) {
-    echo "Sorry, file already exists.";
-    $uploadOk = 0;
+    $uploadOk = unlink($target_file);
+    echo $uploadOk ? "Previous File deleted." : "Problem deleting previous file";
+
 }
 // Check file size
 if ($_FILES["file"]["size"] > 500000) {
