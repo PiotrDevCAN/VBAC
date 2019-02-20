@@ -167,5 +167,45 @@ class odcAccessTable extends DbTable {
         
     }
     
+    function locationMismatch(){
+        
+        $vbacActivePredicate = personTable::activePersonPredicate();
+        
+        // records found in ODC_ACCESS as having access to a Secured Area that doesn't match with their LBG_LOCATION in VPAC PERSON table.
+        $sql = "select * ";
+        $sql.= "from ( ";
+        $sql.= "SELECT trim(P.NOTES_ID),trim(P.LBG_LOCATION),trim(O.SECURED_AREA_NAME)";
+        $sql.= ",case when O.SECURED_AREA_NAME like 'PUNE%' and P.LBG_LOCATION like '%Pune' then 'Pune Match' else "; 
+        $sql.= "    case when O.SECURED_AREA_NAME like 'PUNE%' then 'Pune Mismatch - ODC Access not reflected in VBAC' else ";
+        $sql.= "        case when P.LBG_LOCATION like '%Pune'  then 'Pune Mismatch - VBAC LBG_LOCATION not reflected in ODC Access' else '' ";
+        $sql.= "        end ";
+        $sql.= "    end ";
+        $sql.= "end as PUNE_MATCHED ";
+        $sql.= ",case when O.SECURED_AREA_NAME like 'BANGALORE%' and P.LBG_LOCATION like '%Bangalore' then 'Bangalore Matched' ELSE "; 
+        $sql.= "    case when O.SECURED_AREA_NAME like 'BANGALORE%'  then 'Bangalore Mismatch - ODC Access not reflected in VBAC' else ";
+        $sql.= "        case when P.LBG_LOCATION like '%Bangalore'   then 'Bangalore Mismatch - VBAC LBG_LOCATION not reflected in ODC Access' else '' ";
+        $sql.= "        end ";
+        $sql.= "    end ";
+        $sql.= "end as BANGALORE_MATCHED ";
+        $sql.= ",P.CNUM, P.REVALIDATION_STATUS, P.PES_STATUS ";
+        $sql.= "from " . $_SESSION['Db2Schema'] . "." . allTables::$ODC_ACCESS_LIVE . " as O ";
+        $sql.= "left join " . $_SESSION['Db2Schema'] . "." . \vbac\allTables::$PERSON . " as P ";
+        $sql.= "on O.OWNER_CNUM_ID = P.CNUM ";
+        $sql.= ") ";
+        $sql.= "WHERE 1=1 ";
+        $sql.= " and ( PUNE_MATCHED like 'Pune Mismatch%' "; 
+        $sql.= "       or BANGALORE_MATCHED like 'Bangalore Mismatch%' ) ";
+        $sql.= " and " . $vbacActivePredicate;
+        
+        
+        $rs = db2_exec($_SESSION['conn'], $sql);
+        
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+        }
+        
+        return $rs;
+    }
+    
     
 }

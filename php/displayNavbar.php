@@ -111,11 +111,14 @@ $active          = new NavbarOption('Person Details - Active', 'pr_personDetails
 $activeOdc       = new NavbarOption('Person Details - Active(ODC)<span id="odcPopulation" class="badge">**</span>', 'pr_personDetailsActiveOdc.php','accessCdi accessPmo accessRepFullPerson');
 $bauReport       = new NavbarOption('Person Details - BAU Report', 'pr_bau.php','accessCdi accessPmo accessRepFullPerson');
 $inactive        = new NavbarOption('Person Details - Inactive', 'pr_personDetailsInactive.php','accessCdi accessPmo accessRepFullPerson');
+$locMismatch     = new NavbarOption('Location Mismatch', 'pr_odcMismatchReport.php','accessCdi accessPmo accessRepFullPerson');
 $reports->addOption($fullExtract);
 $reports->addOption($active);
 $reports->addOption($activeOdc);
 $reports->addOption($bauReport);
 $reports->addOption($inactive);
+$reports->addOption(new NavbarDivider('accessCdi accessPmo accessRepFullPerson'));
+$reports->addOption($locMismatch);
 
 
 $navbar->addMenu($cdiAdmin);
