@@ -135,6 +135,9 @@ class DbTable
         'NOV' => '11',
         'DEC' => '12'
     );
+    
+    const ROLLBACK_YES = true;
+    const ROLLBACK_NO  = false;
 
     function __construct($table, $pwd = null, $log = true)
     {
@@ -973,6 +976,33 @@ class DbTable
             Log::logEntry("DBTABLE Data:" . serialize($insertArray), $this->pwd);
         }
         return $rs;
+    }
+    
+    function InsertFromArray(array $insertArray, $withTimings = false, $rollbackIfError = true)
+    {
+        $preparedInsert = $this->prepareInsert($insertArray);
+        
+        
+        $insert = -microtime(true);
+        $rs = @db2_execute($preparedInsert, $insertArray);
+        $insert += microtime(true);
+        echo $withTimings ?  "Db2 Insert Time:" . sprintf('%f', $insert) . PHP_EOL : null;
+        
+        if (! $rs) {
+            $this->lastDb2StmtError = db2_stmt_error();
+            $this->lastDb2StmtErrorMsg = db2_stmt_errormsg();
+            
+            echo "<br/>Method:" . __METHOD__ . " Line:" .  __LINE__ ;
+            echo "<br/>Insert Array:";
+            echo "<pre>";
+            print_r($insertArray);
+            echo "</pre>";
+            self::displayErrorMessage($rs, __CLASS__, __METHOD__, $this->preparedInsertSQL, $this->pwd, $this->lastDb2StmtError, $this->lastDb2StmtErrorMsg, $insertArray, $rollbackIfError);
+            return false;
+        } else {
+            $this->lastId = db2_last_insert_id($_SESSION['conn']);
+            return true;
+        }
     }
 
     /**
@@ -1867,14 +1897,14 @@ class DbTable
         }
     }
 
-    static function displayErrorMessage($rs, $class, $method, $sql, $pwd = null, $db2Error = null, $db2ErrorMsg = null, $data = null)
+    static function displayErrorMessage($rs, $class, $method, $sql, $pwd = null, $db2Error = null, $db2ErrorMsg = null, $data = null, $rollback = true)
     {
         $db2Error = empty($db2Error) ? db2_stmt_error() : $db2Error;
         $db2ErrorMsg = empty($db2ErrorMsg) ? db2_stmt_errormsg() : $db2ErrorMsg;
-        db2_rollback($_SESSION['conn']); // Roll back to last commit point.
+        $rollback ? db2_rollback($_SESSION['conn']) : null; // Roll back to last commit point.
 
         if (isset(AllItdqTables::$DB2_ERRORS)) {
-            echo "<BR/>" . __METHOD__ . "<B>DB2 Error:</B><span style='color:red'>" . $db2Error . "</span><B>Message:</B><span style='color:red'>" . $db2ErrorMsg . "</span>$sql";
+            echo "<BR/>" . $method . "<B>DB2 Error:</B><span style='color:red'>" . $db2Error . "</span><B>Message:</B><span style='color:red'>" . $db2ErrorMsg . "</span>$sql";
             DbTable::logDb2Error($data);
             return array(
                 'Db2Error' => $db2Error,

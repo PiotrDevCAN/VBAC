@@ -21,6 +21,8 @@ class allTables
     public static $EMPLOYEE_TYPE_MAPPING  = 'EMPLOYEE_TYPE_MAPPING';
     
     public static $FEB_TRAVEL_REQUEST_TEMPLATES = 'FEB_TRAVEL_REQUEST_TEMPLATES';
+    
+    public static $ODC_ACCESS  = 'ODC_ACCESS';
 
     public static $ORDER_IT_VARB_TRACKER = 'ORDER_IT_VARB_TRACKER';
 

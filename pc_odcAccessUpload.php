@@ -1,6 +1,7 @@
 <?php
 use vbac\personTable;
 use vbac\dlpRecord;
+use vbac\odcAccessTable;
 
 set_time_limit(0);
 ob_start();
@@ -143,16 +144,36 @@ function preventDefaults (e) {
 		    if (xhr.readyState == 4 && xhr.status == 200) {
 		      // Done. Inform the user
 		      var responseText = xhr.responseText;
-			      $('#drop-area').html(responseText);
+		      responseText += "<br/>Upload to DB2 starting.<br/>This can take several minutes (load runs at circa 4 Rows/Sec)<br/>";
+		      responseText += "<i class='fa fa-spinner fa-spin' style='font-size:24px'></i>";
+			  $('#drop-area').html(responseText);
+			  var filename = file.name;
+     		  console.log(filename);			  
+			  $.ajax({
+			    	url: "ajax/copyOdcAccessXlsxIntoDb2.php",
+			    	type: 'POST',
+			    	data: {filename: filename},
+			    	success: function(result){
+				    	console.log(result);
+				    	 $('#drop-area').html(result);
+
+			    	}
+			    });
+			      
 		    }
 		    else if (xhr.readyState == 4 && xhr.status != 200) {
 		      // Error. Inform the user
+		      var responseText = xhr.responseText;
+			  responseText += "<br/>Error has occured, inform support";
+			  $('#drop-area').html(responseText);
 		    }
 		  })
 
 		  formData.append('file', file)
 		  xhr.send(formData)
 		}
+
+	
 			
 	
 
