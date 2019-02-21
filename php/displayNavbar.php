@@ -53,7 +53,6 @@ $delegate       = new NavbarOption('Delegates', 'pc_delegate.php','accessCdi acc
 $pesTracker     = new NavbarOption('PES Tracker', 'pc_pesTracker.php','accessCdi accessPes');
 $odcDataUpload  = new NavbarOption('ODC Access Upload', 'pc_odcAccessUpload.php','accessCdi accessPmo');
 
-
 $email          = new NavbarOption('Email Log', 'pi_emailLog.php','accessCdi');
 $adminMenu->addOption($pmo);
 $adminMenu->addOption($personFinder);
@@ -112,6 +111,7 @@ $activeOdc       = new NavbarOption('Person Details - Active(ODC)<span id="odcPo
 $bauReport       = new NavbarOption('Person Details - BAU Report', 'pr_bau.php','accessCdi accessPmo accessRepFullPerson');
 $inactive        = new NavbarOption('Person Details - Inactive', 'pr_personDetailsInactive.php','accessCdi accessPmo accessRepFullPerson');
 $locMismatch     = new NavbarOption('Location Mismatch', 'pr_odcMismatchReport.php','accessCdi accessPmo accessRepFullPerson');
+$odcNotInVbac    = new NavbarOption('ODC Access no Vbac Rec', 'pr_odcAccessMissingFromVbac.php','accessCdi accessPmo accessRepFullPerson');
 $reports->addOption($fullExtract);
 $reports->addOption($active);
 $reports->addOption($activeOdc);
@@ -119,6 +119,7 @@ $reports->addOption($bauReport);
 $reports->addOption($inactive);
 $reports->addOption(new NavbarDivider('accessCdi accessPmo accessRepFullPerson'));
 $reports->addOption($locMismatch);
+$reports->addOption($odcNotInVbac);
 
 
 $navbar->addMenu($cdiAdmin);

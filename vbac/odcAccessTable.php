@@ -171,7 +171,7 @@ class odcAccessTable extends DbTable {
         
         $vbacActivePredicate = personTable::activePersonPredicate();
         
-        // records found in ODC_ACCESS as having access to a Secured Area that doesn't match with their LBG_LOCATION in VPAC PERSON table.
+        // records found in ODC_ACCESS as having access to a Secured Area that doesn't match with their LBG_LOCATION in VBAC PERSON table.
         $sql = "select * ";
         $sql.= "from ( ";
         $sql.= "SELECT trim(P.NOTES_ID),trim(P.LBG_LOCATION),trim(O.SECURED_AREA_NAME)";
@@ -207,5 +207,23 @@ class odcAccessTable extends DbTable {
         return $rs;
     }
     
+    
+    function odcAccessMissingFromVbac(){
+        // records found in ODC_ACCESS as having access to a Secured Area but CNUM not found in  VBAC PERSON table.
+
+        $sql = "SELECT O.*";
+        $sql.= "from " . $_SESSION['Db2Schema'] . "." . allTables::$ODC_ACCESS_LIVE . " as O ";
+        $sql.= "left join " . $_SESSION['Db2Schema'] . "." . \vbac\allTables::$PERSON . " as P ";
+        $sql.= "on O.OWNER_CNUM_ID = P.CNUM ";
+        $sql.= "WHERE P.CNUM is null ";        
+        
+        $rs = db2_exec($_SESSION['conn'], $sql);
+        
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+        }
+        
+        return $rs;
+    }
     
 }
