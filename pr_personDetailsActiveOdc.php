@@ -32,22 +32,27 @@ $spreadsheet->getProperties()->setCreator('vBAC')
 
 $now = new DateTime();
 
-$personTable = new personTable(allTables::$PERSON);
-$activePredicate = personTable::activePersonPredicate();
-$activePredicate .=" AND ";
-$activePredicate .= personTable::odcPredicate();
+// $personTable = new personTable(allTables::$PERSON);
+// $activePredicate = personTable::activePersonPredicate();
+// $activePredicate .=" AND ";
+// $activePredicate .= personTable::odcPredicate();
 
 
 try {
-    $sheet = 1;
+
     $sql = " Select * ";
-    $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
+    $sql.= personTable::odcStaffSql();
+//     $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
+//     $sql.= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$ODC_ACCESS_LIVE . " as O ";
+//     $sql.= " ON O.OWNER_CNUM_ID = P.CNUM ";
     
-    $activeSql = $sql . " WHERE 1=1 AND " . $activePredicate;
+//     $activeSql = $sql . " WHERE 1=1 ";
+//     $activeSql.= " AND " . $activePredicate;
+//     $activeSql.= " AND O.OWNER_CNUM_ID is not null ";// they have to have currect access to ODC
     
     set_time_limit(60);
     
-    $rs = db2_exec($_SESSION['conn'], $activeSql);
+    $rs = db2_exec($_SESSION['conn'], $sql);
     
     if($rs){
         $recordsFound = DbTable::writeResultSetToXls($rs, $spreadsheet);

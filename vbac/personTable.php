@@ -1233,9 +1233,14 @@ class personTable extends DbTable {
             }
         }
         
-        $odcActive = self::activePersonPredicate() . " AND " . self::odcPredicate();
-        $sql = " SELECT COUNT(*) as ACTIVE_ODC FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
-        $sql.= " WHERE 1=1 and  " . $odcActive;
+//         $odcActive = self::activePersonPredicate() . " AND " . self::odcPredicate();
+       $sql = " SELECT COUNT(*) as ACTIVE_ODC ";
+       $sql.= self::odcStaffSql();
+           
+//         $sql.= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$ODC_ACCESS_LIVE . " as O ";
+//         $sql.= " ON O.OWNER_CNUM_ID = P.CNUM ";
+//         $sql.= " WHERE 1=1 and  " . $odcActive;
+//         $sql.= " AND O.OWNER_CNUM_ID is not null "; // they have to have access
         
         $rs = db2_exec($_SESSION['conn'], $sql);
         
@@ -1247,7 +1252,20 @@ class personTable extends DbTable {
         $row = db2_fetch_assoc($rs);        
         $_SESSION['Odcstaff'] = $row['ACTIVE_ODC'];        
         return $_SESSION['Odcstaff'];
+    }
+    
+    static function odcStaffSql(){
+        $activePredicate = self::activePersonPredicate();
+
+        $sql = " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
+        $sql.= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$ODC_ACCESS_LIVE . " as O ";
+        $sql.= " ON O.OWNER_CNUM_ID = P.CNUM ";
         
+        $activeSql = $sql . " WHERE 1=1 ";
+        $activeSql.= " AND " . $activePredicate;
+        $activeSql.= " AND O.OWNER_CNUM_ID is not null ";// they have to have currect access to ODC
+        
+        return $activeSql;        
     }
     
     
