@@ -24,6 +24,7 @@ class allTables
     
     public static $ODC_ACCESS       = 'ODC_ACCESS';
     public static $ODC_ACCESS_LIVE  = 'ODC_ACCESS_LIVE';
+    public static $ODC_ASSET_REMOVAL= 'ODC_ASSET_REMOVAL';
 
     public static $ORDER_IT_VARB_TRACKER = 'ORDER_IT_VARB_TRACKER';
 
