@@ -2,6 +2,9 @@
 use vbac\allTables;
 use itdq\DbTable;
 
+ob_start();
+
+
 if($_REQUEST['token']!= $token){
     return;
 }
@@ -175,6 +178,9 @@ if($startDate===false || $endDate===false){
             break;
     }
 }
+
+$errorMsg.= ob_get_clean();
+
 
 $response = array('success'=>empty($errorMsg),'errorMsg'=>$errorMsg);
 
