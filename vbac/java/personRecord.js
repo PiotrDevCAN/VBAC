@@ -581,7 +581,7 @@ function personRecord() {
     console.log(cnum);
       $('#saveBoarding').attr('disabled',true);
 
-    var urlOptions = "preferredidentity&jobresponsibilities&notesemail&uid&preferredfirstname&hrfirstname&sn&hrfamilyname&ismanager&phonemailnumber&employeetype&co&ibmloc";
+    var urlOptions = "preferredidentity&jobresponsibilities&notesemail&uid&givenname&sn&hrfamilyname&ismanager&phonemailnumber&employeetype&co&ibmloc";
 
     if(cnum.length == 9){
         $.ajax({
@@ -621,19 +621,29 @@ function personRecord() {
                          var uid =  document.getElementById('person_uid');
                          if(typeof(uid) !== 'undefined'){ uid.value = value;};
                          break;
-              case 'preferredfirstname':
-              case 'hrfirstname':
-                         var fname =  document.getElementById('person_first_name');
-                         console.log(name.value);
-                         var firstName = value[0];
-                         if(typeof(fname) !== 'undefined'){
-                             initialLetter = firstName.substring(0,1).toUpperCase();
-                             restOfName    = firstName.substring(1).toLowerCase();
-                             capitalizedName = initialLetter + restOfName;
-                             fname.value = capitalizedName ;
-                         };
-                         console.log($(fname));
-                         break;
+//              case 'preferredfirstname':
+//              case 'hrfirstname':
+//                         var fname =  document.getElementById('person_first_name');
+//                         console.log(name.value);
+//                         var firstName = value[0];
+//                         if(typeof(fname) !== 'undefined'){
+//                             initialLetter = firstName.substring(0,1).toUpperCase();
+//                             restOfName    = firstName.substring(1).toLowerCase();
+//                             capitalizedName = initialLetter + restOfName;
+//                             fname.value = capitalizedName ;
+//                         };
+//                         console.log($(fname));
+//                         break;
+              case 'givenname':            	  
+            	  var i=0;
+            	  var firstName = value[i];
+            	  while(regex.test(firstName) && i < value.length){
+            		  firstName = value[++i];
+            	  }
+               capitalizedName = person.toTitleCase(firstName);
+               var fname =  document.getElementById('person_first_name');
+               fname.value = capitalizedName ;
+               break;           
               case 'sn':
               case 'hrfamilyname':
                          var lname =  document.getElementById('person_last_name');
@@ -692,6 +702,12 @@ function personRecord() {
         });
     };
 
+  },
+  
+  this.toTitleCase = function(str) {
+	    return str.replace(/\w\S*/g, function(txt){
+	        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+	    });
   },
 
   this.listenForCtbRtb = function(){
