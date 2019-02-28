@@ -518,6 +518,35 @@ class personTable extends DbTable {
         
     }
     
+    function setFirstName($cnum=null,$firstName=null){
+        if(!$cnum){
+            throw new \Exception('No CNUM provided in ' . __METHOD__);
+        }
+        if(!$firstName){
+            throw new \Exception('No FIRST_NAME provided in ' . __METHOD__);
+        }
+        
+        
+        $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql .= " SET FIRST_NAME ='" . db2_escape_string($firstName)  . "' ";
+        $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
+        
+        try {
+            $result = db2_exec($_SESSION['conn'], $sql);
+        } catch (\Exception $e) {
+            var_dump($e);
+        }
+        
+        if(!$result){
+            DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+        
+        AuditTable::audit("FIRST_NAME for cnum: $cnum set to : $firstName by " . $_SESSION['ssoEmail'], AuditTable::RECORD_TYPE_AUDIT );
+        return true;
+        
+    }
+    
 
     function saveCtid($cnum,$ctid){
         $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
