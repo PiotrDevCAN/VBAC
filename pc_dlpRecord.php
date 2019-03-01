@@ -64,6 +64,49 @@ if(!$myCnum){
 </div>
 </div>
 
+<!-- Modal' Follow -->
+
+		<div id="confirmInstalled" class="modal fade" role="dialog">
+  			<div class="modal-dialog">
+	        <!-- Modal content-->
+    		<div class="modal-content">
+      			<div class="modal-header">
+        		   <h4 class="modal-title">Confirm DLP is Installed</h4>
+      			</div>
+      			<div class="modal-body" >
+      			<h1 class='text-center' style='font-size:43px;background-color:red;color:white'>STOP</h1>
+				<p>You must download and install the software <b>BEFORE</b> raising this request. It is against BCGs to create a DLP record if you don't have the software installed.</p>
+				<label for='dlpInstalConfirmed'>Confirm DLP software is installed</label>
+				<input type='checkbox' id='dlpInstalConfirmed'>
+        		</div>
+        		<div class='modal-footer'>
+      		  		<button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
+      			</div>
+        </div>
+        </div>
+        </div>
+        
+        	<div id="confirmVerified" class="modal fade" role="dialog">
+  			<div class="modal-dialog">
+	        <!-- Modal content-->
+    		<div class="modal-content">
+      			<div class="modal-header">
+        		   <h4 class="modal-title">Confirm DLP instalation has been verified</h4>
+      			</div>
+      			<div class="modal-body" >
+      			<h1 class='text-center' style='font-size:56px;background-color:red;color:white'>STOP</h1>
+				<p>Before approving this request, it is your responsibility to ensure the licence is installed on the individual's machine.</p>
+        		</div>
+        		<div class='modal-footer'>
+      		  		<button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
+      			</div>
+        </div>
+        </div>
+        </div>
+        
+        
+        
+        
 
 <script type="text/javascript">
 var Dlp = new dlp();

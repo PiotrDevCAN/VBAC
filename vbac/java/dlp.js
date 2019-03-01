@@ -92,7 +92,18 @@ function dlp() {
 
 		      if(formValid){
 		    	  var Dlp = new dlp();
-		    	  Dlp.saveRecord();
+		    	  $('#confirmInstalled').on('hidden.bs.modal', function (event) {
+		    		 //  
+		    		  if($('#dlpInstalConfirmed').is(':checked')){
+		    			  Dlp.saveRecord();   
+		    		  } else {
+		    			  $('#saveDlpLicence').removeClass('spinning');
+			    		  $('#saveDlpLicence').attr('disabled',false);		    			  
+		    		  }
+		    		  $('#confirmInstalled').remove('hidden.bs.modal');		    		  
+		    	  });		
+		    	  $('#confirmInstalled').prop('checked',false);
+		    	  $('#confirmInstalled').modal('show');
 		      } else if(currentHostname == hostname) {
 		    	  alert('New Hostname(' + hostname  + ') matches current Hostname (' + currentHostname + ') for the licencee');
 	    		  $('#saveDlpLicence').removeClass('spinning');
