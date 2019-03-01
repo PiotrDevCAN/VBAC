@@ -226,4 +226,42 @@ class odcAccessTable extends DbTable {
         return $rs;
     }
     
+    
+    
+    function odcPopulationByPlatform(){
+        $personTable = new personTable(allTables::$PERSON);       
+        
+        $activePredicate = $personTable->activePersonPredicate();
+        
+        
+        $sql = " SELECT upper(trim(WORK_STREAM)) AS WORK_STREAM, COUNT(*) as Platform_Population ";
+        $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
+        $sql.= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . $this->tableName . " as O ";
+        $sql.= " ON O.OWNER_CNUM_ID = P.CNUM ";
+        $sql.= " WHERE 1=1 ";
+        $sql.= " AND " . $activePredicate;
+        $sql.= " AND TT_BAU='BAU' ";
+        $sql.= " GROUP BY WORK_STREAM ";
+        
+        $rs = db2_exec($_SESSION['conn'], $sql);
+        
+        if(!$rs){
+            echo db2_stmt_error();
+            echo db2_stmt_errormsg();
+            DbTable::displayErrorMessage($rs, '', '', $sql);
+        }
+        
+        $totalPopulation=0;
+        $platformPopulation = array();
+        
+        while(($row=db2_fetch_assoc($rs))==true){
+            $platformPopulation[strtoupper(trim($row['WORK_STREAM']))] = $row['PLATFORM_POPULATION']+0;
+            $totalPopulation += $row['PLATFORM_POPULATION'];
+        }
+        
+        return array('TotalPopulation'=>$totalPopulation,'PlatformPopulations'=>$platformPopulation,'sql'=>$sql);
+        
+        
+    }
+    
 }
