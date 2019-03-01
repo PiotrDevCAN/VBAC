@@ -41,7 +41,26 @@ class odcAssetRemovalTable extends DbTable {
         }
         
         return array('TotalPopulationWithRemove'=>$totalPopulation,'PlatformPopulationsWithRemove'=>$platformPopulation,'sql'=>$sql);
-    }    
+    } 
+    
+    
+    function rightToRemove(){
+        $sql = "SELECT P.NOTES_ID, P.FIRST_NAME, P.LAST_NAME, O.CNUM, O.ASSET_SERIAL_NUMBER, O.START_DATE, O.END_DATE, P.WORK_STREAM ";
+        $sql.= "from " . $_SESSION['Db2Schema'] . "." . $this->tableName . " as O ";
+        $sql.= "left join " . $_SESSION['Db2Schema'] . "." . \vbac\allTables::$PERSON . " as P ";
+        $sql.= "on O.CNUM = P.CNUM ";
+        $sql.= " ORDER BY NOTES_ID ";
+        
+
+        
+        $rs = db2_exec($_SESSION['conn'], $sql);
+        
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+        }
+        
+        return $rs;
+    }
         
     
     

@@ -111,7 +111,8 @@ $activeOdc       = new NavbarOption('Person Details - Active(ODC)<span id="odcPo
 $bauReport       = new NavbarOption('Person Details - BAU Report', 'pr_bau.php','accessCdi accessPmo accessRepFullPerson');
 $inactive        = new NavbarOption('Person Details - Inactive', 'pr_personDetailsInactive.php','accessCdi accessPmo accessRepFullPerson');
 $locMismatch     = new NavbarOption('Location Mismatch', 'pr_odcMismatchReport.php','accessCdi accessPmo accessRepFullPerson');
-$odcNotInVbac    = new NavbarOption('ODC Access no Vbac Rec', 'pr_odcAccessMissingFromVbac.php','accessCdi accessPmo accessRepFullPerson');
+$odcNotInVbac    = new NavbarOption('ODC Access but no Vbac Record', 'pr_odcAccessMissingFromVbac.php','accessCdi accessPmo accessRepFullPerson');
+$assetRemoval    = new NavbarOption('Asset Removal', 'pr_assetRemovalReport.php','accessCdi accessPmo');
 $reports->addOption($fullExtract);
 $reports->addOption($active);
 $reports->addOption($activeOdc);
@@ -120,7 +121,7 @@ $reports->addOption($inactive);
 $reports->addOption(new NavbarDivider('accessCdi accessPmo accessRepFullPerson'));
 $reports->addOption($locMismatch);
 $reports->addOption($odcNotInVbac);
-
+$reports->addOption($assetRemoval);
 
 $navbar->addMenu($cdiAdmin);
 $navbar->addMenu($adminMenu);
