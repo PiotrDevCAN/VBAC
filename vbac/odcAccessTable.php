@@ -234,7 +234,7 @@ class odcAccessTable extends DbTable {
         $activePredicate = $personTable->activePersonPredicate();
         
         
-        $sql = " SELECT upper(trim(WORK_STREAM)) AS WORK_STREAM, COUNT(*) as Platform_Population ";
+        $sql = " SELECT upper(trim(WORK_STREAM)) AS WORK_STREAM, COUNT( distinct O.OWNER_CNUM_ID) as Platform_Population ";
         $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql.= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . $this->tableName . " as O ";
         $sql.= " ON O.OWNER_CNUM_ID = P.CNUM ";

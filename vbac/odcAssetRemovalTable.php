@@ -13,7 +13,7 @@ class odcAssetRemovalTable extends DbTable {
         $personTable = new personTable(allTables::$PERSON);        
         $activePredicate = $personTable->activePersonPredicate();        
         
-        $sql = " SELECT upper(trim(WORK_STREAM)) as WORK_STREAM, COUNT(*) as Platform_Population_With_Remove ";
+        $sql = " SELECT upper(trim(WORK_STREAM)) as WORK_STREAM, COUNT(distinct O.CNUM) as Platform_Population_With_Remove ";
         $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql.= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . $this->tableName . " as O ";
         $sql.= " ON O.CNUM = P.CNUM ";
