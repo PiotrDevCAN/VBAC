@@ -1070,7 +1070,8 @@ class personTable extends DbTable {
             }
             
             //array('/&&leaversNotesid&&/','/&&revalidationStatus&&/','/&&statusDescription&&/');
-            $replacements = array($empsNotesid, $revalidationStatus, $statusDescription);
+            $replacements = array($empsNotesid[$employeeCnum], $revalidationStatus, $statusDescription);
+            
             $message = preg_replace(self::$revalStatusChangeEmailPattern, $replacements, self::$revalStatusChangeEmail);
             
             \itdq\BlueMail::send_mail(array($fmsEmailAddress), "vBAC Revalidation Status Change Notification", $message, 'vbacNoReply@uk.ibm.com');
