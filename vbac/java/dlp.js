@@ -303,7 +303,15 @@ function dlp() {
 	  
 	  this.listenForApproveDlp = function(){
 			$(document).on('click','.btnDlpLicenseApprove', function(e){
-				Dlp.approveRejectDlp($(this),'approved');
+				var record = $(this);
+				$('#dlpInstallVerfied').prop('checked',false);
+				$('#confirmVerified').on('hidden.bs.modal', function(event){
+					if($('#dlpInstallVerfied').is(':checked')){
+						Dlp.approveRejectDlp(record,'approved');						
+					}
+				});
+				$('#confirmVerified').modal('show');
+				//Dlp.approveRejectDlp($(this),'approved');
 			});
 	  },
 	  

@@ -95,7 +95,10 @@ if(!$myCnum){
       			</div>
       			<div class="modal-body" >
       			<h1 class='text-center' style='font-size:56px;background-color:red;color:white'>STOP</h1>
-				<p>Before approving this request, it is your responsibility to ensure the licence is installed on the individual's machine.</p>
+				<p>Before approving this request, it is your responsibility to ensure the software is installed on the individual's machine.</p>
+					<label for='dlpInstallVerfied'>Confirm DLP software is installed</label>
+					<input type='checkbox' id='dlpInstallVerfied'>
+					
         		</div>
         		<div class='modal-footer'>
       		  		<button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
