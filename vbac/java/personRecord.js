@@ -597,6 +597,9 @@ function personRecord() {
               var object = attributes[a];
               var value = object.value;
               var name = object.name;
+              
+              var regex = /[.]/;             
+              
               switch(name){
               case 'preferredidentity':
                 var intranet = document.getElementById('person_intranet');
