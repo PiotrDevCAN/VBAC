@@ -136,10 +136,14 @@ class pesTrackerTable extends DbTable{
         ?>
         <table id='pesTrackerTable' class='table table-striped table-bordered display compact nowrap '  style='width:100%'>
 		<thead>
-		<tr><th>Email Address</th><th>Requestor</th><th>Country</th>
+		<tr ><th>Email Address</th><th>Requestor</th><th>Country</th>
 		<th>Consent Form</th><th>Proof of Right to Work</th><th>Proof of ID</th><th>Proof of Residency</th><th>Credit Check</th>
 		<th>Financial Sanctions</th><th>Criminal Records Check</th><th>Proof of Activity</th>
-		<th>Process Status</th><th>PES Status</th><th>Comment</th>		
+		<th>Process Status</th><th>PES Status</th><th>Comment</th></tr>	
+		<tr class='searchingRow'><td>Email Address</td><td>Requestor</td><td>Country</td>
+		<td>Consent Form</td><td>Proof of Right to Work</td><td>Proof of ID</td><td>Proof of Residency</td><td>Credit Check</td>
+		<td>Financial Sanctions</td><td>Criminal Records Check</td><td>Proof of Activity</td>
+		<td>Process Status</td><td>PES Status</td><td>Comment</td></tr>		
 		</tr>
 		</thead>
 		<tbody>

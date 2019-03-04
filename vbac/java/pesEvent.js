@@ -4,6 +4,17 @@
  *
  */
 
+$.expr[":"].contains = $.expr.createPseudo(function(arg) {
+    return function( elem ) {
+        return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
+    };
+});
+
+
+
+
+
+
 function searchTable(){
 	  var filter = $('#pesTrackerTableSearch').val().toUpperCase();
 
@@ -23,6 +34,8 @@ function searchTable(){
 }
 
 function pesEvent() {
+	
+	var table;
 
   this.init = function(){
     console.log('+++ Function +++ pesEvent.init');
@@ -59,11 +72,12 @@ function pesEvent() {
   
   this.populatePesTracker = function(records){
 	  var buttons = $('.btnRecordSelection');	  
-	  console.log(buttons);
+	  console.log(buttons);	  
+	  
 	  
 	  $('#pesTrackerTableDiv').html('<i class="fa fa-spinner fa-spin" style="font-size:68px"></i>');
 
-	  $.ajax({
+	  pesEvent.table = $.ajax({
 		  	url: "ajax/populatePesTrackerTable.php",
 		  	type: 'POST',
 		  	data : { records: records,
@@ -75,12 +89,43 @@ function pesEvent() {
 		    	console.log(resultObj.messages);
 		    	if(resultObj.sucess){
 		    		$('#pesTrackerTableDiv').html(resultObj.table);	
+
+		    		$('#pesTrackerTable thead th').each( function () {
+		    	        var title = $(this).text();
+		    	        $(this).html(title + '<input class="secondInput" type="hidden"  />' );
+		    	    } );		    		
+		    		
+		    	    $('#pesTrackerTable thead td').each( function () {
+		    	        var title = $(this).text();
+		    	        $(this).html('<input class="firstInput" type="text" placeholder="Search '+title+'" />' );
+		    	    });
+		    		
 		    	} else {
 		    		$('#pesTrackerTableDiv').html(resultObj.messages);
 		    	}
 		    	
 		    }
 	  });
+	  
+	    // Apply the search
+    
+	        $(document).on( 'keyup change', '.firstInput', function (e) {
+	        	var searchFor = this.value;
+	        	var col = $(this).parent().index();      	
+	        	var searchCol = col + 1;
+	        	if(searchFor.length >= 3){
+		        	$('#pesTrackerTable tbody tr').hide();	        	
+		        	$('#pesTrackerTable tbody td:nth-child(' + searchCol + '):contains(' + searchFor + ')	').parent().show();	        		
+	        	} else {
+	        		$('#pesTrackerTable tbody tr').show();
+	        	}
+
+	       } );
+
+
+	  
+	  
+	  
   }
   
   
