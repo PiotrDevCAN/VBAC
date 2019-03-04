@@ -4,6 +4,13 @@
  *
  */
 
+function toTitleCase(str) {
+	    return str.replace(/\w\S*/g, function(txt){
+	        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+	    });
+};
+
+
 function personRecord() {
 
   var table;
@@ -643,7 +650,7 @@ function personRecord() {
             	  while(regex.test(firstName) && i < value.length){
             		  firstName = value[++i];
             	  }
-               capitalizedName = person.toTitleCase(firstName);
+               capitalizedName = toTitleCase(firstName);
                var fname =  document.getElementById('person_first_name');
                fname.value = capitalizedName ;
                break;           
@@ -707,12 +714,6 @@ function personRecord() {
 
   },
   
-  this.toTitleCase = function(str) {
-	    return str.replace(/\w\S*/g, function(txt){
-	        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-	    });
-  },
-
   this.listenForCtbRtb = function(){
     $(document).on('click','.ctbRtb', function(){
       var ctbRtb = $(this).val();
