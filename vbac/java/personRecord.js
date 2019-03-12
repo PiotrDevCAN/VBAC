@@ -588,7 +588,7 @@ function personRecord() {
     console.log(cnum);
       $('#saveBoarding').attr('disabled',true);
 
-    var urlOptions = "preferredidentity&jobresponsibilities&notesemail&uid&givenname&sn&hrfamilyname&ismanager&phonemailnumber&employeetype&co&ibmloc";
+    var urlOptions = "preferredidentity&jobresponsibilities&notesemail&uid&givenname&sn&ismanager&phonemailnumber&employeetype&co&ibmloc";
 
     if(cnum.length == 9){
         $.ajax({
@@ -655,18 +655,14 @@ function personRecord() {
                fname.value = capitalizedName ;
                break;           
               case 'sn':
-              case 'hrfamilyname':
-                         var lname =  document.getElementById('person_last_name');
-                         console.log(name + ":" + value);
-                         var lastName = value[0];
-                         if(typeof(lname) !== 'undefined'){
-                           initialLetter = lastName.substring(0,1).toUpperCase();
-                           restOfName    = lastName.substring(1).toLowerCase();
-                           capitalizedName = initialLetter + restOfName;
-                           lname.value = capitalizedName ;
-                         };
-                         console.log($(lname));
-                         break;
+            	  var lname =  document.getElementById('person_last_name');
+                  console.log(name + ":" + value);
+                  var lastName = value[0];
+                  if(typeof(lname) !== 'undefined'){
+                	  lname.value = lastName ;
+                  };
+                  console.log($(lname));
+                  break;
               case 'ismanager':
                    var isMgr =  document.getElementById('person_is_mgr');
                    console.log($(isMgr) + ":" + value);
