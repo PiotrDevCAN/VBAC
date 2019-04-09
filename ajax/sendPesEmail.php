@@ -13,12 +13,12 @@ AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_POST,
 
 $pesEmailObj = new pesEmail();
 
-$emailResponse = $pesEmailObj->sendPesEmail($_POST['firstname'],$_POST['lastname'],$_POST['emailaddress'], $_POST['country'], $_POST['openseat']);
+$emailResponse = $pesEmailObj->sendPesEmail($_POST['firstname'],$_POST['lastname'],$_POST['emailaddress'], $_POST['country'], $_POST['openseat'], $_POST['cnum']);
 
 $emailStatus = $emailResponse['Status']->status;
 
 $messages = ob_get_contents();
-$success = strlen($messages)==0; 
+$success = strlen($messages)==0;
 $response = array();
 $response['success'] = $success;
 $response['messages'] = $messages;
@@ -31,25 +31,25 @@ if($success){
     $personTable = new personTable(allTables::$PERSON);
     $cnum = $personTable->getCnumFromEmail($_POST['emailaddress']);
     $personTable->setPesEvidence($cnum);
-    
+
     $messages = ob_get_contents();
-    $success = strlen($messages)==0;   
-    
+    $success = strlen($messages)==0;
+
     $response['success'] = $success;
     $response['messages'] = $messages;
-    
+
     try {
         $pesTracker->savePesComment($cnum,"Automated PES Email requesting evidence sent to " . $_POST['emailaddress']);
         $pesTracker->savePesComment($cnum,"Automated PES Email Status :  " . $emailStatus);
-        
-        $comment = $pesTracker->getPesComment($cnum);        
-        $response['comment'] = $comment;       
-        
+
+        $comment = $pesTracker->getPesComment($cnum);
+        $response['comment'] = $comment;
+
     } catch (Exception $e) {
         // Don't give up just because we didn't save the comment.
         echo $e->getMessage();
     }
-    
+
 } else {
     try {
         $pesTracker->savePesComment($cnum,"Error trying to send automated PES Email " . $_POST['emailaddress']);

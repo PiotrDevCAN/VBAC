@@ -8,17 +8,17 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use itdq\BlueMail;
 
 class pesEmail {
-    
+
     private function getLloydsGlobalApplicationForm(){
         // LLoyds Global Application Form v1.4.doc
         $filename = "../emailAttachments/LLoyds Global Application Form v1.4.doc";
-        $handle = fopen($filename, "r");            
+        $handle = fopen($filename, "r");
         $applicationForm = fread($handle, filesize($filename));
         fclose($handle);
         $encodedApplicationForm = base64_encode($applicationForm);
         return $encodedApplicationForm;
     }
-    
+
     private function getOverseasConsentForm(){
         $filename = "../emailAttachments/Overseas Consent Form Owens (2).pdf";
         $handle = fopen($filename, "r");
@@ -27,13 +27,13 @@ class pesEmail {
         $encodedApplicationForm = base64_encode($applicationForm);
         return $encodedApplicationForm;
     }
-    
+
     private function getOdcApplicationForm(){
         $inputFileName = '../emailAttachments/ODC application form V2.0.xls';
-        
+
         /** Load $inputFileName to a Spreadsheet Object  **/
         $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($inputFileName);
-        
+
         // $spreadsheet = new Spreadsheet();
         // Set document properties
         $spreadsheet->getProperties()->setCreator('vBAC')
@@ -43,29 +43,29 @@ class pesEmail {
         ->setDescription('Ventus PES application generated from vBAC')
         ->setKeywords('office 2007 openxml php vbac tracker')
         ->setCategory('testing 1 2 3');
-        
+
         $spreadsheet->getActiveSheet()
         ->getCell('C17')
         ->setValue('Emp no. here');
-        
+
         $spreadsheet->setActiveSheetIndex(0);
 //         ob_clean();
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
         ob_start();
         $writer->save('php://output');
         $xlsAttachment = ob_get_clean();
-        
+
         $encodedXlsAttachment = base64_encode($xlsAttachment);
         return $encodedXlsAttachment;
     }
-    
-    
+
+
     private function determineInternalExternal($emailAddress){
         $ibmEmail = stripos(strtolower($emailAddress), "ibm.com") !== false;
-        
+
         return $ibmEmail ? 'Internal' : 'External';
     }
-    
+
     private function getAttachments($intExt,$emailType){
         switch (true) {
             case $intExt=='External' && $emailType=='UK':
@@ -124,45 +124,45 @@ class pesEmail {
                 );
                 break;
             default:
-                
+
                 throw new Exception('No matches found for ' . $intExt . ' and ' . $emailType, 803);
                 ;
-                break;                
+                break;
         }
-        
+
         return $pesAttachments;
     }
-    
+
     function getEmailDetails($emailAddress, $country,$openSeat=null){
         $countryCodeTable = new DbTable(allTables::$STATIC_COUNTRY_CODES);
         $intExt = $this->determineInternalExternal($emailAddress);
-        
+
         $sql = ' SELECT PES_EMAIL ';
         $sql.= ' FROM ' . strtoupper($_SERVER['environment']) . "." . allTables::$STATIC_COUNTRY_CODES;
         $sql.= " WHERE  upper(country_name)= '" . db2_escape_string(strtoupper($country)) . "' ";
-        
+
         $rs = db2_exec($_SESSION['conn'], $sql);
-        
+
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         }
-        
+
         $row = db2_fetch_assoc($rs);
-        
+
         $pesEmail = trim($row['PES_EMAIL']);
 
         if(empty($pesEmail)){
-           
-            throw new \Exception('PES_EMAIL not defined for country : ' . $country,800);           
+
+            throw new \Exception('PES_EMAIL not defined for country : ' . $country,800);
         }
-        
+
         $results = preg_split('/[-.]/', $pesEmail);
         $locationType = $results[0];
         $emailType  = isset($results[1]) ? $results[1] : null;
         switch ($locationType) {
             case 'xxx':
-                // Need to know if Internal or External            
+                // Need to know if Internal or External
                 $pesEmailBodyFilename = $intExt . "-" . $emailType . ".php";
             break;
             case 'unknown':
@@ -170,37 +170,35 @@ class pesEmail {
                 break;
             default:
                 // We don't need to further clarify the PES EMAIL Body file;
-                $pesEmailBodyFilename = $pesEmail; 
+                $pesEmailBodyFilename = $pesEmail;
             break;
         }
-       
-        $attachments = $this->getAttachments($intExt, $emailType);   
-        
+
+        $attachments = $this->getAttachments($intExt, $emailType);
+
         foreach ($attachments as $attachment) {
             $attachmentFileNames[] = $attachment['filename'];
         }
-        
-        
+
+
         return array('filename'=> $pesEmailBodyFilename, 'attachments'=>$attachments, 'attachmentFileNames'=> $attachmentFileNames,'emailType'=>$emailType,'splitResults'=>$results);
     }
-    
-    
-    function sendPesEmail($firstName, $lastName, $emailAddress, $country, $openseat){
 
+
+    function sendPesEmail($firstName, $lastName, $emailAddress, $country, $openseat, $cnum){
             $emailDetails = $this->getEmailDetails($emailAddress, $country);
             $emailBodyFileName = $emailDetails['filename'];
             $pesAttachments = $emailDetails['attachments'];
             $replacements = array($firstName,$openseat);
-            
+
             include_once 'emailBodies/' . $emailBodyFileName;
             $emailBody = preg_replace($pesEmailPattern, $replacements, $pesEmail);
-            
-            $sendResponse = BlueMail::send_mail(array($emailAddress), "NEW URGENT - Pre Employment Screening - $firstName, $lastName", $emailBody,'LBGVETPR@uk.ibm.com',array(),array(),false,$pesAttachments);
-            return $sendResponse;       
+
+            $sendResponse = BlueMail::send_mail(array($emailAddress), "NEW URGENT - Pre Employment Screening - $cnum : $firstName, $lastName", $emailBody,'LBGVETPR@uk.ibm.com',array(),array(),false,$pesAttachments);
+            return $sendResponse;
 
     }
-    
-    
-    
+
+
+
 }
-    
