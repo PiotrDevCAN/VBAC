@@ -277,8 +277,12 @@ function pesEvent() {
   this.listenForPesProcessStatusChange = function(){
 	  $(document).on('click','.btnProcessStatusChange', function(){  
 		  var buttonObj = $(this);
-		  var processStatus = $(this).data('processstatus');					  
-		  var cnum     = $(this).parents('div').data('cnum');
+		  var processStatus = $(this).data('processstatus');	
+		  var dataDiv       = $(this).parents('div');
+		  var cnum          = $(dataDiv).data('cnum');
+		  var firstname     = $(dataDiv).data('firstname');
+		  var lastname      = $(dataDiv).data('lastname');
+		  var emailaddress  = $(dataDiv).data('emailaddress');
 //		  $(this).parents('div').prev('div.pesProcessStatusDisplay').html(processStatus);
 		  $(this).addClass('spinning');
 		   $.ajax({
@@ -286,6 +290,9 @@ function pesEvent() {
 		       type: 'POST',
 		       data : {cnum:cnum,
 		    	       processStatus:processStatus,
+		    	       firstname : firstname,
+		    	       lastname : lastname,
+		    	       emailaddress : emailaddress
 		    	   	   },
 		       success: function(result){
 		           var resultObj = JSON.parse(result);

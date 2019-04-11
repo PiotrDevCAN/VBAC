@@ -168,6 +168,7 @@ class pesTrackerTable extends DbTable{
             $cnum = $row['CNUM'];
             $firstName = trim($row['FIRST_NAME']);
             $lastName = trim($row['LAST_NAME']);
+            $emailaddress = trim($row['EMAIL_ADDRESS']);
 
             $formattedIdentityField = self::formatEmailFieldOnTracker($row);
 
@@ -192,7 +193,7 @@ class pesTrackerTable extends DbTable{
         ?>
             <td class='nonSearchable'>
             <div class='alert alert-info text-center pesProcessStatusDisplay' role='alert' ><?=self::formatProcessingStatusCell($row);?></div>
-            <div class='text-center'  data-cnum='<?=$cnum?>'>
+            <div class='text-center'  data-cnum='<?=$cnum;?>' data-firstname='<?=$firstName;?>' data-lastname='<?=$lastName;?>' data-emailaddress='<?=$emailaddress;?>'  >
             <span style='white-space:nowrap' >
             <a class="btn btn-xs btn-info  btnProcessStatusChange accessPes accessCdi" 		data-processstatus='PES' data-toggle="tooltip" data-placement="top" title="With PES Team" ><i class="fas fa-users"></i></a>
             <a class="btn btn-xs btn-info  btnProcessStatusChange accessPes accessCdi" 		data-processstatus='User' data-toggle="tooltip" data-placement="top" title="With Applicant" ><i class="fas fa-user"></i></a>
