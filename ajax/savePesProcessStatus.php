@@ -28,8 +28,19 @@ try {
 
 
     if($success){
-        $emailResponse = $pesEmailObj->sendPesProcessStatusChangedConfirmation($cnum, $firstName, $lastName, $emailAddress, trim($_POST['processStatus']));
-        $response['emailResponse'] = $emailResponse;
+        // Some Status Changes - we notify the subject, so they know what's happening.
+        switch (trim($_POST['processStatus'])) {
+            case 'CRC':
+            case 'PES':
+                $emailResponse = $pesEmailObj->sendPesProcessStatusChangedConfirmation($cnum, $firstName, $lastName, $emailAddress, trim($_POST['processStatus']));
+                $response['emailResponse'] = $emailResponse;
+            break;
+
+            default:
+                ;
+            break;
+        }
+
     }
 
 
