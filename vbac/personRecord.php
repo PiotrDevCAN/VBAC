@@ -72,13 +72,13 @@ class personRecord extends DbRecord
     protected $RF_Flag;
     protected $RF_Start;
     protected $RF_End;
-    
+
     protected $PMO_STATUS;
     protected $PES_DATE_EVIDENCE;
-    
+
     protected $RSA_TOKEN;
     protected $CALLSIGN_ID;
-    
+
     protected $person_bio;
 
 
@@ -107,7 +107,7 @@ class personRecord extends DbRecord
 
     const SECURITY_EDUCATION_COMPLETED = 'Yes';
     const SECURITY_EDUCATION_NOT_COMPLETED = 'No';
-    
+
     const PMO_STATUS_CONFIRMED = 'Confirmed';
     const PMO_STATUS_AWARE     = 'Aware';
 
@@ -204,15 +204,12 @@ class personRecord extends DbRecord
 
                                               <br/>Many Thanks for your cooperation,';
     private static $pesClearedEmailPattern = array('/&&candidate&&/','/&&effectiveDate&&/','/&&taskid&&/');
-    
-    
+
+
     private static $pesCancelPesEmail = 'PES Team,
                                               <br/>Please stop processing the PES Clearance for : &&candidateFirstName&& <b>&&candidateSurname&&</b> CNUM:( &&cnum&& )
                                               <br/>This action has been requested by  &&requestor&&.';
     private static $pesCancelPesEmailPattern = array('/&&candidateFirstName&&/','/&&candidateSurname&&/','/&&cnum&&/','/&&requestor&&/');
-    
-    
-    
 
     private static $offboardingEmail = 'Please initiate OFFBOARDING for the following individual:\n
                                     Name : &&name&&
@@ -278,11 +275,11 @@ class personRecord extends DbRecord
                                  . "<ul><li>If your reportee has moved to a new functional manager or changed roles, you can amend their details using the <b>Edit Icon</b> in the <em>Notes ID</em> column to do this. All mandatory information must be completed to save the person record. </li>"
                                  . "<li>If you have people who no longer work on the account  please initiate offboarding by amending their <b>Projected End Date</b>.  Use the <b>Edit Icon</b> in the <em>Notes ID</em> column to do this</li>"
                                  . "<li> If you are missing people who should report to you<br/>Ensure they have been boarded to the account using the vBAC <a href='&&host&&/pa_personFinder.php'>People Finder</a> screen<br/>You can transfer someone to yourself from another manager by clicking the <b>Transfer Icon</b> in the <em>FM Column</em></li>"
-                                 . "<li>If the person needs to be boarded, then please use the <a href='&&host&&/pb_onboard.php'>Boarding</a> screen</li></ul>";      
+                                 . "<li>If the person needs to be boarded, then please use the <a href='&&host&&/pb_onboard.php'>Boarding</a> screen</li></ul>";
 
-    private static $cbnEmailPattern = array('/&&host&&/'); 
-                                 
-                                 
+    private static $cbnEmailPattern = array('/&&host&&/');
+
+
 
     private static  $lobValue = array('GTS','GBS','IMI','Cloud','Security','Other');
 
@@ -442,7 +439,7 @@ class personRecord extends DbRecord
 
         $startDate = \DateTime::createFromFormat('Y-m-d', $this->START_DATE);
         $endDate = \DateTime::createFromFormat('Y-m-d', $this->PROJECTED_END_DATE);
-        
+
         ?>
         <form id='boardingForm'  class="form-horizontal" onsubmit="return false;">
     	<div class="panel panel-default">
@@ -544,7 +541,7 @@ class personRecord extends DbRecord
 
 				<div class='form-group'>
             		<div class='col-sm-12'>
-						<label class="radio-inline employeeTypeRadioBtn"><input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_PREBOARDER ?>' data-type='ibmer'>IBMer Pre-Hire </label>		
+						<label class="radio-inline employeeTypeRadioBtn"><input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_PREBOARDER ?>' data-type='ibmer'>IBMer Pre-Hire </label>
 						<label class="radio-inline employeeTypeRadioBtn"><input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_VENDOR?>' data-type='cognizant' >Cognizant </label>
 						<label class="radio-inline employeeTypeRadioBtn"><input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_VENDOR?>' data-type='densify'   >Densify </label>
 						<label class="radio-inline employeeTypeRadioBtn"><input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_VENDOR?>' data-type='wipro'     >Wipro </label>
@@ -571,15 +568,15 @@ class personRecord extends DbRecord
 				<div id='editLocationDiv' class='col-sm-6' <?=$allowEditLocation;?>>
            	   	<select class='form-control select select2 locationFor '
                 			  id='LBG_LOCATION'
-                              name='LBG_LOCATION'  
+                              name='LBG_LOCATION'
                 >
                 <?php
                    $options = assetRequestRecord::buildLocationOptions($this->LBG_LOCATION);
                    echo $options;
                 ?>
-                </select>          			
+                </select>
        			</div>
-		</div>		
+		</div>
 	</div>
 </div>
 
@@ -641,14 +638,14 @@ class personRecord extends DbRecord
                 ?>
             </select>
     	</div>
-    	
+
     	    <?php $allowEditCtid = empty($this->CT_ID) ? " style='display:none;' " : null; ?>
-               	
+
             <div id='editCtidDiv' class='col-sm-6' <?=$allowEditCtid;?>>
           		<input class="form-control" id="ct_id" name="CT_ID" type="number" min='999999' max='9999999'  value="<?=$this->CT_ID?>" placeholder='7-digit Contractor Id(CT Id) (If known)' >
        		</div>
-    
-    
+
+
      </div>
 
          <div class='form-group' id='selectCioAllignment'>
@@ -813,10 +810,10 @@ class personRecord extends DbRecord
         $activePredicate = personTable::activePersonPredicate();
         $notAlreadyFlagged = " AND RF_FLAG = '0' ";
         $availableForRfFlag = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON, $activePredicate . $notAlreadyFlagged);
-        
+
         $rfStartDate = \DateTime::createFromFormat('Y-m-d', $this->RF_Start);
         $rfEndDate = \DateTime::createFromFormat('Y-m-d', $this->RF_End);
-        
+
         ?>
         <form id='rfFlagForm'  class="form-horizontal" onsubmit="return false;">
     	<div class="panel panel-default">
@@ -839,14 +836,14 @@ class personRecord extends DbRecord
 					</div>
 					<div class="col-sm-3" id='rfStartDate'>
                 	 <input class="form-control" id="rfStart_Date" value="<?=is_object($rfStartDate) ?  $rfStartDate->format('d M Y') : null?>" type="text" placeholder='RF Start Date' data-toggle='tooltip' title='RF Start Date'>
-          			 <input class="form-control" id="rfStart_Date_Db2" name="RF_Start" value="<?=$this->RF_Start?>" type="hidden" >         
+          			 <input class="form-control" id="rfStart_Date_Db2" name="RF_Start" value="<?=$this->RF_Start?>" type="hidden" >
 					</div>
 					<div class="col-sm-3" id='rfEndDate'>
                 	 <input class="form-control" id="rfEnd_Date" value="<?=is_object($rfEndDate) ?  $rfEndDate->format('d M Y') : null?>" type="text" placeholder='RF End Date' data-toggle='tooltip' title='RF End Date'>
-          			 <input class="form-control" id="rfEnd_Date_Db2" name="RF_End" value="<?=$this->RF_End?>" type="hidden" >         
+          			 <input class="form-control" id="rfEnd_Date_Db2" name="RF_End" value="<?=$this->RF_End?>" type="hidden" >
 					</div>
-					
-					
+
+
 				</div>
 		</div>
 	</div>
@@ -864,9 +861,9 @@ class personRecord extends DbRecord
 
 
     }
-    
-    
-    
+
+
+
     function confirmTransferModal(){
         $myCnum = personTable::myCnum();
         $myEmail = trim($_SESSION['ssoEmail']);
@@ -897,7 +894,7 @@ class personRecord extends DbRecord
     <input type="text" class="form-control" id="transferToNotesId" disabled placeholder="To Manager" value='<?=$myNotesid;?>'>
     <input type="hidden" class="form-control" id="transferToCnum" name="transferToCnum" value='<?=$myCnum;?>' >
   </div>
-</form>	   						             
+</form>
        			</div>
        			<div class="modal-footer">
        				<button type="button" class="btn btn-success btnConfirmTransfer" >Confirm</button>
@@ -976,7 +973,7 @@ class personRecord extends DbRecord
                </div>
              </div>
            </div>
-           
+
          </div>
           </div>
 
@@ -996,16 +993,16 @@ class personRecord extends DbRecord
                                >
                     <option value=''>Status</option>
                     <option value='<?=personRecord::PES_STATUS_CLEARED_PERSONAL;?>'><?=personRecord::PES_STATUS_CLEARED_PERSONAL?></option>
-                    <option value='<?=personRecord::PES_STATUS_CLEARED;?>'><?=personRecord::PES_STATUS_CLEARED?></option>                    
+                    <option value='<?=personRecord::PES_STATUS_CLEARED;?>'><?=personRecord::PES_STATUS_CLEARED?></option>
                     <option value='<?=personRecord::PES_STATUS_DECLINED;?>'><?=personRecord::PES_STATUS_DECLINED?></option>
                     <option value='<?=personRecord::PES_STATUS_REQUESTED;?>'><?=personRecord::PES_STATUS_REQUESTED?></option>
                     <option value='<?=personRecord::PES_STATUS_EXCEPTION;?>'><?=personRecord::PES_STATUS_EXCEPTION?></option>
                     <option value='<?=personRecord::PES_STATUS_FAILED;?>'><?=personRecord::PES_STATUS_FAILED?></option>
                     <option value='<?=personRecord::PES_STATUS_INITIATED;?>'><?=personRecord::PES_STATUS_INITIATED?></option>
-                    <option value='<?=personRecord::PES_STATUS_PROVISIONAL;?>'><?=personRecord::PES_STATUS_PROVISIONAL?></option> 
+                    <option value='<?=personRecord::PES_STATUS_PROVISIONAL;?>'><?=personRecord::PES_STATUS_PROVISIONAL?></option>
                     <option value='<?=personRecord::PES_STATUS_REMOVED;?>'><?=personRecord::PES_STATUS_REMOVED?></option>
                     <option value='<?=personRecord::PES_STATUS_TBD;?>'><?=personRecord::PES_STATUS_TBD?></option>
-                    
+
                        </select>
                  </div>
                  <label for='pes_date' class='col-md-1 control-label '>Date</label>
@@ -1071,7 +1068,7 @@ class personRecord extends DbRecord
       </div>
     <?php
     }
-    
+
     function confirmSendPesEmailModal(){
         ?>
        <!-- Modal -->
@@ -1130,7 +1127,7 @@ class personRecord extends DbRecord
                     $submitButton = $this->formButton('submit','confirmSendPesEmail','confirmSendPesEmail',null,'Confirm','btn-primary');
                     $allButtons[] = $submitButton;
                     $this->formBlueButtons($allButtons);
-                    ?>             
+                    ?>
               <button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
              </div>
             </div>
@@ -1138,7 +1135,7 @@ class personRecord extends DbRecord
       </div>
     <?php
     }
-    
+
 
 
     function portalReportSaveModal(){
@@ -1371,12 +1368,12 @@ class personRecord extends DbRecord
                 $pattern   = self::$pesCancelPesEmailPattern;
                 $emailBody = self::$pesCancelPesEmail;
                 $title = 'vBAC Cancel Request';
-                $replacements = array($this->FIRST_NAME,$this->LAST_NAME,$this->CNUM, $_SESSION['ssoEmail']);               
+                $replacements = array($this->FIRST_NAME,$this->LAST_NAME,$this->CNUM, $_SESSION['ssoEmail']);
                 $to[] = personRecord::$pesTaskId[0];
-                !empty($fmEmail) ? $cc[] = $fmEmail : null;                
+                !empty($fmEmail) ? $cc[] = $fmEmail : null;
                 $cc[] = $_SESSION['ssoEmail'];
-                
-                
+
+
             default:
 
             break;
@@ -1446,54 +1443,54 @@ class personRecord extends DbRecord
         $personTable = new personTable(allTables::$PERSON);
 //        $allFm = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON, " UPPER(FM_MANAGER_FLAG) like 'Y%' ");
 
-        $allFm = $personTable->activeFmEmailAddressesByCnum();      
+        $allFm = $personTable->activeFmEmailAddressesByCnum();
         $emailableFmLists = array_chunk($allFm, 49);
         $replacements = array($_SERVER['HTTP_HOST']);
         $emailMessage = preg_replace(self::$cbnEmailPattern, $replacements, self::$cbnEmailBody);
-        foreach ($emailableFmLists as $groupOfFmEmail){     
-            $to = self::$pmoTaskId;  
+        foreach ($emailableFmLists as $groupOfFmEmail){
+            $to = self::$pmoTaskId;
             $cc = array();
             $bcc = $groupOfFmEmail;
             /*
-             * 
+             *
              * Next few lines - use for Testing. Comment out for Live.
-             * 
+             *
              */
-//             $to  = array('rob.daniel@uk.ibm.com');     
+//             $to  = array('rob.daniel@uk.ibm.com');
 //             $cc  = array('jayhunter@uk.ibm.com');
 //             $bcc = array('daniero@uk.ibm.com','antstark@uk.ibm.com');
             /*
-             * 
+             *
              * Lines above - use for testing. Comment out for Live.
-             * 
+             *
              */
-            $bcc[] = self::$smCdiAuditEmail;  // Always copy the slack channel.           
-            set_time_limit(60);       
+            $bcc[] = self::$smCdiAuditEmail;  // Always copy the slack channel.
+            set_time_limit(60);
             \itdq\BlueMail::send_mail($to, 'CBN Initiation Request' , $emailMessage, 'vbacNoReply@uk.ibm.com',$cc,$bcc);
         }
    }
-   
+
 //    static function employeeTypeMappingToDb2(){
 //        $sqlDrop  = "DROP TABLE SESSION.EMPLOYEE_TYPE_MAPPING;";
 //        $sqlCreate = "Create global temporary table SESSION.EMPLOYEE_TYPE_MAPPING  (code char(1) not null, description char(20) not null) ON COMMIT PRESERVE ROWS;";
 //        $sqlInsert = array();
-       
+
 //        foreach (self::$employeeTypeMapping as $code => $description){
 //            $sqlInsert[] = "INSERT into SESSION.EMPLOYEE_TYPE_MAPPING  ( code, description ) values ('$code','$description') ";
 //        }
-       
+
 //         db2_exec($_SESSION['conn'], $sqlDrop);
 //         $created = db2_exec($_SESSION['conn'], $sqlCreate);
-        
+
 //         if(!$created){
 //             throw new \Exception('Unable to create EmployeeTypeMapping Temp Table');
 //         }
-        
+
 //         foreach ($sqlInsert as $insertStatement){
 //             $inserted = db2_exec($_SESSION['conn'], $insertStatement);
 //             if(!$inserted){
 //                 throw new \Exception('Unable to populate EmployeeTypeMapping Temp Table');
-//             }            
+//             }
 //         }
 //    }
 

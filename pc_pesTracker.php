@@ -34,11 +34,11 @@ $person->confirmSendPesEmailModal();
 </div>
 <script>
 $(document).ready(function(){
-	var pesevent = new pesEvent();	
+	var pesevent = new pesEvent();
 	var person = new personRecord();
 
-	person.initialisePesTrackerTable();
-	
+// 	person.initialisePesTrackerTable();
+
 	person.listenForEditPesStatus();
 	person.listenForSavePesStatus();
 	person.listenForInitiatePesFromPortal();
@@ -54,6 +54,7 @@ $(document).ready(function(){
 	pesevent.listenForPesPriorityChange();
 	pesevent.listenForFilterPriority();
 	pesevent.listenForFilterProcess();
+	pesevent.listenForBtnChaser();
 });
 </script>
 <style>
@@ -128,12 +129,8 @@ $(document).ready(function(){
 
 }
 
-
-
-
-
-
+td {
+    font-size: 8px;
+}
 
 </style>
-
-

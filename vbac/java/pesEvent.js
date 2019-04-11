@@ -66,6 +66,41 @@ function pesEvent() {
 	  });
   }, 
   
+  this.listenForBtnChaser = function() {
+	  $(document).on('click','.btnChaser', function(){
+		  var chaser = $(this).data('chaser');
+		  var cnum = $(this).parent('span').data('cnum');	
+		  var firstName = $(this).parent('span').data('firstname');
+		  var lastName = $(this).parent('span').data('lastname');		
+		  
+		  var buttonObj = $(this);
+		  buttonObj.addClass('spinning');
+		  
+		  var dateField = buttonObj.parents('td').find('.pesDateLastChased').first();
+		  $.ajax({
+			  	url: "ajax/sendPesEmailChaser.php",
+			  	type: 'POST',
+			  	data : { cnum: cnum,
+			  		     chaser: chaser,
+			  		     firstName : firstName,
+			  		     lastName : lastName
+			  			},
+			    success: function(result){
+			    	var resultObj = JSON.parse(result);
+			    	console.log(resultObj);
+			    	pesevent = new pesEvent();
+			    	$(dateField).val(resultObj.lastChased);
+			    	pesevent.getAlertClassForPesChasedDate(dateField);
+			    	buttonObj.removeClass('spinning');
+			    	buttonObj.parents('td').parent('tr').children('td.pesCommentsTd').children('div.pesComments').html(resultObj.comment);
+			    }
+		  });
+
+		  
+//		  var pesevent = new pesEvent();
+//		  pesevent.populatePesTracker($(this).data('pesrecords'));
+	  });
+  },
   
   
   
@@ -97,7 +132,7 @@ function pesEvent() {
 		    		
 		    	    $('#pesTrackerTable thead td').each( function () {
 		    	        var title = $(this).text();
-		    	        $(this).html('<input class="firstInput" type="text" placeholder="Search '+title+'" />' );
+		    	        $(this).html('<input class="firstInput" type="text" size="10" placeholder="Search '+title+'" />' );
 		    	    });
 		    		
 		    	} else {

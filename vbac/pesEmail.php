@@ -199,6 +199,26 @@ class pesEmail {
 
     }
 
+    function sendPesEmailChaser($cnum, $emailAddress, $chaserLevel){
+
+        $pesEmailPattern = array(); // Will be overridden when we include_once from emailBodies later.
+        $pesEmail = null;          // Will be overridden when we include_once from emailBodies later.
+        $names = personTable::getNamesFromCnum($cnum);
+        $firstName = $names['FIRST_NAME'];
+        $lastName = $names['LAST_NAME'];
+
+        $emailBodyFileName = 'chaser' . trim($chaserLevel) . ".php";
+        $replacements = array($firstName);
+
+        include_once 'emailBodies/' . $emailBodyFileName;
+        $emailBody = preg_replace($pesEmailPattern, $replacements, $pesEmail);
+
+        $sendResponse = BlueMail::send_mail(array($emailAddress), "Reminder- Pre Employment Screening - $cnum : $firstName, $lastName", $emailBody,'LBGVETPR@uk.ibm.com');
+        return $sendResponse;
+
+
+    }
+
 
 
 }
