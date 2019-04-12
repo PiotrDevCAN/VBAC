@@ -12,6 +12,7 @@ $cnum = trim($_POST['cnum']);
 $firstName = trim($_POST['firstname']);
 $lastName = trim($_POST['lastname']);
 $emailAddress = trim($_POST['emailaddress']);
+$requestor = trim($_POST['requestor']);
 
 
 try {
@@ -32,9 +33,12 @@ try {
         switch (trim($_POST['processStatus'])) {
             case 'CRC':
             case 'PES':
-                $emailResponse = $pesEmailObj->sendPesProcessStatusChangedConfirmation($cnum, $firstName, $lastName, $emailAddress, trim($_POST['processStatus']));
+                $emailResponse = $pesEmailObj->sendPesProcessStatusChangedConfirmation($cnum, $firstName, $lastName, $emailAddress, trim($_POST['processStatus']), $requestor);
                 $response['emailResponse'] = $emailResponse;
             break;
+            case 'User':
+                $emailResponse = $pesEmailObj->sendPesProcessStatusChangedConfirmation($cnum, $firstName, $lastName, $requestor, trim($_POST['processStatus']));
+                $response['emailResponse'] = $emailResponse;
 
             default:
                 ;

@@ -69,9 +69,11 @@ function pesEvent() {
   this.listenForBtnChaser = function() {
 	  $(document).on('click','.btnChaser', function(){
 		  var chaser = $(this).data('chaser');
-		  var cnum = $(this).parent('span').data('cnum');	
-		  var firstName = $(this).parent('span').data('firstname');
-		  var lastName = $(this).parent('span').data('lastname');		
+		  var details = $(this).parent('span').parents('td').children('.personDetails').first();
+		  var cnum = $(details).data('cnum');	
+		  var firstName = $(details).data('firstname');
+		  var lastName = $(details).data('lastname');	
+		  var requestor = $(details).data('requestor');
 		  
 		  var buttonObj = $(this);
 		  buttonObj.addClass('spinning');
@@ -83,7 +85,8 @@ function pesEvent() {
 			  	data : { cnum: cnum,
 			  		     chaser: chaser,
 			  		     firstName : firstName,
-			  		     lastName : lastName
+			  		     lastName : lastName,
+			  		     requestor : requestor
 			  			},
 			    success: function(result){
 			    	var resultObj = JSON.parse(result);
@@ -91,8 +94,14 @@ function pesEvent() {
 			    	pesevent = new pesEvent();
 			    	$(dateField).val(resultObj.lastChased);
 			    	pesevent.getAlertClassForPesChasedDate(dateField);
-			    	buttonObj.removeClass('spinning');
-			    	buttonObj.parents('td').parent('tr').children('td.pesCommentsTd').children('div.pesComments').html(resultObj.comment);
+			    	if(resultObj.success==true){
+				    	buttonObj.removeClass('spinning');
+				    	buttonObj.parents('td').parent('tr').children('td.pesCommentsTd').children('div.pesComments').html(resultObj.comment);			    		
+			    	} else {
+			    		alert('error has occured');
+			    		alert(resultObj);
+			    	}
+
 			    }
 		  });
 
@@ -278,11 +287,12 @@ function pesEvent() {
 	  $(document).on('click','.btnProcessStatusChange', function(){  
 		  var buttonObj = $(this);
 		  var processStatus = $(this).data('processstatus');	
-		  var dataDiv       = $(this).parents('div');
+		  var dataDiv       = $(this).parents('td').children('.personDetails').first();
 		  var cnum          = $(dataDiv).data('cnum');
 		  var firstname     = $(dataDiv).data('firstname');
 		  var lastname      = $(dataDiv).data('lastname');
 		  var emailaddress  = $(dataDiv).data('emailaddress');
+		  var requestor     = $(dataDiv).data('emailaddress');
 //		  $(this).parents('div').prev('div.pesProcessStatusDisplay').html(processStatus);
 		  $(this).addClass('spinning');
 		   $.ajax({
@@ -292,7 +302,8 @@ function pesEvent() {
 		    	       processStatus:processStatus,
 		    	       firstname : firstname,
 		    	       lastname : lastname,
-		    	       emailaddress : emailaddress
+		    	       emailaddress : emailaddress,
+		    	       requestor : requestor
 		    	   	   },
 		       success: function(result){
 		           var resultObj = JSON.parse(result);

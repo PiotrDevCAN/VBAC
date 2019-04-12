@@ -169,6 +169,7 @@ class pesTrackerTable extends DbTable{
             $firstName = trim($row['FIRST_NAME']);
             $lastName = trim($row['LAST_NAME']);
             $emailaddress = trim($row['EMAIL_ADDRESS']);
+            $requestor = trim($row['PES_REQUESTOR']);
 
             $formattedIdentityField = self::formatEmailFieldOnTracker($row);
 
@@ -193,7 +194,7 @@ class pesTrackerTable extends DbTable{
         ?>
             <td class='nonSearchable'>
             <div class='alert alert-info text-center pesProcessStatusDisplay' role='alert' ><?=self::formatProcessingStatusCell($row);?></div>
-            <div class='text-center'  data-cnum='<?=$cnum;?>' data-firstname='<?=$firstName;?>' data-lastname='<?=$lastName;?>' data-emailaddress='<?=$emailaddress;?>'  >
+            <div class='text-center personDetails '   data-cnum='<?=$cnum;?>' data-firstname='<?=$firstName;?>' data-lastname='<?=$lastName;?>' data-emailaddress='<?=$emailaddress;?>'  data-requestor='<?=$requestor;?>'   >
             <span style='white-space:nowrap' >
             <a class="btn btn-xs btn-info  btnProcessStatusChange accessPes accessCdi" 		data-processstatus='PES' data-toggle="tooltip" data-placement="top" title="With PES Team" ><i class="fas fa-users"></i></a>
             <a class="btn btn-xs btn-info  btnProcessStatusChange accessPes accessCdi" 		data-processstatus='User' data-toggle="tooltip" data-placement="top" title="With Applicant" ><i class="fas fa-user"></i></a>
@@ -208,7 +209,7 @@ class pesTrackerTable extends DbTable{
             <div class='alert <?=$alertClass;?>'>
             <input class="form-control input-sm pesDateLastChased" value="<?=$dateLastChasedFormatted?>" type="text" placeholder='Last Chased' data-toggle='tooltip' title='PES Date Last Chased' data-cnum='<?=$cnum?>'>
             </div>
-            <span style='white-space:nowrap' data-cnum='<?=$cnum;?>' data-firstname='<?=$firstName;?>' data-lastname='<?=$lastName;?>' >
+            <span style='white-space:nowrap' >
             <a class="btn btn-xs btn-info  btnChaser accessPes accessCdi" data-chaser='One'  data-toggle="tooltip" data-placement="top" title="Chaser One" ><i>1</i></a>
             <a class="btn btn-xs btn-info  btnChaser accessPes accessCdi" data-chaser='Two'  data-toggle="tooltip" data-placement="top" title="Chaser Two" ><i>2</i></a>
             <a class="btn btn-xs btn-info  btnChaser accessPes accessCdi" data-chaser='Three' data-toggle="tooltip" data-placement="top" title="Chaser Three"><i>3</i></a>

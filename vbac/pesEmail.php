@@ -206,6 +206,7 @@ class pesEmail {
         $names = personTable::getNamesFromCnum($cnum);
         $firstName = $names['FIRST_NAME'];
         $lastName = $names['LAST_NAME'];
+        $requestor = trim($_POST['requestor']);
 
         $emailBodyFileName = 'chaser' . trim($chaserLevel) . ".php";
         $replacements = array($firstName);
@@ -213,13 +214,13 @@ class pesEmail {
         include_once 'emailBodies/' . $emailBodyFileName;
         $emailBody = preg_replace($pesEmailPattern, $replacements, $pesEmail);
 
-        $sendResponse = BlueMail::send_mail(array($emailAddress), "Reminder- Pre Employment Screening - $cnum : $firstName, $lastName", $emailBody,'LBGVETPR@uk.ibm.com');
+        $sendResponse = BlueMail::send_mail(array($emailAddress), "Reminder- Pre Employment Screening - $cnum : $firstName, $lastName", $emailBody,'LBGVETPR@uk.ibm.com',array($requestor));
         return $sendResponse;
 
 
     }
 
-    function sendPesProcessStatusChangedConfirmation($cnum, $firstName, $lastName, $emailAddress, $processStatus){
+    function sendPesProcessStatusChangedConfirmation($cnum, $firstName, $lastName, $emailAddress, $processStatus, $requestor=null){
 
         $pesEmailPattern = array(); // Will be overridden when we include_once from emailBodies later.
         $pesEmail = null;          // Will be overridden when we include_once from emailBodies later.
@@ -230,7 +231,7 @@ class pesEmail {
         include_once 'emailBodies/' . $emailBodyFileName;
         $emailBody = preg_replace($pesEmailPattern, $replacements, $pesEmail);
 
-        $sendResponse = BlueMail::send_mail(array($emailAddress), "Status Change - Pre Employment Screening - $cnum : $firstName, $lastName", $emailBody,'LBGVETPR@uk.ibm.com');
+        $sendResponse = BlueMail::send_mail(array($emailAddress), "Status Change - Pre Employment Screening - $cnum : $firstName, $lastName", $emailBody,'LBGVETPR@uk.ibm.com', array($requestor));
         return $sendResponse;
 
 
