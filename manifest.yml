@@ -1,6 +1,6 @@
 applications:
 - path: .
-  memory: 640M
+  memory: 768M
   instances: 1
   domain: w3ibm.mybluemix.net
   name: vBAC
