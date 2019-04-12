@@ -472,7 +472,7 @@ class personTable extends DbTable {
         }
         $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET $dateField = current date, PES_STATUS='" . db2_escape_string($status)  . "' ";
-        $sql .= empty($requestor) ? null : ", PES_REQUESTOR='" . db2_escape_string($requestor) . "' ";
+        $sql .= trim($status)==personRecord::PES_STATUS_INITIATED ? ", PES_REQUESTOR='" . db2_escape_string($requestor) . "' " : null;
         $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
         $result = db2_exec($_SESSION['conn'], $sql);
