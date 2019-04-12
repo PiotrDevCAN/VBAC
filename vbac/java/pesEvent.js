@@ -117,6 +117,7 @@ function pesEvent() {
   this.populatePesTracker = function(records){
 	  var buttons = $('.btnRecordSelection');	  
 	  console.log(buttons);	  
+	  console.log(records);
 	  
 	  
 	  $('#pesTrackerTableDiv').html('<i class="fa fa-spinner fa-spin" style="font-size:68px"></i>');

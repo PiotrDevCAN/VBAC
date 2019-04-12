@@ -46,7 +46,7 @@ $(document).ready(function(){
 	person.listenforConfirmSendPesEmail();
 
 	var pesevent = new pesEvent();
-	pesevent.populatePesTracker('Active');
+	pesevent.populatePesTracker('<?=pesTrackerTable::PES_TRACKER_RECORDS_ACTIVE_REQUESTED?>');
 	pesevent.listenForBtnRecordSelection();
 	pesevent.listenForPesStageValueChange();
 	pesevent.listenForSavePesComment();

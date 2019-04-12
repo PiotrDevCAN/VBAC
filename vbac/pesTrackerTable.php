@@ -23,6 +23,10 @@ class pesTrackerTable extends DbTable{
     const PES_TRACKER_RECORDS_ACTIVE     = 'Active';
     const PES_TRACKER_RECORDS_NOT_ACTIVE = 'Not Active';
     const PES_TRACKER_RECORDS_ALL        = 'All';
+    const PES_TRACKER_RECORDS_ACTIVE_REQUESTED = 'Active Requested';
+    const PES_TRACKER_RECORDS_ACTIVE_PROVISIONAL = 'Active Provisional';
+
+
 
     const PES_TRACKER_RETURN_RESULTS_AS_ARRAY      = 'array';
     const PES_TRACKER_RETURN_RESULTS_AS_RESULT_SET = 'resultSet';
@@ -41,10 +45,15 @@ class pesTrackerTable extends DbTable{
 
     static function returnPesEventsTable($records='Active',$returnResultsAs='array'){
 
-        switch ($records){
+        switch (trim($records)){
             case self::PES_TRACKER_RECORDS_ACTIVE :
                 $pesStatusPredicate = "  P.PES_STATUS in('" . personRecord::PES_STATUS_REQUESTED . "','" . personRecord::PES_STATUS_INITIATED. "','" . personRecord::PES_STATUS_PROVISIONAL. "') ";
-
+                break;
+            case self::PES_TRACKER_RECORDS_ACTIVE_REQUESTED :
+                $pesStatusPredicate = "  P.PES_STATUS in('" . personRecord::PES_STATUS_REQUESTED . "','" . personRecord::PES_STATUS_INITIATED. "') ";
+                break;
+            case self::PES_TRACKER_RECORDS_ACTIVE_PROVISIONAL :
+                $pesStatusPredicate = "  P.PES_STATUS in('" . personRecord::PES_STATUS_PROVISIONAL. "') ";
                 break;
             case self::PES_TRACKER_RECORDS_NOT_ACTIVE :
                 $pesStatusPredicate = " P.PES_STATUS not in ('" . personRecord::PES_STATUS_REQUESTED . "','" . personRecord::PES_STATUS_INITIATED. "','" . personRecord::PES_STATUS_PROVISIONAL. "')  ";
@@ -94,9 +103,8 @@ class pesTrackerTable extends DbTable{
         $sql.= " left join " . $_SESSION['Db2Schema'] . "." . \vbac\allTables::$PES_TRACKER . " as PT ";
         $sql.= " ON P.CNUM = PT.CNUM ";
         $sql.= " WHERE 1=1 ";
-        $sql.= " and PT.CNUM is not null or ( PT.CNUM is null  AND PES_STATUS_DETAILS is null )"; // it has a tracker record
+        $sql.= " and (PT.CNUM is not null or ( PT.CNUM is null  AND PES_STATUS_DETAILS is null )) "; // it has a tracker record
         $sql.= " AND " . $pesStatusPredicate;
-
 
         AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
@@ -235,10 +243,10 @@ class pesTrackerTable extends DbTable{
 
 
 
-    function displayTable($records='Active'){
+    function displayTable($records='Active Initiated'){
         ?>
         <div class='container-fluid' >
-        <div class='col-sm-8 col-sm-offset-2'>
+        <div class='col-sm-8 col-sm-offset-1'>
           <form class="form-horizontal">
   			<div class="form-group">
     			<label class="control-label col-sm-1" for="pesTrackerTableSearch">Table Search:</label>
@@ -249,11 +257,12 @@ class pesTrackerTable extends DbTable{
 				</div>
 
     			<label class="control-label col-sm-1" for="pesRecordFilter">Records:</label>
-    			<div class="col-sm-3" >
+    			<div class="col-sm-4" >
     			<div class="btn-group" role="group" aria-label="Record Selection">
-  					<button type="button" role='button'  class="btn btn-info btnRecordSelection active" data-pesrecords='Active'  data-toggle='tooltip'  title='Active Records'     >Active</button>
-  					<button type="button" role='button'  class="btn btn-info btnRecordSelection" data-pesrecords='Not Active'     data-toggle='tooltip'  title='Recently Closed'  >Recent</button>
-  					<button type="button" role='button'  class="btn btn-info btnRecordSelection" data-pesrecords='All'      >All</button>
+  					<button type="button" role='button'  class="btn btn-info btnRecordSelection active" data-pesrecords='<?=pesTrackerTable::PES_TRACKER_RECORDS_ACTIVE_REQUESTED?>'    data-toggle='tooltip'  title='Active Record in Initiated or Requested status'     >Requested</button>
+					<button type="button" role='button'  class="btn btn-info btnRecordSelection "       data-pesrecords='<?=pesTrackerTable::PES_TRACKER_RECORDS_ACTIVE_PROVISIONAL?>'  data-toggle='tooltip'  title='Active Records in Provisional Clearance status' >Provisional</button>
+  					<button type="button" role='button'  class="btn btn-info btnRecordSelection "       data-pesrecords='<?=pesTrackerTable::PES_TRACKER_RECORDS_ACTIVE?>'              data-toggle='tooltip'  title='Active Records'     >Active</button>
+  					<button type="button" role='button'  class="btn btn-info btnRecordSelection"        data-pesrecords='<?=pesTrackerTable::PES_TRACKER_RECORDS_NOT_ACTIVE?>'          data-toggle='tooltip'  title='Recently Closed'  >Recent</button>
 				</div>
 				</div>
 

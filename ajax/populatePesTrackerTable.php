@@ -6,7 +6,7 @@ set_time_limit(0);
 ob_start();
 
 $pesTrackerTable = new pesTrackerTable(allTables::$PES_TRACKER);
-$table = $pesTrackerTable->buildTable(ucfirst($_POST['records']));
+$table = $pesTrackerTable->buildTable($_POST['records']);
 
 $dataJsonAble = json_encode($table);
 
@@ -14,7 +14,7 @@ $messages = ob_get_clean();
 $success = empty($messages);
 
 if($dataJsonAble) {
-    $response = array("sucess"=>$success,'messages'=>$messages,'table'=>$table);
+    $response = array("records"=>$_POST['records'],"sucess"=>$success,'messages'=>$messages,'table'=>$table);
 } else {
     exit();
 }
