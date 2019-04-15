@@ -1365,13 +1365,13 @@ function personRecord() {
 	    		        var dateEnd = thirtyDaysHence;
 	    		        // aData represents the table structure as an array of columns, so the script access the date value
 	    		        // in the first column of the table via aData[0]
-	    		        var evalDate= aData[16];
+	    		        var projectedEndDate= aData[16];
 	    		        var revalidationStatus = aData[27];
-
-	    		        if (evalDate != '' && evalDate != '2000-01-01' &&  evalDate <= dateEnd && (revalidationStatus.trim() != 'preboarder' && revalidationStatus.trim() != 'offboarded')) {
+	    		        
+	    		        if (projectedEndDate != '' && projectedEndDate != '2000-01-01' &&  projectedEndDate <= dateEnd && (revalidationStatus.trim().substr(0,10) != 'preboarder' && revalidationStatus.trim().substr(0,10) != 'offboarded')) {
 	    		            return true;
 	    		        }
-	    		        else if(revalidationStatus.trim() == 'leaver' || revalidationStatus.slice(0,11) == 'offboarding'  ){
+	    		        else if(revalidationStatus.trim().substr(0,6) == 'leaver' || revalidationStatus.trim().substr(0,11) == 'offboarding'  ){
 	    		        	return true;
 
 	    		        } else {
