@@ -11,6 +11,7 @@ use vbac\personRecord;
 
 <button id='reportAction' 		class='btn btn-primary btn-sm '>Action Mode</button>
 <button id='reportOffboarding' 	class='btn btn-primary btn-sm '>Offboarding Report</button>
+<button id='reportOffboarded' 	class='btn btn-primary btn-sm '>Offboarded Report</button>
 <button id='reportPes'    		class='btn btn-primary btn-sm '>PES Report</button>
 <button id='reportRevalidation' class='btn btn-primary btn-sm '>Revalidation Report</button>
 <button id='reportMgrsCbn'      class='btn btn-primary btn-sm '>Mgrs CBN Report</button>
@@ -39,13 +40,14 @@ $(document).ready(function(){
 
 	$('[data-toggle="tooltip"]').tooltip();
 
-	
+
 	var person = new personRecord();
 	person.initialisePersonTable();
 	person.listenForReportPes();
 	person.listenForReportAction();
 	person.listenForReportRevalidation();
 	person.listenForReportOffboarding();
+	person.listenForReportOffboarded();
 	person.listenForReportMgrsCbn();
 	person.listenForReportRemoveOffb();
 	person.listenForReportReset();

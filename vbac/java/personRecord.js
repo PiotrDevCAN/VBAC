@@ -1389,6 +1389,36 @@ function personRecord() {
 //	      $.fn.dataTableExt.afnFiltering.pop(); - if we pop off here - then when we sort on a column all the rows are back.
 	      });
 	  },
+	  
+	  this.listenForReportOffboarded = function(){
+		    $(document).on('click','#reportOffboarded', function(e){
+		     	$('#reportRemoveOffb').attr('disabled',false);
+		    	$('#portalTitle').text('Person Portal - Offboarded Report');
+		    	$.fn.dataTableExt.afnFiltering.pop();
+		        $.fn.dataTableExt.afnFiltering.push(
+		    		    function(oSettings, aData, iDataIndex){
+		    		        // aData represents the table structure as an array of columns, so the script access the date value
+		    		        // in the first column of the table via aData[0]
+		    		        var revalidationStatus = aData[27];
+		    		        
+		    		        if (revalidationStatus.trim().substr(0,10) == 'offboarded') {
+		    		            return true;
+		    		        } else {
+		    		            return false;
+		    		        }
+		    		});
+
+		      personRecord.table.columns().visible(false,false);
+		      personRecord.table.columns([5,8,11,12,16,27,36]).visible(true);
+		      personRecord.table.order([16,'asc'],[5,'asc']);
+
+		      personRecord.table.draw();
+
+//		      personRecord.table.column(27).data().each().function(){console.log(this)});
+//		      $.fn.dataTableExt.afnFiltering.pop(); - if we pop off here - then when we sort on a column all the rows are back.
+		      });
+		  },	  
+	  
 
   this.listenForReportReset = function(){
     $(document).on('click','#reportReset', function(e){
