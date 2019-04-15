@@ -137,4 +137,8 @@ td {
     font-size: 10px;
 }
 
+.formattedEmailTd {
+    font-size: 10px;
+}
+
 </style>
