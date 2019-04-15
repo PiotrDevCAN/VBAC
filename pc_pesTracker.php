@@ -130,6 +130,10 @@ $(document).ready(function(){
 }
 
 td {
+    font-size: 8px;
+}
+
+.pesComments {
     font-size: 10px;
 }
 
