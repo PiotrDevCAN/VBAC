@@ -775,6 +775,7 @@ function personRecord() {
 
   this.listenForSaveBoarding = function(){
     $(document).on('click','#saveBoarding', function(){
+    	$(this).attr('disabled',true);
       var person = new personRecord();
       person.saveBoarding('Save');
     });
@@ -911,7 +912,7 @@ function personRecord() {
     var formValid = form[0].checkValidity();
     if(formValid){
       personRecord.boardingFormEnabledInputs = ($("input:enabled"));
-      var allDisabledFields = ($("input:disabled"));
+      var allDisabledFields = ($("input:disabled").not('#saveBoarding'));
       $(allDisabledFields).attr('disabled',false);
       var formData = form.serialize();
       formData += "&mode=" + mode + "&boarding=" + ibmer;
