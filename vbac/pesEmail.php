@@ -20,7 +20,7 @@ class pesEmail {
     }
 
     private function getOverseasConsentForm(){
-        $filename = "../emailAttachments/Overseas Consent Form Owens (2).pdf";
+        $filename = "../emailAttachments/New Overseas Consent Form GDPR.pdf";
         $handle = fopen($filename, "r");
         $applicationForm = fread($handle, filesize($filename));
         fclose($handle);
@@ -101,7 +101,7 @@ class pesEmail {
                 $encodedConsentForm = $this->getOverseasConsentForm();
                 $encodedApplicationForm = $this->getLloydsGlobalApplicationForm();
                 $pesAttachments = array(array('filename'=>'Lloyds Global Application Form v1.4.doc','content_type'=>'application/msword','data'=>$encodedApplicationForm)
-                    ,array('filename'=>'Overseas Consent Form Owens (2).pdf','content_type'=>'application/pdf','data'=>$encodedConsentForm)
+                    ,array('filename'=>'New Overseas Consent Form GDPR.pdf','content_type'=>'application/pdf','data'=>$encodedConsentForm)
                 );
                 break;
             case $emailType=='core_4':
@@ -113,14 +113,14 @@ class pesEmail {
                 $encodedApplicationForm = $this->getLloydsGlobalApplicationForm();
                 $encodedConsentForm = $this->getOverseasConsentForm();
                 $pesAttachments = array(array('filename'=>'Lloyds Global Application Form v1.4.doc','content_type'=>'application/msword','data'=>$encodedApplicationForm)
-                    ,array('filename'=>'Overseas Consent Form Owens (2).pdf','content_type'=>'application/pdf','data'=>$encodedConsentForm)
+                    ,array('filename'=>'New Overseas Consent Form GDPR.pdf','content_type'=>'application/pdf','data'=>$encodedConsentForm)
                 );
                 break;
             case $intExt=='Internal' && $emailType=='International_Credit_Check':
                 $encodedApplicationForm = $this->getLloydsGlobalApplicationForm();
                 $encodedConsentForm = $this->getOverseasConsentForm();
                 $pesAttachments = array(array('filename'=>'Lloyds Global Application Form v1.4.doc','content_type'=>'application/msword','data'=>$encodedApplicationForm)
-                    ,array('filename'=>'Overseas Consent Form Owens (2).pdf','content_type'=>'application/pdf','data'=>$encodedConsentForm)
+                    ,array('filename'=>'New Overseas Consent Form GDPR.pdf','content_type'=>'application/pdf','data'=>$encodedConsentForm)
                 );
                 break;
             default:
