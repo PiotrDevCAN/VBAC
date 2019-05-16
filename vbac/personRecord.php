@@ -398,6 +398,13 @@ class personRecord extends DbRecord
     }
 
     function displayBoardingForm($mode){
+
+        var_dump($_SESSION);
+
+
+
+
+
         $loader = new Loader();
         $workstreamTable = new staticDataWorkstreamTable(allTables::$STATIC_WORKSTREAMS);
         $activePredicate = personTable::activePersonPredicate();
