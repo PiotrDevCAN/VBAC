@@ -27,26 +27,26 @@ try {
         $_POST['COUNTRY'] = $_POST['resCOUNTRY'];
         $_POST['EMAIL_ADDRESS'] = $_POST['resEMAIL_ADDRESS'];
         $_POST['EMPLOYEE_TYPE'] = $_POST['resEMPLOYEE_TYPE'];
-        
+
         if($_POST['EMPLOYEE_TYPE']=='vendor'){
             $_POST['REVALIDATION_STATUS'] = personRecord::REVALIDATED_VENDOR;
         //    $_POST['PES_STATUS'] = personRecord::PES_STATUS_CLEARED;
         } else {
             $_POST['REVALIDATION_STATUS'] = personRecord::REVALIDATED_PREBOARDER;
         }
-        
+
         switch (trim($_POST['ROLE_ON_THE_ACCOUNT'])) {
             case 'Wipro':
             case 'Cognizant':
             case 'Densify':
                 $_POST['PES_STATUS'] = personRecord::PES_STATUS_CLEARED;
-            break; 
+            break;
             case 'Other':
-                $_POST['PES_STATUS'] = personRecord::PES_STATUS_TBD;            
-            default:      
+                $_POST['PES_STATUS'] = personRecord::PES_STATUS_TBD;
+            default:
             break;
         }
-        
+
 
 //         $_POST['PES_STATUS_DETAILS'] = $_POST['resPES_STATUS_DETAILS'];
         AuditTable::audit("Pre boarding:<b>" . $cnum . "</b> Type:" .  $_POST['EMPLOYEE_TYPE'],AuditTable::RECORD_TYPE_AUDIT);
@@ -57,15 +57,21 @@ try {
     }
     $_POST['PRE_BOARDED'] = !empty($_POST['person_preboarded']) ? $_POST['person_preboarded']  : null;  // Save the link to the pre-boarded person
 
-    $_POST['EMAIL_ADDRESS'] = preg_replace('/[\x00-\x1F\x7F-\xFF]/', '', trim($_POST['EMAIL_ADDRESS'])); // remove special characters 
-    
+    $_POST['EMAIL_ADDRESS'] = preg_replace('/[\x00-\x1F\x7F-\xFF]/', '', trim($_POST['EMAIL_ADDRESS'])); // remove special characters
+
     $person->setFromArray($_POST);
     $person->convertCountryCodeToName();
     $saveRecordResult = $table->saveRecord($person,false,false);
+
+    if($_POST['CTB_RTB'] != 'CTB'){
+        $table->clearCioAlignment($_POST['CNUM']);
+    }
+
+
     AuditTable::audit("Saved Boarding Record:<B>" . $_POST['CNUM'] .":" . $_POST['NOTES_ID'] .  "</b>Mode:<b>" . $_POST['mode'],AuditTable::RECORD_TYPE_AUDIT);
     AuditTable::audit("Saved Record:<pre>". print_r($person,true) . "</pre>", AuditTable::RECORD_TYPE_DETAILS);
     AuditTable::audit("PROJECTED_END_DATE:<pre>". print_r($_POST['PROJECTED_END_DATE'],true) . "</pre>", AuditTable::RECORD_TYPE_DETAILS);
-    
+
     $timeToWarnPmo = $person->checkIfTimeToWarnPmo();
     $timeToWarnPmo ? $person->sendOffboardingWarning() : null;
 
@@ -94,12 +100,12 @@ try {
     } else {
        AuditTable::audit("Db2 Error in " . __FILE__ . " POST:" . print_r($_POST,true) , AuditTable::RECORD_TYPE_DETAILS);
        if($saveRecordResult && $_POST['mode']=='Save'){
-           echo "Expecting to create a new record, we ended up UPDATING a record that already existed.";           
+           echo "Expecting to create a new record, we ended up UPDATING a record that already existed.";
        }
        if((!$saveRecordResult && $_POST['mode']=='Update')){
            echo "Expecting to update an existing record, we ended up INSERTING a new one";
        }
-       
+
        echo "saveRecordResult:";
        var_dump($saveRecordResult);
        $success = false;

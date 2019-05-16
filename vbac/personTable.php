@@ -596,6 +596,23 @@ class personTable extends DbTable {
         return true;
     }
 
+    function clearCioAlignment($cnum){
+        $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql .= " SET CIO_ALIGNMENT = null ";
+        $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
+
+        $result = db2_exec($_SESSION['conn'], $sql);
+
+        if(!$result){
+            DbTable::displayErrorMessage($result, __CLASS__,__METHOD__, $sql);
+            return false;
+        }
+        AuditTable::audit("Clear CIO Alignment for $cnum",AuditTable::RECORD_TYPE_AUDIT);
+
+        return true;
+    }
+
+
     function transferIndividual($cnum,$toFmCnum){
         $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET FM_CNUM='"  . db2_escape_string($toFmCnum) . "' ";
