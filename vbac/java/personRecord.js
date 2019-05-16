@@ -721,6 +721,7 @@ function personRecord() {
           .attr('disabled',false)
           .attr('required',true);
       } else {
+    	$('#cioAlignment').val('').trigger('change');  
         $('#cioAlignment').select2({
           placeholder:"Not required",
           })
