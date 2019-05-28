@@ -87,6 +87,7 @@ function auditRecord() {
 	                  'csvHtml5',
 	                  'print'
 	              ],
+  	        order: [[ 1, "desc" ]]
 	    });
 	    
 	    var searchAt = $.fn.dataTable.util.throttle(
