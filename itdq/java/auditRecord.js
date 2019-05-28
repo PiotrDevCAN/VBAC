@@ -154,7 +154,7 @@ function auditRecord() {
 	            data: function ( d ) {
 	            	console.log(d);
 	                d.type = "Revalidation";
-	            },
+	            	},
 	            dataSrc: function ( json ) {
 	            	console.log('dataSrc');
 	            	console.log(json);
@@ -192,7 +192,8 @@ function auditRecord() {
 	                  'excelHtml5',
 	                  'csvHtml5',
 	                  'print'
-	              ],
+	                ],
+	        order: [[ 1, "desc" ]]
 	    });
 	    
 	    var searchAt = $.fn.dataTable.util.throttle(

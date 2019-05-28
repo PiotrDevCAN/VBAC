@@ -36,7 +36,7 @@ $slack->sendMessageToChannel("Revalidation will ignore " . count($allPreboarders
 $allPreboarders= null; // free up some storage
 
 $vendorsPredicate = "   ( REVALIDATION_STATUS =  '" . personRecord::REVALIDATED_VENDOR . "') ";
-$allVendors = $loader->load('CNUM',allTables::$PERSON, $preBoardersPredicate ); //
+$allVendors = $loader->load('CNUM',allTables::$PERSON, $vendorsPredicate ); //
 AuditTable::audit("Revalidation will ignore " . count($allVendors) . " vendors.",AuditTable::RECORD_TYPE_REVALIDATION);
 $slack->sendMessageToChannel("Revalidation will ignore " . count($allVendors) . " vendors.", slack::CHANNEL_SM_CDI_AUDIT);
 $allVendors= null; // free up some storage
