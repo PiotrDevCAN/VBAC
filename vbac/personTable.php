@@ -476,10 +476,10 @@ class personTable extends DbTable {
                 break;
             case personRecord::PES_STATUS_CLEARED:
             case personRecord::PES_STATUS_CLEARED_PERSONAL:
-            case personRecord::PES_STATUS_PROVISIONAL:
                 $dateField = 'PES_CLEARED_DATE';
                 self::setPesRescheckDate($cnum,$requestor);
                 break;
+            case personRecord::PES_STATUS_PROVISIONAL:
             default:
                 $dateField = 'PES_DATE_RESPONDED';
             break;
