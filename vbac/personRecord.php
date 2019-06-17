@@ -79,6 +79,10 @@ class personRecord extends DbRecord
     protected $RSA_TOKEN;
     protected $CALLSIGN_ID;
 
+    protected $PES_LEVEL;
+    protected $PES_RECHECK_DATE;
+    protected $PES_CLEARED_DATE;
+
     protected $person_bio;
 
 

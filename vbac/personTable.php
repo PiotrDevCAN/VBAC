@@ -39,6 +39,12 @@ class personTable extends DbTable {
     const ACTIVE_WITH_PROVISIONAL_CLEARANCE = true;
     const ACTIVE_WITHOUT_PROVISIONAL_CLEARANCE = false;
 
+    const PES_LEVEL_ONE = 'Level 1';
+    const PES_LEVEL_TWO = 'Level 2';
+    const PES_LEVEL_DEFAULT = self::PES_LEVEL_TWO;
+
+    static private $pesRecheckPeriods = array(self::PES_LEVEL_ONE=>'1 Year',self::PES_LEVEL_TWO=>'3 Years'); // must be Db2 date period
+
 
     function __construct($table,$pwd=null,$log=true){
         $this->slack = new slack();
@@ -457,6 +463,7 @@ class personTable extends DbTable {
         }
 
         $status = empty($status) ? personRecord::PES_STATUS_NOT_REQUESTED : $status;
+        $requestor = empty($requestor) ? $_SESSION['ssoEmail'] : $requestor;
 
         switch ($status) {
             case personRecord::PES_STATUS_INITIATED:
@@ -465,6 +472,12 @@ class personTable extends DbTable {
                 break;
             case personRecord::PES_STATUS_REQUESTED:
                 $dateField = 'PES_DATE_EVIDENCE';
+                break;
+            case personRecord::PES_STATUS_CLEARED:
+            case personRecord::PES_STATUS_CLEARED_PERSONAL:
+            case personRecord::PES_STATUS_PROVISIONAL:
+                $dateField = 'PES_CLEARED_DATE';
+                self::setPesRescheckDate($cnum,$requestor);
                 break;
             default:
                 $dateField = 'PES_DATE_RESPONDED';
@@ -489,6 +502,55 @@ class personTable extends DbTable {
 
         return true;
     }
+
+    function setPesRescheckDate($cnum=null,$requestor=null){
+        if(!$cnum){
+            throw new \Exception('No CNUM provided in ' . __METHOD__);
+        }
+
+        $requestor = empty($requestor) ? $_SESSION['ssoEmail'] : $requestor;
+
+        $loader = new Loader();
+        $predicate = " CNUM='" . db2_escape_string(trim($cnum)) . "' ";
+        $pesLevels = $loader->loadIndexed('PES_LEVEL','CNUM',allTables::$PERSON,$predicate);
+
+        $pesLevel = isset($pesLevels[trim($cnum)]) ? $pesLevels[trim($cnum)]  : self::PES_LEVEL_DEFAULT ;
+        $pesRecheckPeriod = isset(self::$pesRecheckPeriods[$pesLevel]) ? self::$pesRecheckPeriods[$pesLevel] : self::$pesRecheckPeriods[self::PES_LEVEL_DEFAULT];
+
+        $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql .= " SET PES_RECHECK_DATE = current date + " . $pesRecheckPeriod ;
+        $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
+
+        $result = db2_exec($_SESSION['conn'], $sql);
+
+        if(!$result){
+            DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+
+        $sql  = " SELECT PES_RECHECK_DATE FROM  " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
+
+        $res = db2_exec($_SESSION['conn'], $sql);
+
+        if(!$res){
+            DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+
+        $row = db2_fetch_assoc($res);
+
+
+
+        $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER);
+        $pesTracker->savePesComment($cnum, "PES_RECHECK_DATE set to :" .  $row['PES_RECHECK_DATE'] );
+
+        AuditTable::audit("PES_RECHECK_DATE set to :  "  . $row['PES_RECHECK_DATE'] . " by " . $requestor,AuditTable::RECORD_TYPE_AUDIT);
+
+        return true;
+    }
+
+
 
     function setPmoStatus($cnum=null,$status=null,$requestor=null){
         if(!$cnum){
