@@ -47,16 +47,16 @@ class pesTrackerTable extends DbTable{
 
         switch (trim($records)){
             case self::PES_TRACKER_RECORDS_ACTIVE :
-                $pesStatusPredicate = "  P.PES_STATUS in('" . personRecord::PES_STATUS_REQUESTED . "','" . personRecord::PES_STATUS_INITIATED. "','" . personRecord::PES_STATUS_PROVISIONAL. "') ";
+                $pesStatusPredicate = "  P.PES_STATUS in('" . personRecord::PES_STATUS_REQUESTED . "','" . personRecord::PES_STATUS_INITIATED. "','" . personRecord::PES_STATUS_PROVISIONAL. "','" . personRecord::PES_STATUS_REVALIDATING . "') ";
                 break;
             case self::PES_TRACKER_RECORDS_ACTIVE_REQUESTED :
-                $pesStatusPredicate = "  P.PES_STATUS in('" . personRecord::PES_STATUS_REQUESTED . "','" . personRecord::PES_STATUS_INITIATED. "') ";
+                $pesStatusPredicate = "  P.PES_STATUS in('" . personRecord::PES_STATUS_REQUESTED . "','" . personRecord::PES_STATUS_INITIATED. "','" . personRecord::PES_STATUS_REVALIDATING . "') ";
                 break;
             case self::PES_TRACKER_RECORDS_ACTIVE_PROVISIONAL :
                 $pesStatusPredicate = "  P.PES_STATUS in('" . personRecord::PES_STATUS_PROVISIONAL. "') ";
                 break;
             case self::PES_TRACKER_RECORDS_NOT_ACTIVE :
-                $pesStatusPredicate = " P.PES_STATUS not in ('" . personRecord::PES_STATUS_REQUESTED . "','" . personRecord::PES_STATUS_INITIATED. "','" . personRecord::PES_STATUS_PROVISIONAL. "')  ";
+                $pesStatusPredicate = " P.PES_STATUS not in ('" . personRecord::PES_STATUS_REQUESTED . "','" . personRecord::PES_STATUS_INITIATED. "','" . personRecord::PES_STATUS_PROVISIONAL. "','" . personRecord::PES_STATUS_REVALIDATING . "')  ";
                 $pesStatusPredicate.= " AND PT.PROCESSING_STATUS_CHANGED > current timestamp - 31 days AND PT.CNUM is not null ";
                 break;
             case self::PES_TRACKER_RECORDS_ALL :

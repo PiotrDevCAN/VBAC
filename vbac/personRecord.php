@@ -303,6 +303,7 @@ class personRecord extends DbRecord
     const PES_STATUS_CANCEL_REQ     = 'Cancel Requested';
     const PES_STATUS_CANCEL_CONFIRMED = 'Cancel Confirmed';
     const PES_STATUS_TBD           = 'TBD';
+    const PES_STATUS_REVALIDATING  = 'Revalidating';
 
 
 //     function htmlHeaderCells(){
@@ -1011,6 +1012,7 @@ class personRecord extends DbRecord
                     <option value='<?=personRecord::PES_STATUS_PROVISIONAL;?>'><?=personRecord::PES_STATUS_PROVISIONAL?></option>
                     <option value='<?=personRecord::PES_STATUS_REMOVED;?>'><?=personRecord::PES_STATUS_REMOVED?></option>
                     <option value='<?=personRecord::PES_STATUS_TBD;?>'><?=personRecord::PES_STATUS_TBD?></option>
+                    <option value='<?=personRecord::PES_STATUS_REVALIDATING;?>'><?=personRecord::PES_STATUS_REVALIDATING?></option>
 
                        </select>
                  </div>

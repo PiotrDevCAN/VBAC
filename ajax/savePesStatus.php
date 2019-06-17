@@ -14,38 +14,38 @@ $formattedEmailField= null;
 try {
     $personTable= new personTable(allTables::$PERSON);
     $personTable->setPesStatus($_POST['psm_cnum'],$_POST['psm_status'],$_SESSION['ssoEmail']);
-    
+
     $person = new personRecord();
     $person->setFromArray(array('CNUM'=>$_POST['psm_cnum'],'PES_STATUS_DETAILS'=>$_POST['psm_detail'],'PES_DATE_RESPONDED'=>$_POST['PES_DATE_RESPONDED']));
     $updateRecordResult = $personTable->update($person,false,false);
-        
+
     $personData = $personTable->getRecord($person);
     $person->setFromArray($personData);
-    
-    
+
+
     if(array_key_exists('psm_passportFirst', $_POST)){
         /// We've been called from the PES TRACKER Screen;
         $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER   );
-        
+
         $pesTrackeRecord = new pesTrackerRecord();
         $pesTrackeRecord->setFromArray(array('CNUM'=>$_POST['psm_cnum']));
-        
+
         if (!$pesTracker->existsInDb($pesTrackeRecord)) {
              $pesTracker->createNewTrackerRecord($_POST['psm_cnum']);
         }
-        
-        
+
+
         $pesTracker->setPesPassportNames($_POST['psm_cnum'],trim($_POST['psm_passportFirst']), trim($_POST['psm_passportSurname']));
-     
+
         $pesTrackerData = $pesTracker->getRecord($pesTrackeRecord);
 
         $row = $pesTrackerData;
         $row['EMAIL_ADDRESS'] = $personData['EMAIL_ADDRESS'];
         $row['FIRST_NAME']    = $personData['FIRST_NAME'];
         $row['LAST_NAME']     = $personData['LAST_NAME'];
-        $formattedEmailField = pesTrackerTable::formatEmailFieldOnTracker($row);        
-    } 
-    
+        $formattedEmailField = pesTrackerTable::formatEmailFieldOnTracker($row);
+    }
+
     AuditTable::audit("Saved Person <pre>" . print_r($person,true) . "</pre>", AuditTable::RECORD_TYPE_DETAILS);
 
     if(!$updateRecordResult){
@@ -58,7 +58,7 @@ try {
 //         echo "<br/>Detail : " . $_POST['psm_detail'];
 
 
-       
+
         switch ($_POST['psm_status']) {
             case personRecord::PES_STATUS_REMOVED:
             case personRecord::PES_STATUS_DECLINED:
@@ -67,23 +67,24 @@ try {
             case personRecord::PES_STATUS_REQUESTED:
             case personRecord::PES_STATUS_EXCEPTION:
             case personRecord::PES_STATUS_PROVISIONAL;
+            case personRecord::PES_STATUS_REVALIDATING;
                 $notificationStatus = 'Email not applicable';
-                 break;  
+                 break;
             case personRecord::PES_STATUS_CLEARED:
             case personRecord::PES_STATUS_CLEARED_PERSONAL:
             case personRecord::PES_STATUS_CANCEL_REQ:
-                $emailResponse = $person->sendPesStatusChangedEmail();   
+                $emailResponse = $person->sendPesStatusChangedEmail();
                 $notificationStatus = $emailResponse ? 'Email sent' : 'No email sent';
                 break;
             default:
-                $notificationStatus = 'Email not applicable(other)';               
+                $notificationStatus = 'Email not applicable(other)';
             break;
         }
-        
+
         AuditTable::audit("PES Status Email:" . $notificationStatus ,AuditTable::RECORD_TYPE_DETAILS);
-        
+
         $success = true;
-        
+
     }
 } catch (Exception $e) {
     echo $e->getCode();

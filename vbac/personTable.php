@@ -471,6 +471,7 @@ class personTable extends DbTable {
                 $dateField = 'PES_DATE_REQUESTED';
                 break;
             case personRecord::PES_STATUS_REQUESTED:
+            case personRecord::PES_STATUS_REVALIDATING:
                 $dateField = 'PES_DATE_EVIDENCE';
                 break;
             case personRecord::PES_STATUS_CLEARED:
@@ -1456,6 +1457,7 @@ class personTable extends DbTable {
             case $status == personRecord::PES_STATUS_REMOVED && $_SESSION['isPes'] :
             case $status == personRecord::PES_STATUS_PROVISIONAL && $_SESSION['isPes'] :
             case $status == personRecord::PES_STATUS_TBD && $_SESSION['isPes'] :
+            case $status == personRecord::PES_STATUS_REVALIDATING && $_SESSION['isPes'] :
                 $pesStatusWithButton.= "<button type='button' class='btn btn-default btn-xs btnPesStatus' aria-label='Left Align' ";
                 $pesStatusWithButton.= " data-cnum='" .$actualCnum . "' ";
                 $pesStatusWithButton.= " data-notesid='" . $notesId . "' ";
@@ -1471,6 +1473,7 @@ class personTable extends DbTable {
                 $pesStatusWithButton.= "</button>";
                 break;
             case $status == personRecord::PES_STATUS_REQUESTED && !$_SESSION['isPes'] :
+            case $status == personRecord::PES_STATUS_REVALIDATING && !$_SESSION['isPes'] :
             case $status == personRecord::PES_STATUS_INITIATED && !$_SESSION['isPes'] ;
                 $pesStatusWithButton.= "<button type='button' class='btn btn-default btn-xs btnPesCancel accessRestrict accessFm' aria-label='Left Align' ";
                 $pesStatusWithButton.= " data-cnum='" .$actualCnum . "' ";
@@ -1491,7 +1494,7 @@ class personTable extends DbTable {
                 break;
         }
 
-        if(isset($row['PROCESSING_STATUS']) && ( $row['PES_STATUS']== personRecord::PES_STATUS_INITIATED || $row['PES_STATUS']==personRecord::PES_STATUS_REQUESTED ) ){
+        if(isset($row['PROCESSING_STATUS']) && ( $row['PES_STATUS']== personRecord::PES_STATUS_INITIATED || $row['PES_STATUS']==personRecord::PES_STATUS_REQUESTED || $row['PES_STATUS']==personRecord::PES_STATUS_REVALIDATING ) ){
             $pesStatusWithButton .= "&nbsp;<button type='button' class='btn btn-default btn-xs btnTogglePesTrackerStatusDetails' aria-label='Left Align' data-toggle='tooltip' data-placement='top' title='See PES Tracker Status' >";
             $pesStatusWithButton .= !empty($row['PROCESSING_STATUS']) ? "&nbsp;<small>" . $row['PROCESSING_STATUS'] . "</small>&nbsp;" : null;
             $pesStatusWithButton .= "<span class='glyphicon glyphicon-search  ' aria-hidden='true' ></span>";
@@ -1531,7 +1534,8 @@ class personTable extends DbTable {
 
         if(trim($ibmerPesStatus) == personRecord::PES_STATUS_INITIATED
                                           || trim($ibmerPesStatus) == personRecord::PES_STATUS_REQUESTED
-                                          || trim($ibmerPesStatus) == personRecord::PES_STATUS_NOT_REQUESTED ){
+                                          || trim($ibmerPesStatus) == personRecord::PES_STATUS_NOT_REQUESTED
+                                          || trim($ibmerPesStatus) == personRecord::PES_STATUS_REVALIDATING  ){
             $ibmerData['PES_STATUS'] = $preboarderPesStatus;
             $ibmerData['PES_STATUS_DETAILS'] = $ibmerPesStatusD . ":" . $preboarderPesStatusD;
             $ibmerData['PES_DATE_EVIDENCE'] = $preBoarderPesEvidence;
