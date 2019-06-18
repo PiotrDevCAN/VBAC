@@ -445,6 +445,8 @@ class personRecord extends DbRecord
         $startDate = \DateTime::createFromFormat('Y-m-d', $this->START_DATE);
         $endDate = \DateTime::createFromFormat('Y-m-d', $this->PROJECTED_END_DATE);
 
+        $pesClearedDate = \DateTime::createFromFormat('Y-m-d', $this->PES_CLEARED_DATE);
+        $pesRecheckDate = \DateTime::createFromFormat('Y-m-d', $this->PES_RECHECK_DATE);
         ?>
         <form id='boardingForm'  class="form-horizontal" onsubmit="return false;">
     	<div class="panel panel-default">
@@ -731,6 +733,43 @@ class personRecord extends DbRecord
      </div>
      </div>
      </div>
+
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">PES Details</h3>
+  </div>
+  <div class="panel-body">
+    <div class='form-group' >
+        <div class='col-sm-6 form-required'>
+               <select class='form-control select select2' id='pesLevel'
+                              name='PES_LEVEL'
+                                >
+                <option value=''>Select PES Level</option>
+                <option value='<?=personTable::PES_LEVEL_ONE;?>' <?=$this->PES_LEVEL==personTable::PES_LEVEL_ONE ? ' selected ' : null;?>><?=personTable::PES_LEVEL_ONE . " (Recheck annually)";?></option>
+                <option value='<?=personTable::PES_LEVEL_TWO;?>' <?=$this->PES_LEVEL==personTable::PES_LEVEL_TWO ? ' selected ' : null;?>><?=personTable::PES_LEVEL_TWO . " (Recheck every 3yrs)"?></option>
+            </select>
+    	</div>
+    </div>
+    <div class='form-group' >
+      <div class='col-sm-6'>
+          <input class="form-control" id="pes_cleared_date" value="<?=is_object($pesClearedDate) ?  $pesClearedDate->format('d M Y') . " (Cleared)" : null?>" type="text" placeholder='PES Cleared Date' data-toggle='tooltip' title='PES Cleared Date' disabled>
+          <input class="form-control" id="pes_cleareD_date_db2" name="pesClearedDate" value="<?=$this->PES_CLEARED_DATE . " (Cleared)"?>" type="hidden" >
+      </div>
+
+      <div class='col-sm-6'>
+          <input class="form-control" id="pes_recheck_date"  value="<?=is_object($pesRecheckDate) ? $pesRecheckDate->format('d M Y')  . " (Recheck)" : null?>"  type="text" placeholder='PES Recheck Date' data-toggle='tooltip' title='PES Recheck Date' disabled>
+		  <input class="form-control" id="pes_recheck_date_db2" name="pesRecheckDate" value="<?=$this->PES_RECHECK_DATE?>" type="hidden" >
+      </div>
+    </div>
+
+
+
+
+
+
+</div>
+</div>
 
    <input id='pes_date_requested'   name='PES_DATE_REQUESTED'     value='<?=$this->PES_DATE_REQUESTED?>'		type='Hidden'  >
    <input id='pes_date_responded'   name='PES_DATE_RESPONDED'     value='<?=$this->PES_DATE_RESPONDED?>'      type='hidden'  >
