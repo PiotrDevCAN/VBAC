@@ -970,8 +970,9 @@ function personRecord() {
           }
         });
     } else {
-      $("#saveBoarding").removeClass('spinning');
-      $("#updateBoarding").removeClass('spinning');
+      $("#saveBoarding").removeClass('spinning').attr('disabled',false);
+      $("#updateBoarding").removeClass('spinning').attr('disabled',false);
+      
       console.log('invalid fields follow');
       console.log($(form).find( ":invalid" ));
     }
