@@ -1572,5 +1572,33 @@ class personTable extends DbTable {
     }
 
 
+    function notifyRecheckDateApproaching(){
+        $sql = " SELECT CNUM, NOTES_ID, PES_STATUS, REVALIDATION_STATUS, PES_RECHECK_DATE ";
+        $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
+        $sql.= " WHERE 1=1 and " . self::activePersonPredicate();
+        $sql.= " and PES_RECHECK_DATE is not null ";
+ //       $sql.= " and PES_RECHECK_DATE < CURRENT DATE + 56 DAYS ";
+
+
+        $rs = db2_exec($_SESSION['conn'], $sql);
+
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+        }
+
+        $allRecheckers = false;
+        while(($row=db2_fetch_assoc($rs))==true){
+            $allRecheckers[] = $row;
+        }
+
+        if($allRecheckers){
+           pesEmail::notifyPesTeamOfUpcomingRechecks($allRecheckers);
+        }
+
+
+    }
+
+
+
 
 }
