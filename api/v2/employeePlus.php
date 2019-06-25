@@ -14,7 +14,7 @@ $cnum    = !empty($_GET['cnum']) ? $_GET['cnum'] : null;
 
 $additionalFields = !empty($_REQUEST['plus']) ? explode(",", $_REQUEST['plus']) : array('EMAIL_ADDRESS');
 $additionalSelect = null;
-$employees = array();
+$employeesArray = array();
 
 foreach ($additionalFields as $field) {
     $additionalSelect .= ", " . db2_escape_string($field);
@@ -42,12 +42,14 @@ if(!$rs){
 
 while(($row = db2_fetch_assoc($rs))==true){
     $row = array_walk($row, 'trim');
-    $employees[] = $row;
+    $employeesArray[] = $row;
 }
-$employees = count($employees)==1 ? $employees[0] : $employees;
+$employees = count($employeesArray)==1 ? $employeesArray[0] : $employeesArray;
 $errorMessage = ob_get_clean();
 $success = empty($errorMessage);
-$response = array('success'=>$success,'employees'=>$employees,'error'=>$errorMessage
+$response = array('success'=>$success
+    ,'employees'=>$employees, 'employeesArray'=>print_r($employeesArray,true)
+    ,'error'=>$errorMessage
     ,'rs'=>$rs,'sql'=>$sql,'notesid'=>$notesId,'Gnotesid'=>$_GET['notesid'],'plus'=>$additionalFields,'addSel'=>$additionalSelect
     ,'GET'=>print_r($_GET,true), 'REQUEST'=>print_r($_REQUEST,true));
 
