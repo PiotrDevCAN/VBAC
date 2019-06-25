@@ -53,6 +53,9 @@ $response = array('success'=>$success
     ,'rs'=>$rs,'sql'=>$sql,'notesid'=>$notesId,'plus'=>$additionalFields,'addSel'=>$additionalSelect
     ,'GET'=>print_r($_GET,true), 'REQUEST'=>print_r($_REQUEST,true));
 
+if(!isset($_GET['diags'])){
+    $response = $employees;
+}
 $responseJson = json_encode($response);
 if($responseJson){
     echo $responseJson;
