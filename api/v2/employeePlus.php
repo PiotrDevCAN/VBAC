@@ -50,7 +50,7 @@ $success = empty($errorMessage);
 $response = array('success'=>$success
     ,'employees'=>$employees, 'employeesArray'=>print_r($employeesArray,true)
     ,'error'=>$errorMessage
-    ,'rs'=>$rs,'sql'=>$sql,'notesid'=>$notesId,'Gnotesid'=>$_GET['notesid'],'plus'=>$additionalFields,'addSel'=>$additionalSelect
+    ,'rs'=>$rs,'sql'=>$sql,'notesid'=>$notesId,'plus'=>$additionalFields,'addSel'=>$additionalSelect
     ,'GET'=>print_r($_GET,true), 'REQUEST'=>print_r($_REQUEST,true));
 
 $responseJson = json_encode($response);
