@@ -41,8 +41,8 @@ if(!$rs){
 }
 
 while(($row = db2_fetch_assoc($rs))==true){
-    $row = array_walk($row, 'trim');
-    $employeesArray[] = $row;
+    $rowTrimmed = array_map('trim',$row);
+    $employeesArray[] = $rowTrimmed;
 }
 $employees = count($employeesArray)==1 ? $employeesArray[0] : $employeesArray;
 $errorMessage = ob_get_clean();
