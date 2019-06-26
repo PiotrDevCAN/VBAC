@@ -1,6 +1,10 @@
 <?php
 use vbac\personRecord;
 
+$personRecord = new personRecord();
+$headerCells = $personRecord->htmlHeaderCells();
+
+
 ?>
 <div class='container'>
 <h1 id='portalTitle'>Person Portal</h1>
@@ -21,6 +25,14 @@ use vbac\personRecord;
 <button id='reportReload'  		class='btn btn-warning btn-sm '>Reload Data</button>
 <button id='reportReset'  		class='btn btn-warning btn-sm '>Reset</button>
 <div id='personDatabaseDiv' class='portalDiv'>
+<table id='personTable' class='table table-striped table-bordered compact'   style='width:100%'>
+<thead>
+<tr><?=$headerCells;?></tr></thead>
+<tbody>
+</tbody>
+<tfoot><tr><?=$headerCells;?></tr>
+</tfoot>
+</table>
 </div>
 </div>
 
@@ -42,7 +54,7 @@ $(document).ready(function(){
 
 
 	var person = new personRecord();
-	person.initialisePersonTable();
+	person.initialiseDataTable();
 	person.listenForReportPes();
 	person.listenForReportAction();
 	person.listenForReportRevalidation();

@@ -1100,17 +1100,19 @@ function personRecord() {
   
   
   this.initialisePersonTable = function(preBoardersAction){
-	  preBoardersAction = typeof(preBoardersAction) == 'undefined' ? null : preBoardersAction;
-      $.ajax({
-        url: "ajax/createHtmlForPersonTable.php",
-        type: 'POST',        
-        success: function(result){
-          var Person = new personRecord();
-          $('#personDatabaseDiv').html(result);
-          $('#assetRequestsDatatablesDiv').html(result);
-          Person.initialiseDataTable(preBoardersAction);
-        }
-      });
+//	  preBoardersAction = typeof(preBoardersAction) == 'undefined' ? null : preBoardersAction;
+
+//	  Person.initialiseDataTable(preBoardersAction);
+//      $.ajax({
+//        url: "ajax/createHtmlForPersonTable.php",
+//        type: 'POST',        
+//        success: function(result){
+//          var Person = new personRecord();
+//          $('#personDatabaseDiv').html(result);
+//          $('#assetRequestsDatatablesDiv').html(result);
+//          Person.initialiseDataTable(preBoardersAction);
+//        }
+//      });
 
   },
   
@@ -1135,7 +1137,8 @@ function personRecord() {
       // Setup - add a text input to each footer cell
       $('#personTable tfoot th').each( function () {
           var title = $(this).text();
-          $(this).html( '<input type="text" id="footer'+ title.replace(' ','') + '" placeholder="Search '+title+'" />' );
+          var titleCondensed = title.replace(' ','');
+          $(this).html( '<input type="text" id="footer'+ titleCondensed + '" placeholder="Search '+title+'" />' );
       } );
     // DataTable
       personRecord.table = $('#personTable').DataTable({
