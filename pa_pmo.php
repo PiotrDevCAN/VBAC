@@ -75,5 +75,18 @@ $(document).ready(function(){
 	person.listenForbtnTogglePesTrackerStatusDetails();
 //	person.listenForCancelPes(); Don't let them cancel 2018/12/19
 
+<?php
+if(isset($_GET['open'])){
+   ?>
+   $(document).on('init.dt',function(){
+	   $('#footerNOTESID').val('<?=trim($_GET['open']);?>').trigger('change');
+	   console.log($('.btnEditPerson'));
+	   $('.btnEditPerson').trigger('click');
+   });
+   <?php
+}
+?>
+
+
 });
 </script>

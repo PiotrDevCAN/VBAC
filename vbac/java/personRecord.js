@@ -1135,7 +1135,7 @@ function personRecord() {
       // Setup - add a text input to each footer cell
       $('#personTable tfoot th').each( function () {
           var title = $(this).text();
-          $(this).html( '<input type="text" id="footer'+ title + '" placeholder="Search '+title+'" />' );
+          $(this).html( '<input type="text" id="footer'+ title.replace(' ','') + '" placeholder="Search '+title+'" />' );
       } );
     // DataTable
       personRecord.table = $('#personTable').DataTable({
