@@ -541,11 +541,14 @@ class personRecord extends DbRecord
 
 				<div class='form-group'>
             		<div class='col-sm-12'>
-						<label class="radio-inline employeeTypeRadioBtn"><input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_PREBOARDER ?>' data-type='ibmer'>IBMer Pre-Hire </label>
-						<label class="radio-inline employeeTypeRadioBtn"><input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_VENDOR?>' data-type='cognizant' >Cognizant </label>
-						<label class="radio-inline employeeTypeRadioBtn"><input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_VENDOR?>' data-type='densify'   >Densify </label>
-						<label class="radio-inline employeeTypeRadioBtn"><input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_VENDOR?>' data-type='wipro'     >Wipro </label>
-						<label class="radio-inline employeeTypeRadioBtn"><input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_VENDOR?>' data-type='other'     >Other (Vendor)</label>
+						<label class="radio-inline employeeTypeRadioBtn" data-toggle='tooltip' data-placement='auto top' title='IBM Regular and IBM Contractors'>
+						<input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_PREBOARDER ?>' data-type='ibmer' >
+						IBMer Pre-Hire Regular or Contractor
+						</label>
+						<label class="radio-inline employeeTypeRadioBtn" data-toggle='tooltip' data-placement='auto top' title='3rd Party Vendors'>
+						<input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_VENDOR?>' data-type='other'      >
+						Other (ie.3rd Party Vendor)
+						</label>
 		        	</div>
         		</div>
 			</div>
