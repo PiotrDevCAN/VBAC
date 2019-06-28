@@ -543,7 +543,7 @@ class personRecord extends DbRecord
             		<div class='col-sm-12'>
 						<label class="radio-inline employeeTypeRadioBtn" data-toggle='tooltip' data-placement='auto top' title='IBM Regular and IBM Contractors'>
 						<input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_PREBOARDER ?>' data-type='ibmer' >
-						IBMer Pre-Hire Regular or Contractor
+						IBMer Pre-Hire (Regular or Contractor)
 						</label>
 						<label class="radio-inline employeeTypeRadioBtn" data-toggle='tooltip' data-placement='auto top' title='3rd Party Vendors'>
 						<input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_VENDOR?>' data-type='other'      >
@@ -571,8 +571,10 @@ class personRecord extends DbRecord
 				<div id='editLocationDiv' class='col-sm-6' <?=$allowEditLocation;?>>
            	   	<select class='form-control select select2 locationFor '
                 			  id='LBG_LOCATION'
-                              name='LBG_LOCATION'
+                              name='LBG_LOCATION',
+                              placeholder='LBG Work Location'
                 >
+                <option value=''>LBG Work Location</option>
                 <?php
                    $options = assetRequestRecord::buildLocationOptions($this->LBG_LOCATION);
                    echo $options;
