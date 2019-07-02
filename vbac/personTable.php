@@ -911,7 +911,8 @@ class personTable extends DbTable {
     private function prepareRevalidationPotentialLeaverStmt(){
         if(empty($this->preparedRevalidationPotentialLeaverStmt)){
             $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
-            $sql .= " SET REVALIDATION_STATUS='" . personRecord::REVALIDATED_POTENTIAL . "' , REVALIDATION_DATE_FIELD = current date ";
+//            $sql .= " SET REVALIDATION_STATUS='" . personRecord::REVALIDATED_POTENTIAL . "' , REVALIDATION_DATE_FIELD = current date ";
+            $sql .= " SET REVALIDATION_STATUS='" . personRecord::REVALIDATED_POTENTIAL . "'  "; // Storing the date waa cutting to many history records
             $sql .= " WHERE CNUM=? ";
 
             $this->preparedRevalidationPotentialLeaverStmt = db2_prepare($_SESSION['conn'], $sql);
