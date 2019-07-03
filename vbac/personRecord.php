@@ -532,7 +532,7 @@ class personRecord extends DbRecord
         				</div>
         			</div>
 				<input id='resource_uid'           name='resperson_uid'        value='<?=$this->CNUM?>'   				type='hidden' >
-        		<input id='resource_is_mgr'	       name='resFM_MANAGER_FLAG'   value='N'               			    	type='hidden' >
+        		<input id='resource_is_mgr'	       name='resFM_MANAGER_FLAG'   value='No'              			    	type='hidden' >
         		<input id='resource_employee_type' name='resEMPLOYEE_TYPE'     value='setByRadioButtons'	    		type='hidden' >
         		<input id='resource_ibm_location'  name='resIBM_BASE_LOCATION' value='<?=$this->IBM_BASE_LOCATION?>'	type='hidden' >
         		<input id='resource_pes_status'    name='resPES_STATUS'        value='<?=$pesStatus?>'                  type='hidden' >
