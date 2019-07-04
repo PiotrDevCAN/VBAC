@@ -11,11 +11,28 @@ if($_REQUEST['token']!= $token){
     return;
 }
 
+if(isset($_REQUEST['activeoffboarding'])){
+    switch (trim($_REQUEST['activeoffboarding'])) {
+        case 'Yes':
+            $activeOffboardingPredicate = " OR ( PES_STATUS like 'Cleared%' AND REVALIDATION_STATUS like 'offboarding%' ) ) ";
+        break;
+        case 'Exc':
+            $activeOffboardingPredicate = " ) AND REVALIDATION_STATUS like 'offboarding%' ";
+            break;
+        default:
+            $activeOffboardingPredicate = " ) ";
+        break;
+    }
+}
+
+
+
 $sql = " SELECT P.NOTES_ID ";
 $sql.= " FROM " . $_SERVER['environment'] . "." . allTables::$PERSON . " AS P ";
 
-$sql.= " WHERE 1=1 AND trim(NOTES_ID) != ''  AND (( " . personTable::activePersonPredicate() . ") ";
-$sql.= isset($_REQUEST['activeoffboarding']) ? " OR ( PES_STATUS like 'Cleared%' AND REVALIDATION_STATUS like 'offboarding%' )) "  : ") ";
+$sql.= " WHERE 1=1 ";
+$sql.= " AND trim(NOTES_ID) != ''  AND (( " . personTable::activePersonPredicate() . ") ";
+$sql.=  $activeOffboardingPredicate;
 $sql.= " ORDER BY P.NOTES_ID ";
 
 $rs = db2_exec($_SESSION['conn'], $sql);
