@@ -5,6 +5,7 @@ use itdq\DbTable;
 use itdq\AuditTable;
 use itdq\Loader;
 use itdq\slack;
+use vbac\personRecord;
 
 class personTable extends DbTable {
 
@@ -263,17 +264,6 @@ class personTable extends DbTable {
             }
         }
    }
-
-   function loadEmployeeTypeMapping(){
-       if(empty($this->employeeTypeMapping)){
-           $loader = new Loader();
-
-       }
-       return $this->employeeTypeMapping;
-   }
-
-
-
 
     function  prepareFields($row){
         $this->loader = empty($this->loader) ? new Loader() : $this->loader;
@@ -1573,14 +1563,17 @@ class personTable extends DbTable {
 
 
     function notifyRecheckDateApproaching(){
+         $localConnection = $_SESSION['conn']; // So we can keep reading this RS whilst making updates to the TRACKER TABLE.
+         $pesTrackerTable = new pesTrackerTable(allTables::$PES_TRACKER);
+        include "connect.php"; // get new connection on $_SESSION['conn'];
+
         $sql = " SELECT CNUM, NOTES_ID, PES_STATUS, REVALIDATION_STATUS, PES_RECHECK_DATE ";
         $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
         $sql.= " WHERE 1=1 and " . self::activePersonPredicate();
         $sql.= " and PES_RECHECK_DATE is not null ";
- //       $sql.= " and PES_RECHECK_DATE < CURRENT DATE + 56 DAYS ";
+        $sql.= " and PES_RECHECK_DATE < CURRENT DATE + 56 DAYS ";
 
-
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($localConnection, $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -1588,17 +1581,17 @@ class personTable extends DbTable {
 
         $allRecheckers = false;
         while(($row=db2_fetch_assoc($rs))==true){
-            $allRecheckers[] = $row;
+            $trimmedRow = array_map('trim', $row);
+            $allRecheckers[] = $trimmedRow;
+//             $this->setPesStatus($trimmedRow['CNUM'],\vbac\personRecord::PES_STATUS_REVALIDATING);
+            $pesTrackerTable->resetForRecheck($trimmedRow['cNUM']);
         }
 
-        if($allRecheckers){
-           pesEmail::notifyPesTeamOfUpcomingRechecks($allRecheckers);
-        }
-
+//         if($allRecheckers){
+//            pesEmail::notifyPesTeamOfUpcomingRechecks($allRecheckers);
+//         }
+     return $allRecheckers;
 
     }
-
-
-
 
 }

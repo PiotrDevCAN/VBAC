@@ -16,6 +16,7 @@ class pesTrackerTable extends DbTable{
 
     protected $preparedStageUpdateStmts;
     protected $preparedTrackerInsert;
+    protected $preparedResetForRecheck;
     protected $preparedGetPesCommentStmt;
     protected $preparedProcessStatusUpdate;
     protected $preparedGetProcessingStatusStmt;
@@ -485,6 +486,27 @@ class pesTrackerTable extends DbTable{
 
     }
 
+    function prepareResetForRecheck(){
+        if(isset($this->preparedResetForRecheck)) {
+            return $this->preparedResetForRecheck;
+        }
+
+        $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql.= " SET CONSENT = null, RIGHT_TO_WORK = null, PROOF_OF_ID = null, PROOF_OF_RESIDENCY= null, CREDIT_CHECK= null,FINANCIAL_SANCTIONS= null ";
+        $sql.= " , CRIMINAL_RECORDS_CHECK= null, PROOF_OF_ACTIVITY= null, PROCESSING_STATUS = 'PES',  PROCESSING_STATUS_CHANGED= current timestamp, DATE_LAST_CHASED = null,";
+        $sql.= " WHERE CNUM = ? ";
+        $preparedStmt = db2_prepare($_SESSION['conn'], $sql);
+
+        if($preparedStmt){
+            $this->preparedResetForRecheck = $preparedStmt;
+            return $preparedStmt;
+        }
+
+        return false;
+
+    }
+
+
     function createNewTrackerRecord($cnum){
         $trackerRecord = new pesTrackerRecord();
         $trackerRecord->setFromArray(array('CNUM'=>$cnum));
@@ -507,6 +529,24 @@ class pesTrackerTable extends DbTable{
         return false;
 
     }
+
+    function resetForRecheck($cnum){
+        $this->createNewTrackerRecord($cnum); // In case there wasn't already a record.
+
+        $trackerRecord = new pesTrackerRecord();
+        $trackerRecord->setFromArray(array('CNUM'=>$cnum));
+
+        $preparedStmt = $this->prepareResetForRecheck();
+        $data = array($cnum);
+
+        $rs = db2_execute($preparedStmt,$data);
+
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared sql');
+            throw new \Exception('Unable to reset for recheck Tracker record for ' . $cnum);
+       }
+    }
+
 
 
     function setPesStageValue($cnum,$stage,$stageValue){
