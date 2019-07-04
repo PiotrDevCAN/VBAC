@@ -53,8 +53,8 @@ class assetRequestRecord extends DbRecord {
     const CREATED_USER             = 'Yes';
     const CREATED_PMO              = 'No';
 
-    
-    static function ableToOwnAssets(){        
+
+    static function ableToOwnAssets(){
 //         $predicate  = " and ((( REVALIDATION_STATUS = '" . personRecord::REVALIDATED_FOUND . "' or (REVALIDATION_STATUS is null or (REVALIDATION_STATUS is null ) or (REVALIDATION_STATUS= '" . personRecord::REVALIDATED_POTENTIAL . "') ) and PES_STATUS in ('" . personRecord::PES_STATUS_CLEARED. "','" . personRecord::PES_STATUS_CLEARED_PERSONAL. "','" . personRecord::PES_STATUS_EXCEPTION. "') ) ";
 //         $predicate .= " or  ( REVALIDATION_STATUS IN ('" . personRecord::REVALIDATED_VENDOR . "') and ( PES_STATUS_DETAILS not like 'Boarded%' or PES_STATUS_DETAILS is null) and PES_STATUS in ('" . personRecord::PES_STATUS_CLEARED. "','" . personRecord::PES_STATUS_CLEARED_PERSONAL. "','" . personRecord::PES_STATUS_EXCEPTION. "') )";
 //         $predicate .= " or (REVALIDATION_STATUS like 'offboarding%' ) ";
@@ -65,7 +65,7 @@ class assetRequestRecord extends DbRecord {
 	    $predicate.= "        or REVALIDATION_STATUS like 'offboarding%' ) ";  // OR they are in the process of offboarding so need to be able to request things be returned.
         return $predicate;
     }
-    
+
 
     function displayForm(){
         $loader = new Loader();
@@ -74,7 +74,7 @@ class assetRequestRecord extends DbRecord {
         $isFm   = personTable::isManager($_SESSION['ssoEmail']);
         $isPmo  = $_SESSION['isPmo'];
         $isRequestor = employee_in_group('vbac_requestor', $_SESSION['ssoEmail']);
-        
+
         $iAmDelegateForArray = $loader->load('CNUM',allTables::$DELEGATE," AND DELEGATE_CNUM='" . db2_escape_string($myCnum) . "' ");
         $iAmDelegateForTrimmed = array_map('trim', $iAmDelegateForArray);
         $iAmDelegateForString = !empty($iAmDelegateForTrimmed) ? implode("','", $iAmDelegateForTrimmed) : null;
@@ -92,7 +92,7 @@ class assetRequestRecord extends DbRecord {
                 $predicate = " ( CNUM='" . db2_escape_string($myCnum) . "' $iAmDelegateForPredicate  ) ";
             break;
         }
-        
+
         $predicate .= self::ableToOwnAssets();
 
         $selectableNotesId = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON,$predicate);
@@ -247,7 +247,7 @@ class assetRequestRecord extends DbRecord {
         </div> <!--  Container -->
 
         </div>
-        
+
         <input id='revalidationStatus' value='' type='hidden'>
         </form>
 		<?php
@@ -439,12 +439,12 @@ class assetRequestRecord extends DbRecord {
 
         foreach ($locationsByCity as $location => $city){
             $children[trim($city)] = empty($children[trim($city)]) ? "" : $children[trim($city)];
-            
+
             $preparedLocation = str_replace(array(','), array(''), strtolower(trim($location . $city)));
             $preparedCurrLocation = str_replace(array(','), array(''), strtolower(trim($currentLocation)));
-            
-            $selected = $preparedLocation == $preparedCurrLocation ? ' selected ' : null;            
-           
+
+            $selected = $preparedLocation == $preparedCurrLocation ? ' selected ' : null;
+
             $children[trim($city)] .= "<option id='$location' $selected >$location,$city</option>";
         }
 
@@ -471,7 +471,8 @@ class assetRequestRecord extends DbRecord {
 
             $assetName = trim($requestableAsset['ASSET_TITLE']);
             $returnable = strpos($assetName,'Return/Deactivation') !== false;
-            
+            $renewable  = strpos($assetName,'Renewal') !== false;
+
             $assetHtmlName = urlencode(trim($requestableAsset['ASSET_TITLE']));
             ?>
             <div class='col-sm-3 selectableThing'>
@@ -484,6 +485,7 @@ class assetRequestRecord extends DbRecord {
             	data-offshore='<?=trim($requestableAsset['APPLICABLE_OFFSHORE'])?>'
             	data-default='<?=trim($requestableAsset['APPLICABLE_ONSHORE'])?>'
             	data-return='<?=$returnable ? "yes" : "no";?>'
+            	data-renewable='<?=$renewable ? "yes" : "no";?>'
             	data-ignore='<?=empty(trim($requestableAsset['ASSET_PREREQUISITE'])) ? 'Yes': 'No'?>'
             	data-orderitreq='<?=trim($requestableAsset['ORDER_IT_REQUIRED'])?>'
             >

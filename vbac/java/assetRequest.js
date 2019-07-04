@@ -200,7 +200,8 @@ function assetRequest() {
 		    var revalidationStatus = $('#revalidationStatus').val();
 		    var offboarding = revalidationStatus.substr(0,11)=='offboarding';
 		    if(offboarding){
-		    	  AssetRequest.enableOnlyReturns();  	
+		    	  AssetRequest.enableOnlyReturns();  
+		    	  AssetRequest.enableRenewals();
 		    }  
 		  
 			  console.log('is form valid NOW NOW listenForSelectLocation ?');
@@ -579,8 +580,12 @@ function assetRequest() {
   }
   
   this.enableOnlyReturns = function(){
-	  $('*[data-return="no"').attr('disabled',true);
+	  $('*[data-return="no"]').attr('disabled',true);
 	  alert( "User is flagged as 'offboarding' therefore the only requests that can be made are to return assets");
+  }
+  
+  this.enableRenewals = function(){
+	  $('*[data-renewal="yes"]').attr('disabled',false);
   }
 
 }
