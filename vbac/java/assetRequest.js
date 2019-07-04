@@ -585,7 +585,7 @@ function assetRequest() {
   }
   
   this.enableRenewals = function(){
-	  $('*[data-renewal="yes"]').attr('disabled',false);
+	  $('*[data-renewable="yes"]').attr('disabled',false);
   }
 
 }
