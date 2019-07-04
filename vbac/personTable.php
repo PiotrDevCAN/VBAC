@@ -149,7 +149,7 @@ class personTable extends DbTable {
         $preboadersAction = empty($preboadersAction) ? self::PORTAL_PRE_BOARDER_EXCLUDE : $preboadersAction;
 
         $this->thirtyDaysHence = new \DateTime();
-        $this->thirtyDaysHence->add(new \DateInterval('P31D'));
+        $this->thirtyDaysHence->add(new \DateInterval('P60D')); // Modified 4th July 2017
 
         $data = array();
 
@@ -300,7 +300,7 @@ class personTable extends DbTable {
         $potentialForOffboarding = substr(trim($row['REVALIDATION_STATUS']),0,10)==personRecord::REVALIDATED_OFFBOARDED ? false : $potentialForOffboarding;
         $potentialForOffboarding = substr(trim($row['REVALIDATION_STATUS']),0,11)==personRecord::REVALIDATED_OFFBOARDING ? false : $potentialForOffboarding;
 
-        $offboardingHint = $projectedEndDateObj <= $this->thirtyDaysHence ? '&nbsp;End date within 30 days' : null; // Thirty day rule.
+        $offboardingHint = $projectedEndDateObj <= $this->thirtyDaysHence ? '&nbsp;End date within 60 days' : null; // Thirty day rule. (MOdified 4th July
         $offboardingHint = $row['REVALIDATION_STATUS']==personRecord::REVALIDATED_LEAVER ? '&nbsp;Flagged as Leaver' : $offboardingHint; // flagged as a leaver.
 
 

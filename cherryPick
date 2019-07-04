@@ -1,0 +1,92 @@
+### Eclipse Workspace Patch 1.0
+#P vBAC_bm
+diff --git vbac/personTable.php vbac/personTable.php
+index 3b4cb26..34974a7 100644
+--- vbac/personTable.php
++++ vbac/personTable.php
+@@ -132,41 +132,41 @@
+         $deleteButton .= "data-cnum='" .trim($row['CNUM']) . "' ";
+         $deleteButton .= "data-toggle='tooltip' data-placement='top' title='Remove Ring Fence'";
+         $deleteButton .= " > ";
+         $deleteButton .= "<span class='glyphicon glyphicon-trash ' aria-hidden='true'></span>";
+         $deleteButton .= " </button> ";
+         $notesId = $row['NOTES_ID'];
+ 
+         $row['NOTES_ID'] = $deleteButton . "&nbsp;" . $notesId;
+ 
+         return $row;
+ 
+     }
+ 
+ 
+ 
+     function returnAsArray($preboadersAction=self::PORTAL_PRE_BOARDER_EXCLUDE){
+ 
+         $preboadersAction = empty($preboadersAction) ? self::PORTAL_PRE_BOARDER_EXCLUDE : $preboadersAction;
+ 
+         $this->thirtyDaysHence = new \DateTime();
+-        $this->thirtyDaysHence->add(new \DateInterval('P31D'));
++        $this->thirtyDaysHence->add(new \DateInterval('P60D')); // Modified 4th July 2017
+ 
+         $data = array();
+ 
+         $isFM   = personTable::isManager($_SESSION['ssoEmail']);
+         $myCnum = personTable::myCnum();
+ 
+ 
+         $justaUser = !$_SESSION['isCdi']  && !$_SESSION['isPmo'] && !$_SESSION['isPes'] && !$_SESSION['isFm'] ;
+ 
+         $predicate = " 1=1  ";
+ 
+         $predicate .= $isFM ? " AND P.FM_CNUM='" . db2_escape_string(trim($myCnum)) . "' " : "";
+         $predicate .= $justaUser ? " AND P.CNUM='" . db2_escape_string(trim($myCnum)) . "' " : ""; // FM Can only see their own people.
+         $predicate .= $preboadersAction==self::PORTAL_PRE_BOARDER_EXCLUDE ? " AND ( PES_STATUS_DETAILS not like 'Boarded as%' or PES_STATUS_DETAILS is null) " : null;
+         $predicate .= $preboadersAction==self::PORTAL_PRE_BOARDER_WITH_LINKED ? " AND ( PES_STATUS_DETAILS like 'Boarded as%' or PRE_BOARDED  is not  null) " : null;
+ 
+ 
+         $sql  = " SELECT P.*, PT.PROCESSING_STATUS , PT.PROCESSING_STATUS_CHANGED ";
+         $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName . " as P ";
+         $sql .= " LEFT JOIN " .  $_SESSION['Db2Schema'] . "." . allTables::$PES_TRACKER . " as PT ";
+@@ -283,41 +283,41 @@
+         }
+         return $preparedRow;
+     }
+ 
+ 
+ 
+ 
+     function addButtons($row){
+         // save some fields before we change the,
+         $notesId = trim($row['NOTES_ID']);
+         $email   = trim($row['EMAIL_ADDRESS']);
+         $cnum = trim($row['CNUM']);
+         $flag = isset($row['FM_MANAGER_FLAG']) ? $row['FM_MANAGER_FLAG'] : null ;
+         $status = empty($row['PES_STATUS']) ? personRecord::PES_STATUS_NOT_REQUESTED : trim($row['PES_STATUS']) ;
+         $projectedEndDateObj = !empty($row['PROJECTED_END_DATE']) ? \DateTime::createFromFormat('Y-m-d', $row['PROJECTED_END_DATE']) : false;
+         $potentialForOffboarding = $projectedEndDateObj ? $projectedEndDateObj <= $this->thirtyDaysHence : false; // Thirty day rule.
+         $potentialForOffboarding = $potentialForOffboarding || $row['REVALIDATION_STATUS']==personRecord::REVALIDATED_LEAVER ? true : $potentialForOffboarding;  // Any leaver - has potential to be offboarded
+         $potentialForOffboarding = substr(trim($row['REVALIDATION_STATUS']),0,10)==personRecord::REVALIDATED_OFFBOARDED ? false : $potentialForOffboarding;
+         $potentialForOffboarding = substr(trim($row['REVALIDATION_STATUS']),0,11)==personRecord::REVALIDATED_OFFBOARDING ? false : $potentialForOffboarding;
+ 
+-        $offboardingHint = $projectedEndDateObj <= $this->thirtyDaysHence ? '&nbsp;End date within 30 days' : null; // Thirty day rule.
++        $offboardingHint = $projectedEndDateObj <= $this->thirtyDaysHence ? '&nbsp;End date within 60 days' : null; // Thirty day rule. (MOdified 4th July
+         $offboardingHint = $row['REVALIDATION_STATUS']==personRecord::REVALIDATED_LEAVER ? '&nbsp;Flagged as Leaver' : $offboardingHint; // flagged as a leaver.
+ 
+ 
+         $revalidationStatus = trim($row['REVALIDATION_STATUS']);
+         $ctid = trim($row['CT_ID']);
+ 
+ 
+ 
+         if(!empty($row['PRE_BOARDED'])){
+             $row['actualCNUM'] = $cnum;
+             $row['CNUM'] = $cnum . "<br/><small>" . $row['PRE_BOARDED'] .  "</small>";
+         }
+ 
+         // PMO_STATUS
+         if($_SESSION['isPmo'] || $_SESSION['isCdi']){
+             // depending on what the current status is - well give buttons to set to "Confirmed" or "Aware";
+             $pmoStatus = trim($row['PMO_STATUS']);
+             $pmoStatus = empty($pmoStatus) ? 'To be assessed' : $pmoStatus;
+             $row['PMO_STATUS']  = "";
+ 
