@@ -68,6 +68,8 @@ try {
             case personRecord::PES_STATUS_EXCEPTION:
             case personRecord::PES_STATUS_PROVISIONAL;
             case personRecord::PES_STATUS_REVALIDATING;
+            case personRecord::PES_STATUS_LEFT_IBM;
+            case personRecord::PES_STATUS_REVOKED;
                 $notificationStatus = 'Email not applicable';
                  break;
             case personRecord::PES_STATUS_CLEARED:

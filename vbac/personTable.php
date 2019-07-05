@@ -1445,6 +1445,8 @@ class personTable extends DbTable {
             case $status == personRecord::PES_STATUS_DECLINED && $_SESSION['isPes'] ;
             case $status == personRecord::PES_STATUS_FAILED && $_SESSION['isPes'] ;
             case $status == personRecord::PES_STATUS_REMOVED && $_SESSION['isPes'] :
+            case $status == personRecord::PES_STATUS_REVOKED && $_SESSION['isPes'] :
+            case $status == personRecord::PES_STATUS_LEFT_IBM && $_SESSION['isPes'] :
             case $status == personRecord::PES_STATUS_PROVISIONAL && $_SESSION['isPes'] :
             case $status == personRecord::PES_STATUS_TBD && $_SESSION['isPes'] :
             case $status == personRecord::PES_STATUS_REVALIDATING && $_SESSION['isPes'] :

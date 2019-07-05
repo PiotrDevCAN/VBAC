@@ -300,10 +300,12 @@ class personRecord extends DbRecord
     const PES_STATUS_INITIATED     = 'Initiated';
     const PES_STATUS_REQUESTED     = 'Evidence Requested';
     const PES_STATUS_REMOVED       = 'Removed';
+    const PES_STATUS_REVOKED       = 'Revoked';
     const PES_STATUS_CANCEL_REQ     = 'Cancel Requested';
     const PES_STATUS_CANCEL_CONFIRMED = 'Cancel Confirmed';
     const PES_STATUS_TBD           = 'TBD';
     const PES_STATUS_REVALIDATING  = 'Revalidating';
+    const PES_STATUS_LEFT_IBM      = 'Left IBM';
 
 
 //     function htmlHeaderCells(){
@@ -1041,7 +1043,6 @@ class personRecord extends DbRecord
                                 data-tags="true" data-placeholder="Status" data-allow-clear="true"
                                >
                     <option value=''>Status</option>
-                    <option value='<?=personRecord::PES_STATUS_CLEARED_PERSONAL;?>'><?=personRecord::PES_STATUS_CLEARED_PERSONAL?></option>
                     <option value='<?=personRecord::PES_STATUS_CLEARED;?>'><?=personRecord::PES_STATUS_CLEARED?></option>
                     <option value='<?=personRecord::PES_STATUS_DECLINED;?>'><?=personRecord::PES_STATUS_DECLINED?></option>
                     <option value='<?=personRecord::PES_STATUS_REQUESTED;?>'><?=personRecord::PES_STATUS_REQUESTED?></option>
@@ -1050,8 +1051,10 @@ class personRecord extends DbRecord
                     <option value='<?=personRecord::PES_STATUS_INITIATED;?>'><?=personRecord::PES_STATUS_INITIATED?></option>
                     <option value='<?=personRecord::PES_STATUS_PROVISIONAL;?>'><?=personRecord::PES_STATUS_PROVISIONAL?></option>
                     <option value='<?=personRecord::PES_STATUS_REMOVED;?>'><?=personRecord::PES_STATUS_REMOVED?></option>
+                    <option value='<?=personRecord::PES_STATUS_REVOKED;?>'><?=personRecord::PES_STATUS_REVOKED?></option>
                     <option value='<?=personRecord::PES_STATUS_TBD;?>'><?=personRecord::PES_STATUS_TBD?></option>
                     <option value='<?=personRecord::PES_STATUS_REVALIDATING;?>'><?=personRecord::PES_STATUS_REVALIDATING?></option>
+                    <option value='<?=personRecord::PES_STATUS_LEFT_IBM;?>'><?=personRecord::PES_STATUS_LEFT_IBM?></option>
 
                        </select>
                  </div>
