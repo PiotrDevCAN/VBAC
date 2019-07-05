@@ -493,8 +493,10 @@ class pesTrackerTable extends DbTable{
 
         $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
         $sql.= " SET CONSENT = null, RIGHT_TO_WORK = null, PROOF_OF_ID = null, PROOF_OF_RESIDENCY= null, CREDIT_CHECK= null,FINANCIAL_SANCTIONS= null ";
-        $sql.= " , CRIMINAL_RECORDS_CHECK= null, PROOF_OF_ACTIVITY= null, PROCESSING_STATUS = 'PES',  PROCESSING_STATUS_CHANGED= current timestamp, DATE_LAST_CHASED = null,";
+        $sql.= " , CRIMINAL_RECORDS_CHECK= null, PROOF_OF_ACTIVITY= null, PROCESSING_STATUS = 'PES' ";
+        $sql.= " ,  PROCESSING_STATUS_CHANGED= current timestamp, DATE_LAST_CHASED = null ";
         $sql.= " WHERE CNUM = ? ";
+
         $preparedStmt = db2_prepare($_SESSION['conn'], $sql);
 
         if($preparedStmt){

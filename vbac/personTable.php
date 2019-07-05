@@ -1570,6 +1570,7 @@ class personTable extends DbTable {
         $sql = " SELECT CNUM, NOTES_ID, PES_STATUS, REVALIDATION_STATUS, PES_RECHECK_DATE ";
         $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
         $sql.= " WHERE 1=1 and " . self::activePersonPredicate();
+        $sql.= " AND PES_STATUS != '" . personRecord::PES_STATUS_REVALIDATING . "' ";
         $sql.= " and PES_RECHECK_DATE is not null ";
         $sql.= " and PES_RECHECK_DATE < CURRENT DATE + 56 DAYS ";
 
@@ -1583,13 +1584,13 @@ class personTable extends DbTable {
         while(($row=db2_fetch_assoc($rs))==true){
             $trimmedRow = array_map('trim', $row);
             $allRecheckers[] = $trimmedRow;
-//             $this->setPesStatus($trimmedRow['CNUM'],\vbac\personRecord::PES_STATUS_REVALIDATING);
-            $pesTrackerTable->resetForRecheck($trimmedRow['cNUM']);
+            $this->setPesStatus($trimmedRow['CNUM'],\vbac\personRecord::PES_STATUS_REVALIDATING);
+            $pesTrackerTable->resetForRecheck($trimmedRow['CNUM']);
         }
 
-//         if($allRecheckers){
-//            pesEmail::notifyPesTeamOfUpcomingRechecks($allRecheckers);
-//         }
+        if($allRecheckers){
+           pesEmail::notifyPesTeamOfUpcomingRechecks($allRecheckers);
+        }
      return $allRecheckers;
 
     }
