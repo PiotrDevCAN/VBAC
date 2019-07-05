@@ -51,6 +51,7 @@ $requestableAssets  = new NavbarOption('Requestable Assets', 'pa_requestableAsse
 $ringFenced     = new NavbarOption('Ring Fencing', 'pa_ringFencing.php','accessRes');
 $delegate       = new NavbarOption('Delegates', 'pc_delegate.php','accessCdi accessPmo accessFm accessUser');
 $pesTracker     = new NavbarOption('PES Tracker', 'pc_pesTracker.php','accessCdi accessPes');
+$pesStatusChange= new NavbarOption('PES Status Changes', 'pr_pesStatusChangeReport.php','accessCdi accessPes');
 $odcDataUpload  = new NavbarOption('ODC Access Upload', 'pc_odcAccessUpload.php','accessCdi accessPmo');
 
 $email          = new NavbarOption('Email Log', 'pi_emailLog.php','accessCdi');
@@ -72,6 +73,7 @@ $adminMenu->addOption($audit);
 $adminMenu->addOption($email);
 $adminMenu->addOption( new NavbarDivider('accessPes accessCdi'));
 $adminMenu->addOption($pesTracker);
+$adminMenu->addOption($pesStatusChange);
 $adminMenu->addOption( new NavbarDivider('accessPmo accessCdi'));
 $adminMenu->addOption($odcDataUpload);
 
@@ -196,14 +198,14 @@ if($page != "index.php" && substr($page,0,3)!='cdi'){
     ?>
 
     console.log('<?=$page;?>');
-    
+
 	var pageAllowed = $('li[data-pagename="<?=$page;?>"]').length;
 
     console.log('li[data-pagename="<?=$page;?>"]');
     console.log($('li[data-pagename="<?=$page;?>"]'));
-    
 
-	
+
+
 	if(pageAllowed==0 ){
 		window.location.replace('index.php');
 		alert("You do not have access to:<?=$page?>");
@@ -219,7 +221,7 @@ $requestor= $isRequestor ? "+" : null;
 
 $(document).ready(function () {
 
-    $('button.accessRestrict')<?=$isFm?><?=$isPmo?><?=$isPes?><?=$isCdi?><?=$isUser?><?=$isRep1?><?=$isRes?>.remove();   
+    $('button.accessRestrict')<?=$isFm?><?=$isPmo?><?=$isPes?><?=$isCdi?><?=$isUser?><?=$isRep1?><?=$isRes?>.remove();
 
     <?=!empty($isUser) ? '$("#userLevel").html("User' . $requestor . '&nbsp;' . $rep . '");console.log("user");' : null;?>
 
@@ -229,7 +231,7 @@ $(document).ready(function () {
     <?=!empty($isCdi)  ? '$("#userLevel").html("CDI' . $requestor . '&nbsp;' . $rep . '");console.log("cdi");' : null;?>
     <?=!empty($isPes)  ? '$("#userLevel").html("PES' . $requestor . '&nbsp;' . $rep . '");console.log("pes");' : null;?>
 
-    
+
     var poContent = $('#<?=$plannedOutagesId?> a').html();
 	var badgedContent = poContent + "&nbsp;" + "<?=$plannedOutages->getBadge();?>";
 	$('#<?=$plannedOutagesId?> a').html(badgedContent);
