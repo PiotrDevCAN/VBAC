@@ -1674,7 +1674,7 @@ function personRecord() {
   this.listenForSavePesStatus = function(){
     $(this).attr('disabled',true);
     $('#psmForm').submit(function(e){
-    	$('#savePesStatus').attr('disabled',true);
+    	$('#savePesStatus').attr('disabled',true).addClass('spinning');
         var form = document.getElementById('psmForm');
         var formValid = form.checkValidity();
         if(formValid){
@@ -1690,7 +1690,7 @@ function personRecord() {
               success: function(result){
                 console.log(result);
                 var resultObj = JSON.parse(result);
-                $('#savePesStatus').attr('disabled',false);
+                $('#savePesStatus').attr('disabled',false).removeClass('spinning');
                 
                 var success = resultObj.status;
                 
