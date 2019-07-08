@@ -1696,7 +1696,11 @@ function personRecord() {
                 
                 if(!success){
                 	alert('Save PES Status, may not have been successful');
-                	alert(resultObj.messages);
+                	alert(resultObj.messages + resultObj.emailResponse);
+                	if(typeof(personRecord.table) != 'undefined'){
+                        // We came from the PERSON PORTAL
+                    	personRecord.table.ajax.reload();	
+                	}
                 	
                 } else {
                     if(typeof(personRecord.table) != 'undefined'){
