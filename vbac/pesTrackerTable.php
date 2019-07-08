@@ -14,6 +14,8 @@ class pesTrackerTable extends DbTable{
 
     use xls;
 
+    public $lastSql;
+
     protected $preparedStageUpdateStmts;
     protected $preparedTrackerInsert;
     protected $preparedResetForRecheck;
@@ -62,7 +64,7 @@ class pesTrackerTable extends DbTable{
                 break;
             case self::PES_TRACKER_RECORDS_NOT_ACTIVE :
                 $pesStatusPredicate = " P.PES_STATUS not in ('" . personRecord::PES_STATUS_REQUESTED . "','" . personRecord::PES_STATUS_INITIATED. "','" . personRecord::PES_STATUS_PROVISIONAL. "','" . personRecord::PES_STATUS_REVALIDATING . "')  ";
-                $pesStatusPredicate.= " AND PT.PROCESSING_STATUS_CHANGED > current timestamp - 31 days AND PT.CNUM is not null ";
+                $pesStatusPredicate.= " AND ( PT.PROCESSING_STATUS_CHANGED > current timestamp - 31 days  OR P.PES_DATE_RESPONDED > current timestamp - 31 DAYS ) AND PT.CNUM is not null ";
                 break;
             case self::PES_TRACKER_RECORDS_ALL :
                 $pesStatusPredicate = " PT.CNUM is not null ";
