@@ -68,7 +68,8 @@ class pesTrackerTable extends DbTable{
                 $pesStatusPredicate = " PT.CNUM is not null ";
                 break;
             default:
-                $pesStatusPredicate = 'pass a parm muppet ';
+                $pesStatusPredicate = 'pass a parm muppet not ' . $records;
+
                 break;
         }
 
@@ -127,7 +128,7 @@ class pesTrackerTable extends DbTable{
                     set_time_limit(5);
                     $trimmedRow = array_map('trim', $row);
                     $report[] = $trimmedRow;
-                }
+                  }
                 return $report;
             break;
             case self::PES_TRACKER_RETURN_RESULTS_AS_RESULT_SET:
@@ -179,9 +180,12 @@ class pesTrackerTable extends DbTable{
         foreach ($allRows as $row){
             set_time_limit(60);
             $today = new \DateTime();
+
             $date = DateTime::createFromFormat('Y-m-d', $row['PES_DATE_REQUESTED']);
             $age  = !empty($row['PES_DATE_REQUESTED']) ?  $date->diff($today)->format('%R%a days') : null ;
             // $age = !empty($row['PES_DATE_REQUESTED']) ? $interval->format('%R%a days') : null;
+
+
             $cnum = $row['CNUM'];
             $firstName = trim($row['FIRST_NAME']);
             $lastName = trim($row['LAST_NAME']);
@@ -189,6 +193,8 @@ class pesTrackerTable extends DbTable{
             $requestor = trim($row['PES_REQUESTOR']);
 
             $formattedIdentityField = self::formatEmailFieldOnTracker($row);
+
+
 
             ?>
             <tr class='<?=$cnum;?>'>
@@ -241,6 +247,7 @@ class pesTrackerTable extends DbTable{
             </tr>
         <?php
         }
+
         ?>
         </tbody>
 		</table>
@@ -753,8 +760,8 @@ class pesTrackerTable extends DbTable{
         $rs = self::returnPesEventsTable($records, pesTrackerTable::PES_TRACKER_RETURN_RESULTS_AS_RESULT_SET);
 
         if($rs){
+            set_time_limit(62);
             $recordsFound = static::writeResultSetToXls($rs, $spreadsheet);
-
             if($recordsFound){
                 static::autoFilter($spreadsheet);
                 static::autoSizeColumns($spreadsheet);
