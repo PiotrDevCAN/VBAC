@@ -116,10 +116,7 @@ function pesEvent() {
   
   this.populatePesTracker = function(records){
 	  var buttons = $('.btnRecordSelection');	  
-	  console.log(buttons);	  
-	  console.log(records);
-	  
-	  
+  
 	  $('#pesTrackerTableDiv').html('<i class="fa fa-spinner fa-spin" style="font-size:68px"></i>');
 
 	  pesEvent.table = $.ajax({
@@ -128,11 +125,12 @@ function pesEvent() {
 		  	data : { records: records,
 		  			},
 		    success: function(result){
+		    	console.log(result);
 		    	var resultObj = JSON.parse(result);
 		    	
-		    	console.log(resultObj.sucess);
+		    	console.log(resultObj.success);
 		    	console.log(resultObj.messages);
-		    	if(resultObj.sucess){
+		    	if(resultObj.success){
 		    		$('#pesTrackerTableDiv').html(resultObj.table);	
 
 		    		$('#pesTrackerTable thead th').each( function () {

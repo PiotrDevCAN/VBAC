@@ -22,6 +22,7 @@ class pesTrackerTable extends DbTable{
     protected $preparedGetProcessingStatusStmt;
 
     const PES_TRACKER_RECORDS_ACTIVE     = 'Active';
+    const PES_TRACKER_RECORDS_ACTIVE_PLUS  = 'Active Plus';
     const PES_TRACKER_RECORDS_NOT_ACTIVE = 'Not Active';
     const PES_TRACKER_RECORDS_ALL        = 'All';
     const PES_TRACKER_RECORDS_ACTIVE_REQUESTED = 'Active Requested';
@@ -49,6 +50,9 @@ class pesTrackerTable extends DbTable{
         switch (trim($records)){
             case self::PES_TRACKER_RECORDS_ACTIVE :
                 $pesStatusPredicate = "  P.PES_STATUS in('" . personRecord::PES_STATUS_REQUESTED . "','" . personRecord::PES_STATUS_INITIATED. "','" . personRecord::PES_STATUS_PROVISIONAL. "','" . personRecord::PES_STATUS_REVALIDATING . "') ";
+                break;
+            case self::PES_TRACKER_RECORDS_ACTIVE_PLUS :
+                $pesStatusPredicate = "  P.PES_STATUS in('" . personRecord::PES_STATUS_REQUESTED . "','" . personRecord::PES_STATUS_INITIATED. "','" . personRecord::PES_STATUS_PROVISIONAL. "','" . personRecord::PES_STATUS_REVALIDATING . "','" . personRecord::PES_STATUS_REMOVED. "','" . personRecord::PES_STATUS_CLEARED. "') ";
                 break;
             case self::PES_TRACKER_RECORDS_ACTIVE_REQUESTED :
                 $pesStatusPredicate = "  P.PES_STATUS in('" . personRecord::PES_STATUS_REQUESTED . "','" . personRecord::PES_STATUS_INITIATED. "','" . personRecord::PES_STATUS_REVALIDATING . "') ";
@@ -120,7 +124,9 @@ class pesTrackerTable extends DbTable{
             case self::PES_TRACKER_RETURN_RESULTS_AS_ARRAY:
                 $report = array();
                 while(($row=db2_fetch_assoc($rs))==true){
-                    $report[] = $row;
+                    set_time_limit(5);
+                    $trimmedRow = array_map('trim', $row);
+                    $report[] = $trimmedRow;
                 }
                 return $report;
             break;
@@ -130,6 +136,7 @@ class pesTrackerTable extends DbTable{
                 return false;
             break;
         }
+        set_time_limit(60);
     }
 
     static function preProcessRowForWriteToXls($row){
@@ -170,6 +177,7 @@ class pesTrackerTable extends DbTable{
 		<?php
 
         foreach ($allRows as $row){
+            set_time_limit(60);
             $today = new \DateTime();
             $date = DateTime::createFromFormat('Y-m-d', $row['PES_DATE_REQUESTED']);
             $age  = !empty($row['PES_DATE_REQUESTED']) ?  $date->diff($today)->format('%R%a days') : null ;
@@ -251,8 +259,8 @@ class pesTrackerTable extends DbTable{
           <form class="form-horizontal">
   			<div class="form-group">
     			<label class="control-label col-sm-1" for="pesTrackerTableSearch">Table Search:</label>
-    			<div class="col-sm-3" >
-      			<input type="text" id="pesTrackerTableSearch" placeholder="Search"  onkeyup=searchTable()  />
+    			<div class="col-sm-2" >
+      			<input type="text" id="pesTrackerTableSearch" placeholder="Search"  onkeyup=searchTable() width='100%' />
       			<br/>
 
 				</div>
@@ -260,10 +268,11 @@ class pesTrackerTable extends DbTable{
     			<label class="control-label col-sm-1" for="pesRecordFilter">Records:</label>
     			<div class="col-sm-4" >
     			<div class="btn-group" role="group" aria-label="Record Selection">
-  					<button type="button" role='button'  class="btn btn-info btnRecordSelection active" data-pesrecords='<?=pesTrackerTable::PES_TRACKER_RECORDS_ACTIVE_REQUESTED?>'    data-toggle='tooltip'  title='Active Record in Initiated or Requested status'     >Requested</button>
-					<button type="button" role='button'  class="btn btn-info btnRecordSelection "       data-pesrecords='<?=pesTrackerTable::PES_TRACKER_RECORDS_ACTIVE_PROVISIONAL?>'  data-toggle='tooltip'  title='Active Records in Provisional Clearance status' >Provisional</button>
-  					<button type="button" role='button'  class="btn btn-info btnRecordSelection "       data-pesrecords='<?=pesTrackerTable::PES_TRACKER_RECORDS_ACTIVE?>'              data-toggle='tooltip'  title='Active Records'     >Active</button>
-  					<button type="button" role='button'  class="btn btn-info btnRecordSelection"        data-pesrecords='<?=pesTrackerTable::PES_TRACKER_RECORDS_NOT_ACTIVE?>'          data-toggle='tooltip'  title='Recently Closed'  >Recent</button>
+  					<button type="button" role='button'  class="btn btn-info btn-sm btnRecordSelection active" data-pesrecords='<?=pesTrackerTable::PES_TRACKER_RECORDS_ACTIVE_REQUESTED?>'    data-toggle='tooltip'  title='Active Record in Initiated or Requested status'     >Requested</button>
+					<button type="button" role='button'  class="btn btn-info btn-sm btnRecordSelection "       data-pesrecords='<?=pesTrackerTable::PES_TRACKER_RECORDS_ACTIVE_PROVISIONAL?>'  data-toggle='tooltip'  title='Active Records in Provisional Clearance status' >Provisional</button>
+  					<button type="button" role='button'  class="btn btn-info btn-sm btnRecordSelection "       data-pesrecords='<?=pesTrackerTable::PES_TRACKER_RECORDS_ACTIVE?>'              data-toggle='tooltip'  title='Active Records'     >Active</button>
+  					<button type="button" role='button'  class="btn btn-info btn-sm btnRecordSelection "       data-pesrecords='<?=pesTrackerTable::PES_TRACKER_RECORDS_ACTIVE_PLUS?>'         data-toggle='tooltip'  title='Active+ Records'     >Active+</button>
+  					<button type="button" role='button'  class="btn btn-info btn-sm btnRecordSelection"        data-pesrecords='<?=pesTrackerTable::PES_TRACKER_RECORDS_NOT_ACTIVE?>'          data-toggle='tooltip'  title='Recently Closed'  >Recent</button>
 				</div>
 				</div>
 
