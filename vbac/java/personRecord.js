@@ -1694,7 +1694,7 @@ function personRecord() {
                 
                 var success = resultObj.status;
                 
-                if(success=='false'){
+                if(!success){
                 	alert('Save PES Status, may not have been successful');
                 	alert(resultObj.messages);
                 	
