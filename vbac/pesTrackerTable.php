@@ -300,8 +300,11 @@ class pesTrackerTable extends DbTable{
               	<div class="col-sm-1"  >
               	<span style='white-space:nowrap' id='pesDownload' >
 				<a class='btn btn-sm btn-link accessBasedBtn accessPes accessCdi' href='/dn_pesTracker.php'><i class="glyphicon glyphicon-download-alt"></i> PES Tracker</a>
+				<a class='btn btn-sm btn-link accessBasedBtn accessPes accessCdi' href='/dn_pesTrackerRecent.php'><i class="glyphicon glyphicon-download-alt"></i> PES Tracker(Recent)</a>
 				</span>
             	</div>
+
+
   			</div>
 		  </form>
 		  </div>
