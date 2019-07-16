@@ -8,7 +8,7 @@ Trace::pageOpening($_SERVER['PHP_SELF']);
 
 $matches = array();
 
-$pattern  = '/(PES[ _]STATUS set to :(.*?)<br\/><small>(.*?):(.*?)<\/small>)/';
+$pattern  = '/(PES[ _]STATUS set to :(.*?)<br\/><small>(.*?):(.*?) (.*?)<\/small>)/';
 
 $otherRecords = "";
 
@@ -27,7 +27,7 @@ $rs = db2_exec($_SESSION['conn'], $sql);
 
 
 <table id='pesStatus' class='table table-responsive table-condensed' >
-<thead><tr><th>Cnum</th><th>Notes Id</th><th>Status</th><th>Actioner</th><th>Timestamp</th></tr>
+<thead><tr><th>Cnum</th><th>Notes Id</th><th>Status</th><th>Actioner</th><th>Date</th><th>Time	</th></tr>
 </thead>
 <tbody>
 <?php
@@ -36,7 +36,7 @@ while(($row=db2_fetch_assoc($rs))==true){
     $response = preg_match_all($pattern, $row['COMMENT'], $matches);
     if($response>0){
         foreach ($matches[2] as $key => $status) {
-            ?><tr<?=trim($status)=='Cleared' ? " class='success' " : null;?>><td><?=$row['CNUM']?></td><td><?=$row['NOTES_ID'];?></td><td><?=$status;?></td><td><?=$matches[3][$key]?></td><td><?=$matches[4][$key];?></td></tr><?php
+            ?><tr<?=trim($status)=='Cleared' ? " class='success' " : null;?>><td><?=$row['CNUM']?></td><td><?=$row['NOTES_ID'];?></td><td><?=$status;?></td><td><?=$matches[3][$key]?></td><td><?=$matches[4][$key];?></td><td><?=$matches[5][$key];?></td></tr><?php
         }
     } else {
         ob_start();
