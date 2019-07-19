@@ -1692,7 +1692,7 @@ function personRecord() {
                 var resultObj = JSON.parse(result);
                 $('#savePesStatus').attr('disabled',false).removeClass('spinning');
                 
-                var success = resultObj.status;
+                var success = resultObj.success;
                 
                 if(!success){
                 	alert('Save PES Status, may not have been successful');
