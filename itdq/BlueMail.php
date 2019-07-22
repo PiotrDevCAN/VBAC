@@ -16,13 +16,13 @@ class BlueMail
         , $asynchronous = true
         , array $attachments=array())
     {
-        
+
         $emailLogRecordID = null;
 
         $cleanedTo = $to;
         $cleanedCc = $cc;
         $cleanedBcc = $bcc;
-        
+
 
         $recipients = array();
         foreach ($cleanedTo as $emailAddress){
@@ -62,8 +62,15 @@ class BlueMail
             case 'dev':
             case 'user':
                 // We're in DEV mode for emails - override the recipients.
+                // But if we're in "batch" mode, the ssoEmail doesn't contain a valid email address, so create one.
+                if(filter_var($_SESSION['ssoEmail'], FILTER_VALIDATE_EMAIL)){
+                    $localEmail = $_SESSION['ssoEmail'];
+                } else {
+                    $localEmail = str_replace(' ', '_', $_SESSION['ssoEmail']) . "@uk.ibm.com";
+                }
+
                 $data['recipients'] = array();
-                $data['recipients'][] = $_SERVER['email']=='user' ?  array('recipient'=>$_SESSION['ssoEmail']) : array('recipient'=>$_SERVER['devemailid']);
+                $data['recipients'][] = $_SERVER['email']=='user' ?  array('recipient'=>$localEmail) : array('recipient'=>$_SERVER['devemailid']);
                 $data['cc']=array();
                 $data['bcc']=array();
                 $data['subject'] = "**" . $_SERVER['environment'] . "**" . $data['subject'];
@@ -95,34 +102,34 @@ class BlueMail
                 curl_setopt($ch, CURLOPT_POSTFIELDS,$data_json);
 
                 $resp = curl_exec($ch);
-                
+
                 if ($emailLogRecordID) {
                     self::updatelog($emailLogRecordID, $resp);
                 }
-                
+
                 if(!$resp){
                     throw new \Exception('Error trying to send email :' . $subject);
                 }
-                
+
                 $responseObject = json_decode($resp);
-                
+
                 if(is_object($responseObject)){
                     $statusUrl = $responseObject->link[0]->href;
                     $status = self::getStatus($emailLogRecordID, $statusUrl);
                     $statusObject = json_decode($status);
-                    
+
                     if (! $asynchronous) {
-                       
+
                         sleep(5);
                         $prevStatus = $status;
                         $status = self::getStatus($emailLogRecordID, $statusUrl, $prevStatus);
                         $statusObject = json_decode($status);
                         $iteration = 0;
                         $attempts = 0;
-                        
+
                         $statusObjects = array();
                         $statusObjects[] = $statusObject;
-                        
+
                         while (! self::checkStatus($statusObjects) && ! $statusObject->locked) {
                             if ($attempts ++ > 20) {
                                 throw new \Exception($attempts . " unsuccessful attempts to send email. Abandoning process");
@@ -130,7 +137,7 @@ class BlueMail
                             $iteration = ++ $iteration < 10 ? $iteration : 9; // wait a little longer each time up till 50 seconds wait. so if they are busy we're not hitting too frequently
                             $response = self::resend($emailLogRecordID, $responseObject->link[1]->href);
                             $prevStatus = $status;
-                            
+
                             $responseObject = json_decode($response);
                             $statusUrl = $responseObject->link[0]->href;
                             $status = self::getStatus($emailLogRecordID, $statusUrl);
@@ -139,9 +146,9 @@ class BlueMail
                             sleep(5 + $iteration * 5);
                         }
                     }
-                    
-                    
-                    
+
+
+
                 } else {
                     var_dump($resp);
                     throw new \Exception('Call to bluemail has failed.See above for response.');
@@ -188,8 +195,8 @@ class BlueMail
         $auditString.= !empty($cc) ? "BCC:" . db2_escape_string(serialize($bcc)) . "<br/>" : null;
         $auditString.= "Subject:" . db2_escape_string($subject) . "-" . $subject . "</br>";
         $auditString.= "Message:" . db2_escape_string(substr($message,0,200)) . "</br>";
-//         $auditString.= "DataJson:" . db2_escape_string(substr(serialize($data_json),0,20));        
-        
+//         $auditString.= "DataJson:" . db2_escape_string(substr(serialize($data_json),0,20));
+
         AuditTable::audit($auditString,AuditTable::RECORD_TYPE_DETAILS);
 
         $sql = " INSERT INTO " . $_SESSION['Db2Schema'] . "." . AllItdqTables::$EMAIL_LOG;
@@ -204,9 +211,9 @@ class BlueMail
 
         $preparedStatement = db2_prepare($_SESSION['conn'], $sql);
         $data = array(serialize($to),$subject,$message,$data_json);
-        
+
         !empty($cc)  ? $data[] = serialize($cc) : null;
-        !empty($bcc) ? $data[] = serialize($bcc) : null; 
+        !empty($bcc) ? $data[] = serialize($bcc) : null;
         $rs = db2_execute($preparedStatement,$data);
 
 
