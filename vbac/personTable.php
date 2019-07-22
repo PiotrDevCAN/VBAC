@@ -1592,6 +1592,8 @@ class personTable extends DbTable {
 
         if($allRecheckers){
            pesEmail::notifyPesTeamOfUpcomingRechecks($allRecheckers);
+        } else {
+            pesEmail::notifyPesTeamNoUpcomingRechecks();
         }
      return $allRecheckers;
 
