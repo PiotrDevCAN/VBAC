@@ -461,7 +461,7 @@ class personTable extends DbTable {
                 $dateField = 'PES_DATE_REQUESTED';
                 break;
             case personRecord::PES_STATUS_REQUESTED:
-            case personRecord::PES_STATUS_REVALIDATING:
+            case personRecord::PES_STATUS_RECHECK_REQ:
                 $dateField = 'PES_DATE_EVIDENCE';
                 break;
             case personRecord::PES_STATUS_CLEARED:
@@ -1449,7 +1449,7 @@ class personTable extends DbTable {
             case $status == personRecord::PES_STATUS_LEFT_IBM && $_SESSION['isPes'] :
             case $status == personRecord::PES_STATUS_PROVISIONAL && $_SESSION['isPes'] :
             case $status == personRecord::PES_STATUS_TBD && $_SESSION['isPes'] :
-            case $status == personRecord::PES_STATUS_REVALIDATING && $_SESSION['isPes'] :
+            case $status == personRecord::PES_STATUS_RECHECK_REQ && $_SESSION['isPes'] :
                 $pesStatusWithButton.= "<button type='button' class='btn btn-default btn-xs btnPesStatus' aria-label='Left Align' ";
                 $pesStatusWithButton.= " data-cnum='" .$actualCnum . "' ";
                 $pesStatusWithButton.= " data-notesid='" . $notesId . "' ";
@@ -1465,7 +1465,7 @@ class personTable extends DbTable {
                 $pesStatusWithButton.= "</button>";
                 break;
             case $status == personRecord::PES_STATUS_REQUESTED && !$_SESSION['isPes'] :
-            case $status == personRecord::PES_STATUS_REVALIDATING && !$_SESSION['isPes'] :
+            case $status == personRecord::PES_STATUS_RECHECK_REQ && !$_SESSION['isPes'] :
             case $status == personRecord::PES_STATUS_INITIATED && !$_SESSION['isPes'] ;
                 $pesStatusWithButton.= "<button type='button' class='btn btn-default btn-xs btnPesCancel accessRestrict accessFm' aria-label='Left Align' ";
                 $pesStatusWithButton.= " data-cnum='" .$actualCnum . "' ";
@@ -1486,7 +1486,7 @@ class personTable extends DbTable {
                 break;
         }
 
-        if(isset($row['PROCESSING_STATUS']) && ( $row['PES_STATUS']== personRecord::PES_STATUS_INITIATED || $row['PES_STATUS']==personRecord::PES_STATUS_REQUESTED || $row['PES_STATUS']==personRecord::PES_STATUS_REVALIDATING ) ){
+        if(isset($row['PROCESSING_STATUS']) && ( $row['PES_STATUS']== personRecord::PES_STATUS_INITIATED || $row['PES_STATUS']==personRecord::PES_STATUS_REQUESTED || $row['PES_STATUS']==personRecord::PES_STATUS_RECHECK_REQ ) ){
             $pesStatusWithButton .= "&nbsp;<button type='button' class='btn btn-default btn-xs btnTogglePesTrackerStatusDetails' aria-label='Left Align' data-toggle='tooltip' data-placement='top' title='See PES Tracker Status' >";
             $pesStatusWithButton .= !empty($row['PROCESSING_STATUS']) ? "&nbsp;<small>" . $row['PROCESSING_STATUS'] . "</small>&nbsp;" : null;
             $pesStatusWithButton .= "<span class='glyphicon glyphicon-search  ' aria-hidden='true' ></span>";
@@ -1527,7 +1527,7 @@ class personTable extends DbTable {
         if(trim($ibmerPesStatus) == personRecord::PES_STATUS_INITIATED
                                           || trim($ibmerPesStatus) == personRecord::PES_STATUS_REQUESTED
                                           || trim($ibmerPesStatus) == personRecord::PES_STATUS_NOT_REQUESTED
-                                          || trim($ibmerPesStatus) == personRecord::PES_STATUS_REVALIDATING  ){
+                                          || trim($ibmerPesStatus) == personRecord::PES_STATUS_RECHECK_REQ  ){
             $ibmerData['PES_STATUS'] = $preboarderPesStatus;
             $ibmerData['PES_STATUS_DETAILS'] = $ibmerPesStatusD . ":" . $preboarderPesStatusD;
             $ibmerData['PES_DATE_EVIDENCE'] = $preBoarderPesEvidence;
@@ -1572,7 +1572,7 @@ class personTable extends DbTable {
         $sql = " SELECT CNUM, NOTES_ID, PES_STATUS, REVALIDATION_STATUS, PES_RECHECK_DATE ";
         $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
         $sql.= " WHERE 1=1 and " . self::activePersonPredicate();
-        $sql.= " AND PES_STATUS != '" . personRecord::PES_STATUS_REVALIDATING . "' ";
+        $sql.= " AND PES_STATUS != '" . personRecord::PES_STATUS_RECHECK_REQ . "' ";
         $sql.= " and PES_RECHECK_DATE is not null ";
         $sql.= " and PES_RECHECK_DATE < CURRENT DATE + 56 DAYS ";
 
@@ -1586,7 +1586,7 @@ class personTable extends DbTable {
         while(($row=db2_fetch_assoc($rs))==true){
             $trimmedRow = array_map('trim', $row);
             $allRecheckers[] = $trimmedRow;
-            $this->setPesStatus($trimmedRow['CNUM'],\vbac\personRecord::PES_STATUS_REVALIDATING);
+            $this->setPesStatus($trimmedRow['CNUM'],\vbac\personRecord::PES_STATUS_RECHECK_REQ);
             $pesTrackerTable->resetForRecheck($trimmedRow['CNUM']);
         }
 
