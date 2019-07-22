@@ -62,11 +62,11 @@ class BlueMail
             case 'dev':
             case 'user':
                 // We're in DEV mode for emails - override the recipients.
-                // But if we're in "batch" mode, the ssoEmail doesn't contain a valid email address, so create one.
+                // But if we're in "batch" mode, the ssoEmail doesn't contain a valid email address, so send it to devemailid or me.
                 if(filter_var($_SESSION['ssoEmail'], FILTER_VALIDATE_EMAIL)){
                     $localEmail = $_SESSION['ssoEmail'];
                 } else {
-                    $localEmail = str_replace(' ', '_', $_SESSION['ssoEmail']) . "@uk.ibm.com";
+                    $localEmail = !empty($_SERVER['devemailid']) ? $_SERVER['devemailid'] : 'daniero@uk.ibm.com';
                 }
 
                 $data['recipients'] = array();
