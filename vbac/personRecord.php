@@ -529,7 +529,7 @@ class personRecord extends DbRecord
         		    	<div class='col-sm-6'>
 		                <select class='form-control select select2 ' id='resource_country'
                         		name='resCOUNTRY'
-                              	placeholder='Country working in:' >
+                              	data-placeholder='Country working in:' >
 
                    		<option value=''>Country working in</option>
                    		<?php
@@ -567,7 +567,7 @@ class personRecord extends DbRecord
                         name='person_preboarded'
                         <?=$preBoardersAvailable?>
                         <?=$notEditable?>
-                        placeholder='Was pre-boarded as:' >
+                        data-placeholder='Was pre-boarded as:' >
                 <option value=''>Link to Pre-Boarded</option>
                 <?php
                     foreach ($availableFromPreBoarding as $option){
@@ -581,7 +581,7 @@ class personRecord extends DbRecord
            	   	<select class='form-control select select2 locationFor '
                 			  id='LBG_LOCATION'
                               name='LBG_LOCATION',
-                              placeholder='LBG Work Location'
+                              data-placeholder='LBG Work Location'
                 >
                 <option value=''>LBG Work Location</option>
                 <?php
@@ -662,19 +662,19 @@ class personRecord extends DbRecord
 
      </div>
 
-         <div class='form-group' id='selectCioAllignment'>
-         <div class='col-sm-6'>
+     <div class='form-group' id='selectCioAllignment'>
+         <div class='col-sm-4'>
              <div class="radio">
-          <label><input type="radio" name="CTB_RTB"  class='ctbRtb' value='CTB' required  <?=substr($this->CTB_RTB,0,3)=='CTB'? 'checked' : null ?>    <?=$_SESSION['isPmo'] || $_SESSION['isCdi'] ? null :  $notEditable;?>>CTB</label>
-          <label><input type="radio" name="CTB_RTB"  class='ctbRtb' value='RTB' required <?=substr($this->CTB_RTB,0,3)=='RTB'? 'checked' : null ?>     <?=$_SESSION['isPmo'] || $_SESSION['isCdi'] ? null :  $notEditable;?>>RTB</label>
-          <label><input type="radio" name="CTB_RTB"  class='ctbRtb' value='Other' required <?=substr($this->CTB_RTB,0,5)=='Other'? 'checked' : null ?> <?=$_SESSION['isPmo'] || $_SESSION['isCdi'] ? null :  $notEditable;?>>Other</label>
-      </div>
-        </div>
-        <div class='col-sm-6'>
+          		<label><input type="radio" name="CTB_RTB"  class='ctbRtb' value='CTB' required  <?=substr($this->CTB_RTB,0,3)=='CTB'? 'checked' : null ?>    <?=$_SESSION['isPmo'] || $_SESSION['isCdi'] ? null :  $notEditable;?>>CTB</label>
+          		<label><input type="radio" name="CTB_RTB"  class='ctbRtb' value='RTB' required <?=substr($this->CTB_RTB,0,3)=='RTB'? 'checked' : null ?>     <?=$_SESSION['isPmo'] || $_SESSION['isCdi'] ? null :  $notEditable;?>>RTB</label>
+          		<label><input type="radio" name="CTB_RTB"  class='ctbRtb' value='Other' required <?=substr($this->CTB_RTB,0,5)=='Other'? 'checked' : null ?> <?=$_SESSION['isPmo'] || $_SESSION['isCdi'] ? null :  $notEditable;?>>Other</label>
+         	</div>
+         </div>
+         <div class='col-sm-4'>
              <select class='form-control select select2' id='cioAlignment'
                               name='CIO_ALIGNMENT'
                               disabled
-                              placeholder='Select CTB/RTB/Other'
+                              data-placeholder='Select CTB/RTB/Other'
               >
                 <option value=''>Select CTB/RTB/Other</option>
                 <?php
@@ -683,14 +683,11 @@ class personRecord extends DbRecord
                 }
                 ?>
             </select>
-            </div>
-  </div>
-
-
-
+	  	</div>
+	  </div>
 
     <div class='form-group' >
-        <div class='col-sm-6'>
+        <div class='col-sm-4'>
             <div class="radio">
         <label><input type="radio" name="TT_BAU"  class='accountOrganisation' value='T&T' required <?=substr($this->TT_BAU,0,3)=='T&T'? 'checked' : null ?>>T&amp;T</label>
         <label><input type="radio" name="TT_BAU"  class='accountOrganisation' value='BAU' required <?=substr($this->TT_BAU,0,3)=='BAU'? 'checked' : null ?>>BAU</label>
@@ -709,17 +706,29 @@ class personRecord extends DbRecord
         }
         ?>
 
-        <div class='col-sm-6'>
+        <div class='col-sm-4'>
           <input id='currentWorkstream' value='<?=$this->WORK_STREAM?>' type='hidden'>
           <select class='form-control select select2' id='work_stream'
                               name='WORK_STREAM'
                               disabled
-                              placeholder='Select T&T/BAU First'
+                              data-placeholder='Select T&T/BAU First'
             >
                 <option value=''>Select T&amp;T/BAU First</option>
-            </select>
+          </select>
 
-    </div>
+        </div>
+        <div class='col-sm-4'>
+             <select class='form-control select select2' id='subPlatform'
+                              name='subPlatform[]'
+                              disabled
+                              data-placeholder='Select SubPlatform(s)'
+                              multiple="multiple">
+                <option value=''></option>
+            </select>
+        </div>
+
+
+
     </div>
 
     <div class='form-group' >

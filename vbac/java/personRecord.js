@@ -448,15 +448,15 @@ function personRecord() {
                      $(button).prop('checked',true);
                      $(button).trigger('click');
                    }
-
+                   var contractorIdReq;
                    if(resultObj.data.CT_ID_REQUIRED != null){
                      if(resultObj.data.CT_ID_REQUIRED.trim().toUpperCase().substring(0,1)=='Y'){
-                       var contractorIdReq = 'yes';
+                       contractorIdReq = 'yes';
                      } else {
-                       var contractorIdReq = 'no';
+                       contractorIdReq = 'no';
                      }
                    }else {
-                     var contractorIdReq = 'no';
+                     contractorIdReq = 'no';
                    }
                    $('#person_contractor_id_required').attr('disabled',false);
                    $('#person_contractor_id_required').val(contractorIdReq).trigger('change');
@@ -743,7 +743,6 @@ function personRecord() {
           var workStreamValues = nullFirstEntry.concat(workStream[i+1]);
         }
       }
-      console.log($('#work_stream'));
       $('#work_stream').select2('destroy');
       $('#work_stream').html('');
       if(typeof(workStreamValues)!='undefined'){
@@ -763,7 +762,6 @@ function personRecord() {
       };
 
       var currentWorkstream = $('#currentWorkstream').val();
-      console.log(currentWorkstream);
 
       if(currentWorkstream!=''){
         console.log('changing to' + currentWorkstream);
@@ -791,7 +789,6 @@ function personRecord() {
 
   this.listenForSaveLinking = function(){
 	    $(document).on('click','#saveLinking', function(){
-		    console.log('saveLinking');
 		    $("#saveLinking").addClass('spinning');
 		    var form = $('#linkingForm');
 		    var formValid = form[0].checkValidity();
@@ -801,7 +798,6 @@ function personRecord() {
 		      $(allDisabledFields).attr('disabled',false);
 		      var formData = form.serialize();
 		      $(allDisabledFields).attr('disabled',true);
-		      console.log(formData);
 		        $.ajax({
 		          url: "ajax/saveLinking.php",
 		          type: 'POST',
@@ -826,7 +822,6 @@ function personRecord() {
 	  
 	  this.listenForSaveRfFlag = function(){
 		    $(document).on('click','#saveRfFlag', function(){
-			    console.log('listenForSaveRfFlag');
 			    $("#saveRfFlag").addClass('spinning');
 			    var form = $('#rfFlagForm');
 			    var formValid = form[0].checkValidity();
@@ -834,7 +829,6 @@ function personRecord() {
 			      var cnum = $('#personForRfFlag').val();
 			      var rfStart = $('#rfStart_Date_Db2').val();
 			      var rfEnd = $('#rfEnd_Date_Db2').val();
-			      console.log(cnum);
 			        $.ajax({
 			          url: "ajax/setRfFlag.php",
 			          type: 'POST',
@@ -845,7 +839,6 @@ function personRecord() {
 			            	  },
 			          success: function(result){
 			        	  $("#saveRfFlag").removeClass('spinning');
-			        	  console.log(result);
 			        	  var resultObj = JSON.parse(result);
 			        	  $('#personForRfFlag').val('');
 			        	  $('#rfStart_Date').val('');

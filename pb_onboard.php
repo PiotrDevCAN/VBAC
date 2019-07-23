@@ -3,6 +3,7 @@ use vbac\personRecord;
 use itdq\FormClass;
 use itdq\Loader;
 use vbac\allTables;
+use vbac\staticDataSubPlatformTable;
 
 set_time_limit(0);
 
@@ -25,6 +26,7 @@ set_time_limit(0);
 <div class='col-sm-8'>
 
 <?php
+staticDataSubPlatformTable::prepareJsonObjectForSubPlatformSelect();
 $mode = personRecord::$modeDEFINE;
 personRecord::loadKnownCnum();
 personRecord::loadKnownEmail();
@@ -45,10 +47,17 @@ $person->savingBoardingDetailsModal();
 var startDate,endDate;
 var startPicker, endPicker;
 
+function changeSubplatform(dataCategory){
+    $("#subPlatform").select2({
+        data:dataCategory,
+        placeholder:'Select'
+    })
+    .attr('disabled',false)
+    .attr('required',true);
 
+};
 
 $(document).ready(function() {
-
 	$('.toggle').bootstrapToggle()
 
 	var person = new personRecord();
@@ -64,6 +73,27 @@ $(document).ready(function() {
     person.listenForInitiatePesFromBoarding();
     person.listenForLinkToPreBoarded();
     person.listenForEmployeeTypeRadioBtn();
+
+    $("#work_stream").on( "change", function(e){
+        if($('.accountOrganisation:checked').val()=='BAU'){
+            var workstream = $('#work_stream').val();
+            var workstreamId = workstreamDetails[workstream];
+             $("#subPlatform").select2("destroy");
+            $("#subPlatform").html("<option><option>");
+            changeSubplatform( platformWithinStream[workstreamId] );
+        } else {
+            $("#subPlatform").select2({
+                placeholder:'Select'
+            })
+            .val('')
+            .trigger('change')
+            .attr('disabled',true)
+            .attr('required',false);
+        }
+
+    });
+
+
 
 });
 
