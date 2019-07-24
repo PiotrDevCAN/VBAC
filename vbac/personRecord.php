@@ -449,6 +449,7 @@ class personRecord extends DbRecord
 
         $pesClearedDate = \DateTime::createFromFormat('Y-m-d', $this->PES_CLEARED_DATE);
         $pesRecheckDate = \DateTime::createFromFormat('Y-m-d', $this->PES_RECHECK_DATE);
+        $allSubplatforms = $mode==FormClass::$modeEDIT ? PersonSubPlatformTable::getValuesForCnum($this->CNUM) : null;
         ?>
         <form id='boardingForm'  class="form-horizontal" onsubmit="return false;">
     	<div class="panel panel-default">
@@ -605,7 +606,7 @@ class personRecord extends DbRecord
           	<select class='form-control select select2' id='FM_CNUM'
                     name='FM_CNUM'
                     required='required'
-                    placeholder='Select functional manager' >
+                    data-placeholder='Select functional manager' >
             <option value=''>Select Functional Mgr</option>
             <?php
                 foreach ($allManagers as $mgrCnum => $mgrNotesid){
@@ -642,7 +643,7 @@ class personRecord extends DbRecord
         <div class='col-sm-6 form-required'>
                <select class='form-control select select2' id='lob'
                               name='LOB'
-                              required="true"
+                              required='true'
               >
                 <option value=''>Select Lob</option>
                 <?php
@@ -712,6 +713,7 @@ class personRecord extends DbRecord
                               name='WORK_STREAM'
                               disabled
                               data-placeholder='Select T&T/BAU First'
+                              data-selections='<?=json_encode($allSubplatforms);?>'
             >
                 <option value=''>Select T&amp;T/BAU First</option>
           </select>
@@ -1249,7 +1251,7 @@ class personRecord extends DbRecord
         ?>
        <!-- Modal -->
     <div id="editPersonModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
           <div class="modal-content">
           <div class="modal-header">
              <button type="button" class="close" data-dismiss="modal">&times;</button>

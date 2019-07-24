@@ -78,7 +78,7 @@ $(document).ready(function() {
         if($('.accountOrganisation:checked').val()=='BAU'){
             var workstream = $('#work_stream').val();
             var workstreamId = workstreamDetails[workstream];
-             $("#subPlatform").select2("destroy");
+            $("#subPlatform").select2("destroy");
             $("#subPlatform").html("<option><option>");
             changeSubplatform( platformWithinStream[workstreamId] );
         } else {

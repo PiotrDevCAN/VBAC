@@ -37,5 +37,33 @@ class PersonSubPlatformTable extends DbTable
 
     }
 
+    static function getValuesForCnum($cnum=null){
+        $sql = " SELECT *  FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON_SUBPLATFORM ;
+        $sql.= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
+
+        $rs = db2_exec($_SESSION['conn'], $sql);
+
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+        }
+
+        $allSubplatforms = array();
+
+        while(($row=db2_fetch_assoc($rs))==true){
+            $row = array_map('trim', $row);
+            $allSubplatforms[] = $row['SUBPLATFORM'];
+        }
+
+        return $allSubplatforms;
+
+
+
+
+
+        return true;
+
+    }
+
+
 }
 

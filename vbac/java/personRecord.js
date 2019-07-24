@@ -1790,6 +1790,26 @@ function personRecord() {
   this.initialisePersonFormSelect2 = function(){
     console.log($('.select2'));
      $('.select2').select2();
+     console.log($('.accountOrganisation:checked'));
+     console.log(platformWithinStream);
+     console.log(workstreamDetails);
+     $('#work_stream').trigger('change');
+     console.log($('#work_stream').val());
+     console.log(workstreamDetails[$('#work_stream').val()]);
+     
+     
+     
+     if($('.accountOrganisation:checked').val()=='BAU'){
+    	 console.log($('#subPlatform'));
+    	 console.log($('#subPlatform').data());
+    	 console.log($('#subPlatform').data('selections'));
+    	 $('#subPlatform').attr('disabled',false).attr('required',true);
+     }
+     
+     
+     
+     
+     
   },
 
 
