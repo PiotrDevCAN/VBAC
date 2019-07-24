@@ -1,7 +1,8 @@
 <?php
 use vbac\personRecord;
+use vbac\personWithSubPRecord;
 
-$personRecord = new personRecord();
+$personRecord = new personWithSubPRecord();
 $headerCells = $personRecord->htmlHeaderCells();
 
 
@@ -54,7 +55,10 @@ $(document).ready(function(){
 
 
 	var person = new personRecord();
-	person.initialiseDataTable();
+	var personWithSubP = new personWithSubPRecord();
+	personWithSubP.initialiseDataTable();
+
+//	person.initialiseDataTable();
 	person.listenForReportPes();
 	person.listenForReportAction();
 	person.listenForReportRevalidation();
