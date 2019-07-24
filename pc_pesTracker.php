@@ -37,8 +37,6 @@ $(document).ready(function(){
 	var pesevent = new pesEvent();
 	var person = new personRecord();
 
-// 	person.initialisePesTrackerTable();
-
 	person.listenForEditPesStatus();
 	person.listenForSavePesStatus();
 	person.listenForInitiatePesFromPortal();

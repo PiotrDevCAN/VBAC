@@ -1091,41 +1091,6 @@ function personRecord() {
 
   },
   
-  
-  
-  this.initialisePersonTable = function(preBoardersAction){
-//	  preBoardersAction = typeof(preBoardersAction) == 'undefined' ? null : preBoardersAction;
-
-//	  Person.initialiseDataTable(preBoardersAction);
-//      $.ajax({
-//        url: "ajax/createHtmlForPersonTable.php",
-//        type: 'POST',        
-//        success: function(result){
-//          var Person = new personRecord();
-//          $('#personDatabaseDiv').html(result);
-//          $('#assetRequestsDatatablesDiv').html(result);
-//          Person.initialiseDataTable(preBoardersAction);
-//        }
-//      });
-
-  },
-  
-  this.initialisePesTrackerTable = function(){	  
-	  console.log('initialisePesTrackerTable');
-	  
-      // Setup - add a text input to each footer cell
-//      $('#pesTrackerTable thead th').each( function () {
-//          var title = $(this).text();
-//          var width = $(this).width();
-//          console.log(title);
-//          console.log($(this).width());
-//          $(this).html( '' );
-//      } );
-
-  },
-  
-  
-
   this.initialiseDataTable = function(preBoardersAction){
 	  preBoardersAction = typeof(preBoardersAction) == 'undefined' ? null : preBoardersAction;	  
       // Setup - add a text input to each footer cell
