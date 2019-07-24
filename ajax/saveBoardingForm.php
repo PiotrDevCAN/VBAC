@@ -4,6 +4,7 @@ use vbac\personTable;
 use vbac\allTables;
 use itdq\AuditTable;
 use itdq\AuditRecord;
+use vbac\PersonSubPlatformTable;
 
 ob_start();
 
@@ -67,6 +68,9 @@ try {
         $table->clearCioAlignment($_POST['CNUM']);
     }
 
+    $saveSubplatform = PersonSubPlatformTable::saveSubplatformValues($_POST['CNUM'],$_POST['subPlatform']);
+
+    $saveRecordResult = $saveRecordResult && $saveSubplatform;
 
     AuditTable::audit("Saved Boarding Record:<B>" . $_POST['CNUM'] .":" . $_POST['NOTES_ID'] .  "</b>Mode:<b>" . $_POST['mode'],AuditTable::RECORD_TYPE_AUDIT);
     AuditTable::audit("Saved Record:<pre>". print_r($person,true) . "</pre>", AuditTable::RECORD_TYPE_DETAILS);
@@ -119,6 +123,11 @@ try {
 
 $messages = ob_get_clean();
 
-$response = array('boarding'=>$_POST['boarding'], 'boardingIbmer'=>$boardingIbmer, 'employeetype'=>$_POST['EMPLOYEE_TYPE'],'pesstatus'=>$_POST['PES_STATUS'], 'success'=>$success,'messages'=>$messages,"saveRecord"=>$saveRecordResult,'cnum'=>$_POST['CNUM'], 'post'=>print_r($_POST,true),'sendWarning'=>print_r($timeToWarnPmo,true));
+$response = array('boarding'=>$_POST['boarding'], 'boardingIbmer'=>$boardingIbmer, 'employeetype'=>$_POST['EMPLOYEE_TYPE'],'pesstatus'=>$_POST['PES_STATUS'], 'success'=>$success,'messages'=>$messages,"saveRecord"=>$saveRecordResult
+                 ,'cnum'=>$_POST['CNUM']
+                 ,'post'=>print_r($_POST,true)
+                 ,'sendWarning'=>print_r($timeToWarnPmo,true)
+                 ,'subplatform'=>print_r($_POST['subPlatform'],true)
+);
 ob_clean();
 echo json_encode($response);
