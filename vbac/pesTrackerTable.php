@@ -41,8 +41,8 @@ class pesTrackerTable extends DbTable{
     const PES_TRACKER_STAGE_RESIDENCY = 'Residency';
     const PES_TRACKER_STAGE_CREDIT  = 'Credit Check';
     const PES_TRACKER_STAGE_SANCTIONS = 'Financial Sanctions';
-    const PES_TRACKER_STAGE__CRIMINAL = 'Criminal Records Check';
-    const PES_TRACKER_STAGE__ACTIVITY = 'Activity';
+    const PES_TRACKER_STAGE_CRIMINAL = 'Criminal Records Check';
+    const PES_TRACKER_STAGE_ACTIVITY = 'Activity';
 
     const PES_TRACKER_STAGES =  array('CONSENT','RIGHT_TO_WORK','PROOF_OF_ID','PROOF_OF_RESIDENCY','CREDIT_CHECK','FINANCIAL_SANCTIONS','CRIMINAL_RECORDS_CHECK','PROOF_OF_ACTIVITY');
 
