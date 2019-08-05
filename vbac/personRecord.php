@@ -714,7 +714,6 @@ class personRecord extends DbRecord
                               disabled
                               data-placeholder='Select T&T/BAU First'
                               data-selections='<?=json_encode($allSubplatforms);?>'
-                              multiple='multiple'
             >
                 <option value=''>Select T&amp;T/BAU First</option>
           </select>
