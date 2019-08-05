@@ -710,19 +710,18 @@ class personRecord extends DbRecord
         }
         ?>
 
-        <div class='col-sm-4'>
+        <div class='col-sm-4' >
           <input id='currentWorkstream' value='<?=$this->WORK_STREAM?>' type='hidden'>
           <select class='form-control select select2' id='work_stream'
                               name='WORK_STREAM'
                               disabled
                               data-placeholder='Select T&T/BAU First'
-                              data-selections='<?=json_encode($allSubplatforms);?>'
             >
                 <option value=''>Select T&amp;T/BAU First</option>
           </select>
 
         </div>
-        <div class='col-sm-4'>
+        <div class='col-sm-4 storeSelections' data-selections='<?=json_encode($allSubplatforms);?>'>
              <select class='form-control select select2' id='subPlatform'
                               name='subPlatform[]'
                               disabled

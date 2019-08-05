@@ -1789,20 +1789,17 @@ function personRecord() {
 
   this.initialisePersonFormSelect2 = function(){
     console.log($('.select2'));
-     $('.select2').select2();
-     console.log($('.accountOrganisation:checked'));
-     console.log(platformWithinStream);
-     console.log(workstreamDetails);
+    console.log($('#work_stream'));
+    console.log($('#subPlatform'));
+     $('#work_stream').select2();
+     $('#subPlatform').select2();
      $('#work_stream').trigger('change');
-     console.log($('#work_stream').val());
-     console.log(workstreamDetails[$('#work_stream').val()]);
-     
-     
      
      if($('.accountOrganisation:checked').val()=='BAU'){
-    	 console.log($('#subPlatform'));
-    	 console.log($('#subPlatform').data());
-    	 console.log($('#subPlatform').data('selections'));
+    	 var subplatformValue = $('#subPlatform').parents('.storeSelections').data('selections');
+    	 console.log(subplatformValue);  	 
+   // 	 $('#subPlatform').val(subplatformValue).trigger('change');
+    	 $('#subPlatform').val('').trigger('change');
     	 $('#subPlatform').attr('disabled',false).attr('required',true);
      }
      

@@ -63,19 +63,21 @@ function changeSubplatform(dataCategory){
 };
 
 $(document).on( "change", '#work_stream', function(e){
-
+    console.log('changing workstream');
 	console.log(e);
 	console.log($('.accountOrganisation:checked').val());
-	console.log($('#subPlatform').data('selections'));
+	console.log($('#subPlatform').parents('.storeSelections').data('selections'));
 
 	if($('.accountOrganisation:checked').val()=='BAU'){
        	var workstream = $('#work_stream').val();
    		var workstreamId = workstreamDetails[workstream];
-    	$("#subPlatform").select2("destroy");
-   		$("#subPlatform").html("<option><option>");
-   		changeSubplatform( platformWithinStream[workstreamId] );
-   		var selections = $('#subPlatform').data('selections');
-   		$("#subPlatform").val(selections).trigger('change');
+   		if($('#subPlatform').data('select2')){
+   		   	$("#subPlatform").select2("destroy");
+   			$("#subPlatform").html("<option><option>");
+   			changeSubplatform( platformWithinStream[workstreamId] );
+   			var selections = $('#subPlatform').parents('.storeSelections').data('selections');
+   			$("#subPlatform").val(selections).trigger('change');
+   		}
 	} else {
        $("#subPlatform").select2({
        placeholder:'Select'
