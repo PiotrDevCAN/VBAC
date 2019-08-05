@@ -55,7 +55,6 @@ class personRecord extends DbRecord
     protected $PES_STATUS_DETAILS;
     protected $PES_STATUS;
 
-
     protected $REVALIDATION_DATE_FIELD;
     protected $REVALIDATION_STATUS;
 
@@ -82,6 +81,10 @@ class personRecord extends DbRecord
     protected $PES_LEVEL;
     protected $PES_RECHECK_DATE;
     protected $PES_CLEARED_DATE;
+
+    protected $PROCESSING_STATUS;
+    protected $PROCESSING_STATUS_CHANGED;
+    protected $SUBPLATFORM;
 
     protected $person_bio;
 
