@@ -713,7 +713,9 @@ function personRecord() {
   this.listenForCtbRtb = function(){
     $(document).on('click','.ctbRtb', function(){
       var ctbRtb = $(this).val();
-      $('#cioAlignment').select2('destroy');
+      if( $('#cioAlignment').data('select2')){
+    	  $('#cioAlignment').select2('destroy');    	  
+      }
       if(ctbRtb=='CTB'){
         $('#cioAlignment').select2({
           placeholder:"Select CIO Alignment",
