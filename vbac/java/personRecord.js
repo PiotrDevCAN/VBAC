@@ -1,4 +1,4 @@
-/*
+ /*
  *
  *
  *
@@ -130,7 +130,7 @@ function personRecord() {
 			       type: 'POST',
 			       data : {cnum:data.cnum},
 			       success: function(result){
-			    	   personRecord.table.ajax.reload();
+			    	   personWithSubPRecord.table.ajax.reload();
 			           console.log(result);
 			           var resultObj = JSON.parse(result);
 			           if(resultObj.success==true){
@@ -246,7 +246,7 @@ function personRecord() {
 			    	   var resultObj = JSON.parse(result);		  	           
 			    	   console.log(resultObj);	
 			    	   
-			    	   if(typeof(personRecord.table)!='undefined'){
+			    	   if(typeof( personWithSubPRecord.table)!='undefined'){
 			    		//   personRecord.table.ajax.reload();
 			    	   }	
 			    	   
@@ -277,7 +277,7 @@ function personRecord() {
 		       type: 'POST',
 		       data : {cnum:data.cnum},
 		       success: function(result){
-		    	   personRecord.table.ajax.reload();
+		    	   personWithSubPRecord.table.ajax.reload();
 		           console.log(result);
 		           var resultObj = JSON.parse(result);
 		           if(resultObj.success==true){
@@ -310,7 +310,7 @@ function personRecord() {
 	       type: 'POST',
 	       data : {cnum:data.cnum},
 	       success: function(result){
-	    	   personRecord.table.ajax.reload();
+	    	   personWithSubPRecord.table.ajax.reload();
 	           console.log(result);
 	           var resultObj = JSON.parse(result);
 	           if(resultObj.success==true){
@@ -369,7 +369,7 @@ function personRecord() {
 		               $('#confirmOffboardingModal  .panel').addClass('panel-danger');		               
 		             };
                 	 $('#confirmOffboardingModal').modal('show');
-  		    	   personRecord.table.ajax.reload();
+                	 personWithSubPRecord.table.ajax.reload();
 		       }
 		   });
 		});
@@ -577,7 +577,7 @@ function personRecord() {
 		        success: function(result){
 		      	  console.log(result);
 		      	  var resultObj = JSON.parse(result);
-		      	  personRecord.table.ajax.reload();
+		      	 personWithSubPRecord.table.ajax.reload();
 		        }
 		    });
 	    });
@@ -950,8 +950,8 @@ function personRecord() {
             };
             $('#editPersonModal').modal('hide');
             $('#savingBoardingDetailsModal').modal('show');
-            if(typeof(personRecord.table) != "undefined") {
-              personRecord.table.ajax.reload();
+            if(typeof( personWithSubPRecord.table) != "undefined") {
+            	 personWithSubPRecord.table.ajax.reload();
             }
             if(resultObj.employeetype=='vendor'){
             	 $('#initiatePes').attr('disabled',true);
@@ -1248,18 +1248,18 @@ function personRecord() {
      	$('#reportRemoveOffb').attr('disabled',false);
     	$('#portalTitle').text('Person Portal - PES Report');
     	$.fn.dataTableExt.afnFiltering.pop();
-    	personRecord.table.columns().visible(false,false);
-    	personRecord.table.columns([5,21,22,23,25,27,34,37]).visible(true);
-    	personRecord.table.order([21,'desc'],[5,"asc"]).draw();
+    	 personWithSubPRecord.table.columns().visible(false,false);
+    	 personWithSubPRecord.table.columns([5,21,22,23,25,27,35,38]).visible(true);
+    	 personWithSubPRecord.table.order([21,'desc'],[5,"asc"]).draw();
       });
   },
 
   this.listenForReportPerson = function(){
     $(document).on('click','#reportPerson', function(e){
       $('#reportRemoveOffb').attr('disabled',false);
-      personRecord.table.columns([0,1,2,3,4,5,6,7,8,9,10,11,12,13,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39]).visible(true,false);
-      personRecord.table.columns([2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,24]).visible(true);
-      personRecord.table.columns.draw();
+      personWithSubPRecord.table.columns([0,1,2,3,4,5,6,7,8,9,10,11,12,13,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45]).visible(true,false);
+      personWithSubPRecord.table.columns([2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,33,34,24]).visible(true);
+      personWithSubPRecord.table.columns.draw();
       });
   },
 
@@ -1268,9 +1268,9 @@ function personRecord() {
      	$('#reportRemoveOffb').attr('disabled',false);
     	$('#portalTitle').text('Person Portal - Action Mode');
     	$.fn.dataTableExt.afnFiltering.pop();
-    	personRecord.table.columns().visible(false,false);
-    	personRecord.table.columns([0,1,5,9,25,36]).visible(true);
-    	personRecord.table.order([5,'asc']).draw();
+    	 personWithSubPRecord.table.columns().visible(false,false);
+    	 personWithSubPRecord.table.columns([0,1,5,9,25,37]).visible(true);
+    	 personWithSubPRecord.table.order([5,'asc']).draw();
       });
   },
 
@@ -1279,9 +1279,9 @@ function personRecord() {
      	$('#reportRemoveOffb').attr('disabled',false);
     	$('#portalTitle').text('Person Portal - Revalidation Report');
     	$.fn.dataTableExt.afnFiltering.pop();
-    	personRecord.table.columns().visible(false,false);
-    	personRecord.table.columns([5,8,15,16,26,27,36]).visible(true);
-    	personRecord.table.search('').order([5,'asc']).draw();
+    	 personWithSubPRecord.table.columns().visible(false,false);
+    	 personWithSubPRecord.table.columns([5,8,15,16,26,27,37]).visible(true);
+    	 personWithSubPRecord.table.search('').order([5,'asc']).draw();
     });
   },
   
@@ -1293,7 +1293,7 @@ function personRecord() {
 		    	          return data[27].trim().substring(0,3) != "off";
 		    	        }
 		    	    );
-			personRecord.table.draw();	
+		    personWithSubPRecord.table.draw();	
 			$('#reportRemoveOffb').attr('disabled',true);
 	  });
   },
@@ -1303,9 +1303,9 @@ function personRecord() {
 	 	$('#reportRemoveOffb').attr('disabled',false);
 	  	$('#portalTitle').text('Person Portal - Managers CBN Report');
 		$.fn.dataTableExt.afnFiltering.pop();
-		personRecord.table.columns().visible(false,false);
-		personRecord.table.columns([0,5,9,16,25,27]).visible(true);
-		personRecord.table.search('').order([5,'asc']).draw();	
+		 personWithSubPRecord.table.columns().visible(false,false);
+		 personWithSubPRecord.table.columns([0,5,9,16,25,27]).visible(true);
+		 personWithSubPRecord.table.search('').order([5,'asc']).draw();	
   },
   
   this.listenForReportMgrsCbn = function(){
@@ -1346,11 +1346,11 @@ function personRecord() {
 	    		        }
 	    		});
 
-	      personRecord.table.columns().visible(false,false);
-	      personRecord.table.columns([5,8,11,12,16,27,36]).visible(true);
-	      personRecord.table.order([16,'asc'],[5,'asc']);
+	        personWithSubPRecord.table.columns().visible(false,false);
+	        personWithSubPRecord.table.columns([5,8,11,12,16,27,37]).visible(true);
+	        personWithSubPRecord.table.order([16,'asc'],[5,'asc']);
 
-	      personRecord.table.draw();
+	        personWithSubPRecord.table.draw();
 
 //	      personRecord.table.column(27).data().each().function(){console.log(this)});
 //	      $.fn.dataTableExt.afnFiltering.pop(); - if we pop off here - then when we sort on a column all the rows are back.
@@ -1375,11 +1375,11 @@ function personRecord() {
 		    		        }
 		    		});
 
-		      personRecord.table.columns().visible(false,false);
-		      personRecord.table.columns([5,8,11,12,16,27,36]).visible(true);
-		      personRecord.table.order([16,'asc'],[5,'asc']);
+		        personWithSubPRecord.table.columns().visible(false,false);
+		        personWithSubPRecord.table.columns([5,8,11,12,16,27,37]).visible(true);
+		        personWithSubPRecord.table.order([16,'asc'],[5,'asc']);
 
-		      personRecord.table.draw();
+		        personWithSubPRecord.table.draw();
 
 //		      personRecord.table.column(27).data().each().function(){console.log(this)});
 //		      $.fn.dataTableExt.afnFiltering.pop(); - if we pop off here - then when we sort on a column all the rows are back.
@@ -1392,9 +1392,9 @@ function personRecord() {
     	$('#portalTitle').text('Person Portal');
     	$('#reportRemoveOffb').attr('disabled',false);
     	$.fn.dataTableExt.afnFiltering.pop();
-    	personRecord.table.columns().visible(false,false);
-    	personRecord.table.columns([0,1,2,3,4,25]).visible(true);
-    	personRecord.table.search('').order([5,"asc"]).draw();
+    	 personWithSubPRecord.table.columns().visible(false,false);
+    	 personWithSubPRecord.table.columns([0,1,2,3,4,25]).visible(true);
+    	 personWithSubPRecord.table.search('').order([5,"asc"]).draw();
     });
   },
 
@@ -1404,9 +1404,9 @@ function personRecord() {
     	$('#portalTitle').text('Person Portal - All Columns');
     	$('#reportRemoveOffb').attr('disabled',false);
     	$.fn.dataTableExt.afnFiltering.pop();
-    	personRecord.table.columns().visible(true);
-    	personRecord.table.columns().search('');
-    	personRecord.table.order([5,"asc"]).draw();
+    	 personWithSubPRecord.table.columns().visible(true);
+    	 personWithSubPRecord.table.columns().search('');
+    	 personWithSubPRecord.table.order([5,"asc"]).draw();
       });
   },
 
@@ -1415,7 +1415,7 @@ function personRecord() {
     $(document).on('click','#reportReload', function(e){
     	$('#portalTitle').text('Person Portal');
     	$.fn.dataTableExt.afnFiltering.pop();
-    	personRecord.table.ajax.reload();
+    	 personWithSubPRecord.table.ajax.reload();
       });
   },
 
@@ -1470,8 +1470,8 @@ function personRecord() {
         $("#initiatePes").removeClass('spinning');
         $(".btnPesInitiate").removeClass('spinning');
         $('#initiatePes').attr('disabled',true);
-        if(typeof(personRecord.table)!='undefined'){
-        	personRecord.table.ajax.reload();	
+        if(typeof( personWithSubPRecord.table)!='undefined'){
+        	 personWithSubPRecord.table.ajax.reload();	
         }      
       }
     });
@@ -1570,7 +1570,7 @@ function personRecord() {
             data : formData,
             type: 'POST',
             success: function(result){
-                personRecord.table.ajax.reload();
+            	 personWithSubPRecord.table.ajax.reload();
               var resultObj = JSON.parse(result);
               console.log(resultObj);
                 if(!resultObj.messages){
@@ -1655,15 +1655,15 @@ function personRecord() {
                 if(!success){
                 	alert('Save PES Status, may not have been successful');
                 	alert(resultObj.messages + resultObj.emailResponse);
-                	if(typeof(personRecord.table) != 'undefined'){
+                	if(typeof( personWithSubPRecord.table) != 'undefined'){
                         // We came from the PERSON PORTAL
-                    	personRecord.table.ajax.reload();	
+                		 personWithSubPRecord.table.ajax.reload();	
                 	}
                 	
                 } else {
-                    if(typeof(personRecord.table) != 'undefined'){
+                    if(typeof( personWithSubPRecord.table) != 'undefined'){
                         // We came from the PERSON PORTAL
-                    	personRecord.table.ajax.reload();	
+                    	 personWithSubPRecord.table.ajax.reload();	
                     }  else {
                     	// We came from the PES TRACKER
                     	console.log('find and amend the email details');
@@ -1709,9 +1709,9 @@ function personRecord() {
 	                 var resultObj = JSON.parse(result);
 	                 $('#savePesStatus').attr('disabled',false);
 	                
-	                 if(typeof(personRecord.table) != 'undefined'){
+	                 if(typeof( personWithSubPRecord.table) != 'undefined'){
 	                     // We came from the PERSON PORTAL
-	                 	personRecord.table.ajax.reload();	
+	                	 personWithSubPRecord.table.ajax.reload();	
 	                 }  else {
 	                 	// We came from the PES TRACKER
 	                 	var cnum = resultObj.cnum;
@@ -1728,7 +1728,7 @@ function personRecord() {
 
   this.listenForReportSave = function(){
 	  $(document).on('click','#reportSave', function(e){
-		  var settings = personRecord.table.columns().visible().join(', ');
+		  var settings =  personWithSubPRecord.table.columns().visible().join(', ');
 		  $('#saveReportModal').modal('show');
 		  var searchBar = [];
 		  $('#personTable tfoot th').each( function () {
