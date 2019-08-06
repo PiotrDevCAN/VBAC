@@ -1802,7 +1802,7 @@ function personRecord() {
     	 console.log(subplatformValue);  	 
    // 	 $('#subPlatform').val(subplatformValue).trigger('change');
     	 $('#subPlatform').val('').trigger('change');
-    	 $('#subPlatform').attr('disabled',false).attr('required',true);
+    	 $('#subPlatform').attr('disabled',false);
      }
      
      
