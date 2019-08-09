@@ -434,19 +434,22 @@ class assetRequestRecord extends DbRecord {
     static function buildLocationOptions($currentLocation=null){
         $loader = new Loader();
         $locationsByCity = $loader->loadIndexed('CITY','ADDRESS',allTables::$STATIC_LOCATIONS);
+        $countryByCity = $loader->loadIndexed('COUNTRY','CITY', allTables::$STATIC_LOCATIONS);
         $children = array();
 
 
         foreach ($locationsByCity as $location => $city){
-            $children[trim($city)] = empty($children[trim($city)]) ? "" : $children[trim($city)];
+            $children[trim($countryByCity[$city]) . " - " . trim($city)] = empty($children[trim($countryByCity[$city]) . " - " . trim($city)]) ? "" : $children[trim($countryByCity[$city]) . " - " . trim($city)];
 
             $preparedLocation = str_replace(array(','), array(''), strtolower(trim($location . $city)));
             $preparedCurrLocation = str_replace(array(','), array(''), strtolower(trim($currentLocation)));
 
             $selected = $preparedLocation == $preparedCurrLocation ? ' selected ' : null;
 
-            $children[trim($city)] .= "<option id='$location' $selected >$location,$city</option>";
+            $children[trim($countryByCity[$city]) . " - " . trim($city)] .= "<option id='$location' $selected >$location,$city</option>";
         }
+
+        ksort($children);
 
         $options = "<option id=''></option>";
         foreach ($children as $city => $cityOptions){
