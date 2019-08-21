@@ -20,7 +20,7 @@ $data = array();
 
 if($rs){
     while(($row = db2_fetch_assoc($rs))==true){
-        $data[] = array_map('trim', $row);
+        $data[trim($row['CNUM'])] = array_map('trim', $row);
     }
 } else {
     ob_clean();
