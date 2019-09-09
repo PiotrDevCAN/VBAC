@@ -11,7 +11,7 @@ staticDataSubPlatformTable::prepareJsonObjectForSubPlatformSelect();
 
 ?>
 <div class='container'>
-<h1 id='portalTitle'>Person Portal</h1>
+<h1 id='portalTitle'>Person Portal - Lite</h1>
 </div>
 
 <div class='container-fluid'>
