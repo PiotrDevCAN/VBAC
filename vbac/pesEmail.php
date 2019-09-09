@@ -20,7 +20,7 @@ class pesEmail {
     }
 
     private function getOverseasConsentForm(){
-        $filename = "../emailAttachments/New Overseas Consent Form GDPR.pdf";
+        $filename = "../emailAttachments/Owens_Consent_Form.pdf";
         $handle = fopen($filename, "r");
         $applicationForm = fread($handle, filesize($filename));
         fclose($handle);
