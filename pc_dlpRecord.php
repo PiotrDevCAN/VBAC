@@ -11,7 +11,7 @@ ob_start();
 <div class='col-sm-2'></div>
 <div class='col-sm-8'>
 <h2>Data Leakage Protection - DG&amp;CB Licence Tracking</h2>
-<h5>Install DG&amp;CB from :<a href='http://ibm.biz/BdYzHY'>http://ibm.biz/BdYzHY</a></h5>
+<h5>Install DG&amp;CB from :<a href='https://w3-01.ibm.com/download/standardsoftware/PC/lang_en/issiCatalogPC.html'>PC@IBM App Store</a></h5>
 </div>
 </div>
 
@@ -85,7 +85,7 @@ if(!$myCnum){
         </div>
         </div>
         </div>
-        
+
         	<div id="confirmVerified" class="modal fade" role="dialog">
   			<div class="modal-dialog">
 	        <!-- Modal content-->
@@ -98,7 +98,7 @@ if(!$myCnum){
 				<p>Before approving this request, it is your responsibility to ensure the software is installed on the individual's machine.</p>
 					<label for='dlpInstallVerfied'>Confirm DLP software is installed</label>
 					<input type='checkbox' id='dlpInstallVerfied'>
-					
+
         		</div>
         		<div class='modal-footer'>
       		  		<button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
@@ -106,10 +106,10 @@ if(!$myCnum){
         </div>
         </div>
         </div>
-        
-        
-        
-        
+
+
+
+
 
 <script type="text/javascript">
 var Dlp = new dlp();
