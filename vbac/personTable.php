@@ -29,6 +29,7 @@ class personTable extends DbTable {
     const PORTAL_PRE_BOARDER_EXCLUDE = 'exclude';
     const PORTAL_PRE_BOARDER_INCLUDE = 'include';
     const PORTAL_PRE_BOARDER_WITH_LINKED = 'withLinked';
+    const PORTAL_ONLY_ACTIVE = 'onlyActive';
 
     private static $revalStatusChangeEmail = 'Functional Manager,'
                                            . '<br/>You have been identified from VBAC as being the functional manager of :  &&leaversNotesid&&'
@@ -172,7 +173,7 @@ class personTable extends DbTable {
         $predicate .= $justaUser ? " AND P.CNUM='" . db2_escape_string(trim($myCnum)) . "' " : ""; // FM Can only see their own people.
         $predicate .= $preboadersAction==self::PORTAL_PRE_BOARDER_EXCLUDE ? " AND ( PES_STATUS_DETAILS not like 'Boarded as%' or PES_STATUS_DETAILS is null) " : null;
         $predicate .= $preboadersAction==self::PORTAL_PRE_BOARDER_WITH_LINKED ? " AND ( PES_STATUS_DETAILS like 'Boarded as%' or PRE_BOARDED  is not  null) " : null;
-
+        $predicate .= $preboadersAction==self::PORTAL_ONLY_ACTIVE ? " AND " . personTable::activePersonPredicate() : null;
 
         $sql  = " SELECT P.*, PT.PROCESSING_STATUS , PT.PROCESSING_STATUS_CHANGED ";
         $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName . " as P ";

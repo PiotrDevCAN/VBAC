@@ -41,6 +41,7 @@ $cdiAdmin->addOption($emailDlp);
 
 $adminMenu      = new NavbarMenu('vBac Admin');
 $pmo            = new NavbarOption('Person Portal', 'pa_pmo.php','accessCdi accessPmo accessFm accessUser');
+$pmoLite        = new NavbarOption('Person Portal (Lite)', 'pa_pmo_lite.php','accessCdi accessPmo accessFm accessUser');
 $personFinder   = new NavbarOption('Person Finder','pa_personFinder.php','accessCdi accessFm');
 $revalidation   = new NavbarOption('Revalidation Portal','pa_revalidation.php','accessCdi accessPmo');
 $linkedReport   = new NavbarOption('Linked Portal','pa_pmoLinked.php','accessCdi accessPmo');
@@ -56,6 +57,7 @@ $odcDataUpload  = new NavbarOption('ODC Access Upload', 'pc_odcAccessUpload.php'
 
 $email          = new NavbarOption('Email Log', 'pi_emailLog.php','accessCdi');
 $adminMenu->addOption($pmo);
+$adminMenu->addOption($pmoLite);
 $adminMenu->addOption($personFinder);
 $adminMenu->addOption($revalidation);
 $adminMenu->addOption($linkedReport);
