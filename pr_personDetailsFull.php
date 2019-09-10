@@ -9,6 +9,8 @@ use vbac\assetRequestsTable;
 use vbac\personRecord;
 use vbac\personWithSubPTable;
 
+ini_set('memory_limit', '768M');
+
 // require_once __DIR__ . '/../../src/Bootstrap.php';
 $helper = new Sample();
 if ($helper->isCli()) {
