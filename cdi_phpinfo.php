@@ -1,6 +1,4 @@
 <?php
-ini_set('memory_limit', '1240M');
-
 phpinfo();
 ?>
 <pre>
