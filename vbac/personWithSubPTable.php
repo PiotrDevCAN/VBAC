@@ -41,11 +41,24 @@ class personWithSubPTable extends personTable {
 
     static function writeResultSetToXls( $resultSet,Spreadsheet $spreadsheet,$withColumnHeadings=true,$columnIndex=1,$rowIndex=1){
         $personSubPlatform = array();
+        $originalConnection = $_SESSION['conn'];
+
+        include("connect.php");
+
+
+        $sql = " SELECT * FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON_SUBPLATFORM;
+        $rs = db2_exec($_SESSION['conn'], $sql);
+
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+        }
 
         while(($subPlatformRecord=db2_fetch_assoc($rs))==true){
             $subPlatformRecord = array_map('trim', $subPlatformRecord);
             $personSubPlatform[$subPlatformRecord['CNUM']][] = $subPlatformRecord['SUBPLATFORM'];
         }
+
+        $_SESSION['conn'] = $originalConnection;
 
         $rowsWritten = false;
         $headerRow=true;
