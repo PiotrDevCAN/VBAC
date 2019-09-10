@@ -8,6 +8,8 @@ use itdq\Loader;
 use vbac\assetRequestsTable;
 use vbac\personRecord;
 use vbac\personTable;
+use vbac\personWithSubPTable;
+
 // require_once __DIR__ . '/../../src/Bootstrap.php';
 $helper = new Sample();
 if ($helper->isCli()) {
@@ -45,17 +47,18 @@ try {
 //     $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
 //     $sql.= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$ODC_ACCESS_LIVE . " as O ";
 //     $sql.= " ON O.OWNER_CNUM_ID = P.CNUM ";
-    
+
 //     $activeSql = $sql . " WHERE 1=1 ";
 //     $activeSql.= " AND " . $activePredicate;
 //     $activeSql.= " AND O.OWNER_CNUM_ID is not null ";// they have to have currect access to ODC
-    
+
     set_time_limit(60);
-    
+
     $rs = db2_exec($_SESSION['conn'], $sql);
-    
+
     if($rs){
-        $recordsFound = DbTable::writeResultSetToXls($rs, $spreadsheet);
+//         $recordsFound = DbTable::writeResultSetToXls($rs, $spreadsheet);
+        $recordsFound = personWithSubPTable::writeResultSetToXls($rs, $spreadsheet);
         if($recordsFound){
             DbTable::autoFilter($spreadsheet);
             DbTable::autoSizeColumns($spreadsheet);
@@ -64,7 +67,7 @@ try {
             $spreadsheet->getActiveSheet()->setTitle('Person Table - Active');
             DbTable::autoSizeColumns($spreadsheet);
             $fileNameSuffix = $now->format('Ymd_His');
-            
+
             ob_clean();
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             header('Content-Disposition: attachment;filename="personExtractActiveOdc' . $fileNameSuffix . '.xlsx"');
@@ -82,11 +85,11 @@ try {
         }
     }
 } catch (Exception $e) {
-    
+
     //    ob_clean();
-    
+
     echo "<br/><br/><br/><br/><br/>";
-    
+
     echo $e->getMessage();
     echo $e->getLine();
     echo $e->getFile();

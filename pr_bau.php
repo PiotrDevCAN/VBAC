@@ -8,6 +8,7 @@ use itdq\Loader;
 use vbac\assetRequestsTable;
 use vbac\personRecord;
 use vbac\personTable;
+use vbac\personWithSubPTable;
 // require_once __DIR__ . '/../../src/Bootstrap.php';
 $helper = new Sample();
 if ($helper->isCli()) {
@@ -40,26 +41,27 @@ try {
     $sheet = 1;
     $sql = " Select * ";
     $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
-    
+
     $activeSql = $sql . " WHERE 1=1 AND " . $activePredicate;
-    
+
 //     Filter On Column "LOB"  Cloud, GTS & Security
 //     Filter on  Column " BAUT&T" pick only BAU
 //     Filter on  Column " CTB RTB"  pick CTB& RTB
 //     Filter on column " Revalidation Status" pick only found
-    
-        
+
+
     $activeSql.= " AND LOB     in ('GTS','Cloud','Security') ";
     $activeSql.= " AND TT_BAU  in ('BAU') ";
     $activeSql.= " AND CTB_RTB in ('CTB','RTB') ";
-    $activeSql.= " AND REVALIDATION_STATUS = 'found' ";  
-    
+    $activeSql.= " AND REVALIDATION_STATUS = 'found' ";
+
     set_time_limit(60);
-    
+
     $rs = db2_exec($_SESSION['conn'], $activeSql);
-    
+
     if($rs){
-        $recordsFound = DbTable::writeResultSetToXls($rs, $spreadsheet);
+      //  $recordsFound = DbTable::writeResultSetToXls($rs, $spreadsheet);
+        $recordsFound = personWithSubPTable::writeResultSetToXls($rs, $spreadsheet);
         if($recordsFound){
             DbTable::autoFilter($spreadsheet);
             DbTable::autoSizeColumns($spreadsheet);
@@ -68,7 +70,7 @@ try {
             $spreadsheet->getActiveSheet()->setTitle('Person Table - Active');
             DbTable::autoSizeColumns($spreadsheet);
             $fileNameSuffix = $now->format('Ymd_His');
-            
+
             ob_clean();
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             header('Content-Disposition: attachment;filename="personBauReport' . $fileNameSuffix . '.xlsx"');
@@ -86,11 +88,11 @@ try {
         }
     }
 } catch (Exception $e) {
-    
+
     //    ob_clean();
-    
+
     echo "<br/><br/><br/><br/><br/>";
-    
+
     echo $e->getMessage();
     echo $e->getLine();
     echo $e->getFile();
