@@ -9,7 +9,7 @@ use vbac\assetRequestsTable;
 use vbac\personRecord;
 use vbac\personWithSubPTable;
 
-ini_set('memory_limit', '768M');
+ini_set('memory_limit', '512M');
 
 // require_once __DIR__ . '/../../src/Bootstrap.php';
 $helper = new Sample();
@@ -40,8 +40,6 @@ try {
     $sql .= " WHERE PES_STATUS_DETAILS is null or PES_STATUS_DETAILS not like 'Boarded%' ";  // dont show boarded pre-boarders
 
     set_time_limit(0);
-    ini_set('memory_limit', '256M');
-
     $rs = db2_exec($_SESSION['conn'], $sql);
 
     if($rs){
