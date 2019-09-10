@@ -5,6 +5,7 @@ use itdq\DbTable;
 use itdq\AuditTable;
 use itdq\Loader;
 use itdq\slack;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class personWithSubPTable extends personTable {
 
@@ -31,4 +32,52 @@ class personWithSubPTable extends personTable {
         $row['SUBPLATFORM'] = !empty($this->personSubPlatform[$row['CNUM']]) ? implode(',',$this->personSubPlatform[$row['CNUM']]) :  '';
         return $row;
     }
+
+
+    function addSubplatform($row){
+        $row['SUBPLATFORM'] = !empty($this->personSubPlatform[$row['CNUM']]) ? implode(',',$this->personSubPlatform[$row['CNUM']]) :  '';
+        return $row;
+    }
+
+    static function writeResultSetToXls( $resultSet,Spreadsheet $spreadsheet,$withColumnHeadings=true,$columnIndex=1,$rowIndex=1){
+        $personSubPlatform = array();
+
+        while(($subPlatformRecord=db2_fetch_assoc($rs))==true){
+            $subPlatformRecord = array_map('trim', $subPlatformRecord);
+            $personSubPlatform[$subPlatformRecord['CNUM']][] = $subPlatformRecord['SUBPLATFORM'];
+        }
+
+        $rowsWritten = false;
+        $headerRow=true;
+        $columnCounter = $columnIndex;
+        $rowCounter = $rowIndex;
+
+        while (($rawRow=db2_fetch_assoc($resultSet))==true) {
+            $rowsWritten = true;
+            $row = array_map('trim', $rawRow);
+            $row = static::preProcessRowForWriteToXls($row);
+            $row['SUBPLATFORM'] = !empty($personSubPlatform[$row['CNUM']]) ? implode(',',$personSubPlatform[$row['CNUM']]) :  '';
+            if($headerRow && $withColumnHeadings){
+                foreach ($row as $columnName => $value){
+                    $columnHeading = ucwords(str_replace("_", " ", $columnName));
+                    $spreadsheet->getActiveSheet()->setCellValueByColumnAndRow($columnCounter++, $rowCounter, $columnHeading);
+                }
+                $headerRow = false;
+                $rowCounter++;
+                $columnCounter=$columnIndex;
+            }
+            foreach ($row as $columnName => $value){
+                $strValue = " " . $value . " ";
+                $spreadsheet->getActiveSheet()->setCellValueByColumnAndRow($columnCounter++, $rowCounter, $strValue);
+            }
+            $rowCounter++;
+            $columnCounter=$columnIndex;
+        }
+        return $rowsWritten;
+    }
+
+
+
+
+
 }
