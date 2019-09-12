@@ -218,6 +218,14 @@ class personRecord extends DbRecord
                                               <br/>This action has been requested by  &&requestor&&.';
     private static $pesCancelPesEmailPattern = array('/&&candidateFirstName&&/','/&&candidateSurname&&/','/&&cnum&&/','/&&requestor&&/');
 
+
+    private static $pesRestartPesEmail = 'PES Team,
+                                              <br/>Please <b>restart</b> processing the PES Clearance for : &&candidateFirstName&& <b>&&candidateSurname&&</b> CNUM:( &&cnum&& )
+                                              <br/>This action has been requested by  &&requestor&&.';
+    private static $pesRestartPesEmailPattern = array('/&&candidateFirstName&&/','/&&candidateSurname&&/','/&&cnum&&/','/&&requestor&&/');
+
+
+
     private static $offboardingEmail = 'Please initiate OFFBOARDING for the following individual:\n
                                     Name : &&name&&
                                     Serial: &&cnum&&
@@ -302,6 +310,7 @@ class personRecord extends DbRecord
     const PES_STATUS_FAILED        = 'Failed';
     const PES_STATUS_INITIATED     = 'Initiated';
     const PES_STATUS_REQUESTED     = 'Evidence Requested';
+    const PES_STATUS_RESTART       = 'Restart Requested';
     const PES_STATUS_REMOVED       = 'Removed';
     const PES_STATUS_REVOKED       = 'Revoked';
     const PES_STATUS_CANCEL_REQ     = 'Cancel Requested';
@@ -1434,6 +1443,15 @@ class personRecord extends DbRecord
                 $pattern   = self::$pesCancelPesEmailPattern;
                 $emailBody = self::$pesCancelPesEmail;
                 $title = 'vBAC Cancel Request';
+                $replacements = array($this->FIRST_NAME,$this->LAST_NAME,$this->CNUM, $_SESSION['ssoEmail']);
+                $to[] = personRecord::$pesTaskId[0];
+                !empty($fmEmail) ? $cc[] = $fmEmail : null;
+                $cc[] = $_SESSION['ssoEmail'];
+                break;
+            case self::PES_STATUS_RESTART:
+                $pattern   = self::$pesRestartPesEmailPattern;
+                $emailBody = self::$pesRestartPesEmail;
+                $title = 'vBAC Restart Request';
                 $replacements = array($this->FIRST_NAME,$this->LAST_NAME,$this->CNUM, $_SESSION['ssoEmail']);
                 $to[] = personRecord::$pesTaskId[0];
                 !empty($fmEmail) ? $cc[] = $fmEmail : null;

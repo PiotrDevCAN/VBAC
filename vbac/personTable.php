@@ -1407,6 +1407,7 @@ class personTable extends DbTable {
                 $pesStatusWithButton.= "</button>&nbsp;";
                 break;
             case $status == personRecord::PES_STATUS_INITIATED && $_SESSION['isPes'] ;
+            case $status == personRecord::PES_STATUS_RESTART   && $_SESSION['isPes'] ;
                 $emailAddress = trim($row['EMAIL_ADDRESS']);
                 $firstName    = trim($row['FIRST_NAME']);
                 $lastName     = trim($row['LAST_NAME']);
@@ -1437,8 +1438,25 @@ class personTable extends DbTable {
                 $pesStatusWithButton.= " $disabled  ";
                 $pesStatusWithButton.= " > ";
                 $pesStatusWithButton.= "<span class='glyphicon glyphicon-send ' aria-hidden='true' ></span>";
-
                 $pesStatusWithButton.= "</button>&nbsp;";
+                break;
+            case $status == personRecord::PES_STATUS_DECLINED && ( $_SESSION['isFm'] || $_SESSION['isCdi'] )  ;
+            case $status == personRecord::PES_STATUS_FAILED && ( $_SESSION['isFm'] || $_SESSION['isCdi'] )  ;
+            case $status == personRecord::PES_STATUS_REMOVED && ( $_SESSION['isFm'] || $_SESSION['isCdi'] )  :
+                $pesStatusWithButton.= "<button type='button' class='btn btn-default btn-xs btnPesRestart accessRestrict accessFm accessCdi' aria-label='Left Align' ";
+                $pesStatusWithButton.= " data-cnum='" .$actualCnum . "' ";
+                $pesStatusWithButton.= " data-notesid='" . $notesId . "' ";
+                $pesStatusWithButton.= " data-email='" . $email . "' ";
+                $pesStatusWithButton.= " data-pesdaterequested='" .trim($row['PES_DATE_REQUESTED']) . "' ";
+                $pesStatusWithButton.= " data-pesrequestor='" .trim($row['PES_REQUESTOR']) . "' ";
+                $pesStatusWithButton.= " data-pesstatus='" .$status . "' ";
+                $pesStatusWithButton.= array_key_exists('PASSPORT_FIRST_NAME', $row) ?  " data-passportfirst='" .$passportFirst . "' " : null;
+                $pesStatusWithButton.= array_key_exists('PASSPORT_SURNAME', $row) ? " data-passportsurname='" .$passportSurname . "' " : null;
+                $pesStatusWithButton.= " data-toggle='tooltip' data-placement='top' title='Restart PES Process'";
+                $pesStatusWithButton.= " > ";
+                $pesStatusWithButton.= "<span class='glyphicon glyphicon-refresh ' aria-hidden='true' ></span>";
+                $pesStatusWithButton.= "</button>";
+                break;
             case $status == personRecord::PES_STATUS_REQUESTED && $_SESSION['isPes'] :
             case $status == personRecord::PES_STATUS_CLEARED_PERSONAL && $_SESSION['isPes'] :
             case $status == personRecord::PES_STATUS_CLEARED && $_SESSION['isPes'] :
@@ -1481,7 +1499,7 @@ class personTable extends DbTable {
                 $pesStatusWithButton.= " > ";
                 $pesStatusWithButton.= "<span class='glyphicon glyphicon-erase ' aria-hidden='true' ></span>";
                 $pesStatusWithButton.= "</button>";
-            break;
+                break;
             case $status == personRecord::PES_STATUS_CANCEL_CONFIRMED && $_SESSION['isPes'] :
             default:
                 break;

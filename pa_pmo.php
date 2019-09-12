@@ -119,6 +119,7 @@ $(document).ready(function(){
 	person.listenForReportSaveConfirm();
 	person.listenForEditPesStatus();
 	person.listenForSavePesStatus();
+	person.listenForRestartPes();
 	person.listenForInitiatePesFromPortal();
 	person.listenForEditPerson();
 	person.listenForAccountOrganisation();
