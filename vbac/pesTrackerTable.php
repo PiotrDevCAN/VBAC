@@ -112,6 +112,7 @@ class pesTrackerTable extends DbTable{
         $sql.= " ON P.CNUM = PT.CNUM ";
         $sql.= " WHERE 1=1 ";
         $sql.= " and (PT.CNUM is not null or ( PT.CNUM is null  AND PES_STATUS_DETAILS is null )) "; // it has a tracker record
+        $sql.= " and PES_STATUS_DETAILS not like 'Boarded as%' ";
         $sql.= " AND " . $pesStatusPredicate;
 
         AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
