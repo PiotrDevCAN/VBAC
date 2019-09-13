@@ -68,7 +68,7 @@ try {
         $table->clearCioAlignment($_POST['CNUM']);
     }
 
-
+    $saveSubplatform = true;
     if(isset($_POST['subPlatform'])){
         $saveSubplatform = PersonSubPlatformTable::saveSubplatformValues($_POST['CNUM'],$_POST['subPlatform']);
     }
