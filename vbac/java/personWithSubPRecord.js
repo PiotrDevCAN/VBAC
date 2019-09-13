@@ -16,6 +16,22 @@ function personWithSubPRecord() {
   
   this.initialiseDataTable = function(preBoardersAction){
 	  
+	    var buttonCommon = {
+	            exportOptions: {
+	                format: {
+	                    body: function ( data, row, column, node ) {
+	                     //   return data ?  data.replace( /<br\s*\/?>/ig, "\n") : data ;
+	                     return data ? data.replace( /<br\s*\/?>/ig, "\n").replace(/(&nbsp;|<([^>]+)>)/ig, "") : data ;
+	                     //    data.replace( /[$,.]/g, '' ) : data.replace(/(&nbsp;|<([^>]+)>)/ig, "");
+
+	                    }
+	                }
+	            }
+	        };
+	  
+	  
+	  
+	  
 	  preBoardersAction = typeof(preBoardersAction) == 'undefined' ? null : preBoardersAction;	  
       // Setup - add a text input to each footer cell
       $('#personTable tfoot th').each( function () {
@@ -62,7 +78,9 @@ function personWithSubPRecord() {
                       { "data": "PES_REQUESTOR", "defaultContent": "" },
                       { "data": "PES_DATE_RESPONDED", "defaultContent": "" },
                       { "data": "PES_STATUS_DETAILS", "defaultContent": "" },
-                      { "data": "PES_STATUS", "defaultContent": "" },
+                      { data: "PES_STATUS",
+                   	  render: { _:'display', sort:'sort' },
+                      },
                       { "data": "REVALIDATION_DATE_FIELD", "defaultContent": "" },
                       { "data": "REVALIDATION_STATUS", "defaultContent": "" },
                       { "data": "CBN_DATE_FIELD", "defaultContent": "" },
@@ -99,9 +117,33 @@ function personWithSubPRecord() {
           dom: 'Blfrtip',
           buttons: [
                     'colvis',
-                    'excelHtml5',
-                    'csvHtml5',
-                    'print'
+                    $.extend( true, {}, buttonCommon, {
+                        extend: 'excelHtml5',
+                        exportOptions: {
+                            orthogonal: 'sort',
+                            stripHtml: true,
+                            stripNewLines:false
+                        },
+                         customize: function( xlsx ) {
+                             var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                         }
+                }),
+                $.extend( true, {}, buttonCommon, {
+                    extend: 'csvHtml5',
+                    exportOptions: {
+                        orthogonal: 'sort',
+                        stripHtml: true,
+                        stripNewLines:false
+                    }
+                }),
+                $.extend( true, {}, buttonCommon, {
+                    extend: 'print',
+                    exportOptions: {
+                        orthogonal: 'sort',
+                        stripHtml: true,
+                        stripNewLines:false
+                    }
+                })
                 ],
       });
       // Apply the search
