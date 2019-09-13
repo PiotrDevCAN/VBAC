@@ -53,6 +53,7 @@ $(document).ready(function(){
 	pesevent.listenForFilterPriority();
 	pesevent.listenForFilterProcess();
 	pesevent.listenForBtnChaser();
+	pesevent.listenForBtnSetPesLevel();
 });
 </script>
 <style>

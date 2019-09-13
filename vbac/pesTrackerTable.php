@@ -103,6 +103,7 @@ class pesTrackerTable extends DbTable{
         $sql.= ", PT.DATE_LAST_CHASED ";
         $sql.= ", P.PES_STATUS ";
         $sql.= ", P.PES_STATUS_DETAILS ";
+        $sql.= ", P.PES_LEVEL ";
         $sql.= ", PT.COMMENT ";
         $sql.= ", PT.PRIORITY ";
         $sql.= ", P.OPEN_SEAT_NUMBER ";
@@ -165,7 +166,7 @@ class pesTrackerTable extends DbTable{
 		<th width="5px">Financial Sanctions</th>
 		<th width="5px">Criminal Records Check</th>
 		<th width="5px">Proof of Activity</th>
-		<th>Process Status</th><th>PES Status</th><th>Comment</th></tr>
+		<th>Process Status</th><th>PES Status</th><th>Level</th><th>Comment</th></tr>
 		<tr class='searchingRow wrap'><td>Email Address</td><td>Requestor</td><td>Country</td>
 		<td>Consent</td>
 		<td>Right to Work</td>
@@ -244,7 +245,8 @@ class pesTrackerTable extends DbTable{
             </div>
             </td>
             <td class='nonSearchable'><?=personTable::getPesStatusWithButtons($row)?></td>
-            <td class='pesCommentsTd'><textarea rows="3" cols="20"  data-cnum='<?=$cnum?>'></textarea><br/>
+            <td><?=pesTrackerTable::getCellContentsForPesLevel($row)?></td>
+            <td class='pesCommentsTd'><textarea rows="3" cols="20"  data-cnum='<?=$cnum?>'></textarea>
             <button class='btn btn-default btn-xs btnPesSaveComment accessPes accessCdi' data-setpesto='Yes' data-toggle="tooltip" data-placement="top" title="Save Comment" ><span class="glyphicon glyphicon-save" ></span></button>
             <div class='pesComments' data-cnum='<?=$cnum?>'><small><?=$row['COMMENT']?></small></div>
             </td>
@@ -438,6 +440,15 @@ class pesTrackerTable extends DbTable{
 	  	</span>
 	  	</div>
         <?php
+    }
+
+    static function getCellContentsForPesLevel($row){
+        $cell = $row['PES_LEVEL'];
+        $cell.= "<br/><span style='white-space:nowrap' >";
+        $cell.= trim($row['PES_LEVEL'])!='Level 1' ? "<a class='btn btn-xs btn-info  btnSetPesLevel accessPes accessCdi' data-cnum='" . $row['CNUM'] . "' data-level='Level 1'  data-toggle='tooltip' data-placement='top' title='Set to Level 1' ><i class='fas fa-dice-one'></i></a>" : null;
+        $cell.= trim($row['PES_LEVEL'])!='Level 2' ? "<a class='btn btn-xs btn-info  btnSetPesLevel accessPes accessCdi' data-cnum='" . $row['CNUM'] . "' data-level='Level 2'  data-toggle='tooltip' data-placement='top' title='Set to Level 2' ><i class='fas fa-dice-two'></i></a>" : null;
+        $cell.= "</span>";
+        return $cell;
     }
 
     function prepareStageUpdate($stage){

@@ -111,6 +111,42 @@ function pesEvent() {
 	  });
   },
   
+  this.listenForBtnSetPesLevel = function() {
+	  $(document).on('click','.btnSetPesLevel', function(){
+		  var cnum = $(this).data('cnum');	
+		  var level = $(this).data('level');
+	  
+		  var buttonObj = $(this);
+		  var cellObj = $(this).parent('span').parents('td');
+		  
+		  console.log(cellObj);
+		  
+		  buttonObj.addClass('spinning');
+		  
+		  $.ajax({
+			  	url: "ajax/setPesLevel.php",
+			  	type: 'POST',
+			  	data : { cnum: cnum,
+			  		     level: level,
+			  			},
+			    success: function(result){
+			    	var resultObj = JSON.parse(result);
+			    	console.log(resultObj);
+			    	if(resultObj.success==true){
+				    	buttonObj.removeClass('spinning');
+				    	cellObj.html(resultObj.cell);		
+				    	cellObj.parent('tr').children('td.pesCommentsTd').children('div.pesComments').html(resultObj.comment);
+			    	} else {
+			    		alert('error has occured');
+			    		alert(resultObj);
+			    	}
+
+			    }
+		  });
+	  });
+  },
+  
+  
   
   
   

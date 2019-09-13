@@ -448,6 +448,7 @@ class personTable extends DbTable {
         return $result;
     }
 
+
     function setPesStatus($cnum=null,$status=null,$requestor=null){
         if(!$cnum){
             throw new \Exception('No CNUM provided in ' . __METHOD__);
@@ -494,6 +495,28 @@ class personTable extends DbTable {
 
         return true;
     }
+
+    function setPesLevel($cnum=null,$level=null){
+        if(!$cnum){
+            throw new \Exception('No CNUM provided in ' . __METHOD__);
+        }
+
+        $requestor = empty($requestor) ? $_SESSION['ssoEmail'] : $requestor;
+
+        $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql .= " SET PES_LEVEL = '" . db2_escape_string($level)  . "' ";
+         $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
+
+        $result = db2_exec($_SESSION['conn'], $sql);
+
+        if(!$result){
+            DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+        AuditTable::audit("PES Level set for:" . $cnum ." To : " . $level . " By:" . $requestor,AuditTable::RECORD_TYPE_AUDIT);
+        return true;
+    }
+
 
     function setPesRescheckDate($cnum=null,$requestor=null){
         if(!$cnum){
@@ -552,9 +575,6 @@ class personTable extends DbTable {
         $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET PMO_STATUS='" . db2_escape_string($status)  . "' ";
         $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
-
-
-        echo $sql;
 
         try {
             $result = db2_exec($_SESSION['conn'], $sql);
