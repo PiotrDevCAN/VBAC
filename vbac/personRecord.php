@@ -768,6 +768,8 @@ class personRecord extends DbRecord
         <div class='col-sm-6 form-required'>
                <select class='form-control select select2' id='pesLevel'
                               name='PES_LEVEL'
+                              <?=!empty($this->PES_LEVEL) ? ' disabled ' : null;?>
+                              <?=empty($this->PES_LEVEL) ? " data-toggle='tooltip' title='Please select appropriate PES LEVEL'" : " data-toggle='tooltip' title='Contact PES Team to change PES LEVEL'";?>
                                 >
                 <option value=''>Select PES Level</option>
                 <option value='<?=personTable::PES_LEVEL_ONE;?>' <?=$this->PES_LEVEL==personTable::PES_LEVEL_ONE ? ' selected ' : null;?>><?=personTable::PES_LEVEL_ONE . " (Recheck annually)";?></option>
