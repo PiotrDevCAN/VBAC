@@ -475,7 +475,7 @@ class personTable extends DbTable {
             case personRecord::PES_STATUS_CLEARED:
             case personRecord::PES_STATUS_CLEARED_PERSONAL:
                 $dateField = 'PES_CLEARED_DATE';
-                self::setPesRescheckDate($cnum,$requestor);
+                self::setPesRescheckDate($cnum,$requestor, $dateToUse);
                 break;
             case personRecord::PES_STATUS_PROVISIONAL:
             default:
@@ -524,7 +524,7 @@ class personTable extends DbTable {
     }
 
 
-    function setPesRescheckDate($cnum=null,$requestor=null){
+    function setPesRescheckDate($cnum=null,$requestor=null, $dateToUse=null){
         if(!$cnum){
             throw new \Exception('No CNUM provided in ' . __METHOD__);
         }
@@ -538,8 +538,16 @@ class personTable extends DbTable {
         $pesLevel = isset($pesLevels[trim($cnum)]) ? $pesLevels[trim($cnum)]  : self::PES_LEVEL_DEFAULT ;
         $pesRecheckPeriod = isset(self::$pesRecheckPeriods[$pesLevel]) ? self::$pesRecheckPeriods[$pesLevel] : self::$pesRecheckPeriods[self::PES_LEVEL_DEFAULT];
 
+        $dateToUseObj = isset($dateToUse) ? \DateTime::createFromFormat('Y-m-d', $dateToUse) : new \DateTime();
+
+        if(!$dateToUseObj){
+            throw new \Exception('Date format mismatch. Expected Y-m-d. Date was:' . $dateToUse);
+        }
+
+
+
         $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
-        $sql .= " SET PES_RECHECK_DATE = current date + " . $pesRecheckPeriod ;
+        $sql .= " SET PES_RECHECK_DATE = date('" .$dateToUseObj->format('Y-m-d') . "') + " . $pesRecheckPeriod ;
         $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
         $result = db2_exec($_SESSION['conn'], $sql);
