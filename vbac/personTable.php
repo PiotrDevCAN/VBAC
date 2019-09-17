@@ -449,9 +449,15 @@ class personTable extends DbTable {
     }
 
 
-    function setPesStatus($cnum=null,$status=null,$requestor=null){
+    function setPesStatus($cnum=null,$status=null,$requestor=null,$dateToUse= null){
         if(!$cnum){
             throw new \Exception('No CNUM provided in ' . __METHOD__);
+        }
+
+        $dateToUseObj = isset($dateToUse) ? \DateTime::createFromFormat('Y-m-d', $dateToUse) : new \DateTime();
+
+        if(!$dateToUseObj){
+            throw new \Exception('Date format mismatch. Expected Y-m-d. Date was:' . $dateToUse);
         }
 
         $status = empty($status) ? personRecord::PES_STATUS_NOT_REQUESTED : $status;
@@ -477,7 +483,7 @@ class personTable extends DbTable {
             break;
         }
         $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
-        $sql .= " SET $dateField = current date, PES_STATUS='" . db2_escape_string($status)  . "' ";
+        $sql .= " SET $dateField = date('" . $dateToUseObj->format('Y-m-d') . "'), PES_STATUS='" . db2_escape_string($status)  . "' ";
         $sql .= trim($status)==personRecord::PES_STATUS_INITIATED ? ", PES_REQUESTOR='" . db2_escape_string($requestor) . "' " : null;
         $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
@@ -489,7 +495,7 @@ class personTable extends DbTable {
         }
 
         $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER);
-        $pesTracker->savePesComment($cnum, "PES_STATUS set to :" . $status );
+        $pesTracker->savePesComment($cnum, "PES_STATUS set to :" . $status . " Date Used:" . $dateToUseObj->format('Y-m-d'));
 
         AuditTable::audit("PES Status set for:" . $cnum ." To : " . $status . " By:" . $requestor,AuditTable::RECORD_TYPE_AUDIT);
 
