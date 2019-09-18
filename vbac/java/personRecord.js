@@ -1727,6 +1727,41 @@ function personRecord() {
 	    	});
 	  },
 	  
+	  this.listenForStopPes = function(){
+		    $(document).on('click','.btnPesStop', function(e){
+		    	 $(this).addClass('spinning');
+		           var cnum = ($(this).data('cnum'));
+		           var notesid = ($(this).data('notesid'));
+		           var email = ($(this).data('email'));
+		           var now = new Date();
+		           var passportFirst = $(this).data('passportfirst');
+		           var passportSurname = $(this).data('psm_passportSurname');
+		           
+		           $.ajax({
+		               url: "ajax/sendPesStopRequestedEmail.php",
+		               data : {
+		            	   psm_cnum : cnum,
+		               },
+		               type: 'POST',
+		               success: function(result){
+		                 console.log(result);
+		                 var resultObj = JSON.parse(result);
+		                
+		                 if(typeof( personWithSubPRecord.table) != 'undefined'){
+		                     // We came from the PERSON PORTAL
+		                	 personWithSubPRecord.table.ajax.reload();	
+		                 }  else {
+		                 	// We came from the PES TRACKER
+		                 	var cnum = resultObj.cnum;
+		                 	var formattedEmail = resultObj.formattedEmailField;
+		                 	$('#pesTrackerTable tr.' + cnum).children('.formattedEmailTd:first').children('.formattedEmailDiv:first').html(formattedEmail);                	
+		                 }             
+		               }
+		             });
+		    	});
+		  },
+	  
+	  
 	  this.listenForRestartPes = function(){
 		    $(document).on('click','.btnPesRestart', function(e){
 		    	 $(this).addClass('spinning');

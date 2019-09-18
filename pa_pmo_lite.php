@@ -137,6 +137,7 @@ $(document).ready(function(){
 	person.listenforConfirmSendPesEmail();
 	person.listenForbtnTogglePesTrackerStatusDetails();
 //	person.listenForCancelPes(); Don't let them cancel 2018/12/19
+	person.listenForStopPes();
 
 <?php
 if(isset($_GET['open'])){

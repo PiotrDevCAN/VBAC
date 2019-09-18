@@ -1522,18 +1522,17 @@ class personTable extends DbTable {
             case $status == personRecord::PES_STATUS_REQUESTED && !$_SESSION['isPes'] :
             case $status == personRecord::PES_STATUS_RECHECK_REQ && !$_SESSION['isPes'] :
             case $status == personRecord::PES_STATUS_INITIATED && !$_SESSION['isPes'] ;
-                $pesStatusWithButton.= "<button type='button' class='btn btn-default btn-xs btnPesCancel accessRestrict accessFm' aria-label='Left Align' ";
+                $pesStatusWithButton.= "<button type='button' class='btn btn-default btn-xs btnPesStop accessRestrict accessFm' aria-label='Left Align' ";
                 $pesStatusWithButton.= " data-cnum='" .$actualCnum . "' ";
                 $pesStatusWithButton.= " data-notesid='" . $notesId . "' ";
                 $pesStatusWithButton.= " data-email='" . $email . "' ";
                 $pesStatusWithButton.= " data-pesdaterequested='" .trim($row['PES_DATE_REQUESTED']) . "' ";
                 $pesStatusWithButton.= " data-pesrequestor='" .trim($row['PES_REQUESTOR']) . "' ";
-                $pesStatusWithButton.= " data-pesstatus='" .$status . "' ";
                 $pesStatusWithButton.= array_key_exists('PASSPORT_FIRST_NAME', $row) ?  " data-passportfirst='" .$passportFirst . "' " : null;
                 $pesStatusWithButton.= array_key_exists('PASSPORT_SURNAME', $row) ? " data-passportsurname='" .$passportSurname . "' " : null;
-                $pesStatusWithButton.= " data-toggle='tooltip' data-placement='top' title='Cancel PES Request'";
+                $pesStatusWithButton.= " data-toggle='tooltip' data-placement='top' title='Request PES be Stopped'";
                 $pesStatusWithButton.= " > ";
-                $pesStatusWithButton.= "<span class='glyphicon glyphicon-erase ' aria-hidden='true' ></span>";
+                $pesStatusWithButton.= "<span class='glyphicon glyphicon-ban-circle ' aria-hidden='true' ></span>";
                 $pesStatusWithButton.= "</button>";
                 break;
             case $status == personRecord::PES_STATUS_CANCEL_CONFIRMED && $_SESSION['isPes'] :
