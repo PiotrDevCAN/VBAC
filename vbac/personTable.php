@@ -1100,8 +1100,8 @@ class personTable extends DbTable {
                 return false;
             }
 
-
             $this->notifyFmOfRevalStatusChange($cnum, personRecord::REVALIDATED_OFFBOARDING);
+            pesEmail::notifyPesTeamOfOffboarding($cnum);
 
             AuditTable::audit("CNUM: $cnum  has been flagged as :" . personRecord::REVALIDATED_OFFBOARDING,AuditTable::RECORD_TYPE_AUDIT);
             return true;
@@ -1123,6 +1123,7 @@ class personTable extends DbTable {
             }
 
             $this->notifyFmOfRevalStatusChange($cnum, personRecord::REVALIDATED_OFFBOARDED);
+            pesEmail::notifyPesTeamOfOffboarded($cnum);
             AuditTable::audit("CNUM: $cnum  has been flagged as :" . personRecord::REVALIDATED_OFFBOARDED,AuditTable::RECORD_TYPE_AUDIT);
             return true;
         }
