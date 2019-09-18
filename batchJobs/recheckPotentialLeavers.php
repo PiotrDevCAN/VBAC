@@ -7,6 +7,7 @@ use vbac\allTables;
 use itdq\AuditTable;
 use itdq\DbTable;
 use itdq\slack;
+use vbac\pesEmail;
 
 $slack = new slack();
 
@@ -54,6 +55,8 @@ foreach ($allpotentialLeavers as $cnum){
     set_time_limit(10);
     $personTable->flagLeaver($cnum);
 }
+
+pesEmail::notifyPesTeamOfLeavers($allpotentialLeavers);
 
 AuditTable::audit("Revalidation re-check completed.",AuditTable::RECORD_TYPE_REVALIDATION);
 $slack->sendMessageToChannel("Revalidation re-check completed.", slack::CHANNEL_SM_CDI_AUDIT);
