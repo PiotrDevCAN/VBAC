@@ -85,7 +85,7 @@ class personTable extends DbTable {
         $activePredicate.= "   OR ";
         $activePredicate.= " ( trim( REVALIDATION_STATUS) is null ) )";
         $activePredicate.= " AND REVALIDATION_STATUS not like '" . personRecord::REVALIDATED_OFFBOARDING . "%:%" .personRecord::REVALIDATED_LEAVER . "%' " ;
-        $activePredicate.= " AND PES_STATUS in ('". personRecord::PES_STATUS_CLEARED ."','". personRecord::PES_STATUS_CLEARED_PERSONAL ."','". personRecord::PES_STATUS_EXCEPTION ."'";
+        $activePredicate.= " AND PES_STATUS in ('". personRecord::PES_STATUS_CLEARED ."','". personRecord::PES_STATUS_CLEARED_PERSONAL ."','". personRecord::PES_STATUS_EXCEPTION ."','". personRecord::PES_STATUS_RECHECK_REQ ."'";
         $activePredicate.= $includeProvisionalClearance ? ",'" . personRecord::PES_STATUS_PROVISIONAL . "'" : null ;
         $activePredicate.= " ) ) ";
         return $activePredicate;
