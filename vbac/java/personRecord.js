@@ -378,12 +378,21 @@ function personRecord() {
 
   this.listenForHasBpEntry = function(){
     $(document).on('change','#hasBpEntry', function(){
+      console.log('#hasBpEntry');
       $('#notAnIbmer').toggle();
       $('#existingIbmer').toggle();
       $('#linkToPreBoarded').toggle();
 
       if($('#notAnIbmer').is(":visible")){
+    	console.log('#notAnIbmer is visible');
     	$('.employeeTypeRadioBtn input[type=radio]').prop('required',true);
+    	$('#person_name').val('').trigger('change');
+    	$('#person_serial').val('').trigger('change');
+    	$('#person_notesid').val('').trigger('change');
+    	$('#person_intranet').val('').trigger('change');
+    	$('#resource_email').val('').trigger('change');
+    	$('#resource_first_name').val('').trigger('change');
+    	$('#resource_last_name').val('').trigger('change');
     	$('#open_seat').attr('placeholder','IBM Hiring Number');
         $('#notAnIbmer :input').attr('required',true);
         $('#existingIbmer :input').attr('required',false);
@@ -393,6 +402,14 @@ function personRecord() {
         $('#person_preboarded').val('').trigger('change');  // incase they already selected a pre-boarder - we need to clear this field.
         $('#editCtidDiv').show();
       } else {
+    	console.log('#notAnIbmer is not visible');
+    	$('#person_name').val('').trigger('change');
+    	$('#person_serial').val('').trigger('change');
+    	$('#person_notesid').val('').trigger('change');
+    	$('#person_intranet').val('').trigger('change');
+    	$('#resource_email').val('').trigger('change');
+    	$('#resource_first_name').val('').trigger('change');
+    	$('#resource_last_name').val('').trigger('change');
     	$('.employeeTypeRadioBtn input[type=radio]').removeAttr('required');
     	$('#open_seat').attr('placeholder','Open Seat Number');
         $('#notAnIbmer :input').attr('required',false);
