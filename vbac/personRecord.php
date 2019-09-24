@@ -149,7 +149,7 @@ class personRecord extends DbRecord
 //                                 </table>
 //                             </td></tr>
 //                             </table>';
-    private static $pesEmailBody = 'Please initiate PES check for the following individual : Name : &&name&&, Email Address : &&email&&, Notes Id : &&notesid&&, Country working in : &&country&&, LoB : &&lob&&, Role on Project : &&role&&, Contract : &&contract&&, Open Seat : &&openSeat&&, Requested By : &&requestor&&, Requested Timestamp : &&requested&&, Functional Mgr (on CC) : &&functionalMgr&&';
+    private static $pesEmailBody = 'Please initiate PES check for the following individual : Name : &&name&&, Email Address : &&email&&, Notes Id : &&notesid&&, Country working in : &&country&&, LoB : &&lob&&, Role on Project : &&role&&, Contract : &&contract&&, Open Seat : &&openSeat&&, Requested By : &&requestor&&, Requested Timestamp : &&requested&&, Functional Mgr (on CC) : &&functionalMgr&&, PES Level : &&level&&';
     private static $pesEmailPatterns = array(
         '/&&name&&/',
         '/&&email&&/',
@@ -162,6 +162,7 @@ class personRecord extends DbRecord
         '/&&requestor&&/',
         '/&&requested&&/',
         '/&&functionalMgr&&/',
+        '/&&level&&/',
     );
 
 
@@ -768,6 +769,7 @@ class personRecord extends DbRecord
     <div class='form-group' >
         <div class='col-sm-6 form-required'>
                <select class='form-control select select2' id='pesLevel'
+               				  required='required'
                               name='PES_LEVEL'
                               <?=!empty($this->PES_LEVEL) ? ' disabled ' : null;?>
                               <?=empty($this->PES_LEVEL) ? " data-toggle='tooltip' title='Please select appropriate PES LEVEL'" : " data-toggle='tooltip' title='Contact PES Team to change PES LEVEL'";?>
@@ -789,12 +791,6 @@ class personRecord extends DbRecord
 		  <input class="form-control" id="pes_recheck_date_db2" name="pesRecheckDate" value="<?=$this->PES_RECHECK_DATE?>" type="hidden" >
       </div>
     </div>
-
-
-
-
-
-
 </div>
 </div>
 
@@ -1383,6 +1379,7 @@ class personRecord extends DbRecord
         $openSeat = !empty($this->OPEN_SEAT_NUMBER) ? $this->OPEN_SEAT_NUMBER : "open seat/hiring";
         $lob = !empty($this->LOB) ? $this->LOB : "lob";
         $role = !empty($this->ROLE_ON_THE_ACCOUNT) ? $this->ROLE_ON_THE_ACCOUNT : "role";
+        $level = !empty($this->PES_LEVEL) ? $this->PES_LEVEL : personTable::PES_LEVEL_TWO;
 
         $now = new \DateTime();
         $replacements = array($firstName . " " . $lastName,
@@ -1395,7 +1392,9 @@ class personRecord extends DbRecord
                               $openSeat,
                               $_SESSION['ssoEmail'],
                               $now->format('Y-m-d H:i:s'),
-                              $fmEmail);
+                              $fmEmail,
+                              $level
+        );
         $message = preg_replace(self::$pesEmailPatterns, $replacements, self::$pesEmailBody);
 
         \itdq\BlueMail::send_mail(self::$pesTaskId, 'vBAC PES Request - ' . $this->CNUM ." (" . trim($this->FIRST_NAME) . " " . trim($this->LAST_NAME) . ")", $message, 'vbacNoReply@uk.ibm.com');
