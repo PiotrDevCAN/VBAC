@@ -62,9 +62,8 @@ body {
 <div class="panel panel-default">
 <div class='panel-body'>
 <ul class='helpLink'>
-<li><a href='https://w3.tap.ibm.com/medialibrary/media_set_view?id=47864' target='_blank' class=''>User Guide and Training Videos</a></li>
-<li><a href='http://w3.tap.ibm.com/data/medialibrary/media/419943.doc/1048424/2018_05_03_2111_vBAC_FAQs.doc' target='_blank' class=''>FAQ</a></li>
-
+<li><a href='https://ibm.ent.box.com/folder/83248737881' target='_blank' class=''>User Guide</a>&nbsp;<small>(Request Access from <a href='mailto:Aurora.Central.PMO@uk.ibm.com'>Aurora Central PMO/UK/IBM</a>)</small></li>
+<li><a href='https://yourlearning.ibm.com/#channel/CNL_LCB_1547052865067' target='_blank' class=''>Ventus Your Learning</a></li>
 
 <li class=' feedback'>Questions
 <div id='feedbackDiv'>
@@ -81,8 +80,8 @@ body {
 </div>
 </form>
 </div>
-<li>Contact IAM Support : <a href='mailto:IBM.LBG.IAM.Requests@uk.ibm.com'>IBM LBG IAM Requests/UK/IBM</a> with any questions regarding requests within vBAC/Process/etc</li>
-<li>Contact vBAC Application Support on Slack&nbsp;<a href='https://ventusdelivery.slack.com/messages/C8DLE1DFH/' target='_blank' ># sm-cognitive-delivery</a> if you experience a bug<br/><small>Please note: This team only support the code behind vBAC they do not support the boarding/access control processes themselves</small></li>
+<li>For ID and Access process issues please contact  :<a href='mailto:IBM.LBG.IAM.Requests@uk.ibm.com'>IBM LBG IAM Requests/UK/IBM</a></li>
+<li>For technical issues please contact application support :<a href='https://ventusdelivery.slack.com/messages/C8DLE1DFH/' target='_blank' ># sm-cognitive-delivery</a></li>
 </ul>
 </div>
 </div>
