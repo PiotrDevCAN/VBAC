@@ -208,8 +208,10 @@ class personRecord extends DbRecord
     private static $pesClearedEmail = 'Hello &&candidate&&,
                                               <br/>I can confirm that you have successfully passed Lloyds Bank PES Screening, effective from &&effectiveDate&&
                                               <br/>If you need any more information regarding your PES clearance, please contact the taskid &&taskid&&.
-                                              <br/>You are now required to successfully complete the mandatory Aurora Security Education for IBMers.
-                                              <br/>Please contact <a href="mailto:Aurora.Central.PMO@uk.ibm.com">Aurora Central PMO/UK/IBM</a> to gain access to these self-paced online courses which are available here:- <a href="https://lt.be.ibm.com/aurora">https://lt.be.ibm.com/aurora</a>
+
+                                              <br/>If this is the first time you have been PES Cleared for Lloyds Bank, you are required to successfully complete the mandatory Aurora Security Education for IBMers.
+                                              <br/>If you have previously successfully completed the Aurora Security Education, then this requirement does not apply.
+                                              <br/>To undertake the training, first contact <a href="mailto:Aurora.Central.PMO@uk.ibm.com">Aurora Central PMO/UK/IBM</a> who will grant you access to these self-paced online courses, which are available here:- <a href="https://lt.be.ibm.com/aurora">https://lt.be.ibm.com/aurora</a>
                                               <br/>Please note that your PES clearance will require revalidation after 1 or 3 years (depending on your access levels), you will be contacted 8 weeks before your revalidation date with instructions.
                                               <br/>Many Thanks for your cooperation,';
     private static $pesClearedEmailPattern = array('/&&candidate&&/','/&&effectiveDate&&/','/&&taskid&&/');
