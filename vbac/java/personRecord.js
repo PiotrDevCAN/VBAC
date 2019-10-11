@@ -270,6 +270,8 @@ function personRecord() {
   this.listenForStopOffBoarding = function(){
 		$(document).on('click','.btnStopOffboarding', function(e){
 		   console.log(this);
+		   $(this).addClass('spinning');
+	       $(this).attr('disabled',true);
 			var data = $(this).data();
 			console.log(data);
 		   $.ajax({
@@ -280,6 +282,8 @@ function personRecord() {
 		    	   personWithSubPRecord.table.ajax.reload();
 		           console.log(result);
 		           var resultObj = JSON.parse(result);
+		           $(this).removeClass('spinning');
+		           $(this).attr('disabled',false);
 		           if(resultObj.success==true){
 		        	   var message = "<div class=panel-heading><h3 class=panel-title>Success</h3>";
 		               message += "<br/><h4>Offboarding has been STOPPED</h4></br>";
@@ -305,6 +309,8 @@ function personRecord() {
 	   console.log(this);
 		var data = $(this).data();
 		console.log(data);
+		 $(this).addClass('spinning');
+		 $(this).attr('disabled',true);
 	   $.ajax({
 		   url: "ajax/completeOffboarding.php",
 	       type: 'POST',
@@ -313,6 +319,8 @@ function personRecord() {
 	    	   personWithSubPRecord.table.ajax.reload();
 	           console.log(result);
 	           var resultObj = JSON.parse(result);
+	           $(this).removeClass('spinning');
+	           $(this).attr('disabled',false);
 	           if(resultObj.success==true){
 	        	   var message = "<div class=panel-heading><h3 class=panel-title>Success</h3>";
 	               message += "<br/><h4>Offboarding has been completed</h4></br>";
