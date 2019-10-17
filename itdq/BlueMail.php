@@ -56,18 +56,6 @@ class BlueMail
                 $data['attachments'][] = array('attachment'=>$attachment);
             }
         }
-
-        echo "<pre>";
-        var_dump($bccRecipients);
-        var_dump($data);
-        var_dump($attachments);
-
-
-        echo "Email:" . $_SERVER['email'];
-        die('sending email');
-
-
-
         switch (trim($_SERVER['email'])) {
             case 'dev':
             case 'user':
@@ -118,6 +106,10 @@ class BlueMail
                 }
 
                 if(!$resp){
+
+                    echo "<br/>" . curl_errno($ch);
+                    echo "<br/>" . curl_error($ch);
+
                     throw new \Exception('Error trying to send email :' . $subject);
                 }
 
