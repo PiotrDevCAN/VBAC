@@ -16,7 +16,6 @@ class BlueMail
         , $asynchronous = true
         , array $attachments=array())
     {
-
         $emailLogRecordID = null;
 
         $cleanedTo = $to;
@@ -57,6 +56,17 @@ class BlueMail
                 $data['attachments'][] = array('attachment'=>$attachment);
             }
         }
+
+        echo "<pre>";
+        var_dump($bccRecipients);
+        var_dump($data);
+        var_dump($attachments);
+
+
+        echo "Email:" . $_SERVER['email'];
+        die('sending email');
+
+
 
         switch (trim($_SERVER['email'])) {
             case 'dev':

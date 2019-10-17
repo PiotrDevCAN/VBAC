@@ -21,7 +21,7 @@ switch ($table){
         $valueId = 'ROLE_ID';
         break;
     default:
-        throw new Exception('Unexpected Tablename passed in');
+        throw new \Exception('Unexpected Tablename passed in');
 }
 
 if($uid != 'newEntry'){

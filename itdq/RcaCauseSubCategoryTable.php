@@ -101,7 +101,7 @@ class RcaCauseSubCategoryTable extends DbTableTable
         $httpInfo = curl_getinfo($curlHandle);
         if ($httpInfo['http_code'] != '200') {
             var_dump($httpInfo);
-            throw new Exception("Unable to retrive RCA CATEGORIES from DPULSE", 460);
+            throw new \Exception("Unable to retrive RCA CATEGORIES from DPULSE", 460);
         }
 
         $rcaCauseSubCategoryDom = new \DOMDocument();

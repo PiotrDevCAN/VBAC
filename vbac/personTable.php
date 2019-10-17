@@ -1089,7 +1089,7 @@ class personTable extends DbTable {
         return true;
     }
 
-    function flagOffboarding ($cnum){
+    function flagOffboarding ($cnum, $revalidationStatusWas, $notesId){
         if(!empty($cnum)){
             $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
             $sql .= " SET REVALIDATION_STATUS= CONCAT(CONCAT(TRIM('" . personRecord::REVALIDATED_OFFBOARDING . "'),':'),REVALIDATION_STATUS),  REVALIDATION_DATE_FIELD = current date ";
@@ -1103,9 +1103,9 @@ class personTable extends DbTable {
             }
 
             $this->notifyFmOfRevalStatusChange($cnum, personRecord::REVALIDATED_OFFBOARDING);
-            pesEmail::notifyPesTeamOfOffboarding($cnum);
+            pesEmail::notifyPesTeamOfOffboarding($cnum, $revalidationStatusWas, $notesId);
 
-            AuditTable::audit("CNUM: $cnum  has been flagged as :" . personRecord::REVALIDATED_OFFBOARDING,AuditTable::RECORD_TYPE_AUDIT);
+            AuditTable::audit("CNUM: $cnum (Reval:$revalidationStatusWas) has been flagged as :" . personRecord::REVALIDATED_OFFBOARDING,AuditTable::RECORD_TYPE_AUDIT);
             return true;
         }
 

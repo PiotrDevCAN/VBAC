@@ -53,7 +53,7 @@ foreach ($allOrderItTypes as $orderItType){
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __FILE__, __LINE__, $sql);
-            throw new Exception('error finding approvers for varb process');
+            throw new \Exception('error finding approvers for varb process');
         }
 
         $allApproversForType = array();
