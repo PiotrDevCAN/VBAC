@@ -1513,6 +1513,7 @@ class personTable extends DbTable {
                 $pesStatusWithButton.= " data-email='" . $email . "' ";
                 $pesStatusWithButton.= " data-pesdaterequested='" .trim($row['PES_DATE_REQUESTED']) . "' ";
                 $pesStatusWithButton.= " data-pesrequestor='" .trim($row['PES_REQUESTOR']) . "' ";
+                $pesStatusWithButton.= " data-revalidationstatus='" .trim($row['REVALIDATION_STATUS']) . "' ";
                 $pesStatusWithButton.= " data-pesstatus='" .$status . "' ";
                 $pesStatusWithButton.= array_key_exists('PASSPORT_FIRST_NAME', $row) ?  " data-passportfirst='" .$passportFirst . "' " : null;
                 $pesStatusWithButton.= array_key_exists('PASSPORT_SURNAME', $row) ? " data-passportsurname='" .$passportSurname . "' " : null;

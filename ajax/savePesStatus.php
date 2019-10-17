@@ -65,15 +65,17 @@ try {
             case personRecord::PES_STATUS_REMOVED:
             case personRecord::PES_STATUS_DECLINED:
             case personRecord::PES_STATUS_FAILED:
+            case personRecord::PES_STATUS_LEFT_IBM:
+            case personRecord::PES_STATUS_REVOKED:
+                 if($_POST['psm_revalidationstatus']==personRecord::REVALIDATED_PREBOARDER) {
+                     $person->initiateOffboarding();
+                 }
+                 $notificationStatus = 'Email not applicable';        ;
+                 break;
             case personRecord::PES_STATUS_INITIATED:
             case personRecord::PES_STATUS_REQUESTED:
-            case personRecord::PES_STATUS_EXCEPTION:
-            case personRecord::PES_STATUS_PROVISIONAL;
-            case personRecord::PES_STATUS_RECHECK_REQ;
-            case personRecord::PES_STATUS_LEFT_IBM;
-            case personRecord::PES_STATUS_REVOKED;
                 $notificationStatus = 'Email not applicable';
-                 break;
+                break;
             case personRecord::PES_STATUS_CLEARED:
             case personRecord::PES_STATUS_CLEARED_PERSONAL:
             case personRecord::PES_STATUS_CANCEL_REQ:

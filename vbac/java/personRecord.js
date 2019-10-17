@@ -1622,6 +1622,7 @@ function personRecord() {
            var cnum = ($(this).data('cnum'));
            var notesid = ($(this).data('notesid'));
            var email = ($(this).data('email'));
+           var revalidationStatus = $(this).data('revalidationstatus');
            
            console.log($(this).data('passportfirst'));
            
@@ -1642,6 +1643,7 @@ function personRecord() {
            var status  = ($(this).data('pesstatus'));
            $('#psm_notesid').val(notesid);
            $('#psm_cnum').val(cnum);
+           $('#psm_revalidationstatus').val(revalidationStatus);
 
            $('#amendPesStatusModal').on('shown.bs.modal', { status: status}, function (e) {
                $('#psm_status').select2();

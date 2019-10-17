@@ -1112,6 +1112,7 @@ class personRecord extends DbRecord
 
            <button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
           </div>
+          <input id='psm_revalidationstatus' name='psm_revalidationstatus' type='hidden' />
           </form>
         </div>
       </div>
