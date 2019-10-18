@@ -319,8 +319,6 @@ function personRecord() {
 	    	   personWithSubPRecord.table.ajax.reload();
 	           console.log(result);
 	           var resultObj = JSON.parse(result);
-	           $(this).removeClass('spinning');
-	           $(this).attr('disabled',false);
 	           if(resultObj.success==true){
 	        	   var message = "<div class=panel-heading><h3 class=panel-title>Success</h3>";
 	               message += "<br/><h4>Offboarding has been completed</h4></br>";
