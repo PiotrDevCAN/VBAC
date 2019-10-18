@@ -125,6 +125,7 @@ function personRecord() {
 			   console.log(this);
 				var data = $(this).data();
 				console.log(data);
+				$(this).addClass('spinning').attr('disabled',true);
 			   $.ajax({
 				   url: "ajax/deoffBoarding.php",
 			       type: 'POST',
