@@ -245,7 +245,7 @@ class pesTrackerTable extends DbTable{
             </span>
             </div>
             </td>
-            <td class='nonSearchable'><?=personTable::getPesStatusWithButtons($row)['display']?></td>
+            <td class='nonSearchable pesStatusCell'><?=personTable::getPesStatusWithButtons($row)['display']?></td>
             <td><?=pesTrackerTable::getCellContentsForPesLevel($row)?></td>
             <td class='pesCommentsTd'><textarea rows="3" cols="20"  data-cnum='<?=$cnum?>'></textarea>
             <button class='btn btn-default btn-xs btnPesSaveComment accessPes accessCdi' data-setpesto='Yes' data-toggle="tooltip" data-placement="top" title="Save Comment" ><span class="glyphicon glyphicon-save" ></span></button>

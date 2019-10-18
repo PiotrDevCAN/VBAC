@@ -24,6 +24,7 @@ try {
     $personData = $personTable->getRecord($person);
     $person->setFromArray($personData);
 
+    $formattedPesStatusField = personTable::getPesStatusWithButtons($personData);
 
     if(array_key_exists('psm_passportFirst', $_POST)){
         /// We've been called from the PES TRACKER Screen;
@@ -45,7 +46,7 @@ try {
         $row['EMAIL_ADDRESS'] = $personData['EMAIL_ADDRESS'];
         $row['FIRST_NAME']    = $personData['FIRST_NAME'];
         $row['LAST_NAME']     = $personData['LAST_NAME'];
-        $formattedEmailField = pesTrackerTable::formatEmailFieldOnTracker($row);
+        $formattedEmailField  = pesTrackerTable::formatEmailFieldOnTracker($row);
     }
 
     AuditTable::audit("Saved Person <pre>" . print_r($person,true) . "</pre>", AuditTable::RECORD_TYPE_DETAILS);
@@ -68,9 +69,11 @@ try {
             case personRecord::PES_STATUS_LEFT_IBM:
             case personRecord::PES_STATUS_REVOKED:
                  if($_POST['psm_revalidationstatus']==personRecord::REVALIDATED_PREBOARDER) {
-                     $person->initiateOffboarding();
+                     $person->informPmoOfPesStatusChange($_POST['psm_status']);
+                     $notificationStatus = 'Email sent to PMO. PES Status is:' . $_POST['psm_status'];
+                 } else {
+                    $notificationStatus = 'Email not applicable';
                  }
-                 $notificationStatus = 'Email not applicable';        ;
                  break;
             case personRecord::PES_STATUS_INITIATED:
             case personRecord::PES_STATUS_REQUESTED:
@@ -102,6 +105,9 @@ try {
 
 $messages = ob_get_clean();
 $success = $success && empty($messages);
-$response = array('success'=>$success,'messages'=>$messages, "emailResponse"=>$notificationStatus,"cnum"=>$_POST['psm_cnum'], "formattedEmailField"=>$formattedEmailField);
+$response = array('success'=>$success,'messages'=>$messages, "emailResponse"=>$notificationStatus,"cnum"=>$_POST['psm_cnum']
+                , 'formattedEmailField'=>$formattedEmailField
+                , 'formattedPesStatusField'=>$formattedPesStatusField
+);
 $jse = json_encode($response);
 echo $jse ? $jse : json_encode(array('success'=>false,'messages'=>'Failed to json_encode : ' . json_last_error() . json_last_error_msg()));

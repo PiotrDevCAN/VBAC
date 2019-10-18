@@ -123,11 +123,11 @@ class personRecord extends DbRecord
     public static $cio = array('Commercial','Cross CIO Leadership','Cyber', 'Digital','Divestment','GOFE','IT 4 IT','Insurance','Retail','Sandbox','TRP','tbc');
 
     public static $pesTaskId = array('lbgvetpr@uk.ibm.com'); // Only first entry will be used as the "contact" in the PES status emails.
-    public static $pmoTaskId = array('Aurora.On.and.Off.Boarding.support@uk.ibm.com');
+    public static $pmoTaskId = array('aurora.central.pmo@uk.ibm.com');
     public static $orderITCtbTaskId = array('jeemohan@in.ibm.com');
-    public static $orderITNonCtbTaskId = array('Aurora.On.and.Off.Boarding.support@uk.ibm.com');
-    public static $orderITBauTaskId = array('Aurora.On.and.Off.Boarding.support@uk.ibm.com');
-    public static $orderITNonBauTaskId = array('Aurora.On.and.Off.Boarding.support@uk.ibm.com');
+    public static $orderITNonCtbTaskId = array('aurora.central.pmo@uk.ibm.com');
+    public static $orderITBauTaskId = array('aurora.central.pmo@uk.ibm.com');
+    public static $orderITNonBauTaskId = array('aurora.central.pmo@uk.ibm.com');
     public static $smCdiAuditEmail = 'e3h3j0u9u6l2q3a3@ventusdelivery.slack.com';
     //private static $pesTaskId = 'rob.daniel@uk.ibm.com';
     //private static $pesTaskId    = array('rob.daniel@uk.ibm.com', 'carrabooth@uk.ibm.com');
@@ -166,31 +166,25 @@ class personRecord extends DbRecord
     );
 
 
-//     private static $pesStatusChangeEmailBody = '<table width="100%" border="0"   cellpadding="0">
-//                              <tr><td align="center">
-//                                 <table width="50%">
-//                                     <tr><td colspan="2" style="font-size:16px;padding-bottom:10px"">Please Note the<b>PES STATUS</b> has changed for the following individual:</td></tr>
-//                                     <tr><th style="background-color:silver;font-size:16px">Name</th><td style="font-size:20px">&&name&&</td></tr>
-//                                     <tr><th style="background-color:silver;font-size:16px">Email Address</th><td style="font-size:20px">&&email&&</td></tr>
-//                                     <tr><th style="background-color:silver;font-size:16px">Notes Id</th><td style="font-size:20px">&&notesid&&</td></tr>
-
-//                                     <tr><th style="background-color:SkyBlue;font-size:18px">Status Is</th><td style="font-size:18px">&&statusIs&&</td></tr>
-
-//                                     <tr><th style="background-color:WhiteSmoke;font-size:16px">Changed By</th><td style="font-size:16px">&&changeor&&</td></tr>
-//                                     <tr><th style="background-color:WhiteSmoke;font-size:16px">Changed Timestamp</th><td style="font-size:16px">&&changed&&</td></tr>
-//                                     <tr><th style="background-color:WhiteSmoke;font-size:16px">Functional Mgr</th><td style="font-size:16px">&&functionalMgr&&</td></tr>
-//                                 </table>
-//                             </td></tr>
-//                             </table>';
-//     private static $pesStatusChangeEmailPatterns = array(
-//         '/&&name&&/',
-//         '/&&email&&/',
-//         '/&&notesid&&/',
-//         '/&&StatusIs&&/',
-//         '/&&changeor&&/',
-//         '/&&changed&&/',
-//         '/&&functionalMgr&&/',
-//     );
+    private static $preboarderStatusChangeEmailBody = '<table width="100%" border="0"   cellpadding="0">
+                             <tr><td align="center">
+                                <table width="50%">
+                                    <tr><td colspan="2" style="font-size:16px;padding-bottom:10px"">Please Note the <b>PES STATUS</b> for a <b>Pre-Boarder</b> has changed :</td></tr>
+                                    <tr><th style="background-color:silver;font-size:16px">Email Address</th><td style="font-size:20px">&&email&&</td></tr>
+                                    <tr><th style="background-color:silver;font-size:16px">Notes Id</th><td style="font-size:20px">&&notesid&&</td></tr>
+                                    <tr><th style="background-color:SkyBlue;font-size:18px">Status Is</th><td style="font-size:18px">&&StatusIs&&</td></tr>
+                                    <tr><th style="background-color:WhiteSmoke;font-size:16px">Changed By</th><td style="font-size:16px">&&changeor&&</td></tr>
+                                    <tr><th style="background-color:WhiteSmoke;font-size:16px">Changed Date</th><td style="font-size:16px">&&changed&&</td></tr>
+                                </table>
+                            </td></tr>
+                            </table>';
+    private static $preboarderStatusChangeEmailPattern = array(
+        '/&&email&&/',
+        '/&&notesid&&/',
+        '/&&StatusIs&&/',
+        '/&&changeor&&/',
+        '/&&changed&&/'
+    );
 
 
     private static $pesClearedPersonalEmail = 'Hello &&candidate&&,
@@ -1558,6 +1552,22 @@ class personRecord extends DbRecord
             \itdq\BlueMail::send_mail($to, 'CBN Initiation Request' , $emailMessage, 'vbacNoReply@uk.ibm.com',$cc,$bcc);
         }
    }
+
+   function informPmoOfPesStatusChange($newPesStatus){
+       $to = self::$pmoTaskId;
+
+       $emailAddress = !empty($this->EMAIL_ADDRESS) ? $this->EMAIL_ADDRESS : "emailAddress  missing from vBAC";
+       $notesId = !empty($this->NOTES_ID) ? $this->NOTES_ID : "NotesId  missing from vBAC";
+
+       $now = new \DateTime();
+       $replacements = array($emailAddress,$notesId,$newPesStatus,$_SESSION['ssoEmail'],$now->format('d-m-Y'));
+       $emailMessage = preg_replace(self::$preboarderStatusChangeEmailPattern, $replacements, self::$preboarderStatusChangeEmailBody);
+
+       set_time_limit(60);
+       \itdq\BlueMail::send_mail($to, 'Pre-Boarder PES Status Change' , $emailMessage, 'vbacNoReply@uk.ibm.com');
+   }
+
+
 
 //    static function employeeTypeMappingToDb2(){
 //        $sqlDrop  = "DROP TABLE SESSION.EMPLOYEE_TYPE_MAPPING;";
