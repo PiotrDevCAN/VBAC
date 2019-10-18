@@ -808,6 +808,20 @@ class personTable extends DbTable {
 
     }
 
+    static function getRevalidationFromCnum($cnum){
+        $sql = " SELECT REVALIDATION_STATUS FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
+        $sql .= " WHERE CNUM = '" . db2_escape_string(strtoupper(trim($cnum))) . "' ";
+
+        $resultSet = db2_exec($_SESSION['conn'], $sql);
+        if(!$resultSet){
+            DbTable::displayErrorMessage($resultSet, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+
+        $row = db2_fetch_assoc($resultSet);
+        $revalidationStatus = trim($row['REVALIDATION_STATUS']);
+        return $revalidationStatus;
+    }
 
 
     static function getCnumFromEmail($emailAddress){
@@ -1111,7 +1125,7 @@ class personTable extends DbTable {
 
     }
 
-    function flagOffboarded ($cnum){
+    function flagOffboarded ($cnum, $revalidationStatus){
         if(!empty($cnum)){
             $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
             $sql .= " SET REVALIDATION_STATUS=CONCAT(CONCAT('" . personRecord::REVALIDATED_OFFBOARDED . "',':'),SUBSTR(REVALIDATION_STATUS,13)), REVALIDATION_DATE_FIELD = current date, OFFBOARDED_DATE = current date ";
@@ -1125,7 +1139,7 @@ class personTable extends DbTable {
             }
 
             $this->notifyFmOfRevalStatusChange($cnum, personRecord::REVALIDATED_OFFBOARDED);
-            pesEmail::notifyPesTeamOfOffboarded($cnum);
+            pesEmail::notifyPesTeamOfOffboarded($cnum,$revalidationStatus);
             AuditTable::audit("CNUM: $cnum  has been flagged as :" . personRecord::REVALIDATED_OFFBOARDED,AuditTable::RECORD_TYPE_AUDIT);
             return true;
         }
