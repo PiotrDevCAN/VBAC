@@ -22,8 +22,13 @@ echo "</pre>";
 echo "<pre>";
 var_dump(count($ableToOwn));
 
-$difference = array_diff_key($ableToOwn, $activePeople);
+$difference1 = array_diff_key($ableToOwn, $activePeople);
+$difference2 = array_diff_key($activePeople, $ableToOwn);
 echo "</pre>";
 echo "<pre>";
-var_dump($difference);
+
+echo "<pre>";
+var_dump($difference1);
+echo "</pre>";
+var_dump($difference2);
 echo "</pre>";
