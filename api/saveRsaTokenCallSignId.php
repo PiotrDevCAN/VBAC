@@ -29,8 +29,8 @@ $cnumValidated = true;
 
 if(isset($_REQUEST['CNUM'])){
     $activePeople = $personTable->activePersonPredicate();
-    $cnumArray = $loader->load('CNUM',allTables::$PERSON, $activePeople . " AND (CNUM='" . db2_escape_string(trim($_REQUEST['CNUM'])) . "') ");    
-    $cnumValidated = isset($cnumArray[trim($_REQUEST['CNUM'])]); 
+    $cnumArray = $loader->load('CNUM',allTables::$PERSON, $activePeople . " AND (CNUM='" . db2_escape_string(trim($_REQUEST['CNUM'])) . "') ");
+    $cnumValidated = isset($cnumArray[trim($_REQUEST['CNUM'])]);
 } else {
     $cnumValidated = false;
 }
@@ -38,20 +38,20 @@ if(isset($_REQUEST['CNUM'])){
 if(isset($_REQUEST['RSA_TOKEN'])){
     $rsaTokenLength = (int)$personTable->getColumnLength('RSA_TOKEN');
     $validRsaTokenLength = (strlen(trim($_REQUEST['RSA_TOKEN']))==$rsaTokenLength);
-    
+
     $allRsaToken = $loader->load('RSA_TOKEN',allTables::$PERSON);
     $duplicateRsaToken = isset($allRsaToken[trim($_REQUEST['RSA_TOKEN'])]);
 
-    $rsaTokenSupplied = ($validRsaTokenLength && !$duplicateRsaToken);   
+    $rsaTokenSupplied = ($validRsaTokenLength && !$duplicateRsaToken);
 }
 
 if(isset($_REQUEST['CALLSIGN_ID'])){
     $callSignIdLength = (int)$personTable->getColumnLength('CALLSIGN_ID');
-    $validCallSignIdLength = (strlen(trim($_REQUEST['CALLSIGN_ID']))==$callSignIdLength);
-    
+    $validCallSignIdLength = (strlen(trim($_REQUEST['CALLSIGN_ID']))<=$callSignIdLength);
+
     $allCallSIgnId = $loader->load('CALLSIGN_ID',allTables::$PERSON);
     $duplicateCallSignId = isset($allCallSIgnId[trim($_REQUEST['CALLSIGN_ID'])]);
-    
+
     $callSignIdSupplied = ($validCallSignIdLength && !$duplicateCallSignId);
 }
 
@@ -60,22 +60,22 @@ if( !$rsaTokenSupplied or !$callSignIdSupplied or !$cnumValidated ){
     ob_clean();
     $response = array();
     $response['success'] = 'false';
-    $response['messages'] = 'Invalid Parameters provided. Details follow:';    
+    $response['messages'] = 'Invalid Parameters provided. Details follow:';
     if(!$rsaTokenSupplied){
         $response['messages'].= $duplicateRsaToken ? " RSA Token is already allocated" : null;
         $response['messages'].= !$validRsaTokenLength ? " RSA Token supplied is not $rsaTokenLength bytes long": null;
-    } 
+    }
     if(!$callSignIdSupplied){
         $response['messages'].= $duplicateCallSignId ? " Call Sign ID is already allocated" : null;
         $response['messages'].= !$validCallSignIdLength ? " Call Sign ID supplied is not $callSignIdLength bytes long": null;
-    } 
+    }
     if(!$cnumValidated){
         $response['messages'].= !isset($_REQUEST['CNUM']) ? " No CNUM parameter passed" : null;
         if(isset($_REQUEST['CNUM'])){
             $response['messages'].= !isset($cnumArray[$_REQUEST['CNUM']]) ? " CNUM not found as an 'active' person in the PERSON table " : null;
         }
     }
-    
+
     $response['parameters'] = print_r($_REQUEST,true);
     error_log('Invalid Parameters provided :' . json_encode($response , JSON_NUMERIC_CHECK));
     http_response_code(422);
@@ -85,19 +85,19 @@ if( !$rsaTokenSupplied or !$callSignIdSupplied or !$cnumValidated ){
 
 // Save here.
 
-$sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON ;    
+$sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON ;
 $sql.= " SET ";
 $sql.= isset($_REQUEST['RSA_TOKEN']) ? " RSA_TOKEN='" . db2_escape_string(trim($_REQUEST['RSA_TOKEN'])) . "' " : null;
 $sql.= isset($_REQUEST['RSA_TOKEN']) && isset($_REQUEST['CALLSIGN_ID']) ? " , " : null;
 $sql.= isset($_REQUEST['CALLSIGN_ID']) ? " CALLSIGN_ID='" .  db2_escape_string(trim($_REQUEST['CALLSIGN_ID'])) . "' " : null;
 $sql.= " WHERE CNUM='" . db2_escape_string($_REQUEST['CNUM']) . "' ";
-  
+
 $rs = db2_exec($_SESSION['conn'], $sql);
-    
+
 if(!$rs){
     echo db2_stmt_error();
     echo db2_stmt_errormsg();
-    DbTable::displayErrorMessage($rs, '', '', $sql);    
+    DbTable::displayErrorMessage($rs, '', '', $sql);
 }
 
 $messages = ob_get_clean();
