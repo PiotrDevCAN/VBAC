@@ -68,6 +68,8 @@ if($hits==0){
     echo "No Owner found for ";
     echo $rsaTokenSupplied ? " RSA TOKEN:" . $_REQUEST['RSA_TOKEN'] : null;
     echo $callSignIdSupplied ? " CALLSIGN_ID:" . $_REQUEST['CALLSIGN_ID'] : null;
+    $response['notesid'] = '';
+    $response['cnum']= '';
 } else if($hits>1){
     echo "Multiple($hits) Owners found";
     $response['notesid'] = $notesId;
@@ -84,10 +86,5 @@ $response['messages'] = $messages;
 
 
 
-if(!$success){
-    ob_clean();
-    echo('TokenOwnerError:' . json_encode($response , JSON_NUMERIC_CHECK));
-    http_response_code(404);
-}
-
+ob_clean();
 echo json_encode($response , JSON_NUMERIC_CHECK);
