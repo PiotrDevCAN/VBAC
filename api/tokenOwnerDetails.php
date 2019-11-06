@@ -61,7 +61,7 @@ while (($row = db2_fetch_assoc($rs))==true) {
     $hits++;
     $row = array_map('trim', $row);
     $notesId[] = $row['NOTES_ID'];
-    $cnum[] = $row['CNUM'];
+    $cnum[] = (string)$row['CNUM'];
 }
 
 if($hits==0){
