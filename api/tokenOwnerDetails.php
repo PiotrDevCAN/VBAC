@@ -76,7 +76,7 @@ if($hits==0){
     $response['cnum']= $cnum;
 } else {
     $response['notesid'] = $notesId[0];
-    $response['cnum']= $cnum[0];
+    $response['cnum']= (string)$cnum[0];
 }
 
 $messages = ob_get_clean();
@@ -87,4 +87,4 @@ $response['messages'] = $messages;
 
 
 ob_clean();
-echo json_encode($response , JSON_NUMERIC_CHECK);
+echo json_encode($response);
