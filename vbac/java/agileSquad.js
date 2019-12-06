@@ -100,10 +100,13 @@ function agileSquad() {
 			      		$('#modalInfo').modal('show');
 		      		}
 		      		$('.spinning').removeClass('spinning');
+		      		$('#SQUAD_NUMBER').val('').trigger('change').attr('disabled',false);
+		      		$('#SQUAD_TYPE').val('');
+		      		$('#SQUAD_NAME').val('');
 		      		$('#TRIBE_NUMBER').val('').trigger('change').attr('disabled',false);
-		      		$('#TRIBE_NAME').val('');
-		      		$('#TRIBE_LEADER').val('');		
-		      		
+		      		$('#SHIFT').val('').trigger('change').attr('disabled',false);
+		      		$('#SQUAD_LEADER').val('');		
+		      		agileSquad.table.ajax.reload();
 		      	},
 		      	fail: function(response){
 			      	console.log('Failed');
