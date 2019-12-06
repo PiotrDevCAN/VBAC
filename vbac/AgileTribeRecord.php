@@ -23,7 +23,7 @@ class AgileTribeRecord extends DbRecord {
          <div class="form-group required" >
             <label for='TRIBE_NUMBER' class='col-sm-2 control-label ceta-label-left' data-toggle='tooltip' data-placement='top' title='Tribe Number'>Tribe Number</label>
         	<div class='col-md-4'>
-				<input id='TRIBE_NUMBER' name='TRIBE_NUMBER' class='form-control' type='number' min='<?=$nextAvailableTribeNumber?>' <?=$notEditable;?> value='<?=!empty($this->TRIBE_NUMBER) ? $this->TRIBE_NUMBER :$nextAvailableTribeNumber ; ?>' />
+				<input id='TRIBE_NUMBER' name='TRIBE_NUMBER' class='form-control' type='number'  <?=$notEditable;?> value='<?=!empty($this->TRIBE_NUMBER) ? $this->TRIBE_NUMBER :$nextAvailableTribeNumber ; ?>' />
             </div>
         </div>
         <div class="form-group required " >

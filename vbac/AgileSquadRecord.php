@@ -28,7 +28,7 @@ class AgileSquadRecord extends DbRecord {
          <div class="form-group required" >
             <label for=SQUAD_NUMBER class='col-sm-2 control-label ceta-label-left' data-toggle='tooltip' data-placement='top' title='Squad Number'>Squad Number</label>
         	<div class='col-md-4'>
-				<input id='SQUAD_NUMBER' name='SQUAD_NUMBER' class='form-control' type='number' min='<?=$nextAvailableSquadNumber?>' <?=$notEditable;?> value='<?=!empty($this->SQUAD_NUMBER) ? $this->SQUAD_NUMBER :$nextAvailableSquadNumber ; ?>' />
+				<input id='SQUAD_NUMBER' name='SQUAD_NUMBER' class='form-control' type='number' <?=$notEditable;?> value='<?=!empty($this->SQUAD_NUMBER) ? $this->SQUAD_NUMBER :$nextAvailableSquadNumber ; ?>' />
             </div>
         </div>
         <div class="form-group required " >
