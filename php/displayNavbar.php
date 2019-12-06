@@ -80,6 +80,15 @@ $adminMenu->addOption( new NavbarDivider('accessPmo accessCdi'));
 $adminMenu->addOption($odcDataUpload);
 
 
+$agileMenu      = new NavbarMenu('Agile');
+$tribes         = new NavbarOption('Tribes','pa_agileTribes.php','accessCdi accessPmo ');
+$squads         = new NavbarOption('Squad','pa_agileSquads.php','accessCdi accessPmo ');
+
+$agileMenu->addOption($tribes);
+$agileMenu->addOption($squads);
+
+
+
 
 $boarding       = new NavbarMenu('Boarding');
 $onBoarding     = new NavbarOption('OnBoard','pb_onboard.php','accessCdi accessPmo accessFm');
@@ -129,6 +138,7 @@ $reports->addOption($assetRemoval);
 
 $navbar->addMenu($cdiAdmin);
 $navbar->addMenu($adminMenu);
+$navbar->addMenu($agileMenu);
 $navbar->addMenu($boarding);
 $navbar->addMenu($access);
 $navbar->addMenu($reports);

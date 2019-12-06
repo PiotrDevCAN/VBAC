@@ -135,7 +135,7 @@ class DbTable
         'NOV' => '11',
         'DEC' => '12'
     );
-    
+
     const ROLLBACK_YES = true;
     const ROLLBACK_NO  = false;
 
@@ -977,21 +977,21 @@ class DbTable
         }
         return $rs;
     }
-    
+
     function InsertFromArray(array $insertArray, $withTimings = false, $rollbackIfError = true)
     {
         $preparedInsert = $this->prepareInsert($insertArray);
-        
-        
+
+
         $insert = -microtime(true);
         $rs = @db2_execute($preparedInsert, $insertArray);
         $insert += microtime(true);
         echo $withTimings ?  "Db2 Insert Time:" . sprintf('%f', $insert) . PHP_EOL : null;
-        
+
         if (! $rs) {
             $this->lastDb2StmtError = db2_stmt_error();
             $this->lastDb2StmtErrorMsg = db2_stmt_errormsg();
-            
+
             echo "<br/>Method:" . __METHOD__ . " Line:" .  __LINE__ ;
             echo "<br/>Insert Array:";
             echo "<pre>";
@@ -1095,7 +1095,7 @@ class DbTable
             if (! $rs) {
                 DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             }
-            return $rs;
+            return $rs==true;
         } else {
             return false;
         }
@@ -2163,7 +2163,7 @@ class DbTable
     function getTableName(){
         return $this->tableName;
     }
-    
+
     static function db2ErrorModal(){
         ?>
        <!-- Modal -->
@@ -2184,6 +2184,6 @@ class DbTable
         </div>
         <?php
     }
-    
+
 
 }

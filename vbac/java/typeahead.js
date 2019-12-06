@@ -4,7 +4,7 @@
 $(document).ready(function(){
 	var bluepages = new Bloodhound({
 	      datumTokenizer: Bloodhound.tokenizers.whitespace,
-		  queryTokenizer:  Bloodhound.tokenizers.whitespace,
+		  queryTokenizer: Bloodhound.tokenizers.whitespace,
 		  remote: {
 			//    http://unified-profile.w3ibm.mybluemix.net
 			//	  http://w3-services1.w3-969.ibm.com
@@ -21,6 +21,27 @@ $(document).ready(function(){
 		      },
 		  }
 		});
+	
+	var notesId = new Bloodhound({
+	      datumTokenizer: Bloodhound.tokenizers.whitespace,
+		  queryTokenizer: Bloodhound.tokenizers.whitespace,
+		  remote: {
+			//    http://unified-profile.w3ibm.mybluemix.net
+			//	  http://w3-services1.w3-969.ibm.com
+			url: 'http://unified-profile.w3ibm.mybluemix.net/myw3/unified-profile/v1/search/user?query=%QUERY&searchConfig=optimized_search',
+		    wildcard: '%QUERY',
+		    filter: function(data) {
+
+		        var dataObject = $.map(data.results, function(obj) {
+					console.log(obj.mail);
+					 var mail = typeof(obj.mail)=='undefined' ? 'unknown' : obj.mail[0];
+			         return { value: obj.notesEmail, cnum:obj.id, role: obj.role, preferredIdentity: obj.preferredIdentity }; });
+		        console.log(dataObject);
+			    return dataObject;
+		      },
+		  }
+		});
+	
 
 	$('.typeahead').typeahead(null, {
 		  limit : 3,
@@ -37,6 +58,24 @@ $(document).ready(function(){
 		  	suggestion: Handlebars.compile('<div> <img src="http://unified-profile.w3ibm.mybluemix.net/myw3/unified-profile-photo/v1/image/{{cnum}}?type=bp&def=blue&s=50" alt="Profile" height="42" width="42"> <strong>{{value}}</strong><br/><small>{{preferredIdentity}}<br/>{{role}}</small></div>')
 		  }
 		});
+	
+	$('.typeaheadNotesId').typeahead(null, {
+		  limit : 3,
+		  name: 'notesId',
+		  display: 'value',
+		  displayKey: 'value',
+		  source: notesId,
+		  templates: {
+		    empty: [
+		      '<div class="empty-messagexx">',
+		        'unable to find any IBMers that match the current query',
+		      '</div>'
+		    	].join('\n'),
+		  	suggestion: Handlebars.compile('<div> <img src="http://unified-profile.w3ibm.mybluemix.net/myw3/unified-profile-photo/v1/image/{{cnum}}?type=bp&def=blue&s=50" alt="Profile" height="42" width="42"> <strong>{{value}}</strong><br/><small>{{preferredIdentity}}<br/>{{role}}</small></div>')
+		  }
+		});
+	
+	
 
 // 	$('.typeahead').bind('typeahead:select', function(ev, suggestion) {
 // 		 $('#notesId').val(suggestion.notesEmail);

@@ -10,6 +10,9 @@ namespace vbac;
  */
 class allTables
 {
+    public static $AGILE_SQUAD     = 'AGILE_SQUAD';
+    public static $AGILE_TRIBE     = 'AGILE_TRIBE';
+
     public static $ASSET_REQUESTS     = 'ASSET_REQUESTS';
     public static $ASSET_REQUESTS_EVENTS  = 'ASSET_REQUESTS_EVENTS';
     public static $ASSET_REQUESTS_EVENTS_SUMMARY  = 'ASSET_REQUESTS_EVENTS_SUMMARY';
