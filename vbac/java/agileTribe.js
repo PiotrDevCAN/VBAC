@@ -95,7 +95,7 @@ function agileTribe() {
 			      		$('.modalInfo-body').html("<p>Save has encountered a problem</p><p>" + responseObj.message + "</p>");
 			      		$('#modalInfo').modal('show');
 		      		}
-		      		$('.spinning').removeClass('spinning');
+		      		$('.spinning').removeClass('spinning').attr('disabled',false);
 		      		$('#TRIBE_NUMBER').val('').trigger('change').attr('disabled',false);
 		      		$('#TRIBE_NAME').val('');
 		      		$('#TRIBE_LEADER').val('');		
