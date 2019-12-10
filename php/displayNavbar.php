@@ -69,10 +69,10 @@ $adminMenu->addOption( new NavbarDivider('accessPmo accessCdi'));
 $adminMenu->addOption($requestableAssets);
 $adminMenu->addOption( new NavbarDivider('accessPmo accessCdi accessUser accessFm'));
 $adminMenu->addOption($delegate);
-$adminMenu->addOption( new NavbarDivider('accessRes'));
+// $adminMenu->addOption( new NavbarDivider('accessRes'));
 // $adminMenu->addOption($ringFenced);
 
-$adminMenu->addOption( new NavbarDivider('accessCdi'));
+//$adminMenu->addOption( new NavbarDivider('accessCdi'));
 // $adminMenu->addOption($audit);
 // $adminMenu->addOption($email);
 $adminMenu->addOption( new NavbarDivider('accessPes accessCdi'));
