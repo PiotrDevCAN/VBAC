@@ -46,16 +46,18 @@ $personFinder   = new NavbarOption('Person Finder','pa_personFinder.php','access
 $revalidation   = new NavbarOption('Revalidation Portal','pa_revalidation.php','accessCdi accessPmo');
 $linkedReport   = new NavbarOption('Linked Portal','pa_pmoLinked.php','accessCdi accessPmo');
 // $initiateCBN    = new NavbarOption('Iniate CBN','pa_sendCbnEmail.php','accessCdi accessPmo');
-$control        = new NavbarOption('Control', 'pa_control.php','accessCdi accessPmo');
-$audit          = new NavbarOption('Audit Report', 'pa_auditListing.php','accessCdi accessPmo');
+// $control        = new NavbarOption('Control', 'pa_control.php','accessCdi accessPmo');
+// $audit          = new NavbarOption('Audit Report', 'pa_auditListing.php','accessCdi accessPmo');
 $requestableAssets  = new NavbarOption('Requestable Assets', 'pa_requestableAssets.php','accessCdi accessPmo');
-$ringFenced     = new NavbarOption('Ring Fencing', 'pa_ringFencing.php','accessRes');
+//$ringFenced     = new NavbarOption('Ring Fencing', 'pa_ringFencing.php','accessRes');
 $delegate       = new NavbarOption('Delegates', 'pc_delegate.php','accessCdi accessPmo accessFm accessUser');
 $pesTracker     = new NavbarOption('PES Tracker', 'pc_pesTracker.php','accessCdi accessPes');
 $pesStatusChange= new NavbarOption('PES Status Changes', 'pr_pesStatusChangeReport.php','accessCdi accessPes');
 $odcDataUpload  = new NavbarOption('ODC Access Upload', 'pc_odcAccessUpload.php','accessCdi accessPmo');
+// $email          = new NavbarOption('Email Log', 'pi_emailLog.php','accessCdi');
+$tribes         = new NavbarOption('Tribes','pa_agileTribes.php','accessCdi accessPmo ');
+$squads         = new NavbarOption('Squad','pa_agileSquads.php','accessCdi accessPmo ');
 
-$email          = new NavbarOption('Email Log', 'pi_emailLog.php','accessCdi');
 $adminMenu->addOption($pmo);
 $adminMenu->addOption($pmoLite);
 $adminMenu->addOption($personFinder);
@@ -63,26 +65,31 @@ $adminMenu->addOption($revalidation);
 $adminMenu->addOption($linkedReport);
 // $adminMenu->addOption($initiateCBN);
 $adminMenu->addOption( new NavbarDivider('accessPmo accessCdi'));
-$adminMenu->addOption($control);
+// $adminMenu->addOption($control);
 $adminMenu->addOption($requestableAssets);
 $adminMenu->addOption( new NavbarDivider('accessPmo accessCdi accessUser accessFm'));
 $adminMenu->addOption($delegate);
 $adminMenu->addOption( new NavbarDivider('accessRes'));
-$adminMenu->addOption($ringFenced);
+// $adminMenu->addOption($ringFenced);
 
 $adminMenu->addOption( new NavbarDivider('accessCdi'));
-$adminMenu->addOption($audit);
-$adminMenu->addOption($email);
+// $adminMenu->addOption($audit);
+// $adminMenu->addOption($email);
 $adminMenu->addOption( new NavbarDivider('accessPes accessCdi'));
 $adminMenu->addOption($pesTracker);
 $adminMenu->addOption($pesStatusChange);
 $adminMenu->addOption( new NavbarDivider('accessPmo accessCdi'));
 $adminMenu->addOption($odcDataUpload);
+$adminMenu->addOption( new NavbarDivider('accessPmo accessCdi'));
+$adminMenu->addOption($tribes);
+$adminMenu->addOption($squads);
 
 
-$agileMenu      = new NavbarMenu('Agile');
-$tribes         = new NavbarOption('Tribes','pa_agileTribes.php','accessCdi accessPmo ');
-$squads         = new NavbarOption('Squad','pa_agileSquads.php','accessCdi accessPmo ');
+
+
+
+// $agileMenu      = new NavbarMenu('Agile');
+
 
 $agileMenu->addOption($tribes);
 $agileMenu->addOption($squads);

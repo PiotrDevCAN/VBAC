@@ -13,12 +13,12 @@ ob_start();
 
 AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_POST,true) . "</b>",AuditTable::RECORD_TYPE_DETAILS);
 
-$agileSquadRecord = new AgileTribeRecord();
-$agileSquadRecord->setFromArray($_POST);
+$agileTribeRecord = new AgileTribeRecord();
+$agileTribeRecord->setFromArray($_POST);
 
 $agileTribeTable = new AgileTribeTable(allTables::$AGILE_TRIBE);
 
-$saveResult = $_POST['mode']==FormClass::$modeDEFINE ? $agileTribeTable->insert($agileSquadRecord) : $agileTribeTable->update($agileSquadRecord);
+$saveResult = $_POST['mode']==FormClass::$modeDEFINE ? $agileTribeTable->insert($agileTribeRecord) : $agileTribeTable->update($agileTribeRecord);
 
 $messages = ob_get_clean();
 $success = empty($messages);
