@@ -95,12 +95,13 @@ function personWithSubPRecord() {
                       { "data": "PMO_STATUS", "defaultContent": "" },
                       { "data": "PES_DATE_EVIDENCE", "defaultContent": "" },
                       { "data": "RSA_TOKEN", "defaultContent": "" },
-                      { "data": "CALLSIGN_ID", "defaultContent": "" },                
+                      { "data": "CALLSIGN_ID", "defaultContent": "" },
+                      { "data": "PROCESSING_STATUS", "defaultContent": "" },
+                      { "data": "PROCESSING_STATUS_CHANGED", "defaultContent": "" },  
                       { "data": "PES_LEVEL", "defaultContent": "" },
                       { "data": "PES_RECHECK_DATE", "defaultContent": "" },
                       { "data": "PES_CLEARED_DATE", "defaultContent": "" },
-                      { "data": "PROCESSING_STATUS", "defaultContent": "" },
-                      { "data": "PROCESSING_STATUS_CHANGED", "defaultContent": "" },                      
+                    
                       
                   ],
           columnDefs: [

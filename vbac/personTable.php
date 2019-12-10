@@ -1558,6 +1558,7 @@ class personTable extends DbTable {
         }
 
         if(isset($row['PROCESSING_STATUS']) && ( $row['PES_STATUS']== personRecord::PES_STATUS_INITIATED || $row['PES_STATUS']==personRecord::PES_STATUS_REQUESTED || $row['PES_STATUS']==personRecord::PES_STATUS_RECHECK_REQ ) ){
+
             $pesStatusWithButton .= "&nbsp;<button type='button' class='btn btn-default btn-xs btnTogglePesTrackerStatusDetails' aria-label='Left Align' data-toggle='tooltip' data-placement='top' title='See PES Tracker Status' >";
             $pesStatusWithButton .= !empty($row['PROCESSING_STATUS']) ? "&nbsp;<small>" . $row['PROCESSING_STATUS'] . "</small>&nbsp;" : null;
             $pesStatusWithButton .= "<span class='glyphicon glyphicon-search  ' aria-hidden='true' ></span>";

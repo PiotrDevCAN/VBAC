@@ -81,6 +81,9 @@ class personWithSubPRecord extends personRecord
     protected $RSA_TOKEN;
     protected $CALLSIGN_ID;
 
+    protected $PROCESSING_STATUS;
+    protected $PROCESSING_STATUS_CHANGED;
+
     protected $person_bio;
 
     function displayBoardingForm($mode){

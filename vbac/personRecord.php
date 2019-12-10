@@ -16,6 +16,8 @@ use DateInterval;
  *
  * @author gb001399
  *
+ * ALTER TABLE "ROB_DEV"."PERSON" ADD COLUMN "SQUAD_NUMBER" NUMERIC(5);
+ *
  */
 class personRecord extends DbRecord
 {
@@ -82,11 +84,15 @@ class personRecord extends DbRecord
     protected $PES_RECHECK_DATE;
     protected $PES_CLEARED_DATE;
 
-    protected $PROCESSING_STATUS;
-    protected $PROCESSING_STATUS_CHANGED;
-    protected $SUBPLATFORM;
+//     protected $PROCESSING_STATUS;
+//     protected $PROCESSING_STATUS_CHANGED;
+//     protected $SUBPLATFORM;
+
+//    protected $SQUAD_NUMBER;
 
     protected $person_bio;
+
+
 
 
 

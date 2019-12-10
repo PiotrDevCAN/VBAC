@@ -6,7 +6,6 @@ use vbac\personTable;
 
 $personRecord = new personWithSubPRecord();
 $headerCells = $personRecord->htmlHeaderCells();
-
 staticDataSubPlatformTable::prepareJsonObjectForSubPlatformSelect();
 
 ?>
