@@ -91,8 +91,8 @@ $adminMenu->addOption($squads);
 // $agileMenu      = new NavbarMenu('Agile');
 
 
-$agileMenu->addOption($tribes);
-$agileMenu->addOption($squads);
+// $agileMenu->addOption($tribes);
+// $agileMenu->addOption($squads);
 
 
 
@@ -145,7 +145,7 @@ $reports->addOption($assetRemoval);
 
 $navbar->addMenu($cdiAdmin);
 $navbar->addMenu($adminMenu);
-$navbar->addMenu($agileMenu);
+// $navbar->addMenu($agileMenu);
 $navbar->addMenu($boarding);
 $navbar->addMenu($access);
 $navbar->addMenu($reports);
