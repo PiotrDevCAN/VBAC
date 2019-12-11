@@ -84,18 +84,9 @@ class personRecord extends DbRecord
     protected $PES_RECHECK_DATE;
     protected $PES_CLEARED_DATE;
 
-//     protected $PROCESSING_STATUS;
-//     protected $PROCESSING_STATUS_CHANGED;
-//     protected $SUBPLATFORM;
-
-//    protected $SQUAD_NUMBER;
+    protected $SQUAD_NUMBER;
 
     protected $person_bio;
-
-
-
-
-
 
     // Fields to be edited in the DataTables Reports. Need to know their position in the array $row;
     const FIELD_CNUM = 0;
@@ -1279,6 +1270,90 @@ class personRecord extends DbRecord
       </div>
     <?php
     }
+
+  function editAgileSquadModal()
+  {
+  $loader = new Loader();
+  $allSquadNames = $loader->loadIndexed('SQUAD_NAME','SQUAD_NUMBER',allTables::$AGILE_SQUAD);
+  $allSquadLeaders = $loader->loadIndexed('SQUAD_LEADER','SQUAD_NUMBER',allTables::$AGILE_SQUAD);
+
+  $squadDetails = isset($this->SQUAD_NUMBER) ?  AgileSquadTable::getSquadDetails($this->SQUAD_NUMBER) : array();
+     ?>
+    <!-- Modal -->
+    <div id="editAgileSquadModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+          <div class="modal-header">
+             <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Edit Agile Squad</h4>
+          </div>
+          <div class="modal-body" >
+             <form id='editAgileSquadForm' class="form-horizontal"  method='post' >
+
+             <div class="form-group">
+    		 <label for="agileSquad">Squad</label>
+          		<select name='agileSquad' id='agileSquad' class='form-control' >
+          		<option value=''></option>
+          		<?php
+          		foreach ($allSquadNames as $squadNumber => $squadName) {
+          		    ?><option value='<?=$squadNumber;?>'
+          		    <?=(int)$squadNumber==(int)$this->SQUAD_NUMBER ? " selected " : null;?>
+          		    >
+          		    <?=$squadName;?>
+          		    <?=isset($allSquadLeaders[$squadNumber]) ? " (" . $allSquadLeaders[$squadNumber] . ")" : null;?>
+
+          		    </option>
+          		    <?php
+          		}
+          		?>
+             </select>
+          	 </div>
+             <div class="form-group">
+    		 <label for="agileSquadType">Squad Type</label>
+             <input type="text" class="form-control" id="agileSquadType" name="agileSquadType"
+                    value='<?=isset($squadDetails['SQUAD_TYPE'])? $squadDetails['SQUAD_TYPE'] : null ;?>'
+                    disabled >
+             </div>
+             <div class="form-group">
+    		 <label for="agileTribeNumber">Tribe Number</label>
+             <input type="text" class="form-control" id="agileTribeNumber" name="agileTribeNumber"
+                    value='<?=isset($squadDetails['TRIBE_NUMBER'])? $squadDetails['TRIBE_NUMBER'] : null ;?>'
+                    disabled >
+             </div>
+             <div class="form-group">
+    		 <label for="agileTribeName">Tribe Name</label>
+             <input type="text" class="form-control" id="agileTribeName" name="agileTribeName"
+                    value='<?=isset($squadDetails['TRIBE_NAME'])? $squadDetails['TRIBE_NAME'] : null ;?>'
+                    disabled >
+             </div>
+             <div class="form-group">
+    		 <label for="agileTribeLeader">Tribe Leader</label>
+             <input type="text" class="form-control" id="agileTribeLeader" name="agileTribeLeader"
+                    value='<?=isset($squadDetails['TRIBE_LEADER'])? $squadDetails['TRIBE_LEADER'] : null ;?>'
+                    disabled >
+             </div>
+              <input type="hidden" class="form-control" id="agileCnum" name="agileCnum"
+                    value='<?=$this->CNUM;?>'
+              >
+             <?php
+
+               $allButtons = array();
+   		       $submitButton = $this->formButton('submit','Submit','updateSquad',null,'Update');
+   		       $resetButton  = $this->formButton('reset','Reset','resetRfs',null,'Reset','btn-warning');
+   		       $allButtons[] = $submitButton;
+   		       $allButtons[] = $resetButton;
+   		       $this->formBlueButtons($allButtons);
+  		    ?>
+  		    </form>
+          </div>
+          <div class='modal-footer'>
+          </div>
+        </div>
+      </div>
+    </div>
+    <?php
+    }
+
 
 
     function editPersonModalBody(){

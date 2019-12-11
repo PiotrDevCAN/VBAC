@@ -44,6 +44,7 @@ $person = new personRecord();
 $person->amendPesStatusModal();
 $person->savingBoardingDetailsModal();
 $person->editPersonModal();
+$person->editAgileSquadModal();
 $person->portalReportSaveModal();
 $person->confirmChangeFmFlagModal();
 $person->confirmOffboardingModal();
@@ -96,10 +97,6 @@ $(document).on( "change", '#work_stream', function(e){
 $(document).ready(function(){
 
 	$('[data-toggle="tooltip"]').tooltip();
-
-
-
-
 	var person = new personRecord();
 	var personWithSubP = new personWithSubPRecord();
 	personWithSubP.initialiseDataTable('<?=personTable::PORTAL_ONLY_ACTIVE ?>');
@@ -119,6 +116,9 @@ $(document).ready(function(){
 	person.listenForReportSaveConfirm();
 	person.listenForEditPesStatus();
 	person.listenForSavePesStatus();
+	person.listenForEditAgileNumber();
+	person.listenForSelectAgileNumber();
+	person.listenForSaveAgileNumber();
 	person.listenForInitiatePesFromPortal();
 	person.listenForEditPerson();
 	person.listenForAccountOrganisation();

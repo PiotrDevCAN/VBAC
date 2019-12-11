@@ -73,4 +73,25 @@ class AgileSquadTable extends DbTable{
     }
 
 
+    static function getSquadDetails($squadNumber){
+        $sql = " SELECT S.SQUAD_NUMBER,S.SQUAD_NAME, S.SQUAD_TYPE, S.SQUAD_LEADER, S.TRIBE_NUMBER, T.TRIBE_NAME, T.TRIBE_LEADER ";
+        $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS S ";
+        $sql.= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " AS T ";
+        $sql.= " ON S.TRIBE_NUMBER = T.TRIBE_NUMBER ";
+        $sql.= " WHERE S.SQUAD_NUMBER = " . db2_escape_string($squadNumber);
+
+        $rs = db2_exec($_SESSION['conn'], $sql);
+
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+
+        $row = db2_fetch_assoc($rs);
+
+        return $row;
+
+    }
+
+
 }

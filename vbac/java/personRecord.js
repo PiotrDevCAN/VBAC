@@ -1561,7 +1561,111 @@ function personRecord() {
       });
   },
 
+  this.listenForEditAgileNumber = function(){
+	    $(document).on('click','.btnEditAgileNumber', function(e){
+	    	   $(this).addClass('spinning').attr('disabled',true);
+	    	   $('#updateSquad').attr('disabled',true);
+	           var cnum = ($(this).data('cnum'));
+	           var spinner =  '<div id="overlay"><i class="fa fa-spinner fa-spin spin-big"></i></div>';
+	           $('#editAgileSquadModal .modal-body').html(spinner);
+	           $('#editAgileSquadModal').modal('show');
+	           $.ajax({
+	              url: "ajax/getEditAgileNumberModalBody.php",
+	              data : {cnum:cnum },
+	              type: 'POST',
+	              success: function(result){
+	                var resultObj = JSON.parse(result);
+	                console.log(resultObj.success);
+	                console.log(resultObj.success==true);
+	                if(resultObj.success){
+		                $('.spinning').removeClass('spinning').attr('disabled',false);		                
+	                    $('#editAgileSquadModal .modal-body').html($(resultObj.body).find('.modal-body'));
+//	                    var person = new personRecord();
+//	                    person.initialisePersonFormSelect2();
+//	                    $('#person_intranet').attr('disabled',false);
+	                    $.fn.modal.Constructor.prototype.enforceFocus = function() {};
+	                	$('#agileSquad').select2({
+	                		width:'100%',
+	                		placeholder: 'Select Squad',
+	                		allowClear: true
+	                	});
+	                } else {
+	                    $('#editAgileSquadModal .modal-body').html(resultObj.messages);
+	                }
 
+	              }
+	            });
+	      });
+	  },
+  
+	  this.listenForSaveAgileNumber = function(){
+		  $(document).on('click','#updateSquad', function(e){
+			  $(this).addClass('spinning').attr('disabled',true);
+			  e.preventDefault();
+		      var form = document.getElementById('editAgileSquadForm');
+		      var formValid = form.checkValidity();
+		      if(formValid){
+		        var allDisabledFields = ($("input:disabled"));
+		        $(allDisabledFields).attr('disabled',false);
+		        var formData = $('#editAgileSquadForm').serialize();
+		        $(allDisabledFields).attr('disabled',true);
+	            $.ajax({
+	            	url: "ajax/updateAgileSquadNumber.php",
+		            data : formData,
+		            type: 'POST',
+		            success: function(result){
+		            	var resultObj = JSON.parse(result);
+		            	if(resultObj.success){
+		            		$('.spinning').removeClass('.spinning').attr('disabled',false);
+			            	$('#editAgileSquadModal').modal('hide');
+			            	personWithSubPRecord.table.ajax.reload();	
+		            	} else {
+		            		$('#editAgileSquadModal .modal-body').html(resultObj.messages);
+		            	}
+		            	
+		            			            	
+		            }
+	            });		
+		      }
+		  });
+	  },
+  
+  this.listenForSelectAgileNumber = function(){
+		  $(document).on('select2:select','#agileSquad', function(e){
+      		$('#agileTribeNumber').val('');
+    		$('#agileTribeName').val('');
+    		$('#agileTribeLeader').val('');
+    		$('#agileSquadType').val('');
+    		$('#agilesquadName').val('');
+    		$('#agilesquadLeader').val('');    
+    		$('#updateSquad').attr('disabled',true);
+			  console.log(this);	
+			  var data = e.params.data;
+			  var squadNumber = e.params.data.id;
+			  console.log(squadNumber);
+			  $.ajax({
+		            url: "ajax/getSquadDetails.php",
+		            data : {squadNumber : squadNumber },
+		            type: 'POST',
+		            success: function(result){
+		            	var resultObj = JSON.parse(result);
+		            	if(resultObj.success){
+		            		$('#agileTribeNumber').val(resultObj.squadDetails.TRIBE_NUMBER);
+		            		$('#agileTribeName').val(resultObj.squadDetails.TRIBE_NAME);
+		            		$('#agileTribeLeader').val(resultObj.squadDetails.TRIBE_LEADER);
+		            		$('#agileSquadType').val(resultObj.squadDetails.SQUAD_TYPE);
+		            		$('#agilesquadName').val(resultObj.squadDetails.SQUAD_NAME);
+		            		$('#agilesquadLeader').val(resultObj.squadDetails.SQUAD_LEADER);
+		            		$('#updateSquad').attr('disabled',false);
+		            	} else {
+		            		alert(resultObj.messages);
+		            	}		            	
+		            }
+			  });
+		  });		  
+	  },
+	  
+	  
 
   this.listenForToggleFmFlag = function(){
     $(document).on('click','.btnSetFmFlag', function(e){

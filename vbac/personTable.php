@@ -26,6 +26,8 @@ class personTable extends DbTable {
 
     private $slack;
 
+    private $squadNames;
+
     const PORTAL_PRE_BOARDER_EXCLUDE = 'exclude';
     const PORTAL_PRE_BOARDER_INCLUDE = 'include';
     const PORTAL_PRE_BOARDER_WITH_LINKED = 'withLinked';
@@ -429,6 +431,9 @@ class personTable extends DbTable {
              $row['CT_ID'] .= " </button> ";
              $row['CT_ID'] .= $ctid;
          }
+
+
+         $row['SQUAD_NUMBER'] = $this->getAgileSquadWithButtons($row);
 
         return $row;
     }
@@ -1574,6 +1579,45 @@ class personTable extends DbTable {
 
         return array('display'=>$pesStatusWithButton,'sort'=>$currentValue);
 
+    }
+
+
+
+    function getAgileSquadWithButtons($row){
+        if(empty($this->squadNames)){
+            $loader = new Loader();
+            $this->squadNames = $loader->loadIndexed('SQUAD_NAME','SQUAD_NUMBER',allTables::$AGILE_SQUAD);
+        }
+        $squad = !empty($row['SQUAD_NUMBER']) ? $row['SQUAD_NUMBER'] : 'none';
+        $squadName = !empty($this->squadNames[$squad]) ?  $this->squadNames[$squad] : "missing squad";
+        $cnum = $row['CNUM'];
+
+        $agileSquadWithButton = "<button type='button' class='btn btn-default btn-xs btnEditAgileNumber accessRestrict accessFm accessCdi' aria-label='Left Align' ";
+        $agileSquadWithButton.= " data-cnum='" .$cnum . "' ";
+        $agileSquadWithButton.= " data-toggle='tooltip' data-placement='top' title='Amend Agile Squad'";
+        $agileSquadWithButton.= " > ";
+        $agileSquadWithButton.= "<span class='glyphicon glyphicon-edit' aria-hidden='true' ></span>";
+        $agileSquadWithButton.= "</button>&nbsp;";
+        $agileSquadWithButton.= $squadName;
+
+        return array('display'=>$agileSquadWithButton,'sort'=>$squad);
+
+    }
+
+    function updateAgileSquadNumber($cnum, $agileNumber){
+        $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql.= " SET SQUAD_NUMBER=" . db2_escape_string($agileNumber) ;
+        $sql.= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
+
+        $this->lastUpdateSql = $sql;
+
+        $rs = db2_exec($_SESSION['conn'],$sql);
+
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__ , __METHOD__, $sql);
+            return false;
+        }
+        return true;
     }
 
 
