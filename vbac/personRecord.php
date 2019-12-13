@@ -1280,8 +1280,6 @@ class personRecord extends DbRecord
   $loader = new Loader();
   $allSquadNames = $loader->loadIndexed('SQUAD_NAME','SQUAD_NUMBER',allTables::$AGILE_SQUAD);
   $allSquadLeaders = $loader->loadIndexed('SQUAD_LEADER','SQUAD_NUMBER',allTables::$AGILE_SQUAD);
-
-
   $squadDetails = !empty($this->SQUAD_NUMBER) ?  AgileSquadTable::getSquadDetails($this->SQUAD_NUMBER) : array();
      ?>
     <!-- Modal -->

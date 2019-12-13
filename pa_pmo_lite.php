@@ -119,6 +119,7 @@ $(document).ready(function(){
 	person.listenForEditAgileNumber();
 	person.listenForSelectAgileNumber();
 	person.listenForSaveAgileNumber();
+	person.listenForClearAgileNumber();
 	person.listenForInitiatePesFromPortal();
 	person.listenForEditPerson();
 	person.listenForAccountOrganisation();

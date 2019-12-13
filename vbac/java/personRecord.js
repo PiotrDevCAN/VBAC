@@ -1560,7 +1560,36 @@ function personRecord() {
             });
       });
   },
+  
+  
+  
+  this.listenForClearAgileNumber = function(){
+	    $(document).on('click','.btnClearSquadNumber', function(e){
+	    	   $(this).addClass('spinning').attr('disabled',true);
+	           var cnum = ($(this).data('cnum'));
+	           $.ajax({
+	              url: "ajax/clearSquadNumber.php",
+	              data : {cnum:cnum },
+	              type: 'POST',
+	              success: function(result){
+	                var resultObj = JSON.parse(result);
+	                console.log(resultObj.success);
+	                console.log(resultObj.success==true);
+	                if(resultObj.success){
+		                $('.spinning').removeClass('spinning').attr('disabled',false);	
+		                personWithSubPRecord.table.ajax.reload();	                    
+	                } else {
+	                    $('#editAgileSquadModal .modal-body').html(resultObj.messages);
+	                    $('#editAgileSquadModal').modal('show'); 
+	                }
 
+	              }
+	            });
+	      });
+	  },
+  
+  
+  
   this.listenForEditAgileNumber = function(){
 	    $(document).on('click','.btnEditAgileNumber', function(e){
 	    	   $(this).addClass('spinning').attr('disabled',true);

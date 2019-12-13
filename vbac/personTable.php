@@ -694,6 +694,25 @@ class personTable extends DbTable {
         return true;
     }
 
+
+    function clearSquadNumber($cnum){
+        $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql .= " SET SQUAD_NUMBER = null ";
+        $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
+
+        $result = db2_exec($_SESSION['conn'], $sql);
+
+        if(!$result){
+            DbTable::displayErrorMessage($result, __CLASS__,__METHOD__, $sql);
+            return false;
+        }
+        AuditTable::audit("Clear Agile Number for $cnum",AuditTable::RECORD_TYPE_AUDIT);
+
+        return true;
+    }
+
+
+
     function clearCioAlignment($cnum){
         $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET CIO_ALIGNMENT = null ";
@@ -1600,7 +1619,19 @@ class personTable extends DbTable {
         $agileSquadWithButton.= " data-toggle='tooltip' data-placement='top' title='Amend Agile Squad'";
         $agileSquadWithButton.= " > ";
         $agileSquadWithButton.= "<span class='glyphicon glyphicon-edit' aria-hidden='true' ></span>";
-        $agileSquadWithButton.= "</button>&nbsp;";
+        $agileSquadWithButton.= "</button>";
+        $agileSquadWithButton.= "&nbsp;";
+
+        if(!empty($row['SQUAD_NUMBER'])){
+            $agileSquadWithButton.= "<button type='button' class='btn btn-danger btn-xs btnClearSquadNumber accessRestrict accessFm accessCdi' aria-label='Left Align' ";
+            $agileSquadWithButton.= " data-cnum='" .$cnum . "' ";
+            $agileSquadWithButton.= " data-toggle='tooltip' data-placement='top' title='Clear Squad Number'";
+            $agileSquadWithButton.= " > ";
+            $agileSquadWithButton.= "<span class='glyphicon glyphicon-erase' aria-hidden='true' ></span>";
+            $agileSquadWithButton.= "</button>";
+            $agileSquadWithButton.= "&nbsp;";
+        }
+
         $agileSquadWithButton.= $squadName;
 
         return array('display'=>$agileSquadWithButton,'sort'=>$squad);
