@@ -25,7 +25,9 @@ class personWithSubPTable extends personTable {
             $subPlatformRecord = array_map('trim', $subPlatformRecord);
             $this->personSubPlatform[$subPlatformRecord['CNUM']][] = $subPlatformRecord['SUBPLATFORM'];
         }
+
     }
+
 
     function addButtons($row){
         $row = parent::addButtons($row);

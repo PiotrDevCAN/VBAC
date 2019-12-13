@@ -330,7 +330,11 @@ class personRecord extends DbRecord
 
     function __construct($pwd=null){
         $this->headerTitles['FM_CNUM'] = 'FUNCTIONAL MGR';
+        $this->headerTitles['SQUAD_NUMBER'] = 'SQUAD NAME';
+
         parent::__construct();
+
+
     }
 
 

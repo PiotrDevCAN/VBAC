@@ -177,10 +177,13 @@ class personTable extends DbTable {
         $predicate .= $preboadersAction==self::PORTAL_PRE_BOARDER_WITH_LINKED ? " AND ( PES_STATUS_DETAILS like 'Boarded as%' or PRE_BOARDED  is not  null) " : null;
         $predicate .= $preboadersAction==self::PORTAL_ONLY_ACTIVE ? "  AND ( PES_STATUS_DETAILS not like 'Boarded as%' or PES_STATUS_DETAILS is null ) AND " . personTable::activePersonPredicate() : null;
 
-        $sql  = " SELECT P.*, PT.PROCESSING_STATUS , PT.PROCESSING_STATUS_CHANGED ";
+        $sql  = " SELECT P.*, PT.PROCESSING_STATUS , PT.PROCESSING_STATUS_CHANGED, AS.SQUAD_NAME ";
         $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName . " as P ";
         $sql .= " LEFT JOIN " .  $_SESSION['Db2Schema'] . "." . allTables::$PES_TRACKER . " as PT ";
         $sql .= " ON PT.CNUM = P.CNUM ";
+        $sql .= " LEFT JOIN " .  $_SESSION['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " as AS ";
+        $sql .= " ON AS.SQUAD_NUMBER = P.SQUAD_NUMBER ";
+
         $sql .= " WHERE " . $predicate;
 
         $rs = db2_exec($_SESSION['conn'], $sql);
@@ -433,7 +436,7 @@ class personTable extends DbTable {
          }
 
 
-         $row['SQUAD_NUMBER'] = $this->getAgileSquadWithButtons($row);
+         $row['SQUAD_NAME'] = $this->getAgileSquadWithButtons($row);
 
         return $row;
     }
@@ -1584,12 +1587,12 @@ class personTable extends DbTable {
 
 
     function getAgileSquadWithButtons($row){
-        if(empty($this->squadNames)){
-            $loader = new Loader();
-            $this->squadNames = $loader->loadIndexed('SQUAD_NAME','SQUAD_NUMBER',allTables::$AGILE_SQUAD);
-        }
+//         if(empty($this->squadNames)){
+//             $loader = new Loader();
+//             $this->squadNames = $loader->loadIndexed('SQUAD_NAME','SQUAD_NUMBER',allTables::$AGILE_SQUAD);
+//         }
         $squad = !empty($row['SQUAD_NUMBER']) ? $row['SQUAD_NUMBER'] : 'none';
-        $squadName = !empty($this->squadNames[$squad]) ?  $this->squadNames[$squad] : "missing squad";
+        $squadName = !empty($row['SQUAD_NAME']) ?  $row['SQUAD_NAME'] : "Not allocated to Squad";
         $cnum = $row['CNUM'];
 
         $agileSquadWithButton = "<button type='button' class='btn btn-default btn-xs btnEditAgileNumber accessRestrict accessFm accessCdi' aria-label='Left Align' ";
