@@ -14,12 +14,12 @@ use itdq\DbTable;
 
 <table id='squadalog' class='table table-stripped table-responseive'>
 <thead>
-<tr><th>CNUM</th><th>Notes Id</th><th>JRSS</th><th>Squad Type</th><th>Tribe</th><th>Shift</th><th>Squad Leader</th><th>FLL</th><th>SLL</th><th>Squad Number</th></tr>
+<tr><th>CNUM</th><th>JRSS</th><th>Squad Type</th><th>Tribe</th><th>Shift</th><th>Squad Leader</th><th>FLL</th><th>SLL</th><th>Squad Number</th></tr>
 </thead>
 <tbody>
 </tbody>
 <tfoot>
-<tr><th>CNUM</th><th>Notes Id</th><th>JRSS</th><th>Squad Type</th><th>Tribe</th><th>Shift</th><th>Squad Leader</th><th>FLL</th><th>SLL</th><th>Squad Number</th></tr>
+<tr><th>CNUM</th><th>JRSS</th><th>Squad Type</th><th>Tribe</th><th>Shift</th><th>Squad Leader</th><th>FLL</th><th>SLL</th><th>Squad Number</th></tr>
 </tfoot>
 </table>
 </div>

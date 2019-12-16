@@ -1251,8 +1251,7 @@ function personRecord() {
           // <th>Tribe</th><th>Shift</th><th>Squad Leader</th><th>FLL</th><th>SLL</th><th>Squad Number</th>
 
           "columns": [
-                      { "data": "CNUM" , "defaultContent": "" },
-                      { "data": "NOTES_ID" ,"defaultContent": "" },
+                      { "data": "CNUM" , "defaultContent": "", render: { _:"display", sort:"sort" } },                
                       { "data": "JRSS"       ,"defaultContent": "<i>unknown</i>"},
                       { "data": "SQUAD_TYPE", "defaultContent": "<i>unknown</i>" },
                       { "data": "TRIBE", "defaultContent": "<i>unknown</i>" },
@@ -1264,7 +1263,7 @@ function personRecord() {
                      
                   ],
           columnDefs: [
-                         { "visible": true, "targets": [0,1,2,3,4,5,6,7,8,9] }
+                         { "visible": true, "targets": [0,1,2,3,4,5,6,7,8] }
                   ] ,
           order: [[ 1, "asc" ]],
           autoWidth: true,
