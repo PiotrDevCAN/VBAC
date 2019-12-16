@@ -22,7 +22,7 @@ $personTable = new personTable(allTables::$PERSON);
 // { "data": "SQUAD_NUMBER", "defaultContent": "" },
 
 $sql = " SELECT P.CNUM, P.NOTES_ID, P.ROLE_ON_THE_ACCOUNT as JRSS, S.SQUAD_TYPE, CONCAT('Tribe ', S.TRIBE_NUMBER) as TRIBE, ";
-$sql.= " S.SHIFT, S.SQUAD_LEADER, F.NOTES_ID as FLL, U.NOTES_ID as SLL, S.SQUAD_NUMBER ";
+$sql.= " S.SHIFT, S.SQUAD_LEADER, F.CNUM as FLL_CNUM, F.NOTES_ID as FLL_NOTES_ID, U.CNUM as SLL_CNUM, U.NOTES_ID as SLL_NOTES_ID, S.SQUAD_NUMBER ";
 $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
 $sql.= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " AS F "; // lookup firstline
 $sql.= " ON P.FM_CNUM = F.CNUM ";
@@ -42,6 +42,12 @@ $data = false;
 
 while(($row = db2_fetch_assoc($rs))==true){
     $row = array_map('trim',$row);
+    $row['FLL'] = array('display'=>$row['FLL_CNUM'] . "<br/><small>" . $row['FLL_NOTES_ID'] . "</small>", 'sort'=>$row['FLL_CNUM']);
+    $row['SLL'] = array('display'=>$row['SLL_CNUM'] . "<br/><small>" . $row['SLL_NOTES_ID'] . "</small>", 'sort'=>$row['SLL_CNUM']);
+    unset($row['FLL_CNUM']);
+    unset($row['FLL_NOTES_ID']);
+    unset($row['SLL_CNUM']);
+    unset($row['SLL_NOTES_ID']);
     $data[] = $row;
 }
 

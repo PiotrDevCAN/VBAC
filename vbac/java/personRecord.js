@@ -11,6 +11,21 @@ function toTitleCase(str) {
 };
 
 
+var buttonCommon = {
+        exportOptions: {
+            format: {
+                body: function ( data, row, column, node ) {
+                 //   return data ?  data.replace( /<br\s*\/?>/ig, "\n") : data ;
+                 return data ? data.replace( /<br\s*\/?>/ig, "\n").replace(/(&nbsp;|<([^>]+)>)/ig, "") : data ;
+                 //    data.replace( /[$,.]/g, '' ) : data.replace(/(&nbsp;|<([^>]+)>)/ig, "");
+
+                }
+            }
+        }
+    };
+
+
+
 function personRecord() {
 
   var table;
@@ -1040,10 +1055,10 @@ function personRecord() {
           responsive: true,
           dom: 'Blfrtip',
           buttons: [
-                    'colvis',
-                    'excelHtml5',
-                    'csvHtml5',
-                    'print'
+              'colvis',
+              'excelHtml5',
+              'csvHtml5',
+              'print'
                 ],
       });
       
@@ -1243,8 +1258,8 @@ function personRecord() {
                       { "data": "TRIBE", "defaultContent": "<i>unknown</i>" },
                       { "data": "SHIFT", "defaultContent": "<i>unknown</i>" },
                       { "data": "SQUAD_LEADER", "defaultContent": "<i>unknown</i>" },
-                      { "data": "FLL", "defaultContent": "" },
-                      { "data": "SLL", "defaultContent": "" },
+                      { "data": "FLL", "defaultContent": "", render: { _:"display", sort:"sort" } },
+                      { "data": "SLL", "defaultContent": "", render: { _:"display", sort:"sort" } },
                       { "data": "SQUAD_NUMBER", "defaultContent": "" },
                      
                   ],
@@ -1259,9 +1274,34 @@ function personRecord() {
           dom: 'Blfrtip',
           buttons: [
                     'colvis',
-                    'excelHtml5',
-                    'csvHtml5',
-                    'print'
+                    $.extend( true, {}, buttonCommon, {
+                        extend: 'excelHtml5',
+                        exportOptions: {
+                            orthogonal: 'sort',
+                            stripHtml: true,
+                            stripNewLines:false
+                        },
+                         customize: function( xlsx ) {
+                             var sheet = xlsx.xl.worksheets['sheet1.xml'];
+
+                         }
+                }),
+                $.extend( true, {}, buttonCommon, {
+                    extend: 'csvHtml5',
+                    exportOptions: {
+                        orthogonal: 'sort',
+                        stripHtml: true,
+                        stripNewLines:false
+                    }
+                }),
+                $.extend( true, {}, buttonCommon, {
+                    extend: 'print',
+                    exportOptions: {
+                        orthogonal: 'sort',
+                        stripHtml: true,
+                        stripNewLines:false
+                    }
+                }),
                 ],
       });
       // Apply the search
