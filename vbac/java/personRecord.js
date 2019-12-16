@@ -1216,6 +1216,70 @@ function personRecord() {
           } );
       } );
   },
+  
+  this.initialiseSquadALog = function(preBoardersAction){
+	  preBoardersAction = typeof(preBoardersAction) == 'undefined' ? null : preBoardersAction;	  
+      // Setup - add a text input to each footer cell
+      $('#squadalog tfoot th').each( function () {
+          var title = $(this).text();
+          var titleCondensed = title.replace(' ','');
+          $(this).html( '<input type="text" id="footer'+ titleCondensed + '" placeholder="Search '+title+'" />' );
+      } );
+    // DataTable
+      personRecord.table = $('#squadalog').DataTable({
+        ajax: {
+              url: 'ajax/populateSquadALog.php',
+              type: 'GET',
+          }	,
+         
+          // <th>CNUM</th><th>Notes Id</th><th>JRSS</th><th>Squad Type</th>
+          // <th>Tribe</th><th>Shift</th><th>Squad Leader</th><th>FLL</th><th>SLL</th><th>Squad Number</th>
+
+          "columns": [
+                      { "data": "CNUM" , "defaultContent": "" },
+                      { "data": "NOTES_ID" ,"defaultContent": "" },
+                      { "data": "JRSS"       ,"defaultContent": "<i>unknown</i>"},
+                      { "data": "SQUAD_TYPE", "defaultContent": "<i>unknown</i>" },
+                      { "data": "TRIBE", "defaultContent": "<i>unknown</i>" },
+                      { "data": "SHIFT", "defaultContent": "<i>unknown</i>" },
+                      { "data": "SQUAD_LEADER", "defaultContent": "<i>unknown</i>" },
+                      { "data": "FLL", "defaultContent": "" },
+                      { "data": "SLL", "defaultContent": "" },
+                      { "data": "SQUAD_NUMBER", "defaultContent": "" },
+                     
+                  ],
+          columnDefs: [
+                         { "visible": true, "targets": [0,1,2,3,4,5,6,7,8,9] }
+                  ] ,
+          order: [[ 1, "asc" ]],
+          autoWidth: true,
+          deferRender: true,
+          processing: true,
+          responsive: true,
+          dom: 'Blfrtip',
+          buttons: [
+                    'colvis',
+                    'excelHtml5',
+                    'csvHtml5',
+                    'print'
+                ],
+      });
+      // Apply the search
+      personRecord.table.columns().every( function () {
+          var that = this;
+
+          $( 'input', this.footer() ).on( 'keyup change', function () {
+              if ( that.search() !== this.value ) {
+                  that
+                      .search( this.value )
+                      .draw();
+              }
+          } );
+      } );
+  },
+  
+  
+  
 
   this.listenForbtnTogglePesTrackerStatusDetails = function(){
 	  $(document).on('click','.btnTogglePesTrackerStatusDetails', function(e){  

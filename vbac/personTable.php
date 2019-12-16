@@ -82,12 +82,24 @@ class personTable extends DbTable {
 
     }
 
-    static function activePersonPredicate($includeProvisionalClearance = false){
-        $activePredicate = " ((( REVALIDATION_STATUS in ('" . personRecord::REVALIDATED_FOUND . "','" . personRecord::REVALIDATED_VENDOR . "','" . personRecord::REVALIDATED_POTENTIAL . "') or trim( REVALIDATION_STATUS) is null or REVALIDATION_STATUS like '" . personRecord::REVALIDATED_OFFBOARDING . "%') ";
+    static function activePersonPredicate($includeProvisionalClearance = false, $tableAbbrv = null ){
+        $activePredicate = " ((( " ;
+        $activePredicate.= !empty($tableAbbrv) ? $tableAbbrv ."." : null ;
+        $activePredicate.= "REVALIDATION_STATUS in ('" . personRecord::REVALIDATED_FOUND . "','" . personRecord::REVALIDATED_VENDOR . "','" . personRecord::REVALIDATED_POTENTIAL . "') or trim(";
+        $activePredicate.= !empty($tableAbbrv) ? $tableAbbrv ."." : null ;
+        $activePredicate.= "REVALIDATION_STATUS) is null or ";
+        $activePredicate.= !empty($tableAbbrv) ? $tableAbbrv ."." : null ;
+        $activePredicate.= "REVALIDATION_STATUS like '" . personRecord::REVALIDATED_OFFBOARDING . "%') ";
         $activePredicate.= "   OR ";
-        $activePredicate.= " ( trim( REVALIDATION_STATUS) is null ) )";
-        $activePredicate.= " AND REVALIDATION_STATUS not like '" . personRecord::REVALIDATED_OFFBOARDING . "%:%" .personRecord::REVALIDATED_LEAVER . "%' " ;
-        $activePredicate.= " AND PES_STATUS in ('". personRecord::PES_STATUS_CLEARED ."','". personRecord::PES_STATUS_CLEARED_PERSONAL ."','". personRecord::PES_STATUS_EXCEPTION ."','". personRecord::PES_STATUS_RECHECK_REQ ."'";
+        $activePredicate.= " ( trim( ";
+        $activePredicate.= !empty($tableAbbrv) ? $tableAbbrv ."." : null ;
+        $activePredicate.= "REVALIDATION_STATUS) is null ) )";
+        $activePredicate.= " AND ";
+        $activePredicate.= !empty($tableAbbrv) ? $tableAbbrv ."." : null ;
+        $activePredicate.= "REVALIDATION_STATUS not like '" . personRecord::REVALIDATED_OFFBOARDING . "%:%" .personRecord::REVALIDATED_LEAVER . "%' " ;
+        $activePredicate.= " AND ";
+        $activePredicate.= !empty($tableAbbrv) ? $tableAbbrv ."." : null ;
+        $activePredicate.= "PES_STATUS in ('". personRecord::PES_STATUS_CLEARED ."','". personRecord::PES_STATUS_CLEARED_PERSONAL ."','". personRecord::PES_STATUS_EXCEPTION ."','". personRecord::PES_STATUS_RECHECK_REQ ."'";
         $activePredicate.= $includeProvisionalClearance ? ",'" . personRecord::PES_STATUS_PROVISIONAL . "'" : null ;
         $activePredicate.= " ) ) ";
         return $activePredicate;

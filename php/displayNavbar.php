@@ -57,6 +57,7 @@ $odcDataUpload  = new NavbarOption('ODC Access Upload', 'pc_odcAccessUpload.php'
 // $email          = new NavbarOption('Email Log', 'pi_emailLog.php','accessCdi');
 $tribes         = new NavbarOption('Tribes','pa_agileTribes.php','accessCdi accessPmo ');
 $squads         = new NavbarOption('Squad','pa_agileSquads.php','accessCdi accessPmo ');
+$squadALog       = new NavbarOption('Squadalog', 'pa_squadalog.php','accessCdi accessPmo');
 
 $adminMenu->addOption($pmo);
 $adminMenu->addOption($pmoLite);
@@ -83,6 +84,7 @@ $adminMenu->addOption($odcDataUpload);
 $adminMenu->addOption( new NavbarDivider('accessPmo accessCdi'));
 $adminMenu->addOption($tribes);
 $adminMenu->addOption($squads);
+$adminMenu->addOption($squadALog);
 
 
 
@@ -142,6 +144,7 @@ $reports->addOption(new NavbarDivider('accessCdi accessPmo accessRepFullPerson')
 $reports->addOption($locMismatch);
 $reports->addOption($odcNotInVbac);
 $reports->addOption($assetRemoval);
+
 
 $navbar->addMenu($cdiAdmin);
 $navbar->addMenu($adminMenu);
