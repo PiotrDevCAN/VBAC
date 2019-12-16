@@ -31,6 +31,7 @@ $sql.= " ON F.FM_CNUM = U.CNUM ";
 $sql.= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS S "; // lookup upline ( second line )
 $sql.= " ON P.SQUAD_NUMBER  = S.SQUAD_NUMBER ";
 $sql.= " WHERE " . personTable::activePersonPredicate(false,"P");
+$sql.= " AND P.SQUAD_NUMBER is not null ";
 
 $rs = db2_exec($_SESSION['conn'], $sql);
 
