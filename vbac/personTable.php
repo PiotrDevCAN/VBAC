@@ -386,6 +386,8 @@ class personTable extends DbTable {
 
         if($_SESSION['isPes'] || $_SESSION['isPmo'] || $_SESSION['isFm'] || $_SESSION['isCdi']){
             $row['PES_STATUS'] = self::getPesStatusWithButtons($row);
+        } else {
+            $row['PES_STATUS'] = array('display'=>$row['PES_STATUS'],'sort'=>$row['PES_STATUS']);
         }
 
         if(($_SESSION['isPes'] || $_SESSION['isPmo'] || $_SESSION['isFm'] || $_SESSION['isCdi']) && ($revalidationStatus!=personRecord::REVALIDATED_OFFBOARDED))  {
