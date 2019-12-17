@@ -1680,6 +1680,9 @@ class personTable extends DbTable {
         $preboarderPesStatus = $preBoarderData['PES_STATUS'];
         $preboarderPesStatusD = $preBoarderData['PES_STATUS_DETAILS'];
         $preBoarderPesEvidence = $preBoarderData['PES_DATE_EVIDENCE'];
+        $preboarderPesCleared  = $preBoarderData['PES_CLEARED_DATE'];
+        $preboarderPesRecheck  = $preBoarderData['PES_RECHECK_DATE'];
+        $preboarderPesLevel    = $preBoarderData['PES_LEVEL'];
 
         $ibmer = new personRecord();
         $ibmer->setFromArray(array('CNUM'=>$ibmerCnum));
@@ -1695,7 +1698,10 @@ class personTable extends DbTable {
                                           || trim($ibmerPesStatus) == personRecord::PES_STATUS_RECHECK_REQ  ){
             $ibmerData['PES_STATUS'] = $preboarderPesStatus;
             $ibmerData['PES_STATUS_DETAILS'] = $ibmerPesStatusD . ":" . $preboarderPesStatusD;
-            $ibmerData['PES_DATE_EVIDENCE'] = $preBoarderPesEvidence;
+            $ibmerData['PES_DATE_EVIDENCE']  = $preBoarderPesEvidence;
+            $ibmerData['PES_CLEARED_DATE']   = $preboarderPesCleared;
+            $ibmerData['PES_RECHECK_DATE']   = $preboarderPesRecheck;
+            $ibmerData['PES_LEVEL']          = $preboarderPesLevel;
         }
         $ibmer->setFromArray($ibmerData);
 
