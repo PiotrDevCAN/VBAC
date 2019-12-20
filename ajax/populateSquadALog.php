@@ -46,7 +46,7 @@ while(($row = db2_fetch_assoc($rs))==true){
     $row['CNUM'] = array('display'=>$row['CNUM'] . "<br/><small>" . $row['NOTES_ID'] . "</small>", 'sort'=>$row['CNUM']);
     $row['FLL'] = array('display'=>$row['FLL_CNUM'] . "<br/><small>" . $row['FLL_NOTES_ID'] . "</small>", 'sort'=>$row['FLL_CNUM']);
     $row['SLL'] = array('display'=>$row['SLL_CNUM'] . "<br/><small>" . $row['SLL_NOTES_ID'] . "</small>", 'sort'=>$row['SLL_CNUM']);
-    $row['SQUAD_NAME'] = array('display'=>$row['SQUAD_NAME'],'sort'=>$row['SQUAD_NUMBER']);
+    $row['SQUAD_NAME'] = array('display'=>$row['SQUAD_NAME'] . "<br/><small>" . $row['SQUAD_NUMBER'] . "</small>",'sort'=>$row['SQUAD_NUMBER']);
     unset($row['NOTES_ID']);
     unset($row['FLL_CNUM']);
     unset($row['FLL_NOTES_ID']);
