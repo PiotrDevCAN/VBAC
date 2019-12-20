@@ -1259,7 +1259,7 @@ function personRecord() {
                       { "data": "SQUAD_LEADER", "defaultContent": "<i>unknown</i>" },
                       { "data": "FLL", "defaultContent": "", render: { _:"display", sort:"sort" } },
                       { "data": "SLL", "defaultContent": "", render: { _:"display", sort:"sort" } },
-                      { "data": "SQUAD_NUMBER", "defaultContent": "" },
+                      { "data": "SQUAD_NAME", "defaultContent": "", render: { _:"display", sort:"sort" }  },
                      
                   ],
           columnDefs: [
