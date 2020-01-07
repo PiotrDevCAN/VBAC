@@ -7,14 +7,19 @@ ob_start();
 $pesEmailObj = new pesEmail();
 
 
-try { 
+try {
     $emailDetails = $pesEmailObj->getEmailDetails($_GET['emailaddress'], $_GET['country']);
 } catch ( \Exception $e) {
     switch ($e->getCode()) {
+        case 800:
+        case 801:
+            $emailDetails['warning']['filename'] = $e->getMessage();
+            echo "Warning";
+             break;
         case 803:
             $emailDetails['warning']['filename'] = 'No email exists for combination of Internal/External and Country';
             echo "Warning";
-        break;
+            break;
         default:
             var_dump($e);
         break;
