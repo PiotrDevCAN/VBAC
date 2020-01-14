@@ -331,6 +331,34 @@ class assetRequestRecord extends DbRecord {
         <?php
     }
 
+    function helpModal(){
+        ?>
+        <!-- Modal -->
+		<div id="assetHelpModal" class="modal fade" role="dialog">
+  			<div class="modal-dialog">
+	        <!-- Modal content-->
+    		<div class="modal-content">
+      			<div class="modal-header">
+        		   <h4 class="modal-title">Help/Guidance</h4>
+      			</div>
+      			<div class="modal-body" >
+			        <p>For a new CT ID : </p>
+			        <ul>
+			        <li>Ask your line manager to create a<b>"New Starter"</b> request in <b>IT@LBG</b>.</li>
+			        <li>Raise a vBAC request ONLY for a CT ID and enter the <b>IT@LBG Request reference in the LBG Ref Number field</b></li>
+			        </ul>
+        			<p>Once your CT ID is recorded in vBAC you may raise all other access requests..</p>
+        		</div>
+        		<div class='modal-footer'>
+      		  		<button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
+      			</div>
+        </div>
+        </div>
+        </div>
+        <?php
+    }
+
+
     function doTheEducationModal(){
         ?>
         <div id='doTheEducation' style='display: none;'>
@@ -342,6 +370,7 @@ class assetRequestRecord extends DbRecord {
         <p>Please complete the required <b>Aurora Security Education</b>, contact the <b>Aurora Central PMO/UK/IBM</b> for details.</p>
         </div>
         <div class='panel-footer'>
+        <button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
         </div>
         </div>
         </div>

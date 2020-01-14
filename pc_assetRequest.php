@@ -9,7 +9,14 @@ ob_start();
 ?>
 <div class='container greyablePage'>
 <div class='row'>
+<div class='col-sm-4'>
 <h2>Asset Request</h2>
+</div>
+<div class='col-sm-1 col-sm-offset-7'>
+<button type='button' id='assetHelp' class='btn btn-info' >Help</button>
+</div>
+
+
 </div>
 
 <div class='row'>
@@ -26,6 +33,7 @@ if(!$myCnum){
 ?>
 </div>
 <?php
+$assetRequest->helpModal();
 $assetRequest->doTheEducationModal();
 $assetRequest->confirmEducationModal();
 $assetRequest->ctIdRequiredModal();
@@ -80,4 +88,12 @@ if($myCnum) {
     <?php
 }
 ?>
+
+
+$('#assetHelp').on('click',function(){
+	$('#assetHelpModal').modal('show');
+});
+
+
+
 </script>
