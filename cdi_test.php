@@ -40,7 +40,7 @@ echo "<pre>";
 print_r($sendResponse);
 echo "</pre>";
 
-$sendResponse = BlueMail::send_mail(array('rob.daniel@uk.ibm.com'), "Test 2",'text here','rob.daniel@uk.ibm.com',array());
+$sendResponse = BlueMail::send_mail(array('rob.daniel@uk.ibm.com'), "Test 2",'text here','rob.daniel@uk.ibm.com',array(null));
 echo "<pre>";
 print_r($sendResponse);
 echo "</pre>";
