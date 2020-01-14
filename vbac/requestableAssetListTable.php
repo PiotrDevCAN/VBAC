@@ -38,14 +38,15 @@ class requestableAssetListTable extends DbTable {
                 $trimmedData['RECORD_DATE_ISSUED_TO_USER']      = trim($trimmedData['RECORD_DATE_ISSUED_TO_USER'])=='1' ? 'Yes' : 'No';
                 $trimmedData['RECORD_DATE_RETURNED']            = trim($trimmedData['RECORD_DATE_RETURNED'])=='1'       ? 'Yes' : 'No';
                 $trimmedData['ORDER_IT_REQUIRED']               = trim($trimmedData['ORDER_IT_REQUIRED'])=='1'       ? 'Yes' : 'No';
+
+                AuditTable::audit("Diag:" . __METHOD__ . __LINE__ . ":" . print_r($trimmedData,true), AuditTable::RECORD_TYPE_DETAILS);
+
                 $rowWithButtonsAdded = $withButtons ?  $this->addButtons($trimmedData) : $trimmedData ;
                 $data[] = $rowWithButtonsAdded;
             }
         }
 
-        AuditTable::audit("Diag:" . __METHOD__ . __LINE__ . ":" . print_r($data,true),AuditTable::RECORD_TYPE_DETAILS);
-      
-        
+
         return $data;
     }
 
