@@ -25,17 +25,23 @@ class BlueMail
 
         $recipients = array();
         foreach ($cleanedTo as $emailAddress){
-            $recipients[] = array('recipient'=>$emailAddress);
+            if(!empty(trim($emailAddress))){
+                $recipients[] = array('recipient'=>$emailAddress);
+            }
         }
 
         $ccRecipients = array();
         foreach ($cleanedCc as $emailAddress){
-            $ccRecipients[] = array('recipient'=>$emailAddress);
+            if(!empty(trim($emailAddress))){
+                $ccRecipients[] = array('recipient'=>$emailAddress);
+            }
         }
 
         $bccRecipients = array();
         foreach ($cleanedBcc as $emailAddress){
-            $bccRecipients[] = array('recipient'=>$emailAddress);
+            if(!empty(trim($emailAddress))){
+                $bccRecipients[] = array('recipient'=>$emailAddress);
+            }
         }
 
         $data = array('contact'=> $replyto,

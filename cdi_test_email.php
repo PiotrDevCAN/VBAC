@@ -3,21 +3,65 @@ use itdq\BlueMail;
 use vbac\personTable;
 use vbac\allTables;
 
-// $attachment = array(array('filename'=>'test.txt','content_type'=>'text/plain','data'=>'VGhpcyBpcyBhIGJhc2U2NCBlbmNvZGVkIHRleHQ='));
+$_SESSION['Db2Schema'] = 'VBAC';
 
-// $sendResponse = BlueMail::send_mail(array('rob.daniel@gmail.com'), 'Test email', 'Second email with attachment','rob.daniel@uk.ibm.com',array('rob.daniel@gmail.com','rob.daniel@uk.ibm.com'),array(),false,$attachment);
+$sql = " SELECT * ";
+$sql.= " FROM VBAC.EMAIL_LOG ";
+$sql.= " WHERE  SUBJECT like 'Reminder%' ";
+//$sql.= " fetch first 30 rows only " ;
+
+$rs = db2_exec($_SESSION['conn'], $sql);
+
+echo "<div class='container'>";
+
+$nonRecipients = false;
 
 
-// echo "<hr/>";
+
+while (($row=db2_fetch_assoc($rs))==true){
+    ini_set('max_execution_time', 60);
+    echo "<br/>";
+    echo "<br/><b>To: </b>" . implode(",",unserialize($row['TO']));
+    echo "<br/><b>Subject: </b>" . $row['SUBJECT'];
+
+    $dataJson = json_decode($row['DATA_JSON']);
+
+    echo "<br/><b>cc:</b>" .  $dataJson->cc[0]->recipient;
+
+    $responsObj = json_decode($row['RESPONSE']);
+
+    foreach ($responsObj->link as  $value) {
+        if($value->rel=='status'){
+            $statusUrl = $value->href;
+        }
+    }
+
+    echo "<br/><b>Status URL:</b>" . $statusUrl;
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_URL, $statusUrl);
+
+    $currentStatus = curl_exec($ch);
+
+    sleep(2);
+
+    $statusObj = json_decode($currentStatus);
+    $sent = $statusObj->sent ? 'Yes' : 'No';
+
+    echo "<br/><b>Sent:</b>" . $sent;
+    echo "<br/><b>Status:</b>" . $statusObj->status;
+
+    if($sent=='No'){
+        $nonRecipients[implode(" ",unserialize($row['TO']))] = $row['SUBJECT'];
+    }
+
+}
+
+echo "<h2>Reminder not sent</h2>";
+echo "<pre>";
+print_r($nonRecipients);
+echo "</pre>";
 
 
-// $base = base64_encode("This is a base64 encoded text");
-// var_dump($base);
-
-// $decoded = base64_decode('VGhpcyBpcyBhIGJhc2U2NCBlbmNvZGVkIHRleHQ=');
-// var_dump($decoded);
-
-
-$personTable = new personTable(allTables::$PERSON);
-
-$personTable->notifyRecheckDateApproaching();
+echo "</div>";
