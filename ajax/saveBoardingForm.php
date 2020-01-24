@@ -17,7 +17,6 @@ $boardingIbmer = $_POST['boarding']== 'true' ? true:false;
 
 try {
     if(!$boardingIbmer && $_POST['mode']!='Update'){
-        //echo "Need to create virtual cnum";
         $cnum = personTable::getNextVirtualCnum();
         $_POST['CNUM']= $cnum;
         // And put their name in the NOTES_ID as that's the field we display as their identity.
@@ -31,7 +30,6 @@ try {
 
         if($_POST['EMPLOYEE_TYPE']=='vendor'){
             $_POST['REVALIDATION_STATUS'] = personRecord::REVALIDATED_VENDOR;
-        //    $_POST['PES_STATUS'] = personRecord::PES_STATUS_CLEARED;
         } else {
             $_POST['REVALIDATION_STATUS'] = personRecord::REVALIDATED_PREBOARDER;
         }
@@ -47,9 +45,6 @@ try {
             default:
             break;
         }
-
-
-//         $_POST['PES_STATUS_DETAILS'] = $_POST['resPES_STATUS_DETAILS'];
         AuditTable::audit("Pre boarding:<b>" . $cnum . "</b> Type:" .  $_POST['EMPLOYEE_TYPE'],AuditTable::RECORD_TYPE_AUDIT);
     }
 
@@ -86,6 +81,7 @@ try {
         if($_POST['mode']=='Save'){
             echo "<br/>Boarding Form Record - Saved.";
             echo "<br/>Click 'Initiate PES' button to initiate the PES Check Process";
+            $person->checkForCBC();
         }
         if($_POST['mode']=='Update'){
             echo "<br/>Boarding Form Record - Updated.";
@@ -94,15 +90,6 @@ try {
         // Do we need to update a PRE-BOARDING record ?
         if(!empty($_POST['person_preboarded'])){
             $table->linkPreBoarderToIbmer($_POST['person_preboarded'], $_POST['CNUM']);
-//             $preBoarder = new personRecord();
-//             $preBoarder->setFromArray(array('CNUM'=>$_POST['person_preboarded']));
-//             $preBoarderData = $table->getFromDb($preBoarder);
-//             $pesStatus = $preBoarderData['PES_STATUS'];
-//             $pesStatusD = $preBoarderData['PES_STATUS_DETAILS'];
-//             $preBoarderData['PES_STATUS_DETAILS'] = 'Boarded as ' . $_POST['CNUM'] . ":" . $_POST['NOTES_ID'] . " Status was:" . $pesStatus;
-//             $preBoarder->setFromArray($preBoarderData);
-//             $table->saveRecord($preBoarder);
-//             $table->setPesStatus($_POST['CNUM'],$pesStatus,$_SESSION['ssoEmail']);  // Set the BOARDER's PES STATUS to that of their PRE_BOARDER
         }
     } else {
        AuditTable::audit("Db2 Error in " . __FILE__ . " POST:" . print_r($_POST,true) , AuditTable::RECORD_TYPE_DETAILS);
