@@ -437,7 +437,7 @@ class personRecord extends DbRecord
             default:
                 AuditTable::audit('CBC Check Required for ' . $this->NOTES_ID . " ($countryCode)", AuditTable::RECORD_TYPE_AUDIT);
                 // private static $cbcEmailPattern = array('/&&notesid&&/','/&&cnum&&/','/&&countryCode&&/','/&&lbgLocation&&/','/&&role&&/');
-                $replacements = array($this->NOTES_ID, $this->CNUM, $countryCode, $this->LBG_LOCATION,  $this->ROLE_ON_THE_ACCOUNT );
+                $replacements = array($this->NOTES_ID, $this->CNUM, $this->COUNTRY, $this->LBG_LOCATION,  $this->ROLE_ON_THE_ACCOUNT );
                 $message = preg_replace(self::$cbcEmailPattern, $replacements, self::$cbcEmailBody);
                 \itdq\BlueMail::send_mail(self::$pmoTaskId, 'vBAC CBC Check Required -' . $this->CNUM ." (" . trim($this->FIRST_NAME) . " " . trim($this->LAST_NAME) . ")", $message, 'vbacNoReply@uk.ibm.com', self::$securityOps);
             break;
