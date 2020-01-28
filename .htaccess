@@ -9,6 +9,3 @@ AddType application/x-httpd-php .php .html
 # handle errors for the site
 ErrorDocument 404 /error_doc/404.html
 
-
-php_value auto_prepend_file php/siteheader.php
-php_value auto_append_file php/sitefooter.php
