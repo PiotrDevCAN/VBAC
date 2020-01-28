@@ -127,6 +127,7 @@ class personRecord extends DbRecord
     public static $orderITBauTaskId = array('aurora.central.pmo@uk.ibm.com');
     public static $orderITNonBauTaskId = array('aurora.central.pmo@uk.ibm.com');
     public static $smCdiAuditEmail = 'e3h3j0u9u6l2q3a3@ventusdelivery.slack.com';
+    public static $securityOps = array('IBM.LBG.Security.Operations@uk.ibm.com');
     //private static $pesTaskId = 'rob.daniel@uk.ibm.com';
     //private static $pesTaskId    = array('rob.daniel@uk.ibm.com', 'carrabooth@uk.ibm.com');
 //     private static $pesEmailBody = '<table width="100%" border="0"   cellpadding="0">
@@ -292,21 +293,18 @@ class personRecord extends DbRecord
 
 
 
-    private static $cbcEmailBody = "<h3>A person has been boarded with an IBM Location (deduced from CNUM) that is not recorded as having a CBC Agreement in place.</h3>"
-                                 . "<p>Please investigate and confirm they can legitmately work on the account from that location</p>"
+    private static $cbcEmailBody = "<h3>The following person has been boarded with a location that may not have a CBC/DOU in place.</h3>"
                                  . "<table>"
                                  . "<tbody>"
                                  . "<tr><th>Notes Id</th><td>&&notesid&&</td></tr>"
-                                 . "<tr><th>Email</th><td>&&emailAddress&&</td></tr>"
                                  . "<tr><th>CNUM</th><td>&&cnum&&</td></tr>"
                                  . "<tr><th>Country Code</th><td>&&countryCode&&</td></tr>"
+                                 . "<tr><th>LBG Location</th><td>&&lbgLocation&&</td></tr>"
                                  . "<tr><th>Role</th><td>&&role&&</td></tr>"
                                  . "<tbody>"
                                  . "<table>";
 
-   private static $cbcEmailPattern = array('/&&notesid&&/','/&&emailAddress&&/','/&&cnum&&/','/&&countryCode&&/','/&&role&&/');
-
-
+    private static $cbcEmailPattern = array('/&&notesid&&/','/&&cnum&&/','/&&countryCode&&/','/&&lbgLocation&&/','/&&role&&/');
 
 
     private static  $lobValue = array('GTS','GBS','IMI','Cloud','Security','Other');
@@ -438,10 +436,10 @@ class personRecord extends DbRecord
                 break;
             default:
                 AuditTable::audit('CBC Check Required for ' . $this->NOTES_ID . " ($countryCode)", AuditTable::RECORD_TYPE_AUDIT);
-                // private static $cbcEmailPattern = array('/&&notesid&&/','/&&emailAddress&&/','/&&cnum&&/','/&&countryCode&&/','/&&role&&/');
-                $replacements = array($this->NOTES_ID, $this->EMAIL_ADDRESS, $this->CNUM, $countryCode, $this->ROLE_ON_THE_ACCOUNT );
+                // private static $cbcEmailPattern = array('/&&notesid&&/','/&&cnum&&/','/&&countryCode&&/','/&&lbgLocation&&/','/&&role&&/');
+                $replacements = array($this->NOTES_ID, $this->CNUM, $countryCode, $this->LBG_LOCATION,  $this->ROLE_ON_THE_ACCOUNT );
                 $message = preg_replace(self::$cbcEmailPattern, $replacements, self::$cbcEmailBody);
-                \itdq\BlueMail::send_mail(self::$pmoTaskId, 'vBAC CBC Check Required -' . $this->CNUM ." (" . trim($this->FIRST_NAME) . " " . trim($this->LAST_NAME) . ")", $message, 'vbacNoReply@uk.ibm.com');
+                \itdq\BlueMail::send_mail(self::$pmoTaskId, 'vBAC CBC Check Required -' . $this->CNUM ." (" . trim($this->FIRST_NAME) . " " . trim($this->LAST_NAME) . ")", $message, 'vbacNoReply@uk.ibm.com', self::$securityOps);
             break;
         }
     }
