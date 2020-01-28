@@ -298,7 +298,7 @@ class personRecord extends DbRecord
                                  . "<tbody>"
                                  . "<tr><th>Notes Id</th><td>&&notesid&&</td></tr>"
                                  . "<tr><th>CNUM</th><td>&&cnum&&</td></tr>"
-                                 . "<tr><th>Country Code</th><td>&&countryCode&&</td></tr>"
+                                 . "<tr><th>Country</th><td>&&countryCode&&</td></tr>"
                                  . "<tr><th>LBG Location</th><td>&&lbgLocation&&</td></tr>"
                                  . "<tr><th>Role</th><td>&&role&&</td></tr>"
                                  . "<tbody>"
