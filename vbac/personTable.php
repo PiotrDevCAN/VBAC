@@ -306,6 +306,7 @@ class personTable extends DbTable {
         $notesId = trim($row['NOTES_ID']);
         $email   = trim($row['EMAIL_ADDRESS']);
         $cnum = trim($row['CNUM']);
+        $row['actualCNUM'] = $cnum;
         $flag = isset($row['FM_MANAGER_FLAG']) ? $row['FM_MANAGER_FLAG'] : null ;
         $status = empty($row['PES_STATUS']) ? personRecord::PES_STATUS_NOT_REQUESTED : trim($row['PES_STATUS']) ;
         $projectedEndDateObj = !empty($row['PROJECTED_END_DATE']) ? \DateTime::createFromFormat('Y-m-d', $row['PROJECTED_END_DATE']) : false;
@@ -326,7 +327,6 @@ class personTable extends DbTable {
 
 
         if(!empty($row['PRE_BOARDED'])){
-            $row['actualCNUM'] = $cnum;
             $row['CNUM'] = $cnum . "<br/><small>" . $row['PRE_BOARDED'] .  "</small>";
         }
 
@@ -1626,7 +1626,7 @@ class personTable extends DbTable {
 //         }
         $squad = !empty($row['SQUAD_NUMBER']) ? $row['SQUAD_NUMBER'] : 'none';
         $squadName = !empty($row['SQUAD_NAME']) ?  $row['SQUAD_NAME'] : "Not allocated to Squad";
-        $cnum = $row['CNUM'];
+        $cnum = $row['actualCNUM'];
 
         $agileSquadWithButton = "<button type='button' class='btn btn-default btn-xs btnEditAgileNumber accessRestrict accessFm accessCdi' aria-label='Left Align' ";
         $agileSquadWithButton.= " data-cnum='" .$cnum . "' ";
