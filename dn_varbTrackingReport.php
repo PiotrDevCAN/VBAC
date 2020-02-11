@@ -6,6 +6,9 @@ use itdq\DbTable;
 use vbac\allTables;
 use vbac\assetRequestsTable;
 // require_once __DIR__ . '/../../src/Bootstrap.php';
+
+
+
 $helper = new Sample();
 if ($helper->isCli()) {
     $helper->log('This example should only be run from a Web Browser' . PHP_EOL);
@@ -16,6 +19,7 @@ echo "<pre>";
 
 // Create new Spreadsheet object
 ini_set('memory_limit', '256M');
+ini_set('max_execution_time', 180);
 
 
 $spreadsheet = new Spreadsheet();

@@ -121,13 +121,13 @@ class assetRequestsTable extends DbTable{
             var_dump($sql);
             return false;
         }
-        
+
         $data = array();
 
         while(($preTrimmed=db2_fetch_assoc($rs))==true){
 
-            $row = array_map('trim', $preTrimmed);    
-            
+            $row = array_map('trim', $preTrimmed);
+
             $userRaised = strtoupper($row['USER_CREATED'])=='YES';
             $approved   = $row['STATUS'] == assetRequestRecord::STATUS_APPROVED;
 
@@ -181,7 +181,7 @@ class assetRequestsTable extends DbTable{
 
             $rejectButton = $withButtons ? $rejectButton : '';
             $rejectButton = $userRaised & $approved  ? '' : $rejectButton;
-            
+
             $amendOITButton  = "<button type='button' class='btn btn-default btn-xs btnAmendOrderItNumber btn-warning' aria-label='Left Align' ";
             $amendOITButton .= "data-reference='" .trim($reference) . "' ";
             $amendOITButton .= "data-orderit='".trim($row['ORDERIT_NUMBER']) . "' ";
@@ -189,10 +189,10 @@ class assetRequestsTable extends DbTable{
             $amendOITButton .= " > ";
             $amendOITButton .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
             $amendOITButton .= " </button> ";
-           
-            $amendOITButton = $withButtons && $_SESSION['isPmo'] && !empty($row['ORDERIT_NUMBER']) ? "&nbsp;" . $amendOITButton : '';     
-            
-            $row['ORDERIT_NUMBER'] = $amendOITButton . $row['ORDERIT_NUMBER']; 
+
+            $amendOITButton = $withButtons && $_SESSION['isPmo'] && !empty($row['ORDERIT_NUMBER']) ? "&nbsp;" . $amendOITButton : '';
+
+            $row['ORDERIT_NUMBER'] = $amendOITButton . $row['ORDERIT_NUMBER'];
 
             $pmoOrFm = ($_SESSION['isFm'] || $_SESSION['isPmo']);
             $notTheirOwnRecord = ( trim(strtolower($row['REQUESTEE_EMAIL'])) != trim(strtolower($_SESSION['ssoEmail'])));
@@ -217,7 +217,7 @@ class assetRequestsTable extends DbTable{
                     $rejectable = true;
                     $approvable = $_SESSION['isPmo']; // Only PMO get the approve button now.
                     break;
-                    
+
                 default:
                     $rejectable = false;
                     $approvable = false;
@@ -580,24 +580,24 @@ class assetRequestsTable extends DbTable{
     }
 
     function countRequestsAwaitingIam(){
-        
+
         $sql = " SELECT count(*) as tickets ";
         $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
         $sql .= " WHERE STATUS='" . assetRequestRecord::STATUS_AWAITING_IAM . "' ";
-       
+
         $rs2 = db2_exec($_SESSION['conn'],$sql);
         if(!$rs2){
             db2_rollback($_SESSION['conn']);
             DbTable::displayErrorMessage($rs2, __CLASS__, __METHOD__, $sql);
             return false;
         }
-        
+
         $row=db2_fetch_assoc($rs2);
-      
+
         return $row['TICKETS'];
     }
-    
-    
+
+
     function countRequestsForPmoExport($bauRequest){
 
         $bau = false;
@@ -1182,8 +1182,8 @@ class assetRequestsTable extends DbTable{
         </form>
     	<?php
     }
-    
-    
+
+
     function amendOrderItModal(){
         ?>
         <!-- Modal -->
@@ -1194,7 +1194,7 @@ class assetRequestsTable extends DbTable{
       			<div class="modal-header">
         		   <h4 class="modal-title">Amend LBG</h4>
       			</div>
-      			
+
       			<div class="modal-body" >
           	<form class="form-horizontal" role="form" id='amendOrderItForm' onSubmit='return false;' >
                   <div class="form-group">
@@ -1223,17 +1223,17 @@ class assetRequestsTable extends DbTable{
                     <div class="col-sm-10">
           				<input class='form-control' id='amendOrderItNewOrderIt' name='amendOrderItNewOrderIt'
                 			value=''
-                			type='text' 
+                			type='text'
                 			placeholder = 'Enter new LBG Number'
                 			>
                     </div>
                   </div>
                 </form>
-        		
+
 
       			</div>
-      			
-      			<div class="modal-footer">      				
+
+      			<div class="modal-footer">
       				<button type="button" class="btn btn-success" id='confirmedSaveOrderIt'>Save</button>
       				<button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
 
@@ -1541,7 +1541,7 @@ class assetRequestsTable extends DbTable{
         $sql .= " ON lower(A.EMAIL_ADDRESS) = lower(AR.APPROVER_EMAIL) ";
         $sql .= " LEFT JOIN " . $_SESSION['Db2Schema']. "." . allTables::$EMPLOYEE_TYPE_MAPPING . " as EM ";
         $sql .= " ON upper(P.EMPLOYEE_TYPE) = upper(EM.CODE) ";
-        
+
 
 
         $sql .= " WHERE 1=1 ";
@@ -1589,6 +1589,7 @@ class assetRequestsTable extends DbTable{
 
 
     function getVarbTracker(Spreadsheet $spreadsheet,$fullExtract = false){
+        ini_set('max_execution_time', 60);
         $recordsFound = false;
         $loader = new Loader();
         array_map('trim',$allStatus);
@@ -1598,6 +1599,7 @@ class assetRequestsTable extends DbTable{
 
 //         if(!empty($allStatus)){
         foreach ($userCreated as $uCreated  ) {
+            ini_set('max_execution_time', 60);
 //            foreach ($ctbOnly as $isThisCtb){
 //                 foreach ($allStatus as $key => $value) {
                     $sql = " SELECT AR.REQUEST_REFERENCE, AR.ORDERIT_NUMBER, AR.ORDERIT_VARB_REF, V.CREATED_DATE, V.CREATED_BY,AR.STATUS, AR.ORDERIT_STATUS ";
@@ -1708,9 +1710,9 @@ class assetRequestsTable extends DbTable{
             $row['INCLUDED'] = "<input type='checkbox' name='request[]' value='" . $row['REFERENCE'] . "'  />";
             $row['ORDERIT_NUMBER'] = "<input type='text' name='orderit[" . $row['REFERENCE'] . "]' value='" . $row['ORDERIT_NUMBER'] . "'  min='999999' max='9999999' class='form-control'  /> " ;
 
-            $comment =trim($row['COMMENT']);            
-            $row['COMMENT'] = "<input type='text' name='comment[" . $row['REFERENCE'] . "]' value='' class='form-control'  /><br/>$comment"; 
-            
+            $comment =trim($row['COMMENT']);
+            $row['COMMENT'] = "<input type='text' name='comment[" . $row['REFERENCE'] . "]' value='' class='form-control'  /><br/>$comment";
+
  //           $row['PRIMARY_UID'] = trim($row['ASSET'])=='CT ID' ?  "<input type='text' name='primaryUid[".$row['REFERENCE'] . "]' placeholder='" . $row['ASSET'] . "' value='' />" : null;
  //           $row['SECONDARY_UID'] = !empty($row['ASSET_SECONDARY_UID_TITLE']) ?  "<input type='text' name='secondaryUid[" .$row['REFERENCE'] . "]' placeholder='" . $row['ASSET_SECONDARY_UID_TITLE'] . "' value='" . $row['SECONDARY_UID'] . "'  />" : null;
 
@@ -1972,11 +1974,11 @@ class assetRequestsTable extends DbTable{
                 break;
             }
 
-            
+
             $comment = $row['COMMENT'];
             $reference = trim($row['REFERENCE']);
 
-            
+
             $row['COMMENT'] = '<div class="form-check"><textarea class="form-check-input" style="min-width: 100%" name=\'comment['. $row['REFERENCE'] . "]'  id=\'comment[". $row['REFERENCE'] . "]\'" . " ></textarea><br/>$comment</div>";
 
 
@@ -1993,14 +1995,14 @@ class assetRequestsTable extends DbTable{
 
             $row['PRIMARY_UID'] = !empty(trim($row['ASSET_PRIMARY_UID_TITLE'])) ?  "<input type='text' name='primaryUid[".$reference. "]' placeholder='" . trim($row['ASSET_PRIMARY_UID_TITLE']) . "' value='" . $primaryUid . "' />" : null;
             $row['STATUS'] = "<small>" . trim($row['STATUS']) . "</small>";
-            
-            
+
+
             $orderItResponded = \DateTime::createFromFormat('Y-m-d', $row['ORDERIT_RESPONDED']);
             $orderItRespondedDisplay = is_object($orderItResponded) ?  $orderItResponded->format('d M Y') : null;
-            
+
             $row['ORDERIT_RESPONDED'] = "<div class='form-check'><input class='form-check' name='orderit_responded[" . $reference . "]' id='orderit_responded[". $reference ."]' value='$orderItRespondedDisplay' type='date' size='10' maxlength='10' placeholder='OrderIt Resp.' data-toggle='tooltip' title='LBG Responded'>";
             $row['ORDERIT_RESPONDED'].= "</div>";
-            
+
 
             unset($row['ORDERIT_NUMBER']);
             unset($row['ORDERIT_VARB_REF']);
@@ -2059,31 +2061,31 @@ class assetRequestsTable extends DbTable{
         }
         return true;
     }
-    
+
     function updateOrderItResponded($requestReference, $orderitResponded){
         if(!empty($orderitResponded)){
             $now = new \DateTime();
-            
+
             $preparedStmt = $this->prepareUpdateOrderitRespondedField();
-            
+
             if(!$preparedStmt){
                 echo "Prepare for LBG Responded has failed.";
                 die('here');
             }
-            
-            
+
+
             $data = array($orderitResponded,$requestReference);
-            
+
             AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>Data:" . print_r($data,true),AuditTable::RECORD_TYPE_DETAILS);
-            
-            
+
+
             $rs = db2_execute($preparedStmt,$data);
-            
+
             if(!$rs){
                 DbTable::displayErrorMessage($preparedStmt, __CLASS__, __METHOD__, 'preparedStmt');
                 return false;
             }
-            
+
             assetRequestsEventsTable::logEventForRequestWithDate(assetRequestsEventsTable::EVENT_ORDERIT_RESPONDED, $requestReference,$orderitResponded);
             return true;
         }
@@ -2133,27 +2135,27 @@ class assetRequestsTable extends DbTable{
         $this->preparedUpdateComment = $rs;
         return $this->preparedUpdateComment;
     }
-    
+
     function prepareUpdateOrderitRespondedField(){
         if(!empty($this->preparedOrderitResponded)){
             return $this->preparedOrderitResponded;
         }
-        
+
         $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS ;
         $sql.= " SET ORDERIT_RESPONDED = ? ";
         $sql.= " WHERE REQUEST_REFERENCE=? ";
-        
+
         $rs = db2_prepare($_SESSION['conn'], $sql);
-        
+
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         }
-        
+
         $this->preparedOrderitResponded = $rs;
         return $this->preparedOrderitResponded;
     }
-    
+
 
     function preparepGetCommentField(){
         if(!empty($this->preparedGetComment)){
@@ -2239,7 +2241,7 @@ class assetRequestsTable extends DbTable{
             case trim($status)==assetRequestRecord::STATUS_AWAITING_IAM:
                 // else - if they are rejecting then go to "Not to be Raised"
                 $orderItStatus = assetRequestRecord::STATUS_ORDERIT_YET;
-                break;                
+                break;
             default:
                 $orderItStatus = null;
                 break;
@@ -2362,21 +2364,21 @@ class assetRequestsTable extends DbTable{
 
         return true;
     }
-    
+
     function saveAmendedOit($reference, $orderIt){
-            
+
         $sql = " UPDATE ";
         $sql.= $_SESSION['Db2Schema'] . "." . $this->tableName;
         $sql.= " SET ORDERIT_NUMBER='" . db2_escape_string($orderIt) . "' ";
         $sql.= " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' ";
-        
+
         $rs = db2_exec($_SESSION['conn'], $sql);
-        
+
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         }
-        
+
         return true;
     }
 
