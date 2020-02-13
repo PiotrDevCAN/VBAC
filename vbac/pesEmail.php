@@ -11,8 +11,8 @@ use itdq\Loader;
 class pesEmail {
 
     private function getLloydsGlobalApplicationForm(){
-        // LLoyds Global Application Form v2.0.doc
-        $filename = "../emailAttachments/LLoyds Global Application Form v2.0.doc";
+        // FSS Global Application Form v2.0.doc
+        $filename = "../emailAttachments/FSS Global Application Form v2.0.doc";
         $handle = fopen($filename, "r");
         $applicationForm = fread($handle, filesize($filename));
         fclose($handle);
@@ -71,56 +71,56 @@ class pesEmail {
         switch (true) {
             case $intExt=='External' && $emailType=='UK':
                 $encodedApplicationForm = $this->getLloydsGlobalApplicationForm();
-                $pesAttachments        = array(array('filename'=>'LLoyds Global Application Form v2.0.doc','content_type'=>'application/msword','data'=>$encodedApplicationForm)
+                $pesAttachments        = array(array('filename'=>'FSS Global Application Form v2.0.doc','content_type'=>'application/msword','data'=>$encodedApplicationForm)
                 );
                 break;
             case $intExt=='Internal' && $emailType=='UK':
                 $encodedApplicationForm = $this->getLloydsGlobalApplicationForm();
-                $pesAttachments = array(array('filename'=>'LLoyds Global Application Form v2.0.doc','content_type'=>'application/msword','data'=>$encodedApplicationForm)
+                $pesAttachments = array(array('filename'=>'FSS Global Application Form v2.0.doc','content_type'=>'application/msword','data'=>$encodedApplicationForm)
                 );
                 break;
             case $intExt=='External' && $emailType=='India':
                 $encodedXlsAttachment = $this->getOdcApplicationForm();
                 $encodedApplicationForm = $this->getLloydsGlobalApplicationForm();
                 $pesAttachments = array(array('filename'=>'ODC application form v3.0.xlsx','content_type'=>'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','data'=>$encodedXlsAttachment)
-                    ,array('filename'=>'LLoyds Global Application Form v2.0.doc','content_type'=>'application/msword','data'=>$encodedApplicationForm)
+                    ,array('filename'=>'FSS Global Application Form v2.0.doc','content_type'=>'application/msword','data'=>$encodedApplicationForm)
                 );
                 break;
             case $intExt=='Internal' && $emailType=='India':
                 $encodedApplicationForm = $this->getLloydsGlobalApplicationForm();
                 $encodedXlsAttachment = $this->getOdcApplicationForm();
-                $pesAttachments = array(array('filename'=>'LLoyds Global Application Form v2.0.doc','content_type'=>'application/msword','data'=>$encodedApplicationForm)
+                $pesAttachments = array(array('filename'=>'FSS Global Application Form v2.0.doc','content_type'=>'application/msword','data'=>$encodedApplicationForm)
                     ,array('filename'=>'ODC application form v3.0.xlsx','content_type'=>'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','data'=>$encodedXlsAttachment)
                 );
                 break;
             case $emailType=='Czech':
                 $encodedApplicationForm = $this->getLloydsGlobalApplicationForm();
-                $pesAttachments = array(array('filename'=>'LLoyds Global Application Form v2.0.doc','content_type'=>'application/msword','data'=>$encodedApplicationForm)
+                $pesAttachments = array(array('filename'=>'FSS Global Application Form v2.0.doc','content_type'=>'application/msword','data'=>$encodedApplicationForm)
                 );
                 break;
             case $emailType=='USA':
                 $encodedConsentForm = $this->getOverseasConsentForm();
                 $encodedApplicationForm = $this->getLloydsGlobalApplicationForm();
-                $pesAttachments = array(array('filename'=>'LLoyds Global Application Form v2.0.doc','content_type'=>'application/msword','data'=>$encodedApplicationForm)
+                $pesAttachments = array(array('filename'=>'FSS Global Application Form v2.0.doc','content_type'=>'application/msword','data'=>$encodedApplicationForm)
                     ,array('filename'=>'New Overseas Consent Form GDPR.pdf','content_type'=>'application/pdf','data'=>$encodedConsentForm)
                 );
                 break;
             case $emailType=='core_4':
                 $encodedApplicationForm = $this->getLloydsGlobalApplicationForm();
-                $pesAttachments = array(array('filename'=>'LLoyds Global Application Form v2.0.doc','content_type'=>'application/msword','data'=>$encodedApplicationForm)
+                $pesAttachments = array(array('filename'=>'FSS Global Application Form v2.0.doc','content_type'=>'application/msword','data'=>$encodedApplicationForm)
                 );
                 break;
             case $intExt=='Internal' && $emailType=='International_CRC':
                 $encodedApplicationForm = $this->getLloydsGlobalApplicationForm();
                 $encodedConsentForm = $this->getOverseasConsentForm();
-                $pesAttachments = array(array('filename'=>'LLoyds Global Application Form v2.0.doc','content_type'=>'application/msword','data'=>$encodedApplicationForm)
+                $pesAttachments = array(array('filename'=>'FSS Global Application Form v2.0.doc','content_type'=>'application/msword','data'=>$encodedApplicationForm)
                     ,array('filename'=>'New Overseas Consent Form GDPR.pdf','content_type'=>'application/pdf','data'=>$encodedConsentForm)
                 );
                 break;
             case $intExt=='Internal' && $emailType=='International_Credit_Check':
                 $encodedApplicationForm = $this->getLloydsGlobalApplicationForm();
                 $encodedConsentForm = $this->getOverseasConsentForm();
-                $pesAttachments = array(array('filename'=>'LLoyds Global Application Form v2.0.doc','content_type'=>'application/msword','data'=>$encodedApplicationForm)
+                $pesAttachments = array(array('filename'=>'FSS Global Application Form v2.0.doc','content_type'=>'application/msword','data'=>$encodedApplicationForm)
                     ,array('filename'=>'New Overseas Consent Form GDPR.pdf','content_type'=>'application/pdf','data'=>$encodedConsentForm)
                 );
                 break;
