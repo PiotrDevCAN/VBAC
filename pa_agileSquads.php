@@ -62,20 +62,13 @@ $(document).ready(function() {
 
 $(document).ready(function(){
     $('input[type=radio]').click(function(){
-       console.log(this.value);
+
        populateTribeDropDown();
        $('#TRIBE_NUMBER').prop('disabled',false);
 
-// console.log($('#TRIBE_NUMBER'));
-// console.log($('#TRIBE_NUMBER option'));
-console.log($('#TRIBE_NUMBER option[data-organisation="Managed Services"]'));
-console.log($('#TRIBE_NUMBER option[data-organisation!="Managed Services"]'));
-// console.log($('#TRIBE_NUMBER option[data-organisation="Project Services"]'));
-
-// 	        $('#TRIBE_NUMBER > option').attr('disabled',true);
-    $('option[data-organisation!="' + this.value + '"]').remove();
-    $("#TRIBE_NUMBER").prepend("<option value='' selected='selected'></option>");
-    $('#TRIBE_NUMBER').trigger('change');
+       $('option[data-organisation!="' + this.value + '"]').remove();
+       $("#TRIBE_NUMBER").prepend("<option value='' selected='selected'></option>");
+       $('#TRIBE_NUMBER').trigger('change');
 
     });
 });

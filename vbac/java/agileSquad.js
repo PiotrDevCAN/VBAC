@@ -126,7 +126,7 @@ function agileSquad() {
   this.listenForEditSquad = function(){
 	  $(document).on('click','.btnEditSquad',function(){
 		  
-		  console.log($(this).data()); 
+		  populateTribeDropDown();
 		  
 		  $('#SQUAD_NUMBER').val($(this).data('squadnumber')).trigger('change').attr('disabled',true);
 		  $('#SQUAD_TYPE').val($(this).data('squadtype'));
@@ -135,6 +135,11 @@ function agileSquad() {
 		  $('#SQUAD_LEADER').val($(this).data('squadleader'));
 		  $('#SQUAD_NAME').val($(this).data('squadname'));
 		  $('#mode').val('edit');
+		  
+		  var organisation =  $('#TRIBE_NUMBER').find(':selected').data('organisation');
+		  $("input[name='Organisation'][value='" + organisation + "']").prop('checked', true);
+		  
+	      $('#TRIBE_NUMBER > option[data-organisation!="' + organisation + '"]').remove();
 		  
 	  });
   }
