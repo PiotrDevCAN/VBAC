@@ -13,12 +13,26 @@ class AgileTribeRecord extends DbRecord {
     protected $TRIBE_NUMBER;
     protected $TRIBE_NAME;
     protected $TRIBE_LEADER;
+    protected $ORGANISATION;
 
 
     function displayForm($mode=FormClass::modeDefine){
         $notEditable = $mode == FormClass::$modeEDIT ? ' disabled ' : '';
         $nextAvailableTribeNumber = AgileTribeTable::nextAvailableTribeNumber();
-        ?>
+
+        var_dump($this->ORGANISATION);
+        var_dump($this->ORGANISATION=='Managed Services');
+
+        $managedChecked = $this->ORGANISATION=='Managed Services' || empty($this->ORGANISATION) ? " checked='checked' " : null;
+
+        var_dump($managedChecked);
+
+        $projectChecked = empty($managedChecked) ?  " checked='checked' " : null;
+        var_dump($projectChecked);
+
+
+
+         ?>
         <form id='tribeForm' class="form-horizontal" method='post'>
          <div class="form-group required" >
             <label for='TRIBE_NUMBER' class='col-sm-2 control-label ceta-label-left' data-toggle='tooltip' data-placement='top' title='Tribe Number'>Tribe Number</label>
@@ -26,6 +40,23 @@ class AgileTribeRecord extends DbRecord {
 				<input id='TRIBE_NUMBER' name='TRIBE_NUMBER' class='form-control' type='number'  <?=$notEditable;?> value='<?=!empty($this->TRIBE_NUMBER) ? $this->TRIBE_NUMBER :$nextAvailableTribeNumber ; ?>' />
             </div>
         </div>
+        <div class="form-group " >
+            <label for='ORGANISATION' class='col-sm-2 control-label ceta-label-left' data-toggle='tooltip' data-placement='top' title='Organisation'>Organisation</label>
+        	<div class='col-md-4'>
+        	 <div class="form-check">
+             <input class="form-check-input" name='ORGANISATION'  type="radio" id="radioTribeOrganisationManaged" value="Managed Services" <?=$managedChecked?>>
+             <label class="form-check-label " for="radio" id="radioTribeOrganisation">Managed Services</label>
+             </div>
+
+             <div class="form-check">
+             <input class="form-check-input" name='ORGANISATION'  type="radio" id="radioTribeOrganisationProject" value="Project Services" <?=$projectChecked?>>
+             <label class="form-check-label " for="radio" id="radioTribeOrganisationProject">Project Services</label>
+             </div>
+            </div>
+        </div>
+
+
+
         <div class="form-group required " >
             <label for='TRIBE_NAME' class='col-sm-2 control-label ceta-label-left' data-toggle='tooltip' data-placement='top' title='Full Name'>Tribe Name</label>
         	<div class='col-md-4'>

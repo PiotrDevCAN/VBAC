@@ -20,12 +20,12 @@ $squadRecord->displayForm(FormClass::$modeDEFINE);
 <div class='container'>
 <table id='tribeTable' class='table table-striped table-bordered compact'  style='width:100%'>
 <thead>
-<tr><th>Tribe Number</th><th>Tribe Name</th><th>Tribe Leader</th></tr>
+<tr><th>Tribe Number</th><th>Tribe Name</th><th>Tribe Leader</th><th>Organisation</th></tr>
 </thead>
 <tbody>
 </tbody>
 <tfoot>
-<tr><th>Tribe Number</th><th>Tribe Name</th><th>Tribe Leader</th></tr>
+<tr><th>Tribe Number</th><th>Tribe Name</th><th>Tribe Leader</th><th>Organisation</th></tr>
 </tfoot>
 </table>
 </div>

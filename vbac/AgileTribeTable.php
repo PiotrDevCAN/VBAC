@@ -53,6 +53,7 @@ class AgileTribeTable extends DbTable{
         $tribeNumberWithIcon .= "data-tribenumber='" .$tribeNumber . "' ";
         $tribeNumberWithIcon .= "data-tribename='" .$row['TRIBE_NAME'] . "' ";
         $tribeNumberWithIcon .= "data-tribeleader='" .$row['TRIBE_LEADER'] . "' ";
+        $tribeNumberWithIcon .= "data-organisation='" .$row['ORGANISATION'] . "' ";
         $tribeNumberWithIcon .= " data-toggle='tooltip' data-placement='top' title='Edit Tribe'";
         $tribeNumberWithIcon .= " > ";
         $tribeNumberWithIcon .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";

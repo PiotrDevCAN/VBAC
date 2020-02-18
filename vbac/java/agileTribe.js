@@ -45,6 +45,7 @@ function agileTribe() {
                       { "data": "TRIBE_NUMBER", render: { _:"display", sort:"sort" } },
                       { "data": "TRIBE_NAME"   },
                       { "data": "TRIBE_LEADER" },
+                      { "data": "ORGANISATION" },
                   ],
           order: [[1, "asc" ]],
           responsive: true,
@@ -98,7 +99,8 @@ function agileTribe() {
 		      		$('.spinning').removeClass('spinning').attr('disabled',false);
 		      		$('#TRIBE_NUMBER').val('').trigger('change').attr('disabled',false);
 		      		$('#TRIBE_NAME').val('');
-		      		$('#TRIBE_LEADER').val('');		
+		      		$('#TRIBE_LEADER').val('');	
+		      		$('#radioTribeOrganisationManaged').prop('checked', true)
 		      		agileTribe.table.ajax.reload();
 		      	},
 		      	fail: function(response){
@@ -121,6 +123,11 @@ function agileTribe() {
 		  $('#TRIBE_NUMBER').val($(this).data('tribenumber')).trigger('change').attr('disabled',true);
 		  $('#TRIBE_NAME').val($(this).data('tribename'));
 		  $('#TRIBE_LEADER').val($(this).data('tribeleader'));
+		  if($(this).data('organisation')=='Managed Services'){
+			  $('#radioTribeOrganisationManaged').prop('checked', true)
+		  } else {
+			  $('#radioTribeOrganisationProject').prop('checked', true)
+		  }
 		  $('#mode').val('edit');
 		  
 	  });
