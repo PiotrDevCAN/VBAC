@@ -22,6 +22,7 @@ class AgileSquadRecord extends DbRecord {
         $loader = new Loader();
         $notEditable = $mode == FormClass::$modeEDIT ? ' disabled ' : '';
         $nextAvailableSquadNumber = AgileSquadTable::nextAvailableSquadNumber();
+        $allTribesOrganisation = $loader->loadIndexed("ORGANISATION","TRIBE_NUMBER", allTables::$AGILE_TRIBE);
         $allTribes = $loader->loadIndexed("TRIBE_NAME","TRIBE_NUMBER", allTables::$AGILE_TRIBE);
         ?>
         <form id='squadForm' class="form-horizontal" method='post'>
@@ -29,6 +30,20 @@ class AgileSquadRecord extends DbRecord {
             <label for=SQUAD_NUMBER class='col-sm-2 control-label ceta-label-left' data-toggle='tooltip' data-placement='top' title='Squad Number'>Squad Number</label>
         	<div class='col-md-4'>
 				<input id='SQUAD_NUMBER' name='SQUAD_NUMBER' class='form-control' type='number' <?=$notEditable;?> value='<?=!empty($this->SQUAD_NUMBER) ? $this->SQUAD_NUMBER :$nextAvailableSquadNumber ; ?>' />
+            </div>
+        </div>
+        <div class="form-group required" >
+            <label for='Organisation' class='col-sm-2 control-label ceta-label-left' data-toggle='tooltip' data-placement='top' title='Organisation'>Organisation</label>
+        	<div class='col-md-4'>
+        	 <div class="form-check">
+             <input class="form-check-input" name='Organisation'  type="radio" id="radioTribeOrganisationManaged" value="Managed Services" >
+             <label class="form-check-label " for="radio" id="radioTribeOrganisation">Managed Services</label>
+             </div>
+
+             <div class="form-check">
+             <input class="form-check-input" name='Organisation'  type="radio" id="radioTribeOrganisationProject" value="Project Services" >
+             <label class="form-check-label " for="radio" id="radioTribeOrganisationProject">Project Services</label>
+             </div>
             </div>
         </div>
         <div class="form-group required " >
@@ -46,12 +61,14 @@ class AgileSquadRecord extends DbRecord {
         <div class="form-group required" >
             <label for='TRIBE_NUMBER' class='col-sm-2 control-label ceta-label-left' data-toggle='tooltip' data-placement='top' title='Tribe'>Tribe</label>
         	<div class='col-md-4'>
-				<SELECT id='TRIBE_NUMBER' class='form-control select2' <?=$notEditable ?> name='TRIBE_NUMBER' >
+				<SELECT id='TRIBE_NUMBER' class='form-control select2'  name='TRIBE_NUMBER' >
     				<option value=''></option>
     				<?php
     				foreach ($allTribes as  $tribeNumber => $tribeName) {
-    				    ?><option value='<?=trim($tribeNumber)?>'><?=trim($tribeName)?>
+    				    ?><option data-organisation='<?=$allTribesOrganisation[trim($tribeNumber)] ?>' value='<?=trim($tribeNumber)?>'
     				    <?=$this->TRIBE_NUMBER == $tribeNumber ? ' selected ' : null;?>
+    				    disabled >
+    				    <?=trim($tribeName) . " - " . $allTribesOrganisation[trim($tribeNumber)]?>
     				    </option><?php
                         }
                     ?>
@@ -80,12 +97,6 @@ class AgileSquadRecord extends DbRecord {
 				<input id='SQUAD_LEADER' name='SQUAD_LEADER' class='form-control typeaheadNotesId' value='<?=!empty($this->SQUAD_LEADER) ? $this->SQUAD_LEADER :null ; ?>'/>
             </div>
         </div>
-
-
-
-
-
-
    		<div class='form-group'>
    		<div class='col-sm-offset-2 -col-md-4'>
         <?php
@@ -100,6 +111,20 @@ class AgileSquadRecord extends DbRecord {
   		</div>
   		</div>
 	</form>
+	<script>
+	function populateTribeDropDown()
+	{
+		  $('#TRIBE_NUMBER').empty().trigger('change');
+		  $('#TRIBE_NUMBER').append('<option value=""></option>')
+		  <?php
+			foreach ($allTribes as  $tribeNumber => $tribeName) {
+		    ?>.append("<option data-organisation='<?=$allTribesOrganisation[trim($tribeNumber)] ?>' value='<?=trim($tribeNumber)?>' ><?=trim($tribeName)?></option>")
+		    <?php
+            }
+            ?>
+            .trigger('change');
+	}
+	</script>
     <?php
     }
 
