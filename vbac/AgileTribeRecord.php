@@ -19,19 +19,8 @@ class AgileTribeRecord extends DbRecord {
     function displayForm($mode=FormClass::modeDefine){
         $notEditable = $mode == FormClass::$modeEDIT ? ' disabled ' : '';
         $nextAvailableTribeNumber = AgileTribeTable::nextAvailableTribeNumber();
-
-        var_dump($this->ORGANISATION);
-        var_dump($this->ORGANISATION=='Managed Services');
-
         $managedChecked = $this->ORGANISATION=='Managed Services' || empty($this->ORGANISATION) ? " checked='checked' " : null;
-
-        var_dump($managedChecked);
-
         $projectChecked = empty($managedChecked) ?  " checked='checked' " : null;
-        var_dump($projectChecked);
-
-
-
          ?>
         <form id='tribeForm' class="form-horizontal" method='post'>
          <div class="form-group required" >
