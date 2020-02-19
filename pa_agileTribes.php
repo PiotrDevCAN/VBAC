@@ -11,6 +11,15 @@ ob_start();
 ?>
 <div class='container'>
 <h2>Manage Tribe Records</h2>
+<form id='tribeVersion' class="form-horizontal" method='post'>
+    <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-4">
+    <input  data-toggle="toggle" type="checkbox" class='toggle' data-width='100%' data-on="Original Squads" data-off="New Squads" id='version' name='version' value='Original' data-onstyle='success' data-offstyle='warning' checked>
+    </div>
+    </div>
+</form>
+
+
 <?php
 $squadRecord = new AgileTribeRecord();
 $squadRecord->displayForm(FormClass::$modeDEFINE);
@@ -55,13 +64,29 @@ $squadRecord->displayForm(FormClass::$modeDEFINE);
 <script type="text/javascript">
 var Tribe = new agileTribe();
 
-console.log(Tribe);
-
 $(document).ready(function() {
-	Tribe.initialiseAgileTribeTable();
+
+	version = $('#version').prop('checked') ? 'Original' : 'New';
+	Tribe.initialiseAgileTribeTable(version);
 	Tribe.listenForSubmitTribeForm();
 	Tribe.listenForLeader();
 	Tribe.listenForEditTribe();
+
+    $('#version').bootstrapToggle();
+
+    console.log(Tribe);
+
+    console.log(agileTribe.table);
+    console.log(agileTribe.spinner);
+
+    $('#version').change({tribe: agileTribe.table}, function(event) {
+        console.log(event);
+        console.log(event.data);
+    	event.data.tribe.ajax.reload();
+    });
+
+
+
 });
 
 </script>

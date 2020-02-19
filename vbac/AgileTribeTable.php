@@ -12,8 +12,10 @@ use itdq\DbTable;
 
 class AgileTribeTable extends DbTable{
 
-    static function nextAvailableTribeNumber() {
-        $sql = " SELECT MAX(TRIBE_NUMBER) as TRIBE_NUMBER FROM " . $_SESSION['Db2Schema'] . "." . allTables::$AGILE_TRIBE ;
+    static function nextAvailableTribeNumber($version=null) {
+
+        $table = $version=='Original' ? allTables::$AGILE_TRIBE : allTables::$AGILE_TRIBE_NEW;
+        $sql = " SELECT MAX(TRIBE_NUMBER) as TRIBE_NUMBER FROM " . $_SESSION['Db2Schema'] . "." . $table;
 
         $rs = db2_exec($_SESSION['conn'], $sql);
 

@@ -13,6 +13,10 @@ class allTables
     public static $AGILE_SQUAD     = 'AGILE_SQUAD';
     public static $AGILE_TRIBE     = 'AGILE_TRIBE';
 
+    public static $AGILE_SQUAD_NEW = 'AGILE_SQUAD_NEW';
+    public static $AGILE_TRIBE_NEW = 'AGILE_TRIBE_NEW';
+
+
     public static $ASSET_REQUESTS     = 'ASSET_REQUESTS';
     public static $ASSET_REQUESTS_EVENTS  = 'ASSET_REQUESTS_EVENTS';
     public static $ASSET_REQUESTS_EVENTS_SUMMARY  = 'ASSET_REQUESTS_EVENTS_SUMMARY';

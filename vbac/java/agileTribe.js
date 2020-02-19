@@ -10,9 +10,6 @@ function agileTribe() {
   var table;
   var spinner =  '<div id="overlay"><i class="fa fa-spinner fa-spin spin-big"></i></div>';
 
-
-
-
   this.init = function(){
     console.log('+++ Function +++ agileTribe.init');
     console.log('--- Function --- agileTribe.init');
@@ -27,7 +24,7 @@ function agileTribe() {
   },
 
 
-  this.initialiseAgileTribeTable = function(){	  
+  this.initialiseAgileTribeTable = function(version){	  
 	console.log('initialiseAgileTribeTable');
 	 
     // Setup - add a text input to each footer cell
@@ -39,7 +36,11 @@ function agileTribe() {
     agileTribe.table = $('#tribeTable').DataTable({
         ajax: {
               url: 'ajax/populateAgileTribeTable.php',
-              type: 'GET',
+              data: function(d){
+            	  var version = $('#version').prop('checked') ? 'Original' : 'New';
+                  d.version = version;                  
+                  },
+              type: 'POST',
           }	,
           columns: [
                       { "data": "TRIBE_NUMBER", render: { _:"display", sort:"sort" } },
@@ -81,11 +82,18 @@ function agileTribe() {
 	  	  var disabledFields = $(':disabled');
 		  $(disabledFields).attr('disabled',false);
 		  var formData = $("#tribeForm").serialize();
+		  var verData = $('#version').prop('checked') ? '&version=Original' : '&version=New';
+		  
+		  console.log(formData);
+		  console.log(verData);
+		  
+		  
+		  
 		  $(disabledFields).attr('disabled',true);
 		  $.ajax({
 				type:'post',
 			  	url: 'ajax/saveAgileTribeRecord.php',
-			  	data:formData,
+			  	data:formData + verData,
 		      	success: function(response) {
 		      		var responseObj = JSON.parse(response);
 		      		console.log(responseObj);
@@ -123,6 +131,11 @@ function agileTribe() {
 		  $('#TRIBE_NUMBER').val($(this).data('tribenumber')).trigger('change').attr('disabled',true);
 		  $('#TRIBE_NAME').val($(this).data('tribename'));
 		  $('#TRIBE_LEADER').val($(this).data('tribeleader'));
+		  
+		  console.log($(this));
+		  console.log($(this).data('organisation'));
+		  
+		  
 		  if($(this).data('organisation')=='Managed Services'){
 			  $('#radioTribeOrganisationManaged').prop('checked', true)
 		  } else {
