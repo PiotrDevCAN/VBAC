@@ -27,7 +27,7 @@ function agileSquad() {
   },
 
 
-  this.initialiseAgileSquadTable = function(){	  
+  this.initialiseAgileSquadTable = function(version){	  
 	console.log('initialiseAgileSquadTable');
 	 
     // Setup - add a text input to each footer cell
@@ -39,7 +39,11 @@ function agileSquad() {
     agileSquad.table = $('#squadTable').DataTable({
         ajax: {
               url: 'ajax/populateAgileSquadTable.php',
-              type: 'GET',
+              data: function(d){
+            	  var version = $('#version').prop('checked') ? 'Original' : 'New';
+                  d.version = version;                  
+                  },
+              type: 'POST'
           }	,
           columns: [
                       { "data": "SQUAD_NUMBER", render: { _:"display", sort:"sort" } },

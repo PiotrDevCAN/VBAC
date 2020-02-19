@@ -8,10 +8,20 @@ ob_start();
 ?>
 <div class='container'>
 <h2>Manage Squad Records</h2>
+<form id='tribeVersion' class="form-horizontal" method='post'>
+    <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-4">
+    <input  data-toggle="toggle" type="checkbox" class='toggle' data-width='100%' data-on="Original Squads" data-off="New Squads" id='version' name='version' value='Original' data-onstyle='success' data-offstyle='warning' checked>
+    </div>
+    </div>
+</form>
+<div id='squadDisplayForm'>
 <?php
 $squadRecord = new AgileSquadRecord();
+$squadRecord->setTribeOrganisation('Original');
 $squadRecord->displayForm(FormClass::$modeDEFINE);
 ?>
+</div>
 </div>
 
 <div class='container'>
@@ -58,6 +68,26 @@ $(document).ready(function() {
 	Squad.listenForLeader();
 	Squad.listenForEditSquad();
 	$('#TRIBE_NUMBER').select2();
+
+    $('#version').bootstrapToggle();
+
+    $('#version').change({squad: agileSquad}, function(event) {
+        var version = $('#version').prop('checked') ? 'Original' : 'New';
+        $('#squadDisplayForm').html('');
+        $.ajax({
+            url: "ajax/getSquadRecordDisplayForm.php",
+            type: 'POST',
+            data: { version: version },
+            success: function(result){
+                var resultObj = JSON.parse(result);
+            	$('#squadDisplayForm').html(resultObj.displayForm);
+            }
+      });
+    	event.data.squad.table.ajax.reload();
+    });
+
+
+
 });
 
 $(document).ready(function(){

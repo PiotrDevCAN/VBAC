@@ -18,8 +18,11 @@ use itdq\DbTable;
 
 class AgileSquadTable extends DbTable{
 
-    static function nextAvailableSquadNumber() {
-        $sql = " SELECT MAX(SQUAD_NUMBER) as SQUAD_NUMBER FROM " . $_SESSION['Db2Schema'] . "." . allTables::$AGILE_SQUAD ;
+    static function nextAvailableSquadNumber($version=null) {
+
+        $table = $version=='Original' ? allTables::$AGILE_SQUAD : allTables::$AGILE_SQUAD_NEW;
+
+        $sql = " SELECT MAX(SQUAD_NUMBER) as SQUAD_NUMBER FROM " . $_SESSION['Db2Schema'] . "." . $table ;
 
         $rs = db2_exec($_SESSION['conn'], $sql);
 
@@ -33,9 +36,13 @@ class AgileSquadTable extends DbTable{
 
     }
 
-    function returnAsArray(){
-        $sql = " SELECT * ";
-        $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+    function returnAsArray($version=null){
+        $tribeTable = $version=='Original' ? allTables::$AGILE_TRIBE : allTables::$AGILE_TRIBE_NEW;
+
+        $sql = " SELECT S.*, T.ORGANISATION ";
+        $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName . " as S ";
+        $sql.= " LEFT JOIN ". $_SESSION['Db2Schema'] . "." . $tribeTable . " as T ";
+        $sql.= " ON S.TRIBE_NUMBER = T.TRIBE_NUMBER ";
         $rs = db2_exec($_SESSION['conn'], $sql);
 
         if(!$rs){
@@ -62,6 +69,7 @@ class AgileSquadTable extends DbTable{
         $squadNumberNumberWithIcon .= "data-squadtype='" .$row['SQUAD_TYPE'] . "' ";
         $squadNumberNumberWithIcon .= "data-shift='" .$row['SHIFT'] . "' ";
         $squadNumberNumberWithIcon .= "data-tribenumber='" .$row['TRIBE_NUMBER'] . "' ";
+        $squadNumberNumberWithIcon .= "data-organisation='" .$row['ORGANISATION'] . "' ";
         $squadNumberNumberWithIcon .= " data-toggle='tooltip' data-placement='top' title='Edit Tribe'";
         $squadNumberNumberWithIcon .= " > ";
         $squadNumberNumberWithIcon .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";

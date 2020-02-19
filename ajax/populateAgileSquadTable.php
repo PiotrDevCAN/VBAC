@@ -7,10 +7,10 @@ use vbac\AgileSquadTable;
 set_time_limit(0);
 ob_start();
 
+$table = $_POST['version']=='Original' ? allTables::$AGILE_SQUAD : allTables::$AGILE_SQUAD_NEW;
 
-
-$agileSquadTable = new AgileSquadTable(allTables::$AGILE_SQUAD);
-$data = $agileSquadTable->returnAsArray();
+$agileSquadTable = new AgileSquadTable($table);
+$data = $agileSquadTable->returnAsArray($_POST['version']);
 
 $dataJsonAble = json_encode($data);
 

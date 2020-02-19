@@ -16,14 +16,22 @@ class AgileSquadRecord extends DbRecord {
     protected $SHIFT;
     protected $SQUAD_LEADER;
     protected $SQUAD_NAME;
+    protected $tribeOrganisation;
+
+    function setTribeOrganisation($version){
+        $this->tribeOrganisation = $version;
+    }
 
 
     function displayForm($mode=FormClass::modeDefine){
         $loader = new Loader();
         $notEditable = $mode == FormClass::$modeEDIT ? ' disabled ' : '';
-        $nextAvailableSquadNumber = AgileSquadTable::nextAvailableSquadNumber();
-        $allTribesOrganisation = $loader->loadIndexed("ORGANISATION","TRIBE_NUMBER", allTables::$AGILE_TRIBE);
-        $allTribes = $loader->loadIndexed("TRIBE_NAME","TRIBE_NUMBER", allTables::$AGILE_TRIBE);
+        $nextAvailableSquadNumber = AgileSquadTable::nextAvailableSquadNumber($this->tribeOrganisation);
+
+        $tribeTable = $this->tribeOrganisation=='Original' ? allTables::$AGILE_TRIBE : allTables::$AGILE_TRIBE_NEW;
+
+        $allTribesOrganisation = $loader->loadIndexed("ORGANISATION","TRIBE_NUMBER", $tribeTable);
+        $allTribes = $loader->loadIndexed("TRIBE_NAME","TRIBE_NUMBER", $tribeTable);
         ?>
         <form id='squadForm' class="form-horizontal" method='post'>
          <div class="form-group required" >
