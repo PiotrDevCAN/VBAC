@@ -137,6 +137,11 @@ function agileSquad() {
 		  $('#mode').val('edit');
 		  
 		  var organisation =  $('#TRIBE_NUMBER').find(':selected').data('organisation');
+		  
+		  console.log(organisation);
+		  
+		  console.log($("input[name='Organisation'][value='" + organisation + "']"));
+		  
 		  $("input[name='Organisation'][value='" + organisation + "']").prop('checked', true);
 		  
 	      $('#TRIBE_NUMBER > option[data-organisation!="' + organisation + '"]').remove();
