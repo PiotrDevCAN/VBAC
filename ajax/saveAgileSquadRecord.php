@@ -15,7 +15,9 @@ AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_POST,
 $agileSquadRecord = new AgileSquadRecord();
 $agileSquadRecord->setFromArray($_POST);
 
-$agileSquadRecordTable = new AgileSquadTable(allTables::$AGILE_SQUAD);
+$table = $_POST['version']=='Original' ? allTables::$AGILE_SQUAD : allTables::$AGILE_SQUAD_NEW;
+
+$agileSquadRecordTable = new AgileSquadTable($table);
 
 $saveResult = $_POST['mode']==FormClass::$modeDEFINE ? $agileSquadRecordTable->insert($agileSquadRecord) : $agileSquadRecordTable->update($agileSquadRecord);
 

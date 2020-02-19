@@ -88,11 +88,14 @@ function agileSquad() {
 	  	  var disabledFields = $(':disabled');
 		  $(disabledFields).attr('disabled',false);
 		  var formData = $("#squadForm").serialize();
+		  var verData = $('#version').prop('checked') ? '&version=Original' : '&version=New';
+		  
+		  
 		  $(disabledFields).attr('disabled',true);
 		  $.ajax({
 				type:'post',
 			  	url: 'ajax/saveAgileSquadRecord.php',
-			  	data:formData,
+			  	data:formData + verData,
 		      	success: function(response) {
 		      		var responseObj = JSON.parse(response);
 		      		console.log(responseObj);
@@ -130,8 +133,6 @@ function agileSquad() {
   this.listenForEditSquad = function(){
 	  $(document).on('click','.btnEditSquad',function(){
 		  
-		  populateTribeDropDown();
-		  
 		  $('#SQUAD_NUMBER').val($(this).data('squadnumber')).trigger('change').attr('disabled',true);
 		  $('#SQUAD_TYPE').val($(this).data('squadtype'));
 		  $('#TRIBE_NUMBER').val($(this).data('tribenumber')).trigger('change');
@@ -140,12 +141,9 @@ function agileSquad() {
 		  $('#SQUAD_NAME').val($(this).data('squadname'));
 		  $('#mode').val('edit');
 		  
+		  // repopulate the TRIBE_NUMBER drop down here
+		  
 		  var organisation =  $('#TRIBE_NUMBER').find(':selected').data('organisation');
-		  
-		  console.log(organisation);
-		  
-		  console.log($("input[name='Organisation'][value='" + organisation + "']"));
-		  
 		  $("input[name='Organisation'][value='" + organisation + "']").prop('checked', true);
 		  
 	      $('#TRIBE_NUMBER > option[data-organisation!="' + organisation + '"]').remove();

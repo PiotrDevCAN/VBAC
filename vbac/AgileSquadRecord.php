@@ -24,14 +24,8 @@ class AgileSquadRecord extends DbRecord {
 
 
     function displayForm($mode=FormClass::modeDefine){
-        $loader = new Loader();
         $notEditable = $mode == FormClass::$modeEDIT ? ' disabled ' : '';
         $nextAvailableSquadNumber = AgileSquadTable::nextAvailableSquadNumber($this->tribeOrganisation);
-
-        $tribeTable = $this->tribeOrganisation=='Original' ? allTables::$AGILE_TRIBE : allTables::$AGILE_TRIBE_NEW;
-
-        $allTribesOrganisation = $loader->loadIndexed("ORGANISATION","TRIBE_NUMBER", $tribeTable);
-        $allTribes = $loader->loadIndexed("TRIBE_NAME","TRIBE_NUMBER", $tribeTable);
         ?>
         <form id='squadForm' class="form-horizontal" method='post'>
          <div class="form-group required" >
@@ -71,15 +65,6 @@ class AgileSquadRecord extends DbRecord {
         	<div class='col-md-4'>
 				<SELECT id='TRIBE_NUMBER' class='form-control select2'  name='TRIBE_NUMBER' >
     				<option value=''></option>
-    				<?php
-    				foreach ($allTribes as  $tribeNumber => $tribeName) {
-    				    ?><option data-organisation='<?=$allTribesOrganisation[trim($tribeNumber)] ?>' value='<?=trim($tribeNumber)?>'
-    				    <?=$this->TRIBE_NUMBER == $tribeNumber ? ' selected ' : null;?>
-    				    disabled >
-    				    <?=trim($tribeName) . " - " . $allTribesOrganisation[trim($tribeNumber)]?>
-    				    </option><?php
-                        }
-                    ?>
     			</select>
         	</div>
         </div>
@@ -119,20 +104,6 @@ class AgileSquadRecord extends DbRecord {
   		</div>
   		</div>
 	</form>
-	<script>
-	function populateTribeDropDown()
-	{
-		  $('#TRIBE_NUMBER').empty().trigger('change');
-		  $('#TRIBE_NUMBER').append('<option value=""></option>')
-		  <?php
-			foreach ($allTribes as  $tribeNumber => $tribeName) {
-		    ?>.append("<option data-organisation='<?=$allTribesOrganisation[trim($tribeNumber)] ?>' value='<?=trim($tribeNumber)?>' ><?=trim($tribeName)?></option>")
-		    <?php
-            }
-            ?>
-            .trigger('change');
-	}
-	</script>
     <?php
     }
 

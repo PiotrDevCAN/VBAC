@@ -73,12 +73,6 @@ $(document).ready(function() {
 	Tribe.listenForEditTribe();
 
     $('#version').bootstrapToggle();
-
-    console.log(Tribe);
-
-    console.log(agileTribe.table);
-    console.log(agileTribe.spinner);
-
     $('#version').change({tribe: agileTribe.table}, function(event) {
         console.log(event);
         console.log(event.data);

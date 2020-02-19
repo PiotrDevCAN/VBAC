@@ -2,6 +2,7 @@
 
 use vbac\AgileSquadRecord;
 use itdq\FormClass;
+use itdq\Loader;
 
 set_time_limit(0);
 ob_start();
@@ -59,20 +60,54 @@ $squadRecord->displayForm(FormClass::$modeDEFINE);
 
 
 
+
 <script type="text/javascript">
+
 var Squad = new agileSquad();
+
+function initialiseTribeNumber(){
+	$('#TRIBE_NUMBER').select2({
+	  ajax: {
+		tags:false,
+	    url: 'ajax/populateTribeNumber.php',
+	    dataType: 'json',
+	    data: function (params) {
+	        var query = {
+	        		version: $('#version').prop('checked') ? 'Original' : 'New',
+	         	    organisation: $('#radioTribeOrganisationManaged').prop('checked') ? 'Managed Services' : 'Project Services',
+	              }
+	        return query;
+	   		}
+	  }
+	});
+	$('#SHIFT').select2();
+}
+// Set the listener for change to Organisation
+function setListenerForOrganisation(){
+    $('input[type=radio]').click(function(){
+        console.log('clear tribe number');
+        $('#TRIBE_NUMBER').empty().trigger('change');
+        if ($('#TRIBE_NUMBER').hasClass("select2-hidden-accessible")) {
+            $('#TRIBE_NUMBER').select2('destroy');
+            initialiseTribeNumber();
+        };
+    });
+}
+
 
 $(document).ready(function() {
 	Squad.initialiseAgileSquadTable();
 	Squad.listenForSubmitSquadForm();
 	Squad.listenForLeader();
 	Squad.listenForEditSquad();
-	$('#TRIBE_NUMBER').select2();
+
+	initialiseTribeNumber();
 
     $('#version').bootstrapToggle();
 
     $('#version').change({squad: agileSquad}, function(event) {
         var version = $('#version').prop('checked') ? 'Original' : 'New';
+        $("#TRIBE_NUMBER").empty().trigger('change')
         $('#squadDisplayForm').html('');
         $.ajax({
             url: "ajax/getSquadRecordDisplayForm.php",
@@ -81,25 +116,11 @@ $(document).ready(function() {
             success: function(result){
                 var resultObj = JSON.parse(result);
             	$('#squadDisplayForm').html(resultObj.displayForm);
+            	initialiseTribeNumber();
+            	setListenerForOrganisation();
             }
       });
     	event.data.squad.table.ajax.reload();
-    });
-
-
-
-});
-
-$(document).ready(function(){
-    $('input[type=radio]').click(function(){
-
-       populateTribeDropDown();
-       $('#TRIBE_NUMBER').prop('disabled',false);
-
-       $('option[data-organisation!="' + this.value + '"]').remove();
-       $("#TRIBE_NUMBER").prepend("<option value='' selected='selected'></option>");
-       $('#TRIBE_NUMBER').trigger('change');
-
     });
 });
 
