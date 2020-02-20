@@ -2,6 +2,7 @@
 namespace vbac;
 
 use itdq\DbTable;
+use itdq\Loader;
 
 /*
  *
@@ -98,6 +99,34 @@ class AgileSquadTable extends DbTable{
         $row = db2_fetch_assoc($rs);
 
         return $row;
+
+    }
+
+
+    static function buildTribeSelects(){
+        $loader = new Loader();
+        $allTribeSelects = array();
+        $allTribeSelects['original']['managed'] = $loader->loadIndexed('TRIBE_NAME','TRIBE_NUMBER', allTables::$AGILE_TRIBE, " ORGANISATION='Managed Services' ");
+        $allTribeSelects['original']['project'] = $loader->loadIndexed('TRIBE_NAME','TRIBE_NUMBER', allTables::$AGILE_TRIBE, " ORGANISATION='Project Services' ");
+        $allTribeSelects['new']['managed'] = $loader->loadIndexed('TRIBE_NAME','TRIBE_NUMBER', allTables::$AGILE_TRIBE_NEW, " ORGANISATION='Managed Services' ");
+        $allTribeSelects['new']['project'] = $loader->loadIndexed('TRIBE_NAME','TRIBE_NUMBER', allTables::$AGILE_TRIBE_NEW, " ORGANISATION='Project Services' ");
+        ?>
+<script type="text/javascript">
+<?php
+        foreach ($allTribeSelects as $tableSet => $organisation) {
+            foreach ($organisation as $org => $selectData) {?>
+var tribes<?=ucfirst($tableSet);?><?=ucfirst($org);?> = [];
+    tribes<?=ucfirst($tableSet);?><?=ucfirst($org)?>.push({id:0,text:""});
+<?php
+                foreach ($selectData as $tribeNumber => $tribeName) {?>
+    tribes<?=ucfirst($tableSet);?><?=ucfirst($org)?>.push({id:"<?=$tribeNumber?>",text:"<?=$tribeName?>"});
+<?php
+                }
+            }
+        }
+        ?>
+</script>
+        <?php
 
     }
 

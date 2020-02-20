@@ -16,7 +16,7 @@ function agileSquad() {
   this.init = function(){
     console.log('+++ Function +++ agileTribe.init');
     console.log('--- Function --- agileTribe.init');
-  },
+  };
 
   this.listenForLeader = function(){
 	 	$('.typeahead').bind('typeahead:select', function(ev, suggestion) {
@@ -24,7 +24,7 @@ function agileSquad() {
 	 		$('#TRIBE_LEADER').val(suggestion.notesEmail);
 		});
 
-  },
+  };
 
 
   this.initialiseAgileSquadTable = function(version){	  
@@ -78,7 +78,7 @@ function agileSquad() {
               }
           } );
       } );
-  },
+  };
   
   this.listenForSubmitSquadForm = function(){
 	  $("#squadForm" ).submit(function( event ) {
@@ -127,29 +127,26 @@ function agileSquad() {
 		      	}
 		  });
 	  });
-  },
+  };
   
   
   this.listenForEditSquad = function(){
 	  $(document).on('click','.btnEditSquad',function(){
-		  
 		  $('#SQUAD_NUMBER').val($(this).data('squadnumber')).trigger('change').attr('disabled',true);
 		  $('#SQUAD_TYPE').val($(this).data('squadtype'));
-		  $('#TRIBE_NUMBER').val($(this).data('tribenumber')).trigger('change');
+		  $('#TRIBE_NUMBER').val('').trigger('change');
+		  if($(this).data('organisation')=='Managed Services'){
+			  $('#radioTribeOrganisationManaged').prop('checked',true);			  
+		  } else {
+			  $('#radioTribeOrganisationProject').prop('checked',true);		
+		  }
+		  initialiseTribeNumber($(this).data('tribenumber'));  
 		  $('#SHIFT').val($(this).data('shift')).trigger('change');
 		  $('#SQUAD_LEADER').val($(this).data('squadleader'));
 		  $('#SQUAD_NAME').val($(this).data('squadname'));
 		  $('#mode').val('edit');
-		  
-		  // repopulate the TRIBE_NUMBER drop down here
-		  
-		  var organisation =  $('#TRIBE_NUMBER').find(':selected').data('organisation');
-		  $("input[name='Organisation'][value='" + organisation + "']").prop('checked', true);
-		  
-	      $('#TRIBE_NUMBER > option[data-organisation!="' + organisation + '"]').remove();
-		  
 	  });
-  }
+  };
   
 }
 

@@ -13,8 +13,13 @@ $loader = new Loader();
 $allTribes = $loader->loadIndexed('TRIBE_NAME','TRIBE_NUMBER', $tribeTable, " ORGANISATION='" . $_GET['organisation'] . "' ");
 
 $data = array();
+$tribeSelected = !empty($_GET['tribeNumber']) ? $_GET['tribeNumber'] : null;
 foreach ($allTribes as $tribeNumber => $tribeName) {
-    $data[] = array('id'=>$tribeNumber,'text'=>$tribeName);
+    $newOption = array('id'=>$tribeNumber,'text'=>$tribeName);
+    if($tribeNumber==$tribeSelected){
+        $newOption['selected'] = true;
+    }
+    $data[] = $newOption;
 }
 
 $messages = ob_get_clean();

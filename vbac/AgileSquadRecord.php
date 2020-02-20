@@ -39,12 +39,12 @@ class AgileSquadRecord extends DbRecord {
         	<div class='col-md-4'>
         	 <div class="form-check">
              <input class="form-check-input" name='Organisation'  type="radio" id="radioTribeOrganisationManaged" value="Managed Services" >
-             <label class="form-check-label " for="radio" id="radioTribeOrganisation">Managed Services</label>
+             <label class="form-check-label " for="radioTribeOrganisationManaged" >Managed Services</label>
              </div>
 
              <div class="form-check">
              <input class="form-check-input" name='Organisation'  type="radio" id="radioTribeOrganisationProject" value="Project Services" >
-             <label class="form-check-label " for="radio" id="radioTribeOrganisationProject">Project Services</label>
+             <label class="form-check-label " for="radioTribeOrganisationProject">Project Services</label>
              </div>
             </div>
         </div>

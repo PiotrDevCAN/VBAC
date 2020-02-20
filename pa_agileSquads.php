@@ -3,6 +3,7 @@
 use vbac\AgileSquadRecord;
 use itdq\FormClass;
 use itdq\Loader;
+use vbac\AgileSquadTable;
 
 set_time_limit(0);
 ob_start();
@@ -58,39 +59,41 @@ $squadRecord->displayForm(FormClass::$modeDEFINE);
   </div>
 </div>
 
-
-
+<?=AgileSquadTable::buildTribeSelects();?>
 
 <script type="text/javascript">
 
 var Squad = new agileSquad();
 
-function initialiseTribeNumber(){
+function initialiseTribeNumber(selectedTribeNumber){
+	var version = $('#version').prop('checked') ? 'Original' : 'New';
+	var organisation = $('#radioTribeOrganisationManaged').prop('checked') ? 'Managed' : 'Project';
+	var tribeSelectName = 'tribes' + version + organisation;
+	var tribesSelect = eval(tribeSelectName);
+	if ($('#TRIBE_NUMBER').hasClass("select2-hidden-accessible")) {
+    // 	Select2 has been initialized
+    	$('#TRIBE_NUMBER').empty().trigger('change');
+    	$('#TRIBE_NUMBER').select2('destroy');
+	}
+
 	$('#TRIBE_NUMBER').select2({
-	  ajax: {
-		tags:false,
-	    url: 'ajax/populateTribeNumber.php',
-	    dataType: 'json',
-	    data: function (params) {
-	        var query = {
-	        		version: $('#version').prop('checked') ? 'Original' : 'New',
-	         	    organisation: $('#radioTribeOrganisationManaged').prop('checked') ? 'Managed Services' : 'Project Services',
-	              }
-	        return query;
-	   		}
-	  }
+		data: tribesSelect
 	});
+
+	if(selectedTribeNumber){
+		$('#TRIBE_NUMBER').val(selectedTribeNumber).trigger('change');
+	}
 	$('#SHIFT').select2();
 }
 // Set the listener for change to Organisation
 function setListenerForOrganisation(){
+	console.log('set listener for radio button');
     $('input[type=radio]').click(function(){
-        console.log('clear tribe number');
-        $('#TRIBE_NUMBER').empty().trigger('change');
-        if ($('#TRIBE_NUMBER').hasClass("select2-hidden-accessible")) {
-            $('#TRIBE_NUMBER').select2('destroy');
-            initialiseTribeNumber();
-        };
+        initialiseTribeNumber();
+//         if ($('#TRIBE_NUMBER').hasClass("select2-hidden-accessible")) {
+//             $('#TRIBE_NUMBER').select2('destroy');
+//             initialiseTribeNumber();
+//         };
     });
 }
 
@@ -102,6 +105,7 @@ $(document).ready(function() {
 	Squad.listenForEditSquad();
 
 	initialiseTribeNumber();
+	setListenerForOrganisation();
 
     $('#version').bootstrapToggle();
 
