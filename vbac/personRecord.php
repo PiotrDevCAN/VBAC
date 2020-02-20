@@ -1317,12 +1317,19 @@ class personRecord extends DbRecord
     <?php
     }
 
-  function editAgileSquadModal()
+  function editAgileSquadModal($version='original')
   {
+
+  $squadTable = $version=='original'  ? allTables::$AGILE_SQUAD : allTables::$AGILE_SQUAD_NEW;
+
   $loader = new Loader();
-  $allSquadNames = $loader->loadIndexed('SQUAD_NAME','SQUAD_NUMBER',allTables::$AGILE_SQUAD);
-  $allSquadLeaders = $loader->loadIndexed('SQUAD_LEADER','SQUAD_NUMBER',allTables::$AGILE_SQUAD);
-  $squadDetails = !empty($this->SQUAD_NUMBER) ?  AgileSquadTable::getSquadDetails($this->SQUAD_NUMBER) : array();
+  $allSquadNames = $loader->loadIndexed('SQUAD_NAME','SQUAD_NUMBER',$squadTable);
+  $allSquadLeaders = $loader->loadIndexed('SQUAD_LEADER','SQUAD_NUMBER',$squadTable);
+
+  $squadNumber = $version=='original'  ? $this->SQUAD_NUMBER : $this->NEW_SQUAD_NUMBER;
+  $title = $version=='original' ? "Edit Agile Squad" : "Edit New Agile Squad" ;
+
+  $squadDetails = !empty($squadNumber) ?  AgileSquadTable::getSquadDetails($this->SQUAD_NUMBER, $version) : array();
      ?>
     <!-- Modal -->
     <div id="editAgileSquadModal" class="modal fade" role="dialog">
@@ -1330,7 +1337,7 @@ class personRecord extends DbRecord
           <div class="modal-content">
           <div class="modal-header">
              <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h4 class="modal-title">Edit Agile Squad</h4>
+              <h4 class="modal-title"><?=$title?></h4>
           </div>
           <div class="modal-body" >
              <form id='editAgileSquadForm' class="form-horizontal"  method='post' >
@@ -1380,6 +1387,10 @@ class personRecord extends DbRecord
               <input type="hidden" class="form-control" id="agileCnum" name="agileCnum"
                     value='<?=$this->CNUM;?>'
               >
+              <input type="hidden" class="form-control" id="version" name="version"
+                    value='<?=$version;?>'
+              >
+
              <?php
 
                $allButtons = array();

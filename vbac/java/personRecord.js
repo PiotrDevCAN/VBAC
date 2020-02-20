@@ -1670,9 +1670,11 @@ function personRecord() {
 	    $(document).on('click','.btnClearSquadNumber', function(e){
 	    	   $(this).addClass('spinning').attr('disabled',true);
 	           var cnum = ($(this).data('cnum'));
+	           var version = ($(this).data('version'));
 	           $.ajax({
 	              url: "ajax/clearSquadNumber.php",
-	              data : {cnum:cnum },
+	              data : {cnum:cnum,
+	            	      version:version},
 	              type: 'POST',
 	              success: function(result){
 	                var resultObj = JSON.parse(result);
@@ -1698,12 +1700,14 @@ function personRecord() {
 	    	   $(this).addClass('spinning').attr('disabled',true);
 	    	   $('#updateSquad').attr('disabled',true);
 	           var cnum = ($(this).data('cnum'));
+	           var version = ($(this).data('version'));
 	           var spinner =  '<div id="overlay"><i class="fa fa-spinner fa-spin spin-big"></i></div>';
 	           $('#editAgileSquadModal .modal-body').html(spinner);
 	           $('#editAgileSquadModal').modal('show');
 	           $.ajax({
 	              url: "ajax/getEditAgileNumberModalBody.php",
-	              data : {cnum:cnum },
+	              data : {cnum:cnum,
+	            	      version: version},
 	              type: 'POST',
 	              success: function(result){
 	                var resultObj = JSON.parse(result);

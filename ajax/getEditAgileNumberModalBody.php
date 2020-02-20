@@ -21,7 +21,7 @@ try {
     $personData = $table->getRecord($person);
     $person->setFromArray($personData);
     ob_start();
-    $person->editAgileSquadModal();
+    $person->editAgileSquadModal($_POST['version']);
     $body = ob_get_clean();
     $success = true;
 } catch (Exception $e) {

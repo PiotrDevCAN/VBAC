@@ -712,9 +712,10 @@ class personTable extends DbTable {
     }
 
 
-    function clearSquadNumber($cnum){
+    function clearSquadNumber($cnum,$version='original'){
         $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
-        $sql .= " SET SQUAD_NUMBER = null ";
+        $sql .= " SET ";
+        $sql .= $version=='original' ? " SQUAD_NUMBER = null " : " NEW_SQUAD_NUMBER = null";
         $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
         $result = db2_exec($_SESSION['conn'], $sql);
@@ -723,7 +724,8 @@ class personTable extends DbTable {
             DbTable::displayErrorMessage($result, __CLASS__,__METHOD__, $sql);
             return false;
         }
-        AuditTable::audit("Clear Agile Number for $cnum",AuditTable::RECORD_TYPE_AUDIT);
+
+        AuditTable::audit("Clear " . $version . " Agile Number for $cnum",AuditTable::RECORD_TYPE_AUDIT);
 
         return true;
     }
@@ -1660,13 +1662,15 @@ class personTable extends DbTable {
 
         $agileSquadWithButton.= $squadName;
 
-        return array('display'=>$agileSquadWithButton,'sort'=>$squad);
+        return array('display'=>$agileSquadWithButton,'sort'=>$squadName);
 
     }
 
-    function updateAgileSquadNumber($cnum, $agileNumber){
+    function updateAgileSquadNumber($cnum, $agileNumber, $version='original'){
         $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
-        $sql.= " SET SQUAD_NUMBER=" . db2_escape_string($agileNumber) ;
+        $sql.= " SET " ;
+        $sql.= $version=='original' ? " SQUAD_NUMBER=" : " NEW_SQUAD_NUMBER=";
+        $sql.= db2_escape_string($agileNumber) ;
         $sql.= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
         $this->lastUpdateSql = $sql;
