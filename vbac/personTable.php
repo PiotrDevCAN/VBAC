@@ -1631,7 +1631,9 @@ class personTable extends DbTable {
 //         }
         $originalSquad = !empty($row['SQUAD_NUMBER']) ? $row['SQUAD_NUMBER'] : 'none';
         $newSquad = !empty($row['NEW_SQUAD_NUMBER']) ? $row['NEW_SQUAD_NUMBER'] : 'none';
-        $squad = $original ? $originalSquad : $newSquad;
+        $squadNumber = $original ? $originalSquad : $newSquad;
+
+        $squadNumberField =  $original ? $row['SQUAD_NUMBER']  : $row['NEW_SQUAD_NUMBER'];
 
         $originalSquadName = !empty($row['SQUAD_NAME']) ?  $row['SQUAD_NAME'] : "Not allocated to Squad";
         $newSquadName = !empty($row['NEW_SQUAD_NAME']) ?  $row['NEW_SQUAD_NAME'] : "Not allocated to Squad";
@@ -1648,7 +1650,7 @@ class personTable extends DbTable {
         $agileSquadWithButton.= "</button>";
         $agileSquadWithButton.= "&nbsp;";
 
-        if(!empty($row['SQUAD_NUMBER'])){
+        if(!empty($squadNumberField)){
             $agileSquadWithButton.= "<button type='button' class='btn btn-danger btn-xs btnClearSquadNumber accessRestrict accessFm accessCdi' aria-label='Left Align' ";
             $agileSquadWithButton.= " data-cnum='" .$cnum . "' ";
             $agileSquadWithButton.= $original ? " data-version='original' " : " data-version='new' ";
