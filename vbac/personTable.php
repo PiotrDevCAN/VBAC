@@ -189,12 +189,14 @@ class personTable extends DbTable {
         $predicate .= $preboadersAction==self::PORTAL_PRE_BOARDER_WITH_LINKED ? " AND ( PES_STATUS_DETAILS like 'Boarded as%' or PRE_BOARDED  is not  null) " : null;
         $predicate .= $preboadersAction==self::PORTAL_ONLY_ACTIVE ? "  AND ( PES_STATUS_DETAILS not like 'Boarded as%' or PES_STATUS_DETAILS is null ) AND " . personTable::activePersonPredicate() : null;
 
-        $sql  = " SELECT P.*, PT.PROCESSING_STATUS , PT.PROCESSING_STATUS_CHANGED, AS.SQUAD_NAME ";
+        $sql  = " SELECT P.*, PT.PROCESSING_STATUS , PT.PROCESSING_STATUS_CHANGED, AS.SQUAD_NAME, ASN.SQUAD_NAME as NEW_SQUAD_NAME ";
         $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName . " as P ";
         $sql .= " LEFT JOIN " .  $_SESSION['Db2Schema'] . "." . allTables::$PES_TRACKER . " as PT ";
         $sql .= " ON PT.CNUM = P.CNUM ";
         $sql .= " LEFT JOIN " .  $_SESSION['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " as AS ";
         $sql .= " ON AS.SQUAD_NUMBER = P.SQUAD_NUMBER ";
+        $sql .= " LEFT JOIN " .  $_SESSION['Db2Schema'] . "." . allTables::$AGILE_SQUAD_NEW . " as ASN ";
+        $sql .= " ON ASN.SQUAD_NUMBER = P.NEW_SQUAD_NUMBER ";
 
         $sql .= " WHERE " . $predicate;
 
@@ -450,7 +452,8 @@ class personTable extends DbTable {
          }
 
 
-         $row['SQUAD_NAME'] = $this->getAgileSquadWithButtons($row);
+         $row['SQUAD_NAME'] = $this->getAgileSquadWithButtons($row,true);
+         $row['NEW_SQUAD_NAME'] = $this->getAgileSquadWithButtons($row,false);
 
         return $row;
     }
@@ -1619,18 +1622,25 @@ class personTable extends DbTable {
 
 
 
-    function getAgileSquadWithButtons($row){
+    function getAgileSquadWithButtons($row,$original=true){
 //         if(empty($this->squadNames)){
 //             $loader = new Loader();
 //             $this->squadNames = $loader->loadIndexed('SQUAD_NAME','SQUAD_NUMBER',allTables::$AGILE_SQUAD);
 //         }
-        $squad = !empty($row['SQUAD_NUMBER']) ? $row['SQUAD_NUMBER'] : 'none';
-        $squadName = !empty($row['SQUAD_NAME']) ?  $row['SQUAD_NAME'] : "Not allocated to Squad";
+        $originalSquad = !empty($row['SQUAD_NUMBER']) ? $row['SQUAD_NUMBER'] : 'none';
+        $newSquad = !empty($row['NEW_SQUAD_NUMBER']) ? $row['NEW_SQUAD_NUMBER'] : 'none';
+        $squad = $original ? $originalSquad : $newSquad;
+
+        $originalSquadName = !empty($row['SQUAD_NAME']) ?  $row['SQUAD_NAME'] : "Not allocated to Squad";
+        $newSquadName = !empty($row['NEW_SQUAD_NAME']) ?  $row['NEW_SQUAD_NAME'] : "Not allocated to Squad";
+        $squadName = $original ? $originalSquadName : $newSquadName;
         $cnum = $row['actualCNUM'];
 
         $agileSquadWithButton = "<button type='button' class='btn btn-default btn-xs btnEditAgileNumber accessRestrict accessFm accessCdi' aria-label='Left Align' ";
         $agileSquadWithButton.= " data-cnum='" .$cnum . "' ";
-        $agileSquadWithButton.= " data-toggle='tooltip' data-placement='top' title='Amend Agile Squad'";
+        $agileSquadWithButton.= $original ? " data-version='original' " : " data-version='new' ";
+        $agileSquadWithButton.= " data-toggle='tooltip' data-placement='top' ";
+        $agileSquadWithButton.= $original ?  " title='Amend Original Agile Squad'" : " title='Amend New Agile Squad'";
         $agileSquadWithButton.= " > ";
         $agileSquadWithButton.= "<span class='glyphicon glyphicon-edit' aria-hidden='true' ></span>";
         $agileSquadWithButton.= "</button>";
@@ -1639,7 +1649,9 @@ class personTable extends DbTable {
         if(!empty($row['SQUAD_NUMBER'])){
             $agileSquadWithButton.= "<button type='button' class='btn btn-danger btn-xs btnClearSquadNumber accessRestrict accessFm accessCdi' aria-label='Left Align' ";
             $agileSquadWithButton.= " data-cnum='" .$cnum . "' ";
-            $agileSquadWithButton.= " data-toggle='tooltip' data-placement='top' title='Clear Squad Number'";
+            $agileSquadWithButton.= $original ? " data-version='original' " : " data-version='new' ";
+            $agileSquadWithButton.= " data-toggle='tooltip' data-placement='top' ";
+            $agileSquadWithButton.= $original ? " title='Clear Squad Number'" : " title='Clear New Squad Number'";
             $agileSquadWithButton.= " > ";
             $agileSquadWithButton.= "<span class='glyphicon glyphicon-erase' aria-hidden='true' ></span>";
             $agileSquadWithButton.= "</button>";

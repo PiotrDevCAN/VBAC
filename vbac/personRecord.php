@@ -86,6 +86,7 @@ class personRecord extends DbRecord
     protected $PES_CLEARED_DATE;
 
     protected $SQUAD_NUMBER;
+    protected $NEW_SQUAD_NUMBER;
 
     protected $person_bio;
 
@@ -347,6 +348,7 @@ class personRecord extends DbRecord
     function __construct($pwd=null){
         $this->headerTitles['FM_CNUM'] = 'FUNCTIONAL MGR';
         $this->headerTitles['SQUAD_NUMBER'] = 'SQUAD NAME';
+        $this->headerTitles['NEW_SQUAD_NUMBER'] = 'NEW SQUAD NAME';
 
         parent::__construct();
 
