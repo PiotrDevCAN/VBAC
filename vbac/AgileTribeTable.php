@@ -15,8 +15,11 @@ class AgileTribeTable extends DbTable{
     static function nextAvailableTribeNumber($version=null) {
 
         $table = $version=='Original' ? allTables::$AGILE_TRIBE : allTables::$AGILE_TRIBE_NEW;
-        $sql = " SELECT MAX(TRIBE_NUMBER) as TRIBE_NUMBER FROM " . $_SESSION['Db2Schema'] . "." . $table;
-
+        $sql = " SELECT MAX(TRIBE_NUMBER) FROM ( ";
+        $sql.= "      SELECT MAX(TRIBE_NUMBER) as TRIBE_NUMBER FROM " . $_SESSION['Db2Schema'] . "." . allTables::$AGILE_TRIBE;
+        $sql.= "      UNION ";
+        $sql.= "      SELECT MAX(TRIBE_NUMBER) as TRIBE_NUMBER FROM " . $_SESSION['Db2Schema'] . "." . allTables::$AGILE_TRIBE_NEW;
+        $sql.= " ); ";
         $rs = db2_exec($_SESSION['conn'], $sql);
 
         if(!$rs){
