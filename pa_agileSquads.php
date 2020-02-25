@@ -9,7 +9,7 @@ set_time_limit(0);
 ob_start();
 ?>
 <div class='container'>
-<h2>Manage Squad Records (Old)</h2>
+<h2>Manage Squad Records (Original)</h2>
 <form id='tribeVersion' class="form-horizontal" method='post'>
     <div class="form-group">
     <div class="col-sm-offset-2 col-sm-4">
