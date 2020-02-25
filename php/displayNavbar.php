@@ -56,7 +56,8 @@ $pesStatusChange= new NavbarOption('PES Status Changes', 'pr_pesStatusChangeRepo
 $odcDataUpload  = new NavbarOption('ODC Access Upload', 'pc_odcAccessUpload.php','accessCdi accessPmo');
 // $email          = new NavbarOption('Email Log', 'pi_emailLog.php','accessCdi');
 $tribes         = new NavbarOption('Tribes','pa_agileTribes.php','accessCdi accessPmo ');
-$squads         = new NavbarOption('Squad','pa_agileSquads.php','accessCdi accessPmo ');
+$squads         = new NavbarOption('Squad(old)','pa_agileSquads.php','accessCdi accessPmo ');
+$squadsNew         = new NavbarOption('Squad(new)','pa_agileSquadsNew.php','accessCdi accessPmo ');
 $squadALog       = new NavbarOption('Squadalog', 'pa_squadalog.php','accessCdi accessPmo accessFm');
 
 $adminMenu->addOption($pmo);
@@ -84,6 +85,7 @@ $adminMenu->addOption($odcDataUpload);
 $adminMenu->addOption( new NavbarDivider('accessPmo accessCdi'));
 $adminMenu->addOption($tribes);
 $adminMenu->addOption($squads);
+$adminMenu->addOption($squadsNew);
 $adminMenu->addOption($squadALog);
 
 
