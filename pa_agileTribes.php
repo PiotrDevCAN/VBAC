@@ -21,8 +21,8 @@ ob_start();
 
 
 <?php
-$squadRecord = new AgileTribeRecord();
-$squadRecord->displayForm(FormClass::$modeDEFINE);
+$tribeRecord = new AgileTribeRecord();
+$tribeRecord->displayForm(FormClass::$modeDEFINE, 'original');
 ?>
 </div>
 

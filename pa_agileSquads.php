@@ -19,9 +19,9 @@ ob_start();
 </form>
 <div id='squadDisplayForm'>
 <?php
-$squadRecord = new AgileSquadRecord();
-$squadRecord->setTribeOrganisation('Original');
-$squadRecord->displayForm(FormClass::$modeDEFINE);
+$tribeRecord = new AgileSquadRecord();
+$tribeRecord->setTribeOrganisation('Original');
+$tribeRecord->displayForm(FormClass::$modeDEFINE);
 ?>
 </div>
 </div>
