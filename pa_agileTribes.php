@@ -22,7 +22,7 @@ ob_start();
 
 <?php
 $tribeRecord = new AgileTribeRecord();
-$tribeRecord->displayForm(FormClass::$modeDEFINE, 'original');
+$tribeRecord->displayForm(FormClass::$modeDEFINE, 'Original');
 ?>
 </div>
 
