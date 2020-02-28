@@ -47,7 +47,7 @@ function agileSquad() {
           }	,
           columns: [
                       { "data": "SQUAD_NUMBER", render: { _:"display", sort:"sort" } },
-                      { "data": "SQUAD_TYPE"   },
+                      { "data": "ORGANISATION"   },
                       { "data": "SQUAD_NAME" },
                       { "data": "TRIBE_NUMBER" },
                       { "data": "SHIFT" },
