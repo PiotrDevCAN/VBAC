@@ -2140,6 +2140,7 @@ function personRecord() {
     console.log($('#subPlatform'));
      $('#work_stream').select2();
      $('#subPlatform').select2();
+     $('#person_preboarded').select2();
      $('#work_stream').trigger('change');
      
      if($('.accountOrganisation:checked').val()=='BAU'){
