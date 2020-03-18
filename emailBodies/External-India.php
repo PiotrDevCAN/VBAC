@@ -11,6 +11,11 @@ $pesEmail.= '<li>A copy of <b>one</b> utility bill (not mobile) or <b>one</b> Ba
 $pesEmail.= '<li>Evidence of your last 5 years activity will be required.  If you were     employed/in education, please arrange to send your service/transfer certificates or mark sheets, alternatively you can arrange for your previous employer/education provider to email us directly with confirmation of your start and end dates.  If you were doing some other form of activity, please contact us with a summary and we can advise what evidence we will require.</li>';
 $pesEmail.= '</ul>';
 $pesEmail.= '<p>If you have any questions, you do not have any of the listed documents or are unsure about the process please contact the PES Team on <a href=\'mailto:LBGVETPR@uk.ibm.com\'>LBGVETPR@uk.ibm.com</a></p>';
+
+$pesEmail.= '<p><b>Please Note</b></p>';
+$pesEmail.= "<p>Due to the recent situation we understand that many people will be unable to meet with fellow IBM'ers to have their documents Certified.  We have implemented a  'provisional clearance' process and wil accept documents without certification, at this time.  However these documents will require to be certified as soon as the restrictions are lifted.</p>";
+$pesEmail.= "<p>This will not give you full PES clearance for the account, so if you can get them certified correctly (ie another IBM'er seeing the document and signing) please do so.</p>";
+
 $pesEmail.= '<p>Many Thanks for your cooperation</p>';
 $pesEmail.= '<h3>Lloyds PES Team</h3>';
 
