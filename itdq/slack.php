@@ -13,7 +13,7 @@ class slack {
     const CHANNEL_POLYTEST    = 'polytest';
     const CHANNEL_ID_POLYTEST = 'G010VEL63UN';
     const CHANNEL_ID_BAU_D_ELT = 'G010TNY2VG8';
-    const TOKEN_VENTUS_SRE    = 'xoxb-210170148918-1027216985764-r8dIKwIUbJJCTCy4F4K3EAvo';
+//    const TOKEN_VENTUS_SRE    = 'xoxb-210170148918-1027216985764-r8dIKwIUbJJCTCy4F4K3EAvo';
 
     function __construct(){
         $this->url[self::CHANNEL_SM_CDI]              = 'https://hooks.slack.com/services/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';
@@ -29,7 +29,10 @@ class slack {
         $url = 'https://slack.com/api/chat.postMessage';
         $ch = curl_init( $url );
 
-        $messageToSlack = '{token=xoxb-210170148918-1027216985764-r8dIKwIUbJJCTCy4F4K3EAvo&channel=G010VEL63UN&text=testing}';
+        $tokenVentusSre = $_SERVER['token_ventus_sre'];
+
+
+        $messageToSlack = '{token=' . $tokenVentusSre . '&channel=G010VEL63UN&text=testing}';
 
         curl_setopt( $ch, CURLOPT_POSTFIELDS,$messageToSlack );
         curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json','Content-Length: ' . strlen($messageToSlack)));
