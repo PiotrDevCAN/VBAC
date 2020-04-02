@@ -69,7 +69,9 @@ class slack {
         $url = "https://slack.com/api/chat.postMessage";
         $ch = curl_init( $url );
 
-        $messageToSlack = 'token=' . self::TOKEN_VENTUS_SRE . '&channel=' . $channel . '&text=' . urlencode($text);
+        $tokenVentusSre = $_SERVER['token_ventus_sre'];
+
+        $messageToSlack = 'token=' . $tokenVentusSre . '&channel=' . $channel . '&text=' . urlencode($text);
 
         curl_setopt( $ch, CURLOPT_POSTFIELDS,$messageToSlack );
         curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded','Content-Length: ' . strlen($messageToSlack)));
@@ -90,7 +92,9 @@ class slack {
         $url = "https://slack.com/api/reactions.add";
         $ch = curl_init( $url );
 
-        $messageToSlack = 'token=' . self::TOKEN_VENTUS_SRE . '&channel=' . $channel . '&name=' . $name . '&timestamp=' . $timestamp;
+        $tokenVentusSre = $_SERVER['token_ventus_sre'];
+
+        $messageToSlack = 'token=' . $tokenVentusSre . '&channel=' . $channel . '&name=' . $name . '&timestamp=' . $timestamp;
 
         curl_setopt( $ch, CURLOPT_POSTFIELDS,$messageToSlack );
         curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded','Content-Length: ' . strlen($messageToSlack)));
