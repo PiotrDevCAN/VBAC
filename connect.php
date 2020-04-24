@@ -23,9 +23,6 @@ if( getenv( "VCAP_SERVICES" ) )
 
     //echo $conn_string;
 
-
-    die('here');
-
     $conn = db2_connect( $conn_string, "", "" );
 
 //   $_SESSION['ssoEmail'] = 'dummyUser';
