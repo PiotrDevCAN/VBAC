@@ -21,6 +21,11 @@ if( getenv( "VCAP_SERVICES" ) )
 
     $conn_string = str_replace('poCXUiBIC0Pl','poCXUiBIC0Pl!ab',$conn_string);
 
+    echo $conn_string;
+
+
+    die('here');
+
     $conn = db2_connect( $conn_string, "", "" );
 
 //   $_SESSION['ssoEmail'] = 'dummyUser';
