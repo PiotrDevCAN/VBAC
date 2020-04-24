@@ -19,9 +19,9 @@ if( getenv( "VCAP_SERVICES" ) )
     $conn_string = $driver . $dsn;     # Non-SSL
     $conn_string = $driver . $ssl_dsn; # SSL
 
-    $conn_string = str_replace('poCXUiBIC0Pl','poCXUiBIC0Pl!ab',$conn_string);
+    //$conn_string = str_replace('poCXUiBIC0Pl','poCXUiBIC0Pl!ab',$conn_string);
 
-    echo $conn_string;
+    //echo $conn_string;
 
 
     die('here');
