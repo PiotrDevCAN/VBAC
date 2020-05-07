@@ -162,7 +162,7 @@ class pesTrackerTable extends DbTable{
 		<th width="5px">Consent Form</th>
 		<th width="5px">Proof or Right to Work</th>
 		<th width="5px">Proof of ID</th>
-		<th width="5px">Proof of Residency</th>
+		<th width="5px">Proof of Residence</th>
 		<th width="5px">Credit Check</th>
 		<th width="5px">Financial Sanctions</th>
 		<th width="5px">Criminal Records Check</th>
@@ -172,7 +172,7 @@ class pesTrackerTable extends DbTable{
 		<td>Consent</td>
 		<td>Right to Work</td>
 		<td>ID</td>
-		<td>Residency</td>
+		<td>Residence</td>
 		<td>Credit Check</td>
 		<td>Financial Sanctions</td>
 		<td>Criminal Records Check</td>
