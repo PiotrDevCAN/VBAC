@@ -777,8 +777,9 @@ function personRecord() {
 
   this.listenForAccountOrganisation = function(){
     // var workStream is created in PHP in the personRecord class and loaded to javascript using Javascript::buildSelectArray
-    $(document).on('click','.accountOrganisation', function(){
-      var accountOrganisation = $(this).val();
+//    $(document).on('click','.accountOrganisation', function(){
+	  $(document).ready(function(){
+      var accountOrganisation = $('.accountOrganisation:checked').val();
       var nullFirstEntry  = [''];
       for(i=0;i<workStream.length;i++){
         if(workStream[0][i]==accountOrganisation){
@@ -787,6 +788,9 @@ function personRecord() {
       }
       $('#work_stream').select2('destroy');
       $('#work_stream').html('');
+      
+      console.log(workStreamValues);      
+      
       if(typeof(workStreamValues)!='undefined'){
         $('#work_stream').select2({
           data:workStreamValues,

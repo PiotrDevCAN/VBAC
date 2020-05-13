@@ -102,7 +102,7 @@ function personWithSubPRecord() {
                       { "data": "PES_RECHECK_DATE", "defaultContent": "" },
                       { "data": "PES_CLEARED_DATE", "defaultContent": "" },
                       { "data": "SQUAD_NAME", render: { _:'display', sort:'sort' },},
-                      { "data": "NEW_SQUAD_NAME", render: { _:'display', sort:'sort' },},
+                      { "data": "OLD_SQUAD_NAME", render: { _:'display', sort:'sort' },},
                     
                       
                   ],

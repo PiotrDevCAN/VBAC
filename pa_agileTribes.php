@@ -14,7 +14,7 @@ ob_start();
 <form id='tribeVersion' class="form-horizontal" method='post'>
     <div class="form-group">
     <div class="col-sm-offset-2 col-sm-4">
-    <input  data-toggle="toggle" type="checkbox" class='toggle' data-width='100%' data-on="Original Tribes" data-off="New Tribes" id='version' name='version' value='Original' data-onstyle='success' data-offstyle='warning' checked>
+    <input  data-toggle="toggle" type="checkbox" class='toggle' data-width='100%' data-on="Current Tribes" data-off="Old Tribes" id='version' name='version' value='Original' data-onstyle='success' data-offstyle='warning' checked disabled>
     </div>
     </div>
 </form>

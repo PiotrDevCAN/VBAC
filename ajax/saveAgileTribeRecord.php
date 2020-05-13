@@ -16,7 +16,7 @@ AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_POST,
 $agileTribeRecord = new AgileTribeRecord();
 $agileTribeRecord->setFromArray($_POST);
 
-$table = $_POST['version']=='Original' ? allTables::$AGILE_TRIBE : allTables::$AGILE_TRIBE_NEW;
+$table = $_POST['version']=='Original' ? allTables::$AGILE_TRIBE : allTables::$AGILE_TRIBE_OLD;
 
 $agileTribeTable = new AgileTribeTable($table);
 

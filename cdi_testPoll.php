@@ -15,8 +15,8 @@ $slack = new slack();
 // $slack->slackPostMessageWithEmoji(slack::CHANNEL_ID_BAU_D_ELT,'Testing message, please ignore', array('thumbsup', 'thumbsdown'));
 
 
-$slack->slackPostMessageWithEmoji(slack::CHANNEL_ID_BAU_D_ELT,'*DAILY DELIVERY HEARTBEAT* - Team, please indicate using the emojis below the overall status of your respective areas.', array('thumbsup', 'thumbsdown'));
-
+// $slack->slackPostMessageWithEmoji(slack::CHANNEL_ID_BAU_D_ELT,'<!channel> *DAILY DELIVERY HEARTBEAT* - Team, please indicate using the emojis below the overall status of your respective areas.', array('thumbsup', 'thumbsdown'));
+$slack->slackPostMessageWithEmoji(slack::CHANNEL_ID_BAU_D_ELT,'<!channel> Test - Please ignore.', array('thumbsup', 'thumbsdown'));
 // DAILY DELIVERY HEARTBEAT - Team, please indicate using the emojis below the overall status of your respective areas.
 
 

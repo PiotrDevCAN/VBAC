@@ -7,7 +7,7 @@ Trace::pageOpening($_SERVER['PHP_SELF']);
 
 ob_start();
 
-$tribeTable = $_GET['version']=='Original' ? allTables::$AGILE_TRIBE : allTables::$AGILE_TRIBE_NEW;
+$tribeTable = $_GET['version']=='Original' ? allTables::$AGILE_TRIBE : allTables::$AGILE_TRIBE_OLD;
 $loader = new Loader();
 
 $allTribes = $loader->loadIndexed('TRIBE_NAME','TRIBE_NUMBER', $tribeTable, " ORGANISATION='" . $_GET['organisation'] . "' ");

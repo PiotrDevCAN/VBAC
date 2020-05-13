@@ -13,8 +13,8 @@ class allTables
     public static $AGILE_SQUAD     = 'AGILE_SQUAD';
     public static $AGILE_TRIBE     = 'AGILE_TRIBE';
 
-    public static $AGILE_SQUAD_NEW = 'AGILE_SQUAD_NEW';
-    public static $AGILE_TRIBE_NEW = 'AGILE_TRIBE_NEW';
+    public static $AGILE_SQUAD_OLD = 'AGILE_SQUAD_OLD';
+    public static $AGILE_TRIBE_OLD = 'AGILE_TRIBE_OLD';
 
 
     public static $ASSET_REQUESTS     = 'ASSET_REQUESTS';

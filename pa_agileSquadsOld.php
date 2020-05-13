@@ -9,11 +9,11 @@ set_time_limit(0);
 ob_start();
 ?>
 <div class='container'>
-<h2>Manage Squad Records (New)</h2>
+<h2>Manage Squad Records (Old)</h2>
 <form id='tribeVersion' class="form-horizontal" method='post'>
     <div class="form-group">
     <div class="col-sm-offset-2 col-sm-4">
-    <input  disabled data-toggle="toggle" type="checkbox" class='toggle' data-width='100%' data-on="Original Squads" data-off="New Squads" id='version' name='version' value='Original' data-onstyle='success' data-offstyle='warning' >
+    <input  disabled data-toggle="toggle" type="checkbox" class='toggle' data-width='100%' data-on="Squads" data-off="Old Squads" id='version' name='version' value='Current' data-onstyle='success' data-offstyle='warning' >
     </div>
     </div>
 </form>

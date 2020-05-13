@@ -189,14 +189,14 @@ class personTable extends DbTable {
         $predicate .= $preboadersAction==self::PORTAL_PRE_BOARDER_WITH_LINKED ? " AND ( PES_STATUS_DETAILS like 'Boarded as%' or PRE_BOARDED  is not  null) " : null;
         $predicate .= $preboadersAction==self::PORTAL_ONLY_ACTIVE ? "  AND ( PES_STATUS_DETAILS not like 'Boarded as%' or PES_STATUS_DETAILS is null ) AND " . personTable::activePersonPredicate() : null;
 
-        $sql  = " SELECT P.*, PT.PROCESSING_STATUS , PT.PROCESSING_STATUS_CHANGED, AS.SQUAD_NAME, ASN.SQUAD_NAME as NEW_SQUAD_NAME ";
+        $sql  = " SELECT P.*, PT.PROCESSING_STATUS , PT.PROCESSING_STATUS_CHANGED, AS.SQUAD_NAME, ASO.SQUAD_NAME as OLD_SQUAD_NAME ";
         $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName . " as P ";
         $sql .= " LEFT JOIN " .  $_SESSION['Db2Schema'] . "." . allTables::$PES_TRACKER . " as PT ";
         $sql .= " ON PT.CNUM = P.CNUM ";
         $sql .= " LEFT JOIN " .  $_SESSION['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " as AS ";
         $sql .= " ON AS.SQUAD_NUMBER = P.SQUAD_NUMBER ";
-        $sql .= " LEFT JOIN " .  $_SESSION['Db2Schema'] . "." . allTables::$AGILE_SQUAD_NEW . " as ASN ";
-        $sql .= " ON ASN.SQUAD_NUMBER = P.NEW_SQUAD_NUMBER ";
+        $sql .= " LEFT JOIN " .  $_SESSION['Db2Schema'] . "." . allTables::$AGILE_SQUAD_OLD . " as ASO ";
+        $sql .= " ON ASO.SQUAD_NUMBER = P.OLD_SQUAD_NUMBER ";
 
         $sql .= " WHERE " . $predicate;
 
@@ -453,7 +453,7 @@ class personTable extends DbTable {
 
 
          $row['SQUAD_NAME'] = $this->getAgileSquadWithButtons($row,true);
-         $row['NEW_SQUAD_NAME'] = $this->getAgileSquadWithButtons($row,false);
+         $row['OLD_SQUAD_NAME'] = $this->getAgileSquadWithButtons($row,false);
 
         return $row;
     }
@@ -715,7 +715,7 @@ class personTable extends DbTable {
     function clearSquadNumber($cnum,$version='original'){
         $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET ";
-        $sql .= $version=='original' ? " SQUAD_NUMBER = null " : " NEW_SQUAD_NUMBER = null";
+        $sql .= $version=='original' ? " SQUAD_NUMBER = null " : " OLD_SQUAD_NUMBER = null";
         $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
         $result = db2_exec($_SESSION['conn'], $sql);
@@ -1630,27 +1630,29 @@ class personTable extends DbTable {
 //             $this->squadNames = $loader->loadIndexed('SQUAD_NAME','SQUAD_NUMBER',allTables::$AGILE_SQUAD);
 //         }
         $originalSquad = !empty($row['SQUAD_NUMBER']) ? $row['SQUAD_NUMBER'] : 'none';
-        $newSquad = !empty($row['NEW_SQUAD_NUMBER']) ? $row['NEW_SQUAD_NUMBER'] : 'none';
-        $squadNumber = $original ? $originalSquad : $newSquad;
+        $oldSquad = !empty($row['OLD_SQUAD_NUMBER']) ? $row['OLD_SQUAD_NUMBER'] : 'none';
+        $squadNumber = $original ? $originalSquad : $oldSquad;
 
-        $squadNumberField =  $original ? $row['SQUAD_NUMBER']  : $row['NEW_SQUAD_NUMBER'];
+        $squadNumberField =  $original ? $row['SQUAD_NUMBER']  : $row['OLD_SQUAD_NUMBER'];
 
         $originalSquadName = !empty($row['SQUAD_NAME']) ?  $row['SQUAD_NAME'] : "Not allocated to Squad";
-        $newSquadName = !empty($row['NEW_SQUAD_NAME']) ?  $row['NEW_SQUAD_NAME'] : "Not allocated to Squad";
-        $squadName = $original ? $originalSquadName : $newSquadName;
+        $oldSquadName = !empty($row['OLD_SQUAD_NAME']) ?  $row['OLD_SQUAD_NAME'] : "Not allocated to Squad";
+        $squadName = $original ? $originalSquadName : $oldSquadName;
         $cnum = $row['actualCNUM'];
 
-        $agileSquadWithButton = "<button type='button' class='btn btn-default btn-xs btnEditAgileNumber accessRestrict accessFm accessCdi' aria-label='Left Align' ";
-        $agileSquadWithButton.= " data-cnum='" .$cnum . "' ";
-        $agileSquadWithButton.= $original ? " data-version='original' " : " data-version='new' ";
-        $agileSquadWithButton.= " data-toggle='tooltip' data-placement='top' ";
-        $agileSquadWithButton.= $original ?  " title='Amend Original Agile Squad'" : " title='Amend New Agile Squad'";
-        $agileSquadWithButton.= " > ";
-        $agileSquadWithButton.= "<span class='glyphicon glyphicon-edit' aria-hidden='true' ></span>";
-        $agileSquadWithButton.= "</button>";
-        $agileSquadWithButton.= "&nbsp;";
+        $agileSquadWithButton = $original ? "<button type='button' class='btn btn-default btn-xs btnEditAgileNumber accessRestrict accessFm accessCdi' aria-label='Left Align' " : null;
+        $agileSquadWithButton.= $original ? " data-cnum='" .$cnum . "' ": null ;
+//        $agileSquadWithButton.= $original ? " data-version='original' " : " data-version='old' ";
+        $agileSquadWithButton.= $original ? " data-version='original' " : null ;
+        $agileSquadWithButton.= $original ? " data-toggle='tooltip' data-placement='top' " : null;
+//        $agileSquadWithButton.= $original ?  " title='Amend Agile Squad'" : " title='Amend Old Agile Squad'";
+        $agileSquadWithButton.= $original ?  " title='Amend Agile Squad'" : null;
+        $agileSquadWithButton.= $original ?" > ": null ;
+        $agileSquadWithButton.= $original ?"<span class='glyphicon glyphicon-edit' aria-hidden='true' ></span>": null ;
+        $agileSquadWithButton.= $original ?"</button>": null ;
+        $agileSquadWithButton.= $original ?"&nbsp;" : null ;
 
-        if(!empty($squadNumberField)){
+        if(!empty($squadNumberField) && $original){
             $agileSquadWithButton.= "<button type='button' class='btn btn-danger btn-xs btnClearSquadNumber accessRestrict accessFm accessCdi' aria-label='Left Align' ";
             $agileSquadWithButton.= " data-cnum='" .$cnum . "' ";
             $agileSquadWithButton.= $original ? " data-version='original' " : " data-version='new' ";
@@ -1671,7 +1673,7 @@ class personTable extends DbTable {
     function updateAgileSquadNumber($cnum, $agileNumber, $version='original'){
         $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
         $sql.= " SET " ;
-        $sql.= $version=='original' ? " SQUAD_NUMBER=" : " NEW_SQUAD_NUMBER=";
+        $sql.= $version=='original' ? " SQUAD_NUMBER=" : " OLD_SQUAD_NUMBER=";
         $sql.= db2_escape_string($agileNumber) ;
         $sql.= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 

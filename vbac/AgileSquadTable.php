@@ -21,7 +21,7 @@ class AgileSquadTable extends DbTable{
 
     static function nextAvailableSquadNumber($version=null) {
 
-        $table = $version=='Original' ? allTables::$AGILE_SQUAD : allTables::$AGILE_SQUAD_NEW;
+        $table = $version=='Original' ? allTables::$AGILE_SQUAD : allTables::$AGILE_SQUAD_OLD;
 
         $sql = " SELECT MAX(SQUAD_NUMBER) as SQUAD_NUMBER FROM " . $_SESSION['Db2Schema'] . "." . $table ;
 
@@ -38,7 +38,7 @@ class AgileSquadTable extends DbTable{
     }
 
     function returnAsArray($version=null){
-        $tribeTable = $version=='Original' ? allTables::$AGILE_TRIBE : allTables::$AGILE_TRIBE_NEW;
+        $tribeTable = $version=='Original' ? allTables::$AGILE_TRIBE : allTables::$AGILE_TRIBE_OLD;
 
         $sql = " SELECT S.*, T.ORGANISATION ";
         $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName . " as S ";
@@ -84,8 +84,8 @@ class AgileSquadTable extends DbTable{
 
     static function getSquadDetails($squadNumber, $version='original'){
 
-        $squadTable = $version=='original'  ? allTables::$AGILE_SQUAD : allTables::$AGILE_SQUAD_NEW;
-        $tribeTable = $version=='original'  ? allTables::$AGILE_TRIBE : allTables::$AGILE_TRIBE_NEW;
+        $squadTable = $version=='original'  ? allTables::$AGILE_SQUAD : allTables::$AGILE_SQUAD_OLD;
+        $tribeTable = $version=='original'  ? allTables::$AGILE_TRIBE : allTables::$AGILE_TRIBE_OLD;
 
 
         $sql = " SELECT S.SQUAD_NUMBER,S.SQUAD_NAME, S.SQUAD_TYPE, S.SQUAD_LEADER, S.TRIBE_NUMBER, T.TRIBE_NAME, T.TRIBE_LEADER ";
@@ -113,8 +113,8 @@ class AgileSquadTable extends DbTable{
         $allTribeSelects = array();
         $allTribeSelects['original']['managed'] = $loader->loadIndexed('TRIBE_NAME','TRIBE_NUMBER', allTables::$AGILE_TRIBE, " ORGANISATION='Managed Services' ");
         $allTribeSelects['original']['project'] = $loader->loadIndexed('TRIBE_NAME','TRIBE_NUMBER', allTables::$AGILE_TRIBE, " ORGANISATION='Project Services' ");
-        $allTribeSelects['new']['managed'] = $loader->loadIndexed('TRIBE_NAME','TRIBE_NUMBER', allTables::$AGILE_TRIBE_NEW, " ORGANISATION='Managed Services' ");
-        $allTribeSelects['new']['project'] = $loader->loadIndexed('TRIBE_NAME','TRIBE_NUMBER', allTables::$AGILE_TRIBE_NEW, " ORGANISATION='Project Services' ");
+        $allTribeSelects['old']['managed'] = $loader->loadIndexed('TRIBE_NAME','TRIBE_NUMBER', allTables::$AGILE_TRIBE_OLD, " ORGANISATION='Managed Services' ");
+        $allTribeSelects['old']['project'] = $loader->loadIndexed('TRIBE_NAME','TRIBE_NUMBER', allTables::$AGILE_TRIBE_OLD, " ORGANISATION='Project Services' ");
         ?>
 <script type="text/javascript">
 <?php

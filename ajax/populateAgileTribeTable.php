@@ -7,7 +7,7 @@ use vbac\AgileTribeTable;
 set_time_limit(0);
 ob_start();
 
-$table = $_POST['version']=='Original' ? allTables::$AGILE_TRIBE : allTables::$AGILE_TRIBE_NEW;
+$table = $_POST['version']=='Original' ? allTables::$AGILE_TRIBE : allTables::$AGILE_TRIBE_OLD;
 
 $agileTribeTable = new AgileTribeTable($table);
 $data = $agileTribeTable->returnAsArray();

@@ -86,7 +86,7 @@ class personRecord extends DbRecord
     protected $PES_CLEARED_DATE;
 
     protected $SQUAD_NUMBER;
-    protected $NEW_SQUAD_NUMBER;
+    protected $OLD_SQUAD_NUMBER;
 
     protected $person_bio;
 
@@ -348,7 +348,7 @@ class personRecord extends DbRecord
     function __construct($pwd=null){
         $this->headerTitles['FM_CNUM'] = 'FUNCTIONAL MGR';
         $this->headerTitles['SQUAD_NUMBER'] = 'SQUAD NAME';
-        $this->headerTitles['NEW_SQUAD_NUMBER'] = 'NEW SQUAD NAME';
+        $this->headerTitles['OLD_SQUAD_NUMBER'] = 'OLD SQUAD NAME';
 
         parent::__construct();
 
@@ -743,8 +743,8 @@ class personRecord extends DbRecord
     <div class='form-group' >
         <div class='col-sm-4'>
             <div class="radio">
-        <label><input type="radio" name="TT_BAU"  class='accountOrganisation' value='T&T' required <?=substr($this->TT_BAU,0,3)=='T&T'? 'checked' : null ?>>T&amp;T</label>
-        <label><input type="radio" name="TT_BAU"  class='accountOrganisation' value='BAU' required <?=substr($this->TT_BAU,0,3)=='BAU'? 'checked' : null ?>>BAU</label>
+        <label><input type="radio" name="TT_BAU"  class='accountOrganisation' value='T&T' required disabled<?=substr($this->TT_BAU,0,3)=='T&T'? 'checked' : null ?>>T&amp;T</label>
+        <label><input type="radio" name="TT_BAU"  class='accountOrganisation' value='BAU' required checked <?=substr($this->TT_BAU,0,3)=='BAU'? 'checked' : null ?>>BAU</label>
       </div>
         </div>
 
@@ -765,7 +765,8 @@ class personRecord extends DbRecord
           <select class='form-control select select2' id='work_stream'
                               name='WORK_STREAM'
                               disabled
-                              data-placeholder='Select T&T/BAU First'
+                              required
+                              data-placeholder='Select workstream'
             >
                 <option value=''>Select T&amp;T/BAU First</option>
           </select>
@@ -1320,14 +1321,14 @@ class personRecord extends DbRecord
   function editAgileSquadModal($version='original')
   {
 
-  $squadTable = $version=='original'  ? allTables::$AGILE_SQUAD : allTables::$AGILE_SQUAD_NEW;
+  $squadTable = $version=='original'  ? allTables::$AGILE_SQUAD : allTables::$AGILE_SQUAD_OLD;
 
   $loader = new Loader();
   $allSquadNames = $loader->loadIndexed('SQUAD_NAME','SQUAD_NUMBER',$squadTable);
   $allSquadLeaders = $loader->loadIndexed('SQUAD_LEADER','SQUAD_NUMBER',$squadTable);
 
-  $squadNumber = $version=='original'  ? $this->SQUAD_NUMBER : $this->NEW_SQUAD_NUMBER;
-  $title = $version=='original' ? "Edit Agile Squad" : "Edit New Agile Squad" ;
+  $squadNumber = $version=='original'  ? $this->SQUAD_NUMBER : $this->OLD_SQUAD_NUMBER;
+  $title = $version=='original' ? "Edit Agile Squad" : "Edit Old Agile Squad" ;
 
   $squadDetails = !empty($squadNumber) ?  AgileSquadTable::getSquadDetails($this->SQUAD_NUMBER, $version) : array();
      ?>
