@@ -82,7 +82,7 @@ class personTable extends DbTable {
 
     }
 
-    static function activePersonPredicate($includeProvisionalClearance = false, $tableAbbrv = null ){
+    static function activePersonPredicate($includeProvisionalClearance = true, $tableAbbrv = null ){
         $activePredicate = " ((( " ;
         $activePredicate.= !empty($tableAbbrv) ? $tableAbbrv ."." : null ;
         $activePredicate.= "REVALIDATION_STATUS in ('" . personRecord::REVALIDATED_FOUND . "','" . personRecord::REVALIDATED_VENDOR . "','" . personRecord::REVALIDATED_POTENTIAL . "') or trim(";
