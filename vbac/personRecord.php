@@ -191,7 +191,7 @@ class personRecord extends DbRecord
                                               <br/>I can confirm that you have successfully passed Lloyds Bank PES Screening, with a personal reference, effective from &&effectiveDate&&
                                               <br/>If you need any more information regarding your PES clearance, please contact the taskid &&taskid&&.
                                               <br/>You are now required to successfully complete the mandatory Aurora Security Education for IBMers.
-                                              <br/>Please contact <a href="mailto:Aurora.Central.PMO@uk.ibm.com">Aurora Central PMO/UK/IBM</a> to gain access to these self-paced online courses which are available here:- <a href="https://lt.be.ibm.com/aurora">https://lt.be.ibm.com/aurora</a>
+                                              <br/>Please contact <a href="mailto:Aurora.Central.PMO@uk.ibm.com">Aurora Central PMO/UK/IBM</a> to gain access to these self-paced online courses which are available here:- <a href="http://ltc.sl.bluecloud.ibm.com/aurora/">http://ltc.sl.bluecloud.ibm.com/aurora/</a>
                                               <br/>Please note that your PES clearance will require revalidation after 1 or 3 years (depending on your access levels), you will be contacted 8 weeks before your revalidation date with instructions.
                                               <br/>Many Thanks for your cooperation';
 
