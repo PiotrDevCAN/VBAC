@@ -31,7 +31,7 @@ $sql.= " ON F.FM_CNUM = U.CNUM ";
 $sql.= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS S "; // lookup upline ( second line )
 $sql.= " ON P.SQUAD_NUMBER  = S.SQUAD_NUMBER ";
 $sql.= " WHERE " . personTable::activePersonPredicate(false,"P");
-$sql.= " AND P.SQUAD_NUMBER is not null ";
+$sql.= " AND ( P.SQUAD_NUMBER is not null  AND P.SQUAD_NUMBER > 0 ) ";
 
 $rs = db2_exec($_SESSION['conn'], $sql);
 
@@ -60,7 +60,7 @@ $dataJsonAble = json_encode($data);
 $messages = ob_get_clean();
 
 if($dataJsonAble) {
-     $response = array("data"=>$data,'messages'=>$messages,'post'=>print_r($_POST,true));
+     $response = array("data"=>$data,'messages'=>$messages,'post'=>print_r($_POST,true),'sql'=>$sql);
  } else {
     $personTable->findDirtyData();
     $dirtyDetails = ob_get_clean();
