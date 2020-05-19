@@ -31,7 +31,7 @@ if($startDate===false || $endDate===false){
                 break;
                 
                 default:
-                    $sql = " INSERT INTO " . $_SERVER['environment']  . "." . allTables::$ODC_ASSET_REMOVAL ;
+                    $sql = " INSERT INTO " . $_ENV['environment']  . "." . allTables::$ODC_ASSET_REMOVAL ;
                     $sql.= " ( CNUM,  ASSET_SERIAL_NUMBER, START_DATE ";
                     $sql.= !empty($endDate) ? " , END_DATE " : null ;
                     $sql.= " ) VALUES ( '";
@@ -61,7 +61,7 @@ if($startDate===false || $endDate===false){
                     $sql = " SELECT CURRENT DATE as TODAY "; // means the next statement can begin with an ,
                     $sql.= empty($assetSerial) ? " ,ASSET_SERIAL_NUMBER ": null; // if they didn't provide an asset serial, that's what they want back
                     $sql.= empty($cnum) ?        " ,CNUM ": null; // if they didn't provide a cnum, that's what they want back.
-                    $sql.= " FROM ". $_SERVER['environment']  . "." . allTables::$ODC_ASSET_REMOVAL ;
+                    $sql.= " FROM ". $_ENV['environment']  . "." . allTables::$ODC_ASSET_REMOVAL ;
                     $sql.= " WHERE 1=1 ";
                     $sql.= "                        and START_DATE <= CURRENT DATE ";
                     $sql.= "                        and END_DATE >= CURRENT DATE ";
@@ -96,7 +96,7 @@ if($startDate===false || $endDate===false){
                 break;
                 default:
                     $sql = " DELETE  ";
-                    $sql.= " FROM ". $_SERVER['environment']  . "." . allTables::$ODC_ASSET_REMOVAL ;
+                    $sql.= " FROM ". $_ENV['environment']  . "." . allTables::$ODC_ASSET_REMOVAL ;
                     $sql.= " WHERE 1=1 ";
                     $sql.= !empty($assetSerial) ? " AND ASSET_SERIAL_NUMBER='" . db2_escape_string($assetSerial) . "' " : null;
                     $sql.= !empty($cnum) ?        " AND CNUM='" . db2_escape_string($cnum) . "' " : null;
@@ -119,7 +119,7 @@ if($startDate===false || $endDate===false){
                 $httpCode = 400;
                 break;
                 default :
-                    $sql = " UPDATE  " . $_SERVER['environment']  . "." . allTables::$ODC_ASSET_REMOVAL ;
+                    $sql = " UPDATE  " . $_ENV['environment']  . "." . allTables::$ODC_ASSET_REMOVAL ;
                     $sql.= " SET ";
                     $sql.= " END_DATE='" . db2_escape_string($endDate->format('Y-m-d')) . "' ";
                     $sql.= " WHERE 1=1 ";
@@ -144,7 +144,7 @@ if($startDate===false || $endDate===false){
                 $httpCode = 400;
                 break;
                 default :
-                    $sql = " SELECT count(*) as VALID FROM  " . $_SERVER['environment']  . "." . allTables::$ODC_ASSET_REMOVAL ;
+                    $sql = " SELECT count(*) as VALID FROM  " . $_ENV['environment']  . "." . allTables::$ODC_ASSET_REMOVAL ;
                     $sql.= " WHERE 1=1 ";
                     $sql.= "   and START_DATE <= CURRENT DATE ";
                     $sql.= "   and END_DATE >= CURRENT DATE ";

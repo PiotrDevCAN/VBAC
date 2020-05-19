@@ -12,7 +12,7 @@ $plannedOutages = new PlannedOutages();
 include ('UserComms/responsiveOutages_V2.php');
 
 $navBarImage = ""; //a small image to displayed at the top left of the nav bar
-$navBarBrand = array(lcfirst(strtoupper($_SERVER['environment'])),"index.php");
+$navBarBrand = array(lcfirst(strtoupper($_ENV['environment'])),"index.php");
 $navBarSearch = false;
 
 $pageDetails = explode("/", $_SERVER['PHP_SELF']);
@@ -177,11 +177,11 @@ $isRes   = employee_in_group('ventus_resource_strategy',  $_SESSION['ssoEmail'],
 $isUser = ".not('.accessUser')";
 $isRequestor = employee_in_group('vbac_requestor', $_SESSION['ssoEmail']);
 
-$isCdi   = stripos($_SERVER['environment'], 'dev') ? ".not('.accessCdi')"  : $isCdi;
-$isPmo   = stripos($_SERVER['environment'], 'dev')  ? ".not('.accessPmo')" : $isPmo;
-$isPes   = stripos($_SERVER['environment'], 'dev')  ? ".not('.accessPes')" : $isPes;
-$isRep1   = stripos($_SERVER['environment'], 'dev')  ? ".not('.accessRepFullPerson')" : $isRep1;
-$isRes   = stripos($_SERVER['environment'], 'dev')  ? ".not('.accessRes')" : $isRes;
+$isCdi   = stripos($_ENV['environment'], 'dev') ? ".not('.accessCdi')"  : $isCdi;
+$isPmo   = stripos($_ENV['environment'], 'dev')  ? ".not('.accessPmo')" : $isPmo;
+$isPes   = stripos($_ENV['environment'], 'dev')  ? ".not('.accessPes')" : $isPes;
+$isRep1   = stripos($_ENV['environment'], 'dev')  ? ".not('.accessRepFullPerson')" : $isRep1;
+$isRes   = stripos($_ENV['environment'], 'dev')  ? ".not('.accessRes')" : $isRes;
 
 $isFm = $isPmo ? null : $isFm; // If they are PMO it don't matter if they are FM
 

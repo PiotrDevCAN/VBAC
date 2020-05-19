@@ -11,7 +11,7 @@ if($_REQUEST['token']!= $token){
 }
 
 $sql = " SELECT CNUM, " . db2_escape_string($_REQUEST['fieldName']) ;
-$sql.= " FROM " . $_SERVER['environment'] . "." . allTables::$PERSON;
+$sql.= " FROM " . $_ENV['environment'] . "." . allTables::$PERSON;
 $sql.= " FOR SYSTEM_TIME as of '" . db2_escape_string($_REQUEST['systemTime']) . "' ";
 $sql.= " ORDER BY CNUM ";
 

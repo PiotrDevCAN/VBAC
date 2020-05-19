@@ -10,8 +10,8 @@ if($_REQUEST['token']!= $token){
 $notesIds = array();
 $activePersonPredicate = str_replace(array(' REV',' PES'), array(' P.REV',' P.PES'), personTable::activePersonPredicate());
 
-$sql = " SELECT P.NOTES_ID  FROM " . $_SERVER['environment'] . "." . allTables::$PERSON . " AS P ";
-$sql.= " LEFT JOIN ". $_SERVER['environment'] . "." . allTables::$PERSON . " AS F ";
+$sql = " SELECT P.NOTES_ID  FROM " . $_ENV['environment'] . "." . allTables::$PERSON . " AS P ";
+$sql.= " LEFT JOIN ". $_ENV['environment'] . "." . allTables::$PERSON . " AS F ";
 $sql.= " ON P.FM_CNUM = F.CNUM ";
 
 $sql.= " WHERE 1=1 AND trim(P.NOTES_ID) != ''  AND " . $activePersonPredicate;

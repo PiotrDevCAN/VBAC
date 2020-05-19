@@ -25,7 +25,7 @@ if(isset($_REQUEST['activeoffboarding'])){
 }
 
 $sql = " SELECT P.NOTES_ID ";
-$sql.= " FROM " . $_SERVER['environment'] . "." . allTables::$PERSON . " AS P ";
+$sql.= " FROM " . $_ENV['environment'] . "." . allTables::$PERSON . " AS P ";
 
 $sql.= " WHERE 1=1 ";
 $sql.= " AND trim(NOTES_ID) != ''  ";

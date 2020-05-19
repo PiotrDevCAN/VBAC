@@ -59,9 +59,9 @@
 
 		    $fields = array(
 				'code' => $code,
-				'client_id' => $this->config->client_id[strtolower($_SERVER['environment'])],
-				'client_secret' => $this->config->client_secret[strtolower($_SERVER['environment'])],
-				'redirect_uri' => $this->config->redirect_url[strtolower($_SERVER['environment'])],
+				'client_id' => $this->config->client_id[strtolower($_ENV['environment'])],
+				'client_secret' => $this->config->client_secret[strtolower($_ENV['environment'])],
+				'redirect_uri' => $this->config->redirect_url[strtolower($_ENV['environment'])],
 				'grant_type' => 'authorization_code'
 			);
 
@@ -172,7 +172,7 @@
 		private function generateOpenIDConnectAuthorizeURL()
 		{
 			$current_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-			return $this->config->authorize_url . "?scope=openid&response_type=code&client_id=".$this->config->client_id[strtolower($_SERVER['environment'])]."&state=".urlencode($current_link)."&redirect_uri=".$this->config->redirect_url[strtolower($_SERVER['environment'])];
+			return $this->config->authorize_url . "?scope=openid&response_type=code&client_id=".$this->config->client_id[strtolower($_ENV['environment'])]."&state=".urlencode($current_link)."&redirect_uri=".$this->config->redirect_url[strtolower($_ENV['environment'])];
 		}
 
 		//loads openidconnect
@@ -200,9 +200,9 @@
 				&& isset($config->authorize_url) && !empty($config->authorize_url)
 				&& isset($config->token_url) && !empty($config->token_url)
 				&& isset($config->introspect_url) && !empty($config->introspect_url)
-				&& isset($config->client_id[strtolower($_SERVER['environment'])]) && !empty($config->client_id[strtolower($_SERVER['environment'])])
-				&& isset($config->client_secret[strtolower($_SERVER['environment'])]) && !empty($config->client_secret[strtolower($_SERVER['environment'])])
-				&& isset($config->redirect_url[strtolower($_SERVER['environment'])]) && !empty($config->redirect_url[strtolower($_SERVER['environment'])])
+				&& isset($config->client_id[strtolower($_ENV['environment'])]) && !empty($config->client_id[strtolower($_ENV['environment'])])
+				&& isset($config->client_secret[strtolower($_ENV['environment'])]) && !empty($config->client_secret[strtolower($_ENV['environment'])])
+				&& isset($config->redirect_url[strtolower($_ENV['environment'])]) && !empty($config->redirect_url[strtolower($_ENV['environment'])])
 				)
 			{
 				return true;

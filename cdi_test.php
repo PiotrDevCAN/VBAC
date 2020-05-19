@@ -7,7 +7,7 @@ use vbac\allTables;
 use vbac\assetRequestRecord;
 use itdq\BlueMail;
 
-// $_SERVER['environment'] = 'VBAC';
+// $_ENV['environment'] = 'VBAC';
 
 // $loader = new Loader();
 

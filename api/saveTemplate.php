@@ -4,7 +4,7 @@ ob_start();
 
 switch ($_REQUEST['mode']) {
     case 'write':
-        $sql = "DELETE FROM " . $_SERVER['environment'] . "." . \vbac\allTables::$FEB_TRAVEL_REQUEST_TEMPLATES ;
+        $sql = "DELETE FROM " . $_ENV['environment'] . "." . \vbac\allTables::$FEB_TRAVEL_REQUEST_TEMPLATES ;
         $sql.= " WHERE EMAIL_ADDRESS='". db2_escape_string($_REQUEST['email_address']) . "' AND TITLE='" . db2_escape_string($_REQUEST['title']) . "' ";
 
         $rs = db2_exec($_SESSION['conn'], $sql);
@@ -17,7 +17,7 @@ switch ($_REQUEST['mode']) {
         
         db2_commit($_SESSION['conn']);
         
-        $sql = "INSERT INTO " . $_SERVER['environment'] . "." . \vbac\allTables::$FEB_TRAVEL_REQUEST_TEMPLATES ;
+        $sql = "INSERT INTO " . $_ENV['environment'] . "." . \vbac\allTables::$FEB_TRAVEL_REQUEST_TEMPLATES ;
         $sql.= " (EMAIL_ADDRESS, TITLE, TEMPLATE) VALUES ('" . db2_escape_string($_REQUEST['email_address']) . "','" . db2_escape_string($_REQUEST['title']) . "','" . db2_escape_string($_REQUEST['template']) . "') ";
         
         $rs = db2_exec($_SESSION['conn'], $sql);

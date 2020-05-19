@@ -9,7 +9,7 @@ ob_start();
 switch (true) {
     case isset($_GET['email_address']) && isset($_GET['title']):
         // Get a specific template
-        $sql = " SELECT TEMPLATE FROM " . $_SERVER['environment'] . "." . \vbac\allTables::$FEB_TRAVEL_REQUEST_TEMPLATES;
+        $sql = " SELECT TEMPLATE FROM " . $_ENV['environment'] . "." . \vbac\allTables::$FEB_TRAVEL_REQUEST_TEMPLATES;
         $sql .= " WHERE EMAIL_ADDRESS='" . db2_escape_string(trim($_GET['email_address'])) . "' ";
         $sql .= " AND TITLE='" . db2_escape_string(trim($_GET['title'])) . "' ";
         $rs = db2_exec($_SESSION['conn'], $sql);
@@ -56,7 +56,7 @@ switch (true) {
         break;
     case isset($_GET['email_address']):
         // Get list of titles for this person
-        $sql = " SELECT DISTINCT TITLE FROM " . $_SERVER['environment'] . "." . \vbac\allTables::$FEB_TRAVEL_REQUEST_TEMPLATES;
+        $sql = " SELECT DISTINCT TITLE FROM " . $_ENV['environment'] . "." . \vbac\allTables::$FEB_TRAVEL_REQUEST_TEMPLATES;
         $sql .= " WHERE UPPER(EMAIL_ADDRESS)='" . db2_escape_string(strtoupper(trim($_GET['email_address']))) . "' ";
         $response['sql'] = $sql;
         

@@ -22,7 +22,7 @@ foreach ($additionalFields as $field) {
 
 
 $sql = " SELECT P.NOTES_ID " . $additionalSelect;
-$sql.= " FROM " . $_SERVER['environment'] . "." . allTables::$PERSON . " AS P ";
+$sql.= " FROM " . $_ENV['environment'] . "." . allTables::$PERSON . " AS P ";
 
 $sql.= " WHERE 1=1 AND trim(NOTES_ID) != ''  AND " . personTable::activePersonPredicate();
 $sql.= isset($_GET['emailid']) ? " AND lower(P.EMAIL_ADDRESS) = '" . db2_escape_string(strtolower($emailID)) . "' " : null;

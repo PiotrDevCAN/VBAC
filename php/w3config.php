@@ -44,10 +44,10 @@ $site = array(
     'dateFormat' => 'yyyy-mm-dd', // Determines the date format for Date Picker
     'dateStart' => '2017-01-01',
 
-    'Db2Schema' => strtoupper($_SERVER['environment']),  // DB2 Schema name for the app
-    'prefix' => $_SERVER['environment'], // DB2 Schema name for the app
-    'dirPrefix' => $_SERVER['environment'],
-    'csvPrefix' => $_SERVER['environment'],
+    'Db2Schema' => strtoupper($_ENV['environment']),  // DB2 Schema name for the app
+    'prefix' => $_ENV['environment'], // DB2 Schema name for the app
+    'dirPrefix' => $_ENV['environment'],
+    'csvPrefix' => $_ENV['environment'],
 
     'cdiBg' => 'ventus_cdi',
     'pmoBg' => 'vbac_pmo',
@@ -62,7 +62,7 @@ $site = array(
     'AuditLife' => '13 months',
     'AuditDetailsLife' => '6 months',
 
-    'SITE_NAME' => $_SERVER['environment'],
+    'SITE_NAME' => $_ENV['environment'],
     'iconDirectory' => 'ICON'
 
 

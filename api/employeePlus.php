@@ -24,7 +24,7 @@ foreach ($additionalFields as $field) {
 
 
 $sql = " SELECT P.NOTES_ID " . $additionalSelect;
-$sql.= " FROM " . $_SERVER['environment'] . "." . allTables::$PERSON . " AS P ";
+$sql.= " FROM " . $_ENV['environment'] . "." . allTables::$PERSON . " AS P ";
 
 $sql.= " WHERE 1=1 AND trim(NOTES_ID) != '' ";
 $sql.= $onlyActiveBool ? " AND " . personTable::activePersonPredicate() : null;

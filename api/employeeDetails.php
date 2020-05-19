@@ -17,10 +17,10 @@ $trimmedRow = false;
 
 $sql = " SELECT P.*, M.EMAIL_ADDRESS as FM_EMAIL, M.NOTES_ID as FM_NOTES_ID,  trim(P.FIRST_NAME) CONCAT ' ' CONCAT trim(P.LAST_NAME) as FULL_NAME  ";
 $sql.= " , CASE WHEN T.DESCRIPTION is not null then T.DESCRIPTION else P.EMPLOYEE_TYPE end as EMPLOYEE_TYPE ";
-$sql.= " FROM " . $_SERVER['environment'] . "." . allTables::$PERSON . " AS P ";
-$sql.= " LEFT JOIN " . $_SERVER['environment'] . "." . allTables::$PERSON . " AS M ";
+$sql.= " FROM " . $_ENV['environment'] . "." . allTables::$PERSON . " AS P ";
+$sql.= " LEFT JOIN " . $_ENV['environment'] . "." . allTables::$PERSON . " AS M ";
 $sql.= " ON P.FM_CNUM = M.CNUM ";
-$sql.= " LEFT JOIN " . $_SERVER['environment'] . "." . allTables::$EMPLOYEE_TYPE_MAPPING .  " AS T ";
+$sql.= " LEFT JOIN " . $_ENV['environment'] . "." . allTables::$EMPLOYEE_TYPE_MAPPING .  " AS T ";
 $sql.= " ON upper(P.EMPLOYEE_TYPE) = upper(T.CODE) ";
 $sql.= " WHERE 1=1 ";
 $sql.= !empty($emailID) ? " AND lower(P.EMAIL_ADDRESS) = '" . db2_escape_string(strtolower($emailID)) . "'; " : null;

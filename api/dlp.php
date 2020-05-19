@@ -13,7 +13,7 @@ $cnum     = !empty($_GET['cnum'])     ? trim($_GET['cnum']) : null;
 $status   = !empty($_GET['status'])   ? trim($_GET['status']) : null;
 
 $sql = " SELECT lower(D.STATUS) as STATUS, count(*) as RECORDS ";
-$sql.= " FROM " . $_SERVER['environment'] . "." . allTables::$DLP . " AS D ";
+$sql.= " FROM " . $_ENV['environment'] . "." . allTables::$DLP . " AS D ";
 $sql.= " WHERE 1=1 AND lower(status) = '" . db2_escape_string($status) . "' " ;
 $sql.= !empty($cnum)     ? " AND D.CNUM = '" . db2_escape_string($cnum) . "'  " : null;
 $sql.= !empty($hostname) ? " AND lower(D.HOSTNAME) = '" . db2_escape_string(strtolower($hostname)) . "'  " : null;

@@ -77,7 +77,7 @@ class BlueMail
                 $data['recipients'][] = $_SERVER['email']=='user' ?  array('recipient'=>$localEmail) : array('recipient'=>$_SERVER['devemailid']);
                 $data['cc']=array();
                 $data['bcc']=array();
-                $data['subject'] = "**" . $_SERVER['environment'] . "**" . $data['subject'];
+                $data['subject'] = "**" . $_ENV['environment'] . "**" . $data['subject'];
                 // no BREAK - need to drop through to proper email.
             case 'on':
                 $data_json = json_encode($data);
