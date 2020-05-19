@@ -1,12 +1,12 @@
 {
-  "name" : "vBAC_bm",
-  "require" : {
-    "ext-ldap" : "*",
-    "phpoffice/phpspreadsheet" : "1.2.0",
-    "php": "7.1.2"
-  },
-  "repositories" : [ {
-    "type" : "composer",
-    "url" : "https://packagist.org/"
-  } ]
+	"name" : "vbac/vbac",
+	"require" : {
+		"phpoffice/phpspreadsheet" : "~1.12",
+		"ext-gd": "*"
+	},
+	"repositories" : [{
+			"type" : "composer",
+			"url" : "https://packagist.org/"
+		}
+	]
 }
