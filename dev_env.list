@@ -1,0 +1,5 @@
+email=dev
+environment=rest_dev
+ssldsn=DATABASE=BLUDB;HOSTNAME=dashdb-txn-flex-yp-dal10-158.services.dal.bluemix.net;PORT=50001;PROTOCOL=TCPIP;UID=bluadmin;PWD=NmI1MmYyYjlmZGZk!;Security=SSL;
+SERVER_ADMIN=rob.daniel@uk.ibm.com
+SSO_environment=staging
