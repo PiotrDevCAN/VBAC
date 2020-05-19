@@ -3,3 +3,4 @@
 /vendor/
 /cfg/
 .htaccess
+dev_env.list
