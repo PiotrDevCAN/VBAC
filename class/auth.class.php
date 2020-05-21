@@ -163,7 +163,10 @@
 		//returns exit();
 		private function authenticateOpenIDConnect()
 		{
-			header("Location: ".$this->generateOpenIDConnectAuthorizeURL());
+		    $connectAuthorizeURL = $this->generateOpenIDConnectAuthorizeURL();
+		    error_log("About to go to SSO:" . $connectAuthorizeURL);
+
+			header("Location: ".$connectAuthorizeURL);
 			exit();
 		}
 
