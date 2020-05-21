@@ -33,7 +33,7 @@ foreach ($_POST['status'] as $reference => $statusIndicator){
     if($success && !empty($orderItResponded)){
         $success = $assetRequestTable->updateOrderItResponded($reference, $orderItResponded);
     }
-    
+
     // Now, if we're APPROVE and we have a PRIMAR_UID, save that too.
     if($success && trim($statusIndicator)==assetRequestRecord::STATUS_ORDERIT_APPROVED && !empty($_POST['primaryUid'][$reference])){
        $primaryUid = $_POST['primaryUid'][$reference];
@@ -64,6 +64,7 @@ if($success){
 db2_autocommit($_SESSION['conn'],$autoCommit);
 
 $messages = ob_get_clean();
+ob_start();
 $response = array('result'=>$success,'post'=>print_r($_POST,true),'messages'=>$messages);
 
 ob_clean();

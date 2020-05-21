@@ -266,7 +266,7 @@ class personTable extends DbTable {
             while(($row=db2_fetch_assoc($rs))==true){
                 $jsonEncodable = json_encode($row);
                 if(!$jsonEncodable){
-                    echo "<hr/><br/>Dirty Date Found in record for : " . $row['CNUM'];
+                    echo "<hr/><br/>Dirty Data Found in record for : " . $row['CNUM'];
                     foreach ($row as $key => $value) {
                         $jsonEncodableField = json_encode($value);
                         if(!$jsonEncodableField){

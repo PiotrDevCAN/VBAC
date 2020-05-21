@@ -24,7 +24,8 @@ try {
      $comment = $pesTracker->getPesComment($cnum);
      $response['comment'] = $comment;
 
-     $messages = ob_get_contents();
+     $messages = ob_get_clean();
+     ob_start();
      $success = strlen($messages)==0;
 
      $response['success'] = $success;

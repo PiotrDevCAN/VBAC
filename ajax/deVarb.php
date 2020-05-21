@@ -14,6 +14,7 @@ foreach ($_POST['request'] as $requestReference){
 }
 
 $messages = ob_get_clean();
+ob_start();
 
 $response = array('result'=>$success,'post'=>print_r($_REQUEST,true),'messages'=>$messages);
 ob_clean();

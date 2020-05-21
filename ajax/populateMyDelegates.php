@@ -11,6 +11,7 @@ $delegateTable = new delegateTable(allTables::$DELEGATE);
 $data = $delegateTable->returnForDataTables($_POST['requestorCnum']);
 
 $messages = ob_get_clean();
+ob_start();
 
 $response = array("data"=>$data,'messages'=>$messages);
 

@@ -23,6 +23,7 @@ try {
     ob_start();
     $person->editAgileSquadModal($_POST['version']);
     $body = ob_get_clean();
+    ob_start();
     $success = true;
 } catch (Exception $e) {
     echo $e->getCode();
@@ -31,6 +32,7 @@ try {
 }
 
 $messages = ob_get_clean();
+ob_start();
 $response = array('body'=>$body,'success'=>$success,'messages'=>$messages);
 ob_clean();
 echo json_encode($response);

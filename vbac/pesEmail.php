@@ -55,6 +55,7 @@ class pesEmail {
         ob_start();
         $writer->save('php://output');
         $xlsAttachment = ob_get_clean();
+        ob_start();
 
         $encodedXlsAttachment = base64_encode($xlsAttachment);
         return $encodedXlsAttachment;

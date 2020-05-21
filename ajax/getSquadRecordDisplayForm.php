@@ -9,6 +9,7 @@ $tribeRecord = new AgileSquadRecord();
 $tribeRecord->setTribeOrganisation($_POST['version']);
 $tribeRecord->displayForm(FormClass::$modeDEFINE);
 $displayForm = ob_get_clean();
+ob_start();
 
 $response = array('displayForm'=>$displayForm);
 

@@ -7,6 +7,7 @@ AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_REQUE
 
 $success = requestableAssetListTable::flagAsDeleted($_POST['ASSET_TITLE'], $_POST['DELETED_BY']);
 $messages = ob_get_clean();
+ob_start();
 $response = array('success'=>$success,'messages'=>$messages);
 ob_clean();
 echo json_encode($response);

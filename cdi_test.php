@@ -34,18 +34,18 @@ use itdq\BlueMail;
 // var_dump($difference2);
 // echo "</pre>";
 
+phpinfo();
+// $sendResponse = BlueMail::send_mail(array('rob.daniel@uk.ibm.com'), "Test 1",'text here','rob.daniel@uk.ibm.com',array('rob.daniel@uk.ibm.com'));
+// echo "<pre>";
+// print_r($sendResponse);
+// echo "</pre>";
 
-$sendResponse = BlueMail::send_mail(array('rob.daniel@uk.ibm.com'), "Test 1",'text here','rob.daniel@uk.ibm.com',array('rob.daniel@uk.ibm.com'));
-echo "<pre>";
-print_r($sendResponse);
-echo "</pre>";
+// $sendResponse = BlueMail::send_mail(array('rob.daniel@uk.ibm.com'), "Test 2",'text here','rob.daniel@uk.ibm.com',array(null));
+// echo "<pre>";
+// print_r($sendResponse);
+// echo "</pre>";
 
-$sendResponse = BlueMail::send_mail(array('rob.daniel@uk.ibm.com'), "Test 2",'text here','rob.daniel@uk.ibm.com',array(null));
-echo "<pre>";
-print_r($sendResponse);
-echo "</pre>";
-
-$sendResponse = BlueMail::send_mail(array('rob.daniel@uk.ibm.com'), "Test 3",'text here','rob.daniel@uk.ibm.com',array(""));
-echo "<pre>";
-print_r($sendResponse);
-echo "</pre>";
+// $sendResponse = BlueMail::send_mail(array('rob.daniel@uk.ibm.com'), "Test 3",'text here','rob.daniel@uk.ibm.com',array(""));
+// echo "<pre>";
+// print_r($sendResponse);
+// echo "</pre>";

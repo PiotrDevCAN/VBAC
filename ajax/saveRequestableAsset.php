@@ -23,6 +23,7 @@ if(($saveRecordResult && $_POST['mode']=='Save') || (!$saveRecordResult && $_POS
 }
 
 $messages = ob_get_clean();
+ob_start();
 $response = array('success'=>$success,'messages'=>$messages,"saveRecord"=>$saveRecordResult,'post'=>print_r($_POST,true));
 ob_clean();
 echo json_encode($response);

@@ -14,6 +14,7 @@ $endDate = !empty($_POST['endDate']) ? $_POST['endDate'] : null;
 $data = $emailLogTable->returnAsArray($startDate,$endDate);
 
 $messages = ob_get_clean();
+ob_start();
 
 $response = array("data"=>$data,'messages'=>$messages);
 

@@ -23,6 +23,7 @@ foreach ($allTribes as $tribeNumber => $tribeName) {
 }
 
 $messages = ob_get_clean();
+ob_start();
 $response = array("results"=>$data,'messages'=>$messages,'post'=>print_r($_POST,true));
 ob_clean();
 echo json_encode($response);

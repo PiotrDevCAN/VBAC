@@ -14,6 +14,7 @@ $orderItStatus = !empty($_POST['orderitstatus']) ? trim($_POST['orderitstatus'])
 $assetRequestsTable->setStatus($_POST['reference'], $_POST['status'],$comment,$dateReturned,$orderItStatus, $_POST['ispmo']);
 
 $messages = ob_get_clean();
+ob_start();
 
 $success = empty($messages);
 

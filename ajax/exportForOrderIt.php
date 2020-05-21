@@ -103,6 +103,7 @@ $base64EncodedDataNonPmo = !empty($nonPmoRequestData) ?  base64_encode($nonPmoRe
 
 
 $messages = ob_get_clean();
+ob_start();
 
 if(empty($base64EncodedData) && empty($base64EncodedDataNonPmo)){
     $messages .= "<br/><br/><br/><h2<No requests found to export</h2>";

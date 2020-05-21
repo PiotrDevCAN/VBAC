@@ -30,6 +30,7 @@ try {
 }
 
 $messages = ob_get_clean();
+ob_start();
 $response = array('success'=>$success,'messages'=>$messages,"updateRecord"=>$updateRecordResult);
 ob_clean();
 echo json_encode($response);

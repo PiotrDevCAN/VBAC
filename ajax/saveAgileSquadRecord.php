@@ -22,6 +22,7 @@ $agileSquadRecordTable = new AgileSquadTable($table);
 $saveResult = $_POST['mode']==FormClass::$modeDEFINE ? $agileSquadRecordTable->insert($agileSquadRecord) : $agileSquadRecordTable->update($agileSquadRecord);
 
 $messages = ob_get_clean();
+ob_start();
 $success = empty($messages);
 $response = array('result'=>$saveResult,'success'=>$success,'messages'=>$messages);
 ob_clean();

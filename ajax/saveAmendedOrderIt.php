@@ -15,6 +15,7 @@ $newOrderit     = trim($_POST['newOit']);
 $saved = $assetRequestTable->saveAmendedOit($reference, $newOrderit);
 
 $messages = ob_get_clean();
+ob_start();
 $success = empty($messages) && $saved;
 $response = array('success'=>$success,'messages'=>$messages);
 ob_clean();

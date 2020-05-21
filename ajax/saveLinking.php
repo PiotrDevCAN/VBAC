@@ -8,7 +8,7 @@ ob_start();
 AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_POST,true) . "</pre>",AuditTable::RECORD_TYPE_DETAILS);
 
 // $person = new personRecord();
-$table = new personTable(allTables::$PERSON);try {    $table->linkPreBoarderToIbmer($_POST['person_preboarded'], $_POST['ibmer_preboarded']);} catch (Exception $e) {    echo $e->getMessage();  }
+$table = new personTable(allTables::$PERSON);try {    $table->linkPreBoarderToIbmer($_POST['person_preboarded'], $_POST['ibmer_preboarded']);} catch (Exception $e) {    echo $e->getMessage();}
 
 // $preBoarder = new personRecord();
 // $preBoarder->setFromArray(array('CNUM'=>$_POST['person_preboarded']));
@@ -28,7 +28,7 @@ $table = new personTable(allTables::$PERSON);try {    $table->linkPreBoarderTo
 // $preBoarder->setFromArray($preBoarderData);
 // $table->saveRecord($preBoarder);
 
-$messages = ob_get_clean();$success = empty($messages);
+$messages = ob_get_clean();ob_start();$success = empty($messages);
 $response = array( 'success'=>$success,'messages'=>$messages,'post'=>print_r($_POST,true));
 ob_clean();
 echo json_encode($response);

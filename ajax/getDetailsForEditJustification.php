@@ -16,6 +16,7 @@ $comment = !empty(trim($comment[$reference])) ? trim($comment[$reference]) : nul
 
 
 $messages = ob_get_clean();
+ob_start();
 
 $response = array('justification'=>$justification,'comment'=>$comment, 'messages'=>$messages);
 

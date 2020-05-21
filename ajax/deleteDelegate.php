@@ -15,6 +15,7 @@ try {
 }
 
 $messages = ob_get_clean();
+ob_start();
 $response = array('success'=>$success,'messages'=>$messages,"post"=>print_r($_POST,true));
 ob_clean();
 echo json_encode($response);

@@ -20,6 +20,7 @@ if(!empty($_POST['cnum'])){
 }
 
 $messages = ob_get_clean();
+ob_start();
 $success = empty($messages);
 $response = array('success'=>$success,'messages'=>$messages,'cnum'=>$_POST['CNUM'],'revalidationStatus'=>$revalidationStatus, 'post'=>print_r($_POST,true));
 ob_clean();

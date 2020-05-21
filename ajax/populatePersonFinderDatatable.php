@@ -14,12 +14,14 @@ $data = $personTable->returnPersonFinderArray(personTable::ACTIVE_WITH_PROVISION
 $dataJsonAble = json_encode($data);
 
 $messages = ob_get_clean();
+ob_start();
 
 if($dataJsonAble) {
     $response = array("data"=>$data,'messages'=>$messages);
 } else {
     $personTable->findDirtyData();
     $dirtyDetails = ob_get_clean();
+    ob_start();
     ob_clean();
     echo $dirtyDetails;
     exit();

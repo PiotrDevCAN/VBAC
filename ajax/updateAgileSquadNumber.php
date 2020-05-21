@@ -17,6 +17,7 @@ if(!$updateResult){
 
 
 $messages = ob_get_clean();
+ob_start();
 
 $success = empty($messages) && $updateResult;
 

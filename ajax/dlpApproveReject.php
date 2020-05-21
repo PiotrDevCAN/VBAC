@@ -14,6 +14,7 @@ $approveReject = $trimmedParms['approveReject'] == dlpRecord::STATUS_APPROVED ? 
 $dlp->approveReject($trimmedParms['cnum'], $trimmedParms['hostname'], $approveReject);
 
 $messages = ob_get_clean();
+ob_start();
 $success = (trim($messages) == "");
 $response = array('success'=>$success,'messages'=>$messages,"post"=>print_r($_POST,true));
 ob_clean();

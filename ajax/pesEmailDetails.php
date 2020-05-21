@@ -27,6 +27,7 @@ try {
 }
 
 $messages = ob_get_clean();
+ob_start();
 $success = strlen($messages)==0;
 
 unset($emailDetails['attachments']); // dont need them at this point.

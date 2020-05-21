@@ -51,6 +51,7 @@ if(!$preparedStmt){
 }
 
 $messages = ob_get_clean();
+ob_start();
 
 $response = array('result'=>$execute ? true : false,'Messages'=>$messages);
 

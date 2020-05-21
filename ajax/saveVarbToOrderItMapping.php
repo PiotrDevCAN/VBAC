@@ -54,6 +54,7 @@ db2_commit($_SESSION['conn']);
 db2_autocommit($_SESSION['conn'],$autoCommit);
 
 $messages = ob_get_clean();
+ob_start();
 
 $response = array('result'=>$success,'post'=>print_r($_POST,true),'messages'=>$messages);
 ob_clean();

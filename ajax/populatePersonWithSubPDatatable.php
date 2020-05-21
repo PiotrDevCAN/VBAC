@@ -17,12 +17,14 @@ $data = $personTable->returnAsArray($preBoardersAction);
 $dataJsonAble = json_encode($data);
 
 $messages = ob_get_clean();
+ob_start();
 
 if($dataJsonAble) {
      $response = array("data"=>$data,'messages'=>$messages,'post'=>print_r($_POST,true));
  } else {
     $personTable->findDirtyData();
     $dirtyDetails = ob_get_clean();
+    ob_start();
     echo $dirtyDetails;
     exit();
  }

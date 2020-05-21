@@ -6,6 +6,7 @@ ob_start();
 
 $allData = staticDataTable::getStaticDataValuesForEdit();
 $messages = ob_get_clean();
+ob_start();
 
 $response = array("data"=>$allData,'messages'=>$messages);
 

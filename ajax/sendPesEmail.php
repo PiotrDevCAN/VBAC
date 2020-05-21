@@ -17,7 +17,8 @@ $emailResponse = $pesEmailObj->sendPesEmail($_POST['firstname'],$_POST['lastname
 
 $emailStatus = $emailResponse['Status']->status;
 
-$messages = ob_get_contents();
+$messages = ob_get_clean();
+ob_start();
 $success = strlen($messages)==0;
 $response = array();
 $response['success'] = $success;
@@ -32,7 +33,8 @@ if($success){
     $cnum = $personTable->getCnumFromEmail($_POST['emailaddress']);
     $personTable->setPesEvidence($cnum);
 
-    $messages = ob_get_contents();
+    $messages = ob_get_clean();
+    ob_start();
     $success = strlen($messages)==0;
 
     $response['success'] = $success;

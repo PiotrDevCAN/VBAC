@@ -21,6 +21,7 @@ try {
     echo $e->getMessage();
 }
 $messages = ob_get_clean();
+ob_start();
 $response = array('body'=>$body,'messages'=>$messages);
 ob_clean();
 echo json_encode($response);

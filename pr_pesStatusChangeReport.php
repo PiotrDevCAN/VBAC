@@ -45,6 +45,7 @@ while(($row=db2_fetch_assoc($rs))==true){
         print_r($row);
         ?></pre><?php
         $otherRecords.= ob_get_clean();
+        ob_start();
 
     }
 }

@@ -26,7 +26,7 @@ switch (true) {
         $predicate .= " AND ( F.CNUM='". db2_escape_string($myCnum) . "' ";
         $predicate .= "       OR ";
         $predicate .= "       G.DELEGATE_CNUM='" . db2_escape_string($myCnum) . "' ";
-        $predicate .= "     ) ";        
+        $predicate .= "     ) ";
         break;
     case $_SESSION['isCdi']:
     case $_SESSION['isPmo']:
@@ -45,7 +45,7 @@ switch ($_POST['showType']) {
     case 'active' :
         $predicate.= " AND D.STATUS in ('" . dlpRecord::STATUS_PENDING . "','" . dlpRecord::STATUS_APPROVED . "') ";
         $predicate.= " AND D.TRANSFERRED_TO_HOSTNAME is null ";
-        break; 
+        break;
     case 'pending':
         $predicate.= " AND D.STATUS='" . dlpRecord::STATUS_PENDING . "' ";
         $predicate.= " AND D.TRANSFERRED_TO_HOSTNAME is null ";
@@ -59,7 +59,7 @@ switch ($_POST['showType']) {
         break;
     case 'all':
     default:
-       
+
         break;
 }
 
@@ -72,6 +72,7 @@ $data = $dataAndSql['data'];
 $sql  = $dataAndSql['sql'];
 
 $messages = ob_get_clean();
+ob_start();
 
 $response = array("data"=>$data,'messages'=>$messages,'sql'=>$sql,'post'=>print_r($_POST,true));
 

@@ -13,6 +13,7 @@ $trimmedParms = array_map('trim', $_POST);
 $dlp->delete($trimmedParms['cnum'], $trimmedParms['hostname'], $trimmedParms['transferred']);
 
 $messages = ob_get_clean();
+ob_start();
 $success = (trim($messages) == "");
 $response = array('success'=>$success,'cnum'=>$trimmedParms['cnum'],'hostname'=>$trimmedParms['hostname'],'messages'=>$messages,"post"=>print_r($_POST,true));
 ob_clean();

@@ -21,6 +21,7 @@ if($requestDetails){
 
 
 $messages = ob_get_clean();
+ob_start();
 $success = empty($messages);
 $response = array('success'=>$success,'messages'=>$messages);
 ob_clean();

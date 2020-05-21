@@ -94,6 +94,7 @@ $data = $dataAndSql['data'];
 $sql  = $dataAndSql['sql'];
 
 $messages = ob_get_clean();
+ob_start();
 
 $response = array("data"=>$data,'messages'=>$messages,'sql'=>$sql,'post'=>print_r($_POST,true));
 

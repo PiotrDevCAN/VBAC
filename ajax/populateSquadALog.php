@@ -58,12 +58,14 @@ while(($row = db2_fetch_assoc($rs))==true){
 
 $dataJsonAble = json_encode($data);
 $messages = ob_get_clean();
+ob_start();
 
 if($dataJsonAble) {
      $response = array("data"=>$data,'messages'=>$messages,'post'=>print_r($_POST,true),'sql'=>$sql);
  } else {
     $personTable->findDirtyData();
     $dirtyDetails = ob_get_clean();
+    ob_start();
     echo $dirtyDetails;
     exit();
  }

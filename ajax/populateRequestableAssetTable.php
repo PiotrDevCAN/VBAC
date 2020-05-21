@@ -14,6 +14,7 @@ $data = $requestableAssetList->returnAsArray();
 $dataJsonAble = json_encode($data);
 
 $messages = ob_get_clean();
+ob_start();
 
 if($dataJsonAble) {
     $response = array("data"=>$data,'messages'=>$messages);

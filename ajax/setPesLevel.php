@@ -26,6 +26,7 @@ if($setSuccess){
 
 
 $messages = ob_get_clean();
+ob_start();
 $success = empty($messages) && $setSuccess;
 $response = array('success'=>$success,'messages'=>$messages,'post'=>print_r($_POST,true),'cell'=>$cellContents,'comment'=>$comment);
 ob_clean();

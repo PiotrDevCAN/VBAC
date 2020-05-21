@@ -112,6 +112,7 @@ try {
 }
 
 $messages = ob_get_clean();
+ob_start();
 
 $response = array('boarding'=>$_POST['boarding'], 'boardingIbmer'=>$boardingIbmer, 'employeetype'=>$_POST['EMPLOYEE_TYPE'],'pesstatus'=>$_POST['PES_STATUS'], 'success'=>$success,'messages'=>$messages,"saveRecord"=>$saveRecordResult
                  ,'cnum'=>$_POST['CNUM']

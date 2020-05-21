@@ -17,6 +17,7 @@ $assetRequestTable->setStatus($_POST['reference'], assetRequestRecord::STATUS_RE
 
 
 $messages = ob_get_clean();
+ob_start();
 $success = empty($messages);
 $response = array('success'=>$success,'messages'=>$messages);
 ob_clean();

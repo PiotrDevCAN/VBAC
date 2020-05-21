@@ -155,6 +155,7 @@ class pesTrackerTable extends DbTable{
     function buildTable($records='Active'){
         $allRows = self::returnPesEventsTable($records,self::PES_TRACKER_RETURN_RESULTS_AS_ARRAY);
         ob_start();
+
         ?>
         <table id='pesTrackerTable' class='table table-striped table-bordered table-condensed '  style='width:100%'>
 		<thead>
@@ -198,8 +199,6 @@ class pesTrackerTable extends DbTable{
             $requestor = trim($row['PES_REQUESTOR']);
 
             $formattedIdentityField = self::formatEmailFieldOnTracker($row);
-
-
 
             ?>
             <tr class='<?=$cnum;?>'>
@@ -379,9 +378,19 @@ class pesTrackerTable extends DbTable{
 
         if($rs){
             $row = db2_fetch_assoc($preparedStmt);
+
+            var_dump(ob_get_level());
+
             ob_start();
             self::formatProcessingStatusCell($row);
             $cellContents = ob_get_clean();
+
+            var_dump(ob_get_level());
+
+            echo ">>>>>>>>>>>>>>>>>>";
+            die('another death');
+
+
             return $cellContents;
         }
         return false;

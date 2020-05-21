@@ -25,6 +25,7 @@ try {
 
 
     $messages  = ob_get_clean();
+    ob_start();
     $success   = empty($messages);
 
 
@@ -54,6 +55,7 @@ try {
     ob_start();
     pesTrackerTable::formatProcessingStatusCell($row);
     $formattedStatusField = ob_get_clean();
+    ob_start();
 
 } catch (Exception $e){
     $success = false;

@@ -19,6 +19,7 @@ $data = $personTable->getForRfFlagReport();
 // $sql  = $dataAndSql['sql'];
 
 $messages = ob_get_clean();
+ob_start();
 
 $response = array("data"=>$data,'messages'=>$messages,'post'=>print_r($_POST,true));
 

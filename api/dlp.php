@@ -33,6 +33,7 @@ if($rs){
     ob_clean();
     DbTable::displayErrorMessage($rs, 'class', 'method', $sql);
     $errorMessage = ob_get_clean();
+    ob_start();
     echo json_encode(array('status'=>$status,'records'=>0,'err'=>$errorMessage));
 }
 

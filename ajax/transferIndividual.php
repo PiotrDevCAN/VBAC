@@ -11,6 +11,7 @@ $personTable = new personTable(allTables::$PERSON);
 $personTable->transferIndividual($_POST['transferCnum'], $_POST['transferToCnum']);
 
 $messages = ob_get_clean();
+ob_start();
 $success = empty($messages);
 
 $response = array('result'=>$success,'post'=>print_r($_REQUEST,true),'messages'=>$messages);

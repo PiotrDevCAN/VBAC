@@ -26,15 +26,16 @@ $licencedAlready = $dlpTable->licencedAlready($parms['licencee'], $parms['curren
 
 if($licencedAlready){
     $actionsTaken.= "<br/>" . $licenceeNotes . " already holds a licence for Hostname:" .  $parms['currentHostname'];
-    
+
     $save = $dlpTable->recordTransfer($parms['licencee'],$parms['currentHostname'], $parms['hostname']);
     $actionsTaken.= $save ? "<p class='bg-success'>Licence transfered from Hostname:" .  $parms['currentHostname'] . "To:" . $parms['hostname'] . "</p>" : "<p class='bg-danger'>Attempt to record licence transfer has failed. See error message below<p>";
 }
-    
+
 $save = $dlpTable->recordLicence($parms['licencee'], $parms['hostname'],$approverEmail );
 $actionsTaken.= $save ? "<p class='bg-success'>New Licence recorded for $licenceeNotes on Hostname:" .  $parms['hostname'] . "</p>" : "<p class='bg-danger'>Attempt to save new Licence record has failed. See error message below</p>";
- 
+
 $messages = ob_get_clean();
+ob_start();
 $success = (trim($messages) == "");
 
 if($success){

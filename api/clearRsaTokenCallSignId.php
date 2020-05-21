@@ -16,7 +16,7 @@ if($_REQUEST['token']!= $token){
 
 // validate parameters.
 
-$rsaTokenSupplied   = isset($_REQUEST['RSA_TOKEN']); 
+$rsaTokenSupplied   = isset($_REQUEST['RSA_TOKEN']);
 $callSignIdSupplied = isset($_REQUEST['CALLSIGN_ID']);
 $cnumSupplied       = isset($_REQUEST['CNUM']);
 
@@ -29,11 +29,11 @@ if( (!$rsaTokenSupplied and !$callSignIdSupplied) or !$cnumSupplied ){
     if(!$cnumSupplied and !$rsaTokenSupplied){
         $response['messages'].= " Parameters don't indicate which token to clear";
     }
-    
+
     if(!$cnumSupplied){
         $response['messages'].= " CNUM not provided" ;
     }
-    
+
     $response['parameters'] = print_r($_REQUEST,true);
     error_log('Invalid Parameters provided :' . json_encode($response , JSON_NUMERIC_CHECK));
     http_response_code(422);
@@ -59,6 +59,7 @@ if(!$rs){
 }
 
 $messages = ob_get_clean();
+ob_start();
 $success = empty($messages);
 $response['success'] = $success;
 $response['messages'] = $messages;

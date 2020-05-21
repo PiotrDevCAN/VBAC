@@ -23,6 +23,7 @@ $agileTribeTable = new AgileTribeTable($table);
 $saveResult = $_POST['mode']==FormClass::$modeDEFINE ? $agileTribeTable->insert($agileTribeRecord) : $agileTribeTable->update($agileTribeRecord);
 
 $messages = ob_get_clean();
+ob_start();
 $success = empty($messages);
 $response = array('result'=>$saveResult,'success'=>$success,'messages'=>$messages,'parms'=>print_r($_POST,true));
 ob_clean();

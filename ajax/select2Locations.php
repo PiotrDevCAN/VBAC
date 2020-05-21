@@ -75,6 +75,7 @@ foreach ($children as $city => $locations){
 
 
 $diags = ob_get_clean();
+ob_start();
 $selectDropDown  = array('results'=>$results);
 ob_clean();
 echo json_encode($selectDropDown);

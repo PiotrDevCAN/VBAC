@@ -35,6 +35,7 @@ $rs = db2_exec($_SESSION['conn'], $sql);
 if(!$rs){
     DbTable::displayErrorMessage($rs, 'class', 'method', $sql);
     $errorMessage = ob_get_clean();
+    ob_start();
     $response = array('success'=>false,'error'=>$errorMessage);
     echo json_encode($response);
     exit();
@@ -46,6 +47,7 @@ while(($row = db2_fetch_assoc($rs))==true){
 }
 $employees = count($employeesArray)==1 ? $employeesArray[0] : $employeesArray;
 $errorMessage = ob_get_clean();
+ob_start();
 $success = empty($errorMessage);
 $response = array('success'=>$success
     ,'employees'=>$employees, 'employeesArray'=>print_r($employeesArray,true)

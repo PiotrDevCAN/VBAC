@@ -10,6 +10,7 @@ $squadNumber = trim($_REQUEST['squadNumber']);
 $squadDetails = AgileSquadTable::getSquadDetails($squadNumber);
 
 $messages = ob_get_clean();
+ob_start();
 $success = empty($messages) && $squadDetails;
 
 $response = array('squadDetails'=>$squadDetails,'success'=>$success, 'messages'=>$messages);

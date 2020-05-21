@@ -19,7 +19,8 @@ $emailResponse = $pesEmailObj->sendPesEmailChaser($cnum, $emailAddress, $_POST['
 
 $emailStatus = $emailResponse['Status']->status;
 
-$messages = ob_get_contents();
+$messages = ob_get_clean();
+ob_start();
 $success = strlen($messages)==0;
 $response = array();
 $response['success'] = $success;
@@ -36,7 +37,8 @@ if($success){
     $dateLastChased = $dateObj->format('Y-m-d');
     $pesTracker->setPesDateLastChased($cnum, $dateLastChased);
 
-    $messages = ob_get_contents();
+    $messages = ob_get_clean();
+    ob_start();
     $success = strlen($messages)==0;
 
     $response['success'] = $success;

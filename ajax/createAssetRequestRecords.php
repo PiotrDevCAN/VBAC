@@ -141,8 +141,9 @@ foreach ($_POST as $key => $value){
 
         } catch (Exception $e) {
             echo "Exception:" .  $e->getMessage();
-            echo "Code:" . $e->getCode();            
+            echo "Code:" . $e->getCode();
             $messages = ob_get_clean();
+            ob_start();
             $response = array('result'=>'failed','post'=>$post,'messages'=>$messages);
             echo json_encode($response);
             return;
@@ -155,6 +156,7 @@ $notifyApprovingMgr && !empty($approvingMgrEmail) ? $assetRequestTable->notifyAp
 $assetRequestTable->linkPrereqs($assetReferences);
 
 $messages = ob_get_clean();
+ob_start();
 
 $result = empty($messages) ? 'success' : 'failed';
 
