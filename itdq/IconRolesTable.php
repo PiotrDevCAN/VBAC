@@ -214,7 +214,7 @@ class IconRolesTable extends DbTable {
 	 * @return string
 	 */
 	static function getServiceLines() {
-		$url = "http://" . $_SERVER ['SERVER_NAME'] . "/" . $_SESSION ['iconDirectory'] . "/s_getServiceLineFunctionXML.php";
+		$url = "https://" . $_SERVER ['SERVER_NAME'] . "/" . $_SESSION ['iconDirectory'] . "/s_getServiceLineFunctionXML.php";
 		$serviceLineDetails = new \SimpleXMLElement ( $url, 0, true ); // Get the XML document back from ICON
 
 		foreach ( $serviceLineDetails as $serviceLineDetail ) {
@@ -226,7 +226,7 @@ class IconRolesTable extends DbTable {
 		return $serviceLineFunctions;
 	}
 	static function getTeams($serviceLine = null, $function = null) {
-		$url = "http://" . $_SERVER ['SERVER_NAME'] . "/" . $_SESSION ['iconDirectory'] . "/s_getServiceLineFunctionXML.php?serviceLine=" . urlencode ( $serviceLine ) . "&function=" . urlencode ( $function );
+		$url = "https://" . $_SERVER ['SERVER_NAME'] . "/" . $_SESSION ['iconDirectory'] . "/s_getServiceLineFunctionXML.php?serviceLine=" . urlencode ( $serviceLine ) . "&function=" . urlencode ( $function );
 		$ch = curl_init ( $url );
 		curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, true );
 		$xmlDocument = curl_exec ( $ch );
@@ -234,7 +234,7 @@ class IconRolesTable extends DbTable {
 		return $xmlDocument;
 	}
 	static function getRoles() {
-		$url = "http://" . $_SERVER ['SERVER_NAME'] . "/" . $_SESSION ['iconDirectory'] . "/s_getRoleXML.php";
+		$url = "https://" . $_SERVER ['SERVER_NAME'] . "/" . $_SESSION ['iconDirectory'] . "/s_getRoleXML.php";
 		$roleDetails = new \SimpleXMLElement ( $url, 0, true ); // Get the XML document back from ICON
 		$role = array ();
 		foreach ( $roleDetails as $roleName ) {
@@ -244,7 +244,7 @@ class IconRolesTable extends DbTable {
 	}
 	static function getMyRoles($myIntranetId = null) {
 		$intranetParms = ! empty ( $myIntranetId ) ? "?intranet=" . trim ( $myIntranetId ) : null;
-		$url = "http://" . $_SERVER ['SERVER_NAME'] . "/" . $_SESSION ['iconDirectory'] . "/s_getAccountRoleXML.php" . $intranetParms;
+		$url = "https://" . $_SERVER ['SERVER_NAME'] . "/" . $_SESSION ['iconDirectory'] . "/s_getAccountRoleXML.php" . $intranetParms;
 
 		$xml = new \SimpleXMLElement ( $url, 0, true ); // Get the XML document back from ICON
 		$json = json_encode ( $xml );
@@ -272,7 +272,7 @@ class IconRolesTable extends DbTable {
 	}
 	static function getAccountNames($column = null) {
 		$columnName = ! empty ( $column ) ? "?columnName=" . trim ( $column ) : null;
-		$url = "http://" . $_SERVER ['SERVER_NAME'] . "/" . $_SESSION ['iconDirectory'] . "/s_getAccountXML.php";
+		$url = "https://" . $_SERVER ['SERVER_NAME'] . "/" . $_SESSION ['iconDirectory'] . "/s_getAccountXML.php";
 
 		$xml = new \SimpleXMLElement( $url, 0, true ); // Get the XML document back from ICON
 		$json = json_encode ( $xml );
@@ -290,7 +290,7 @@ class IconRolesTable extends DbTable {
 	}
 
 	static function getAccountDetails() {
-	    $url = "http://" . $_SERVER ['SERVER_NAME'] . "/" . $_SESSION ['iconDirectory'] . "/s_getAccountXML.php";
+	    $url = "https://" . $_SERVER ['SERVER_NAME'] . "/" . $_SESSION ['iconDirectory'] . "/s_getAccountXML.php";
 
 	    $xml = new \SimpleXMLElement( $url, 0, true ); // Get the XML document back from ICON
 	    $json  = json_encode ( $xml );
@@ -318,7 +318,7 @@ class IconRolesTable extends DbTable {
 	    Trace::traceTimings('IconRolesTable::getAccountRoles start',$_SERVER['PHP_SELF'],__LINE__);
 	    $roleParm = ! empty ( $role ) ? "?role=" . trim ( $role ) : null;
 
-	    $url = "http://" . $_SERVER ['SERVER_NAME'] . "/" . $_SESSION ['iconDirectory'] . "/s_getAccountRoleXML.php$roleParm";
+	    $url = "https://" . $_SERVER ['SERVER_NAME'] . "/" . $_SESSION ['iconDirectory'] . "/s_getAccountRoleXML.php$roleParm";
 
 	    $xml = new \SimpleXMLElement( $url, 0, true ); // Get the XML document back from ICON
 	    Trace::traceTimings('IconRolesTable::getAccountRoles xml returned',$_SERVER['PHP_SELF'],__LINE__);

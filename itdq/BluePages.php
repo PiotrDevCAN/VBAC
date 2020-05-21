@@ -69,7 +69,7 @@ class BluePages {
 			return FALSE;
 		}
 		set_time_limit(120);
-		$url = "http://bluepages.ibm.com/BpHttpApisv3/wsapi?byInternetAddr=INTRANET_ID_HERE";
+		$url = "https://bluepages.ibm.com/BpHttpApisv3/wsapi?byInternetAddr=INTRANET_ID_HERE";
 		//echo "<BR/>" . str_replace('INTRANET_ID_HERE',urlencode($intranetId),$url);
 		$ch = curl_init ( str_replace('INTRANET_ID_HERE',urlencode($intranetId),$url) );
 		curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, true );
@@ -110,7 +110,7 @@ class BluePages {
 			return FALSE;
 		}
 		set_time_limit(120);
-		$url = "http://bluepages.ibm.com/BpHttpApisv3/wsapi?allByNotesIDLite=NOTES_ID_HERE%25";
+		$url = "https://bluepages.ibm.com/BpHttpApisv3/wsapi?allByNotesIDLite=NOTES_ID_HERE%25";
 
 	$sp = strpos($notesId,'/O=IBM');
 
@@ -135,7 +135,7 @@ class BluePages {
 			return FALSE;
 		}
 		set_time_limit(120);
-		$url = "http://bluepages.ibm.com/BpHttpApisv3/wsapi?byInternetAddr=INTRANET_ID_HERE";
+		$url = "https://bluepages.ibm.com/BpHttpApisv3/wsapi?byInternetAddr=INTRANET_ID_HERE";
 //		echo "<BR/>" . str_replace('INTRANET_ID_HERE',urlencode($intranetId),$url);
 		$ch = curl_init ( str_replace('INTRANET_ID_HERE',urlencode($intranetId),$url) );
 		curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, true );
@@ -198,7 +198,7 @@ class BluePages {
 			return FALSE;
 		}
 		set_time_limit(120);
-		$url = "http://bluepages.ibm.com/BpHttpApisv3/wsapi?allByNotesIDLite=NOTES_ID_HERE%25";
+		$url = "https://bluepages.ibm.com/BpHttpApisv3/wsapi?allByNotesIDLite=NOTES_ID_HERE%25";
 
 	$sp = strpos($notesId,'/O=IBM');
 
@@ -262,7 +262,7 @@ class BluePages {
 			return FALSE;
 		}
 		set_time_limit(120);
-		$url = "http://bluepages.ibm.com/BpHttpApisv3/wsapi?allByNotesIDLite=NOTES_ID_HERE%25";
+		$url = "https://bluepages.ibm.com/BpHttpApisv3/wsapi?allByNotesIDLite=NOTES_ID_HERE%25";
 
 	    $sp = strpos($notesId,'/O=IBM');
 
@@ -333,7 +333,7 @@ class BluePages {
 			return FALSE;
 		}
 		set_time_limit(120);
-		$url = "http://bluepages.ibm.com/BpHttpApisv3/wsapi?byInternetAddr=INTRANET_ID_HERE";
+		$url = "https://bluepages.ibm.com/BpHttpApisv3/wsapi?byInternetAddr=INTRANET_ID_HERE";
 //echo "<BR/>" . str_replace('INTRANET_ID_HERE',urlencode($intranetId),$url);
 		$ch = curl_init ( str_replace('INTRANET_ID_HERE',urlencode($intranetId),$url) );
 		curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, true );

@@ -8,7 +8,7 @@ $(document).ready(function(){
 		  remote: {
 			//    http://unified-profile.w3ibm.mybluemix.net
 			//	  http://w3-services1.w3-969.ibm.com
-			url: 'http://unified-profile.w3ibm.mybluemix.net/myw3/unified-profile/v1/search/user?query=%QUERY&searchConfig=optimized_search',
+			url: 'https://unified-profile.w3ibm.mybluemix.net/myw3/unified-profile/v1/search/user?query=%QUERY&searchConfig=optimized_search',
 		    wildcard: '%QUERY',
 		    filter: function(data) {
 
@@ -28,7 +28,7 @@ $(document).ready(function(){
 		  remote: {
 			//    http://unified-profile.w3ibm.mybluemix.net
 			//	  http://w3-services1.w3-969.ibm.com
-			url: 'http://unified-profile.w3ibm.mybluemix.net/myw3/unified-profile/v1/search/user?query=%QUERY&searchConfig=optimized_search',
+			url: 'https://unified-profile.w3ibm.mybluemix.net/myw3/unified-profile/v1/search/user?query=%QUERY&searchConfig=optimized_search',
 		    wildcard: '%QUERY',
 		    filter: function(data) {
 
@@ -55,7 +55,7 @@ $(document).ready(function(){
 		        'unable to find any IBMers that match the current query',
 		      '</div>'
 		    	].join('\n'),
-		  	suggestion: Handlebars.compile('<div> <img src="http://unified-profile.w3ibm.mybluemix.net/myw3/unified-profile-photo/v1/image/{{cnum}}?type=bp&def=blue&s=50" alt="Profile" height="42" width="42"> <strong>{{value}}</strong><br/><small>{{preferredIdentity}}<br/>{{role}}</small></div>')
+		  	suggestion: Handlebars.compile('<div> <img src="https://unified-profile.w3ibm.mybluemix.net/myw3/unified-profile-photo/v1/image/{{cnum}}?type=bp&def=blue&s=50" alt="Profile" height="42" width="42"> <strong>{{value}}</strong><br/><small>{{preferredIdentity}}<br/>{{role}}</small></div>')
 		  }
 		});
 	
@@ -71,7 +71,7 @@ $(document).ready(function(){
 		        'unable to find any IBMers that match the current query',
 		      '</div>'
 		    	].join('\n'),
-		  	suggestion: Handlebars.compile('<div> <img src="http://unified-profile.w3ibm.mybluemix.net/myw3/unified-profile-photo/v1/image/{{cnum}}?type=bp&def=blue&s=50" alt="Profile" height="42" width="42"> <strong>{{value}}</strong><br/><small>{{preferredIdentity}}<br/>{{role}}</small></div>')
+		  	suggestion: Handlebars.compile('<div> <img src="https://unified-profile.w3ibm.mybluemix.net/myw3/unified-profile-photo/v1/image/{{cnum}}?type=bp&def=blue&s=50" alt="Profile" height="42" width="42"> <strong>{{value}}</strong><br/><small>{{preferredIdentity}}<br/>{{role}}</small></div>')
 		  }
 		});
 	

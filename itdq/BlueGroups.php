@@ -34,21 +34,21 @@ class BlueGroups {
 		$url['Add_Administrator'] = "https://bluepages.ibm.com/tools/groups/protect/groups.wss?gName=" . urlencode($groupName) . "&task=Administrators&mebox=" . urlencode($memberUID) . "&Submit=Add+Administrators&API=1 ";
 		self::processURL($url);
 	}
-	
-	
+
+
 	public static function listMembers($groupName){
-	    $url = "http://bluepages.ibm.com/tools/groups/groupsxml.wss?task=listMembers&group=" . urlencode($groupName) . "&depth=1";
+	    $url = "https://bluepages.ibm.com/tools/groups/groupsxml.wss?task=listMembers&group=" . urlencode($groupName) . "&depth=1";
 	    $myXMLData =  self::getBgResponseXML($url);
-	    
-	    
+
+
 	    $xml=simplexml_load_string($myXMLData);
-	    
+
 	    // print_r($xml);
-	    
+
 	    $allMembers = get_object_vars($xml)['member'];
         return $allMembers;
-	    
-	    
+
+
 	    // $simple = "<para><note>simple note</note></para>";
 // 	    $p = xml_parser_create();
 // 	    xml_parse_into_struct($p, $xml, $vals, $index);
@@ -103,18 +103,18 @@ class BlueGroups {
 			echo "<BR>Processing $function.";
 			echo "URL:" . $BGurl;
 			$ret = curl_setopt($ch, CURLOPT_URL, $BGurl);
-			
+
 			var_dump($ret);
-				
-			
+
+
 			$ret = curl_exec($ch);
-			
+
 			var_dump($ret);
-			
-			
-			
-			
-			
+
+
+
+
+
 			if (empty($ret)) {
 				//     some kind of an error happened
    		 		die(curl_error($ch));
@@ -144,8 +144,8 @@ class BlueGroups {
 			}
 		}
 	}
-	
-	
+
+
 	private static function getBgResponseXML($url){
 	    $ch = self::createCurl();
 
