@@ -22,15 +22,6 @@
 		{
 			if(isset($_SESSION['uid']) && isset($_SESSION['exp']) && ($_SESSION['exp']-300) > time()) return true;
 
-			?>
-			<script type="text/javascript">
-    			// Firefox 1.0+
-    			var isFirefox = typeof InstallTrigger !== 'undefined';
-    			if(!isFirefox){
-        			alert('Only the Firefox browser is supported by vBAC. \nIt has detected you are using a different browser. \nIf you experience any problems with the tool, please try using FireFox before alerting the CDI Team.');
-    			}
-		    </script>
-			<?php
 			switch ($this->technology) {
 				case "openidconnect":
 					$this->authenticateOpenIDConnect();
@@ -55,13 +46,13 @@
 		//verifies openID response
 		private function verifyCodeOpenIDConnect($code)
 		{
-		    $url = $this->config->token_url;
+		    $url = $this->config->token_url[strtolower($_ENV['SSO_environment'])];
 
 		    $fields = array(
 				'code' => $code,
-				'client_id' => $this->config->client_id[strtolower($_ENV['environment'])],
-				'client_secret' => $this->config->client_secret[strtolower($_ENV['environment'])],
-				'redirect_uri' => $this->config->redirect_url[strtolower($_ENV['environment'])],
+				'client_id' => $this->config->client_id[strtolower($_ENV['SSO_environment'])],
+				'client_secret' => $this->config->client_secret[strtolower($_ENV['SSO_environment'])],
+				'redirect_uri' => $this->config->redirect_url,
 				'grant_type' => 'authorization_code'
 			);
 
@@ -163,10 +154,9 @@
 		//returns exit();
 		private function authenticateOpenIDConnect()
 		{
-		    $connectAuthorizeURL = $this->generateOpenIDConnectAuthorizeURL();
-		    error_log("About to go to SSO:" . $connectAuthorizeURL);
-
-			header("Location: ".$connectAuthorizeURL);
+		    $authorizedUrL = $this->generateOpenIDConnectAuthorizeURL();
+		    error_log(__CLASS__ . __FUNCTION__ . __LINE__. " About to pass to  : " . $authorizedUrL);
+			header("Location: ".$authorizedUrL);
 			exit();
 		}
 
@@ -174,8 +164,9 @@
 		//returns string
 		private function generateOpenIDConnectAuthorizeURL()
 		{
-			$current_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-			return $this->config->authorize_url . "?scope=openid&response_type=code&client_id=".$this->config->client_id[strtolower($_ENV['environment'])]."&state=".urlencode($current_link)."&redirect_uri=".$this->config->redirect_url[strtolower($_ENV['environment'])];
+			$current_link = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+			$authorizeString = $this->config->authorize_url[strtolower($_ENV['SSO_environment'])] . "?scope=openid&response_type=code&client_id=".$this->config->client_id[strtolower($_ENV['SSO_environment'])]."&state=".urlencode($current_link)."&redirect_uri=".$this->config->redirect_url;
+            return $authorizeString;
 		}
 
 		//loads openidconnect
@@ -200,12 +191,12 @@
 		private function verifyOpenIDConnectConfig($config)
 		{
 			if(isset($config) && !empty($config)
-				&& isset($config->authorize_url) && !empty($config->authorize_url)
-				&& isset($config->token_url) && !empty($config->token_url)
-				&& isset($config->introspect_url) && !empty($config->introspect_url)
-				&& isset($config->client_id[strtolower($_ENV['environment'])]) && !empty($config->client_id[strtolower($_ENV['environment'])])
-				&& isset($config->client_secret[strtolower($_ENV['environment'])]) && !empty($config->client_secret[strtolower($_ENV['environment'])])
-				&& isset($config->redirect_url[strtolower($_ENV['environment'])]) && !empty($config->redirect_url[strtolower($_ENV['environment'])])
+			    && isset($config->authorize_url[strtolower($_ENV['SSO_environment'])]) && !empty($config->authorize_url[strtolower($_ENV['SSO_environment'])])
+			    && isset($config->token_url[strtolower($_ENV['SSO_environment'])]) && !empty($config->token_url[strtolower($_ENV['SSO_environment'])])
+			    && isset($config->introspect_url[strtolower($_ENV['SSO_environment'])]) && !empty($config->introspect_url[strtolower($_ENV['SSO_environment'])])
+				&& isset($config->client_id[strtolower($_ENV['SSO_environment'])]) && !empty($config->client_id[strtolower($_ENV['SSO_environment'])])
+				&& isset($config->client_secret[strtolower($_ENV['SSO_environment'])]) && !empty($config->client_secret[strtolower($_ENV['SSO_environment'])])
+				&& isset($config->redirect_url) && !empty($config->redirect_url)
 				)
 			{
 				return true;
