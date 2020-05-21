@@ -1,5 +1,7 @@
 <?php
 
+use itdq\BlueGroups;
+
 // bool return = employee_in_group ( string group, string employee, [string depth] )
 // returns true if $employee is in the bluegroup $group. $depth defaults to 2
 // set $depth to 0 to not check sub groups. $employee can be an DN (faster) or an
