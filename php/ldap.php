@@ -56,62 +56,64 @@ function bluegroups_subgroups($group)
 // an email address.
 function employee_in_group($group, $employee, $depth = 2)
 {
-    if (! is_array($group)) {
-        $group = array(
-            $group
-        );
-    }
-    if (strpos($employee, "@") == TRUE) {
-        // lookup the DN from an email address
-        if (! $record = bluepages_search("(mail=$employee)")) {
-            return FALSE;
-        }
-        $user_dn = key($record);
-    } elseif (strpos($employee, "=") == TRUE) {
-        // use the DN given
-        $user_dn = $employee;
-    } else {
-        // passed something we don't know how to handle
-        return FALSE;
-    }
+    return BlueGroups::inAGroup($group,$employee, $depth);
 
-    // setup ldap connection resource
-    $basedn = "ou=memberlist,ou=ibmgroups,o=ibm.com";
-    if (! $ds = _ldap_connect())
-        return FALSE;
+//     if (! is_array($group)) {
+//         $group = array(
+//             $group
+//         );
+//     }
+//     if (strpos($employee, "@") == TRUE) {
+//         // lookup the DN from an email address
+//         if (! $record = bluepages_search("(mail=$employee)")) {
+//             return FALSE;
+//         }
+//         $user_dn = key($record);
+//     } elseif (strpos($employee, "=") == TRUE) {
+//         // use the DN given
+//         $user_dn = $employee;
+//     } else {
+//         // passed something we don't know how to handle
+//         return FALSE;
+//     }
 
-    $result = FALSE;
-    while ($depth >= 0) {
+//     // setup ldap connection resource
+//     $basedn = "ou=memberlist,ou=ibmgroups,o=ibm.com";
+//     if (! $ds = _ldap_connect())
+//         return FALSE;
 
-        // filter to look for $dn in $group list
-        $filter = "";
-        foreach ($group as $cn) {
-            $filter .= "(cn=" . $cn . ")";
-        }
-        if (sizeof($group) > 1)
-            $filter = "(|" . $filter . ")";
-        $filter = "(&(objectclass=groupofuniquenames)(uniquemember=$user_dn)$filter)";
+//     $result = FALSE;
+//     while ($depth >= 0) {
 
-        // connect, bind and search for $dn in $group
-        if (! $sr = @ldap_search($ds, $basedn, $filter, array(
-            'cn'
-        ))) {
-            break;
-        }
+//         // filter to look for $dn in $group list
+//         $filter = "";
+//         foreach ($group as $cn) {
+//             $filter .= "(cn=" . $cn . ")";
+//         }
+//         if (sizeof($group) > 1)
+//             $filter = "(|" . $filter . ")";
+//         $filter = "(&(objectclass=groupofuniquenames)(uniquemember=$user_dn)$filter)";
 
-        // bail out if $dn is found in this $group list
-        if (@ldap_count_entries($ds, $sr) > 0) {
-            $result = TRUE;
-            break;
-        }
+//         // connect, bind and search for $dn in $group
+//         if (! $sr = @ldap_search($ds, $basedn, $filter, array(
+//             'cn'
+//         ))) {
+//             break;
+//         }
 
-        // bail out if there are no sub-groups
-        if (! $group = bluegroups_subgroups($group)) {
-            break;
-        }
-        $depth --;
-    }
-    return $result;
+//         // bail out if $dn is found in this $group list
+//         if (@ldap_count_entries($ds, $sr) > 0) {
+//             $result = TRUE;
+//             break;
+//         }
+
+//         // bail out if there are no sub-groups
+//         if (! $group = bluegroups_subgroups($group)) {
+//             break;
+//         }
+//         $depth --;
+//     }
+//     return $result;
 }
 
 // specialized ldap search for returning records from a dn
