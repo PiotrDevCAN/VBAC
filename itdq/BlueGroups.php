@@ -18,19 +18,21 @@ class BlueGroups {
 
 	public static function deleteMember($groupName,$memberEmail){
 		$memberUID = self::getUID($memberEmail);
+		$url = array();
 		$url['Delete_Member'] = "https://bluepages.ibm.com/tools/groups/protect/groups.wss?Delete=Delete+Checked&gName=" . urlencode($groupName) . "&task=DelMem&mebox=" . urlencode($memberUID) . "&API=1";
 		self::processURL($url);
 	}
 
 	public static function addMember($groupName,$memberEmail){
 		$memberUID = self::getUID($memberEmail);
-
+		$url = array();
 		$url['Add_Member'] = "https://bluepages.ibm.com/tools/groups/protect/groups.wss?gName=" . urlencode($groupName) . "&task=Members&mebox=" . urlencode($memberUID) . "&Select=Add+Members&API=1";
 		self::processURL($url);
 	}
 
 	public static function addAdministrator($groupName,$memberEmail){
 		$memberUID = self::getUID($memberEmail);
+		$url = array();
 		$url['Add_Administrator'] = "https://bluepages.ibm.com/tools/groups/protect/groups.wss?gName=" . urlencode($groupName) . "&task=Administrators&mebox=" . urlencode($memberUID) . "&Submit=Add+Administrators&API=1 ";
 		self::processURL($url);
 	}
@@ -40,20 +42,26 @@ class BlueGroups {
 	    $url = "https://bluepages.ibm.com/tools/groups/groupsxml.wss?task=listMembers&group=" . urlencode($groupName) . "&depth=1";
 	    $myXMLData =  self::getBgResponseXML($url);
 
-
 	    $xml=simplexml_load_string($myXMLData);
 
-	    // print_r($xml);
-
-	    $allMembers = get_object_vars($xml)['member'];
-        return $allMembers;
-
+        return get_object_vars($xml)['member'];
 
 	    // $simple = "<para><note>simple note</note></para>";
 // 	    $p = xml_parser_create();
 // 	    xml_parse_into_struct($p, $xml, $vals, $index);
 // 	    print_r($vals);
 	}
+
+
+	public static function inAGroup($groupName, $ssoEmail, $depth=1){
+	    // https://bluepages.ibm.com/tools/groups/groupsxml.wss?task=inAGroup&email=MEMBER_EMAIL_ADDRESS&group=GROUP_NAME[&depth=DEPTH]
+	    $url = "https://bluepages.ibm.com/tools/groups/groupsxml.wss?task=inAGroup&email=" . urlencode($ssoEmail) . "&group=" . urlencode($groupName) . "&depth=" . urlencode($depth);
+	    $myXMLData =  self::getBgResponseXML($url);
+	    $xml=simplexml_load_string($myXMLData);
+	    return get_object_vars($xml)['msg']=='Success';
+
+	}
+
 
 
 	public static function getUID($email){
@@ -82,16 +90,16 @@ class BlueGroups {
 	private static function createCurl($agent='ITDQ'){
 			// create a new cURL resource
 		$ch = curl_init();
-		$ret = curl_setopt($ch, CURLOPT_HEADER,         1);
-		$ret = curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-		$ret = curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		$ret = curl_setopt($ch, CURLOPT_TIMEOUT,        240);
-		$ret = curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 240);
-		$ret = curl_setopt($ch, CURLOPT_USERAGENT,      $agent);
-		$ret = curl_setopt($ch, CURLOPT_CAINFO,        '/cecert/cacert.pem');
-//		$ret = curl_setopt($ch, CURLOPT_CAINFO,        '/usr/local/zendsvr6/share/curl/cacert.pem');
-//		$ret = curl_setopt($ch, CURLOPT_HTTPAUTH,        CURLAUTH_BASIC);
-		$ret = curl_setopt($ch, CURLOPT_HEADER,        FALSE);
+//		curl_setopt($ch, CURLOPT_HEADER,         1);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+//		curl_setopt($ch, CURLOPT_TIMEOUT,        240);
+//		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 240);
+//		curl_setopt($ch, CURLOPT_USERAGENT,      $agent);
+//		curl_setopt($ch, CURLOPT_CAINFO,        '/cecert/cacert.pem');
+//		curl_setopt($ch, CURLOPT_CAINFO,        '/usr/local/zendsvr6/share/curl/cacert.pem');
+//		curl_setopt($ch, CURLOPT_HTTPAUTH,        CURLAUTH_BASIC);
+		curl_setopt($ch, CURLOPT_HEADER,        FALSE);
 // 		$userpwd = $_SERVER['PHP_AUTH_USER'] . ':' . $_SERVER['PHP_AUTH_PW'];
 // 		$ret = curl_setopt($ch, CURLOPT_USERPWD,        $userpwd);
 		return $ch;
@@ -149,7 +157,8 @@ class BlueGroups {
 	private static function getBgResponseXML($url){
 	    $ch = self::createCurl();
 
-	    $ret = curl_setopt($ch, CURLOPT_URL, $url);
+	    curl_setopt($ch, CURLOPT_URL, $url);
+
         $ret = curl_exec($ch);
         if (empty($ret)) {
             //     some kind of an error happened
