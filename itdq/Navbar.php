@@ -56,10 +56,14 @@ class Navbar
         foreach ($this->menuItems as $menu){
             $menu->createItem();
         }
+
+        $hash = `git log -1 --pretty=%h`;
+
+
         ?>
         </ul>
 
-		<p class='nav navbar-nav navbar-right userLevel '>User Level is:<scan id='userLevel'></scan><br/>Powered by CDI</p>
+		<p class='nav navbar-nav navbar-right userLevel '>User Level is:<scan id='userLevel'></scan><br/>Powered by SRE (<?=$hash;?>)</p>
         <ul class="nav navbar-nav navbar-right">
         <li class='accessCdi accessPmo accessFm accessUser'
                id='Help_Page'
