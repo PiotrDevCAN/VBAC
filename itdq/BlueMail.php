@@ -65,7 +65,7 @@ class BlueMail
                     $localEmail = !empty($_ENV['devemailid']) ? $_ENV['devemailid'] : 'daniero@uk.ibm.com';
                 }
 
-                $recipient =  $_ENV['email']=='user' ?  array('recipient'=>$localEmail) : array('recipient'=>$_ENV['devemailid']);
+                $recipient =  $_ENV['email']=='user' ?  $localEmail : $_ENV['devemailid'];
                 $mail->clearAllRecipients();
                 $mail->addAddress($recipient);
                 $mail->clearCCs();
