@@ -70,7 +70,7 @@ class slack {
         $url = "https://slack.com/api/chat.postMessage";
         $ch = curl_init( $url );
 
-        $tokenVentusSre = $_SERVER['token_ventus_sre'];
+        $tokenVentusSre = $_ENV['token_ventus_sre'];
 
         $messageToSlack = 'token=' . $tokenVentusSre . '&channel=' . $channel . '&text=' . urlencode($text);
 
@@ -93,7 +93,7 @@ class slack {
         $url = "https://slack.com/api/reactions.add";
         $ch = curl_init( $url );
 
-        $tokenVentusSre = $_SERVER['token_ventus_sre'];
+        $tokenVentusSre = $_ENV['token_ventus_sre'];
 
         $messageToSlack = 'token=' . $tokenVentusSre . '&channel=' . $channel . '&name=' . $name . '&timestamp=' . $timestamp;
 
