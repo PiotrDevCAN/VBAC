@@ -1,4 +1,6 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+
 // use vbac\personRecord;
 
 // $message = '<table width="100%" border="0"   cellpadding="0">
@@ -36,18 +38,33 @@ echo "<div class='container'>";
 
 phpinfo();
 
-$response = mail($to, $subject, $message, $headers);
+$mail = new PHPMailer();
 
-echo "<br/><br/><br/>";
+$mail->setFrom('rob.daniel@uk.ibm.com', 'Rob Daniel');
+$mail->addAddress('daniero@uk.ibm.com', 'Another Rob');
+$mail->isSMTP();
+$mail->Subject  = 'First PHPMailer Message';
+$mail->Body     = 'Hi! This is my first e-mail sent through PHPMailer.';
 
 echo "<p> About to show response</p>";
 
-echo "<pre>";
-print_r($response);
 
-error_get_last();
+if(!$mail->send()) {
+    echo 'Message was not sent.';
+    echo 'Mailer error: ' . $mail->ErrorInfo;
+} else {
+    echo 'Message has been sent.';
+}
 
-echo "</pre>";
+
+
+// $response = mail($to, $subject, $message, $headers);
+
+// echo "<br/><br/><br/>";
+
+
+
+
 
 echo "<p> response above </p>";
 

@@ -2,7 +2,8 @@
 	"name" : "vbac/vbac",
 	"require" : {
 		"phpoffice/phpspreadsheet" : "~1.12",
-		"ext-gd": "*"
+		"ext-gd" : "*",
+		"phpmailer/phpmailer" : "~6.1"
 	},
 	"repositories" : [{
 			"type" : "composer",
