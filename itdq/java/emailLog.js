@@ -85,25 +85,25 @@ function EmailLog() {
 		});
 	},
 
-	this.listenForResendEmail = function(){
-		$(document).on('click','.resendEmail', function(e){
-			var recordId = $(this).data('reference');
-			var url = $(this).data('url');
-		    EmailLog.table.clear();
-		    EmailLog.table.draw();
-		    $('.dataTables_processing', $('#emailLogTable').closest('.dataTables_wrapper')).show();
-			$.ajax({
-		    	url: "ajax/resendEmail.php",
-		        type: 'POST',
-		    	data: {recordId:recordId,
-		    		   url:url
-		    		   },
-		    	success: function(result){
-		    		EmailLog.table.ajax.reload();
-		    	}
-		    });
-		});
-	},
+//	this.listenForResendEmail = function(){
+//		$(document).on('click','.resendEmail', function(e){
+//			var recordId = $(this).data('reference');
+//			var url = $(this).data('url');
+//		    EmailLog.table.clear();
+//		    EmailLog.table.draw();
+//		    $('.dataTables_processing', $('#emailLogTable').closest('.dataTables_wrapper')).show();
+//			$.ajax({
+//		    	url: "ajax/resendEmail.php",
+//		        type: 'POST',
+//		    	data: {recordId:recordId,
+//		    		   url:url
+//		    		   },
+//		    	success: function(result){
+//		    		EmailLog.table.ajax.reload();
+//		    	}
+//		    });
+//		});
+//	},
 
 
 	  this.initialiseDateSelect = function(){

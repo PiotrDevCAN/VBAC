@@ -3,6 +3,9 @@ namespace itdq;
 
 use itdq\AllItdqTables;
 use itdq\AuditTable;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
 
 /**
  *
@@ -22,46 +25,35 @@ class BlueMail
         $cleanedCc = $cc;
         $cleanedBcc = $bcc;
 
+        $mail = new PHPMailer();
 
-        $recipients = array();
         foreach ($cleanedTo as $emailAddress){
             if(!empty(trim($emailAddress))){
-                $recipients[] = array('recipient'=>$emailAddress);
+                $mail->addAddress($emailAddress);
             }
         }
 
-        $ccRecipients = array();
         foreach ($cleanedCc as $emailAddress){
             if(!empty(trim($emailAddress))){
-                $ccRecipients[] = array('recipient'=>$emailAddress);
+                $mail->addCC($emailAddress);
             }
         }
 
-        $bccRecipients = array();
         foreach ($cleanedBcc as $emailAddress){
             if(!empty(trim($emailAddress))){
-                $bccRecipients[] = array('recipient'=>$emailAddress);
+                $mail->addBCC($emailAddress);
             }
         }
 
-        $data = array('contact'=> $replyto,
-            'recipients'=>$recipients,
-            'subject'=>$subject,
-            'message'=>$message);
-
-        if($ccRecipients){
-            $data['cc'] = $ccRecipients;
-        }
-
-        if($bccRecipients){
-            $data['bcc'] = $bccRecipients;
-        }
+        $mail->Subject= $subject;
+        $mail->body= $message;
 
         if($attachments){
             foreach ($attachments as $attachment){
-                $data['attachments'][] = array('attachment'=>$attachment);
+                $mail->addAttachment($attachment);
             }
         }
+
         switch (trim($_SERVER['email'])) {
             case 'dev':
             case 'user':
@@ -73,93 +65,41 @@ class BlueMail
                     $localEmail = !empty($_SERVER['devemailid']) ? $_SERVER['devemailid'] : 'daniero@uk.ibm.com';
                 }
 
-                $data['recipients'] = array();
-                $data['recipients'][] = $_SERVER['email']=='user' ?  array('recipient'=>$localEmail) : array('recipient'=>$_SERVER['devemailid']);
-                $data['cc']=array();
-                $data['bcc']=array();
-                $data['subject'] = "**" . $_ENV['environment'] . "**" . $data['subject'];
+                $recipient =  $_SERVER['email']=='user' ?  array('recipient'=>$localEmail) : array('recipient'=>$_SERVER['devemailid']);
+                $mail->clearAllRecipients();
+                $mail->addAddress($recipient);
+                $mail->clearCCs();
+                $mail->clearBCCs();
+                $mail->Subject =  "**" . $_ENV['environment'] . "**" . $subject;
+
                 // no BREAK - need to drop through to proper email.
             case 'on':
-                $data_json = json_encode($data);
-
                 if(isset(AllItdqTables::$EMAIL_LOG)){
-                    $emailLogRecordID = self::prelog($to, $subject, $message, $data_json, $cc, $bcc);
+                    $emailLogRecordID = self::prelog($to, $subject, $message, null, $cc, $bcc);
                 }
 
-                $vcapServices = json_decode($_SERVER['VCAP_SERVICES']);
+                $mail->SMTPDebug = SMTP::DEBUG_OFF;                    // Enable verbose debug output ; SMTP::DEBUG_OFF
+                $mail->isSMTP();                                       // Send using SMTP
+                $mail->Host       = 'na.relay.ibm.com';                // Set the SMTP server to send through
+                $mail->SMTPAuth = false;
+                $mail->SMTPAutoTLS = false;
+                $mail->Port       = 25;
 
-                $ch = curl_init();
-                curl_setopt($ch, CURLOPT_HEADER,         1);
-                curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                curl_setopt($ch, CURLOPT_TIMEOUT,        240);
-                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 240);
-                curl_setopt($ch, CURLOPT_HTTPAUTH,  CURLAUTH_BASIC);
-                curl_setopt($ch, CURLOPT_HEADER,    FALSE);
+                $mail->setFrom($replyto);
+                $mail->isHTML(true);
 
-                $userpwd = $vcapServices->bluemailservice[0]->credentials->username . ':' . $vcapServices->bluemailservice[0]->credentials->password;
-                curl_setopt($ch, CURLOPT_USERPWD,        $userpwd);
+                $mail->Body     = $message;
 
-                curl_setopt($ch, CURLOPT_URL, $vcapServices->bluemailservice[0]->credentials->emailUrl);
-
-                curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json','Content-Length: ' . strlen($data_json)));
-                curl_setopt($ch, CURLOPT_POSTFIELDS,$data_json);
-
-                $resp = curl_exec($ch);
-
-                if ($emailLogRecordID) {
-                    self::updatelog($emailLogRecordID, $resp);
-                }
-
-                if(!$resp){
-
-                    echo "<br/>" . curl_errno($ch);
-                    echo "<br/>" . curl_error($ch);
-
+                if(!$mail->send()) {
+                    $response = array('response'=>'Mailer error: ' . $mail->ErrorInfo);
                     throw new \Exception('Error trying to send email :' . $subject);
+                } else {
+                    $response = array('response'=>'Message has been sent.');
                 }
 
-                $responseObject = json_decode($resp);
-
-                if(is_object($responseObject)){
-                    $statusUrl = $responseObject->link[0]->href;
-                    $status = self::getStatus($emailLogRecordID, $statusUrl);
-                    $statusObject = json_decode($status);
-
-                    if (! $asynchronous) {
-
-                        sleep(5);
-                        $prevStatus = $status;
-                        $status = self::getStatus($emailLogRecordID, $statusUrl, $prevStatus);
-                        $statusObject = json_decode($status);
-                        $iteration = 0;
-                        $attempts = 0;
-
-                        $statusObjects = array();
-                        $statusObjects[] = $statusObject;
-
-                        while (! self::checkStatus($statusObjects) && ! $statusObject->locked) {
-                            if ($attempts ++ > 20) {
-                                throw new \Exception($attempts . " unsuccessful attempts to send email. Abandoning process");
-                            }
-                            $iteration = ++ $iteration < 10 ? $iteration : 9; // wait a little longer each time up till 50 seconds wait. so if they are busy we're not hitting too frequently
-                            $response = self::resend($emailLogRecordID, $responseObject->link[1]->href);
-                            $prevStatus = $status;
-
-                            $responseObject = json_decode($response);
-                            $statusUrl = $responseObject->link[0]->href;
-                            $status = self::getStatus($emailLogRecordID, $statusUrl);
-                            $statusObject = json_decode($status);
-                            $statusObjects[] = $statusObject;
-                            sleep(5 + $iteration * 5);
-                        }
-                    }
-
-
-
-                } else {
-                    var_dump($resp);
-                    throw new \Exception('Call to bluemail has failed.See above for response.');
+                $responseObject = json_encode($response);
+                if ($emailLogRecordID) {
+                    self::updatelog($emailLogRecordID, $responseObject);
                 }
             break;
 
@@ -167,30 +107,18 @@ class BlueMail
                 $response = array(
                 'response' => "email disabled in this environment, did not initiate send"
                     );
-                $status = array(
-                    'status' => "email disabled in this environment, did not initiate send (" . trim($_SERVER['email']) .")"
-                );
                 $responseObject = json_encode($response);
-                $statusObject = json_encode($status);
 
                 if ($emailLogRecordID) {
                     self::updatelog($emailLogRecordID, $responseObject);
-                    self::logStatus($emailLogRecordID, $statusObject);
                 }
             break;
         }
-        return array('sendResponse' => $responseObject, 'Status'=>$statusObject);
+        return array('sendResponse' => $response, 'Status'=>null);
     }
 
     static function checkStatus(array $statusObjects){
-        $status = false;
-        foreach ($statusObjects as $statusObject){
-            if($statusObject->status){
-                $status = true;
-                break;
-            }
-        }
-        return $status;
+        return true;
     }
 
 
@@ -315,30 +243,30 @@ class BlueMail
 
     static function resend($recordId, $resendUrl)
     {
-        $emailDetails = self::getEmailDetails($recordId);
+//         $emailDetails = self::getEmailDetails($recordId);
 
-        $emailLogRecordID = self::prelog(unserialize($emailDetails['TO']), $emailDetails['SUBJECT'], $emailDetails['MESSAGE'], $emailDetails['DATA_JSON']);
+//         $emailLogRecordID = self::prelog(unserialize($emailDetails['TO']), $emailDetails['SUBJECT'], $emailDetails['MESSAGE'], $emailDetails['DATA_JSON']);
 
-        $vcapServices = json_decode($_SERVER['VCAP_SERVICES']);
+//         $vcapServices = json_decode($_SERVER['VCAP_SERVICES']);
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_HEADER,         1);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_TIMEOUT,        240);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 240);
-        curl_setopt($ch, CURLOPT_HTTPAUTH,  CURLAUTH_BASIC);
-        curl_setopt($ch, CURLOPT_HEADER,    FALSE);
+//         $ch = curl_init();
+//         curl_setopt($ch, CURLOPT_HEADER,         1);
+//         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+//         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+//         curl_setopt($ch, CURLOPT_TIMEOUT,        240);
+//         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 240);
+//         curl_setopt($ch, CURLOPT_HTTPAUTH,  CURLAUTH_BASIC);
+//         curl_setopt($ch, CURLOPT_HEADER,    FALSE);
 
-        $userpwd = $vcapServices->bluemailservice[0]->credentials->username . ':' . $vcapServices->bluemailservice[0]->credentials->password;
-        curl_setopt($ch, CURLOPT_USERPWD,        $userpwd);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
-        curl_setopt($ch, CURLOPT_URL, $resendUrl);
+//         $userpwd = $vcapServices->bluemailservice[0]->credentials->username . ':' . $vcapServices->bluemailservice[0]->credentials->password;
+//         curl_setopt($ch, CURLOPT_USERPWD,        $userpwd);
+//         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+//         curl_setopt($ch, CURLOPT_URL, $resendUrl);
 
-        $resp = curl_exec($ch);
-        self::updatelog($emailLogRecordID, $resp);
-        self::getStatus($recordId, $emailDetails['PREV_STATUS']);
-        return $resp;
+//         $resp = curl_exec($ch);
+//         self::updatelog($emailLogRecordID, $resp);
+//         self::getStatus($recordId, $emailDetails['PREV_STATUS']);
+//         return $resp;
     }
 
 

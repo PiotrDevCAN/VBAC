@@ -68,7 +68,7 @@ $(document).ready(function() {
 	emailLog.initialiseDateSelect();
 	emailLog.initialiseDataTable();
 	emailLog.listenForcheckStatus();
-	emailLog.listenForResendEmail();
+//	emailLog.listenForResendEmail();
 });
 
 </script>

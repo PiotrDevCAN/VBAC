@@ -46,9 +46,11 @@ class EmailLogTable  extends DbTable {
 
                 $checkStatusButton = isset($row['LAST_STATUS']) ? $checkStatusButton : null;
 
-                $resendButton  =  "<button type='button' class='btn btn-primary btn-xs resendEmail' aria-label='Left Align' data-reference='" . trim($row['RECORD_ID']) . "' data-url='" . $resendUrl .  "'  >";
-                $resendButton .= "<span class='glyphicon glyphicon-share-alt ' aria-hidden='true'></span>";
-                $resendButton .= "</button><br/>";
+//                 $resendButton  =  "<button type='button' class='btn btn-primary btn-xs resendEmail' aria-label='Left Align' data-reference='" . trim($row['RECORD_ID']) . "' data-url='" . $resendUrl .  "'  >";
+//                 $resendButton .= "<span class='glyphicon glyphicon-share-alt ' aria-hidden='true'></span>";
+//                 $resendButton .= "</button><br/>";
+
+                $resendButton = null; // Resend not supported with PHPMailer as opposed to Bluemail service.
 
                 $resendButton = $statusObject->locked ? null : $resendButton; // Can't resend once locked.
 
