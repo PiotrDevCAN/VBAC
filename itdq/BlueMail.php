@@ -54,7 +54,7 @@ class BlueMail
             }
         }
 
-        switch (trim($_SERVER['email'])) {
+        switch (trim($_ENV['email'])) {
             case 'dev':
             case 'user':
                 // We're in DEV mode for emails - override the recipients.
@@ -62,10 +62,10 @@ class BlueMail
                 if(filter_var($_SESSION['ssoEmail'], FILTER_VALIDATE_EMAIL)){
                     $localEmail = $_SESSION['ssoEmail'];
                 } else {
-                    $localEmail = !empty($_SERVER['devemailid']) ? $_SERVER['devemailid'] : 'daniero@uk.ibm.com';
+                    $localEmail = !empty($_ENV['devemailid']) ? $_ENV['devemailid'] : 'daniero@uk.ibm.com';
                 }
 
-                $recipient =  $_SERVER['email']=='user' ?  array('recipient'=>$localEmail) : array('recipient'=>$_SERVER['devemailid']);
+                $recipient =  $_ENV['email']=='user' ?  array('recipient'=>$localEmail) : array('recipient'=>$_ENV['devemailid']);
                 $mail->clearAllRecipients();
                 $mail->addAddress($recipient);
                 $mail->clearCCs();
