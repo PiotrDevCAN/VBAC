@@ -33,6 +33,9 @@ $headers = array(
 );
 
 echo "<div class='container'>";
+
+phpinfo();
+
 $response = mail($to, $subject, $message, $headers);
 
 echo "<br/><br/><br/>";
