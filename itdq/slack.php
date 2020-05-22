@@ -41,11 +41,6 @@ class slack {
         curl_setopt( $ch, CURLOPT_POST, true);
         # Send request.
         $result = curl_exec($ch);
-
-        var_dump($result);
-
-
-
         return $result;
     }
 
