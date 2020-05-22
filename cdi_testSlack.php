@@ -8,6 +8,7 @@ echo "<br/><br/><br/>";
 
 echo "<pre>";
 print_r($_ENV);
+echo "</pre>";
 
 $slack = new slack();
 

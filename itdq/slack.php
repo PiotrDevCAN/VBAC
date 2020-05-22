@@ -29,6 +29,7 @@ class slack {
         $url = 'https://slack.com/api/chat.postMessage';
         $ch = curl_init( $url );
 
+
         $tokenVentusSre = $_ENV['token_ventus_sre'];
 
 
