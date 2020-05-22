@@ -29,7 +29,7 @@ class slack {
         $url = 'https://slack.com/api/chat.postMessage';
         $ch = curl_init( $url );
 
-        $tokenVentusSre = $_SERVER['token_ventus_sre'];
+        $tokenVentusSre = $_ENV['token_ventus_sre'];
 
 
         $messageToSlack = '{token=' . $tokenVentusSre . '&channel=G010VEL63UN&text=testing}';
@@ -41,6 +41,11 @@ class slack {
         curl_setopt( $ch, CURLOPT_POST, true);
         # Send request.
         $result = curl_exec($ch);
+
+        var_dump($result);
+
+
+
         return $result;
     }
 
