@@ -13,7 +13,7 @@ echo "</pre>";
 $slack = new slack();
 
 
-$result = $slack->slackApiPostMessage(slack::CHANNEL_SM_CDI,'Test message from Cirrus');
+$result = $slack->sendMessageToChannel('Testing from Cirrus',slack::CHANNEL_GENERAL);
 
 echo "<pre>";
 print_r($result);

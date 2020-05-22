@@ -9,31 +9,34 @@ class slack {
     const CHANNEL_SM_CDI      = 'sm_cognitive_delivery';
     const CHANNEL_SM_CDI_AUDIT = 'sm_cdi_audit';
     const CHANNEL_GENERAL     = 'general';
+
     const CHANNEL_RTB_WINTEL_OFFSHORE = 'rtb-wintel_offshore';
-    const CHANNEL_POLYTEST    = 'polytest';
-    const CHANNEL_ID_POLYTEST = 'G010VEL63UN';
+    const CHANNEL_BAU_D_ELT = 'bau_d_elt';
+//     const CHANNEL_POLYTEST    = 'polytest';
+//     const CHANNEL_ID_POLYTEST = 'G010VEL63UN';
     const CHANNEL_ID_BAU_D_ELT = 'G010TNY2VG8';
-//    const TOKEN_VENTUS_SRE    = 'xoxb-210170148918-1027216985764-r8dIKwIUbJJCTCy4F4K3EAvo';
+
 
     function __construct(){
-        $this->url[self::CHANNEL_SM_CDI]              = 'https://hooks.slack.com/services/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';
-        $this->url[self::CHANNEL_SM_CDI_AUDIT]        = 'https://hooks.slack.com/services/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';
-        $this->url[self::CHANNEL_GENERAL]             = 'https://hooks.slack.com/services/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';
+        $this->url[self::CHANNEL_SM_CDI]              = 'https://hooks.slack.com/services/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';
+        $this->url[self::CHANNEL_SM_CDI_AUDIT]        = 'https://hooks.slack.com/services/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';
+        $this->url[self::CHANNEL_GENERAL]             = 'https://hooks.slack.com/services/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';
+        $this->url[self::CHANNEL_BAU_D_ELT]           = 'https://hooks.slack.com/services/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';
+
         $this->url[self::CHANNEL_RTB_WINTEL_OFFSHORE] = 'https://hooks.slack.com/services/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';
-        $this->url[self::CHANNEL_POLYTEST]            = 'https://hooks.slack.com/services/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';
+//        $this->url[self::CHANNEL_POLYTEST]            = 'https://hooks.slack.com/services/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';
 
     }
 
     function sendMessageToChannel($message=null,$channel=null){
 
-        $url = 'https://slack.com/api/chat.postMessage';
+
+        $url = $this->url[$channel];
         $ch = curl_init( $url );
 
+        $messageToSlack = '{"text":"' . $message . '"}';
 
-        $tokenVentusSre = $_ENV['token_ventus_sre'];
-
-
-        $messageToSlack = '{token=' . $tokenVentusSre . '&channel=G010VEL63UN&text=testing}';
+        var_dump($messageToSlack);
 
         curl_setopt( $ch, CURLOPT_POSTFIELDS,$messageToSlack );
         curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json','Content-Length: ' . strlen($messageToSlack)));
@@ -65,7 +68,7 @@ class slack {
 
 
     function slackApiPostMessage($channel,$text){
-        // https://slack.com/api/chat.postMessage?token=xoxb-210170148918-1027216985764-r8dIKwIUbJJCTCy4F4K3EAvo&channel=polytest&text=Emoji%20This&pretty=1(
+        // https://slack.com/api/chat.postMessage?token=xoxb-xxxxxxxxxxxxxxxxxxxxxxxxxx&channel=polytest&text=Emoji%20This&pretty=1(
 
         $url = "https://slack.com/api/chat.postMessage";
         $ch = curl_init( $url );
@@ -88,7 +91,7 @@ class slack {
     }
 
     function slackAddReaction($channel,$name,$timestamp){
-        //  https://slack.com/api/reactions.add?token=xoxb-210170148918-1027216985764-r8dIKwIUbJJCTCy4F4K3EAvo&channel=C8DLE1DFH&name=thumbsup&timestamp=1585225528.000700&pretty=1
+        //  https://slack.com/api/reactions.add?token=xoxb-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&channel=C8DLE1DFH&name=thumbsup&timestamp=1585225528.000700&pretty=1
 
         $url = "https://slack.com/api/reactions.add";
         $ch = curl_init( $url );
