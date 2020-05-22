@@ -1,5 +1,7 @@
 <?php
 use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
 
 // use vbac\personRecord;
 
@@ -36,16 +38,25 @@ $headers = array(
 
 echo "<div class='container'>";
 
-phpinfo();
+// phpinfo();
 
 $mail = new PHPMailer();
 
+$mail->SMTPDebug = SMTP::DEBUG_OFF;                    // Enable verbose debug output ; SMTP::DEBUG_OFF
+$mail->isSMTP();                                       // Send using SMTP
+$mail->Host       = '9.57.199.108';                    // Set the SMTP server to send through
+$mail->SMTPAuth = false;
+$mail->SMTPAutoTLS = false;
+$mail->Port       = 25;
+
+
 $mail->setFrom('rob.daniel@uk.ibm.com', 'Rob Daniel');
 $mail->addAddress('daniero@uk.ibm.com', 'Another Rob');
-$mail->isSMTP();
+
 $mail->Subject  = 'First PHPMailer Message';
 $mail->Body     = 'Hi! This is my first e-mail sent through PHPMailer.';
 
+echo "<br/><br/><br/><br/><br/>";
 echo "<p> About to show response</p>";
 
 
@@ -58,14 +69,6 @@ if(!$mail->send()) {
 
 
 
-// $response = mail($to, $subject, $message, $headers);
-
-// echo "<br/><br/><br/>";
-
-
-
-
-
 echo "<p> response above </p>";
 
 
@@ -75,4 +78,6 @@ echo "</div>";
 // $person = new personRecord();
 
 // $person->sendPesRequest();
+
+
 
