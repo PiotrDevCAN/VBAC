@@ -3,6 +3,17 @@
 
 // ** session_cache_limiter('private');
 // ** for fpdf http://www.fpdf.org/ download of pdf files in https;
+use ByJG\Session\JwtSession;
+
+include ('vendor/autoload.php');
+include ('splClassLoader.php');
+
+$sessionConfig = (new \ByJG\Session\SessionConfig($_SERVER['SERVER_NAME']))
+->withSecret($_ENV['jwt_token']);
+
+$handler = new \ByJG\Session\JwtSession($sessionConfig);
+session_set_save_handler($handler, true);
+
 session_start();
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -303,8 +314,6 @@ include ('php/ldap.php');
 include ('php/templates/interior.header.html');
 include ('itdq/java/scripts.html');
 include ('vbac/java/scripts.html');
-include ('vendor/autoload.php');
-include ('splClassLoader.php');
 include ('connect.php');
 //include ('php/templates/navbar.php');
 include('displayNavbar.php');
