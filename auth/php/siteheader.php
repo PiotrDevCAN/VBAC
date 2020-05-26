@@ -20,4 +20,6 @@ $handler = new \ByJG\Session\JwtSession($sessionConfig);
 session_set_save_handler($handler, true);
 session_start();
 
+error_log(__FILE__ . "session:" . session_id());
+
 include "connect.php";
