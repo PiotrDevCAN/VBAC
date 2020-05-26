@@ -18,6 +18,6 @@ $sessionConfig = (new \ByJG\Session\SessionConfig($_SERVER['SERVER_NAME']))
 
 $handler = new \ByJG\Session\JwtSession($sessionConfig);
 session_set_save_handler($handler, true);
-
 session_start();
+
 include "connect.php";
