@@ -1764,6 +1764,7 @@ class personTable extends DbTable {
         $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
         $sql.= " WHERE 1=1 and " . self::activePersonPredicate();
         $sql.= " AND PES_STATUS != '" . personRecord::PES_STATUS_RECHECK_REQ . "' ";
+        $sql.= " AND PES_STATUS != '" . personRecord::PES_STATUS_PROVISIONAL . "' ";
         $sql.= " and PES_RECHECK_DATE is not null ";
         $sql.= " and PES_RECHECK_DATE <= CURRENT DATE + 56 DAYS ";
 
