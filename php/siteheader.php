@@ -5,12 +5,6 @@
 // ** for fpdf http://www.fpdf.org/ download of pdf files in https;
 use ByJG\Session\JwtSession;
 
-error_log(__FILE__ . "session:" . session_id());
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-date_default_timezone_set('UTC');
-
 set_include_path("./" . PATH_SEPARATOR . "../" . PATH_SEPARATOR . "../../" . PATH_SEPARATOR . "../../../" . PATH_SEPARATOR);
 
 include ('vendor/autoload.php');
@@ -23,6 +17,15 @@ $handler = new \ByJG\Session\JwtSession($sessionConfig);
 session_set_save_handler($handler, true);
 
 session_start();
+
+error_log(__FILE__ . "session:" . session_id());
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+date_default_timezone_set('UTC');
+
+
+
 
 while(ob_get_level()>0){
     ob_end_clean();
