@@ -126,7 +126,7 @@ class delegateTable extends DbTable {
     }
 
     static function allDelegates(){
-        $sql = " SELECT CNUM, DELEGATE_EMAIL ";
+        $sql = " SELECT distinct CNUM, DELEGATE_EMAIL ";
         $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$DELEGATE ;
 
         $rs = db2_exec($_SESSION['conn'], $sql);
