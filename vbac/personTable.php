@@ -28,6 +28,8 @@ class personTable extends DbTable {
 
     private $squadNames;
 
+    private $allDelegates;
+
     const PORTAL_PRE_BOARDER_EXCLUDE = 'exclude';
     const PORTAL_PRE_BOARDER_INCLUDE = 'include';
     const PORTAL_PRE_BOARDER_WITH_LINKED = 'withLinked';
@@ -168,6 +170,8 @@ class personTable extends DbTable {
 
     function returnAsArray($preboadersAction=self::PORTAL_PRE_BOARDER_EXCLUDE){
 
+        $this->allDelegates = delegateTable::allDelegates();
+
         $preboadersAction = empty($preboadersAction) ? self::PORTAL_PRE_BOARDER_EXCLUDE : $preboadersAction;
 
         $this->thirtyDaysHence = new \DateTime();
@@ -292,7 +296,9 @@ class personTable extends DbTable {
 
         $preparedRow = array_map('trim', $row);
         $fmNotesid = isset($this->allNotesIdByCnum[trim($row['FM_CNUM'])]) ? $this->allNotesIdByCnum[trim($row['FM_CNUM'])]  :  trim($row['FM_CNUM']);
+        $preparedRow['fmCnum'] = $row['FM_CNUM'];
         $preparedRow['FM_CNUM'] = $fmNotesid;
+
         if (isset($preparedRow['EMPLOYEE_TYPE'])){
             $preparedRow['EMPLOYEE_TYPE'] = isset($this->employeeTypeMapping[strtoupper($preparedRow['EMPLOYEE_TYPE'])]) ? $this->employeeTypeMapping[strtoupper($preparedRow['EMPLOYEE_TYPE'])]  : $preparedRow['EMPLOYEE_TYPE'];
             $preparedRow['EMPLOYEE_TYPE'] = ucwords($preparedRow['EMPLOYEE_TYPE'],' -');
@@ -450,6 +456,24 @@ class personTable extends DbTable {
              $row['CT_ID'] .= " </button> ";
              $row['CT_ID'] .= $ctid;
          }
+
+         $functionalMgr = $row['FM_CNUM'];
+         $btnColor = isset($this->allDelegates[$row['fmCnum']]) ? 'btn-success' : 'btn-secondary';
+
+//         $row['FM_CNUM']  = "<a href='#' data-toggle='popover' title='Popover Header' data-content='Some content inside the popover'>";
+         $row['FM_CNUM'] = "<button ";
+         $row['FM_CNUM'] .= " type='button' class='btn $btnColor  btn-xs ' aria-label='Left Align' ";
+
+         if(isset($this->allDelegates[$row['fmCnum']]) ){
+             $delegates = implode(",", $this->allDelegates[$row['fmCnum']]);
+             $row['FM_CNUM'] .= " data-placement='bottom' data-toggle='popover' title='' data-content='$delegates' data-original-title='Delegates' ";
+         } else {
+             $row['FM_CNUM'] .= " data-placement='bottom' data-toggle='popover' title='' data-content='Has not defined a delegate' data-original-title='Delegates' ";
+         }
+         $row['FM_CNUM'] .= " > ";
+         $row['FM_CNUM'] .= "<i class='fas fa-user-friends'></i>";
+         $row['FM_CNUM'] .= " </button>";
+         $row['FM_CNUM'] .= $functionalMgr;
 
 
          $row['SQUAD_NAME'] = $this->getAgileSquadWithButtons($row,true);

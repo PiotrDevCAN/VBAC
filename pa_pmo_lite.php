@@ -97,6 +97,7 @@ $(document).on( "change", '#work_stream', function(e){
 $(document).ready(function(){
 
 	$('[data-toggle="tooltip"]').tooltip();
+	$('[data-toggle="popover"]').popover();
 	var person = new personRecord();
 	var personWithSubP = new personWithSubPRecord();
 	personWithSubP.initialiseDataTable('<?=personTable::PORTAL_ONLY_ACTIVE ?>');

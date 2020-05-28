@@ -16,6 +16,16 @@ function personWithSubPRecord() {
   
   this.initialiseDataTable = function(preBoardersAction){
 	  
+	  $('#personTable').on('draw.dt', function () {
+		    $('[data-toggle="popover"]').popover();
+		} );
+	  
+	  $('#personTable').on('column-visibility.dt', function () {
+		    $('[data-toggle="popover"]').popover();
+    	} );
+	  
+	  
+	  
 	    var buttonCommon = {
 	            exportOptions: {
 	                format: {
@@ -113,6 +123,14 @@ function personWithSubPRecord() {
 //	            order: [ 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34]
 //	        },
           order: [[ 5, "asc" ]],
+          
+          drawCallback: function( settings ) {
+        	  console.log('drawback');
+              $('[data-toggle="popover"]').popover();
+              console.log($('[data-toggle="popover"]'));
+          },        
+          
+          
           autoWidth: true,
           deferRender: true,
           processing: true,
