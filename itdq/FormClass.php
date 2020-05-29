@@ -971,7 +971,7 @@ function formTextArea($label, $fieldName, $state = null, $textAreaclass = null, 
 
 
 
- 
+
     /**
      * Used to place an "Input type='hidden'" in the form.
      * This can then be used to pass from one form to the next page
@@ -1069,7 +1069,17 @@ function formTextArea($label, $fieldName, $state = null, $textAreaclass = null, 
     {
         echo "<span class='button-blue' style='font-size:1.4em'>";
         foreach ($buttonDetails as $button) {
-            echo "<input class='btn " . $button['class'] . "' type='" . $button['type'] . "' name='" . $button['name'] . "' id='" . $button['id'] . "' " . $button['state'] . " value='" . $button['value'] . "'  >&nbsp;";
+
+            if(is_array($button)){
+                echo "<input class='btn "
+                     . $button['class']
+                     . "' type='"
+                     . $button['type'] . "' name='"
+                     . $button['name'] . "' id='"
+                     . $button['id'] . "' "
+                     . $button['state'] . " value='"
+                     . $button['value'] . "'  >&nbsp;";
+            }
         }
         // echo "<input type='submit' name='btnNewProduct' id='btnNewProduct' enabled value='Define New Product' >";
         echo "</span>";
