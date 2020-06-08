@@ -3,7 +3,7 @@
 
 // ** session_cache_limiter('private');
 // ** for fpdf http://www.fpdf.org/ download of pdf files in https;
-use ByJG\Session\JwtSession;
+use itdq\JwtSecureSession;
 
 set_include_path("./" . PATH_SEPARATOR . "../" . PATH_SEPARATOR . "../../" . PATH_SEPARATOR . "../../../" . PATH_SEPARATOR);
 
@@ -13,7 +13,7 @@ include ('splClassLoader.php');
 $sessionConfig = (new \ByJG\Session\SessionConfig($_SERVER['SERVER_NAME']))
 ->withSecret($_ENV['jwt_token']);
 
-$handler = new \ByJG\Session\JwtSession($sessionConfig);
+$handler = new JwtSecureSession($sessionConfig);
 session_set_save_handler($handler, true);
 
 session_start();

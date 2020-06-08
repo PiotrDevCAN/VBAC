@@ -1,5 +1,6 @@
 <?php
-use ByJG\Session\JwtSession;
+use itdq\JwtSecureSession;
+
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -13,7 +14,7 @@ include ('splClassLoader.php');
 $sessionConfig = (new \ByJG\Session\SessionConfig($_SERVER['SERVER_NAME']))
 ->withSecret($_ENV['jwt_token']);
 
-$handler = new \ByJG\Session\JwtSession($sessionConfig);
+$handler = new JwtSecureSession($sessionConfig);
 session_set_save_handler($handler, true);
 
 session_start();
