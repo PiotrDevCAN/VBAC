@@ -36,14 +36,24 @@ Class JwtSecureSession extends JwtSession
         $token = $jwt->generateToken($data);
 
         if (!headers_sent()) {
+            $cookieProperties = array('expires'=>(time()+$this->sessionConfig->getTimeoutMinutes()*60)
+                                     ,'path'=>$this->sessionConfig->getCookiePath()
+                                     ,'domain'=>$this->sessionConfig->getCookieDomain()
+                                     ,'secure'=>true
+                                     ,'httponly'=>true);
+//             setcookie(
+//                 self::COOKIE_PREFIX . $this->sessionConfig->getSessionContext(),
+//                 $token,
+//                 (time()+$this->sessionConfig->getTimeoutMinutes()*60) ,
+//                 $this->sessionConfig->getCookiePath(),
+//                 $this->sessionConfig->getCookieDomain(),
+//                 true,
+//                 true
+//                 );
             setcookie(
                 self::COOKIE_PREFIX . $this->sessionConfig->getSessionContext(),
                 $token,
-                (time()+$this->sessionConfig->getTimeoutMinutes()*60) ,
-                $this->sessionConfig->getCookiePath(),
-                $this->sessionConfig->getCookieDomain(),
-                true,
-                true
+                $cookieProperties
                 );
             if (defined("SETCOOKIE_FORTEST")) {
                 $_COOKIE[self::COOKIE_PREFIX . $this->sessionConfig->getSessionContext()] = $token;
