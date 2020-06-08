@@ -1255,19 +1255,24 @@ function personRecord() {
           // <th>Tribe</th><th>Shift</th><th>Squad Leader</th><th>FLL</th><th>SLL</th><th>Squad Number</th>
 
           "columns": [
-                      { "data": "CNUM" , "defaultContent": "", render: { _:"display", sort:"sort" } },                
+                      { "data": "CNUM" , "defaultContent": "", render: { _:"display", sort:"sort" } },    
+                      { "data": "NOTES_ID", "defaultContent": ""  },
                       { "data": "JRSS"       ,"defaultContent": "<i>unknown</i>"},
                       { "data": "SQUAD_TYPE", "defaultContent": "<i>unknown</i>" },
                       { "data": "TRIBE", "defaultContent": "<i>unknown</i>" },
+                      { "data": "TRIBE_NAME", "defaultContent": "<i>unknown</i>" },
                       { "data": "SHIFT", "defaultContent": "<i>unknown</i>" },
                       { "data": "SQUAD_LEADER", "defaultContent": "<i>unknown</i>" },
                       { "data": "FLL", "defaultContent": "", render: { _:"display", sort:"sort" } },
                       { "data": "SLL", "defaultContent": "", render: { _:"display", sort:"sort" } },
-                      { "data": "SQUAD_NAME", "defaultContent": "", render: { _:"display", sort:"sort" }  },
+                      { "data": "SQUAD", "defaultContent": "", render: { _:"display", sort:"sort" }  },
+                      { "data": "SQUAD_NAME", "defaultContent": "" },
+                      
                      
                   ],
           columnDefs: [
-                         { "visible": true, "targets": [0,1,2,3,4,5,6,7,8] }
+        	  			 { "visible": false, "targets": [1,5,11] },
+                         { "visible": true, "targets": [0,2,3,4,6,7,8,9,10] }
                   ] ,
           order: [[ 1, "asc" ]],
           autoWidth: true,

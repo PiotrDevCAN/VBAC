@@ -21,8 +21,9 @@ $personTable = new personTable(allTables::$PERSON);
 // { "data": "SLL", "defaultContent": "" },
 // { "data": "SQUAD_NUMBER", "defaultContent": "" },
 
-$sql = " SELECT P.CNUM, P.NOTES_ID, P.ROLE_ON_THE_ACCOUNT as JRSS, S.SQUAD_TYPE, CONCAT('Tribe ', S.TRIBE_NUMBER) as TRIBE, ";
+$sql = " SELECT distinct P.CNUM, P.NOTES_ID, P.ROLE_ON_THE_ACCOUNT as JRSS, S.SQUAD_TYPE, CONCAT('Tribe ', S.TRIBE_NUMBER) as TRIBE, ";
 $sql.= " S.SHIFT, S.SQUAD_LEADER, F.CNUM as FLL_CNUM, F.NOTES_ID as FLL_NOTES_ID, U.CNUM as SLL_CNUM, U.NOTES_ID as SLL_NOTES_ID, S.SQUAD_NUMBER, S.SQUAD_NAME ";
+$sql.= " ,T.TRIBE_NAME ";
 $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
 $sql.= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " AS F "; // lookup firstline
 $sql.= " ON P.FM_CNUM = F.CNUM ";
@@ -30,6 +31,9 @@ $sql.= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " AS 
 $sql.= " ON F.FM_CNUM = U.CNUM ";
 $sql.= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS S "; // lookup upline ( second line )
 $sql.= " ON P.SQUAD_NUMBER  = S.SQUAD_NUMBER ";
+$sql.= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " AS T "; // lookup upline ( second line )
+$sql.= " ON S.TRIBE_NUMBER  = T.TRIBE_NUMBER ";
+
 $sql.= " WHERE " . personTable::activePersonPredicate(true,"P");
 $sql.= " AND ( P.SQUAD_NUMBER is not null  AND P.SQUAD_NUMBER > 0 ) ";
 
@@ -46,12 +50,12 @@ while(($row = db2_fetch_assoc($rs))==true){
     $row['CNUM'] = array('display'=>$row['CNUM'] . "<br/><small>" . $row['NOTES_ID'] . "</small>", 'sort'=>$row['CNUM']);
     $row['FLL'] = array('display'=>$row['FLL_CNUM'] . "<br/><small>" . $row['FLL_NOTES_ID'] . "</small>", 'sort'=>$row['FLL_CNUM']);
     $row['SLL'] = array('display'=>$row['SLL_CNUM'] . "<br/><small>" . $row['SLL_NOTES_ID'] . "</small>", 'sort'=>$row['SLL_CNUM']);
-    $row['SQUAD_NAME'] = array('display'=>$row['SQUAD_NAME'] . "<br/><small>" . $row['SQUAD_NUMBER'] . "</small>",'sort'=>$row['SQUAD_NUMBER']);
-    unset($row['NOTES_ID']);
+    $row['SQUAD'] = array('display'=>$row['SQUAD_NAME'] . "<br/><small>" . $row['SQUAD_NUMBER'] . "</small>",'sort'=>$row['SQUAD_NUMBER']);
+    //unset($row['NOTES_ID']);
     unset($row['FLL_CNUM']);
-    unset($row['FLL_NOTES_ID']);
+    //unset($row['FLL_NOTES_ID']);
     unset($row['SLL_CNUM']);
-    unset($row['SLL_NOTES_ID']);
+    //unset($row['SLL_NOTES_ID']);
     unset($row['SQUAD_NUMBER']);
     $data[] = $row;
 }
