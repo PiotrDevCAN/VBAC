@@ -30,7 +30,7 @@ $sql.= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " AS 
 $sql.= " ON F.FM_CNUM = U.CNUM ";
 $sql.= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS S "; // lookup upline ( second line )
 $sql.= " ON P.SQUAD_NUMBER  = S.SQUAD_NUMBER ";
-$sql.= " WHERE " . personTable::activePersonPredicate(false,"P");
+$sql.= " WHERE " . personTable::activePersonPredicate(true,"P");
 $sql.= " AND ( P.SQUAD_NUMBER is not null  AND P.SQUAD_NUMBER > 0 ) ";
 
 $rs = db2_exec($_SESSION['conn'], $sql);
