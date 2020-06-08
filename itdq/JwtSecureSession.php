@@ -2,6 +2,8 @@
 namespace itdq;
 
 use ByJG\Session\JwtSession;
+use ByJG\Util\JwtWrapper;
+
 
 Class JwtSecureSession extends JwtSession
 {
