@@ -15,6 +15,7 @@ class slack {
 //     const CHANNEL_POLYTEST    = 'polytest';
 //     const CHANNEL_ID_POLYTEST = 'G010VEL63UN';
     const CHANNEL_ID_BAU_D_ELT = 'G010TNY2VG8';
+    const CHANNEL_ID_SM_CDI_AUDIT = 'CC3EY7P6V';
 
 
     function __construct(){
