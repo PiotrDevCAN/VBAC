@@ -2,6 +2,7 @@
 
 use vbac\allTables;
 
+ob_start();
 
 if($_REQUEST['token']!= $token){
     return;
