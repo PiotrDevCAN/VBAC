@@ -47,6 +47,10 @@ class BluePages {
 
 	    var_dump($curlReturn);
 
+	    $info = curl_getinfo($ch);
+	    var_dump($info);
+
+
 	    $lookupTime = (float)(microtime(true) - $startTime);
 	    echo "<br/>Bluepages Lookup Elapsed Time:$lookupTime";
 
