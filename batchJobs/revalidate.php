@@ -20,29 +20,29 @@ $slack = new slack();
 
 $loader = new Loader();
 
-// $personTable->flagPreboarders();
+$personTable->flagPreboarders();
 db2_commit($_SESSION['conn']);
 
-// $offboarders = " ( REVALIDATION_STATUS like  'offboard%') ";
-// $allOffboarders = $loader->load('CNUM',allTables::$PERSON, $offboarders ); //
-// AuditTable::audit("Revalidation will ignore " . count($allOffboarders) . " offboarding/ed.",AuditTable::RECORD_TYPE_REVALIDATION);
-// $response = $slack->slackApiPostMessage(slack::CHANNEL_ID_SM_CDI_AUDIT,"Revalidation will ignore " . count($allOffboarders) . " offboarding/ed.");
-// error_log($response);
-// $allOffboarders= null; // free up some storage
+$offboarders = " ( REVALIDATION_STATUS like  'offboard%') ";
+$allOffboarders = $loader->load('CNUM',allTables::$PERSON, $offboarders ); //
+AuditTable::audit("Revalidation will ignore " . count($allOffboarders) . " offboarding/ed.",AuditTable::RECORD_TYPE_REVALIDATION);
+$response = $slack->slackApiPostMessage(slack::CHANNEL_ID_SM_CDI_AUDIT,"Revalidation will ignore " . count($allOffboarders) . " offboarding/ed.");
+error_log($response);
+$allOffboarders= null; // free up some storage
 
-// $preBoardersPredicate = "   ( REVALIDATION_STATUS =  '" . personRecord::REVALIDATED_PREBOARDER . "') ";
-// $allPreboarders = $loader->load('CNUM',allTables::$PERSON, $preBoardersPredicate ); //
-// AuditTable::audit("Revalidation will ignore " . count($allPreboarders) . " pre-boarders.",AuditTable::RECORD_TYPE_REVALIDATION);
-// $response = $slack->slackApiPostMessage(slack::CHANNEL_ID_SM_CDI_AUDIT,"Revalidation will ignore " . count($allPreboarders) . " pre-boarders.");
-// error_log($response);
-// $allPreboarders= null; // free up some storage
+$preBoardersPredicate = "   ( REVALIDATION_STATUS =  '" . personRecord::REVALIDATED_PREBOARDER . "') ";
+$allPreboarders = $loader->load('CNUM',allTables::$PERSON, $preBoardersPredicate ); //
+AuditTable::audit("Revalidation will ignore " . count($allPreboarders) . " pre-boarders.",AuditTable::RECORD_TYPE_REVALIDATION);
+$response = $slack->slackApiPostMessage(slack::CHANNEL_ID_SM_CDI_AUDIT,"Revalidation will ignore " . count($allPreboarders) . " pre-boarders.");
+error_log($response);
+$allPreboarders= null; // free up some storage
 
-// $vendorsPredicate = "   ( REVALIDATION_STATUS =  '" . personRecord::REVALIDATED_VENDOR . "') ";
-// $allVendors = $loader->load('CNUM',allTables::$PERSON, $vendorsPredicate ); //
-// AuditTable::audit("Revalidation will ignore " . count($allVendors) . " vendors.",AuditTable::RECORD_TYPE_REVALIDATION);
-// $response = $slack->slackApiPostMessage(slack::CHANNEL_ID_SM_CDI_AUDIT,"Revalidation will ignore " . count($allVendors) . " vendors.");
-// error_log($response);
-// $allVendors= null; // free up some storage
+$vendorsPredicate = "   ( REVALIDATION_STATUS =  '" . personRecord::REVALIDATED_VENDOR . "') ";
+$allVendors = $loader->load('CNUM',allTables::$PERSON, $vendorsPredicate ); //
+AuditTable::audit("Revalidation will ignore " . count($allVendors) . " vendors.",AuditTable::RECORD_TYPE_REVALIDATION);
+$response = $slack->slackApiPostMessage(slack::CHANNEL_ID_SM_CDI_AUDIT,"Revalidation will ignore " . count($allVendors) . " vendors.");
+error_log($response);
+$allVendors= null; // free up some storage
 
 
 
