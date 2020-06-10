@@ -34,10 +34,19 @@ class BluePages {
 
  	    echo $urlTemplate;
 	    $ch = curl_init ( $urlTemplate );
+
+
+	    var_dump($ch);
+
+
 	    AuditTable::audit(__FUNCTION__ . ":" . print_r($urlTemplate,true),AuditTable::RECORD_TYPE_DETAILS);
 	    curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, true );
+	    curl_setopt ( $ch, CURLOPT_VERBOSE, true );
 
 	    $curlReturn = curl_exec ( $ch );
+
+	    var_dump($curlReturn);
+
 	    $lookupTime = (float)(microtime(true) - $startTime);
 	    echo "<br/>Bluepages Lookup Elapsed Time:$lookupTime";
 
