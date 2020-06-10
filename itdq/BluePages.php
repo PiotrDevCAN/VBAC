@@ -18,7 +18,7 @@ class BluePages {
 	    $startTime = microtime(true);
 	    set_time_limit(120);
 	   //  $urlTemplate = "https://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmperson/(|";
-	    $urlTemplate = $_SERVER['SERVER_NAME'] . "/api/bluepages.php?ibmperson/(|";
+	    $urlTemplate = "https://bluepages.ibm.com/BpHttpApisv3/slaphapi??ibmperson/(|";
 
 	    foreach ($cnumArray as $cnum){
 	        $urlTemplate .= "(UID=" . trim($cnum) . ")";
@@ -42,6 +42,7 @@ class BluePages {
 	    AuditTable::audit(__FUNCTION__ . ":" . print_r($urlTemplate,true),AuditTable::RECORD_TYPE_DETAILS);
 	    curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, true );
 	    curl_setopt ( $ch, CURLOPT_VERBOSE, true );
+	    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
 	    $curlReturn = curl_exec ( $ch );
 
