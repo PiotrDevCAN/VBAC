@@ -56,7 +56,7 @@ var_dump($allNonLeavers);
 echo "</pre>";
 
 $chunkedCnum = array_chunk($allNonLeavers, 100);
-$detailsFromBp = "&notesid&mail";
+$detailsFromBp = "notesid&mail";
 $bpEntries = array();
 
 foreach ($chunkedCnum as $key => $cnumList){
