@@ -18,7 +18,7 @@ class BluePages {
 	    $startTime = microtime(true);
 	    set_time_limit(120);
 	   //  $urlTemplate = "https://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmperson/(|";
-	    $urlTemplate = "https://bluepages.ibm.com/BpHttpApisv3/slaphapi??ibmperson/(|";
+	    $urlTemplate = "https://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmperson/(|";
 
 	    foreach ($cnumArray as $cnum){
 	        $urlTemplate .= "(UID=" . trim($cnum) . ")";
@@ -30,15 +30,6 @@ class BluePages {
 	     * Alternative making it easier (byJson)
 	     * http://bluepages.ibm.com/BpHttpApisv3/slaphapi?ibmperson/(|(UID=099470866)(UID=001399866)).list/byJson?&uid&dept&div&c&managerCnum&managerCountryCode%C2%ACesEmail&isManager%C2%ACesId&mail
 	     */
-
-
- 	    echo $urlTemplate;
-	    $ch = curl_init ( $urlTemplate );
-
-
-	    var_dump($ch);
-
-
 	    AuditTable::audit(__FUNCTION__ . ":" . print_r($urlTemplate,true),AuditTable::RECORD_TYPE_DETAILS);
 	    curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, true );
 	    curl_setopt ( $ch, CURLOPT_VERBOSE, true );
