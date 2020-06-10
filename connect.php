@@ -28,6 +28,12 @@ if( isset($_ENV['ssldsn']) )
 
         if (! $rs) {
             echo "<br/>" . $Statement . "<br/>";
+
+            echo "<pre>";
+            print_r($_SESSION);
+            echo "</pre>";
+
+
             echo "<BR>" . db2_stmt_errormsg() . "<BR>";
             echo "<BR>" . db2_stmt_error() . "<BR>";
             exit("Set current schema failed");
