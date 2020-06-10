@@ -62,6 +62,8 @@ $bpEntries = array();
 foreach ($chunkedCnum as $key => $cnumList){
     $bpEntries[$key] = BluePages::getDetailsFromCnumSlapMulti($cnumList, $detailsFromBp);
 
+
+    var_dump($detailsFromBp);
     var_dump($bpEntries);
 
     die('here');
