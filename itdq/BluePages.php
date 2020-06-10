@@ -32,7 +32,7 @@ class BluePages {
 	     */
 
 
-// 	    echo $urlTemplate;
+ 	    echo $urlTemplate;
 	    $ch = curl_init ( $urlTemplate );
 	    AuditTable::audit(__FUNCTION__ . ":" . print_r($urlTemplate,true),AuditTable::RECORD_TYPE_DETAILS);
 	    curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, true );

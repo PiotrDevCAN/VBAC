@@ -58,19 +58,25 @@ $bpEntries = array();
 
 foreach ($chunkedCnum as $key => $cnumList){
     $bpEntries[$key] = BluePages::getDetailsFromCnumSlapMulti($cnumList, $detailsFromBp);
-    foreach ($bpEntries[$key]->search->entry as $bpEntry){
-        set_time_limit(20);
-        $serial = substr($bpEntry->dn,4,9);
-        $mail        = ''; // Clear out previous value
-        $notesid      = ''; // Clear out previous value
-        foreach ($bpEntry->attribute as $details){
-            $name = trim($details->name);
-            $$name = trim($details->value[0]);
-        }
-        $notesid = str_replace(array('CN=','OU=','O='),array('','',''),$notesid);
-        $personTable->confirmRevalidation($notesid,$mail,$serial);
-        unset($allNonLeavers[$serial]);
-    }
+
+    var_dump($bpEntries);
+
+    die('here');
+
+
+//     foreach ($bpEntries[$key]->search->entry as $bpEntry){
+//         set_time_limit(20);
+//         $serial = substr($bpEntry->dn,4,9);
+//         $mail        = ''; // Clear out previous value
+//         $notesid      = ''; // Clear out previous value
+//         foreach ($bpEntry->attribute as $details){
+//             $name = trim($details->name);
+//             $$name = trim($details->value[0]);
+//         }
+//         $notesid = str_replace(array('CN=','OU=','O='),array('','',''),$notesid);
+//         $personTable->confirmRevalidation($notesid,$mail,$serial);
+//         unset($allNonLeavers[$serial]);
+//    }
 }
 
 // At this stage, anyone still in the $allNonLeavers array - has NOT been found in BP and so is now POTENTIALLY a leaver and needs to be flagged as such.
