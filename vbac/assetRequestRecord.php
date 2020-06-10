@@ -299,7 +299,7 @@ class assetRequestRecord extends DbRecord {
       			</div>
       			<div class="modal-body" >
       				<p style="text-align:center">Please confirm <b><span id='educationNotesid'></span></b> has successfully completed the mandatory Aurora Security Education Modules for IBMers before continuing</p>
-      				<p style="text-align:center">Access to these self paced online courses is via the following link <a href='https://lt.be.ibm.com/aurora' target='_blank'>https://lt.be.ibm.com/aurora</a></p>
+      				<p style="text-align:center">Access to these self paced online courses is via the following link <a href='http://ltc.sl.bluecloud.ibm.com/aurora/' target='_blank'>http://ltc.sl.bluecloud.ibm.com/aurora/</a></p>
       				<p style="text-align:center">Please contact <a href='mailto:Aurora.Central.PMO@uk.ibm.com'>Aurora Central PMO/UK/IBM</a> if you do not have access.</p>
 					<p style="text-align:center">Please note a false declaration of completion constitutes a breach of IBM Business Conduct Guidelines and may lead to disciplinary action.</p>
       			</div>
