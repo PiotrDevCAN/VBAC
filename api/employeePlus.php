@@ -4,6 +4,8 @@ use vbac\allTables;
 use vbac\personTable;
 use itdq\DbTable;
 
+ob_start();
+
 if($_REQUEST['token']!= $token){
     return;
 }
@@ -41,6 +43,7 @@ if($rs){
     }
 } else {
     ob_clean();
+    ob_start();
     DbTable::displayErrorMessage($rs, 'class', 'method', $sql);
     $errorMessage = ob_get_clean();
     echo json_encode($errorMessage);
