@@ -9,7 +9,7 @@ include "vendor/autoload.php";
 include "splClassLoader.php";
 
 session_start();
-$token = $_SERVER['api_token'];
+$token = $_ENV['api_token'];
 $_SESSION['Db2Schema'] = strtoupper($_ENV['environment']);
 $_SESSION['ssoEmail'] = empty($_SESSION['ssoEmail']) ? 'API Invocation' : $_SESSION['ssoEmail'];
 include "connect.php";
