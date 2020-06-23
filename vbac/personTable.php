@@ -398,15 +398,34 @@ class personTable extends DbTable {
             $row['PES_STATUS'] = array('display'=>$row['PES_STATUS'],'sort'=>$row['PES_STATUS']);
         }
 
+
+        $btnColor = isset($this->allDelegates[$row['CNUM']]) ? 'btn-success' : 'btn-secondary';
+        $row['NOTES_ID'] = "<button ";
+        $row['NOTES_ID'] .= " type='button' class='btn $btnColor  btn-xs ' aria-label='Left Align' ";
+
+        if(isset($this->allDelegates[$row['CNUM']]) ){
+            $delegates = implode(",", $this->allDelegates[$row['CNUM']]);
+            $row['NOTES_ID'] .= " data-placement='bottom' data-toggle='popover' title='' data-content='$delegates' data-original-title='Delegates' ";
+        } else {
+            $row['NOTES_ID'] .= " data-placement='bottom' data-toggle='popover' title='' data-content='Has not defined a delegate' data-original-title='Delegates' ";
+        }
+
+        $row['NOTES_ID'] .= " > ";
+        $row['NOTES_ID'] .= "<i class='fas fa-user-friends'></i>";
+        $row['NOTES_ID'] .= " </button>";
+
+
         if(($_SESSION['isPes'] || $_SESSION['isPmo'] || $_SESSION['isFm'] || $_SESSION['isCdi']) && ($revalidationStatus!=personRecord::REVALIDATED_OFFBOARDED))  {
-            $row['NOTES_ID']  = "<button type='button' class='btn btn-default btn-xs btnEditPerson' aria-label='Left Align' ";
+            $row['NOTES_ID'] .= "<button type='button' class='btn btn-default btn-xs btnEditPerson' aria-label='Left Align' ";
             $row['NOTES_ID'] .= "data-cnum='" .$cnum . "'";
             $row['NOTES_ID'] .= " data-toggle='tooltip' data-placement='top' title='Edit Person Record'";
             $row['NOTES_ID'] .= " > ";
             $row['NOTES_ID'] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
             $row['NOTES_ID'] .= " </button> ";
-            $row['NOTES_ID'] .= $notesId;
         }
+
+        $row['NOTES_ID'] .= $notesId;
+
 
         if( ($_SESSION['isPmo'] || $_SESSION['isCdi']) && (substr(trim($row['REVALIDATION_STATUS']),0,11)==personRecord::REVALIDATED_OFFBOARDING))  {
             $row['REVALIDATION_STATUS']  = "<button type='button' class='btn btn-default btn-xs btnStopOffboarding btn-danger' aria-label='Left Align' ";
@@ -810,6 +829,15 @@ class personTable extends DbTable {
         }
 
         $row = db2_fetch_assoc($resultSet);
+
+        if(is_bool($row['FM_MANAGER_FLAG'])){
+            var_dump($row);
+            var_dump($resultSet);
+            echo $sql;
+            throw new \Exception('problem in' . __FILE__ . __FUNCTION__);
+        }
+
+
         $flagValue = strtoupper(substr(trim($row['FM_MANAGER_FLAG']),0,1));
         $_SESSION['isFm'] = ($flagValue=='Y');
         return $_SESSION['isFm'];
