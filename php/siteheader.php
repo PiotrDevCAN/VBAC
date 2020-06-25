@@ -184,10 +184,6 @@ function do_auth($group = null)
 {
 
 if(stripos($_ENV['environment'], 'dev')) {
-    ?>
-
-    <?php
-    $_SESSION['ssoEmail'] = $_SERVER['SERVER_ADMIN'];
     $_SESSION['ssoEmail'] = $_SERVER['SERVER_ADMIN'];
 } else {
     include_once "class/include.php";
