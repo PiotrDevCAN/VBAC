@@ -71,64 +71,31 @@ class pesEmail {
     private function getAttachments($intExt,$emailType){
         switch (true) {
             case $intExt=='External' && $emailType=='UK':
-                $encodedApplicationForm = $this->getLloydsGlobalApplicationForm();
-                $pesAttachments        = array(array('filename'=>'FSS Global Application Form v2.0.doc','content_type'=>'application/msword','data'=>$encodedApplicationForm)
-                );
-                break;
             case $intExt=='Internal' && $emailType=='UK':
-                $encodedApplicationForm = $this->getLloydsGlobalApplicationForm();
-                $pesAttachments = array(array('filename'=>'FSS Global Application Form v2.0.doc','content_type'=>'application/msword','data'=>$encodedApplicationForm)
-                );
+                $pesAttachments = array('../emailAttachments/FSS Global Application Form v2.0.doc');
                 break;
             case $intExt=='External' && $emailType=='India':
-                $encodedXlsAttachment = $this->getOdcApplicationForm();
-                $encodedApplicationForm = $this->getLloydsGlobalApplicationForm();
-                $pesAttachments = array(array('filename'=>'ODC application form v3.0.xlsx','content_type'=>'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','data'=>$encodedXlsAttachment)
-                    ,array('filename'=>'FSS Global Application Form v2.0.doc','content_type'=>'application/msword','data'=>$encodedApplicationForm)
-                );
+                $pesAttachments = array('../emailAttachments/ODC application form v3.0.xls'
+                                       ,'../emailAttachments/FSS Global Application Form v2.0.doc');
                 break;
             case $intExt=='Internal' && $emailType=='India':
-                $encodedApplicationForm = $this->getLloydsGlobalApplicationForm();
-                $encodedXlsAttachment = $this->getOdcApplicationForm();
-                $pesAttachments = array(array('filename'=>'FSS Global Application Form v2.0.doc','content_type'=>'application/msword','data'=>$encodedApplicationForm)
-                    ,array('filename'=>'ODC application form v3.0.xlsx','content_type'=>'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','data'=>$encodedXlsAttachment)
-                );
+                $pesAttachments = array('../emailAttachments/FSS Global Application Form v2.0.doc'
+                                       ,'../emailAttachments/ODC application form v3.0.xls');
                 break;
             case $emailType=='Czech':
-                $encodedApplicationForm = $this->getLloydsGlobalApplicationForm();
-                $pesAttachments = array(array('filename'=>'FSS Global Application Form v2.0.doc','content_type'=>'application/msword','data'=>$encodedApplicationForm)
-                );
+                $pesAttachments = array('../emailAttachments/FSS Global Application Form v2.0.doc');
                 break;
             case $emailType=='USA':
-                $encodedConsentForm = $this->getOverseasConsentForm();
-                $encodedApplicationForm = $this->getLloydsGlobalApplicationForm();
-                $pesAttachments = array(array('filename'=>'FSS Global Application Form v2.0.doc','content_type'=>'application/msword','data'=>$encodedApplicationForm)
-                    ,array('filename'=>'New Overseas Consent Form GDPR.pdf','content_type'=>'application/pdf','data'=>$encodedConsentForm)
-                );
+            case $intExt=='Internal' && $emailType=='International_CRC':
+            case $intExt=='Internal' && $emailType=='International_Credit_Check':
+                $pesAttachments = array('../emailAttachments/FSS Global Application Form v2.0.doc'
+                                       ,'../emailAttachments/New Overseas Consent Form GDPR.pdf');
                 break;
             case $emailType=='core_4':
-                $encodedApplicationForm = $this->getLloydsGlobalApplicationForm();
-                $pesAttachments = array(array('filename'=>'FSS Global Application Form v2.0.doc','content_type'=>'application/msword','data'=>$encodedApplicationForm)
-                );
-                break;
-            case $intExt=='Internal' && $emailType=='International_CRC':
-                $encodedApplicationForm = $this->getLloydsGlobalApplicationForm();
-                $encodedConsentForm = $this->getOverseasConsentForm();
-                $pesAttachments = array(array('filename'=>'FSS Global Application Form v2.0.doc','content_type'=>'application/msword','data'=>$encodedApplicationForm)
-                    ,array('filename'=>'New Overseas Consent Form GDPR.pdf','content_type'=>'application/pdf','data'=>$encodedConsentForm)
-                );
-                break;
-            case $intExt=='Internal' && $emailType=='International_Credit_Check':
-                $encodedApplicationForm = $this->getLloydsGlobalApplicationForm();
-                $encodedConsentForm = $this->getOverseasConsentForm();
-                $pesAttachments = array(array('filename'=>'FSS Global Application Form v2.0.doc','content_type'=>'application/msword','data'=>$encodedApplicationForm)
-                    ,array('filename'=>'New Overseas Consent Form GDPR.pdf','content_type'=>'application/pdf','data'=>$encodedConsentForm)
-                );
+                $pesAttachments = array('../emailAttachments/FSS Global Application Form v2.0.doc');
                 break;
             default:
-
                 throw new \Exception('No matches found for ' . $intExt . ' and ' . $emailType, 803);
-                ;
                 break;
         }
 
@@ -178,17 +145,13 @@ class pesEmail {
 
         $attachments = $this->getAttachments($intExt, $emailType);
 
-        foreach ($attachments as $attachment) {
-            $attachmentFileNames[] = $attachment['filename'];
-        }
-
-
-        return array('filename'=> $pesEmailBodyFilename, 'attachments'=>$attachments, 'attachmentFileNames'=> $attachmentFileNames,'emailType'=>$emailType,'splitResults'=>$results);
+        return array('filename'=> $pesEmailBodyFilename, 'attachments'=>$attachments, 'attachmentFileNames'=> $attachments,'emailType'=>$emailType,'splitResults'=>$results);
     }
 
 
     function sendPesEmail($firstName, $lastName, $emailAddress, $country, $openseat, $cnum){
             $emailDetails = $this->getEmailDetails($emailAddress, $country);
+
             $emailBodyFileName = $emailDetails['filename'];
             $pesAttachments = $emailDetails['attachments'];
             $replacements = array($firstName,$openseat);

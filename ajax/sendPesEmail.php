@@ -15,7 +15,7 @@ $pesEmailObj = new pesEmail();
 
 $emailResponse = $pesEmailObj->sendPesEmail($_POST['firstname'],$_POST['lastname'],$_POST['emailaddress'], $_POST['country'], $_POST['openseat'], $_POST['cnum']);
 
-$emailStatus = $emailResponse['Status']->status;
+$emailStatus = $emailResponse['Status'];
 
 $messages = ob_get_clean();
 ob_start();
