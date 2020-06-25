@@ -25,6 +25,8 @@ class BlueMail
         $cleanedCc = $cc;
         $cleanedBcc = $bcc;
 
+        $status = 'not sent';
+
         $mail = new PHPMailer();
 
         foreach ($cleanedTo as $emailAddress){
@@ -92,9 +94,11 @@ class BlueMail
 
                 if(!$mail->send()) {
                     $response = array('response'=>'Mailer error: ' . $mail->ErrorInfo);
+                    $status = 'error sending';
                     throw new \Exception('Error trying to send email :' . $subject);
                 } else {
                     $response = array('response'=>'Message has been sent.');
+                    $status = 'sent';
                 }
 
                 $responseObject = json_encode($response);
@@ -108,13 +112,14 @@ class BlueMail
                 'response' => "email disabled in this environment, did not initiate send"
                     );
                 $responseObject = json_encode($response);
+                $status = 'email feature disabled, nothing sent';
 
                 if ($emailLogRecordID) {
                     self::updatelog($emailLogRecordID, $responseObject);
                 }
             break;
         }
-        return array('sendResponse' => $response, 'Status'=>null);
+        return array('sendResponse' => $response, 'Status'=>$status);
     }
 
     static function checkStatus(array $statusObjects){

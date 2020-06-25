@@ -17,7 +17,7 @@ $emailAddress = personTable::getEmailFromCnum($cnum);
 $pesEmailObj = new pesEmail();
 $emailResponse = $pesEmailObj->sendPesEmailChaser($cnum, $emailAddress, $_POST['chaser'], $_POST['requestor']);
 
-$emailStatus = $emailResponse['Status']->status;
+$emailStatus = $emailResponse['Status'];
 
 $messages = ob_get_clean();
 ob_start();
@@ -28,11 +28,9 @@ $response['messages'] = $messages;
 $response['emailResponse'] = $emailResponse;
 $response['pesStatus'] = personRecord::PES_STATUS_REQUESTED;
 
-
+$pesTracker = new pesTrackerTable(allTables::$PES_TRACKER   );
 
 if($success){
-    $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER   );
-
     $dateObj = new DateTime();
     $dateLastChased = $dateObj->format('Y-m-d');
     $pesTracker->setPesDateLastChased($cnum, $dateLastChased);
