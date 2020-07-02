@@ -221,14 +221,13 @@ class personRecord extends DbRecord
                                               <br/>This action has been requested by  &&requestor&&.';
     private static $pesRestartPesEmailPattern = array('/&&candidateFirstName&&/','/&&candidateSurname&&/','/&&cnum&&/','/&&requestor&&/');
 
-    private static $pesClearedProvisionalEmail = '<style>.centreRed:   text-align:center;  color:red;</style>
-                                              <p>Hello &&candidate&&,</p>
+    private static $pesClearedProvisionalEmail = '<p>Hello &&candidate&&,</p>
                                               <p>Due to the recent situation we understand that many people will be unable to meet with fellow IBM\'ers to have their documents Certified.  We have implemented a \'provisional clearance\' process and will be accepting all documents without certification - however these documents will require to be certified as soon as the restrictions are lifted.</p>
                                               <p>Therefore I can confirm that you have provisionally passed  Lloyds Bank PES Screening, effective from &&effectiveDate&&</p>
                                               <p>Please note that this will not give you full PES clearance, and your account may not recognise Provisional Clearance, therefore, if you can get your documents certified correctly (as per below) please do so.</p>
                                               <p>When sending your document please only send to the PES team.</p>
                                               <p><b>The Certification MUST be done by another IBM’er</b>, to confirm that they have seen the original document. The following statement should be handwritten on <b>each document</b>, on the <b>same side as the image</b>.</p>
-                                              <p class=\'centreRed\' ><span style=\'text-align:center;color:red\'>True & Certified Copy<br/>Name of certifier  in BLOCK CAPITALS<br/>IBM Serial number of certifier<br/>Certification Date<br/>Signature of certifier<br/></span></p>
+                                              <p style=\'text-align:center;color:red\'>True & Certified Copy<br/>Name of certifier  in BLOCK CAPITALS<br/>IBM Serial number of certifier<br/>Certification Date<br/>Signature of certifier</p>
                                               <p>If you need any more information regarding your PES clearance, please let me know.</p>
                                               <p>Many Thanks for your cooperation,</p>
 ';
