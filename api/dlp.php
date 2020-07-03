@@ -7,6 +7,7 @@ use itdq\DbTable;
 if($_REQUEST['token']!= $token){
     return;
 }
+ob_start();
 
 $hostname = !empty($_GET['hostname']) ? trim($_GET['hostname']) : null;
 $cnum     = !empty($_GET['cnum'])     ? trim($_GET['cnum']) : null;
