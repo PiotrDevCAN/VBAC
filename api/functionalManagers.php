@@ -7,7 +7,7 @@ if($_REQUEST['token']!= $token){
     return;
 }
 
-
+ob_start();
 
 $sql = " SELECT P.NOTES_ID  FROM " . $_ENV['environment'] . "." . allTables::$PERSON . " AS P ";
 
@@ -26,6 +26,7 @@ if($rs){
     DbTable::displayErrorMessage($rs, 'class', 'method', $sql);
     $errorMessage = ob_get_clean();
     echo json_encode($errorMessage);
+    return;
 }
 
 ob_clean();
