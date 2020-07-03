@@ -80,6 +80,7 @@ if($hits==0){
 }
 
 $messages = ob_get_clean();
+ob_start();
 $success = empty($messages) && $hits==1;
 $response['success'] = $success;
 $response['messages'] = $messages;
