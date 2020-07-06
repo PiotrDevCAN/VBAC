@@ -19,12 +19,13 @@ class BlueMail
         , $asynchronous = true
         , array $attachments=array())
     {
+     
         $emailLogRecordID = null;
 
         $cleanedTo = $to;
-        $cleanedCc = $cc;
-        $cleanedBcc = $bcc;
-
+        $cleanedCc = array_diff($cc,$cleanedTo, $bcc); // We can't CC/BCC someone already in the TO list.
+        $cleanedBcc = array_diff($bcc,$cleanedTo,$cleanedCc);
+        
         $status = '';
         $resp = true;
 
@@ -35,22 +36,23 @@ class BlueMail
                 $resp = $resp ? $mail->addAddress($emailAddress) : $resp;
             }
         }
+        
+
 
         foreach ($cleanedCc as $emailAddress){
             if(!empty(trim($emailAddress))){
                 $resp = $resp ? $mail->addCC($emailAddress) : $resp;
             }
         }
-
+        
         foreach ($cleanedBcc as $emailAddress){
             if(!empty(trim($emailAddress))){
                 $resp = $resp ? $mail->addBCC($emailAddress) : $resp;
             }
         }
-
         $mail->Subject= $subject;
         $mail->body= $message;
-
+        
         if($resp && $attachments){
             foreach ($attachments as $attachment){
                 $resp = $resp ? $mail->addAttachment($attachment) : $resp;
