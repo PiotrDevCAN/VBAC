@@ -124,7 +124,7 @@ class Trace extends Log{
 		$elapsed = isset($_SESSION['tracePageOpenTime']) ? microtime(true) - $_SESSION['tracePageOpenTime'] : null;
 		$elapsed =  ($elapsed > 3600) ? 0 : $elapsed ; // Fix for long page opening times.
 
-		$sql  = " INSERT INTO " . $_SESSION['Db2Schema'] . "." . AllItdqTables::$TRACE . " ( LOG_ENTRY,LASTUPDATER,CLASS,METHOD,PAGE ";
+		$sql  = " INSERT INTO " . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$TRACE . " ( LOG_ENTRY,LASTUPDATER,CLASS,METHOD,PAGE ";
 		$sql .= empty($elapsed) ? ") " : ",ELAPSED) ";
 		$db2Entry = db2_escape_string($entry);
 
@@ -148,7 +148,7 @@ class Trace extends Log{
 	}
 
 	static function deleteTraceRecords($keepDays=2){
-		$sql = "DELETE FROM " . $_SESSION['Db2Schema'] . "." . AllItdqTables::$TRACE . " WHERE LASTUPDATED < (CURRENT TIMESTAMP - $keepDays DAYS) ";
+		$sql = "DELETE FROM " . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$TRACE . " WHERE LASTUPDATED < (CURRENT TIMESTAMP - $keepDays DAYS) ";
 
 		Trace::traceVariable($keepDays);
 		$rs = DB2_EXEC($_SESSION['conn'],$sql);
@@ -162,7 +162,7 @@ class Trace extends Log{
 
 	static function setTraceControls(){
 
-		$sql = "SELECT * FROM " . $_SESSION['Db2Schema'] . "." . AllItdqTables::$TRACE_CONTROL ;
+		$sql = "SELECT * FROM " . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$TRACE_CONTROL ;
 		$rs = DB2_EXEC($_SESSION['conn'],$sql);
 		if(!$rs)
 			{

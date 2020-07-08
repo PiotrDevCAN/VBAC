@@ -12,7 +12,7 @@ class AuditTable extends DbTable {
 
     static function audit($statement,$type='Details'){
         if(property_exists('itdq\AllItdqTables','AUDIT')){
-            $sql = " INSERT INTO " . $_SESSION['Db2Schema'] . "." . \itdq\AllItdqTables::$AUDIT;
+            $sql = " INSERT INTO " . $GLOBALS['Db2Schema'] . "." . \itdq\AllItdqTables::$AUDIT;
             $sql . " ('TIMESTAMP','EMAIL_ADDRESS','DATA','TYPE') ";
             $sql .= " VALUES ";
             $sql .= " ( CURRENT TIMESTAMP, '" . db2_escape_string($_SESSION['ssoEmail']) . "','" . db2_escape_string($statement) . "','" . db2_escape_string($type) . "' )";
@@ -30,7 +30,7 @@ class AuditTable extends DbTable {
             $auditLifeSpan = empty($auditLifeSpan) ? $_SESSION['AuditLife'] : $auditLifeSpan;
             $detailsLifeSpan = empty($detailsLifeSpan) ? $_SESSION['AuditDetailsLife'] : $detailsLifeSpan;
 
-            $sql  = " DELETE FROM " . $_SESSION['Db2Schema'] . "." . AllItdqTables::$AUDIT ;
+            $sql  = " DELETE FROM " . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$AUDIT ;
             $sql .= " WHERE " ;
             $sql .= " (TYPE='" . self::RECORD_TYPE_AUDIT . "' AND \"TIMESTAMP\" < ( CURRENT TIMESTAMP - " . db2_escape_string($auditLifeSpan) . " )) ";
             $sql .= " OR " ;
@@ -59,7 +59,7 @@ class AuditTable extends DbTable {
         $sql = " SELECT TIMESTAMP, EMAIL_ADDRESS, DATA, TYPE FROM ( ";
         $sql .= " SELECT ROW_NUMBER() OVER( ";
         $sql.= $orderBy;
-        $sql.= " ) AS rownum,A.* FROM " . $_SESSION['Db2Schema'] . "." . AllItdqTables::$AUDIT . " AS A ";
+        $sql.= " ) AS rownum,A.* FROM " . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$AUDIT . " AS A ";
         $sql .= " WHERE 1=1 ";
         $sql .= " AND TIMESTAMP >= (CURRENT TIMESTAMP - 31 days) ";
         $sql .= !empty($predicate)   ? "  $predicate " : null;
@@ -89,7 +89,7 @@ class AuditTable extends DbTable {
      }
 
      static function recordsFiltered($predicate){
-         $sql = " SELECT count(*) as recordsFiltered FROM " . $_SESSION['Db2Schema'] . "." . AllItdqTables::$AUDIT . " AS A ";
+         $sql = " SELECT count(*) as recordsFiltered FROM " . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$AUDIT . " AS A ";
          $sql .= " WHERE 1=1 ";
          $sql .= " AND TIMESTAMP >= (CURRENT TIMESTAMP - 31 days) ";
          $sql .= !empty($predicate)   ? "  $predicate " : null;
@@ -108,7 +108,7 @@ class AuditTable extends DbTable {
      }
 
      static function totalRows($type=null){
-         $sql = " SELECT count(*) as totalRows FROM " . $_SESSION['Db2Schema'] . "." . AllItdqTables::$AUDIT . " AS A ";
+         $sql = " SELECT count(*) as totalRows FROM " . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$AUDIT . " AS A ";
          $sql .= " WHERE 1=1 ";
          $sql .= " AND TIMESTAMP >= (CURRENT TIMESTAMP - 31 days) ";
          $sql .= $type=='Revalidation' ? " AND TYPE='Revalidation' " : null;

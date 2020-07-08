@@ -8,7 +8,7 @@ class dlpTable extends DbTable {
     
     function licencedAlready($cnum,$hostname){
         $sql = " SELECT COUNT(*) as LICENCES ";
-        $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$DLP;
+        $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$DLP;
         $sql.= " WHERE CNUM='" . db2_escape_string($cnum) ."' ";
         $sql.= " AND HOSTNAME='" . strtoupper(db2_escape_string($hostname)) . "' ";
         $sql.= " AND TRANSFERRED_TO_HOSTNAME is null ";
@@ -27,7 +27,7 @@ class dlpTable extends DbTable {
     
     function recordTransfer($cnum,$fromHostname, $toHostname){
         $sql = " UPDATE ";
-        $sql.=  $_SESSION['Db2Schema'] . "." . allTables::$DLP;
+        $sql.=  $GLOBALS['Db2Schema'] . "." . allTables::$DLP;
         $sql.= "  SET TRANSFERRED_TO_HOSTNAME='" . strtoupper(db2_escape_string($toHostname)) . "' ";
         $sql.= " ,TRANSFERRED_DATE = CURRENT DATE ";
         $sql.= " ,TRANSFERRED_EMAIL='" . db2_escape_string($_SESSION['ssoEmail']) . "' ";
@@ -49,7 +49,7 @@ class dlpTable extends DbTable {
     
     function recordLicence($cnum,$hostname,$approvingEmail){
         $sql = " INSERT INTO ";
-        $sql.=  $_SESSION['Db2Schema'] . "." . allTables::$DLP;
+        $sql.=  $GLOBALS['Db2Schema'] . "." . allTables::$DLP;
         $sql.= "( CNUM, HOSTNAME, APPROVER_EMAIL, CREATION_DATE, EXCEPTION_CODE, STATUS ) ";
         $sql.= " values ";
         $sql.= " ('" . db2_escape_string($cnum) . "','" . strtoupper(db2_escape_string($hostname)) . "'";
@@ -83,18 +83,18 @@ class dlpTable extends DbTable {
         $sql.= ", T.TRANSFERRED_DATE as TRANSFERRED ";
         $sql.= ", case when N.NOTES_ID is not null then N.NOTES_ID else T.TRANSFERRED_EMAIL end  as TRANSFERRER ";
         $sql.= ", D.STATUS ";
-        $sql.= " from ". $_SESSION['Db2Schema'] . "." . allTables::$DLP . " as D ";
-        $sql.= " left join ". $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
+        $sql.= " from ". $GLOBALS['Db2Schema'] . "." . allTables::$DLP . " as D ";
+        $sql.= " left join ". $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql.= " on D.cnum = P.cnum ";
-        $sql.= " left join ". $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as F ";
+        $sql.= " left join ". $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as F ";
         $sql.= " on P.FM_CNUM = F.CNUM ";
-        $sql.= " left join ". $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as A ";
+        $sql.= " left join ". $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as A ";
         $sql.= " on lower(approver_email) = lower(a.email_address) ";
-        $sql.= " left join ". $_SESSION['Db2Schema'] . "." . allTables::$DLP . "  as T ";
+        $sql.= " left join ". $GLOBALS['Db2Schema'] . "." . allTables::$DLP . "  as T ";
         $sql.= " on D.hostname = T.TRANSFERRED_TO_HOSTNAME ";
-        $sql.= " left join ". $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as N ";
+        $sql.= " left join ". $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as N ";
         $sql.= " on T.transferred_email = N.EMAIL_ADDRESS ";
-        $sql.= " left join ". $_SESSION['Db2Schema'] . "." . allTables::$DELEGATE . " as G ";
+        $sql.= " left join ". $GLOBALS['Db2Schema'] . "." . allTables::$DELEGATE . " as G ";
         $sql.= " on F.CNUM = G.CNUM  ";
         
         
@@ -180,7 +180,7 @@ class dlpTable extends DbTable {
     
     function approveReject($cnum, $hostname, $approveReject){
         $sql = " UPDATE ";
-        $sql.= $_SESSION['Db2Schema'] . "." . allTables::$DLP;
+        $sql.= $GLOBALS['Db2Schema'] . "." . allTables::$DLP;
         $sql.= " SET ";
         $sql.= " STATUS='";
         $sql.= $approveReject==dlpRecord::STATUS_APPROVED ? dlpRecord::STATUS_APPROVED : dlpRecord::STATUS_REJECTED;
@@ -209,7 +209,7 @@ class dlpTable extends DbTable {
     
     function delete($cnum, $hostname, $transferred=null){ 
         $sql = " DELETE FROM ";
-        $sql.= $_SESSION['Db2Schema'] . "." . allTables::$DLP;
+        $sql.= $GLOBALS['Db2Schema'] . "." . allTables::$DLP;
         $sql.= " WHERE ";
         $sql.= " CNUM='" . db2_escape_string(trim($cnum)) . "' ";
         $sql.= " AND HOSTNAME='" . db2_escape_string(trim($hostname)) . "' ";

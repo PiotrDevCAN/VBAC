@@ -85,7 +85,7 @@ if( !$rsaTokenSupplied or !$callSignIdSupplied or !$cnumValidated ){
 
 // Save here.
 
-$sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON ;
+$sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON ;
 $sql.= " SET ";
 $sql.= isset($_REQUEST['RSA_TOKEN']) ? " RSA_TOKEN='" . db2_escape_string(trim($_REQUEST['RSA_TOKEN'])) . "' " : null;
 $sql.= isset($_REQUEST['RSA_TOKEN']) && isset($_REQUEST['CALLSIGN_ID']) ? " , " : null;

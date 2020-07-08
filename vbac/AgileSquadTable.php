@@ -23,7 +23,7 @@ class AgileSquadTable extends DbTable{
 
         $table = $version=='Original' ? allTables::$AGILE_SQUAD : allTables::$AGILE_SQUAD_OLD;
 
-        $sql = " SELECT MAX(SQUAD_NUMBER) as SQUAD_NUMBER FROM " . $_SESSION['Db2Schema'] . "." . $table ;
+        $sql = " SELECT MAX(SQUAD_NUMBER) as SQUAD_NUMBER FROM " . $GLOBALS['Db2Schema'] . "." . $table ;
 
         $rs = db2_exec($_SESSION['conn'], $sql);
 
@@ -41,8 +41,8 @@ class AgileSquadTable extends DbTable{
         $tribeTable = $version=='Original' ? allTables::$AGILE_TRIBE : allTables::$AGILE_TRIBE_OLD;
 
         $sql = " SELECT S.*, T.ORGANISATION ";
-        $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName . " as S ";
-        $sql.= " LEFT JOIN ". $_SESSION['Db2Schema'] . "." . $tribeTable . " as T ";
+        $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName . " as S ";
+        $sql.= " LEFT JOIN ". $GLOBALS['Db2Schema'] . "." . $tribeTable . " as T ";
         $sql.= " ON S.TRIBE_NUMBER = T.TRIBE_NUMBER ";
         $rs = db2_exec($_SESSION['conn'], $sql);
 
@@ -89,8 +89,8 @@ class AgileSquadTable extends DbTable{
 
 
         $sql = " SELECT S.SQUAD_NUMBER,S.SQUAD_NAME, S.SQUAD_TYPE, S.SQUAD_LEADER, S.TRIBE_NUMBER, T.TRIBE_NAME, T.TRIBE_LEADER ";
-        $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . $squadTable . " AS S ";
-        $sql.= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . $tribeTable . " AS T ";
+        $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . $squadTable . " AS S ";
+        $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . $tribeTable . " AS T ";
         $sql.= " ON S.TRIBE_NUMBER = T.TRIBE_NUMBER ";
         $sql.= " WHERE S.SQUAD_NUMBER = " . db2_escape_string($squadNumber);
 

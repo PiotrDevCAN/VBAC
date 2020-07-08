@@ -40,7 +40,7 @@ $activePredicate = personTable::activePersonPredicate();
 try {
     $sheet = 1;
     $sql = " Select * ";
-    $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
+    $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
 
     $activeSql = $sql . " WHERE 1=1 AND " . $activePredicate;
 

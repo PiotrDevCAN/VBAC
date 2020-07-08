@@ -35,7 +35,7 @@ class assetRequestsEventsTable extends DbTable{
 
         $initator = empty($_SESSION['ssoEmail']) ? 'Unknown' : $_SESSION['ssoEmail'];
 
-        $sql = " INSERT INTO " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS_EVENTS ;
+        $sql = " INSERT INTO " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS_EVENTS ;
         $sql.= " ( REQUEST_REFERENCE, EVENT, OCCURED, INITIATED_BY ) ";
         $sql.= " values ";
         $sql.= "( ?, ?, current timestamp, '$initator') ";
@@ -66,7 +66,7 @@ class assetRequestsEventsTable extends DbTable{
     static function logEventForRequestWithDate($event, $requestReference,$date){
         $initator = empty($_SESSION['ssoEmail']) ? 'Unknown' : $_SESSION['ssoEmail'];
         
-        $sql = " INSERT INTO " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS_EVENTS ;
+        $sql = " INSERT INTO " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS_EVENTS ;
         $sql.= " ( REQUEST_REFERENCE, EVENT, OCCURED, INITIATED_BY ) ";
         $sql.= " values ";
         $sql.= "( ?, ?, ?, '$initator') ";

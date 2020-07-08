@@ -24,14 +24,14 @@ $personTable = new personTable(allTables::$PERSON);
 $sql = " SELECT distinct P.CNUM, P.NOTES_ID, P.ROLE_ON_THE_ACCOUNT as JRSS, S.SQUAD_TYPE, CONCAT('Tribe ', S.TRIBE_NUMBER) as TRIBE, ";
 $sql.= " S.SHIFT, S.SQUAD_LEADER, F.CNUM as FLL_CNUM, F.NOTES_ID as FLL_NOTES_ID, U.CNUM as SLL_CNUM, U.NOTES_ID as SLL_NOTES_ID, S.SQUAD_NUMBER, S.SQUAD_NAME ";
 $sql.= " ,T.TRIBE_NAME ";
-$sql.= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
-$sql.= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " AS F "; // lookup firstline
+$sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
+$sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS F "; // lookup firstline
 $sql.= " ON P.FM_CNUM = F.CNUM ";
-$sql.= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " AS U "; // lookup upline ( second line )
+$sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS U "; // lookup upline ( second line )
 $sql.= " ON F.FM_CNUM = U.CNUM ";
-$sql.= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS S "; // lookup upline ( second line )
+$sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS S "; // lookup upline ( second line )
 $sql.= " ON P.SQUAD_NUMBER  = S.SQUAD_NUMBER ";
-$sql.= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " AS T "; // lookup upline ( second line )
+$sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " AS T "; // lookup upline ( second line )
 $sql.= " ON S.TRIBE_NUMBER  = T.TRIBE_NUMBER ";
 
 $sql.= " WHERE " . personTable::activePersonPredicate(true,"P");

@@ -341,8 +341,8 @@ index 9b93690..c5676ce 100644
          $sql = " SELECT P.CNUM ";
          $sql.= ", P.EMAIL_ADDRESS  ";
 @@ -103,90 +107,94 @@
-         $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
-         $sql.= " left join " . $_SESSION['Db2Schema'] . "." . \vbac\allTables::$PES_TRACKER . " as PT ";
+         $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
+         $sql.= " left join " . $GLOBALS['Db2Schema'] . "." . \vbac\allTables::$PES_TRACKER . " as PT ";
          $sql.= " ON P.CNUM = PT.CNUM ";
          $sql.= " WHERE 1=1 ";
          $sql.= " and (PT.CNUM is not null or ( PT.CNUM is null  AND PES_STATUS_DETAILS is null )) "; // it has a tracker record

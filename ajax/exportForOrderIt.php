@@ -42,10 +42,10 @@ foreach ($allOrderItTypes as $orderItType){
         $restrictToApproverPredicate = $predicate . $assetRequestTable->eligibleForOrderItPredicate($orderItType);
 
         $sql = " SELECT DISTINCT APPROVER_EMAIL ";
-        $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR ";
-        $sql .= "  LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$REQUESTABLE_ASSET_LIST . " AS RAL ";
+        $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR ";
+        $sql .= "  LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$REQUESTABLE_ASSET_LIST . " AS RAL ";
         $sql .= "  ON RAL.ASSET_TITLE = AR.ASSET_TITLE ";
-        $sql.= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
+        $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
         $sql .= " ON AR.CNUM = P.CNUM ";
         $sql .= " WHERE 1=1 " . $restrictToApproverPredicate;
 

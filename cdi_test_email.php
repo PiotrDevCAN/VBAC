@@ -3,7 +3,7 @@ use itdq\BlueMail;
 use vbac\personTable;
 use vbac\allTables;
 
-$_SESSION['Db2Schema'] = 'VBAC';
+$GLOBALS['Db2Schema'] = 'VBAC';
 
 $sql = " SELECT * ";
 $sql.= " FROM VBAC.EMAIL_LOG ";

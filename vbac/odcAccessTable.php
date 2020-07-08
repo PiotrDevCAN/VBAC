@@ -57,7 +57,7 @@ class odcAccessTable extends DbTable {
                 if($row==2){
                     // delete the previous data for this Secured Area.
                     $secureAreaName = trim($recordData['SECURED_AREA_NAME']);
-                    $sql = " DELETE FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+                    $sql = " DELETE FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
                     $sql.= " WHERE SECURED_AREA_NAME = '" . db2_escape_string($secureAreaName) . "' ";
                     $rs = db2_exec($_SESSION['conn'], $sql);
 
@@ -152,7 +152,7 @@ class odcAccessTable extends DbTable {
 
     function numberOfRecordsForLocation($location=null){
         $sql = " SELECT COUNT(*) as RECORDS ";
-        $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql.= " WHERE 1= 1 ";
         $sql.= !empty($location) ? " AND SECURED_AREA_NAME='" . db2_escape_string($location) . "' " : null;
 
@@ -189,8 +189,8 @@ class odcAccessTable extends DbTable {
         $sql.= "    end ";
         $sql.= "end as BANGALORE_MATCHED ";
         $sql.= ",P.CNUM, P.REVALIDATION_STATUS, P.PES_STATUS ";
-        $sql.= "from " . $_SESSION['Db2Schema'] . "." . allTables::$ODC_ACCESS_LIVE . " as O ";
-        $sql.= "left join " . $_SESSION['Db2Schema'] . "." . \vbac\allTables::$PERSON . " as P ";
+        $sql.= "from " . $GLOBALS['Db2Schema'] . "." . allTables::$ODC_ACCESS_LIVE . " as O ";
+        $sql.= "left join " . $GLOBALS['Db2Schema'] . "." . \vbac\allTables::$PERSON . " as P ";
         $sql.= "on O.OWNER_CNUM_ID = P.CNUM ";
         $sql.= ") ";
         $sql.= "WHERE 1=1 ";
@@ -213,8 +213,8 @@ class odcAccessTable extends DbTable {
         // records found in ODC_ACCESS as having access to a Secured Area but CNUM not found in  VBAC PERSON table.
 
         $sql = "SELECT O.*";
-        $sql.= "from " . $_SESSION['Db2Schema'] . "." . allTables::$ODC_ACCESS_LIVE . " as O ";
-        $sql.= "left join " . $_SESSION['Db2Schema'] . "." . \vbac\allTables::$PERSON . " as P ";
+        $sql.= "from " . $GLOBALS['Db2Schema'] . "." . allTables::$ODC_ACCESS_LIVE . " as O ";
+        $sql.= "left join " . $GLOBALS['Db2Schema'] . "." . \vbac\allTables::$PERSON . " as P ";
         $sql.= "on O.OWNER_CNUM_ID = P.CNUM ";
         $sql.= "WHERE P.CNUM is null ";
 
@@ -236,8 +236,8 @@ class odcAccessTable extends DbTable {
 
 
         $sql = " SELECT upper(trim(WORK_STREAM)) AS WORK_STREAM, COUNT( distinct O.OWNER_CNUM_ID) as Platform_Population ";
-        $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
-        $sql.= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . $this->tableName . " as O ";
+        $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
+        $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . $this->tableName . " as O ";
         $sql.= " ON O.OWNER_CNUM_ID = P.CNUM ";
         $sql.= " WHERE 1=1 ";
         $sql.= " AND " . $activePredicate;

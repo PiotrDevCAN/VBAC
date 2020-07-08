@@ -38,10 +38,10 @@ $activePredicate = personTable::activePersonPredicate();
 try {
     $sheet = 1;
     $sql = " Select * ";
-    $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
+    $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
     $sql .= " WHERE CNUM NOT IN ( ";
     $sql .= "    SELECT CNUM " ;
-    $sql .= "    FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
+    $sql .= "    FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
     $sql .= "    WHERE 1=1 AND $activePredicate ";
     $sql .= "    ) ";
     $sql .= " AND (PES_STATUS_DETAILS is null or PES_STATUS_DETAILS not like 'Boarded%' )"; // dont show boarded pre-boarders

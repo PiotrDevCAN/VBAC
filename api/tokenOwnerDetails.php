@@ -41,7 +41,7 @@ if( (!$rsaTokenSupplied && !$callSignIdSupplied)){
 $sql = " SELECT CNUM, NOTES_ID ";
 $sql.= $rsaTokenSupplied ? ", RSA_TOKEN " : null;
 $sql.= $callSignIdSupplied ? ", CALLSIGN_ID " : null;
-$sql.= " FROM ". $_SESSION['Db2Schema'] . "." . allTables::$PERSON ;
+$sql.= " FROM ". $GLOBALS['Db2Schema'] . "." . allTables::$PERSON ;
 $sql.= " WHERE  ";
 $sql.= $rsaTokenSupplied ? " RSA_TOKEN = '" . db2_escape_string($_REQUEST['RSA_TOKEN']) . "'  " : null;
 $sql.= $callSignIdSupplied ? " CALLSIGN_ID = '" . db2_escape_string($_REQUEST['CALLSIGN_ID']) . "'  " : null;

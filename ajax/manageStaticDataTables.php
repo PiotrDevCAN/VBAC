@@ -25,13 +25,13 @@ switch ($table){
 }
 
 if($uid != 'newEntry'){
-    $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . $table;
+    $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $table;
     $sql .= " SET " . $valueField  . "  =  ? " ;
     $sql .= " WHERE " . $valueId . " = ? ";
     $preparedStmt = db2_prepare($_SESSION['conn'], $sql);
     $data = array($value,$uid);
 } else {
-    $sql = " INSERT INTO " . $_SESSION['Db2Schema'] . "." . $table;
+    $sql = " INSERT INTO " . $GLOBALS['Db2Schema'] . "." . $table;
     $sql .= " ( " . $valueField  . ") values (?) " ;
     $preparedStmt = db2_prepare($_SESSION['conn'], $sql);
     $data = array($value);

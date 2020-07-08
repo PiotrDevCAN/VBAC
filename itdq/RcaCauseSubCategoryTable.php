@@ -17,7 +17,7 @@ class RcaCauseSubCategoryTable extends DbTableTable
     static function getAsXML($predicate = null)
     {
         $sql = " Select * ";
-        $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . AllItdqTables::$RCA_CAUSE_SUB_CATEGORY;
+        $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$RCA_CAUSE_SUB_CATEGORY;
         $sql .= " WHERE 1=1 " . $predicate;
 
         $rs = db2_exec($_SESSION['conn'], $sql);

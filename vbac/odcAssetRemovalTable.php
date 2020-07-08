@@ -14,8 +14,8 @@ class odcAssetRemovalTable extends DbTable {
         $activePredicate = $personTable->activePersonPredicate();        
         
         $sql = " SELECT upper(trim(WORK_STREAM)) as WORK_STREAM, COUNT(distinct O.CNUM) as Platform_Population_With_Remove ";
-        $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
-        $sql.= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . $this->tableName . " as O ";
+        $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
+        $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . $this->tableName . " as O ";
         $sql.= " ON O.CNUM = P.CNUM ";
         $sql.= " WHERE 1=1 ";
         $sql.= " and " . $activePredicate;
@@ -46,8 +46,8 @@ class odcAssetRemovalTable extends DbTable {
     
     function rightToRemove(){
         $sql = "SELECT P.NOTES_ID, P.FIRST_NAME, P.LAST_NAME, O.CNUM, O.ASSET_SERIAL_NUMBER, O.START_DATE, O.END_DATE, P.WORK_STREAM ";
-        $sql.= "from " . $_SESSION['Db2Schema'] . "." . $this->tableName . " as O ";
-        $sql.= "left join " . $_SESSION['Db2Schema'] . "." . \vbac\allTables::$PERSON . " as P ";
+        $sql.= "from " . $GLOBALS['Db2Schema'] . "." . $this->tableName . " as O ";
+        $sql.= "left join " . $GLOBALS['Db2Schema'] . "." . \vbac\allTables::$PERSON . " as P ";
         $sql.= "on O.CNUM = P.CNUM ";
         $sql.= " ORDER BY NOTES_ID ";
         

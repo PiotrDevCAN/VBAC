@@ -14,7 +14,7 @@ class personWithSubPTable extends personTable {
     function __construct($table,$pwd=null, $log=true){
         parent::__construct($table,$pwd,$log);
 
-        $sql = " SELECT * FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON_SUBPLATFORM;
+        $sql = " SELECT * FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON_SUBPLATFORM;
         $rs = db2_exec($_SESSION['conn'], $sql);
 
         if(!$rs){
@@ -48,7 +48,7 @@ class personWithSubPTable extends personTable {
         include("connect.php");
 
 
-        $sql = " SELECT * FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON_SUBPLATFORM;
+        $sql = " SELECT * FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON_SUBPLATFORM;
         $rs = db2_exec($_SESSION['conn'], $sql);
 
         if(!$rs){

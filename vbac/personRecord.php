@@ -369,7 +369,7 @@ class personRecord extends DbRecord
 
 
     static function loadKnownCnum($predicate=null){
-        $sql = " SELECT CNUM FROM " . $_SESSION['Db2Schema'] . "." .  allTables::$PERSON;
+        $sql = " SELECT CNUM FROM " . $GLOBALS['Db2Schema'] . "." .  allTables::$PERSON;
 
         $rs = db2_exec($_SESSION['conn'], $sql);
 
@@ -391,7 +391,7 @@ class personRecord extends DbRecord
     }
 
     static function loadKnownEmail($predicate=null){
-        $sql = " SELECT EMAIL_ADDRESS FROM " . $_SESSION['Db2Schema'] . "." .  allTables::$PERSON;
+        $sql = " SELECT EMAIL_ADDRESS FROM " . $GLOBALS['Db2Schema'] . "." .  allTables::$PERSON;
         $sql.= " WHERE CNUM like '%XXX' ";
         $sql.= " ORDER BY 1 ";
 

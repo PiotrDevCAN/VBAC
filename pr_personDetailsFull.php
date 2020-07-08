@@ -36,7 +36,7 @@ $personTable = new assetRequestsTable(allTables::$PERSON);
 try {
     $sheet = 1;
     $sql = " Select * ";
-    $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
+    $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
     $sql .= " WHERE PES_STATUS_DETAILS is null or PES_STATUS_DETAILS not like 'Boarded%' ";  // dont show boarded pre-boarders
 
     set_time_limit(0);

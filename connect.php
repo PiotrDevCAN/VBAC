@@ -22,7 +22,7 @@ if( isset($_ENV['ssldsn']) )
     if( $conn )
     {
         $_SESSION['conn'] = $conn;
-        $schema = isset($_SESSION['Db2Schema']) ? $_SESSION['Db2Schema'] : 'REST';
+        $schema = isset($GLOBALS['Db2Schema']) ? $GLOBALS['Db2Schema'] : 'REST';
         $Statement = "SET CURRENT SCHEMA='$schema';";
         $rs = db2_exec($conn, $Statement);
 

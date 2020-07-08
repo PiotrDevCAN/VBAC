@@ -10,7 +10,7 @@ class EmailLogTable  extends DbTable {
         $endDate = isset($endDate) ? $endDate : $now->format('Y-m-d');
         $startDate = isset($startDate) ? $startDate : date_format($now->modify("-1 month"),'Y-m-d');
 
-        $sql  = " SELECT * FROM " . $_SESSION['Db2Schema'] . "." . AllItdqTables::$EMAIL_LOG;
+        $sql  = " SELECT * FROM " . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$EMAIL_LOG;
         $sql .= " WHERE DATE(SENT_TIMESTAMP) >= DATE('" . db2_escape_string($startDate) . "') and DATE(SENT_TIMESTAMP) <= DATE('" . db2_escape_string($endDate) . "') ";
         $rs = db2_exec($_SESSION['conn'], $sql);
 

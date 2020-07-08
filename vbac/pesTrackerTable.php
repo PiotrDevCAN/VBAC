@@ -109,8 +109,8 @@ class pesTrackerTable extends DbTable{
         $sql.= ", P.OPEN_SEAT_NUMBER ";
         $sql.= ", P.REVALIDATION_STATUS ";
 
-        $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
-        $sql.= " left join " . $_SESSION['Db2Schema'] . "." . \vbac\allTables::$PES_TRACKER . " as PT ";
+        $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
+        $sql.= " left join " . $GLOBALS['Db2Schema'] . "." . \vbac\allTables::$PES_TRACKER . " as PT ";
         $sql.= " ON P.CNUM = PT.CNUM ";
         $sql.= " WHERE 1=1 ";
         $sql.= " and (PT.CNUM is not null or ( PT.CNUM is null  AND PES_STATUS_DETAILS is null )) "; // it has a tracker record
@@ -465,7 +465,7 @@ class pesTrackerTable extends DbTable{
         if(isset($this->preparedStageUpdateStmts[strtoupper(db2_escape_string($stage))] )) {
             return $this->preparedStageUpdateStmts[strtoupper(db2_escape_string($stage))];
         }
-        $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql.= " SET " . strtoupper(db2_escape_string($stage)) . " =? ";
         $sql.= " WHERE CNUM=? ";
 
@@ -486,7 +486,7 @@ class pesTrackerTable extends DbTable{
         }
 
         $sql = " SELECT PROCESSING_STATUS, PROCESSING_STATUS_CHANGED ";
-        $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql.= " WHERE CNUM=? ";
 
         $preparedStmt = db2_prepare($_SESSION['conn'], $sql);
@@ -500,7 +500,7 @@ class pesTrackerTable extends DbTable{
         if(isset($this->preparedProcessStatusUpdate )) {
             return $this->prepareProcessStatusUpdate;
         }
-        $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql.= " SET PROCESSING_STATUS =?, PROCESSING_STATUS_CHANGED = current timestamp ";
         $sql.= " WHERE CNUM=? ";
 
@@ -519,7 +519,7 @@ class pesTrackerTable extends DbTable{
         if(isset($this->preparedTrackerInsert )) {
             return $this->preparedTrackerInsert;
         }
-        $sql = " INSERT INTO " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql = " INSERT INTO " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql.= " ( CNUM ) VALUES (?) ";
         $preparedStmt = db2_prepare($_SESSION['conn'], $sql);
 
@@ -537,7 +537,7 @@ class pesTrackerTable extends DbTable{
             return $this->preparedResetForRecheck;
         }
 
-        $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql.= " SET CONSENT = null, RIGHT_TO_WORK = null, PROOF_OF_ID = null, PROOF_OF_RESIDENCY= null, CREDIT_CHECK= null,FINANCIAL_SANCTIONS= null ";
         $sql.= " , CRIMINAL_RECORDS_CHECK= null, PROOF_OF_ACTIVITY= null, PROCESSING_STATUS = 'PES' ";
         $sql.= " ,  PROCESSING_STATUS_CHANGED= current timestamp, DATE_LAST_CHASED = null ";
@@ -645,7 +645,7 @@ class pesTrackerTable extends DbTable{
             $this->createNewTrackerRecord($cnum);
         }
 
-        $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql.= " SET PRIORITY=";
         $sql.= !empty($pesPriority) ? "'" . db2_escape_string($pesPriority) . "' " : " null, ";
         $sql.= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
@@ -670,7 +670,7 @@ class pesTrackerTable extends DbTable{
             $this->createNewTrackerRecord($cnum);
         }
 
-        $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql.= " SET PASSPORT_FIRST_NAME=";
         $sql.= !empty($passportFirstname) ? "'" . db2_escape_string($passportFirstname) . "', " : " null, ";
         $sql.= " PASSPORT_SURNAME=";
@@ -695,7 +695,7 @@ class pesTrackerTable extends DbTable{
             $this->createNewTrackerRecord($cnum);
         }
 
-        $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql.= " SET DATE_LAST_CHASED=DATE('" . db2_escape_string($dateLastChased) . "') ";
         $sql.= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
@@ -731,7 +731,7 @@ class pesTrackerTable extends DbTable{
         }
 
 
-        $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql.= " SET COMMENT='" . db2_escape_string($newComment) . "' ";
         $sql.= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
@@ -750,7 +750,7 @@ class pesTrackerTable extends DbTable{
             return $this->preparedGetPesCommentStmt;
         }
 
-        $sql = " SELECT COMMENT FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql = " SELECT COMMENT FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql.= " WHERE CNUM=? ";
 
         $preparedStmt = db2_prepare($_SESSION['conn'], $sql);
@@ -814,7 +814,7 @@ class pesTrackerTable extends DbTable{
 
 
     function changeCnum($fromCnum,$toCnum){
-        $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql.= " SET CNUM='" . db2_escape_string(trim($toCnum)) . "' ";
         $sql.= " WHERE CNUM='" . db2_escape_string(trim($fromCnum)) . "' ";
 
@@ -827,7 +827,7 @@ class pesTrackerTable extends DbTable{
 
         db2_commit($_SESSION['conn']);
 
-//         $sql = " DELETE FROM  " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+//         $sql = " DELETE FROM  " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
 //         $sql.= " WHERE CNUM='" . db2_escape_string(trim($fromCnum)) . "' ";
 
 //         $rs = db2_exec($_SESSION['conn'], $sql);

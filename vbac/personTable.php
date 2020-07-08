@@ -58,7 +58,7 @@ class personTable extends DbTable {
     }
 
     static function getNextVirtualCnum(){
-        $sql  = " SELECT CNUM FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
+        $sql  = " SELECT CNUM FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE CNUM LIKE '%XXX' or CNUM LIKE '%xxx' or CNUM LIKE '%999' ";
         $sql .= " order by CNUM desc ";
         $sql .= " OPTIMIZE FOR 1 ROW ";
@@ -123,8 +123,8 @@ class personTable extends DbTable {
         $sql.= ", P.RF_Start as FROM ";
         $sql.= ", P.RF_End as TO ";
 
-        $sql.= " from  ". $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
-        $sql.= " left join ". $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as F ";
+        $sql.= " from  ". $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
+        $sql.= " left join ". $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as F ";
         $sql.= " on P.FM_CNUM = F.CNUM ";
         $sql.= " WHERE P.RF_FLAG = '1' ";
 
@@ -194,12 +194,12 @@ class personTable extends DbTable {
         $predicate .= $preboadersAction==self::PORTAL_ONLY_ACTIVE ? "  AND ( PES_STATUS_DETAILS not like 'Boarded as%' or PES_STATUS_DETAILS is null ) AND " . personTable::activePersonPredicate() : null;
 
         $sql  = " SELECT P.*, PT.PROCESSING_STATUS , PT.PROCESSING_STATUS_CHANGED, AS.SQUAD_NAME, ASO.SQUAD_NAME as OLD_SQUAD_NAME ";
-        $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName . " as P ";
-        $sql .= " LEFT JOIN " .  $_SESSION['Db2Schema'] . "." . allTables::$PES_TRACKER . " as PT ";
+        $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName . " as P ";
+        $sql .= " LEFT JOIN " .  $GLOBALS['Db2Schema'] . "." . allTables::$PES_TRACKER . " as PT ";
         $sql .= " ON PT.CNUM = P.CNUM ";
-        $sql .= " LEFT JOIN " .  $_SESSION['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " as AS ";
+        $sql .= " LEFT JOIN " .  $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " as AS ";
         $sql .= " ON AS.SQUAD_NUMBER = P.SQUAD_NUMBER ";
-        $sql .= " LEFT JOIN " .  $_SESSION['Db2Schema'] . "." . allTables::$AGILE_SQUAD_OLD . " as ASO ";
+        $sql .= " LEFT JOIN " .  $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD_OLD . " as ASO ";
         $sql .= " ON ASO.SQUAD_NUMBER = P.OLD_SQUAD_NUMBER ";
 
         $sql .= " WHERE " . $predicate;
@@ -226,7 +226,7 @@ class personTable extends DbTable {
         $data = array();
 
         $sql = " SELECT CNUM, FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, NOTES_ID, FM_CNUM ";
-        $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName ;
+        $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName ;
         $sql.= " WHERE " . $activePredicate;
 
 
@@ -258,7 +258,7 @@ class personTable extends DbTable {
 
     function findDirtyData($autoClear=false){
 
-        $sql  = " SELECT * FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName ;
+        $sql  = " SELECT * FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName ;
         $sql .= " ORDER BY CNUM ";
 
         $rs = db2_exec($_SESSION['conn'], $sql);
@@ -552,7 +552,7 @@ class personTable extends DbTable {
                 $dateField = 'PES_DATE_RESPONDED';
             break;
         }
-        $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql  = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET $dateField = date('" . $dateToUseObj->format('Y-m-d') . "'), PES_STATUS='" . db2_escape_string($status)  . "' ";
         $sql .= trim($status)==personRecord::PES_STATUS_INITIATED ? ", PES_REQUESTOR='" . db2_escape_string($requestor) . "' " : null;
         $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
@@ -579,7 +579,7 @@ class personTable extends DbTable {
 
         $requestor = empty($requestor) ? $_SESSION['ssoEmail'] : $requestor;
 
-        $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql  = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET PES_LEVEL = '" . db2_escape_string($level)  . "' ";
          $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
@@ -616,7 +616,7 @@ class personTable extends DbTable {
 
 
 
-        $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql  = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET PES_RECHECK_DATE = date('" .$dateToUseObj->format('Y-m-d') . "') + " . $pesRecheckPeriod ;
         $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
@@ -627,7 +627,7 @@ class personTable extends DbTable {
             return false;
         }
 
-        $sql  = " SELECT PES_RECHECK_DATE FROM  " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql  = " SELECT PES_RECHECK_DATE FROM  " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
         $res = db2_exec($_SESSION['conn'], $sql);
@@ -656,7 +656,7 @@ class personTable extends DbTable {
             throw new \Exception('No CNUM provided in ' . __METHOD__);
         }
 
-        $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql  = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET PMO_STATUS='" . db2_escape_string($status)  . "' ";
         $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
@@ -685,7 +685,7 @@ class personTable extends DbTable {
         }
 
 
-        $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql  = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET FIRST_NAME ='" . db2_escape_string($firstName)  . "' ";
         $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
@@ -707,7 +707,7 @@ class personTable extends DbTable {
 
 
     function saveCtid($cnum,$ctid){
-        $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql  = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET CT_ID='"  . db2_escape_string($ctid) . "' ";
         $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
@@ -723,7 +723,7 @@ class personTable extends DbTable {
     }
 
     function setFmFlag($cnum,$flag){
-        $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql  = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET FM_MANAGER_FLAG='"  . db2_escape_string($flag) . "' ";
         $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
@@ -739,7 +739,7 @@ class personTable extends DbTable {
     }
 
     function clearCtid($cnum){
-        $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql  = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET CT_ID = null ";
         $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
@@ -756,7 +756,7 @@ class personTable extends DbTable {
 
 
     function clearSquadNumber($cnum,$version='original'){
-        $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql  = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET ";
         $sql .= $version=='original' ? " SQUAD_NUMBER = null " : " OLD_SQUAD_NUMBER = null";
         $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
@@ -776,7 +776,7 @@ class personTable extends DbTable {
 
 
     function clearCioAlignment($cnum){
-        $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql  = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET CIO_ALIGNMENT = null ";
         $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
@@ -793,7 +793,7 @@ class personTable extends DbTable {
 
 
     function transferIndividual($cnum,$toFmCnum){
-        $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql  = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET FM_CNUM='"  . db2_escape_string($toFmCnum) . "' ";
         $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
@@ -818,7 +818,7 @@ class personTable extends DbTable {
             return false;
         }
 
-        $sql = ' SELECT FM_MANAGER_FLAG FROM "' . $_SESSION['Db2Schema'] . '".' . allTables::$PERSON;
+        $sql = ' SELECT FM_MANAGER_FLAG FROM "' . $GLOBALS['Db2Schema'] . '".' . allTables::$PERSON;
         $sql .= " WHERE UPPER(EMAIL_ADDRESS) = '" . db2_escape_string(strtoupper(trim($emailAddress))) . "' ";
 
         $resultSet = db2_exec($_SESSION['conn'], $sql);
@@ -852,7 +852,7 @@ class personTable extends DbTable {
             return false;
         }
 
-        $sql = " SELECT CNUM FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
+        $sql = " SELECT CNUM FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE UPPER(EMAIL_ADDRESS) = '" . db2_escape_string(strtoupper(trim($_SESSION['ssoEmail']))) . "' ";
 
         $resultSet = db2_exec($_SESSION['conn'], $sql);
@@ -877,7 +877,7 @@ class personTable extends DbTable {
             return false;
         }
 
-        $sql = " SELECT FM_CNUM FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
+        $sql = " SELECT FM_CNUM FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE UPPER(EMAIL_ADDRESS) = '" . db2_escape_string(strtoupper(trim($_SESSION['ssoEmail']))) . "' ";
 
         $resultSet = db2_exec($_SESSION['conn'], $sql);
@@ -907,7 +907,7 @@ class personTable extends DbTable {
     }
 
     static function getRevalidationFromCnum($cnum){
-        $sql = " SELECT REVALIDATION_STATUS FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
+        $sql = " SELECT REVALIDATION_STATUS FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE CNUM = '" . db2_escape_string(strtoupper(trim($cnum))) . "' ";
 
         $resultSet = db2_exec($_SESSION['conn'], $sql);
@@ -923,7 +923,7 @@ class personTable extends DbTable {
 
 
     static function getCnumFromEmail($emailAddress){
-        $sql = " SELECT CNUM FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
+        $sql = " SELECT CNUM FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE UPPER(EMAIL_ADDRESS) = '" . db2_escape_string(strtoupper(trim($emailAddress))) . "' ";
 
         $resultSet = db2_exec($_SESSION['conn'], $sql);
@@ -938,7 +938,7 @@ class personTable extends DbTable {
     }
 
     static function getEmailFromCnum($cnum){
-        $sql = " SELECT EMAIL_ADDRESS FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
+        $sql = " SELECT EMAIL_ADDRESS FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE CNUM = '" . db2_escape_string(strtoupper(trim($cnum))) . "' ";
 
         $resultSet = db2_exec($_SESSION['conn'], $sql);
@@ -955,8 +955,8 @@ class personTable extends DbTable {
     static function getNamesFromCnum($cnum){
         $sql = " SELECT case when PT.PASSPORT_FIRST_NAME is null then P.FIRST_NAME else PT.PASSPORT_FIRST_NAME end as FIRST_NAME ";
         $sql.= ",       case when PT.PASSPORT_SURNAME is null then P.LAST_NAME else PT.PASSPORT_SURNAME end as LAST_NAME  ";
-        $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
-        $sql.= " left join " . $_SESSION['Db2Schema'] . "." . \vbac\allTables::$PES_TRACKER . " as PT ";
+        $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
+        $sql.= " left join " . $GLOBALS['Db2Schema'] . "." . \vbac\allTables::$PES_TRACKER . " as PT ";
         $sql.= " ON P.CNUM = PT.CNUM ";
         $sql.= " WHERE P.CNUM = '" . db2_escape_string(strtoupper(trim($cnum))) . "' ";
 
@@ -976,7 +976,7 @@ class personTable extends DbTable {
 
 
     static function getCnumFromNotesid($notesid){
-        $sql = " SELECT CNUM FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
+        $sql = " SELECT CNUM FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE UPPER(NOTES_ID) = '" . db2_escape_string(strtoupper(trim($notesid))) . "' ";
 
         $resultSet = db2_exec($_SESSION['conn'], $sql);
@@ -993,7 +993,7 @@ class personTable extends DbTable {
 
 
     static function getNotesidFromCnum($cnum){
-        $sql = " SELECT NOTES_ID FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
+        $sql = " SELECT NOTES_ID FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE CNUM = '" . db2_escape_string(strtoupper(trim($cnum))) . "' ";
 
         $resultSet = db2_exec($_SESSION['conn'], $sql);
@@ -1023,7 +1023,7 @@ class personTable extends DbTable {
             $availPreBoPredicate  = " ( CNUM = '" . db2_escape_string($preBoarded) . "' ) ";
         }
 
-        $sql =  " SELECT distinct FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, CNUM  FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
+        $sql =  " SELECT distinct FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, CNUM  FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE " . $availPreBoPredicate;
         $sql .= " ORDER BY FIRST_NAME, LAST_NAME ";
 
@@ -1049,7 +1049,7 @@ class personTable extends DbTable {
         $sql = " SELECT CTB_RTB,TT_BAU, WORK_STREAM, PES_DATE_REQUESTED, PES_DATE_RESPONDED, PES_REQUESTOR,  PES_STATUS, PES_STATUS_DETAILS, FM_CNUM ";
         $sql .= " , CT_ID_REQUIRED, CT_ID, LOB, OPEN_SEAT_NUMBER, ROLE_ON_THE_ACCOUNT ";
         $sql .= " , START_DATE, PROJECTED_END_DATE, CIO_ALIGNMENT  ";
-        $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
+        $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE CNUM='" . db2_escape_string(trim($cnum)) . "' ";
         $sql .= " OPTIMIZE for 1 row ";
         $rs = db2_exec($_SESSION['conn'], $sql);
@@ -1064,7 +1064,7 @@ class personTable extends DbTable {
 
     private function prepareRevalidationStmt(){
         if(empty($this->preparedRevalidationStmt)){
-            $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+            $sql  = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
             $sql .= " SET NOTES_ID=?, EMAIL_ADDRESS = ?,  REVALIDATION_STATUS='" . personRecord::REVALIDATED_FOUND . "' , REVALIDATION_DATE_FIELD = current date ";
             $sql .= " WHERE CNUM=? ";
 
@@ -1080,7 +1080,7 @@ class personTable extends DbTable {
 
     private function prepareLeaverProjectedEndDateStmt(){
         if(empty($this->preparedLeaverProjectedEndDateStmt)){
-            $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+            $sql  = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
             $sql .= " SET PROJECTED_END_DATE = current date ";
             $sql .= " WHERE CNUM=? AND PROJECTED_END_DATE is null ";
 
@@ -1096,7 +1096,7 @@ class personTable extends DbTable {
 
     private function prepareRevalidationLeaverStmt(){
         if(empty($this->preparedRevalidationLeaverStmt)){
-            $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+            $sql  = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
             $sql .= " SET REVALIDATION_STATUS='" . personRecord::REVALIDATED_LEAVER . "' , REVALIDATION_DATE_FIELD = current date ";
             $sql .= " WHERE CNUM=? ";
 
@@ -1112,7 +1112,7 @@ class personTable extends DbTable {
 
     private function prepareRevalidationPotentialLeaverStmt(){
         if(empty($this->preparedRevalidationPotentialLeaverStmt)){
-            $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+            $sql  = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
 //            $sql .= " SET REVALIDATION_STATUS='" . personRecord::REVALIDATED_POTENTIAL . "' , REVALIDATION_DATE_FIELD = current date ";
             $sql .= " SET REVALIDATION_STATUS='" . personRecord::REVALIDATED_POTENTIAL . "'  "; // Storing the date waa cutting to many history records
             $sql .= " WHERE CNUM=? ";
@@ -1187,7 +1187,7 @@ class personTable extends DbTable {
 
 
     function flagPreboarders (){
-        $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql  = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET REVALIDATION_STATUS='" . personRecord::REVALIDATED_PREBOARDER . "', REVALIDATION_DATE_FIELD = current date ";
         $sql .= " WHERE (CNUM like '%999' or CNUM like '%xxx' or CNUM like '%XXX' )  AND ( REVALIDATION_STATUS is null )";
 
@@ -1203,7 +1203,7 @@ class personTable extends DbTable {
 
     function flagOffboarding ($cnum, $revalidationStatusWas, $notesId){
         if(!empty($cnum)){
-            $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+            $sql  = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
             $sql .= " SET REVALIDATION_STATUS= CONCAT(CONCAT(TRIM('" . personRecord::REVALIDATED_OFFBOARDING . "'),':'),REVALIDATION_STATUS),  REVALIDATION_DATE_FIELD = current date ";
             $sql .= " WHERE CNUM = '" . db2_escape_string($cnum) . "'";
 
@@ -1225,7 +1225,7 @@ class personTable extends DbTable {
 
     function flagOffboarded ($cnum, $revalidationStatus){
         if(!empty($cnum)){
-            $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+            $sql  = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
             $sql .= " SET REVALIDATION_STATUS=CONCAT(CONCAT('" . personRecord::REVALIDATED_OFFBOARDED . "',':'),SUBSTR(REVALIDATION_STATUS,13)), REVALIDATION_DATE_FIELD = current date, OFFBOARDED_DATE = current date ";
             $sql .= " WHERE CNUM = '" . db2_escape_string($cnum) . "'";
 
@@ -1246,7 +1246,7 @@ class personTable extends DbTable {
 
     function stopOffboarded ($cnum){
         if(!empty($cnum)){
-            $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+            $sql  = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
             $sql .= " SET REVALIDATION_STATUS= SUBSTR(REVALIDATION_STATUS,13), REVALIDATION_DATE_FIELD = current date, OFFBOARDED_DATE = null  ";
             $sql .= " WHERE CNUM = '" . db2_escape_string($cnum) . "'";
 
@@ -1268,7 +1268,7 @@ class personTable extends DbTable {
 
     function deOffboarded ($cnum){
         if(!empty($cnum)){
-            $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+            $sql  = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
             $sql .= " SET REVALIDATION_STATUS= TRIM(SUBSTR(REVALIDATION_STATUS,12)), REVALIDATION_DATE_FIELD = current date, OFFBOARDED_DATE = null  ";
             $sql .= " WHERE CNUM = '" . db2_escape_string($cnum) . "'";
 
@@ -1334,7 +1334,7 @@ class personTable extends DbTable {
 
     private function prepareUpdateLbgLocationStmt(){
         if(empty($this->preparedUpdateLbgLocationStmt)){
-            $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+            $sql  = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
             $sql .= " SET LBG_LOCATION=? ";
             $sql .= " WHERE CNUM=?  ";
 
@@ -1367,7 +1367,7 @@ class personTable extends DbTable {
 
     static function getLbgLocationForCnum ($cnum){
         if(!empty($cnum)){
-            $sql = " SELECT LBG_LOCATION FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
+            $sql = " SELECT LBG_LOCATION FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
             $rs = db2_exec($_SESSION['conn'], $sql);
 
@@ -1378,7 +1378,7 @@ class personTable extends DbTable {
 
             $locationRow = db2_fetch_assoc($rs);
 
-            $sql = " SELECT FM_CNUM FROM " .  $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
+            $sql = " SELECT FM_CNUM FROM " .  $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
             $rs = db2_exec($_SESSION['conn'], $sql);
 
@@ -1400,7 +1400,7 @@ class personTable extends DbTable {
 
     private function prepareUpdateSecurityEducationStmt(){
         if(empty($this->preparedUpdateSecurityEducationStmt)){
-            $sql  = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+            $sql  = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
             $sql .= " SET SECURITY_EDUCATION=? ";
             $sql .= " WHERE CNUM=?  ";
 
@@ -1432,7 +1432,7 @@ class personTable extends DbTable {
 
     static function getSecurityEducationForCnum ($cnum){
         if(!empty($cnum)){
-            $sql = " SELECT SECURITY_EDUCATION FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
+            $sql = " SELECT SECURITY_EDUCATION FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
             $rs = db2_exec($_SESSION['conn'], $sql);
 
@@ -1451,7 +1451,7 @@ class personTable extends DbTable {
     function assetUpdate($cnum,$assetTitle,$primaryUid){
         $columnName = DbTable::toColumnName($assetTitle);
         if(!empty($this->columns[$columnName])){
-            $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+            $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
             $sql .= " SET " . $columnName . "='" . db2_escape_string(trim($primaryUid)) . "' ";
             $sql .= " WHERE CNUM='" . db2_escape_string(trim($cnum)) . "' ";
 
@@ -1480,7 +1480,7 @@ class personTable extends DbTable {
        $sql = " SELECT COUNT(*) as ACTIVE_ODC ";
        $sql.= self::odcStaffSql();
 
-//         $sql.= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$ODC_ACCESS_LIVE . " as O ";
+//         $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$ODC_ACCESS_LIVE . " as O ";
 //         $sql.= " ON O.OWNER_CNUM_ID = P.CNUM ";
 //         $sql.= " WHERE 1=1 and  " . $odcActive;
 //         $sql.= " AND O.OWNER_CNUM_ID is not null "; // they have to have access
@@ -1500,8 +1500,8 @@ class personTable extends DbTable {
     static function odcStaffSql(){
         $activePredicate = self::activePersonPredicate();
 
-        $sql = " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
-        $sql.= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$ODC_ACCESS_LIVE . " as O ";
+        $sql = " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
+        $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$ODC_ACCESS_LIVE . " as O ";
         $sql.= " ON O.OWNER_CNUM_ID = P.CNUM ";
 
         $activeSql = $sql . " WHERE 1=1 ";
@@ -1513,7 +1513,7 @@ class personTable extends DbTable {
 
 
     function updateRfFlag($cnum,$rfFlag, $rfStart=null, $rfEnd=null){
-        $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." .  $this->tableName;
+        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." .  $this->tableName;
         $sql.= " SET RF_FLAG='" . db2_escape_string($rfFlag) . "' ";
         $sql.= !empty($rfStart) ? ", RF_START=DATE('" . db2_escape_string($rfStart) . "') " : null ;
         $sql.= !empty($rfEnd) ? ", RF_END=DATE('" . db2_escape_string($rfEnd) . "') " :  null ;
@@ -1723,7 +1723,7 @@ class personTable extends DbTable {
     }
 
     function updateAgileSquadNumber($cnum, $agileNumber, $version='original'){
-        $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql.= " SET " ;
         $sql.= $version=='original' ? " SQUAD_NUMBER=" : " OLD_SQUAD_NUMBER=";
         $sql.= db2_escape_string($agileNumber) ;
@@ -1813,7 +1813,7 @@ class personTable extends DbTable {
         include "connect.php"; // get new connection on $_SESSION['conn'];
 
         $sql = " SELECT CNUM, NOTES_ID, PES_STATUS, REVALIDATION_STATUS, PES_RECHECK_DATE ";
-        $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON;
+        $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
         $sql.= " WHERE 1=1 and " . self::activePersonPredicate();
         $sql.= " AND PES_STATUS != '" . personRecord::PES_STATUS_RECHECK_REQ . "' ";
         $sql.= " AND PES_STATUS != '" . personRecord::PES_STATUS_PROVISIONAL . "' ";

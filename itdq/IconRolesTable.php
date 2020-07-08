@@ -54,7 +54,7 @@ class IconRolesTable extends DbTable {
 
 // 		Trace::traceTimings ( null, __METHOD__, __LINE__ );
 // 		$sql = " SELECT distinct CUSTOMER_REF, CUSTOMER_ID ";
-// 		$sql .= " FROM " . $_SESSION['Db2Schema'] . "." . AllItdqTables::$ICON_ACCOUNT_ROLES;
+// 		$sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$ICON_ACCOUNT_ROLES;
 // 		$sql .= " WHERE UPPER(PERSON_INTRANET)='" . strtoupper ( $GLOBALS ['ltcuser'] ['mail'] ) . "'  ";
 // 		$sql .= empty ( $country ) ? null : " AND COUNTRY = '" . db2_escape_string ( trim ( $country ) ) . "' ";
 
@@ -84,7 +84,7 @@ class IconRolesTable extends DbTable {
 // 	static function getAllRoles($customerId = null, $country = null) {
 // 		Trace::traceTimings ( $customerId, __METHOD__, __LINE__ );
 // 		$sql = " SELECT distinct ROLE ";
-// 		$sql .= " FROM " . $_SESSION['Db2Schema'] . "." . AllTables::$ICON_ACCOUNT_ROLES;
+// 		$sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . AllTables::$ICON_ACCOUNT_ROLES;
 // 		$sql .= " WHERE ROLE is not null ";
 // 		$sql .= empty ( $customerId ) ? null : " AND CUSTOMER_ID='" . db2_escape_string ( trim ( $customerId ) ) . "' ";
 // 		$sql .= empty ( $country ) ? null : " AND COUNTRY = '" . db2_escape_string ( trim ( $country ) ) . "' ";
@@ -104,7 +104,7 @@ class IconRolesTable extends DbTable {
 // 	static function getIntranetAddressesForRoleAccountCombination(array $rolesArray = null, Array $customerIdArray = null) {
 // 		Trace::traceTimings ( null, __METHOD__, __LINE__ );
 // 		$sql = " SELECT distinct PERSON_INTRANET ";
-// 		$sql .= " FROM " . $_SESSION['Db2Schema'] . "." . AllTables::$ICON_ACCOUNT_ROLES;
+// 		$sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . AllTables::$ICON_ACCOUNT_ROLES;
 // 		$sql .= " WHERE PERSON_INTRANET is not null ";
 
 // 		if ($rolesArray) {

@@ -40,10 +40,10 @@ class pesEventTable extends DbTable{
 
 
 
-        $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
+        $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
 
         foreach ($allEvents as $element => $event_title) {
-            $sql .= " left join " . $_SESSION['Db2Schema'] . "." . \vbac\allTables::$PES_EVENTS . " as PE$element ";
+            $sql .= " left join " . $GLOBALS['Db2Schema'] . "." . \vbac\allTables::$PES_EVENTS . " as PE$element ";
             $sql .= " ON P.CNUM = PE$element.CNUM AND PE$element.EVENT='$event_title' ";
         }
 

@@ -13,7 +13,7 @@ use itdq\DbTable;
 class PersonSubPlatformTable extends DbTable
 {
     static function saveSubplatformValues($cnum=null,$subplatformValues=null){
-        $sql = " DELETE FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON_SUBPLATFORM ;
+        $sql = " DELETE FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON_SUBPLATFORM ;
         $sql.= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
         $rs = db2_exec($_SESSION['conn'], $sql);
@@ -23,7 +23,7 @@ class PersonSubPlatformTable extends DbTable
         }
 
         foreach ($subplatformValues as $subPlatform) {
-            $sql = " INSERT  INTO " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON_SUBPLATFORM;
+            $sql = " INSERT  INTO " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON_SUBPLATFORM;
             $sql.= " (CNUM, SUBPLATFORM) values ('" . db2_escape_string($cnum) ."','" . db2_escape_string($subPlatform) . "') ";
 
             $rs = db2_exec($_SESSION['conn'], $sql);
@@ -38,7 +38,7 @@ class PersonSubPlatformTable extends DbTable
     }
 
     static function getValuesForCnum($cnum=null){
-        $sql = " SELECT *  FROM " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON_SUBPLATFORM ;
+        $sql = " SELECT *  FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON_SUBPLATFORM ;
         $sql.= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
         $rs = db2_exec($_SESSION['conn'], $sql);

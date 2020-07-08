@@ -45,8 +45,8 @@ index 3b4cb26..34974a7 100644
  
  
          $sql  = " SELECT P.*, PT.PROCESSING_STATUS , PT.PROCESSING_STATUS_CHANGED ";
-         $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName . " as P ";
-         $sql .= " LEFT JOIN " .  $_SESSION['Db2Schema'] . "." . allTables::$PES_TRACKER . " as PT ";
+         $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName . " as P ";
+         $sql .= " LEFT JOIN " .  $GLOBALS['Db2Schema'] . "." . allTables::$PES_TRACKER . " as PT ";
 @@ -283,41 +283,41 @@
          }
          return $preparedRow;

@@ -56,7 +56,7 @@ class LogList extends SortableList {
 			}
 		}
 		
-		$this->sql .= " from " . $_SESSION['Db2Schema'] . "." . $this->DbTable->getName(). " as E";
+		$this->sql .= " from " . $GLOBALS['Db2Schema'] . "." . $this->DbTable->getName(). " as E";
 		
 		$this->sql = str_replace ( 'SELECT ,', 'SELECT ', $this->sql );
 		

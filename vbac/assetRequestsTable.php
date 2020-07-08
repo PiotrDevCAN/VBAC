@@ -98,14 +98,14 @@ class assetRequestsTable extends DbTable{
         $sql .= " , USER_CREATED ";
         $sql .= " , P.CTB_RTB,P.TT_BAU,P.LOB, P.WORK_STREAM ";
         $sql .= " , PRE_REQ_REQUEST ";
-        $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
-        $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
+        $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
+        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql .= " ON AR.CNUM = P.CNUM ";
-        $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as F ";
+        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as F ";
         $sql .= " ON P.FM_CNUM = F.CNUM ";
-        $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$REQUESTABLE_ASSET_LIST . " as RAL ";
+        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$REQUESTABLE_ASSET_LIST . " as RAL ";
         $sql .= " ON TRIM(RAL.ASSET_TITLE) = TRIM(AR.ASSET_TITLE) ";
-        $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$DELEGATE . " as D "; // needed for the predicate.
+        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$DELEGATE . " as D "; // needed for the predicate.
         $sql .= " ON F.CNUM = D.CNUM ";
 
 
@@ -354,7 +354,7 @@ class assetRequestsTable extends DbTable{
     }
 
     private function getNextVarb(){
-        $sql  = " INSERT INTO " . $_SESSION['Db2Schema'] . "." . allTables::$ORDER_IT_VARB_TRACKER;
+        $sql  = " INSERT INTO " . $GLOBALS['Db2Schema'] . "." . allTables::$ORDER_IT_VARB_TRACKER;
         $sql .= " ( CREATED_BY ) VALUES ('" . db2_escape_string($_SESSION['ssoEmail']) . "' )" ;
 
         $rs = db2_exec($_SESSION['conn'], $sql);
@@ -402,12 +402,12 @@ class assetRequestsTable extends DbTable{
         // Get the Ref's for this export - so we can timestamp the export.
 
         $sql = " SELECT REQUEST_REFERENCE ";
-        $sql.= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS ;
+        $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS ;
         $sql.= " WHERE REQUEST_REFERENCE in ";
-        $sql.= " (SELECT REQUEST_REFERENCE FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR ";
-        $sql.= "  LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$REQUESTABLE_ASSET_LIST . " AS RAL ";
+        $sql.= " (SELECT REQUEST_REFERENCE FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR ";
+        $sql.= "  LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$REQUESTABLE_ASSET_LIST . " AS RAL ";
         $sql.= "  ON RAL.ASSET_TITLE = AR.ASSET_TITLE ";
-        $sql.= "  LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
+        $sql.= "  LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql.= "  ON AR.CNUM = P.CNUM ";
         $sql.= "   WHERE 1=1 ";
         $sql.= !empty($predicate) ? $predicate : null;
@@ -426,13 +426,13 @@ class assetRequestsTable extends DbTable{
             $this->assetRequestEventsTable->logEventForRequest(assetRequestsEventsTable::EVENT_EXPORTED, $row['REQUEST_REFERENCE']);
         }
 
-        $sql =  "UPDATE " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS ;
+        $sql =  "UPDATE " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS ;
         $sql .= " SET ORDERIT_VARB_REF = '$nextVarb', STATUS='" . assetRequestRecord::STATUS_EXPORTED . "' ";
         $sql .= " WHERE REQUEST_REFERENCE in ";
-        $sql .= " (SELECT REQUEST_REFERENCE FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR ";
-        $sql .= "  LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$REQUESTABLE_ASSET_LIST . " AS RAL ";
+        $sql .= " (SELECT REQUEST_REFERENCE FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR ";
+        $sql .= "  LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$REQUESTABLE_ASSET_LIST . " AS RAL ";
         $sql .= "  ON RAL.ASSET_TITLE = AR.ASSET_TITLE ";
-        $sql .= "  LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
+        $sql .= "  LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql .= "  ON AR.CNUM = P.CNUM ";
         $sql .= "   WHERE 1=1 ";
         $sql .= !empty($predicate) ? $predicate : null;
@@ -461,10 +461,10 @@ class assetRequestsTable extends DbTable{
         $sql .= " STATUS,  USER_LOCATION, REQUESTOR_EMAIL, date(REQUESTED) as REQUESTED,  APPROVER_EMAIL, DATE(APPROVED) as APPROVED,";
         $sql .= " F.EMAIL_ADDRESS as FM_EMAIL, ";
         $sql .= " current date as EXPORTED ";
-        $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
-        $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
+        $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
+        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql .= " ON AR.CNUM = P.CNUM ";
-        $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as F ";
+        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as F ";
         $sql .= " ON F.CNUM = P.FM_CNUM ";
 
 
@@ -515,10 +515,10 @@ class assetRequestsTable extends DbTable{
         $sql .= " STATUS,  USER_LOCATION, REQUESTOR_EMAIL, date(REQUESTED) as REQUESTED,  APPROVER_EMAIL, DATE(APPROVED) as APPROVED,";
         $sql .= " F.EMAIL_ADDRESS as FM_EMAIL, ";
         $sql .= " current date as EXPORTED ";
-        $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
-        $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
+        $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
+        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql .= " ON AR.CNUM = P.CNUM ";
-        $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as F ";
+        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as F ";
         $sql .= " ON F.CNUM = P.FM_CNUM ";
 
 
@@ -557,10 +557,10 @@ class assetRequestsTable extends DbTable{
 
     function countRequestsForNonPmoExport(){
         $sql = " SELECT count(*) as tickets ";
-        $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
-        $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
+        $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
+        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql .= " ON AR.CNUM = P.CNUM ";
-        $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as F ";
+        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as F ";
         $sql .= " ON F.CNUM = P.FM_CNUM ";
 
         $sql .= " WHERE 1=1 ";
@@ -582,7 +582,7 @@ class assetRequestsTable extends DbTable{
     function countRequestsAwaitingIam(){
 
         $sql = " SELECT count(*) as tickets ";
-        $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
+        $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
         $sql .= " WHERE STATUS='" . assetRequestRecord::STATUS_AWAITING_IAM . "' ";
 
         $rs2 = db2_exec($_SESSION['conn'],$sql);
@@ -609,12 +609,12 @@ class assetRequestsTable extends DbTable{
         }
 
         $sql = " SELECT count(*) as tickets ";
-        $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
-        $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
+        $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
+        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql .= " ON AR.CNUM = P.CNUM ";
-        $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as F ";
+        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as F ";
         $sql .= " ON F.CNUM = P.FM_CNUM ";
-        $sql .= "  LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$REQUESTABLE_ASSET_LIST . " AS RAL ";
+        $sql .= "  LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$REQUESTABLE_ASSET_LIST . " AS RAL ";
         $sql .= "  ON RAL.ASSET_TITLE = AR.ASSET_TITLE ";
 
 
@@ -641,7 +641,7 @@ class assetRequestsTable extends DbTable{
     function countRequestsExported(){
 
         $sql = " SELECT count(*) as tickets ";
-        $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
+        $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
 
         $sql .= " WHERE 1=1 ";
         $sql .= " AND STATUS='" . assetRequestRecord::STATUS_EXPORTED . "' ";
@@ -661,8 +661,8 @@ class assetRequestsTable extends DbTable{
     function countRequestsRaised($bau=true){
 
         $sql = " SELECT count(*) as tickets ";
-        $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
-        $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
+        $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
+        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql .= " ON AR.CNUM = P.CNUM ";
         $sql .= " WHERE 1=1 ";
         $sql .= " AND ORDERIT_STATUS='" . assetRequestRecord::STATUS_ORDERIT_RAISED . "' ";
@@ -705,8 +705,8 @@ class assetRequestsTable extends DbTable{
         $predicate .= " AND ORDERIT_VARB_REF is null ";
         $predicate .= " AND (ORDER_IT_TYPE = '1' or P.CT_ID is not null)";
         $predicate .= " and ( pre_req_Request is null or pre_req_request  in (  select AR2.pre_req_request
-						  	from " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR2
-						  	left join " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR3
+						  	from " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR2
+						  	left join " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR3
 						  	on AR2.PRE_REQ_REQUEST = AR3.REQUEST_REFERENCE
 						    where AR3.ORDERIT_STATUS in ('" . assetRequestRecord::STATUS_ORDERIT_APPROVED . "','" . assetRequestRecord::STATUS_PROVISIONED . "')
 							) )";
@@ -719,10 +719,10 @@ class assetRequestsTable extends DbTable{
 
     function countApprovedForOrderItType($orderItType = 0, $predicate = null){
         $sql  = " SELECT COUNT(*) as REQUESTS ";
-        $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR ";
-        $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$REQUESTABLE_ASSET_LIST . " AS RAL ";
+        $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR ";
+        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$REQUESTABLE_ASSET_LIST . " AS RAL ";
         $sql .= " ON RAL.ASSET_TITLE = AR.ASSET_TITLE ";
-        $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
+        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql .= " ON AR.CNUM = P.CNUM ";
         $sql .= " WHERE 1=1 ";
         $sql .= !empty($predicate) ? $predicate : null;
@@ -1247,7 +1247,7 @@ class assetRequestsTable extends DbTable{
 
     function getUnmappedVarb(){
         $sql = " SELECT distinct ORDERIT_VARB_REF ";
-        $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " WHERE ORDERIT_VARB_REF is not null and ORDERIT_NUMBER is null and STATUS in ('". assetRequestRecord::STATUS_EXPORTED . "','". assetRequestRecord::STATUS_RAISED_ORDERIT . "') ";
         $sql .= " ORDER BY ORDERIT_VARB_REF asc ";
 
@@ -1268,7 +1268,7 @@ class assetRequestsTable extends DbTable{
 
     function getUnmappedref(){
         $sql = " SELECT distinct REQUEST_REFERENCE ";
-        $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " WHERE ORDERIT_VARB_REF is not null and ORDERIT_NUMBER is null and STATUS in ('". assetRequestRecord::STATUS_EXPORTED . "','". assetRequestRecord::STATUS_RAISED_ORDERIT . "') ";
         $sql .= " ORDER BY REQUEST_REFERENCE asc ";
 
@@ -1288,7 +1288,7 @@ class assetRequestsTable extends DbTable{
 
     function getMappedVarb(){
         $sql = " SELECT distinct ORDERIT_VARB_REF ";
-        $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " WHERE ORDERIT_VARB_REF is not null and ORDERIT_NUMBER is not null ";
         $sql .= " ORDER BY ORDERIT_VARB_REF asc ";
 
@@ -1309,7 +1309,7 @@ class assetRequestsTable extends DbTable{
 
     function getMappedref(){
         $sql = " SELECT distinct REQUEST_REFERENCE ";
-        $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " WHERE ORDERIT_NUMBER is not null ";
         $sql .= " ORDER BY REQUEST_REFERENCE asc ";
 
@@ -1460,12 +1460,12 @@ class assetRequestsTable extends DbTable{
                     $sql.= " , P.CNUM, P.CT_ID, P.FM_CNUM as MGR_CNUM, FM.EMAIL_ADDRESS as MGR_EMAIL, FM.NOTES_ID as MGR_NOTESID, P.PES_STATUS, P.WORK_STREAM,P.CTB_RTB ";
                     $sql.= " ,P.TT_BAU, P.LOB, P.ROLE_ON_THE_ACCOUNT, P.CIO_ALIGNMENT,  AR.PRIMARY_UID, AR.SECONDARY_UID, AR.DATE_ISSUED_TO_IBM, AR. DATE_ISSUED_TO_USER  ";
                     $sql.= " ,AR.DATE_RETURNED  ";
-                    $sql.= " FROM " . $_SESSION['Db2Schema']. "." . allTables::$ASSET_REQUESTS  . " as AR ";
-                    $sql.= " LEFT JOIN " . $_SESSION['Db2Schema']. "." . allTables::$PERSON . " as P ";
+                    $sql.= " FROM " . $GLOBALS['Db2Schema']. "." . allTables::$ASSET_REQUESTS  . " as AR ";
+                    $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema']. "." . allTables::$PERSON . " as P ";
                     $sql.= " ON P.CNUM = AR.CNUM ";
-                    $sql.= " LEFT JOIN " . $_SESSION['Db2Schema']. "." . allTables::$PERSON . " as FM ";
+                    $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema']. "." . allTables::$PERSON . " as FM ";
                     $sql.= " ON P.FM_CNUM = FM.CNUM ";
-                    $sql.= " LEFT JOIN " . $_SESSION['Db2Schema']. "." . allTables::$ORDER_IT_VARB_TRACKER . " as V ";
+                    $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema']. "." . allTables::$ORDER_IT_VARB_TRACKER . " as V ";
                     $sql.= " ON right(trim(AR.ORDERIT_VARB_REF),5) = right(concat('000000',V.VARB),5) ";
                     $sql.= " WHERE 1=1 ";
                     $sql.= " AND AR.ORDERIT_STATUS in ('" . assetRequestRecord::STATUS_ORDERIT_RAISED . "') ";
@@ -1532,14 +1532,14 @@ class assetRequestsTable extends DbTable{
         $sql = " SELECT AR.*, P.FIRST_NAME, P.LAST_NAME, P.NOTES_ID, P.EMAIL_ADDRESS, P.LBG_EMAIL ";
         $sql.= ", case when EM.DESCRIPTION is not null then EM.DESCRIPTION else P.EMPLOYEE_TYPE as EMPLOYEE_TYPE ";
         $sql.= ", P.CNUM, P.CT_ID, P.FM_CNUM as MGR_CNUM, FM.EMAIL_ADDRESS as MGR_EMAIL, FM.NOTES_ID as MGR_NOTESID, P.PES_STATUS, P.WORK_STREAM,P.CTB_RTB, P.TT_BAU, P.LOB, P.ROLE_ON_THE_ACCOUNT, P.CIO_ALIGNMENT, A.EMAIL_ADDRESS as APPROVER_EMAIL, A.NOTES_ID as APPROVER_NOTESID,A.WORK_STREAM as APPROVER_WORK_STREAM, A.TT_BAU as APPROVER_TT_BAU  ";
-        $sql .= " FROM " . $_SESSION['Db2Schema']. "." . allTables::$ASSET_REQUESTS  . " as AR ";
-        $sql .= " LEFT JOIN " . $_SESSION['Db2Schema']. "." . allTables::$PERSON . " as P ";
+        $sql .= " FROM " . $GLOBALS['Db2Schema']. "." . allTables::$ASSET_REQUESTS  . " as AR ";
+        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema']. "." . allTables::$PERSON . " as P ";
         $sql .= " ON P.CNUM = AR.CNUM ";
-        $sql .= " LEFT JOIN " . $_SESSION['Db2Schema']. "." . allTables::$PERSON . " as FM ";
+        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema']. "." . allTables::$PERSON . " as FM ";
         $sql .= " ON P.FM_CNUM = FM.CNUM ";
-        $sql .= " LEFT JOIN " . $_SESSION['Db2Schema']. "." . allTables::$PERSON . " as A ";
+        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema']. "." . allTables::$PERSON . " as A ";
         $sql .= " ON lower(A.EMAIL_ADDRESS) = lower(AR.APPROVER_EMAIL) ";
-        $sql .= " LEFT JOIN " . $_SESSION['Db2Schema']. "." . allTables::$EMPLOYEE_TYPE_MAPPING . " as EM ";
+        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema']. "." . allTables::$EMPLOYEE_TYPE_MAPPING . " as EM ";
         $sql .= " ON upper(P.EMPLOYEE_TYPE) = upper(EM.CODE) ";
 
 
@@ -1606,12 +1606,12 @@ class assetRequestsTable extends DbTable{
                     $sql.= ", AR.ASSET_TITLE, AR.BUSINESS_JUSTIFICATION, AR.COMMENT ";
                     $sql.= ", AR.REQUESTOR_EMAIl, AR.REQUESTED, AR.APPROVER_EMAIL, AR.APPROVED,  AR.PRIMARY_UID, AR.SECONDARY_UID ";
                     $sql.= ", ES.* ";
-                    $sql.= " FROM " . $_SESSION['Db2Schema']. "." . allTables::$ASSET_REQUESTS  . " as AR ";
-                    $sql.= " LEFT JOIN " . $_SESSION['Db2Schema']. "." . allTables::$PERSON . " as P ";
+                    $sql.= " FROM " . $GLOBALS['Db2Schema']. "." . allTables::$ASSET_REQUESTS  . " as AR ";
+                    $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema']. "." . allTables::$PERSON . " as P ";
                     $sql.= " ON P.CNUM = AR.CNUM ";
-                    $sql.= " LEFT JOIN " . $_SESSION['Db2Schema']. "." . allTables::$ORDER_IT_VARB_TRACKER . " as V ";
+                    $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema']. "." . allTables::$ORDER_IT_VARB_TRACKER . " as V ";
                     $sql.= " ON right(trim(AR.ORDERIT_VARB_REF),5) = right(concat('000000',V.VARB),5) ";
-                    $sql.= " LEFT JOIN " . $_SESSION['Db2Schema']. "." . allTables::$ASSET_REQUESTS_EVENTS_SUMMARY . " as ES ";
+                    $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema']. "." . allTables::$ASSET_REQUESTS_EVENTS_SUMMARY . " as ES ";
                     $sql.= " ON AR.REQUEST_REFERENCE = ES.REF ";
 
                     $sql.= " WHERE 1=1 ";
@@ -1663,7 +1663,7 @@ class assetRequestsTable extends DbTable{
     function getCnumAndAssetForReference($reference){
 
         $sql = " SELECT CNUM, ASSET_TITLE ";
-        $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " WHERE REQUEST_REFERENCE= '" . db2_escape_string($reference) . "' ";
 
         AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
@@ -1686,10 +1686,10 @@ class assetRequestsTable extends DbTable{
 
         $sql = " SELECT REQUEST_REFERENCE as REFERENCE, P.NOTES_ID as PERSON, AR.ASSET_TITLE as ASSET, AR.CNUM, PRIMARY_UID, ORDERIT_NUMBER, COMMENT ";
         $sql .= " ,ASSET_PRIMARY_UID_TITLE, ASSET_SECONDARY_UID_TITLE ";
-        $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName . " as AR ";
-        $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
+        $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName . " as AR ";
+        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql .= " ON AR.CNUM = P.CNUM ";
-        $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$REQUESTABLE_ASSET_LIST . " as RAL ";
+        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$REQUESTABLE_ASSET_LIST . " as RAL ";
         $sql .= " ON RAL.ASSET_TITLE = AR.ASSET_TITLE ";
 
         $sql .=  " WHERE 1=1 " ;
@@ -1730,7 +1730,7 @@ class assetRequestsTable extends DbTable{
         $autoCommit = db2_autocommit($_SESSION['conn'],DB2_AUTOCOMMIT_OFF);
 
         $sql  = " UPDATE ";
-        $sql .= $_SESSION['Db2Schema'] . "." . $this->tableName ;
+        $sql .= $GLOBALS['Db2Schema'] . "." . $this->tableName ;
         $sql .= " SET ORDERIT_NUMBER='" . db2_escape_string($orderIt) . "' ";
         $sql .= ",STATUS='" . assetRequestRecord::STATUS_RAISED_ORDERIT . "' ";
         $sql .= ",ORDERIT_STATUS='" . assetRequestRecord::STATUS_ORDERIT_RAISED . "' ";
@@ -1754,7 +1754,7 @@ class assetRequestsTable extends DbTable{
         // Anything they didn't select gets reset for next time.
 
         $sql  = " UPDATE ";
-        $sql .= $_SESSION['Db2Schema'] . "." . $this->tableName ;
+        $sql .= $GLOBALS['Db2Schema'] . "." . $this->tableName ;
         $sql .= " SET STATUS='" . assetRequestRecord::STATUS_APPROVED . "' ";
         $sql .= ", ORDERIT_VARB_REF = null ";
         $sql .= ", ORDERIT_STATUS = '" . assetRequestRecord::STATUS_ORDERIT_YET . "' ";
@@ -1786,7 +1786,7 @@ class assetRequestsTable extends DbTable{
         }
 
         $sql  = " UPDATE ";
-        $sql .= $_SESSION['Db2Schema'] . "." . $this->tableName ;
+        $sql .= $GLOBALS['Db2Schema'] . "." . $this->tableName ;
         $sql .= " SET ORDERIT_NUMBER=? ";
         $sql .= ",STATUS='" . assetRequestRecord::STATUS_RAISED_ORDERIT . "' ";
         $sql .= ",ORDERIT_STATUS='" . assetRequestRecord::STATUS_ORDERIT_RAISED . "' ";
@@ -1824,7 +1824,7 @@ class assetRequestsTable extends DbTable{
 //         // Anything they didn't select gets reset for next time.
 
 //         $sql  = " UPDATE ";
-//         $sql .= $_SESSION['Db2Schema'] . "." . $this->tableName ;
+//         $sql .= $GLOBALS['Db2Schema'] . "." . $this->tableName ;
 //         $sql .= " SET STATUS='" . assetRequestRecord::STATUS_APPROVED . "' ";
 //         $sql .= ", ORDERIT_VARB_REF = null ";
 //         $sql .= ", ORDERIT_STATUS = '" . assetRequestRecord::STATUS_ORDERIT_YET . "' ";
@@ -1853,10 +1853,10 @@ class assetRequestsTable extends DbTable{
     function getAssetRequestsForOrderIt($orderIt,$varb,$ref){
         $sql = " SELECT REQUEST_REFERENCE as REFERENCE, P.NOTES_ID as PERSON, AR.ASSET_TITLE as ASSET,AR.STATUS as STATUS,  AR.ORDERIT_STATUS";
         $sql .=", '' as ACTION, COMMENT as COMMENT, ORDERIT_NUMBER, ORDERIT_VARB_REF, ASSET_PRIMARY_UID_TITLE, P.CT_ID, PRIMARY_UID, AR.ORDERIT_RESPONDED  ";
-        $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName . " as AR ";
-        $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " as P ";
+        $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName . " as AR ";
+        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql .= " ON AR.CNUM = P.CNUM ";
-        $sql .= " LEFT JOIN " . $_SESSION['Db2Schema'] . "." . allTables::$REQUESTABLE_ASSET_LIST . " as RAL ";
+        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$REQUESTABLE_ASSET_LIST . " as RAL ";
         $sql .= " ON AR.ASSET_TITLE = RAL.ASSET_TITLE ";
 
 
@@ -2020,7 +2020,7 @@ class assetRequestsTable extends DbTable{
     function setRequestsOrderItStatus($reference, $orderItStatus, $comment=null){
 
 //         $sql  = " UPDATE ";
-//         $sql .= $_SESSION['Db2Schema'] . "." . $this->tableName ;
+//         $sql .= $GLOBALS['Db2Schema'] . "." . $this->tableName ;
 //         $sql .= " SET ORDERIT_STATUS='" . db2_escape_string($orderItStatus) . "' ";
 //         $sql .= " WHERE REQUEST_REFERENCE ='" . db2_escape_string($reference) . "' " ;
 
@@ -2099,7 +2099,7 @@ class assetRequestsTable extends DbTable{
             return $this->preparedSetRequestOrderItStatus;
         }
         $sql  = " UPDATE ";
-        $sql .= $_SESSION['Db2Schema'] . "." . $this->tableName ;
+        $sql .= $GLOBALS['Db2Schema'] . "." . $this->tableName ;
         $sql .= " SET ORDERIT_STATUS=? ";
         $sql .= " WHERE REQUEST_REFERENCE =? " ;
 
@@ -2121,7 +2121,7 @@ class assetRequestsTable extends DbTable{
             return $this->preparedUpdateComment;
         }
 
-        $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS ;
+        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS ;
         $sql.= " SET COMMENT = ? ";
         $sql.= " WHERE REQUEST_REFERENCE=? ";
 
@@ -2141,7 +2141,7 @@ class assetRequestsTable extends DbTable{
             return $this->preparedOrderitResponded;
         }
 
-        $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS ;
+        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS ;
         $sql.= " SET ORDERIT_RESPONDED = ? ";
         $sql.= " WHERE REQUEST_REFERENCE=? ";
 
@@ -2162,7 +2162,7 @@ class assetRequestsTable extends DbTable{
             return $this->preparedGetComment;
         }
 
-        $sql = " SELECT COMMENT FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " WHERE REQUEST_REFERENCE=? ";
+        $sql = " SELECT COMMENT FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " WHERE REQUEST_REFERENCE=? ";
 
         $rs = db2_prepare($_SESSION['conn'], $sql);
         if(!$rs){
@@ -2209,7 +2209,7 @@ class assetRequestsTable extends DbTable{
 
         if(!empty($comment)){
             $now = new \DateTime();
-            $sql = " SELECT COMMENT FROM " . $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' ";
+            $sql = " SELECT COMMENT FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' ";
             $rs = db2_exec($_SESSION['conn'], $sql);
 
             if(!$rs){
@@ -2248,7 +2248,7 @@ class assetRequestsTable extends DbTable{
         }
 
         $sql  = " UPDATE ";
-        $sql .= $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS;
+        $sql .= $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS;
         $sql .= " SET STATUS='" . db2_escape_string($status) . "' ";
         $sql .= !empty($orderItStatus) ? " ,ORDERIT_STATUS='" . db2_escape_string($orderItStatus) . "' " : null ;
         $sql .= !empty($newComment) ? ", COMMENT='" . db2_escape_string(substr($newComment,0,500)) . "' " : null;
@@ -2272,7 +2272,7 @@ class assetRequestsTable extends DbTable{
         // IF we're approving it - AND - it's NOT user raised - then set the ORDERIT_STATUS to 'Yet to be raised'
         if(trim($status)==assetRequestRecord::STATUS_APPROVED ){
             $sql  = " UPDATE ";
-            $sql .= $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS;
+            $sql .= $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS;
             $sql .= " SET ORDERIT_STATUS = '" . assetRequestRecord::STATUS_ORDERIT_YET . "' " ;
             $sql .= " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' AND USER_CREATED='" . assetRequestRecord::CREATED_PMO . "' ";
 
@@ -2294,7 +2294,7 @@ class assetRequestsTable extends DbTable{
     function prepareUpdateUidsStmt(){
 
         if(empty($this->preparedUpdateUidsStmt)){
-            $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+            $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
             $sql .= " SET PRIMARY_UID = ? , SECONDARY_UID = ? ";
             $sql .= " WHERE REQUEST_REFERENCE = ? ";
 
@@ -2328,7 +2328,7 @@ class assetRequestsTable extends DbTable{
 
     function setToProvisionedStatus($reference){
         $sql  = " UPDATE ";
-        $sql .= $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS;
+        $sql .= $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS;
         $sql .= " SET STATUS='" . db2_escape_string(assetRequestRecord::STATUS_PROVISIONED) . "' ";
         $sql .= " , ORDERIT_STATUS='" . db2_escape_String(assetRequestRecord::STATUS_ORDERIT_APPROVED)  . "' ";
         $sql .= " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' ";
@@ -2351,7 +2351,7 @@ class assetRequestsTable extends DbTable{
         $justification = trim(substr($justification, 0, 500));
 
         $sql = " UPDATE ";
-        $sql.= $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql.= $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql.= " SET BUSINESS_JUSTIFICATION='" . db2_escape_string($justification) . "' ";
         $sql.= " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' ";
 
@@ -2368,7 +2368,7 @@ class assetRequestsTable extends DbTable{
     function saveAmendedOit($reference, $orderIt){
 
         $sql = " UPDATE ";
-        $sql.= $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql.= $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql.= " SET ORDERIT_NUMBER='" . db2_escape_string($orderIt) . "' ";
         $sql.= " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' ";
 
@@ -2485,10 +2485,10 @@ class assetRequestsTable extends DbTable{
         $listOfAssetRefs = implode("','", $assetReferences);
 
         $sql  = "select ar.request_reference, ar.asset_title, ARL.asset_prerequisite, AR2.REQUEST_REFERENCE as pre_req ";
-        $sql .= "from " . $_SESSION['Db2Schema'] . "." . \vbac\allTables::$ASSET_REQUESTS . " as AR  ";
-        $sql .= "left join " . $_SESSION['Db2Schema'] .  "." . \vbac\allTables::$REQUESTABLE_ASSET_LIST . " as ARL  ";
+        $sql .= "from " . $GLOBALS['Db2Schema'] . "." . \vbac\allTables::$ASSET_REQUESTS . " as AR  ";
+        $sql .= "left join " . $GLOBALS['Db2Schema'] .  "." . \vbac\allTables::$REQUESTABLE_ASSET_LIST . " as ARL  ";
         $sql .= "on AR.ASSET_TITLE = ARL.ASSET_TITLE  ";
-        $sql .= "left join " . $_SESSION['Db2Schema'] . "." . \vbac\allTables::$ASSET_REQUESTS . " as AR2  ";
+        $sql .= "left join " . $GLOBALS['Db2Schema'] . "." . \vbac\allTables::$ASSET_REQUESTS . " as AR2  ";
         $sql .= "on ARL.ASSET_PREREQUISITE = AR2.ASSET_TITLE  ";
         $sql .= "where AR.request_reference in ('" . $listOfAssetRefs . "')  ";
         $sql .= "and AR2.request_reference in ('" . $listOfAssetRefs  . "')  ";
@@ -2504,7 +2504,7 @@ class assetRequestsTable extends DbTable{
             }
 
             while (($row=db2_fetch_assoc($rs1))==true) {
-                $sql = " update " . $_SESSION['Db2Schema'] . "." . $this->tableName ;
+                $sql = " update " . $GLOBALS['Db2Schema'] . "." . $this->tableName ;
                 $sql .= " SET PRE_REQ_REQUEST='" . db2_escape_string(trim($row['PRE_REQ'])) . "' ";
                 $sql .= " WHERE REQUEST_REFERENCE='" . db2_escape_string(trim($row['REQUEST_REFERENCE']))  . "' " ;
 
@@ -2538,7 +2538,7 @@ class assetRequestsTable extends DbTable{
 
 
         $sql  = " UPDATE ";
-        $sql .= $_SESSION['Db2Schema'] . "." . $this->tableName ;
+        $sql .= $GLOBALS['Db2Schema'] . "." . $this->tableName ;
         $sql .= " SET STATUS='" . assetRequestRecord::STATUS_APPROVED . "' ";
         $sql .= ", ORDERIT_VARB_REF = null ";
         $sql .= ", ORDERIT_STATUS = '" . assetRequestRecord::STATUS_ORDERIT_YET . "' ";
@@ -2585,8 +2585,8 @@ class assetRequestsTable extends DbTable{
      static function notifyChangeOfStatus($reference, $status, $comment=null){
 
          $sql = " SELECT P.EMAIL_ADDRESS, REQUESTOR_EMAIL, ASSET_TITLE, ORDERIT_VARB_REF, ORDERIT_NUMBER, STATUS, ORDERIT_STATUS, STATUS ";
-         $sql.= " FROM ". $_SESSION['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " AS AR ";
-         $sql.= " LEFT JOIN ". $_SESSION['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
+         $sql.= " FROM ". $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " AS AR ";
+         $sql.= " LEFT JOIN ". $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
          $sql.= " ON P.CNUM = AR.CNUM ";
          $sql.= " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' " ;
 
@@ -2617,7 +2617,7 @@ class assetRequestsTable extends DbTable{
 
      function getOpenRequestsForCnum($cnum){
          $sql = " select distinct Asset_title ";
-         $sql.= " from " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+         $sql.= " from " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
          $sql.= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
          $sql.= " AND ORDERIT_STATUS in ('" . assetRequestRecord::STATUS_ORDERIT_YET . "','" . assetRequestRecord::STATUS_ORDERIT_RAISED . "') ";
          $sql.= " AND ASSET_TITLE NOT LIKE 'Other%' ";

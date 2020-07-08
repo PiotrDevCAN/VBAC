@@ -19,7 +19,7 @@ static function logEntry($entry,$pwd=null){
 
 	$userid = $_SESSION['ssoEmail'];
 
-	$sql = " INSERT INTO " . $_SESSION['Db2Schema'] . "." . AllItdqTables::$LOG . " ( LOG_ENTRY,LASTUPDATER) ";
+	$sql = " INSERT INTO " . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$LOG . " ( LOG_ENTRY,LASTUPDATER) ";
 	$db2Entry = db2_escape_string($entry);
 	$db2Entry =  str_replace($pwd,'********',$db2Entry);
 	if($pwd!=null){
@@ -37,7 +37,7 @@ static function logEntry($entry,$pwd=null){
 }
 
 	static function deleteLogRecords($keepDays=1){
-		$sql = "DELETE FROM " . $_SESSION['Db2Schema'] . "." . AllItdqTables::$LOG . " WHERE LASTUPDATED < (CURRENT TIMESTAMP - $keepDays DAYS) ";
+		$sql = "DELETE FROM " . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$LOG . " WHERE LASTUPDATED < (CURRENT TIMESTAMP - $keepDays DAYS) ";
 		$rs = DB2_EXEC($_SESSION['conn'],$sql);
 		if(!$rs)
 			{

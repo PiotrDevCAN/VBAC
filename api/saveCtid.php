@@ -74,7 +74,7 @@ if( !$ctidValidated or !$cnumValidated ){
 
 // Save here.
 
-$sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON ;
+$sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON ;
 $sql.= " SET ";
 $sql.= isset($_REQUEST['CT_ID']) ? " CT_ID='" . db2_escape_string(trim($_REQUEST['CT_ID'])) . "' " : 'invalid sql no ctid' ;
 $sql.= " WHERE CNUM='" . db2_escape_string($_REQUEST['CNUM']) . "' ";

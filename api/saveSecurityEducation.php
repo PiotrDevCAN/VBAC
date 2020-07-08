@@ -65,7 +65,7 @@ if( !$securityEducationSupplied or !$validSecEdLength or  !$cnumValidated ){
 
 // Save here.
 
-$sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . allTables::$PERSON ;
+$sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON ;
 $sql.= " SET ";
 $sql.= " SECURITY_EDUCATION='" . db2_escape_string(trim($_REQUEST['SECURITY_EDUCATION'])) . "' " ;
 $sql.= " WHERE CNUM='" . db2_escape_string($_REQUEST['CNUM']) . "' ";

@@ -473,7 +473,7 @@ class DbTable
     function getDBColumns()
     {
         Trace::traceComment(null, __METHOD__);
-        $rs = db2_columns($_SESSION['conn'], null, $_SESSION['Db2Schema'], strtoupper($this->tableName), '%');
+        $rs = db2_columns($_SESSION['conn'], null, $GLOBALS['Db2Schema'], strtoupper($this->tableName), '%');
         while ($row = db2_fetch_assoc($rs)) {
             Trace::traceVariable($row, __METHOD__, __LINE__);
             $this->columns[trim($row['COLUMN_NAME'])] = $row;
@@ -484,7 +484,7 @@ class DbTable
     function getSpecialColumns()
     {
         Trace::traceComment(null, __METHOD__);
-        $rs = db2_special_columns($_SESSION['conn'], null, $_SESSION['Db2Schema'], $this->tableName, 0);
+        $rs = db2_special_columns($_SESSION['conn'], null, $GLOBALS['Db2Schema'], $this->tableName, 0);
         while ($row = db2_fetch_assoc($rs)) {
             $this->special_columns[trim($row['COLUMN_NAME'])] = $row;
         }
@@ -525,7 +525,7 @@ class DbTable
     function getPrimaryKeys()
     {
         Trace::traceComment(null, __METHOD__);
-        $rs = db2_primary_keys($_SESSION['conn'], null, $_SESSION['Db2Schema'], $this->tableName);
+        $rs = db2_primary_keys($_SESSION['conn'], null, $GLOBALS['Db2Schema'], $this->tableName);
         while ($row = db2_fetch_assoc($rs)) {
             // print_r($row);
             $this->primary_keys[trim($row['COLUMN_NAME'])] = $row;
@@ -753,7 +753,7 @@ class DbTable
      */
     function clear($announce = true)
     {
-        $sql = " DELETE FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql = " DELETE FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         Trace::traceVariable($sql, __METHOD__);
         $rs = DB2_EXEC($_SESSION['conn'], $sql);
         if (! $rs) {
@@ -763,7 +763,7 @@ class DbTable
             exit("Error in: " . __METHOD__ . " running: " . $sql);
         }
         if ($announce) {
-            echo "<BR/><B>Entire contents of " . $_SESSION['Db2Schema'] . "." . $this->tableName . " deleted.</B>";
+            echo "<BR/><B>Entire contents of " . $GLOBALS['Db2Schema'] . "." . $this->tableName . " deleted.</B>";
         }
     }
 
@@ -779,7 +779,7 @@ class DbTable
     function deleteData($predicate = null, $announce = true)
     {
         Trace::traceVariable($predicate, __METHOD__);
-        $sql = " DELETE FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql = " DELETE FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $comment = "Contents of ";
         if ($predicate != null) {
             $sql .= " WHERE $predicate ";
@@ -787,7 +787,7 @@ class DbTable
             $comment = "Record where " . $safePredicate . " in ";
         }
         if ($announce) {
-            echo "<BR/><B>$comment " . $_SESSION['Db2Schema'] . "." . $this->tableName . " about to be deleted.</B>";
+            echo "<BR/><B>$comment " . $GLOBALS['Db2Schema'] . "." . $this->tableName . " about to be deleted.</B>";
         }
         Trace::traceVariable($sql, __METHOD__);
         $rs = $this->execute($sql);
@@ -796,14 +796,14 @@ class DbTable
             echo "<BR/>SQLError:" . $this->lastDb2StmtErrorMsg . "<BR/>";
             exit("Error in: " . __METHOD__ . " running: " . str_replace($this->pwd, "******", $sql));
         } elseif ($announce) {
-            echo "<BR/><B>$comment " . $_SESSION['Db2Schema'] . "." . $this->tableName . " deleted.</B>";
+            echo "<BR/><B>$comment " . $GLOBALS['Db2Schema'] . "." . $this->tableName . " deleted.</B>";
         }
     }
 
     function deleteRecord(DbRecord $record)
     {
         Trace::traceComment(null, __METHOD__, __LINE__);
-        $sql = " Delete FROM " . $_SESSION['Db2Schema'] . ".$this->tableName WHERE " . $this->buildKeyPredicate($record);
+        $sql = " Delete FROM " . $GLOBALS['Db2Schema'] . ".$this->tableName WHERE " . $this->buildKeyPredicate($record);
         Trace::traceVariable($sql, __METHOD__, __LINE__);
         $rs = $this->execute($sql);
         if (! $rs) {
@@ -820,13 +820,13 @@ class DbTable
     function refresh($time = 180)
     {
         set_time_limit($time); // Can take a while
-        echo "<BR/><B>About to refresh :" . $_SESSION['Db2Schema'] . "." . $this->tableName . "</B>";
+        echo "<BR/><B>About to refresh :" . $GLOBALS['Db2Schema'] . "." . $this->tableName . "</B>";
         $refreshStart = microtime(true);
-        $rs = $this->execute(" REFRESH TABLE " . $_SESSION['Db2Schema'] . "." . $this->tableName);
+        $rs = $this->execute(" REFRESH TABLE " . $GLOBALS['Db2Schema'] . "." . $this->tableName);
         $refreshEnded = microtime(true);
         $refreshElapsed = ($refreshEnded - $refreshStart);
         Trace::traceComment("Refresh took " . $refreshElapsed, __METHOD__, __LINE__);
-        echo "<BR/><B>Contents of " . $_SESSION['Db2Schema'] . "." . $this->tableName . " have been Refreshed.</B>";
+        echo "<BR/><B>Contents of " . $GLOBALS['Db2Schema'] . "." . $this->tableName . " have been Refreshed.</B>";
     }
 
     /**
@@ -879,7 +879,7 @@ class DbTable
     function prepareInsert(&$insertArray = null)
     {
         Trace::traceVariable($insertArray, __METHOD__, __LINE__);
-        $insert = " INSERT INTO  " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $insert = " INSERT INTO  " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $colNames = " (";
         $values = " (";
         foreach ($this->columns as $key => $properties) {
@@ -1021,7 +1021,7 @@ class DbTable
         $updateArray = $record->getColumns($populatedColumns, true, $nullColumns, $db2);
         Trace::traceVariable($updateArray, __METHOD__, __LINE__);
         $values = " SET";
-        $sql = " UPDATE " . $_SESSION['Db2Schema'] . ".$this->tableName ";
+        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . ".$this->tableName ";
 
         foreach ($this->columns as $key => $properties) {
             /*
@@ -1139,7 +1139,7 @@ class DbTable
 
     function prepareSelect()
     {
-        // $select = " SELECT " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        // $select = " SELECT " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         // $colNames = " ";
         // foreach ( $this->columns as $key => $properties ) {
         // if ($properties ['DATA_TYPE'] == 98) {
@@ -1148,10 +1148,10 @@ class DbTable
         // $values .= ", ? ";
         // }
         // }
-        // $sql = str_replace ( "SELECT ,","SELECT ", "SELECT" . $colNames . " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName );
+        // $sql = str_replace ( "SELECT ,","SELECT ", "SELECT" . $colNames . " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName );
         // echo "<BR/>" . __METHOD__ . __LINE__ . "<BR/>" . $sql;
         //
-        // // $sql = " SELECT DECRYPT_CHAR((CHAR)?,'$this->pwd') FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName ;
+        // // $sql = " SELECT DECRYPT_CHAR((CHAR)?,'$this->pwd') FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName ;
         //
         // $this->preparedSelect = db2_prepare ( $_SESSION ['conn'], $sql );
         // if (! $preparedStmt) {
@@ -1192,7 +1192,7 @@ class DbTable
             }
         }
         $select .= $additionColumns;
-        $select .= " FROM  " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $select .= " FROM  " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         if ($tableRef != null) {
             $select .= " AS $tableRef";
         }
@@ -1279,7 +1279,7 @@ class DbTable
     function getWithPredicate($predicate)
     {
         Trace::traceVariable($predicate, __METHOD__);
-        $sql = "SELECT * FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName . " WHERE " . $predicate;
+        $sql = "SELECT * FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName . " WHERE " . $predicate;
         Trace::traceVariable($sql, __METHOD__);
         $resultSet = $this->execute($sql);
         if ($resultSet) {
@@ -1605,7 +1605,7 @@ class DbTable
     function existsInDb(DbRecord $record)
     {
         Trace::traceComment(null, __METHOD__, __LINE__);
-        $sql = " SELECT count(*) as RECORDS FROM " . $_SESSION['Db2Schema'] . ".$this->tableName WHERE " . $this->buildKeyPredicate($record);
+        $sql = " SELECT count(*) as RECORDS FROM " . $GLOBALS['Db2Schema'] . ".$this->tableName WHERE " . $this->buildKeyPredicate($record);
         Trace::traceVariable($sql, __METHOD__, __LINE__);
         $rs = $this->execute($sql);
         if (! $rs) {
@@ -1629,7 +1629,7 @@ class DbTable
     function checkExists($predicate)
     {
         Trace::traceComment(null, __METHOD__, __LINE__);
-        $sql = " SELECT count(*) as RECORDS FROM " . $_SESSION['Db2Schema'] . ".$this->tableName WHERE " . $predicate;
+        $sql = " SELECT count(*) as RECORDS FROM " . $GLOBALS['Db2Schema'] . ".$this->tableName WHERE " . $predicate;
         Trace::traceVariable($sql, __METHOD__, __LINE__);
         $rs = $this->execute($sql);
         if (! $rs) {
@@ -1656,7 +1656,7 @@ class DbTable
     function occursInDb($predicate)
     {
         Trace::traceComment(null, __METHOD__, __LINE__);
-        $sql = " SELECT count(*) as RECORDS FROM " . $_SESSION['Db2Schema'] . ".$this->tableName WHERE " . $predicate;
+        $sql = " SELECT count(*) as RECORDS FROM " . $GLOBALS['Db2Schema'] . ".$this->tableName WHERE " . $predicate;
         Trace::traceVariable($sql, __METHOD__, __LINE__);
         $rs = $this->execute($sql);
         if (! $rs) {
@@ -1801,7 +1801,7 @@ class DbTable
     function timeLastLoaded($tableName = null)
     {
         $tableName = empty($tableName) ? $this->tableName : $tableName;
-        $sql = " Select MAX(TIMESTAMP) as TIMESTAMP from " . $_SESSION['Db2Schema'] . "." . AllItdqTables::$LOAD_LOG;
+        $sql = " Select MAX(TIMESTAMP) as TIMESTAMP from " . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$LOAD_LOG;
         $sql .= " WHERE TABLENAME='" . $tableName . "' ";
         $sql .= " GROUP BY TABLENAME ";
 
@@ -1938,7 +1938,7 @@ class DbTable
         $userid = isset($_SESSION['ssoEmail']) ? $_SESSION['ssoEmail'] : 'userNotDefined';
         $elapsed = isset($_SESSION['tracePageOpenTime']) ? microtime(true) - $_SESSION['tracePageOpenTime'] : null;
 
-        $sql = " INSERT INTO " . $_SESSION['Db2Schema'] . "." . AllItdqTables::$DB2_ERRORS . " ( USERID, PAGE, DB2_ERROR, DB2_MESSAGE, BACKTRACE, REQUEST ) ";
+        $sql = " INSERT INTO " . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$DB2_ERRORS . " ( USERID, PAGE, DB2_ERROR, DB2_MESSAGE, BACKTRACE, REQUEST ) ";
 
         ob_start();
         echo "<pre>";
@@ -1965,7 +1965,7 @@ class DbTable
 
         if (isset($_SESSION['phoneHome']) && class_exists('Email')) {
             $to = $_SESSION['phoneHome'];
-            $subject = $_SESSION['Db2Schema'] . " Bug : User: $userid Page:" . $_SERVER['PHP_SELF'];
+            $subject = $GLOBALS['Db2Schema'] . " Bug : User: $userid Page:" . $_SERVER['PHP_SELF'];
             $summary = "<BR/>Page:" . $_SERVER['PHP_SELF'] . "<BR/>DB2 Error:<B>" . db2_stmt_error() . "</B><BR/>Db2 Error Message<B>" . db2_stmt_errormsg() . "</B>";
             $body = $summary . "<BR/>$backtrace<HR/>$request<HR/>";
             Email::send_mail($to, null, $subject, $body, null, false);
@@ -1996,7 +1996,7 @@ class DbTable
             @ob_end_clean();
 
             $to = $_SESSION['phoneHome'];
-            $subject = $_SESSION['Db2Schema'] . " Bug : User: $userid Page:" . $_SERVER['PHP_SELF'];
+            $subject = $GLOBALS['Db2Schema'] . " Bug : User: $userid Page:" . $_SERVER['PHP_SELF'];
             $summary = "<BR/>Page:" . $_SERVER['PHP_SELF'] . "<BR/>Non DB2 Error:<B>" . $message . "</B><BR/> Class:<B>" . $class . "</B><B> Method:</B>$method</B><B> Line:</B>$line";
             $body = $summary . "<BR/>$backtrace<HR/>$request<HR/>";
             Email::send_mail($to, null, $subject, $body, null, false);
@@ -2006,7 +2006,7 @@ class DbTable
 
     function resetIdentity($columnName, $initialValue = 1)
     {
-        $sql = " ALTER TABLE " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql = " ALTER TABLE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " ALTER COLUMN $columnName RESTART WITH $initialValue  ";
         return $this->execute($sql);
     }
@@ -2079,7 +2079,7 @@ class DbTable
     {
         $column = strtoupper($column);
         $sql = " SELECT $column ";
-        $sql .= " FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName;
+        $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
 
         $rs = DB2_EXEC($_SESSION['conn'], $sql);
         if (! $rs) {

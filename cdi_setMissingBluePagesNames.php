@@ -6,7 +6,7 @@ use itdq\Loader;
 use vbac\allTables;
 use itdq\JavaScript;
 
-$sql = " SELECT CNUM, FIRST_NAME FROM " . $_SESSION['Db2Schema'] . ".PERSON WHERE FIRST_NAME is null and REVALIDATION_STATUS = 'found' ";
+$sql = " SELECT CNUM, FIRST_NAME FROM " . $GLOBALS['Db2Schema'] . ".PERSON WHERE FIRST_NAME is null and REVALIDATION_STATUS = 'found' ";
 $rs = db2_exec($_SESSION['conn'], $sql);
 $firstNames = array();
 while(($row=db2_fetch_assoc($rs))==true){

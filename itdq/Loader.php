@@ -116,7 +116,7 @@ class Loader
     function buildIxSQL($value, $key, $table)
     {
         $sql = "select distinct $value,$key ";
-        $sql .= " from " . $_SESSION['Db2Schema'] . ".$table ";
+        $sql .= " from " . $GLOBALS['Db2Schema'] . ".$table ";
         if ($this->notNull) {
             $sql .= " where $value is not null and $key is not null";
         }
@@ -127,7 +127,7 @@ class Loader
     function buildSQL($column, $table)
     {
         $sql = "select distinct $column ";
-        $sql .= " from " . $_SESSION['Db2Schema'] . ".$table ";
+        $sql .= " from " . $GLOBALS['Db2Schema'] . ".$table ";
         if ($this->notNull) {
             $sql .= " where $column is not null";
         }
@@ -283,7 +283,7 @@ class Loader
     private function buildQuadSQL($first, $second, $third, $forth, $table)
     {
         $sql = "select distinct $first,$second,$third,$forth ";
-        $sql .= " from " . $_SESSION['Db2Schema'] . ".$table ";
+        $sql .= " from " . $GLOBALS['Db2Schema'] . ".$table ";
         $sql .= " where $first is not null and $second is not null and $third is not null and $forth is not null ";
         return $sql;
     }
@@ -300,7 +300,7 @@ class Loader
     private function buildTriSQL($first, $second, $third, $table)
     {
         $sql = "select distinct $first,$second,$third ";
-        $sql .= " from " . $_SESSION['Db2Schema'] . ".$table ";
+        $sql .= " from " . $GLOBALS['Db2Schema'] . ".$table ";
         $sql .= " where $first is not null and $second is not null and $third is not null";
         return $sql;
     }

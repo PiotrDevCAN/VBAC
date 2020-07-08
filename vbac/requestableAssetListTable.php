@@ -18,7 +18,7 @@ class requestableAssetListTable extends DbTable {
 
         $predicate = $excludeDeleted ? " AND LISTING_ENTRY_REMOVED is null " : null;
 
-        $sql  = " SELECT * FROM " . $_SESSION['Db2Schema'] . "." . $this->tableName ;
+        $sql  = " SELECT * FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName ;
         $sql .= " WHERE 1=1 " . $predicate;
         $sql .= " ORDER BY ASSET_TITLE ";
 
@@ -99,7 +99,7 @@ class requestableAssetListTable extends DbTable {
     }
 
     static function flagAsDeleted($assetTitle,$deletedBy){
-        $sql = " UPDATE " . $_SESSION['Db2Schema'] . "." . allTables::$REQUESTABLE_ASSET_LIST;
+        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . allTables::$REQUESTABLE_ASSET_LIST;
         $sql .= " SET LISTING_ENTRY_REMOVED= current timestamp, LISTING_ENTRY_REMOVED_BY='" . db2_escape_string($deletedBy) . "' ";
         $sql .= " WHERE ASSET_TITLE='" . db2_escape_string($assetTitle) . "' ";
 
