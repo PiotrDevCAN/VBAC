@@ -20,7 +20,7 @@ $sql.= " ORDER BY 1 asc ";
 
 // echo $sql;
 
-$rs = db2_exec($_SESSION['conn'], $sql);
+$rs = db2_exec($GLOBALS['conn'], $sql);
 
 ?>
 <h2>PES Status Change Details Report</h2>

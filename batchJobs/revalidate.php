@@ -21,7 +21,7 @@ $slack = new slack();
 $loader = new Loader();
 
 $personTable->flagPreboarders();
-db2_commit($_SESSION['conn']);
+db2_commit($GLOBALS['conn']);
 
 $offboarders = " ( REVALIDATION_STATUS like  'offboard%') ";
 $allOffboarders = $loader->load('CNUM',allTables::$PERSON, $offboarders ); //
@@ -88,4 +88,4 @@ foreach ($allNonLeavers as $cnum){
 AuditTable::audit("Revalidation completed.",AuditTable::RECORD_TYPE_REVALIDATION);
 $response = $slack->slackApiPostMessage(slack::CHANNEL_ID_SM_CDI_AUDIT,$_ENV['environment'] . ":Revalidation completed.");
 
-db2_commit($_SESSION['conn']);
+db2_commit($GLOBALS['conn']);

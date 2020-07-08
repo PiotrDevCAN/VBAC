@@ -12,7 +12,7 @@ class EmailLogTable  extends DbTable {
 
         $sql  = " SELECT * FROM " . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$EMAIL_LOG;
         $sql .= " WHERE DATE(SENT_TIMESTAMP) >= DATE('" . db2_escape_string($startDate) . "') and DATE(SENT_TIMESTAMP) <= DATE('" . db2_escape_string($endDate) . "') ";
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);

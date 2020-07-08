@@ -24,7 +24,7 @@ class odcAssetRemovalTable extends DbTable {
         $sql.= " AND O.CNUM is not null ";        
         $sql.= " GROUP BY WORK_STREAM ";
         
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
         
         if(!$rs){
             echo db2_stmt_error();
@@ -53,7 +53,7 @@ class odcAssetRemovalTable extends DbTable {
         
 
         
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
         
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);

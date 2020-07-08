@@ -32,7 +32,7 @@ $sql.= " AND trim(NOTES_ID) != ''  ";
 $sql.=  $predicate;
 $sql.= " ORDER BY P.NOTES_ID ";
 
-$rs = db2_exec($_SESSION['conn'], $sql);
+$rs = db2_exec($GLOBALS['conn'], $sql);
 $employees = array();
 
 if($rs){

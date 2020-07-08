@@ -61,4 +61,4 @@ pesEmail::notifyPesTeamOfLeavers($allpotentialLeavers);
 AuditTable::audit("Revalidation re-check completed.",AuditTable::RECORD_TYPE_REVALIDATION);
 $response = $slack->slackApiPostMessage(slack::CHANNEL_ID_SM_CDI_AUDIT,$_ENV['environment'] . ":Revalidation re-check completed.", slack::CHANNEL_SM_CDI_AUDIT);
 error_log($response);
-db2_commit($_SESSION['conn']);
+db2_commit($GLOBALS['conn']);

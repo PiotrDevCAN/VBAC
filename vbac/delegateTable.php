@@ -14,7 +14,7 @@ class delegateTable extends DbTable {
         $sql.= ",'" . db2_escape_string($delegateCnum) . "','" . db2_escape_string($delegateEmail) . "'";
         $sql.= ")";
 
-        $rs = db2_exec($_SESSION['conn'],$sql);
+        $rs = db2_exec($GLOBALS['conn'],$sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -29,7 +29,7 @@ class delegateTable extends DbTable {
         $sql.= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
         $sql.= " AND DELEGATE_CNUM='" . db2_escape_string($delegateCnum) . "' ";
 
-        $rs = db2_exec($_SESSION['conn'],$sql);
+        $rs = db2_exec($GLOBALS['conn'],$sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -47,7 +47,7 @@ class delegateTable extends DbTable {
         }
 
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -86,7 +86,7 @@ class delegateTable extends DbTable {
         $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$DELEGATE ;
         $sql.= " WHERE CNUM='" . db2_escape_string(trim($fmCnum)) . "' ";
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -108,7 +108,7 @@ class delegateTable extends DbTable {
         $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$DELEGATE ;
         $sql.= " WHERE EMAIL_ADDRESS='" . db2_escape_string(trim($fmEmail)) . "' ";
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -129,7 +129,7 @@ class delegateTable extends DbTable {
         $sql = " SELECT distinct CNUM, DELEGATE_EMAIL ";
         $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$DELEGATE ;
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);

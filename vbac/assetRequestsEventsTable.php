@@ -40,7 +40,7 @@ class assetRequestsEventsTable extends DbTable{
         $sql.= " values ";
         $sql.= "( ?, ?, current timestamp, '$initator') ";
 
-        $rs = db2_prepare($_SESSION['conn'], $sql);
+        $rs = db2_prepare($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -71,7 +71,7 @@ class assetRequestsEventsTable extends DbTable{
         $sql.= " values ";
         $sql.= "( ?, ?, ?, '$initator') ";
         
-        $preparedStmt = db2_prepare($_SESSION['conn'], $sql);   
+        $preparedStmt = db2_prepare($GLOBALS['conn'], $sql);   
         $data = array($requestReference, $event,$date);
         $rs = db2_execute($preparedStmt,$data);
         if(!$rs){

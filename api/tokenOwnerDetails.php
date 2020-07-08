@@ -45,7 +45,7 @@ $sql.= " FROM ". $GLOBALS['Db2Schema'] . "." . allTables::$PERSON ;
 $sql.= " WHERE  ";
 $sql.= $rsaTokenSupplied ? " RSA_TOKEN = '" . db2_escape_string($_REQUEST['RSA_TOKEN']) . "'  " : null;
 $sql.= $callSignIdSupplied ? " CALLSIGN_ID = '" . db2_escape_string($_REQUEST['CALLSIGN_ID']) . "'  " : null;
-$rs = db2_exec($_SESSION['conn'], $sql);
+$rs = db2_exec($GLOBALS['conn'], $sql);
 
 if(!$rs){
     echo db2_stmt_error();

@@ -10,7 +10,7 @@ $sql.= " FROM VBAC.EMAIL_LOG ";
 $sql.= " WHERE  SUBJECT like 'Reminder%' ";
 //$sql.= " fetch first 30 rows only " ;
 
-$rs = db2_exec($_SESSION['conn'], $sql);
+$rs = db2_exec($GLOBALS['conn'], $sql);
 
 echo "<div class='container'>";
 

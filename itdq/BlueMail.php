@@ -165,7 +165,7 @@ class BlueMail
         $sql.= !empty($bcc) ? " ,? " : null ;
         $sql.= " ); ";
 
-        $preparedStatement = db2_prepare($_SESSION['conn'], $sql);
+        $preparedStatement = db2_prepare($GLOBALS['conn'], $sql);
         $data = array(serialize($to),$subject,$message,$data_json);
 
         !empty($cc)  ? $data[] = serialize($cc) : null;
@@ -177,14 +177,14 @@ class BlueMail
 //         $sql .= " (TO, SUBJECT, MESSAGE, DATA_JSON ) VALUES ( '" . db2_escape_string(serialize($to)) ."','" . db2_escape_string($subject) . "'";
 //         $sql .= " ,'" . db2_escape_string($message) . "','" . db2_escape_string($data_json) . "'); ";
 
-//         $rs = db2_exec($_SESSION['conn'], $sql);
+//         $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs,__CLASS__,__METHOD__,$sql);
             $emailRecordId = false;
         } else {
-            db2_commit($_SESSION['conn']);
-            $emailRecordId = db2_last_insert_id($_SESSION['conn']);
+            db2_commit($GLOBALS['conn']);
+            $emailRecordId = db2_last_insert_id($GLOBALS['conn']);
             self::clearLog();
         }
 
@@ -198,13 +198,13 @@ class BlueMail
         $sql .= " SET RESPONSE = '" . db2_escape_string($result) . "'" ;
         $sql .= " WHERE RECORD_ID= " . db2_escape_string($recordId) . "; ";
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs,__CLASS__,__METHOD__,$sql);
             return false;
         }
-        db2_commit($_SESSION['conn']);
+        db2_commit($GLOBALS['conn']);
         return true;
     }
 
@@ -214,13 +214,13 @@ class BlueMail
         $sql .= " SET LAST_STATUS = '" . db2_escape_string($status) . "', STATUS_TIMESTAMP = CURRENT TIMESTAMP " ;
         $sql .= " WHERE RECORD_ID= " . db2_escape_string($recordId) . "; ";
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs,__CLASS__,__METHOD__,$sql);
             return false;
         }
-        db2_commit($_SESSION['conn']);
+        db2_commit($GLOBALS['conn']);
         return true;
     }
 
@@ -229,13 +229,13 @@ class BlueMail
     {
        $sql  = " DELETE FROM " . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$EMAIL_LOG;
        $sql .= ' WHERE SENT_TIMESTAMP < (CURRENT TIMESTAMP - ' . $retainPeriod . "); ";
-       db2_exec($_SESSION['conn'], $sql);
+       db2_exec($GLOBALS['conn'], $sql);
     }
 
     static function getEmailDetails($recordID){
         $sql  = " SELECT * FROM " . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$EMAIL_LOG;
         $sql .= ' WHERE RECORD_ID = ' . db2_escape_string($recordID);
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);

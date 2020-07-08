@@ -49,7 +49,7 @@ foreach ($allOrderItTypes as $orderItType){
         $sql .= " ON AR.CNUM = P.CNUM ";
         $sql .= " WHERE 1=1 " . $restrictToApproverPredicate;
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __FILE__, __LINE__, $sql);

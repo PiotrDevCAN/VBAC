@@ -448,7 +448,7 @@ class SortableList
 
         Trace::traceVariable($this->sql2, __METHOD__, __LINE__);
 
-        $rs = db2_exec($_SESSION['conn'], $this->sql2, array(
+        $rs = db2_exec($GLOBALS['conn'], $this->sql2, array(
             'cursor' => DB2_SCROLLABLE
         ));
 

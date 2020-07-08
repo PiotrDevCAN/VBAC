@@ -55,4 +55,4 @@ pesEmail::notifyPesTeamOfLeavers($allPeopleToCheck);
 AuditTable::audit("PES Revalidation completed.",AuditTable::RECORD_TYPE_REVALIDATION);
 $slack->sendMessageToChannel("PES Revalidation completed.", slack::CHANNEL_SM_CDI_AUDIT);
 
-db2_commit($_SESSION['conn']);
+db2_commit($GLOBALS['conn']);

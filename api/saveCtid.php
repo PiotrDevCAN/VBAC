@@ -79,7 +79,7 @@ $sql.= " SET ";
 $sql.= isset($_REQUEST['CT_ID']) ? " CT_ID='" . db2_escape_string(trim($_REQUEST['CT_ID'])) . "' " : 'invalid sql no ctid' ;
 $sql.= " WHERE CNUM='" . db2_escape_string($_REQUEST['CNUM']) . "' ";
 
-$rs = db2_exec($_SESSION['conn'], $sql);
+$rs = db2_exec($GLOBALS['conn'], $sql);
 
 if(!$rs){
     echo db2_stmt_error();

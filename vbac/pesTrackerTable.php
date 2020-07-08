@@ -119,7 +119,7 @@ class pesTrackerTable extends DbTable{
 
         AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -471,7 +471,7 @@ class pesTrackerTable extends DbTable{
 
         $this->preparedSelectSQL = $sql;
 
-        $preparedStmt = db2_prepare($_SESSION['conn'], $sql);
+        $preparedStmt = db2_prepare($GLOBALS['conn'], $sql);
 
          if($preparedStmt){
              $this->preparedStageUpdateStmts[strtoupper(db2_escape_string($stage))] = $preparedStmt;
@@ -489,7 +489,7 @@ class pesTrackerTable extends DbTable{
         $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql.= " WHERE CNUM=? ";
 
-        $preparedStmt = db2_prepare($_SESSION['conn'], $sql);
+        $preparedStmt = db2_prepare($GLOBALS['conn'], $sql);
 
         $this->preparedGetProcessingStatusStmt = $preparedStmt ? $preparedStmt : false;
         return $this->preparedGetProcessingStatusStmt;
@@ -506,7 +506,7 @@ class pesTrackerTable extends DbTable{
 
         $this->preparedSelectSQL = $sql;
 
-        $preparedStmt = db2_prepare($_SESSION['conn'], $sql);
+        $preparedStmt = db2_prepare($GLOBALS['conn'], $sql);
 
         if($preparedStmt){
             $this->prepareProcessStatusUpdate = $preparedStmt;
@@ -521,7 +521,7 @@ class pesTrackerTable extends DbTable{
         }
         $sql = " INSERT INTO " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql.= " ( CNUM ) VALUES (?) ";
-        $preparedStmt = db2_prepare($_SESSION['conn'], $sql);
+        $preparedStmt = db2_prepare($GLOBALS['conn'], $sql);
 
         if($preparedStmt){
             $this->preparedTrackerInsert = $preparedStmt;
@@ -543,7 +543,7 @@ class pesTrackerTable extends DbTable{
         $sql.= " ,  PROCESSING_STATUS_CHANGED= current timestamp, DATE_LAST_CHASED = null ";
         $sql.= " WHERE CNUM = ? ";
 
-        $preparedStmt = db2_prepare($_SESSION['conn'], $sql);
+        $preparedStmt = db2_prepare($GLOBALS['conn'], $sql);
 
         if($preparedStmt){
             $this->preparedResetForRecheck = $preparedStmt;
@@ -650,7 +650,7 @@ class pesTrackerTable extends DbTable{
         $sql.= !empty($pesPriority) ? "'" . db2_escape_string($pesPriority) . "' " : " null, ";
         $sql.= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
-        $rs = db2_exec($_SESSION['conn'],$sql);
+        $rs = db2_exec($GLOBALS['conn'],$sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared sql');
@@ -677,7 +677,7 @@ class pesTrackerTable extends DbTable{
         $sql.= !empty($passportSurname) ? "'" . db2_escape_string($passportSurname) . "'  " : " null ";
         $sql.= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
-        $rs = db2_exec($_SESSION['conn'],$sql);
+        $rs = db2_exec($GLOBALS['conn'],$sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared sql');
@@ -699,7 +699,7 @@ class pesTrackerTable extends DbTable{
         $sql.= " SET DATE_LAST_CHASED=DATE('" . db2_escape_string($dateLastChased) . "') ";
         $sql.= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
-        $rs = db2_exec($_SESSION['conn'],$sql);
+        $rs = db2_exec($GLOBALS['conn'],$sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared sql');
@@ -735,7 +735,7 @@ class pesTrackerTable extends DbTable{
         $sql.= " SET COMMENT='" . db2_escape_string($newComment) . "' ";
         $sql.= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -753,7 +753,7 @@ class pesTrackerTable extends DbTable{
         $sql = " SELECT COMMENT FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql.= " WHERE CNUM=? ";
 
-        $preparedStmt = db2_prepare($_SESSION['conn'], $sql);
+        $preparedStmt = db2_prepare($GLOBALS['conn'], $sql);
 
         if($preparedStmt){
             $this->preparedGetPesCommentStmt = $preparedStmt;
@@ -818,19 +818,19 @@ class pesTrackerTable extends DbTable{
         $sql.= " SET CNUM='" . db2_escape_string(trim($toCnum)) . "' ";
         $sql.= " WHERE CNUM='" . db2_escape_string(trim($fromCnum)) . "' ";
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__,__METHOD__, $sql);
             return false;
         }
 
-        db2_commit($_SESSION['conn']);
+        db2_commit($GLOBALS['conn']);
 
 //         $sql = " DELETE FROM  " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
 //         $sql.= " WHERE CNUM='" . db2_escape_string(trim($fromCnum)) . "' ";
 
-//         $rs = db2_exec($_SESSION['conn'], $sql);
+//         $rs = db2_exec($GLOBALS['conn'], $sql);
 
 //         if(!$rs){
 //             DbTable::displayErrorMessage($rs, __CLASS__,__METHOD__, $sql);

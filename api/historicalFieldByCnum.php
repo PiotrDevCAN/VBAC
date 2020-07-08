@@ -15,7 +15,7 @@ $sql.= " FROM " . $_ENV['environment'] . "." . allTables::$PERSON;
 $sql.= " FOR SYSTEM_TIME as of '" . db2_escape_string($_REQUEST['systemTime']) . "' ";
 $sql.= " ORDER BY CNUM ";
 
-$rs = db2_exec($_SESSION['conn'], $sql);
+$rs = db2_exec($GLOBALS['conn'], $sql);
 $data = array();
 
 if($rs){

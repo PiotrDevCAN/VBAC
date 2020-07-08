@@ -63,7 +63,7 @@ class personTable extends DbTable {
         $sql .= " order by CNUM desc ";
         $sql .= " OPTIMIZE FOR 1 ROW ";
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -128,7 +128,7 @@ class personTable extends DbTable {
         $sql.= " on P.FM_CNUM = F.CNUM ";
         $sql.= " WHERE P.RF_FLAG = '1' ";
 
-        $rs = db2_exec($_SESSION['conn'],$sql);
+        $rs = db2_exec($GLOBALS['conn'],$sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -204,7 +204,7 @@ class personTable extends DbTable {
 
         $sql .= " WHERE " . $predicate;
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -230,7 +230,7 @@ class personTable extends DbTable {
         $sql.= " WHERE " . $activePredicate;
 
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -261,7 +261,7 @@ class personTable extends DbTable {
         $sql  = " SELECT * FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName ;
         $sql .= " ORDER BY CNUM ";
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -557,7 +557,7 @@ class personTable extends DbTable {
         $sql .= trim($status)==personRecord::PES_STATUS_INITIATED ? ", PES_REQUESTOR='" . db2_escape_string($requestor) . "' " : null;
         $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
-        $result = db2_exec($_SESSION['conn'], $sql);
+        $result = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$result){
            DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
@@ -583,7 +583,7 @@ class personTable extends DbTable {
         $sql .= " SET PES_LEVEL = '" . db2_escape_string($level)  . "' ";
          $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
-        $result = db2_exec($_SESSION['conn'], $sql);
+        $result = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$result){
             DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
@@ -620,7 +620,7 @@ class personTable extends DbTable {
         $sql .= " SET PES_RECHECK_DATE = date('" .$dateToUseObj->format('Y-m-d') . "') + " . $pesRecheckPeriod ;
         $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
-        $result = db2_exec($_SESSION['conn'], $sql);
+        $result = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$result){
             DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
@@ -630,7 +630,7 @@ class personTable extends DbTable {
         $sql  = " SELECT PES_RECHECK_DATE FROM  " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
-        $res = db2_exec($_SESSION['conn'], $sql);
+        $res = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$res){
             DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
@@ -661,7 +661,7 @@ class personTable extends DbTable {
         $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
         try {
-            $result = db2_exec($_SESSION['conn'], $sql);
+            $result = db2_exec($GLOBALS['conn'], $sql);
         } catch (\Exception $e) {
             var_dump($e);
         }
@@ -690,7 +690,7 @@ class personTable extends DbTable {
         $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
         try {
-            $result = db2_exec($_SESSION['conn'], $sql);
+            $result = db2_exec($GLOBALS['conn'], $sql);
         } catch (\Exception $e) {
             var_dump($e);
         }
@@ -711,7 +711,7 @@ class personTable extends DbTable {
         $sql .= " SET CT_ID='"  . db2_escape_string($ctid) . "' ";
         $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
-        $result = db2_exec($_SESSION['conn'], $sql);
+        $result = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$result){
             DbTable::displayErrorMessage($result, __CLASS__,__METHOD__, $sql);
@@ -727,7 +727,7 @@ class personTable extends DbTable {
         $sql .= " SET FM_MANAGER_FLAG='"  . db2_escape_string($flag) . "' ";
         $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
-        $result = db2_exec($_SESSION['conn'], $sql);
+        $result = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$result){
             DbTable::displayErrorMessage($result, __CLASS__,__METHOD__, $sql);
@@ -743,7 +743,7 @@ class personTable extends DbTable {
         $sql .= " SET CT_ID = null ";
         $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
-        $result = db2_exec($_SESSION['conn'], $sql);
+        $result = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$result){
             DbTable::displayErrorMessage($result, __CLASS__,__METHOD__, $sql);
@@ -761,7 +761,7 @@ class personTable extends DbTable {
         $sql .= $version=='original' ? " SQUAD_NUMBER = null " : " OLD_SQUAD_NUMBER = null";
         $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
-        $result = db2_exec($_SESSION['conn'], $sql);
+        $result = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$result){
             DbTable::displayErrorMessage($result, __CLASS__,__METHOD__, $sql);
@@ -780,7 +780,7 @@ class personTable extends DbTable {
         $sql .= " SET CIO_ALIGNMENT = null ";
         $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
-        $result = db2_exec($_SESSION['conn'], $sql);
+        $result = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$result){
             DbTable::displayErrorMessage($result, __CLASS__,__METHOD__, $sql);
@@ -797,7 +797,7 @@ class personTable extends DbTable {
         $sql .= " SET FM_CNUM='"  . db2_escape_string($toFmCnum) . "' ";
         $sql .= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
-        $result = db2_exec($_SESSION['conn'], $sql);
+        $result = db2_exec($GLOBALS['conn'], $sql);
 
 
         if(!$result){
@@ -821,7 +821,7 @@ class personTable extends DbTable {
         $sql = ' SELECT FM_MANAGER_FLAG FROM "' . $GLOBALS['Db2Schema'] . '".' . allTables::$PERSON;
         $sql .= " WHERE UPPER(EMAIL_ADDRESS) = '" . db2_escape_string(strtoupper(trim($emailAddress))) . "' ";
 
-        $resultSet = db2_exec($_SESSION['conn'], $sql);
+        $resultSet = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$resultSet){
             DbTable::displayErrorMessage($resultSet, __CLASS__, __METHOD__, $sql);
@@ -855,7 +855,7 @@ class personTable extends DbTable {
         $sql = " SELECT CNUM FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE UPPER(EMAIL_ADDRESS) = '" . db2_escape_string(strtoupper(trim($_SESSION['ssoEmail']))) . "' ";
 
-        $resultSet = db2_exec($_SESSION['conn'], $sql);
+        $resultSet = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$resultSet){
             DbTable::displayErrorMessage($resultSet, __CLASS__, __METHOD__, $sql);
@@ -880,7 +880,7 @@ class personTable extends DbTable {
         $sql = " SELECT FM_CNUM FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE UPPER(EMAIL_ADDRESS) = '" . db2_escape_string(strtoupper(trim($_SESSION['ssoEmail']))) . "' ";
 
-        $resultSet = db2_exec($_SESSION['conn'], $sql);
+        $resultSet = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$resultSet){
             DbTable::displayErrorMessage($resultSet, __CLASS__, __METHOD__, $sql);
@@ -910,7 +910,7 @@ class personTable extends DbTable {
         $sql = " SELECT REVALIDATION_STATUS FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE CNUM = '" . db2_escape_string(strtoupper(trim($cnum))) . "' ";
 
-        $resultSet = db2_exec($_SESSION['conn'], $sql);
+        $resultSet = db2_exec($GLOBALS['conn'], $sql);
         if(!$resultSet){
             DbTable::displayErrorMessage($resultSet, __CLASS__, __METHOD__, $sql);
             return false;
@@ -926,7 +926,7 @@ class personTable extends DbTable {
         $sql = " SELECT CNUM FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE UPPER(EMAIL_ADDRESS) = '" . db2_escape_string(strtoupper(trim($emailAddress))) . "' ";
 
-        $resultSet = db2_exec($_SESSION['conn'], $sql);
+        $resultSet = db2_exec($GLOBALS['conn'], $sql);
         if(!$resultSet){
             DbTable::displayErrorMessage($resultSet, __CLASS__, __METHOD__, $sql);
             return false;
@@ -941,7 +941,7 @@ class personTable extends DbTable {
         $sql = " SELECT EMAIL_ADDRESS FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE CNUM = '" . db2_escape_string(strtoupper(trim($cnum))) . "' ";
 
-        $resultSet = db2_exec($_SESSION['conn'], $sql);
+        $resultSet = db2_exec($GLOBALS['conn'], $sql);
         if(!$resultSet){
             DbTable::displayErrorMessage($resultSet, __CLASS__, __METHOD__, $sql);
             return false;
@@ -961,7 +961,7 @@ class personTable extends DbTable {
         $sql.= " WHERE P.CNUM = '" . db2_escape_string(strtoupper(trim($cnum))) . "' ";
 
 
-        $resultSet = db2_exec($_SESSION['conn'], $sql);
+        $resultSet = db2_exec($GLOBALS['conn'], $sql);
         if(!$resultSet){
             DbTable::displayErrorMessage($resultSet, __CLASS__, __METHOD__, $sql);
             return false;
@@ -979,7 +979,7 @@ class personTable extends DbTable {
         $sql = " SELECT CNUM FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE UPPER(NOTES_ID) = '" . db2_escape_string(strtoupper(trim($notesid))) . "' ";
 
-        $resultSet = db2_exec($_SESSION['conn'], $sql);
+        $resultSet = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$resultSet){
             DbTable::displayErrorMessage($resultSet, __CLASS__, __METHOD__, $sql);
@@ -996,7 +996,7 @@ class personTable extends DbTable {
         $sql = " SELECT NOTES_ID FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE CNUM = '" . db2_escape_string(strtoupper(trim($cnum))) . "' ";
 
-        $resultSet = db2_exec($_SESSION['conn'], $sql);
+        $resultSet = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$resultSet){
             DbTable::displayErrorMessage($resultSet, __CLASS__, __METHOD__, $sql);
@@ -1027,7 +1027,7 @@ class personTable extends DbTable {
         $sql .= " WHERE " . $availPreBoPredicate;
         $sql .= " ORDER BY FIRST_NAME, LAST_NAME ";
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if (!$rs){
             DbTable::displayErrorMessage($rs,__CLASS__ , __METHOD__ , $sql);
@@ -1052,7 +1052,7 @@ class personTable extends DbTable {
         $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE CNUM='" . db2_escape_string(trim($cnum)) . "' ";
         $sql .= " OPTIMIZE for 1 row ";
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if (!$rs){
             DbTable::displayErrorMessage($rs,__CLASS__ , __METHOD__ , $sql);
@@ -1068,7 +1068,7 @@ class personTable extends DbTable {
             $sql .= " SET NOTES_ID=?, EMAIL_ADDRESS = ?,  REVALIDATION_STATUS='" . personRecord::REVALIDATED_FOUND . "' , REVALIDATION_DATE_FIELD = current date ";
             $sql .= " WHERE CNUM=? ";
 
-            $this->preparedRevalidationStmt = db2_prepare($_SESSION['conn'], $sql);
+            $this->preparedRevalidationStmt = db2_prepare($GLOBALS['conn'], $sql);
 
             if(!$this->preparedRevalidationStmt){
                 DbTable::displayErrorMessage($this->preparedRevalidationStmt, __CLASS__, __METHOD__, $sql);
@@ -1084,7 +1084,7 @@ class personTable extends DbTable {
             $sql .= " SET PROJECTED_END_DATE = current date ";
             $sql .= " WHERE CNUM=? AND PROJECTED_END_DATE is null ";
 
-            $this->preparedLeaverProjectedEndDateStmt = db2_prepare($_SESSION['conn'], $sql);
+            $this->preparedLeaverProjectedEndDateStmt = db2_prepare($GLOBALS['conn'], $sql);
 
             if(!$this->preparedLeaverProjectedEndDateStmt){
                 DbTable::displayErrorMessage($this->preparedLeaverProjectedEndDateStmt, __CLASS__, __METHOD__, $sql);
@@ -1100,7 +1100,7 @@ class personTable extends DbTable {
             $sql .= " SET REVALIDATION_STATUS='" . personRecord::REVALIDATED_LEAVER . "' , REVALIDATION_DATE_FIELD = current date ";
             $sql .= " WHERE CNUM=? ";
 
-            $this->preparedRevalidationLeaverStmt = db2_prepare($_SESSION['conn'], $sql);
+            $this->preparedRevalidationLeaverStmt = db2_prepare($GLOBALS['conn'], $sql);
 
             if(!$this->preparedRevalidationLeaverStmt){
                 DbTable::displayErrorMessage($this->preparedRevalidationStmt, __CLASS__, __METHOD__, $sql);
@@ -1117,7 +1117,7 @@ class personTable extends DbTable {
             $sql .= " SET REVALIDATION_STATUS='" . personRecord::REVALIDATED_POTENTIAL . "'  "; // Storing the date waa cutting to many history records
             $sql .= " WHERE CNUM=? ";
 
-            $this->preparedRevalidationPotentialLeaverStmt = db2_prepare($_SESSION['conn'], $sql);
+            $this->preparedRevalidationPotentialLeaverStmt = db2_prepare($GLOBALS['conn'], $sql);
 
             if(!$this->preparedRevalidationPotentialLeaverStmt){
                 DbTable::displayErrorMessage($this->preparedRevalidationPotentialLeaverStmt, __CLASS__, __METHOD__, $sql);
@@ -1191,7 +1191,7 @@ class personTable extends DbTable {
         $sql .= " SET REVALIDATION_STATUS='" . personRecord::REVALIDATED_PREBOARDER . "', REVALIDATION_DATE_FIELD = current date ";
         $sql .= " WHERE (CNUM like '%999' or CNUM like '%xxx' or CNUM like '%XXX' )  AND ( REVALIDATION_STATUS is null )";
 
-        $rs = db2_exec($_SESSION['conn'],$sql);
+        $rs = db2_exec($GLOBALS['conn'],$sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -1207,7 +1207,7 @@ class personTable extends DbTable {
             $sql .= " SET REVALIDATION_STATUS= CONCAT(CONCAT(TRIM('" . personRecord::REVALIDATED_OFFBOARDING . "'),':'),REVALIDATION_STATUS),  REVALIDATION_DATE_FIELD = current date ";
             $sql .= " WHERE CNUM = '" . db2_escape_string($cnum) . "'";
 
-            $rs = db2_exec($_SESSION['conn'],$sql);
+            $rs = db2_exec($GLOBALS['conn'],$sql);
 
             if(!$rs){
                 DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -1229,7 +1229,7 @@ class personTable extends DbTable {
             $sql .= " SET REVALIDATION_STATUS=CONCAT(CONCAT('" . personRecord::REVALIDATED_OFFBOARDED . "',':'),SUBSTR(REVALIDATION_STATUS,13)), REVALIDATION_DATE_FIELD = current date, OFFBOARDED_DATE = current date ";
             $sql .= " WHERE CNUM = '" . db2_escape_string($cnum) . "'";
 
-            $rs = db2_exec($_SESSION['conn'],$sql);
+            $rs = db2_exec($GLOBALS['conn'],$sql);
 
             if(!$rs){
                 DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -1250,7 +1250,7 @@ class personTable extends DbTable {
             $sql .= " SET REVALIDATION_STATUS= SUBSTR(REVALIDATION_STATUS,13), REVALIDATION_DATE_FIELD = current date, OFFBOARDED_DATE = null  ";
             $sql .= " WHERE CNUM = '" . db2_escape_string($cnum) . "'";
 
-            $rs = db2_exec($_SESSION['conn'],$sql);
+            $rs = db2_exec($GLOBALS['conn'],$sql);
 
             if(!$rs){
                 DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -1272,7 +1272,7 @@ class personTable extends DbTable {
             $sql .= " SET REVALIDATION_STATUS= TRIM(SUBSTR(REVALIDATION_STATUS,12)), REVALIDATION_DATE_FIELD = current date, OFFBOARDED_DATE = null  ";
             $sql .= " WHERE CNUM = '" . db2_escape_string($cnum) . "'";
 
-            $rs = db2_exec($_SESSION['conn'],$sql);
+            $rs = db2_exec($GLOBALS['conn'],$sql);
 
             if(!$rs){
                 DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -1338,7 +1338,7 @@ class personTable extends DbTable {
             $sql .= " SET LBG_LOCATION=? ";
             $sql .= " WHERE CNUM=?  ";
 
-            $this->preparedUpdateLbgLocationStmt = db2_prepare($_SESSION['conn'], $sql);
+            $this->preparedUpdateLbgLocationStmt = db2_prepare($GLOBALS['conn'], $sql);
 
             if(!$this->preparedUpdateLbgLocationStmt){
                 DbTable::displayErrorMessage($this->preparedRevalidationLeaverStmt, __CLASS__, __METHOD__, $sql);
@@ -1369,7 +1369,7 @@ class personTable extends DbTable {
         if(!empty($cnum)){
             $sql = " SELECT LBG_LOCATION FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
-            $rs = db2_exec($_SESSION['conn'], $sql);
+            $rs = db2_exec($GLOBALS['conn'], $sql);
 
             if(!$rs){
                 DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared statment');
@@ -1380,7 +1380,7 @@ class personTable extends DbTable {
 
             $sql = " SELECT FM_CNUM FROM " .  $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
-            $rs = db2_exec($_SESSION['conn'], $sql);
+            $rs = db2_exec($GLOBALS['conn'], $sql);
 
             if(!$rs){
                 DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared statment');
@@ -1404,7 +1404,7 @@ class personTable extends DbTable {
             $sql .= " SET SECURITY_EDUCATION=? ";
             $sql .= " WHERE CNUM=?  ";
 
-            $this->preparedUpdateSecurityEducationStmt = db2_prepare($_SESSION['conn'], $sql);
+            $this->preparedUpdateSecurityEducationStmt = db2_prepare($GLOBALS['conn'], $sql);
 
             if(!$this->preparedUpdateSecurityEducationStmt){
                 DbTable::displayErrorMessage($this->preparedUpdateSecurityEducationStmt, __CLASS__, __METHOD__, $sql);
@@ -1434,7 +1434,7 @@ class personTable extends DbTable {
         if(!empty($cnum)){
             $sql = " SELECT SECURITY_EDUCATION FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
-            $rs = db2_exec($_SESSION['conn'], $sql);
+            $rs = db2_exec($GLOBALS['conn'], $sql);
 
             if(!$rs){
                 DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared statment');
@@ -1456,7 +1456,7 @@ class personTable extends DbTable {
             $sql .= " WHERE CNUM='" . db2_escape_string(trim($cnum)) . "' ";
 
 
-            $rs = db2_exec($_SESSION['conn'], $sql);
+            $rs = db2_exec($GLOBALS['conn'], $sql);
 
             if(!$rs){
                 DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -1485,7 +1485,7 @@ class personTable extends DbTable {
 //         $sql.= " WHERE 1=1 and  " . $odcActive;
 //         $sql.= " AND O.OWNER_CNUM_ID is not null "; // they have to have access
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -1519,7 +1519,7 @@ class personTable extends DbTable {
         $sql.= !empty($rfEnd) ? ", RF_END=DATE('" . db2_escape_string($rfEnd) . "') " :  null ;
         $sql.= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -1731,7 +1731,7 @@ class personTable extends DbTable {
 
         $this->lastUpdateSql = $sql;
 
-        $rs = db2_exec($_SESSION['conn'],$sql);
+        $rs = db2_exec($GLOBALS['conn'],$sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__ , __METHOD__, $sql);
@@ -1743,7 +1743,7 @@ class personTable extends DbTable {
 
     function linkPreBoarderToIbmer($preboarderCnum, $ibmerCnum){
 
-        db2_autocommit($_SESSION['conn'],DB2_AUTOCOMMIT_OFF);
+        db2_autocommit($GLOBALS['conn'],DB2_AUTOCOMMIT_OFF);
 
         $preBoarder = new personRecord();
         $preBoarder->setFromArray(array('CNUM'=>$preboarderCnum));
@@ -1778,7 +1778,7 @@ class personTable extends DbTable {
         $ibmer->setFromArray($ibmerData);
 
         if(!$this->update($ibmer)){
-            db2_rollback($_SESSION['conn']);
+            db2_rollback($GLOBALS['conn']);
             throw new \Exception("Failed to update IBMer record for CNUM: $ibmerCnum when linking to $preboarderCnum");
             return false;
         }
@@ -1787,7 +1787,7 @@ class personTable extends DbTable {
         $preBoarderData['EMAIL_ADDRESS'] = str_replace('ibm.com', '###.com', strtolower($preBoarderData['EMAIL_ADDRESS']));
         $preBoarder->setFromArray($preBoarderData);
         if(!$this->update($preBoarder)){
-            db2_rollback($_SESSION['conn']);
+            db2_rollback($GLOBALS['conn']);
             throw new \Exception("Failed to update Preboarder record for CNUM: $preboarderCnum when linking to $ibmerCnum");
             return false;
         }
@@ -1795,22 +1795,22 @@ class personTable extends DbTable {
 
         $pesTrackerTable = new pesTrackerTable(allTables::$PES_TRACKER);
         if(!$pesTrackerTable->changeCnum($preboarderCnum,$ibmerCnum)){
-            db2_rollback($_SESSION['conn']);
+            db2_rollback($GLOBALS['conn']);
             throw new \Exception("Failed amending PES TRACKER Table to reflect that pre-boarder($preboarderCnum has been boarded as ($ibmerCnum) ");
             return false;
         }
 
-        db2_commit($_SESSION['conn']);
+        db2_commit($GLOBALS['conn']);
 
-        db2_autocommit($_SESSION['conn'],DB2_AUTOCOMMIT_ON);
+        db2_autocommit($GLOBALS['conn'],DB2_AUTOCOMMIT_ON);
 
     }
 
 
     function notifyRecheckDateApproaching(){
-         $localConnection = $_SESSION['conn']; // So we can keep reading this RS whilst making updates to the TRACKER TABLE.
+         $localConnection = $GLOBALS['conn']; // So we can keep reading this RS whilst making updates to the TRACKER TABLE.
          $pesTrackerTable = new pesTrackerTable(allTables::$PES_TRACKER);
-        include "connect.php"; // get new connection on $_SESSION['conn'];
+        include "connect.php"; // get new connection on $GLOBALS['conn'];
 
         $sql = " SELECT CNUM, NOTES_ID, PES_STATUS, REVALIDATION_STATUS, PES_RECHECK_DATE ";
         $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;

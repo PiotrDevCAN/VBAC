@@ -180,7 +180,7 @@ class DbTable
             $uploadLogTable->saveRecord($uploadLogRecord);
             $this->uploadId = $uploadLogTable->lastId();
             $uploadLogRecord->setId($this->uploadId);
-            $db2CommitState = db2_autocommit($_SESSION['conn'], DB2_AUTOCOMMIT_OFF);
+            $db2CommitState = db2_autocommit($GLOBALS['conn'], DB2_AUTOCOMMIT_OFF);
             echo "<BR/>Log id is " . $this->uploadId;
         }
 
@@ -459,8 +459,8 @@ class DbTable
 
         if ($withUploadLogId) {
             $uploadLogTable->setStatus($this->uploadId, UploadLogRecord::$statusLOADED);
-            db2_commit($_SESSION['conn']);
-            db2_autocommit($_SESSION['conn'], $db2CommitState);
+            db2_commit($GLOBALS['conn']);
+            db2_autocommit($GLOBALS['conn'], $db2CommitState);
             return $this->uploadId;
         } else {
             return TRUE;
@@ -473,7 +473,7 @@ class DbTable
     function getDBColumns()
     {
         Trace::traceComment(null, __METHOD__);
-        $rs = db2_columns($_SESSION['conn'], null, $GLOBALS['Db2Schema'], strtoupper($this->tableName), '%');
+        $rs = db2_columns($GLOBALS['conn'], null, $GLOBALS['Db2Schema'], strtoupper($this->tableName), '%');
         while ($row = db2_fetch_assoc($rs)) {
             Trace::traceVariable($row, __METHOD__, __LINE__);
             $this->columns[trim($row['COLUMN_NAME'])] = $row;
@@ -484,7 +484,7 @@ class DbTable
     function getSpecialColumns()
     {
         Trace::traceComment(null, __METHOD__);
-        $rs = db2_special_columns($_SESSION['conn'], null, $GLOBALS['Db2Schema'], $this->tableName, 0);
+        $rs = db2_special_columns($GLOBALS['conn'], null, $GLOBALS['Db2Schema'], $this->tableName, 0);
         while ($row = db2_fetch_assoc($rs)) {
             $this->special_columns[trim($row['COLUMN_NAME'])] = $row;
         }
@@ -525,7 +525,7 @@ class DbTable
     function getPrimaryKeys()
     {
         Trace::traceComment(null, __METHOD__);
-        $rs = db2_primary_keys($_SESSION['conn'], null, $GLOBALS['Db2Schema'], $this->tableName);
+        $rs = db2_primary_keys($GLOBALS['conn'], null, $GLOBALS['Db2Schema'], $this->tableName);
         while ($row = db2_fetch_assoc($rs)) {
             // print_r($row);
             $this->primary_keys[trim($row['COLUMN_NAME'])] = $row;
@@ -568,7 +568,7 @@ class DbTable
         }
         $sql .= " WHERE " . $predicate;
         Trace::traceVariable($sql, __METHOD__);
-        $rs = db2_exec($_SESSION['conn'], $sql, array(
+        $rs = db2_exec($GLOBALS['conn'], $sql, array(
             'cursor' => DB2_SCROLLABLE
         ));
         return $rs;
@@ -755,7 +755,7 @@ class DbTable
     {
         $sql = " DELETE FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         Trace::traceVariable($sql, __METHOD__);
-        $rs = DB2_EXEC($_SESSION['conn'], $sql);
+        $rs = DB2_EXEC($GLOBALS['conn'], $sql);
         if (! $rs) {
             print_r($_SESSION);
             echo "<BR/>" . db2_stmt_error();
@@ -842,7 +842,7 @@ class DbTable
     function execute($sql, $log = false)
     {
         Trace::traceVariable($sql, __METHOD__);
-        $rs = DB2_EXEC($_SESSION['conn'], $sql);
+        $rs = DB2_EXEC($GLOBALS['conn'], $sql);
         if (! $rs) {
             $this->lastDb2StmtError = db2_stmt_error();
             $this->lastDb2StmtErrorMsg = db2_stmt_errormsg();
@@ -929,7 +929,7 @@ class DbTable
             // So best prepare a new statement, which we will save in the hope of reusing
             Trace::traceVariable($sql, __METHOD__, __LINE__);
             $this->preparedInsertSQL = $sql;
-            $this->preparedInsert = db2_prepare($_SESSION['conn'], $sql);
+            $this->preparedInsert = db2_prepare($GLOBALS['conn'], $sql);
             if (! $this->preparedInsert) {
                 echo "<BR/>" . db2_stmt_error();
                 echo "<BR/>" . db2_stmt_errormsg() . "<BR/>";
@@ -969,7 +969,7 @@ class DbTable
             echo "</pre>";
             self::displayErrorMessage($rs, __CLASS__, __METHOD__, $this->preparedInsertSQL, $this->pwd, $this->lastDb2StmtError, $this->lastDb2StmtErrorMsg, $insertArray);
         } else {
-            $this->lastId = db2_last_insert_id($_SESSION['conn']);
+            $this->lastId = db2_last_insert_id($GLOBALS['conn']);
         }
         if (isset($_SESSION['log'])) {
             Log::logEntry("DBTABLE SQL:" . str_replace($this->pwd, 'password', $this->preparedInsertSql), $this->pwd);
@@ -1000,7 +1000,7 @@ class DbTable
             self::displayErrorMessage($rs, __CLASS__, __METHOD__, $this->preparedInsertSQL, $this->pwd, $this->lastDb2StmtError, $this->lastDb2StmtErrorMsg, $insertArray, $rollbackIfError);
             return false;
         } else {
-            $this->lastId = db2_last_insert_id($_SESSION['conn']);
+            $this->lastId = db2_last_insert_id($GLOBALS['conn']);
             return true;
         }
     }
@@ -1296,7 +1296,7 @@ class DbTable
      */
     function commitUpdates()
     {
-        $rs = DB2_EXEC($_SESSION['conn'], " COMMIT");
+        $rs = DB2_EXEC($GLOBALS['conn'], " COMMIT");
         if (! $rs) {
             print_r($_SESSION);
             echo "<BR/>" . db2_stmt_error();
@@ -1520,7 +1520,7 @@ class DbTable
             Trace::traceComment('Attempting Insert', __METHOD__, __LINE__);
             $inserted = $this->insert($record);
             $inserted = $inserted ? $inserted : null;
-            $this->lastId = db2_last_insert_id($_SESSION['conn']);
+            $this->lastId = db2_last_insert_id($GLOBALS['conn']);
         }
         if ($commit) {
             $this->commitUpdates();
@@ -1805,7 +1805,7 @@ class DbTable
         $sql .= " WHERE TABLENAME='" . $tableName . "' ";
         $sql .= " GROUP BY TABLENAME ";
 
-        $rs = DB2_EXEC($_SESSION['conn'], $sql);
+        $rs = DB2_EXEC($GLOBALS['conn'], $sql);
         if (! $rs) {
             print_r($_SESSION);
             echo "<BR/>" . db2_stmt_error();
@@ -1901,7 +1901,7 @@ class DbTable
     {
         $db2Error = empty($db2Error) ? db2_stmt_error() : $db2Error;
         $db2ErrorMsg = empty($db2ErrorMsg) ? db2_stmt_errormsg() : $db2ErrorMsg;
-        $rollback ? db2_rollback($_SESSION['conn']) : null; // Roll back to last commit point.
+        $rollback ? db2_rollback($GLOBALS['conn']) : null; // Roll back to last commit point.
 
         if (isset(AllItdqTables::$DB2_ERRORS)) {
             echo "<BR/>" . $method . "<B>DB2 Error:</B><span style='color:red'>" . $db2Error . "</span><B>Message:</B><span style='color:red'>" . $db2ErrorMsg . "</span>$sql";
@@ -1972,7 +1972,7 @@ class DbTable
             echo "<h4>An email has been sent to: $to informing them of this problem</h4>";
         }
 
-        $rs = @db2_exec($_SESSION['conn'], $sql);
+        $rs = @db2_exec($GLOBALS['conn'], $sql);
         if (! $rs) {
             echo "<BR>Error: " . db2_stmt_error();
             echo "<BR>Msg: " . db2_stmt_errormsg() . "<BR>";
@@ -2081,7 +2081,7 @@ class DbTable
         $sql = " SELECT $column ";
         $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
 
-        $rs = DB2_EXEC($_SESSION['conn'], $sql);
+        $rs = DB2_EXEC($GLOBALS['conn'], $sql);
         if (! $rs) {
             print_r($_SESSION);
             echo "<BR/>" . db2_stmt_error();

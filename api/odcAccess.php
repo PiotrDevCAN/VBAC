@@ -16,7 +16,7 @@ $sql.= " WHERE 1=1 ";
 $sql.= !empty($notesId) ? " AND lower(O.OWNER_NOTES_ID) = '" . db2_escape_string(strtolower($notesId)) . "'; " : null;
 $sql.= !empty($cnum) ? " AND lower(O.OWNER_CNUM_ID) = '" . db2_escape_string(strtolower($cnum)) . "'; " : null;
 
-$rs = db2_exec($_SESSION['conn'], $sql);
+$rs = db2_exec($GLOBALS['conn'], $sql);
 
 if($rs){
     $row = db2_fetch_assoc($rs);

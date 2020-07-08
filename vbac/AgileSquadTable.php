@@ -25,7 +25,7 @@ class AgileSquadTable extends DbTable{
 
         $sql = " SELECT MAX(SQUAD_NUMBER) as SQUAD_NUMBER FROM " . $GLOBALS['Db2Schema'] . "." . $table ;
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -44,7 +44,7 @@ class AgileSquadTable extends DbTable{
         $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName . " as S ";
         $sql.= " LEFT JOIN ". $GLOBALS['Db2Schema'] . "." . $tribeTable . " as T ";
         $sql.= " ON S.TRIBE_NUMBER = T.TRIBE_NUMBER ";
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -94,7 +94,7 @@ class AgileSquadTable extends DbTable{
         $sql.= " ON S.TRIBE_NUMBER = T.TRIBE_NUMBER ";
         $sql.= " WHERE S.SQUAD_NUMBER = " . db2_escape_string($squadNumber);
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);

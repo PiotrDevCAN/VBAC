@@ -30,7 +30,7 @@ $sql.= isset($_GET['notesid']) ? " AND lower(P.NOTES_ID) = '" . db2_escape_strin
 $sql.= isset($_GET['cnum']) ? " AND lower(P.CNUM) = '" . db2_escape_string(strtolower($cnum)) . "' " : null;
 $sql.= " ORDER BY P.NOTES_ID ";
 
-$rs = db2_exec($_SESSION['conn'], $sql);
+$rs = db2_exec($GLOBALS['conn'], $sql);
 
 if(!$rs){
     DbTable::displayErrorMessage($rs, 'class', 'method', $sql);

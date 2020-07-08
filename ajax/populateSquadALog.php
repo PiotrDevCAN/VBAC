@@ -37,7 +37,7 @@ $sql.= " ON S.TRIBE_NUMBER  = T.TRIBE_NUMBER ";
 $sql.= " WHERE " . personTable::activePersonPredicate(true,"P");
 $sql.= " AND ( P.SQUAD_NUMBER is not null  AND P.SQUAD_NUMBER > 0 ) ";
 
-$rs = db2_exec($_SESSION['conn'], $sql);
+$rs = db2_exec($GLOBALS['conn'], $sql);
 
 if(!$rs){
     DbTable::displayErrorMessage($rs, null, __FILE__, $sql);

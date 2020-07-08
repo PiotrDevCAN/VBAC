@@ -47,7 +47,7 @@ try {
 
     set_time_limit(60);
 
-    $rs = db2_exec($_SESSION['conn'], $activeSql);
+    $rs = db2_exec($GLOBALS['conn'], $activeSql);
 
     if($rs){
      //   $recordsFound = DbTable::writeResultSetToXls($rs, $spreadsheet);

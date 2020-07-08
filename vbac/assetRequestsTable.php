@@ -114,7 +114,7 @@ class assetRequestsTable extends DbTable{
 
 
     //    AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
-        $rs = db2_exec($_SESSION['conn'],$sql);
+        $rs = db2_exec($GLOBALS['conn'],$sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -357,7 +357,7 @@ class assetRequestsTable extends DbTable{
         $sql  = " INSERT INTO " . $GLOBALS['Db2Schema'] . "." . allTables::$ORDER_IT_VARB_TRACKER;
         $sql .= " ( CREATED_BY ) VALUES ('" . db2_escape_string($_SESSION['ssoEmail']) . "' )" ;
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -397,7 +397,7 @@ class assetRequestsTable extends DbTable{
 
         $nextVarb = $this->getNextVarb();
 
-        $commitState  = db2_autocommit($_SESSION['conn'],DB2_AUTOCOMMIT_OFF);
+        $commitState  = db2_autocommit($GLOBALS['conn'],DB2_AUTOCOMMIT_OFF);
 
         // Get the Ref's for this export - so we can timestamp the export.
 
@@ -415,7 +415,7 @@ class assetRequestsTable extends DbTable{
         $sql.= "   ORDER BY REQUEST_REFERENCE asc ";
         $sql.= "   FETCH FIRST 20 ROWS ONLY) ";
 
-        $rs = db2_exec($_SESSION['conn'],$sql);
+        $rs = db2_exec($GLOBALS['conn'],$sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -440,7 +440,7 @@ class assetRequestsTable extends DbTable{
         $sql .= "   ORDER BY REQUEST_REFERENCE asc ";
         $sql .= "   FETCH FIRST 20 ROWS ONLY) ";
 
-        $rs = db2_exec($_SESSION['conn'],$sql);
+        $rs = db2_exec($GLOBALS['conn'],$sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -475,9 +475,9 @@ class assetRequestsTable extends DbTable{
 //         $data[] = "";
         $data[] = $first ? '"VARB","REQUEST","CT ID","CTB/RTB","TT/BAU","LOB","WORK STREAM","ASSET TITLE","REQUESTEE EMAIL","JUSTIFICATION","STATUS","LOCATION","REQUESTOR","REQUESTED","APPROVER","APPROVED","FM EMAIL","EXPORTED"' : null;
 
-        $rs2 = db2_exec($_SESSION['conn'],$sql);
+        $rs2 = db2_exec($GLOBALS['conn'],$sql);
         if(!$rs2){
-            db2_rollback($_SESSION['conn']);
+            db2_rollback($GLOBALS['conn']);
             DbTable::displayErrorMessage($rs2, __CLASS__, __METHOD__, $sql);
             return false;
         }
@@ -494,14 +494,14 @@ class assetRequestsTable extends DbTable{
 
 //         $base64Encoded = base64_encode($requestData);
 
-        db2_commit($_SESSION['conn']);
-        db2_autocommit($_SESSION['conn'],$commitState);
+        db2_commit($GLOBALS['conn']);
+        db2_autocommit($GLOBALS['conn'],$commitState);
 
         return $requestData;
     }
 
     function getRequestsForNonPmo(){
-        $commitState  = db2_autocommit($_SESSION['conn'],DB2_AUTOCOMMIT_OFF);
+        $commitState  = db2_autocommit($GLOBALS['conn'],DB2_AUTOCOMMIT_OFF);
 
         $sql = " SELECT 'User Created' as ORDERIT_VARB_REF, ORDERIT_NUMBER, REQUEST_REFERENCE, ";
         $sql .= " P.CT_ID as CT_ID, ";
@@ -531,9 +531,9 @@ class assetRequestsTable extends DbTable{
         //         $data[] = "";
         $data[] = '"VARB","LBG","REQUEST","CT ID","CTB/RTB","TT/BAU","LOB","WORK STREAM","ASSET TITLE","REQUESTEE EMAIL","JUSTIFICATION","STATUS","LOCATION","REQUESTOR","REQUESTED","APPROVER","APPROVED","FM EMAIL","EXPORTED"';
 
-        $rs2 = db2_exec($_SESSION['conn'],$sql);
+        $rs2 = db2_exec($GLOBALS['conn'],$sql);
         if(!$rs2){
-            db2_rollback($_SESSION['conn']);
+            db2_rollback($GLOBALS['conn']);
             DbTable::displayErrorMessage($rs2, __CLASS__, __METHOD__, $sql);
             return false;
         }
@@ -548,8 +548,8 @@ class assetRequestsTable extends DbTable{
             $requestData .= $request . "\n";
         }
 
-        db2_commit($_SESSION['conn']);
-        db2_autocommit($_SESSION['conn'],$commitState);
+        db2_commit($GLOBALS['conn']);
+        db2_autocommit($GLOBALS['conn'],$commitState);
 
         return $requestData;
     }
@@ -567,9 +567,9 @@ class assetRequestsTable extends DbTable{
         $sql .= $this->predicateExportNonPmoRequests();
 
 
-        $rs2 = db2_exec($_SESSION['conn'],$sql);
+        $rs2 = db2_exec($GLOBALS['conn'],$sql);
         if(!$rs2){
-            db2_rollback($_SESSION['conn']);
+            db2_rollback($GLOBALS['conn']);
             DbTable::displayErrorMessage($rs2, __CLASS__, __METHOD__, $sql);
             return false;
         }
@@ -585,9 +585,9 @@ class assetRequestsTable extends DbTable{
         $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
         $sql .= " WHERE STATUS='" . assetRequestRecord::STATUS_AWAITING_IAM . "' ";
 
-        $rs2 = db2_exec($_SESSION['conn'],$sql);
+        $rs2 = db2_exec($GLOBALS['conn'],$sql);
         if(!$rs2){
-            db2_rollback($_SESSION['conn']);
+            db2_rollback($GLOBALS['conn']);
             DbTable::displayErrorMessage($rs2, __CLASS__, __METHOD__, $sql);
             return false;
         }
@@ -626,9 +626,9 @@ class assetRequestsTable extends DbTable{
 
         $sql.= $pred;
 
-        $rs2 = db2_exec($_SESSION['conn'],$sql);
+        $rs2 = db2_exec($GLOBALS['conn'],$sql);
         if(!$rs2){
-            db2_rollback($_SESSION['conn']);
+            db2_rollback($GLOBALS['conn']);
             DbTable::displayErrorMessage($rs2, __CLASS__, __METHOD__, $sql);
             return false;
         }
@@ -646,9 +646,9 @@ class assetRequestsTable extends DbTable{
         $sql .= " WHERE 1=1 ";
         $sql .= " AND STATUS='" . assetRequestRecord::STATUS_EXPORTED . "' ";
 
-        $rs2 = db2_exec($_SESSION['conn'],$sql);
+        $rs2 = db2_exec($GLOBALS['conn'],$sql);
         if(!$rs2){
-            db2_rollback($_SESSION['conn']);
+            db2_rollback($GLOBALS['conn']);
             DbTable::displayErrorMessage($rs2, __CLASS__, __METHOD__, $sql);
             return false;
         }
@@ -669,9 +669,9 @@ class assetRequestsTable extends DbTable{
         $sql .= " AND USER_CREATED='" . assetRequestRecord::CREATED_PMO . "' ";
         $sql .= $bau ? " AND P.TT_BAU='BAU' " : " AND ( P.TT_BAU!='BAU' or P.TT_BAU is null )  ";
 
-        $rs2 = db2_exec($_SESSION['conn'],$sql);
+        $rs2 = db2_exec($GLOBALS['conn'],$sql);
         if(!$rs2){
-            db2_rollback($_SESSION['conn']);
+            db2_rollback($GLOBALS['conn']);
             DbTable::displayErrorMessage($rs2, __CLASS__, __METHOD__, $sql);
             return false;
         }
@@ -728,7 +728,7 @@ class assetRequestsTable extends DbTable{
         $sql .= !empty($predicate) ? $predicate : null;
         $sql .= $this->eligibleForOrderItPredicate($orderItType);
 
-        $rs = db2_exec($_SESSION['conn'],$sql);
+        $rs = db2_exec($GLOBALS['conn'],$sql);
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
@@ -1251,7 +1251,7 @@ class assetRequestsTable extends DbTable{
         $sql .= " WHERE ORDERIT_VARB_REF is not null and ORDERIT_NUMBER is null and STATUS in ('". assetRequestRecord::STATUS_EXPORTED . "','". assetRequestRecord::STATUS_RAISED_ORDERIT . "') ";
         $sql .= " ORDER BY ORDERIT_VARB_REF asc ";
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs,__CLASS__, __METHOD__, $sql);
@@ -1272,7 +1272,7 @@ class assetRequestsTable extends DbTable{
         $sql .= " WHERE ORDERIT_VARB_REF is not null and ORDERIT_NUMBER is null and STATUS in ('". assetRequestRecord::STATUS_EXPORTED . "','". assetRequestRecord::STATUS_RAISED_ORDERIT . "') ";
         $sql .= " ORDER BY REQUEST_REFERENCE asc ";
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs,__CLASS__, __METHOD__, $sql);
@@ -1292,7 +1292,7 @@ class assetRequestsTable extends DbTable{
         $sql .= " WHERE ORDERIT_VARB_REF is not null and ORDERIT_NUMBER is not null ";
         $sql .= " ORDER BY ORDERIT_VARB_REF asc ";
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs,__CLASS__, __METHOD__, $sql);
@@ -1313,7 +1313,7 @@ class assetRequestsTable extends DbTable{
         $sql .= " WHERE ORDERIT_NUMBER is not null ";
         $sql .= " ORDER BY REQUEST_REFERENCE asc ";
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs,__CLASS__, __METHOD__, $sql);
@@ -1477,7 +1477,7 @@ class assetRequestsTable extends DbTable{
                     $sql.= "    ) ";
                     $sql.= $isThisCtb ? " AND upper(P.CTB_RTB='CTB') " : " AND (upper(P.CTB_RTB != 'CTB') or P.CTB_RTB is null ) ";
                     $sql.= " ORDER BY AR.REQUESTED asc ";
-                    $rs = db2_exec($_SESSION['conn'], $sql);
+                    $rs = db2_exec($GLOBALS['conn'], $sql);
 
                     AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
@@ -1552,7 +1552,7 @@ class assetRequestsTable extends DbTable{
 //         $sql .= "      ( AR.APPROVED > CURRENT TIMESTAMP - 6 MONTHS )";
 //        $sql .= "    ) ";
         $sql .= " ORDER BY AR.REQUESTED desc ";
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
@@ -1626,7 +1626,7 @@ class assetRequestsTable extends DbTable{
 //                     $sql.= "    ) ";
 //                    $sql.= $isThisCtb ? " AND upper(P.CTB_RTB='CTB') " : " AND (upper(P.CTB_RTB != 'CTB') or P.CTB_RTB is null ) ";
                     $sql.= " ORDER BY Ar.REQUEST_REFERENCE desc ";
-                    $rs = db2_exec($_SESSION['conn'], $sql);
+                    $rs = db2_exec($GLOBALS['conn'], $sql);
 
                     AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
@@ -1668,7 +1668,7 @@ class assetRequestsTable extends DbTable{
 
         AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -1698,7 +1698,7 @@ class assetRequestsTable extends DbTable{
 
         AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -1727,7 +1727,7 @@ class assetRequestsTable extends DbTable{
 
         $requestList = "'" . implode("','", $request) . "'";
 
-        $autoCommit = db2_autocommit($_SESSION['conn'],DB2_AUTOCOMMIT_OFF);
+        $autoCommit = db2_autocommit($GLOBALS['conn'],DB2_AUTOCOMMIT_OFF);
 
         $sql  = " UPDATE ";
         $sql .= $GLOBALS['Db2Schema'] . "." . $this->tableName ;
@@ -1740,7 +1740,7 @@ class assetRequestsTable extends DbTable{
 
         AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs,__CLASS__, __METHOD__, $sql);
@@ -1765,16 +1765,16 @@ class assetRequestsTable extends DbTable{
 
         // echo __METHOD__ . __LINE__ .  $sql;
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs,__CLASS__, __METHOD__, $sql);
             return false;
         }
 
-        db2_commit($_SESSION['conn']);
+        db2_commit($GLOBALS['conn']);
 
-        db2_autocommit($_SESSION['conn'],$autoCommit);
+        db2_autocommit($GLOBALS['conn'],$autoCommit);
 
         return true;
     }
@@ -1794,7 +1794,7 @@ class assetRequestsTable extends DbTable{
 
         AuditTable::audit("Prepare SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
-        $rs = db2_prepare($_SESSION['conn'], $sql);
+        $rs = db2_prepare($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -1835,16 +1835,16 @@ class assetRequestsTable extends DbTable{
 
 //         // echo __METHOD__ . __LINE__ .  $sql;
 
-//         $rs = db2_exec($_SESSION['conn'], $sql);
+//         $rs = db2_exec($GLOBALS['conn'], $sql);
 
 //         if(!$rs){
 //             DbTable::displayErrorMessage($rs,__CLASS__, __METHOD__, $sql);
 //             return false;
 //         }
 
-//         db2_commit($_SESSION['conn']);
+//         db2_commit($GLOBALS['conn']);
 
-//         db2_autocommit($_SESSION['conn'],$autoCommit);
+//         db2_autocommit($GLOBALS['conn'],$autoCommit);
 
         return true;
     }
@@ -1867,7 +1867,7 @@ class assetRequestsTable extends DbTable{
 
         AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -2105,7 +2105,7 @@ class assetRequestsTable extends DbTable{
 
         AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
-        $rs = db2_prepare($_SESSION['conn'], $sql);
+        $rs = db2_prepare($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs,__CLASS__, __METHOD__, $sql);
@@ -2125,7 +2125,7 @@ class assetRequestsTable extends DbTable{
         $sql.= " SET COMMENT = ? ";
         $sql.= " WHERE REQUEST_REFERENCE=? ";
 
-        $rs = db2_prepare($_SESSION['conn'], $sql);
+        $rs = db2_prepare($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -2145,7 +2145,7 @@ class assetRequestsTable extends DbTable{
         $sql.= " SET ORDERIT_RESPONDED = ? ";
         $sql.= " WHERE REQUEST_REFERENCE=? ";
 
-        $rs = db2_prepare($_SESSION['conn'], $sql);
+        $rs = db2_prepare($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -2164,7 +2164,7 @@ class assetRequestsTable extends DbTable{
 
         $sql = " SELECT COMMENT FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " WHERE REQUEST_REFERENCE=? ";
 
-        $rs = db2_prepare($_SESSION['conn'], $sql);
+        $rs = db2_prepare($GLOBALS['conn'], $sql);
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__,__METHOD__, $sql);
             return false;
@@ -2210,7 +2210,7 @@ class assetRequestsTable extends DbTable{
         if(!empty($comment)){
             $now = new \DateTime();
             $sql = " SELECT COMMENT FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' ";
-            $rs = db2_exec($_SESSION['conn'], $sql);
+            $rs = db2_exec($GLOBALS['conn'], $sql);
 
             if(!$rs){
                 DbTable::displayErrorMessage($rs, __CLASS__,__METHOD__, $sql);
@@ -2260,7 +2260,7 @@ class assetRequestsTable extends DbTable{
 
         AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__,__METHOD__, $sql);
@@ -2278,7 +2278,7 @@ class assetRequestsTable extends DbTable{
 
             AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
-            $rs = db2_exec($_SESSION['conn'], $sql);
+            $rs = db2_exec($GLOBALS['conn'], $sql);
 
             if(!$rs){
                 DbTable::displayErrorMessage($rs, __CLASS__,__METHOD__, $sql);
@@ -2300,7 +2300,7 @@ class assetRequestsTable extends DbTable{
 
             AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
-            $preparedUpdateUidsStmt = db2_prepare($_SESSION['conn'], $sql);
+            $preparedUpdateUidsStmt = db2_prepare($GLOBALS['conn'], $sql);
 
             if(!$preparedUpdateUidsStmt){
                 DbTable::displayErrorMessage($preparedUpdateUidsStmt, __CLASS__, __METHOD__, $sql);
@@ -2336,7 +2336,7 @@ class assetRequestsTable extends DbTable{
 
         AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__,__METHOD__, $sql);
             return false;
@@ -2355,7 +2355,7 @@ class assetRequestsTable extends DbTable{
         $sql.= " SET BUSINESS_JUSTIFICATION='" . db2_escape_string($justification) . "' ";
         $sql.= " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' ";
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -2372,7 +2372,7 @@ class assetRequestsTable extends DbTable{
         $sql.= " SET ORDERIT_NUMBER='" . db2_escape_string($orderIt) . "' ";
         $sql.= " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' ";
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -2480,7 +2480,7 @@ class assetRequestsTable extends DbTable{
 
         $assetRequestEventsTable = new assetRequestsEventsTable(allTables::$ASSET_REQUESTS_EVENTS);
 
-        $autocommit = db2_autocommit($_SESSION['conn'],DB2_AUTOCOMMIT_OFF);
+        $autocommit = db2_autocommit($GLOBALS['conn'],DB2_AUTOCOMMIT_OFF);
 
         $listOfAssetRefs = implode("','", $assetReferences);
 
@@ -2496,7 +2496,7 @@ class assetRequestsTable extends DbTable{
         try {
             AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
-            $rs1 = db2_exec($_SESSION['conn'], $sql);
+            $rs1 = db2_exec($GLOBALS['conn'], $sql);
 
             if(!$rs1){
                 DbTable::displayErrorMessage($rs1,__CLASS__, __METHOD__, $sql);
@@ -2508,7 +2508,7 @@ class assetRequestsTable extends DbTable{
                 $sql .= " SET PRE_REQ_REQUEST='" . db2_escape_string(trim($row['PRE_REQ'])) . "' ";
                 $sql .= " WHERE REQUEST_REFERENCE='" . db2_escape_string(trim($row['REQUEST_REFERENCE']))  . "' " ;
 
-                $rs2 = db2_exec($_SESSION['conn'], $sql);
+                $rs2 = db2_exec($GLOBALS['conn'], $sql);
 
                 if(!$rs2){
                     DbTable::displayErrorMessage($rs2,__CLASS__, __METHOD__, $sql);
@@ -2526,8 +2526,8 @@ class assetRequestsTable extends DbTable{
             echo $e->getTrace();
         }
 
-        db2_commit($_SESSION['conn']);
-        db2_autocommit($_SESSION['conn'],$autocommit);
+        db2_commit($GLOBALS['conn']);
+        db2_autocommit($GLOBALS['conn'],$autocommit);
     }
 
     function prepareDevarb(){
@@ -2547,7 +2547,7 @@ class assetRequestsTable extends DbTable{
 
         AuditTable::audit("Prepare SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>prepared sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
-        $rs = db2_prepare($_SESSION['conn'], $sql);
+        $rs = db2_prepare($GLOBALS['conn'], $sql);
 
 
         if(!$rs){
@@ -2590,7 +2590,7 @@ class assetRequestsTable extends DbTable{
          $sql.= " ON P.CNUM = AR.CNUM ";
          $sql.= " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' " ;
 
-         $rs = db2_exec($_SESSION['conn'], $sql);
+         $rs = db2_exec($GLOBALS['conn'], $sql);
 
          if(!$rs){
              DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -2623,7 +2623,7 @@ class assetRequestsTable extends DbTable{
          $sql.= " AND ASSET_TITLE NOT LIKE 'Other%' ";
          $sql.= " AND ASSET_TITLE NOT LIKE 'MPW Renewal%' ";
 
-         $rs = db2_exec($_SESSION['conn'], $sql);
+         $rs = db2_exec($GLOBALS['conn'], $sql);
 
          if(!$rs){
              DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);

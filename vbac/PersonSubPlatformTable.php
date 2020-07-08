@@ -16,7 +16,7 @@ class PersonSubPlatformTable extends DbTable
         $sql = " DELETE FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON_SUBPLATFORM ;
         $sql.= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -26,7 +26,7 @@ class PersonSubPlatformTable extends DbTable
             $sql = " INSERT  INTO " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON_SUBPLATFORM;
             $sql.= " (CNUM, SUBPLATFORM) values ('" . db2_escape_string($cnum) ."','" . db2_escape_string($subPlatform) . "') ";
 
-            $rs = db2_exec($_SESSION['conn'], $sql);
+            $rs = db2_exec($GLOBALS['conn'], $sql);
 
             if(!$rs){
                 DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -41,7 +41,7 @@ class PersonSubPlatformTable extends DbTable
         $sql = " SELECT *  FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON_SUBPLATFORM ;
         $sql.= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);

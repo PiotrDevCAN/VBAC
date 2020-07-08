@@ -15,7 +15,7 @@ $sql.= " WHERE 1=1 AND trim(NOTES_ID) != ''  AND " . personTable::activePersonPr
 $sql.= " AND FM_MANAGER_FLAG='Yes' ";
 $sql.= " ORDER BY P.NOTES_ID ";
 
-$rs = db2_exec($_SESSION['conn'], $sql);
+$rs = db2_exec($GLOBALS['conn'], $sql);
 
 if($rs){
     while(($row = db2_fetch_assoc($rs))==true){

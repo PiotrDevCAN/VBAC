@@ -84,7 +84,7 @@ index 0000000..192d64c
 +$sql.= " ON T.CNUM = P.CNUM ";
 +$sql.= " ORDER BY 1 asc ";
 +
-+$rs = db2_exec($_SESSION['conn'], $sql);
++$rs = db2_exec($GLOBALS['conn'], $sql);
 +
 +?>
 +<h2>PES Status Change Details Report</h2>
@@ -350,7 +350,7 @@ index 9b93690..c5676ce 100644
  
          AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
  
-         $rs = db2_exec($_SESSION['conn'], $sql);
+         $rs = db2_exec($GLOBALS['conn'], $sql);
  
          if(!$rs){
              DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);

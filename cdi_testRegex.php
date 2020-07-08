@@ -35,7 +35,7 @@ $sql.= " LEFT JOIN VBAC.PERSON as P ";
 $sql.= " ON T.CNUM = P.CNUM ";
 $sql.= " ORDER BY 1 asc ";
 
-$rs = db2_exec($_SESSION['conn'], $sql);
+$rs = db2_exec($GLOBALS['conn'], $sql);
 
 ?>
 <h2>PES Status Change Details Report</h2>

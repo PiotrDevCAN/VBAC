@@ -20,7 +20,7 @@ class AgileTribeTable extends DbTable{
         $sql.= "      UNION ";
         $sql.= "      SELECT MAX(TRIBE_NUMBER) as TRIBE_NUMBER FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE_OLD;
         $sql.= " ); ";
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -35,7 +35,7 @@ class AgileTribeTable extends DbTable{
     function returnAsArray(){
         $sql = " SELECT * ";
         $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);

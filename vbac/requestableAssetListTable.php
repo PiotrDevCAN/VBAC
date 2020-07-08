@@ -22,7 +22,7 @@ class requestableAssetListTable extends DbTable {
         $sql .= " WHERE 1=1 " . $predicate;
         $sql .= " ORDER BY ASSET_TITLE ";
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -103,7 +103,7 @@ class requestableAssetListTable extends DbTable {
         $sql .= " SET LISTING_ENTRY_REMOVED= current timestamp, LISTING_ENTRY_REMOVED_BY='" . db2_escape_string($deletedBy) . "' ";
         $sql .= " WHERE ASSET_TITLE='" . db2_escape_string($assetTitle) . "' ";
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;

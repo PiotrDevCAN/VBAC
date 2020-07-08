@@ -70,7 +70,7 @@ $sql.= " SET ";
 $sql.= " SECURITY_EDUCATION='" . db2_escape_string(trim($_REQUEST['SECURITY_EDUCATION'])) . "' " ;
 $sql.= " WHERE CNUM='" . db2_escape_string($_REQUEST['CNUM']) . "' ";
 
-$rs = db2_exec($_SESSION['conn'], $sql);
+$rs = db2_exec($GLOBALS['conn'], $sql);
 
 if(!$rs){
     echo db2_stmt_error();

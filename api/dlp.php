@@ -20,7 +20,7 @@ $sql.= !empty($cnum)     ? " AND D.CNUM = '" . db2_escape_string($cnum) . "'  " 
 $sql.= !empty($hostname) ? " AND lower(D.HOSTNAME) = '" . db2_escape_string(strtolower($hostname)) . "'  " : null;
 $sql.= " GROUP BY D.STATUS ";
 
-$rs = db2_exec($_SESSION['conn'], $sql);
+$rs = db2_exec($GLOBALS['conn'], $sql);
 
 if($rs){
     $row = db2_fetch_assoc($rs);

@@ -6,7 +6,7 @@ $allCnums = array();
 $details = array();
 
 $sql = " Select distinct cnum, first_name, last_name, employee_type from vbac.person ";
-$rs = db2_exec($_SESSION['conn'], $sql);
+$rs = db2_exec($GLOBALS['conn'], $sql);
 
 while (($row=db2_fetch_assoc($rs))==true ){
     $people[$row['CNUM']] = $row ;

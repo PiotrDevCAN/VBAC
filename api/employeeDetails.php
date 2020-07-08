@@ -39,7 +39,7 @@ $sql.= !empty($cnum) ? " AND lower(P.CNUM) = '" . db2_escape_string(strtolower($
 
 error_log($sql);
 
-$rs = db2_exec($_SESSION['conn'], $sql);
+$rs = db2_exec($GLOBALS['conn'], $sql);
 
 if($rs){
     $row = db2_fetch_assoc($rs);

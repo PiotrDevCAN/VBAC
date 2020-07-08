@@ -37,7 +37,7 @@ try {
     $sql = " Select * ";
     $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
 
-    $rs = db2_exec($_SESSION['conn'], $sql);
+    $rs = db2_exec($GLOBALS['conn'], $sql);
 
     if($rs){
         $recordsFound = DbTable::writeResultSetToXls($rs, $spreadsheet);

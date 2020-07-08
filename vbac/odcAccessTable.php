@@ -30,7 +30,7 @@ class odcAccessTable extends DbTable {
         $columnHeaders = array();
         $recordData = array();
         $failedRecords = 0;
-        $autoCommit = db2_autocommit($_SESSION['conn'],DB2_AUTOCOMMIT_OFF);
+        $autoCommit = db2_autocommit($GLOBALS['conn'],DB2_AUTOCOMMIT_OFF);
         for ($row = 1; $row <= $highestRow; $row++){
             set_time_limit(10);
             $time = -microtime(true);
@@ -59,7 +59,7 @@ class odcAccessTable extends DbTable {
                     $secureAreaName = trim($recordData['SECURED_AREA_NAME']);
                     $sql = " DELETE FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
                     $sql.= " WHERE SECURED_AREA_NAME = '" . db2_escape_string($secureAreaName) . "' ";
-                    $rs = db2_exec($_SESSION['conn'], $sql);
+                    $rs = db2_exec($GLOBALS['conn'], $sql);
 
 
                     if(!$rs){
@@ -98,8 +98,8 @@ class odcAccessTable extends DbTable {
             }
         }
 
-        db2_commit($_SESSION['conn']);  // Save what we have done.
-        db2_autocommit($_SESSION['conn'],$autoCommit);
+        db2_commit($GLOBALS['conn']);  // Save what we have done.
+        db2_autocommit($GLOBALS['conn'],$autoCommit);
 
         $response = ob_get_clean();
         ob_start();
@@ -156,7 +156,7 @@ class odcAccessTable extends DbTable {
         $sql.= " WHERE 1= 1 ";
         $sql.= !empty($location) ? " AND SECURED_AREA_NAME='" . db2_escape_string($location) . "' " : null;
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql,null,null,null,null,DbTable::ROLLBACK_NO);
@@ -199,7 +199,7 @@ class odcAccessTable extends DbTable {
         $sql.= " and " . $vbacActivePredicate;
 
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -218,7 +218,7 @@ class odcAccessTable extends DbTable {
         $sql.= "on O.OWNER_CNUM_ID = P.CNUM ";
         $sql.= "WHERE P.CNUM is null ";
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -244,7 +244,7 @@ class odcAccessTable extends DbTable {
         $sql.= " AND TT_BAU='BAU' ";
         $sql.= " GROUP BY WORK_STREAM ";
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             echo db2_stmt_error();

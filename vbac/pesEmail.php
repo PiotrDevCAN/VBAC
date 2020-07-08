@@ -110,7 +110,7 @@ class pesEmail {
         $sql.= ' FROM ' . strtoupper($_ENV['environment']) . "." . allTables::$STATIC_COUNTRY_CODES;
         $sql.= " WHERE  upper(country_name)= '" . db2_escape_string(strtoupper($country)) . "' ";
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);

@@ -8,7 +8,7 @@ use itdq\AuditTable;
 ob_start();
 AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_REQUEST,true) . "</b>",AuditTable::RECORD_TYPE_DETAILS);
 
-$autoCommit = db2_autocommit($_SESSION['conn'],DB2_AUTOCOMMIT_OFF);
+$autoCommit = db2_autocommit($GLOBALS['conn'],DB2_AUTOCOMMIT_OFF);
 
 $personTable = new personTable(allTables::$PERSON);
 $assetRequestTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
@@ -50,8 +50,8 @@ if(!empty($_POST['comment'])){
 // }
 
 
-db2_commit($_SESSION['conn']);
-db2_autocommit($_SESSION['conn'],$autoCommit);
+db2_commit($GLOBALS['conn']);
+db2_autocommit($GLOBALS['conn'],$autoCommit);
 
 $messages = ob_get_clean();
 ob_start();

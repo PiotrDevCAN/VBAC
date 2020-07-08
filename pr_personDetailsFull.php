@@ -40,7 +40,7 @@ try {
     $sql .= " WHERE PES_STATUS_DETAILS is null or PES_STATUS_DETAILS not like 'Boarded%' ";  // dont show boarded pre-boarders
 
     set_time_limit(0);
-    $rs = db2_exec($_SESSION['conn'], $sql);
+    $rs = db2_exec($GLOBALS['conn'], $sql);
 
     if($rs){
         $recordsFound = personWithSubPTable::writeResultSetToXls($rs, $spreadsheet);

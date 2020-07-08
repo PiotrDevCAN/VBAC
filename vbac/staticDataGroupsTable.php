@@ -17,7 +17,7 @@ class staticDataGroupsTable extends staticDataTable {
     static function getStaticDataValuesForEdit(){
         $sql = " SELECT * FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$STATIC_GROUPS;
 
-        $resultSet = db2_exec($_SESSION['conn'], $sql);
+        $resultSet = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$resultSet){
             db2_stmt_error();

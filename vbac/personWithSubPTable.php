@@ -15,7 +15,7 @@ class personWithSubPTable extends personTable {
         parent::__construct($table,$pwd,$log);
 
         $sql = " SELECT * FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON_SUBPLATFORM;
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -43,13 +43,13 @@ class personWithSubPTable extends personTable {
 
     static function writeResultSetToXls( $resultSet,Spreadsheet $spreadsheet,$withColumnHeadings=true,$columnIndex=1,$rowIndex=1){
         $personSubPlatform = array();
-        $originalConnection = $_SESSION['conn'];
+        $originalConnection = $GLOBALS['conn'];
 
         include("connect.php");
 
 
         $sql = " SELECT * FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON_SUBPLATFORM;
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -60,7 +60,7 @@ class personWithSubPTable extends personTable {
             $personSubPlatform[$subPlatformRecord['CNUM']][] = $subPlatformRecord['SUBPLATFORM'];
         }
 
-        $_SESSION['conn'] = $originalConnection;
+        $GLOBALS['conn'] = $originalConnection;
 
         $rowsWritten = false;
         $headerRow=true;

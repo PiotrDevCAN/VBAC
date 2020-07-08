@@ -49,7 +49,7 @@ class pesEventTable extends DbTable{
 
         $sql.= " WHERE P.PES_STATUS IN ('" . personRecord::PES_STATUS_REQUESTED . "','" . personRecord::PES_STATUS_RECHECK_REQ . "') ";
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);

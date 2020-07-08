@@ -47,7 +47,7 @@ $sql.= !empty($notesId) ? " AND lower(P.NOTES_ID) = '" . db2_escape_string(strto
 $sql.= !empty($cnum) ? " AND lower(P.CNUM) = '" . db2_escape_string(strtolower($cnum)) . "'  " : null;
 $sql.= " ORDER BY P.NOTES_ID; ";
 
-$rs = db2_exec($_SESSION['conn'], $sql);
+$rs = db2_exec($GLOBALS['conn'], $sql);
 
 if($rs){
     while(($row = db2_fetch_assoc($rs))==true){

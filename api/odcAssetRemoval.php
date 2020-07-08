@@ -43,7 +43,7 @@ if($startDate===false || $endDate===false){
                     $sql.= !empty($endDate) ? ",'" . db2_escape_string($endDate->format('Y-m-d')) . "' " : ",'2099-12-31' " ;
                     $sql.= ") ";
                     
-                    $rs = db2_exec($_SESSION['conn'], $sql);
+                    $rs = db2_exec($GLOBALS['conn'], $sql);
                     
                     if(!$rs){
                         $errorMsg = db2_stmt_errormsg();
@@ -67,7 +67,7 @@ if($startDate===false || $endDate===false){
                     $sql.= "                        and END_DATE >= CURRENT DATE ";
                     $sql.= !empty($assetSerial) ? " and ASSET_SERIAL_NUMBER='" . db2_escape_string($assetSerial) . "' " : null;
                     $sql.= !empty($cnum) ?        " and CNUM='" . db2_escape_string($cnum) . "' " : null;
-                    $rs = db2_exec($_SESSION['conn'], $sql);
+                    $rs = db2_exec($GLOBALS['conn'], $sql);
                     
                     if(!$rs){
                         $errorMsg = db2_stmt_errormsg();
@@ -100,7 +100,7 @@ if($startDate===false || $endDate===false){
                     $sql.= " WHERE 1=1 ";
                     $sql.= !empty($assetSerial) ? " AND ASSET_SERIAL_NUMBER='" . db2_escape_string($assetSerial) . "' " : null;
                     $sql.= !empty($cnum) ?        " AND CNUM='" . db2_escape_string($cnum) . "' " : null;
-                    $rs = db2_exec($_SESSION['conn'], $sql);
+                    $rs = db2_exec($GLOBALS['conn'], $sql);
                     
                     if(!$rs){
                         $errorMsg = db2_stmt_errormsg();
@@ -125,7 +125,7 @@ if($startDate===false || $endDate===false){
                     $sql.= " WHERE 1=1 ";
                     $sql.= !empty($assetSerial) ? " AND ASSET_SERIAL_NUMBER='" . db2_escape_string($assetSerial) . "' " : null;
                     $sql.= !empty($cnum) ?        " AND CNUM='" . db2_escape_string($cnum) . "' " : null;
-                    $rs = db2_exec($_SESSION['conn'], $sql);
+                    $rs = db2_exec($GLOBALS['conn'], $sql);
                     
                     if(!$rs){
                         $errorMsg = db2_stmt_errormsg();
@@ -150,7 +150,7 @@ if($startDate===false || $endDate===false){
                     $sql.= "   and END_DATE >= CURRENT DATE ";
                     $sql.= "   and ASSET_SERIAL_NUMBER='" . db2_escape_string($assetSerial) . "' " ;
                     $sql.= "   and CNUM='" . db2_escape_string($cnum) . "' " ;
-                    $rs = db2_exec($_SESSION['conn'], $sql);
+                    $rs = db2_exec($GLOBALS['conn'], $sql);
                     
                     if(!$rs){
                         $errorMsg = db2_stmt_errormsg();

@@ -18,7 +18,7 @@ switch ($_REQUEST['mode']) {
                 // Save a template to the database
                 $sql = "INSERT INTO " . $_ENV['environment'] . "." . \vbac\allTables::$FEB_TRAVEL_REQUEST_TEMPLATES ;
                 $sql.= " (EMAIL_ADDRESS, TITLE, TEMPLATE) VALUES ('" . db2_escape_string($_REQUEST['email_address']) . "','" .  db2_escape_string($_REQUEST['title']) . "','" . db2_escape_string(print_r($_REQUEST['template'],true)) . "') ";
-                $rs = db2_exec($_SESSION['conn'], $sql);
+                $rs = db2_exec($GLOBALS['conn'], $sql);
                 
                 if(!$rs){
                     echo db2_stmt_error();
@@ -47,7 +47,7 @@ switch ($_REQUEST['mode']) {
                 $sql.= " WHERE EMAIL_ADDRESS='" . db2_escape_string(trim($_GET['email_address'])) . "' ";
                 $sql.= " AND TITLE='" . db2_escape_string(trim($_GET['title'])) . "' ";   
                 ob_start();
-                $rs = db2_exec($_SESSION['conn'], $sql);
+                $rs = db2_exec($GLOBALS['conn'], $sql);
                 
                 if(!$rs){
                     echo db2_stmt_error();
@@ -87,7 +87,7 @@ switch ($_REQUEST['mode']) {
                 $response['sql']= $sql;
                 
                 
-                $rs = db2_exec($_SESSION['conn'], $sql);
+                $rs = db2_exec($GLOBALS['conn'], $sql);
                 
                 if(!$rs){
                     echo db2_stmt_error();

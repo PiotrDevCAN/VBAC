@@ -13,7 +13,7 @@ class dlpTable extends DbTable {
         $sql.= " AND HOSTNAME='" . strtoupper(db2_escape_string($hostname)) . "' ";
         $sql.= " AND TRANSFERRED_TO_HOSTNAME is null ";
        
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
         
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -37,7 +37,7 @@ class dlpTable extends DbTable {
         $sql.= " AND HOSTNAME='" . db2_escape_string(strtoupper(trim($fromHostname))) . "' ";
         $sql.= " AND TRANSFERRED_TO_HOSTNAME is null ";
        
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
         
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -57,7 +57,7 @@ class dlpTable extends DbTable {
         $sql.= ",'" . dlpRecord::STATUS_PENDING . "' ";
         $sql.= " ) ";
        
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
         
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -102,7 +102,7 @@ class dlpTable extends DbTable {
         $sql.= !empty($predicate) ? $predicate : null;
         $sql.= " ; ";
         
-        $rs = db2_exec($_SESSION['conn'],$sql);
+        $rs = db2_exec($GLOBALS['conn'],$sql);
         
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -197,7 +197,7 @@ class dlpTable extends DbTable {
         
         
         
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
         
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -215,7 +215,7 @@ class dlpTable extends DbTable {
         $sql.= " AND HOSTNAME='" . db2_escape_string(trim($hostname)) . "' ";
         $sql.= empty(($transferred)) ? " AND TRANSFERRED_TO_HOSTNAME is null " : " AND TRANSFERRED_TO_HOSTNAME='" . db2_escape_string(trim(strtoupper($transferred))) . "' ";
         
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
         
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);

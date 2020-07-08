@@ -371,7 +371,7 @@ class personRecord extends DbRecord
     static function loadKnownCnum($predicate=null){
         $sql = " SELECT CNUM FROM " . $GLOBALS['Db2Schema'] . "." .  allTables::$PERSON;
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -396,7 +396,7 @@ class personRecord extends DbRecord
         $sql.= " ORDER BY 1 ";
 
 
-        $rs = db2_exec($_SESSION['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -1734,15 +1734,15 @@ class personRecord extends DbRecord
 //            $sqlInsert[] = "INSERT into SESSION.EMPLOYEE_TYPE_MAPPING  ( code, description ) values ('$code','$description') ";
 //        }
 
-//         db2_exec($_SESSION['conn'], $sqlDrop);
-//         $created = db2_exec($_SESSION['conn'], $sqlCreate);
+//         db2_exec($GLOBALS['conn'], $sqlDrop);
+//         $created = db2_exec($GLOBALS['conn'], $sqlCreate);
 
 //         if(!$created){
 //             throw new \Exception('Unable to create EmployeeTypeMapping Temp Table');
 //         }
 
 //         foreach ($sqlInsert as $insertStatement){
-//             $inserted = db2_exec($_SESSION['conn'], $insertStatement);
+//             $inserted = db2_exec($GLOBALS['conn'], $insertStatement);
 //             if(!$inserted){
 //                 throw new \Exception('Unable to populate EmployeeTypeMapping Temp Table');
 //             }
