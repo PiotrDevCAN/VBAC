@@ -1,5 +1,10 @@
 <?php
 
+function tryConnect($conn_string){
+    return db2_connect( $conn_string, "", "" );
+}
+
+
 if( isset($_ENV['ssldsn']) )
 {
     # Get database details from the VCAP_SERVICES environment variable
@@ -17,8 +22,17 @@ if( isset($_ENV['ssldsn']) )
     $driver = "DRIVER={IBM DB2 ODBC DRIVER};";
     //    $conn_string = $driver . $dsn;     # Non-SSL
     $conn_string = $driver . $ssl_dsn; # SSL
+    
+    $conn=false;
+    $attempts = 0;
 
-    $conn = db2_connect( $conn_string, "", "" );
+    while(!$conn && ++$attempts < 3){
+        // since Cirrus - we have the occasional problem connecting, so sleep and try again a couple of times 
+        $conn = tryConnect($conn_string);
+        sleep(3);
+    }
+    
+
     if( $conn )
     {
         $GLOBALS['conn'] = $conn;
@@ -46,7 +60,7 @@ if( isset($_ENV['ssldsn']) )
         error_log(__FILE__ . __LINE__ . $conn_string);
         error_log(__FILE__ . __LINE__ . db2_conn_errormsg());
         error_log(__FILE__ . __LINE__ . db2_conn_error());
-        throw new Exception('Connection Failed');
+        throw new Exception('Failed to connect to DB2');
     }
 }
 else
@@ -56,7 +70,6 @@ else
     echo "</pre>";
     echo "<p>No credentials.</p>";
 }
-
 
 
 
