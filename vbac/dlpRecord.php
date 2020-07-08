@@ -122,7 +122,7 @@ class dlpRecord extends DbRecord
                     <option value=''>
                     </option>
                     <?php
-                    $isFm = $GLOBALS['isFm'];
+                    $isFm = $_SESSION['isFm'];
                     $myCnum = personTable::myCnum();                    
                     foreach ($approvingMgrs as $cnum => $notesId){
                             $displayedName = !empty(trim($notesId)) ?  trim($notesId) : $selectableEmailAddress[$cnum];

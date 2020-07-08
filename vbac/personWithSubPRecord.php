@@ -345,9 +345,9 @@ class personWithSubPRecord extends personRecord
      <div class='form-group' id='selectCioAllignment'>
          <div class='col-sm-4'>
              <div class="radio">
-          		<label><input type="radio" name="CTB_RTB"  class='ctbRtb' value='CTB' required  <?=substr($this->CTB_RTB,0,3)=='CTB'? 'checked' : null ?>    <?=$GLOBALS['isPmo'] || $GLOBALS['isCdi'] ? null :  $notEditable;?>>CTB</label>
-          		<label><input type="radio" name="CTB_RTB"  class='ctbRtb' value='RTB' required <?=substr($this->CTB_RTB,0,3)=='RTB'? 'checked' : null ?>     <?=$GLOBALS['isPmo'] || $GLOBALS['isCdi'] ? null :  $notEditable;?>>RTB</label>
-          		<label><input type="radio" name="CTB_RTB"  class='ctbRtb' value='Other' required <?=substr($this->CTB_RTB,0,5)=='Other'? 'checked' : null ?> <?=$GLOBALS['isPmo'] || $GLOBALS['isCdi'] ? null :  $notEditable;?>>Other</label>
+          		<label><input type="radio" name="CTB_RTB"  class='ctbRtb' value='CTB' required  <?=substr($this->CTB_RTB,0,3)=='CTB'? 'checked' : null ?>    <?=$_SESSION['isPmo'] || $_SESSION['isCdi'] ? null :  $notEditable;?>>CTB</label>
+          		<label><input type="radio" name="CTB_RTB"  class='ctbRtb' value='RTB' required <?=substr($this->CTB_RTB,0,3)=='RTB'? 'checked' : null ?>     <?=$_SESSION['isPmo'] || $_SESSION['isCdi'] ? null :  $notEditable;?>>RTB</label>
+          		<label><input type="radio" name="CTB_RTB"  class='ctbRtb' value='Other' required <?=substr($this->CTB_RTB,0,5)=='Other'? 'checked' : null ?> <?=$_SESSION['isPmo'] || $_SESSION['isCdi'] ? null :  $notEditable;?>>Other</label>
          	</div>
          </div>
          <div class='col-sm-4'>

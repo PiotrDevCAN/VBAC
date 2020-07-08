@@ -161,7 +161,7 @@ class assetRequestsTable extends DbTable{
             $approveButton .= "data-asset='"     .trim($row['ASSET']) . "' ";
             $approveButton .= "data-orderitstatus='".trim($row['ORDERIT_STATUS']) . "' ";
             $approveButton .= "data-status='".trim($row['STATUS']) . "' ";
-            $approveButton .= "data-ispmo='".$GLOBALS['isPmo'] . "' ";
+            $approveButton .= "data-ispmo='".$_SESSION['isPmo'] . "' ";
             $approveButton .= "data-toggle='tooltip' data-placement='top' title='Approve the request'";
             $approveButton .= " > ";
             $approveButton .= "<span class='glyphicon glyphicon-ok ' aria-hidden='true'></span>";
@@ -190,11 +190,11 @@ class assetRequestsTable extends DbTable{
             $amendOITButton .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
             $amendOITButton .= " </button> ";
 
-            $amendOITButton = $withButtons && $GLOBALS['isPmo'] && !empty($row['ORDERIT_NUMBER']) ? "&nbsp;" . $amendOITButton : '';
+            $amendOITButton = $withButtons && $_SESSION['isPmo'] && !empty($row['ORDERIT_NUMBER']) ? "&nbsp;" . $amendOITButton : '';
 
             $row['ORDERIT_NUMBER'] = $amendOITButton . $row['ORDERIT_NUMBER'];
 
-            $pmoOrFm = ($GLOBALS['isFm'] || $GLOBALS['isPmo']);
+            $pmoOrFm = ($_SESSION['isFm'] || $_SESSION['isPmo']);
             $notTheirOwnRecord = ( trim(strtolower($row['REQUESTEE_EMAIL'])) != trim(strtolower($_SESSION['ssoEmail'])));
 
             $allowedtoApproveReject = $withButtons && $pmoOrFm && $notTheirOwnRecord;
@@ -215,7 +215,7 @@ class assetRequestsTable extends DbTable{
                     break;
                 case $status == assetRequestRecord::STATUS_AWAITING_IAM:
                     $rejectable = true;
-                    $approvable = $GLOBALS['isPmo']; // Only PMO get the approve button now.
+                    $approvable = $_SESSION['isPmo']; // Only PMO get the approve button now.
                     break;
 
                 default:
@@ -248,7 +248,7 @@ class assetRequestsTable extends DbTable{
                $indicatorIfApproverIsFm = "<span class='bg-warning'>&nbsp;";
             }
 
-            $indicatorIfApproverIsFm = $GLOBALS['isPmo'] ? $indicatorIfApproverIsFm : "<span>&nbsp;";
+            $indicatorIfApproverIsFm = $_SESSION['isPmo'] ? $indicatorIfApproverIsFm : "<span>&nbsp;";
 
             $row['APPROVER'] = $indicatorIfApproverIsFm .  $row['APPROVER_EMAIL'] . "&nbsp;</span><br/><small>" . $row['APPROVED_DATE'] . "</small>";
 

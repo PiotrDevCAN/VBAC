@@ -170,7 +170,7 @@ class dlpTable extends DbTable {
                 break;
         } 
         
-        if($GLOBALS['isPmo'] || $GLOBALS['isCdi']){
+        if($_SESSION['isPmo'] || $_SESSION['isCdi']){
             $licensee = $row['LICENSEE'];
             $row['LICENSEE'] = $deleteButton . "&nbsp;" . $licensee;
         }

@@ -42,7 +42,7 @@ class delegateTable extends DbTable {
         $sql = " SELECT * ";
         $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
 
-        if(!$GLOBALS['isPmo'] && !$GLOBALS['isCdi']){
+        if(!$_SESSION['isPmo'] && !$_SESSION['isCdi']){
             $sql.= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
         }
 

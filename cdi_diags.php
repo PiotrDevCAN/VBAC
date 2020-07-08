@@ -15,11 +15,11 @@ echo "<div class='container'>";
 
 echo "<h3>cdi_diags</h3>";
 
-unset($GLOBALS['isFm']);
-unset($GLOBALS['isCdi']);
-unset($GLOBALS['isPmo']);
-unset($GLOBALS['isUser']);
-unset($GLOBALS['isPes']);
+unset($_SESSION['isFm']);
+unset($_SESSION['isCdi']);
+unset($_SESSION['isPmo']);
+unset($_SESSION['isUser']);
+unset($_SESSION['isPes']);
 
 $isFm   = personTable::isManager($_SESSION['ssoEmail'])                 ? ".not('.accessFm')" : null;
 $isCdi  = employee_in_group($_SESSION['cdiBg'],  $_SESSION['ssoEmail']) ? ".not('.accessCdi')" : null;
@@ -28,11 +28,11 @@ $isPes  = employee_in_group($_SESSION['pesBg'],  $_SESSION['ssoEmail']) ? ".not(
 $isUser = ".not('.accessUser')";
 
 
-$GLOBALS['isFm']   = !empty($isFm)   ? true : false;
-$GLOBALS['isCdi']  = !empty($isCdi)  ? true : false;
-$GLOBALS['isPmo']  = !empty($isPmo)  ? true : false;
-$GLOBALS['isUser'] = !empty($isUser) ? true : false;
-$GLOBALS['isPes']  = !empty($isPes)  ? true : false;
+$_SESSION['isFm']   = !empty($isFm)   ? true : false;
+$_SESSION['isCdi']  = !empty($isCdi)  ? true : false;
+$_SESSION['isPmo']  = !empty($isPmo)  ? true : false;
+$_SESSION['isUser'] = !empty($isUser) ? true : false;
+$_SESSION['isPes']  = !empty($isPes)  ? true : false;
 
 ?>
 

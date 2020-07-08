@@ -21,15 +21,15 @@ $predicate = null;
 $allDelegates = $loader->load('DELEGATE_CNUM',allTables::$DELEGATE);
 
 switch (true) {
-    case $GLOBALS['isFm']:
+    case $_SESSION['isFm']:
         $myCnum = personTable::myCnum();
         $predicate .= " AND ( F.CNUM='". db2_escape_string($myCnum) . "' ";
         $predicate .= "       OR ";
         $predicate .= "       G.DELEGATE_CNUM='" . db2_escape_string($myCnum) . "' ";
         $predicate .= "     ) ";
         break;
-    case $GLOBALS['isCdi']:
-    case $GLOBALS['isPmo']:
+    case $_SESSION['isCdi']:
+    case $_SESSION['isPmo']:
         $myCnum = personTable::myCnum();
         break;
     default:

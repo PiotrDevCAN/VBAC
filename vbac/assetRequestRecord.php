@@ -74,7 +74,7 @@ class assetRequestRecord extends DbRecord {
         $myCnum = personTable::myCnum();
         $myManagersCnum = personTable::myManagersCnum();
         $isFm   = personTable::isManager($_SESSION['ssoEmail']);
-        $isPmo  = $GLOBALS['isPmo'];
+        $isPmo  = $_SESSION['isPmo'];
         $isRequestor = employee_in_group('vbac_requestor', $_SESSION['ssoEmail']);
 
         $iAmDelegateForArray = $loader->load('CNUM',allTables::$DELEGATE," AND DELEGATE_CNUM='" . db2_escape_string($myCnum) . "' ");

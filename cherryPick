@@ -34,7 +34,7 @@ index 3b4cb26..34974a7 100644
          $myCnum = personTable::myCnum();
  
  
-         $justaUser = !$GLOBALS['isCdi']  && !$GLOBALS['isPmo'] && !$GLOBALS['isPes'] && !$GLOBALS['isFm'] ;
+         $justaUser = !$_SESSION['isCdi']  && !$_SESSION['isPmo'] && !$_SESSION['isPes'] && !$_SESSION['isFm'] ;
  
          $predicate = " 1=1  ";
  
@@ -84,7 +84,7 @@ index 3b4cb26..34974a7 100644
          }
  
          // PMO_STATUS
-         if($GLOBALS['isPmo'] || $GLOBALS['isCdi']){
+         if($_SESSION['isPmo'] || $_SESSION['isCdi']){
              // depending on what the current status is - well give buttons to set to "Confirmed" or "Aware";
              $pmoStatus = trim($row['PMO_STATUS']);
              $pmoStatus = empty($pmoStatus) ? 'To be assessed' : $pmoStatus;
