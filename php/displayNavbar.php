@@ -197,13 +197,13 @@ $isFm = $isPmo ? null : $isFm; // If they are PMO it don't matter if they are FM
 
 
 
-$_SESSION['isFm']   = !empty($isFm)   ? true : false;
-$_SESSION['isCdi']  = !empty($isCdi)  ? true : false;
-$_SESSION['isPmo']  = !empty($isPmo)  ? true : false;
-$_SESSION['isPes']  = !empty($isPes)  ? true : false;
-$_SESSION['isUser'] = !empty($isUser) ? true : false;
-$_SESSION['isRep1'] = !empty($isRep1) ? true : false;
-$_SESSION['isRes']  = !empty($isRes) ? true : false;
+$GLOBALS['isFm']   = !empty($isFm)   ? true : false;
+$GLOBALS['isCdi']  = !empty($isCdi)  ? true : false;
+$GLOBALS['isPmo']  = !empty($isPmo)  ? true : false;
+$GLOBALS['isPes']  = !empty($isPes)  ? true : false;
+$GLOBALS['isUser'] = !empty($isUser) ? true : false;
+$GLOBALS['isRep1'] = !empty($isRep1) ? true : false;
+$GLOBALS['isRes']  = !empty($isRes) ? true : false;
 
 
 $plannedOutagesId = str_replace(" ","_",$plannedOutagesLabel);

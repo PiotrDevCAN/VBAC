@@ -31,21 +31,9 @@ while(ob_get_level()>0){
     ob_end_clean();
 }
 ob_start();
+$GLOBALS['Db2Schema'] = strtoupper($_ENV['environment']);
 $https = (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == "on");
 
-// Only keep login data available via secure sessions
-if (isset($_SESSION['ltcuser']) && $https === FALSE) {
-    unset($_SESSION['ltcuser']);
-}
-// restore cached logins
-if (isset($_SESSION['ltcuser']['expire'])) {
-    if ($_SESSION['ltcuser']['expire'] > time()) {
-        $GLOBALS['ltcuser'] = $_SESSION['ltcuser'];
-    } else {
-        unset($GLOBALS['ltcuser']);
-        unset($_SESSION['ltcuser']);
-    }
-}
 
 // global var and config file
 include_once ('w3config.php');

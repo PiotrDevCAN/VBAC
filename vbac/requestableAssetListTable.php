@@ -59,7 +59,7 @@ class requestableAssetListTable extends DbTable {
         $removed   = trim($row['LISTING_ENTRY_REMOVED']);
         $removedBy = trim($row['LISTING_ENTRY_REMOVED_BY']);
 
-        if($_SESSION['isPmo'] || $_SESSION['isCdi']){
+        if($GLOBALS['isPmo'] || $GLOBALS['isCdi']){
             $row['LISTING_ENTRY_CREATED']  = "<button type='button' class='btn btn-default btn-xs btnEditAsset' aria-label='Left Align' ";
             $row['LISTING_ENTRY_CREATED'] .= "data-asset='" . trim($row['ASSET_TITLE']) . "' ";
             $row['LISTING_ENTRY_CREATED'] .= "data-prereq='" .trim($row['ASSET_PREREQUISITE']) . "' ";

@@ -46,8 +46,7 @@ if( isset($_ENV['ssldsn']) )
         error_log(__FILE__ . __LINE__ . $conn_string);
         error_log(__FILE__ . __LINE__ . db2_conn_errormsg());
         error_log(__FILE__ . __LINE__ . db2_conn_error());
-
-        echo "<p>Connection failed.</p>";
+        throw new Exception('Connection Failed');
     }
 }
 else

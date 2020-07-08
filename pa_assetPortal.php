@@ -57,17 +57,17 @@ $assetTable->confirmReturnedModal();
 $assetTable->justificationEditModal();
 $assetTable->amendOrderItModal();
 
-$isFm   = $_SESSION['isFm']   ? ".not('.accessFm')"   : null;
-$isCdi  = $_SESSION['isCdi']  ? ".not('.accessCdi')"  : null;
-$isPmo  = $_SESSION['isPmo']  ? ".not('.accessPmo')"  : null;
-$isPes  = $_SESSION['isPes']  ? ".not('.accessPes')"  : null;
-$isUser = $_SESSION['isUser'] ? ".not('.accessUser')" : null;
+$isFm   = $GLOBALS['isFm']   ? ".not('.accessFm')"   : null;
+$isCdi  = $GLOBALS['isCdi']  ? ".not('.accessCdi')"  : null;
+$isPmo  = $GLOBALS['isPmo']  ? ".not('.accessPmo')"  : null;
+$isPes  = $GLOBALS['isPes']  ? ".not('.accessPes')"  : null;
+$isUser = $GLOBALS['isUser'] ? ".not('.accessUser')" : null;
 $myCnum = personTable::myCnum();
 
 
 ?>
-<input type='hidden' id='isPmo' value='<?=$_SESSION['isPmo']?>' />
-<input type='hidden' id='isFm' value='<?=$_SESSION['isFm']?>' />
+<input type='hidden' id='isPmo' value='<?=$GLOBALS['isPmo']?>' />
+<input type='hidden' id='isFm' value='<?=$GLOBALS['isFm']?>' />
 <input type='hidden' id='myCnum' value='<?=$myCnum?>' />
 
 <script>

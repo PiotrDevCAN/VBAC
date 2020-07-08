@@ -183,7 +183,7 @@ class personTable extends DbTable {
         $myCnum = personTable::myCnum();
 
 
-        $justaUser = !$_SESSION['isCdi']  && !$_SESSION['isPmo'] && !$_SESSION['isPes'] && !$_SESSION['isFm'] ;
+        $justaUser = !$GLOBALS['isCdi']  && !$GLOBALS['isPmo'] && !$GLOBALS['isPes'] && !$GLOBALS['isFm'] ;
 
         $predicate = " 1=1  ";
 
@@ -339,7 +339,7 @@ class personTable extends DbTable {
         }
 
         // PMO_STATUS
-        if($_SESSION['isPmo'] || $_SESSION['isCdi']){
+        if($GLOBALS['isPmo'] || $GLOBALS['isCdi']){
             // depending on what the current status is - well give buttons to set to "Confirmed" or "Aware";
             $pmoStatus = trim($row['PMO_STATUS']);
             $pmoStatus = empty($pmoStatus) ? 'To be assessed' : $pmoStatus;
@@ -369,7 +369,7 @@ class personTable extends DbTable {
         }
 
         // FM_MANAGER_FLAG
-        if($_SESSION['isPmo'] || $_SESSION['isCdi']){
+        if($GLOBALS['isPmo'] || $GLOBALS['isCdi']){
             if(strtoupper(substr($flag,0,1))=='N' || empty($flag)){
                 $row['FM_MANAGER_FLAG']  = "<button type='button' class='btn btn-default btn-xs btnSetFmFlag' aria-label='Left Align' ";
                 $row['FM_MANAGER_FLAG'] .= "data-cnum='" .$cnum . "' ";
@@ -392,7 +392,7 @@ class personTable extends DbTable {
             $row['FM_MANAGER_FLAG'] .= $flag;
         }
 
-        if($_SESSION['isPes'] || $_SESSION['isPmo'] || $_SESSION['isFm'] || $_SESSION['isCdi']){
+        if($GLOBALS['isPes'] || $GLOBALS['isPmo'] || $GLOBALS['isFm'] || $GLOBALS['isCdi']){
             $row['PES_STATUS'] = self::getPesStatusWithButtons($row);
         } else {
             $row['PES_STATUS'] = array('display'=>$row['PES_STATUS'],'sort'=>$row['PES_STATUS']);
@@ -415,7 +415,7 @@ class personTable extends DbTable {
         $row['NOTES_ID'] .= " </button>";
 
 
-        if(($_SESSION['isPes'] || $_SESSION['isPmo'] || $_SESSION['isFm'] || $_SESSION['isCdi']) && ($revalidationStatus!=personRecord::REVALIDATED_OFFBOARDED))  {
+        if(($GLOBALS['isPes'] || $GLOBALS['isPmo'] || $GLOBALS['isFm'] || $GLOBALS['isCdi']) && ($revalidationStatus!=personRecord::REVALIDATED_OFFBOARDED))  {
             $row['NOTES_ID'] .= "<button type='button' class='btn btn-default btn-xs btnEditPerson' aria-label='Left Align' ";
             $row['NOTES_ID'] .= "data-cnum='" .$cnum . "'";
             $row['NOTES_ID'] .= " data-toggle='tooltip' data-placement='top' title='Edit Person Record'";
@@ -427,7 +427,7 @@ class personTable extends DbTable {
         $row['NOTES_ID'] .= $notesId;
 
 
-        if( ($_SESSION['isPmo'] || $_SESSION['isCdi']) && (substr(trim($row['REVALIDATION_STATUS']),0,11)==personRecord::REVALIDATED_OFFBOARDING))  {
+        if( ($GLOBALS['isPmo'] || $GLOBALS['isCdi']) && (substr(trim($row['REVALIDATION_STATUS']),0,11)==personRecord::REVALIDATED_OFFBOARDING))  {
             $row['REVALIDATION_STATUS']  = "<button type='button' class='btn btn-default btn-xs btnStopOffboarding btn-danger' aria-label='Left Align' ";
             $row['REVALIDATION_STATUS'] .= "data-cnum='" .$cnum . "'";
             $row['REVALIDATION_STATUS'] .= " data-toggle='tooltip' data-placement='top' title='Stop Offboarding Process'";
@@ -444,7 +444,7 @@ class personTable extends DbTable {
             $row['REVALIDATION_STATUS'] .= $revalidationStatus;
         }
 
-        if( $potentialForOffboarding && ($_SESSION['isPmo'] || $_SESSION['isCdi']) && substr(trim($row['REVALIDATION_STATUS']),0,11)!=personRecord::REVALIDATED_OFFBOARDING )  {
+        if( $potentialForOffboarding && ($GLOBALS['isPmo'] || $GLOBALS['isCdi']) && substr(trim($row['REVALIDATION_STATUS']),0,11)!=personRecord::REVALIDATED_OFFBOARDING )  {
             $row['REVALIDATION_STATUS']  = "<button type='button' class='btn btn-default btn-xs btnOffboarding btn-warning' aria-label='Left Align' ";
             $row['REVALIDATION_STATUS'] .= "data-cnum='" .$cnum . "'";
             $row['REVALIDATION_STATUS'] .= " data-toggle='tooltip' data-placement='top' title='Initiate Offboarding." . $offboardingHint . "' ";
@@ -454,7 +454,7 @@ class personTable extends DbTable {
             $row['REVALIDATION_STATUS'] .= $revalidationStatus;
          }
 
-         if( ($_SESSION['isPmo'] || $_SESSION['isCdi']) && substr(trim($row['REVALIDATION_STATUS']),0,10)==personRecord::REVALIDATED_OFFBOARDED )  {
+         if( ($GLOBALS['isPmo'] || $GLOBALS['isCdi']) && substr(trim($row['REVALIDATION_STATUS']),0,10)==personRecord::REVALIDATED_OFFBOARDED )  {
              $row['REVALIDATION_STATUS']  = "<button type='button' class='btn btn-default btn-xs btnDeoffBoarding btn-danger' aria-label='Left Align' ";
              $row['REVALIDATION_STATUS'] .= "data-cnum='" .$cnum . "'";
              $row['REVALIDATION_STATUS'] .= "title='Bring back from Offboarding.'";
@@ -465,7 +465,7 @@ class personTable extends DbTable {
              $row['REVALIDATION_STATUS'] .= $revalidationStatus;
          }
 
-         if( ($_SESSION['isPmo'] || $_SESSION['isCdi']) && !empty($ctid)  )  {
+         if( ($GLOBALS['isPmo'] || $GLOBALS['isCdi']) && !empty($ctid)  )  {
              $row['CT_ID']  = "<button type='button' class='btn btn-default btn-xs btnClearCtid btn-danger' aria-label='Left Align' ";
              $row['CT_ID'] .= "data-cnum='" .$cnum . "'";
              $row['CT_ID'] .= "title='Delete CT ID.'";
@@ -810,8 +810,8 @@ class personTable extends DbTable {
 
 
     static function isManager($emailAddress){
-         if(isset($_SESSION['isFm'])) {
-            return $_SESSION['isFm'];
+         if(isset($GLOBALS['isFm'])) {
+            return $GLOBALS['isFm'];
         }
 
         if (empty($emailAddress)) {
@@ -839,8 +839,8 @@ class personTable extends DbTable {
 
 
         $flagValue = strtoupper(substr(trim($row['FM_MANAGER_FLAG']),0,1));
-        $_SESSION['isFm'] = ($flagValue=='Y');
-        return $_SESSION['isFm'];
+        $GLOBALS['isFm'] = ($flagValue=='Y');
+        return $GLOBALS['isFm'];
     }
 
     static function myCnum(){
@@ -1545,7 +1545,7 @@ class personTable extends DbTable {
             case $boarder:
                 // Don't add buttons if this is a boarded - pre-boarder record.
                 break;
-            case $status == personRecord::PES_STATUS_TBD && !$_SESSION['isPes']:
+            case $status == personRecord::PES_STATUS_TBD && !$GLOBALS['isPes']:
             case $status == personRecord::PES_STATUS_NOT_REQUESTED:
                 $pesStatusWithButton.= "<button type='button' class='btn btn-default btn-xs btnPesInitiate accessRestrict accessPmo accessFm' ";
                 $pesStatusWithButton.= "aria-label='Left Align' ";
@@ -1556,8 +1556,8 @@ class personTable extends DbTable {
                 $pesStatusWithButton.= "<span class='glyPesInitiate glyphicon glyphicon-plane ' aria-hidden='true'></span>";
                 $pesStatusWithButton.= "</button>&nbsp;";
                 break;
-            case $status == personRecord::PES_STATUS_INITIATED && $_SESSION['isPes'] ;
-            case $status == personRecord::PES_STATUS_RESTART   && $_SESSION['isPes'] ;
+            case $status == personRecord::PES_STATUS_INITIATED && $GLOBALS['isPes'] ;
+            case $status == personRecord::PES_STATUS_RESTART   && $GLOBALS['isPes'] ;
                 $emailAddress = trim($row['EMAIL_ADDRESS']);
                 $firstName    = trim($row['FIRST_NAME']);
                 $lastName     = trim($row['LAST_NAME']);
@@ -1590,9 +1590,9 @@ class personTable extends DbTable {
                 $pesStatusWithButton.= "<span class='glyphicon glyphicon-send ' aria-hidden='true' ></span>";
                 $pesStatusWithButton.= "</button>&nbsp;";
                 break;
-            case $status == personRecord::PES_STATUS_DECLINED && ( $_SESSION['isFm'] || $_SESSION['isCdi'] )  ;
-            case $status == personRecord::PES_STATUS_FAILED && ( $_SESSION['isFm'] || $_SESSION['isCdi'] )  ;
-            case $status == personRecord::PES_STATUS_REMOVED && ( $_SESSION['isFm'] || $_SESSION['isCdi'] )  :
+            case $status == personRecord::PES_STATUS_DECLINED && ( $GLOBALS['isFm'] || $GLOBALS['isCdi'] )  ;
+            case $status == personRecord::PES_STATUS_FAILED && ( $GLOBALS['isFm'] || $GLOBALS['isCdi'] )  ;
+            case $status == personRecord::PES_STATUS_REMOVED && ( $GLOBALS['isFm'] || $GLOBALS['isCdi'] )  :
                 $pesStatusWithButton.= "<button type='button' class='btn btn-default btn-xs btnPesRestart accessRestrict accessFm accessCdi' aria-label='Left Align' ";
                 $pesStatusWithButton.= " data-cnum='" .$actualCnum . "' ";
                 $pesStatusWithButton.= " data-notesid='" . $notesId . "' ";
@@ -1607,18 +1607,18 @@ class personTable extends DbTable {
                 $pesStatusWithButton.= "<span class='glyphicon glyphicon-refresh ' aria-hidden='true' ></span>";
                 $pesStatusWithButton.= "</button>";
                 break;
-            case $status == personRecord::PES_STATUS_REQUESTED && $_SESSION['isPes'] :
-            case $status == personRecord::PES_STATUS_CLEARED_PERSONAL && $_SESSION['isPes'] :
-            case $status == personRecord::PES_STATUS_CLEARED && $_SESSION['isPes'] :
-            case $status == personRecord::PES_STATUS_EXCEPTION && $_SESSION['isPes'] :
-            case $status == personRecord::PES_STATUS_DECLINED && $_SESSION['isPes'] ;
-            case $status == personRecord::PES_STATUS_FAILED && $_SESSION['isPes'] ;
-            case $status == personRecord::PES_STATUS_REMOVED && $_SESSION['isPes'] :
-            case $status == personRecord::PES_STATUS_REVOKED && $_SESSION['isPes'] :
-            case $status == personRecord::PES_STATUS_LEFT_IBM && $_SESSION['isPes'] :
-            case $status == personRecord::PES_STATUS_PROVISIONAL && $_SESSION['isPes'] :
-            case $status == personRecord::PES_STATUS_TBD && $_SESSION['isPes'] :
-            case $status == personRecord::PES_STATUS_RECHECK_REQ && $_SESSION['isPes'] :
+            case $status == personRecord::PES_STATUS_REQUESTED && $GLOBALS['isPes'] :
+            case $status == personRecord::PES_STATUS_CLEARED_PERSONAL && $GLOBALS['isPes'] :
+            case $status == personRecord::PES_STATUS_CLEARED && $GLOBALS['isPes'] :
+            case $status == personRecord::PES_STATUS_EXCEPTION && $GLOBALS['isPes'] :
+            case $status == personRecord::PES_STATUS_DECLINED && $GLOBALS['isPes'] ;
+            case $status == personRecord::PES_STATUS_FAILED && $GLOBALS['isPes'] ;
+            case $status == personRecord::PES_STATUS_REMOVED && $GLOBALS['isPes'] :
+            case $status == personRecord::PES_STATUS_REVOKED && $GLOBALS['isPes'] :
+            case $status == personRecord::PES_STATUS_LEFT_IBM && $GLOBALS['isPes'] :
+            case $status == personRecord::PES_STATUS_PROVISIONAL && $GLOBALS['isPes'] :
+            case $status == personRecord::PES_STATUS_TBD && $GLOBALS['isPes'] :
+            case $status == personRecord::PES_STATUS_RECHECK_REQ && $GLOBALS['isPes'] :
                 $pesStatusWithButton.= "<button type='button' class='btn btn-default btn-xs btnPesStatus' aria-label='Left Align' ";
                 $pesStatusWithButton.= " data-cnum='" .$actualCnum . "' ";
                 $pesStatusWithButton.= " data-notesid='" . $notesId . "' ";
@@ -1634,9 +1634,9 @@ class personTable extends DbTable {
                 $pesStatusWithButton.= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
                 $pesStatusWithButton.= "</button>";
                 break;
-            case $status == personRecord::PES_STATUS_REQUESTED && !$_SESSION['isPes'] :
-            case $status == personRecord::PES_STATUS_RECHECK_REQ && !$_SESSION['isPes'] :
-            case $status == personRecord::PES_STATUS_INITIATED && !$_SESSION['isPes'] ;
+            case $status == personRecord::PES_STATUS_REQUESTED && !$GLOBALS['isPes'] :
+            case $status == personRecord::PES_STATUS_RECHECK_REQ && !$GLOBALS['isPes'] :
+            case $status == personRecord::PES_STATUS_INITIATED && !$GLOBALS['isPes'] ;
                 $pesStatusWithButton.= "<button type='button' class='btn btn-default btn-xs btnPesStop accessRestrict accessFm' aria-label='Left Align' ";
                 $pesStatusWithButton.= " data-cnum='" .$actualCnum . "' ";
                 $pesStatusWithButton.= " data-notesid='" . $notesId . "' ";
@@ -1650,7 +1650,7 @@ class personTable extends DbTable {
                 $pesStatusWithButton.= "<span class='glyphicon glyphicon-ban-circle ' aria-hidden='true' ></span>";
                 $pesStatusWithButton.= "</button>";
                 break;
-            case $status == personRecord::PES_STATUS_CANCEL_CONFIRMED && $_SESSION['isPes'] :
+            case $status == personRecord::PES_STATUS_CANCEL_CONFIRMED && $GLOBALS['isPes'] :
             default:
                 break;
         }

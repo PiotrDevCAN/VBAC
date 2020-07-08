@@ -781,6 +781,7 @@ function personRecord() {
 	  $(document).ready(function(){
       var accountOrganisation = $('.accountOrganisation:checked').val();
       var nullFirstEntry  = [''];
+      console.log(workStream);
       for(i=0;i<workStream.length;i++){
         if(workStream[0][i]==accountOrganisation){
           var workStreamValues = nullFirstEntry.concat(workStream[i+1]);

@@ -13,11 +13,11 @@ ob_start();
 $_SESSION['ssoEmail'] = $_SESSION['ssoEmail'];
 
 $loader = new Loader();
-// $_SESSION['isFm']   = !empty($isFm)   ? true : false;
-// $_SESSION['isCdi']  = !empty($isCdi)  ? true : false;
-// $_SESSION['isPmo']  = !empty($isPmo)  ? true : false;
-// $_SESSION['isPes']  = !empty($isPes)  ? true : false;
-// $_SESSION['isUser'] = !empty($isUser) ? true : false;
+// $GLOBALS['isFm']   = !empty($isFm)   ? true : false;
+// $GLOBALS['isCdi']  = !empty($isCdi)  ? true : false;
+// $GLOBALS['isPmo']  = !empty($isPmo)  ? true : false;
+// $GLOBALS['isPes']  = !empty($isPes)  ? true : false;
+// $GLOBALS['isUser'] = !empty($isUser) ? true : false;
 $show = !empty($_POST['show']) ? $_POST['show'] : 'all';
 $pmoRaised = !empty($_POST['pmoRaised']) ?$_POST['pmoRaised'] : false;
 
@@ -27,7 +27,7 @@ $pmoRaised = strtolower($pmoRaised)=='true';
 $withButtons = true;
 $predicate = null;
 switch (true) {
-    case $_SESSION['isFm']:
+    case $GLOBALS['isFm']:
         echo "is FM";
         $myCnum = personTable::myCnum();
 
@@ -47,9 +47,9 @@ switch (true) {
         $predicate .= "       D.DELEGATE_CNUM='" . db2_escape_string($myCnum) . "' ) ";
 
         break;
-    case $_SESSION['isCdi']:
+    case $GLOBALS['isCdi']:
         echo "is CDI";
-    case $_SESSION['isPmo']:
+    case $GLOBALS['isPmo']:
         echo "is PMO";
         $assetRequestTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
 

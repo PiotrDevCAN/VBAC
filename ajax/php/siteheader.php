@@ -11,6 +11,8 @@ set_include_path("./" . PATH_SEPARATOR . "../" . PATH_SEPARATOR . "../../" . PAT
 include ('vendor/autoload.php');
 include ('splClassLoader.php');
 
+$GLOBALS['Db2Schema'] = strtoupper($_ENV['environment']);
+
 $sessionConfig = (new \ByJG\Session\SessionConfig($_SERVER['SERVER_NAME']))
 ->withSecret($_ENV['jwt_token']);
 
