@@ -11,7 +11,7 @@ include ('vendor/autoload.php');
 include ('splClassLoader.php');
 
 $sessionConfig = (new \ByJG\Session\SessionConfig($_SERVER['SERVER_NAME']))
-->withTimeoutMinutes(4)
+->withTimeoutMinutes(120)
 ->withSecret($_ENV['jwt_token']);
 
 $handler = new JwtSecureSession($sessionConfig);

@@ -42,7 +42,7 @@ include ('splClassLoader.php');
 $GLOBALS['Db2Schema'] = strtoupper($_ENV['environment']);
 
 $sessionConfig = (new \ByJG\Session\SessionConfig($_SERVER['SERVER_NAME']))
-->withTimeoutMinutes(4)
+->withTimeoutMinutes(120)
 ->withSecret($_ENV['jwt_token']);
 
 $handler = new JwtSecureSession($sessionConfig);
