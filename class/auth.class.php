@@ -156,7 +156,7 @@
 		{
 		    $authorizedUrL = $this->generateOpenIDConnectAuthorizeURL();
 		    error_log(__CLASS__ . __FUNCTION__ . __LINE__. " About to pass to  : " . $authorizedUrL);
-		    header("Access-Control-Allow-Origin:*");
+		    header("Access-Control-Allow-Origin: *");
 			header("Location: ".$authorizedUrL);
 			exit();
 		}
