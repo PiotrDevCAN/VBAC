@@ -27,7 +27,7 @@ $sql.= " ON upper(P.EMPLOYEE_TYPE) = upper(T.CODE) ";
 $sql.= " LEFT JOIN " . $_ENV['environment'] . "." . allTables::$AGILE_SQUAD .  " AS SQ ";
 $sql.= " ON P.SQUAD_NUMBER = SQ.SQUAD_NUMBER ";
 $sql.= " LEFT JOIN " . $_ENV['environment'] . "." . allTables::$AGILE_TRIBE .  " AS TR ";
-$sql.= " ON SQ.TRIBE_NUMBER = SQ.TRIBE_NUMBER ";
+$sql.= " ON SQ.TRIBE_NUMBER = TR.TRIBE_NUMBER ";
 $sql.= " LEFT JOIN " . $_ENV['environment'] . "." . allTables::$PERSON .  " AS SQP ";
 $sql.= " ON SQ.SQUAD_LEADER = SQP.NOTES_ID ";
 $sql.= " LEFT JOIN " . $_ENV['environment'] . "." . allTables::$PERSON .  " AS TRP ";
