@@ -5,6 +5,10 @@ use itdq\NavbarMenu;
 use itdq\NavbarOption;
 use vbac\personTable;
 use itdq\NavbarDivider;
+
+
+$beginNavBar = microtime(true);
+
 include ('itdq/PlannedOutages.php');
 include ('itdq/DbTable.php');
 $plannedOutagesLabel = "Planned Outages";
@@ -166,16 +170,45 @@ $navbar->addOption($privacy);
 
 
 $navbar->createNavbar($page);
-
+$start = microtime(true);
 $isFm   = personTable::isManager($_SESSION['ssoEmail'])                 ? ".not('.accessFm')" : null;
+
+$elapsed = microtime(true);
+
+error_log("isFm:" . (float)($elapsed-$start));
+
 $isCdi  = employee_in_group($_SESSION['cdiBg'],  $_SESSION['ssoEmail']) ? ".not('.accessCdi')" : null;
+
+$elapsed = microtime(true);
+error_log("CDI:" . (float)($elapsed-$start));
+
+
 $isPmo  = employee_in_group($_SESSION['pmoBg'],  $_SESSION['ssoEmail']) ? ".not('.accessPmo')" : null;
+
+$elapsed = microtime(true);
+error_log("Pmo:" . (float)($elapsed-$start));
+
 $isPes  = employee_in_group($_SESSION['pesBg'],  $_SESSION['ssoEmail']) ? ".not('.accessPes')" : null;
+
+$elapsed = microtime(true);
+error_log("Pes:" . (float)($elapsed-$start));
+
 $isRep1  = employee_in_group('vbac_Reports_Full_Person',  $_SESSION['ssoEmail']) ? ".not('.accessRepFullPerson')" : null;
+
+$elapsed = microtime(true);
+error_log("Rep1:" . (float)($elapsed-$start));
+
 $isRes   = employee_in_group('ventus_resource_strategy',  $_SESSION['ssoEmail'],3) ? ".not('.accessRes')" : null;
+
+$elapsed = microtime(true);
+error_log("vent:" . (float)($elapsed-$start));
+
 
 $isUser = ".not('.accessUser')";
 $isRequestor = employee_in_group('vbac_requestor', $_SESSION['ssoEmail']);
+
+$elapsed = microtime(true);
+error_log("vbac:" . (float)($elapsed-$start));
 
 $isCdi   = stripos($_ENV['environment'], 'dev') ? ".not('.accessCdi')"  : $isCdi;
 $isPmo   = stripos($_ENV['environment'], 'dev')  ? ".not('.accessPmo')" : $isPmo;
@@ -266,3 +299,8 @@ $(document).ready(function () {
 });
 </script>
 
+<?php 
+$elapsed = microtime(true);
+error_log("Navbar:" . (float)($elapsed-$beginNavBar));
+
+?>
