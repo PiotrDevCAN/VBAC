@@ -171,6 +171,9 @@ $navbar->addOption($privacy);
 
 $navbar->createNavbar($page);
 $start = microtime(true);
+
+error_log("to isFm:" . (float)($beginNavBar-$start));
+
 $isFm   = personTable::isManager($_SESSION['ssoEmail'])                 ? ".not('.accessFm')" : null;
 
 $elapsed = microtime(true);

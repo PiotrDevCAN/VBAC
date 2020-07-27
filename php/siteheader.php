@@ -5,6 +5,8 @@
 // ** for fpdf http://www.fpdf.org/ download of pdf files in https;
 use itdq\JwtSecureSession;
 
+$start = microtime(true);
+
 set_include_path("./" . PATH_SEPARATOR . "../" . PATH_SEPARATOR . "../../" . PATH_SEPARATOR . "../../../" . PATH_SEPARATOR);
 
 include ('vendor/autoload.php');
@@ -299,15 +301,25 @@ function _microtime_float()
     return ((float) $usec + (float) $sec);
 }
 
+$elapsed = microtime(true);
+error_log("Pre do_Auth():" . (float)($elapsed-$start));
+
 do_auth();
+$elapsed = microtime(true);
+error_log("Post do_Auth():" . (float)($elapsed-$start));
 include ('php/ldap.php');
 include ('php/templates/interior.header.html');
 include ('itdq/java/scripts.html');
 include ('vbac/java/scripts.html');
+$elapsed = microtime(true);
+error_log("Pre connect:" . (float)($elapsed-$start));
 include ('connect.php');
+
+$elapsed = microtime(true);
+error_log("Post connect:" . (float)($elapsed-$start));
 //include ('php/templates/navbar.php');
 include('displayNavbar.php');
 
-
-
+$elapsed = microtime(true);
+error_log("Post Navbar:" . (float)($elapsed-$start));
 ?>
