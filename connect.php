@@ -1,8 +1,8 @@
 <?php
 
 function tryConnect($conn_string){
-    $preConnect = microtime(true);    
-    error_log("Attempting Pconnect to DB2");
+    error_log("Attempting Pconnect to DB2 from Pod:" . $_ENV['HOSTNAME']);
+    $preConnect = microtime(true);  
     $connection =  db2_pconnect( $conn_string, "", "" );
     $postConnect = microtime(true);
     error_log("Db2 Pconnect took:" . (float)($postConnect-$preConnect));
