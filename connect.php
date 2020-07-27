@@ -2,13 +2,11 @@
 
 function tryConnect($conn_string){
     $preConnect = microtime(true);    
-    error_log("Attempting connect to DB2");
-    $connection =  db2_connect( $conn_string, "", "" );
+    error_log("Attempting Pconnect to DB2");
+    $connection =  db2_pconnect( $conn_string, "", "" );
     $postConnect = microtime(true);
-    error_log("Db2 Connect took:" . (float)($postConnect-$preConnect));
-    
-    
-    
+    error_log("Db2 Pconnect took:" . (float)($postConnect-$preConnect));
+    return $connection;
 }
 
 
