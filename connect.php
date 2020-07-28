@@ -1,6 +1,6 @@
 <?php
 
-if(!function_exists(tryConnect)){
+if(!function_exists('tryConnect')){
     function tryConnect($conn_string){
         error_log("Attempting Pconnect to DB2 from Pod:" . $_ENV['HOSTNAME']);
         $preConnect = microtime(true);
