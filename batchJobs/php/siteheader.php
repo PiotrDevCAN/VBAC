@@ -19,14 +19,14 @@ include ('splClassLoader.php');
 // session_set_save_handler($handler, true);
 
 
-// ini_set('display_errors', 1);
-// ini_set('display_startup_errors', 1);
-// error_reporting(E_ALL);
-// date_default_timezone_set('UTC');
-// set_include_path("./" . PATH_SEPARATOR . "../" . PATH_SEPARATOR . "../../" . PATH_SEPARATOR . "../../../" . PATH_SEPARATOR);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+date_default_timezone_set('UTC');
+set_include_path("./" . PATH_SEPARATOR . "../" . PATH_SEPARATOR . "../../" . PATH_SEPARATOR . "../../../" . PATH_SEPARATOR);
 // session_start();
 
 include "../php/w3config.php";
 include "connect.php";
-
+$GLOBALS['Db2Schema'] = strtoupper($_ENV['environment']);
 $_SESSION['ssoEmail'] = 'Scheduled Job';
