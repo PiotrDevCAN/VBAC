@@ -9,8 +9,6 @@ function assetPortal() {
 	var requestsWithStatus;
 
   this.init = function(){
-    console.log('+++ Function +++ assetPortal.init');
-    console.log('--- Function --- assetPortal.init');
   },
 
   this.countRequestsForPortal = function(){

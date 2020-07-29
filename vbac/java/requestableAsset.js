@@ -5,8 +5,6 @@ function requestableAsset() {
 	var table;
 
   this.init = function(){
-    console.log('+++ Function +++ requestableAsset.init');
-    console.log('--- Function --- requestableAsset.init');
   },
 
   this.initialiseTable = function(){

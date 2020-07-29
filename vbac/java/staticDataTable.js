@@ -9,8 +9,6 @@ function staticDataTable() {
 	var table;
 
 	this.init = function(){
-		console.log('+++ Function +++ staticDataTable.init');
-		console.log('--- Function --- staticDataTable.init');
 	},
 
 

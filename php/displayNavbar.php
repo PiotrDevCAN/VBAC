@@ -247,8 +247,6 @@ $odcStaff = personTable::countOdcStaff();
 ?>
 <script>
 
-console.log('in navbar');
-
 $('.navbarMenuOption')<?=$isFm?><?=$isPmo?><?=$isPes?><?=$isCdi?><?=$isUser?><?=$isRep1?><?=$isRes?>.remove();
 $('.navbarMenu').not(':has(li)').remove();
 
@@ -259,16 +257,7 @@ $('li[data-pagename="<?=$page;?>"]').addClass('active').closest('li.dropdown').a
 
 if($page != "index.php" && substr($page,0,3)!='cdi'){
     ?>
-
-    console.log('<?=$page;?>');
-
 	var pageAllowed = $('li[data-pagename="<?=$page;?>"]').length;
-
-    console.log('li[data-pagename="<?=$page;?>"]');
-    console.log($('li[data-pagename="<?=$page;?>"]'));
-
-
-
 	if(pageAllowed==0 ){
 		window.location.replace('index.php');
 		alert("You do not have access to:<?=$page?>");
@@ -286,13 +275,13 @@ $(document).ready(function () {
 
     $('button.accessRestrict')<?=$isFm?><?=$isPmo?><?=$isPes?><?=$isCdi?><?=$isUser?><?=$isRep1?><?=$isRes?>.remove();
 
-    <?=!empty($isUser) ? '$("#userLevel").html("User' . $requestor . '&nbsp;' . $rep . '");console.log("user");' : null;?>
+    <?=!empty($isUser) ? '$("#userLevel").html("User' . $requestor . '&nbsp;' . $rep . '");' : null;?>
 
-    <?=!empty($isFm)   ? '$("#userLevel").html("Func.Mgr.' . $requestor . '&nbsp;' . $rep . '");console.log("fm");' : null;?>
-    <?=!empty($isRes)  ? '$("#userLevel").html("Req' . $requestor . '&nbsp;' . $rep . '");console.log("req");' : null;?>
-    <?=!empty($isPmo)  ? '$("#userLevel").html("PMO' . $requestor . '&nbsp;' . $rep . '");console.log("pmo");' : null;?>
-    <?=!empty($isCdi)  ? '$("#userLevel").html("CDI' . $requestor . '&nbsp;' . $rep . '");console.log("cdi");' : null;?>
-    <?=!empty($isPes)  ? '$("#userLevel").html("PES' . $requestor . '&nbsp;' . $rep . '");console.log("pes");' : null;?>
+    <?=!empty($isFm)   ? '$("#userLevel").html("Func.Mgr.' . $requestor . '&nbsp;' . $rep . '");' : null;?>
+    <?=!empty($isRes)  ? '$("#userLevel").html("Req' . $requestor . '&nbsp;' . $rep . '");' : null;?>
+    <?=!empty($isPmo)  ? '$("#userLevel").html("PMO' . $requestor . '&nbsp;' . $rep . '");' : null;?>
+    <?=!empty($isCdi)  ? '$("#userLevel").html("CDI' . $requestor . '&nbsp;' . $rep . '");' : null;?>
+    <?=!empty($isPes)  ? '$("#userLevel").html("PES' . $requestor . '&nbsp;' . $rep . '");' : null;?>
 
 
     var poContent = $('#<?=$plannedOutagesId?> a').html();
@@ -304,6 +293,6 @@ $(document).ready(function () {
 
 <?php 
 $elapsed = microtime(true);
-error_log("Navbar:" . (float)($elapsed-$beginNavBar));
+error_log("Navbar ended:" . (float)($elapsed-$beginNavBar));
 
 ?>

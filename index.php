@@ -28,7 +28,6 @@ body {
 
 <script>
 $(document).ready(function() {
-	console.log('start listening');
 	var person = new personRecord();
 	person.listenForOnBoarding();
 	person.listenForOffBoarding();

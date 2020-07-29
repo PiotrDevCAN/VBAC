@@ -22,8 +22,6 @@ function assetRequest() {
 	var table;
 
   this.init = function(){
-    console.log('+++ Function +++ assetRequest.init');
-    console.log('--- Function --- assetRequest.init');
   },
 
   this.showEducationConfirmationModal = function(){
