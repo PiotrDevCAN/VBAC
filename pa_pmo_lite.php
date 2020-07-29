@@ -64,11 +64,6 @@ function changeSubplatform(dataCategory){
 };
 
 $(document).on( "change", '#work_stream', function(e){
-    console.log('changing workstream');
-	console.log(e);
-	console.log($('.accountOrganisation:checked').val());
-	console.log($('#subPlatform').parents('.storeSelections').data('selections'));
-
 	if($('.accountOrganisation:checked').val()=='BAU'){
        	var workstream = $('#work_stream').val();
    		var workstreamId = workstreamDetails[workstream];
@@ -145,7 +140,6 @@ if(isset($_GET['open'])){
    ?>
    $(document).on('init.dt',function(){
 	   $('#footerNOTESID').val('<?=trim($_GET['open']);?>').trigger('change');
-	   console.log($('.btnEditPerson'));
 	   $('.btnEditPerson').trigger('click');
    });
    <?php

@@ -8,13 +8,6 @@ function Form() {
 	var currentXmlDoc;
 
 	this.init = function(){
-		console.log('+++ Function +++ Form.init');
-		//this.enableTinyMceForClass();	 - Caused problems on the ActionForms page when it was initialsed here.
-
-		// $('select').select2();
-
-		console.log('--- Function --- Form.init');
-
 	},
 
 	this.enableTinyMceForClass = function(classId, callback) {

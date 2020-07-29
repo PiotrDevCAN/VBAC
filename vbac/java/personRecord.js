@@ -37,11 +37,7 @@ function personRecord() {
   var spinner =  '<div id="overlay"><i class="fa fa-spinner fa-spin spin-big"></i></div>';
   var boardingFormEnabledInputs;
 
-
-
   this.init = function(){
-    console.log('+++ Function +++ personRecord.init');
-    console.log('--- Function --- personRecord.init');
   },
 
   this.listenForName = function(){
@@ -51,13 +47,10 @@ function personRecord() {
 	 		$('#person_serial').val(suggestion.cnum).attr('disabled','disabled');
 	 		$('#person_bio').val(suggestion.role);
 	 		$('#person_intranet').val(suggestion.mail);
-	 		console.log(suggestion.mail);
 
 	 		var newCnum = suggestion.cnum;
-	 		console.log(newCnum);
 	 		var allreadyExists = ($.inArray(newCnum, knownCnum) >= 0 );
 
-	 		console.log(allreadyExists);
 	 		if(allreadyExists){ // comes back with Position in array(true) or false is it's NOT in the array.
 	 			$('#saveBoarding').attr('disabled',true);
 	 			$('#person_name').css("background-color","LightPink");
@@ -67,9 +60,6 @@ function personRecord() {
 	 			$('#person_name').css("background-color","LightGreen");
 	 			$('#saveBoarding').attr('disabled',false);
 	 		}
-
-	 		console.log(suggestion.cnum);
-
 	 		var personObj = new personRecord();
 	 		personObj.fetchBluepagesDetailsForCnum(suggestion.cnum);
 
@@ -85,12 +75,8 @@ function personRecord() {
 	  $(document).on('focusout','#resource_email',function(){
 		  var newEmail = $('#resource_email').val();
 		  var trimmedEmail = newEmail.trim();
-		  console.log(trimmedEmail);
-		  console.log(knownEmail);
 		  var allreadyExists = ($.inArray(trimmedEmail, knownEmail) >= 0 );
 		  var ibmEmailAddress = (trimmedEmail.search(/ibm/i) != -1);
-		  console.log(ibmEmailAddress);
-          console.log(allreadyExists);
           if(allreadyExists){ // comes back with Position in array(true) or false is it's NOT in the array.
             $('#saveBoarding').attr('disabled',true);
             $('#resource_email').css("background-color","LightPink");
@@ -137,9 +123,7 @@ function personRecord() {
 
   this.listenForDeoffBoarding = function() {
 		$(document).on('click','.btnDeoffBoarding', function(e){
-			   console.log(this);
 				var data = $(this).data();
-				console.log(data);
 				$(this).addClass('spinning').attr('disabled',true);
 			   $.ajax({
 				   url: "ajax/deoffBoarding.php",
@@ -147,7 +131,6 @@ function personRecord() {
 			       data : {cnum:data.cnum},
 			       success: function(result){
 			    	   personWithSubPRecord.table.ajax.reload();
-			           console.log(result);
 			           var resultObj = JSON.parse(result);
 			           if(resultObj.success==true){
 			        	   var message = "<div class=panel-heading><h3 class=panel-title>Success</h3>";
@@ -166,19 +149,11 @@ function personRecord() {
 			       }
 			   });
 			});
-
-
-
-
   },
   
   this.listenforSendPesEmail = function(){
-	   console.log('set listener');
-	   console.log($('.btnSendPesEmail'));
 		$(document).on('click','.btnSendPesEmail', function(e){
-			console.log(e);
 			$(this).addClass('spinning');
-			console.log(this);
 			var data = $(this).data();
 			   $.ajax({
 				   url: "ajax/pesEmailDetails.php",
@@ -189,7 +164,6 @@ function personRecord() {
 			    	       },
 			       success: function(result){
 			    	   $('.btnSendPesEmail').removeClass('spinning');		    	 
-			           console.log(result);
 			           var resultObj = JSON.parse(result);
 			           if(resultObj.success==true){
 			   				$('#pesEmailFirstName').val(data.firstname);
@@ -258,10 +232,8 @@ function personRecord() {
 			    	       },
 			       success: function(result){
 			    	   $('#confirmSendPesEmail').removeClass('spinning');	  		    	   
-			    	   
+	    	   
 			    	   var resultObj = JSON.parse(result);		  	           
-			    	   console.log(resultObj);	
-			    	   
 			    	   if(typeof( personWithSubPRecord.table)!='undefined'){
 			    		//   personRecord.table.ajax.reload();
 			    	   }	
@@ -285,18 +257,15 @@ function personRecord() {
 
   this.listenForStopOffBoarding = function(){
 		$(document).on('click','.btnStopOffboarding', function(e){
-		   console.log(this);
 		   $(this).addClass('spinning');
 	       $(this).attr('disabled',true);
 			var data = $(this).data();
-			console.log(data);
 		   $.ajax({
 			   url: "ajax/stopOffboarding.php",
 		       type: 'POST',
 		       data : {cnum:data.cnum},
 		       success: function(result){
 		    	   personWithSubPRecord.table.ajax.reload();
-		           console.log(result);
 		           var resultObj = JSON.parse(result);
 		           $(this).removeClass('spinning');
 		           $(this).attr('disabled',false);
@@ -322,9 +291,7 @@ function personRecord() {
 
   this.listenForOffBoardingCompleted = function(){
 	$(document).on('click','.btnOffboarded', function(e){
-	   console.log(this);
 		var data = $(this).data();
-		console.log(data);
 		 $(this).addClass('spinning');
 		 $(this).attr('disabled',true);
 	   $.ajax({
@@ -333,7 +300,6 @@ function personRecord() {
 	       data : {cnum:data.cnum},
 	       success: function(result){
 	    	   personWithSubPRecord.table.ajax.reload();
-	           console.log(result);
 	           var resultObj = JSON.parse(result);
 	           if(resultObj.success==true){
 	        	   var message = "<div class=panel-heading><h3 class=panel-title>Success</h3>";
@@ -356,16 +322,13 @@ function personRecord() {
 
   this.listenForBtnOffboarding = function(){
 		$(document).on('click','.btnOffboarding', function(e){
-		   console.log(this);
 			var data = $(this).data();
-			console.log(data);
 			$(this).addClass('spinning').attr('disabled',true);
 		   $.ajax({
 			   url: "ajax/initiateOffboardingFromPortal.php",
 		       type: 'POST',
 		       data : {cnum:data.cnum},
 		       success: function(result){
-		           console.log(result);
 		           var resultObj = JSON.parse(result);
 		           if(resultObj.initiated==true){
 		        	   var message = "<div class=panel-heading><h3 class=panel-title>Success</h3>";
@@ -401,13 +364,11 @@ function personRecord() {
 
   this.listenForHasBpEntry = function(){
     $(document).on('change','#hasBpEntry', function(){
-      console.log('#hasBpEntry');
       $('#notAnIbmer').toggle();
       $('#existingIbmer').toggle();
       $('#linkToPreBoarded').toggle();
 
       if($('#notAnIbmer').is(":visible")){
-    	console.log('#notAnIbmer is visible');
     	$('.employeeTypeRadioBtn input[type=radio]').prop('required',true);
     	$('#person_name').val('').trigger('change');
     	$('#person_serial').val('').trigger('change');
@@ -425,7 +386,6 @@ function personRecord() {
         $('#person_preboarded').val('').trigger('change');  // incase they already selected a pre-boarder - we need to clear this field.
         $('#editCtidDiv').show();
       } else {
-    	console.log('#notAnIbmer is not visible');
     	$('#person_name').val('').trigger('change');
     	$('#person_serial').val('').trigger('change');
     	$('#person_notesid').val('').trigger('change');
@@ -442,10 +402,6 @@ function personRecord() {
       var currentHeading = $('#employeeResourceHeading').text();
       var newHeading = currentHeading=='Employee Details' ? 'Resource Details' : 'Employee Details';
       $('#employeeResourceHeading').text(newHeading);
-
-  	console.log($('.employeeTypeRadioBtn input[type=radio]'));
-
-
     });
   },
 
@@ -454,9 +410,7 @@ function personRecord() {
       var data = e.params.data;
       if(data.id!=''){
         // They have selected an entry
-        console.log(data.id);
         var allEnabled = $('form :enabled');
-        console.log(allEnabled);
         $(allEnabled).attr('disabled',true);
         $("#saveBoarding").addClass('spinning');
         $('#initiatePes').hide();
@@ -466,10 +420,8 @@ function personRecord() {
               data : {cnum:data.id},
             success: function(result){
             $("#saveBoarding").removeClass('spinning');
-              console.log(result);
               var resultObj = JSON.parse(result);
               if(resultObj.success==true){
-                console.log(resultObj.data);
                    $(allEnabled).attr('disabled',false);
                    var $radios = $('input:radio[name=CTB_RTB]');
                    $($radios).attr('disabled',false);
@@ -518,8 +470,6 @@ function personRecord() {
                      var cioAlignment = resultObj.data.CIO_ALIGNMENT.trim();
                      $('#cioAlignment').attr('disabled',false);
                      if(cioAlignment){
-                       console.log(cioAlignment);
-                       console.log( $('#cioAlignment'));
                        $('#cioAlignment').val(cioAlignment).trigger('change');
                      }
                    }
@@ -592,9 +542,7 @@ function personRecord() {
   this.listenForSerial = function(){
     $(document).on('keyup change','#person_serial',function(e){
       var cnum = $(this).val();
-      console.log(cnum);
       if(cnum.length==9){
-        console.log(this);
         var person = new personRecord;
         person.fetchBluepagesDetailsForCnum(cnum);
       }
@@ -605,7 +553,6 @@ function personRecord() {
   
   this.listenForSetPmoStatus = function(){
 	  $(document).on('click','.btnSetPmoStatus', function(e){
-		  console.log('listenForSetPmoStatus');
 		  $(this).addClass('spinning');
 		  var cnum = $(this).data('cnum');
 		  var setpmostatusto = $(this).data('setpmostatusto');
@@ -615,7 +562,6 @@ function personRecord() {
 		        data : {cnum: cnum,
 		      	      setpmostatusto: setpmostatusto },
 		        success: function(result){
-		      	  console.log(result);
 		      	  var resultObj = JSON.parse(result);
 		      	 personWithSubPRecord.table.ajax.reload();
 		        }
@@ -625,7 +571,6 @@ function personRecord() {
   
 
   this.fetchBluepagesDetailsForCnum = function(cnum){
-    console.log(cnum);
       $('#saveBoarding').attr('disabled',true);
 
     var urlOptions = "preferredidentity&jobresponsibilities&notesemail&uid&givenname&sn&ismanager&phonemailnumber&employeetype&co&ibmloc";
@@ -637,7 +582,6 @@ function personRecord() {
           url: "api/bluepages.php?ibmperson/(uid=" + cnum + ").search/byjson?" + urlOptions ,
             type: 'GET',
           success: function(result){
-            console.log(result);
             var personDetailsObj = JSON.parse(result);
             var attributes = personDetailsObj.search.entry[0].attribute;
             for(a=0;a<attributes.length;a++){
@@ -657,8 +601,6 @@ function personRecord() {
                        if(typeof(bio) !== 'undefined'){ bio.value = value;};
                        break;
               case 'notesemail':
-                console.log(value[0]);
-                console.log(typeof(value[0]));
                   var Step1 = value[0].replace('CN=','');
                   var Step2 = Step1.replace('OU=','');
                   var Step3 = Step2.replace('O=','');
@@ -696,16 +638,13 @@ function personRecord() {
                break;           
               case 'sn':
             	  var lname =  document.getElementById('person_last_name');
-                  console.log(name + ":" + value);
                   var lastName = value[0];
                   if(typeof(lname) !== 'undefined'){
                 	  lname.value = lastName ;
                   };
-                  console.log($(lname));
                   break;
               case 'ismanager':
                    var isMgr =  document.getElementById('person_is_mgr');
-                   console.log($(isMgr) + ":" + value);
                          if(typeof(isMgr) !== 'undefined'){
                         	 if(value=='Y' || value=='Yes' ){
                         		 isMgr.value = 'Yes';
@@ -717,17 +656,14 @@ function personRecord() {
                        break;
               case 'employeetype':
                    var employeeeType =  document.getElementById('person_employee_type');
-                   console.log($(employeeeType) + ":" + value);
                          if(typeof(employeeeType) !== 'undefined'){ employeeeType.value = value ;};
                        break;
               case 'co':
                    var country =  document.getElementById('person_country');
-                   console.log($(country) + ":" + value);
                          if(typeof(country) !== 'undefined'){ country.value = value ;};
                        break;
               case 'ibmloc':
                    var location =  document.getElementById('person_ibm_location');
-                   console.log($(location) + ":" + value);
                          if(typeof(location) !== 'undefined'){ location.value = value ;};
                        break;
               default:
@@ -781,7 +717,6 @@ function personRecord() {
 	  $(document).ready(function(){
       var accountOrganisation = $('.accountOrganisation:checked').val();
       var nullFirstEntry  = [''];
-      console.log(workStream);
       for(i=0;i<workStream.length;i++){
         if(workStream[0][i]==accountOrganisation){
           var workStreamValues = nullFirstEntry.concat(workStream[i+1]);
@@ -790,7 +725,6 @@ function personRecord() {
       $('#work_stream').select2('destroy');
       $('#work_stream').html('');
       
-      console.log(workStreamValues);      
       
       if(typeof(workStreamValues)!='undefined'){
         $('#work_stream').select2({
@@ -811,7 +745,6 @@ function personRecord() {
       var currentWorkstream = $('#currentWorkstream').val();
 
       if(currentWorkstream!=''){
-        console.log('changing to' + currentWorkstream);
         $('#work_stream').val(currentWorkstream); // Select the option with a value of currentWorkstream
         $('#work_stream').trigger('change');
       }
@@ -851,7 +784,6 @@ function personRecord() {
 		            data : formData,
 		          success: function(result){
 		        	  $("#saveLinking").removeClass('spinning');
-		        	  console.log(result);
 		        	  var resultObj = JSON.parse(result);
 		        	  $('#ibmer_preboarded').val('');
 		        	  $('#person_preboarded').val('');
@@ -905,10 +837,8 @@ function personRecord() {
 		  
 		  this.listenForDeleteRfFlag = function(){
 			    $(document).on('click','.btnDeleteRfFlag', function(e){
-				    console.log('listenForDeleteRfFlag');
 				    $(this).addClass('spinning');
 				    var cnum = $(this).data('cnum');
-				    console.log(cnum);
 				    $.ajax({
 				          url: "ajax/setRfFlag.php",
 				          type: 'POST',
@@ -925,10 +855,8 @@ function personRecord() {
 			  
 	this.listenForClearCtid = function(){
 				  $(document).on('click','.btnClearCtid', function(e){
-					    console.log('listenForClearCtid');
 					    $(this).addClass('spinning');
 					    var cnum = $(this).data('cnum');
-					    console.log(cnum);
 					    $.ajax({
 					          url: "ajax/clearCtid.php",
 					          type: 'POST',
@@ -945,7 +873,6 @@ function personRecord() {
 			  
 
   this.saveBoarding = function(mode){
-    console.log('saveBoarding mode:' + mode);
     $("#saveBoarding").addClass('spinning');
     $("#updateBoarding").addClass('spinning');
     var ibmer = $('#hasBpEntry').is(':checked');
@@ -958,7 +885,6 @@ function personRecord() {
       var formData = form.serialize();
       formData += "&mode=" + mode + "&boarding=" + ibmer;
       $(allDisabledFields).attr('disabled',true);
-      console.log(formData);
         $.ajax({
           url: "ajax/saveBoardingForm.php",
           type: 'POST',
@@ -966,7 +892,6 @@ function personRecord() {
           success: function(result){
           $("#saveBoarding").removeClass('spinning');
           $('#updateBoarding').removeClass('spinning');
-            console.log(result);
             var resultObj = JSON.parse(result);
             if(resultObj.success==true){
             	$('#person_uid').val(resultObj.cnum);
@@ -1023,18 +948,14 @@ function personRecord() {
         url: "ajax/createHtmlForPersonFinderTable.php",
         type: 'POST',
         success: function(result){
-        	console.log(result);
-        	var Person = new personRecord();
-         
+        	var Person = new personRecord();    
         	$('#personFinderDatabaseDiv').html(result);
         	Person.initialisePersonFinderDataTable();
         	}
       });
   }, 
   
-  this.initialisePersonFinderDataTable = function(){	  
-	  console.log('initialisePersonFinderDataTable');
-	  
+  this.initialisePersonFinderDataTable = function(){	    
       // Setup - add a text input to each footer cell
       $('#personFinderTable tfoot th').each( function () {
           var title = $(this).text();
@@ -1067,8 +988,6 @@ function personRecord() {
                 ],
       });
       
-      console.log(personRecord.personFinderTable);
-      
       // Apply the search
       personRecord.personFinderTable.columns().every( function () {
           var that = this;
@@ -1085,14 +1004,12 @@ function personRecord() {
 
   
   this.initialiseRfFlagReport = function(){
-	  console.log('initialiseRfFlagReport');	  
       // Setup - add a text input to each footer cell
       $('#rfFlagTable tfoot th').each( function () {
           var title = $(this).text();
           $(this).html( '<input type="text" id="footer'+ title + '" placeholder="Search '+title+'" />' );
       } );
-      
-      console.log('about to invoke DataTable');	 
+     
       // DataTable
       personRecord.rfFlagTable = $('#rfFlagTable').DataTable({
     	  ajax: {
@@ -1118,9 +1035,6 @@ function personRecord() {
                     'print'
                 ],
       });
-      
-      console.log('invoked over');
-      console.log(personRecord.rfFlagTable);
       
       // Apply the search
       personRecord.rfFlagTable.columns().every( function () {
@@ -1356,15 +1270,12 @@ function personRecord() {
   this.listenForBtnTransferConfirmed = function(){
 	  $(document).on('click','.btnConfirmTransfer', function(e){
 		  $('.btnConfirmTransfer').addClass('spinning');
-		  console.log($('#confirmTransferForm'));
  		  var formData = $('#confirmTransferForm').serialize();		  
-		  console.log(formData);
 	      $.ajax({
 	          url: "ajax/transferIndividual.php",
 	          type: 'POST',
 	          data: formData,
 	          success: function(result){	
-	        	  console.log(result);
 	        	  personRecord.personFinderTable.ajax.reload();
 	    		  $('#transferNotes_id').val('');
 	    		  $('#transferCnum').val('');
@@ -1561,7 +1472,6 @@ function personRecord() {
 
   this.listenForInitiatePesFromBoarding = function(){
     $(document).on('click','.btnPesInitiate', function(e){
-      console.log('initiatePes PES from boarding');
       $(this).addClass('spinning');
       var cnum = $('#person_uid').val();
       var person = new personRecord;
@@ -1572,9 +1482,7 @@ function personRecord() {
   this.listenForInitiatePesFromPortal = function(){
     $(document).on('click','.btnPesInitiate', function(e){
     	$('#portalTitle').text('Person Portal - PES Report');
-    	console.log('initiatePes PES from Portal');
     	$(this).addClass('spinning');
-    	console.log(this);
     	var cnum = $(this).data('cnum');
     	var person = new personRecord;
     	person.initiatePes(cnum);
@@ -1582,13 +1490,11 @@ function personRecord() {
   },
 
   this.initiatePes = function(cnum){
-    console.log(cnum);
       $.ajax({
         url: "ajax/initiatePes.php",
         data : {cnum:cnum},
         type: 'POST',
         success: function(result){
-          console.log(result);
           var resultObj = JSON.parse(result);
           $('#savingBoardingDetailsModal').on('hidden.bs.modal', function () { // When they close the modal this time, reload the page.
             $('#savingBoardingDetailsModal').off('hidden.bs.modal');  // only do this once.
@@ -1620,8 +1526,6 @@ function personRecord() {
   this.listenForEditPerson = function(){
     $(document).on('click','.btnEditPerson', function(e){
            var cnum = ($(this).data('cnum'));
-           console.log(cnum);
-           
            var spinner =  '<div id="overlay"><i class="fa fa-spinner fa-spin spin-big"></i></div>';
            $('#editPersonModal .modal-body').html(spinner);
            $('#editPersonModal').modal('show');
@@ -1631,7 +1535,6 @@ function personRecord() {
               type: 'POST',
               success: function(result){
                 var resultObj = JSON.parse(result);
-                console.log(resultObj);
                 $('.employeeTypeRadioBtn input[type=radio]').removeAttr('required');
 
                 if(!resultObj.messages){
@@ -1688,8 +1591,6 @@ function personRecord() {
 	              type: 'POST',
 	              success: function(result){
 	                var resultObj = JSON.parse(result);
-	                console.log(resultObj.success);
-	                console.log(resultObj.success==true);
 	                if(resultObj.success){
 		                $('.spinning').removeClass('spinning').attr('disabled',false);	
 		                personWithSubPRecord.table.ajax.reload();	                    
@@ -1721,8 +1622,6 @@ function personRecord() {
 	              type: 'POST',
 	              success: function(result){
 	                var resultObj = JSON.parse(result);
-	                console.log(resultObj.success);
-	                console.log(resultObj.success==true);
 	                if(resultObj.success){
 		                $('.spinning').removeClass('spinning').attr('disabled',false);		                
 	                    $('#editAgileSquadModal .modal-body').html($(resultObj.body).find('.modal-body'));
@@ -1785,10 +1684,8 @@ function personRecord() {
     		$('#agilesquadName').val('');
     		$('#agilesquadLeader').val('');    
     		$('#updateSquad').attr('disabled',true);
-			  console.log(this);	
 			  var data = e.params.data;
 			  var squadNumber = e.params.data.id;
-			  console.log(squadNumber);
 			  $.ajax({
 		            url: "ajax/getSquadDetails.php",
 		            data : {squadNumber : squadNumber },
@@ -1833,7 +1730,6 @@ function personRecord() {
 
   this.listenForConfirmFmFlag = function(){
     $('#confirmFmFlagChangeForm').submit(function(e){
-      console.log('submit hit');
       var form = document.getElementById('confirmFmFlagChangeForm');
       var formValid = form.checkValidity();
       if(formValid){
@@ -1849,7 +1745,6 @@ function personRecord() {
             success: function(result){
             	 personWithSubPRecord.table.ajax.reload();
               var resultObj = JSON.parse(result);
-              console.log(resultObj);
                 if(!resultObj.messages){
                   $('#confirmChangeFmFlagModal .modal-body').html(resultObj.body);
               } else {
@@ -1872,8 +1767,6 @@ function personRecord() {
            var notesid = ($(this).data('notesid'));
            var email = ($(this).data('email'));
            var revalidationStatus = $(this).data('revalidationstatus');
-           
-           console.log($(this).data('passportfirst'));
            
            if(typeof($(this).data('passportfirst'))!='undefined'){
         	   var passportFirst = $(this).data('passportfirst');
@@ -1918,14 +1811,12 @@ function personRecord() {
           var allDisabledFields = ($("input:disabled"));
           $(allDisabledFields).not('#psm_passportFirst').not('#psm_passportSurname').attr('disabled',false);
           var formData = $('#amendPesStatusModal form').serialize();
-          console.log(formData);
           $(allDisabledFields).attr('disabled',true);
           $.ajax({
               url: "ajax/savePesStatus.php",
               data : formData,
               type: 'POST',
               success: function(result){
-                console.log(result);
                 var resultObj = JSON.parse(result);
                 $('#savePesStatus').attr('disabled',false).removeClass('spinning');
                 
@@ -1985,7 +1876,6 @@ function personRecord() {
 	               },
 	               type: 'POST',
 	               success: function(result){
-	                 console.log(result);
 	                 var resultObj = JSON.parse(result);
 	                 $('#savePesStatus').attr('disabled',false);
 	                
@@ -2022,7 +1912,6 @@ function personRecord() {
 		               },
 		               type: 'POST',
 		               success: function(result){
-		                 console.log(result);
 		                 var resultObj = JSON.parse(result);
 		                
 		                 if(typeof( personWithSubPRecord.table) != 'undefined'){
@@ -2062,7 +1951,6 @@ function personRecord() {
 		               },
 		               type: 'POST',
 		               success: function(result){
-		                 console.log(result);
 		                 var resultObj = JSON.parse(result);
 	                
 		                 if(typeof( personWithSubPRecord.table) != 'undefined'){
@@ -2104,8 +1992,6 @@ function personRecord() {
 	  $(document).on('click','#reportSaveConfirm', function(e){
 		  $('#saveReportModal').modal('hide');
 		  var form =  $('#reportSaveForm').serialize();
-		  console.log(form);
-
 	  });
   },
 
@@ -2145,9 +2031,6 @@ function personRecord() {
 
 
   this.initialisePersonFormSelect2 = function(){
-    console.log($('.select2'));
-    console.log($('#work_stream'));
-    console.log($('#subPlatform'));
      $('#work_stream').select2();
      $('#subPlatform').select2();
      $('#person_preboarded').select2();
@@ -2155,16 +2038,10 @@ function personRecord() {
      
      if($('.accountOrganisation:checked').val()=='BAU'){
     	 var subplatformValue = $('#subPlatform').parents('.storeSelections').data('selections');
-    	 console.log(subplatformValue);  	 
    // 	 $('#subPlatform').val(subplatformValue).trigger('change');
     	 $('#subPlatform').val('').trigger('change');
     	 $('#subPlatform').attr('disabled',false);
      }
-     
-     
-     
-     
-     
   },
 
 

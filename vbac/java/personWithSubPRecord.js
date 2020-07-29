@@ -9,8 +9,7 @@ function personWithSubPRecord() {
 	var table;
 
   this.init = function(){
-    console.log('+++ Function +++ personWithSubPRecord.init');
-    console.log('--- Function --- personWithSubPRecord.init');
+
   },
 
   
@@ -125,9 +124,7 @@ function personWithSubPRecord() {
           order: [[ 5, "asc" ]],
           
           drawCallback: function( settings ) {
-        	  console.log('drawback');
               $('[data-toggle="popover"]').popover();
-              console.log($('[data-toggle="popover"]'));
           },        
           
           
@@ -171,7 +168,6 @@ function personWithSubPRecord() {
       personWithSubPRecord.table.columns().every( function () {
           var that = this;
           $( 'input', this.footer() ).on( 'keyup change', function () {
-        	  console.log(this.value);
               if ( that.search() !== this.value ) {
                   that
                       .search( this.value )

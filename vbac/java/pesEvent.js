@@ -286,8 +286,8 @@ function pesEvent() {
 		    	   	   stage:column,
 		    	   	   },
 		       success: function(result){
-		           console.log(result);
 		           var resultObj = JSON.parse(result);
+				   console.log(result.messages);
 		           if(resultObj.success==true){
 		        	   buttonObj.parents('td').parent('tr').children('td.pesCommentsTd').children('div.pesComments').html(resultObj.comment);
 		           } else {

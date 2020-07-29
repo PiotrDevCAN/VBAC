@@ -18,7 +18,7 @@ class staticDataSubPlatformTable extends DbTable
         // $allSubPlatform = $loader->loadIndexed('WORK_STREAM_ID','SUB_PLATFORM',allTables::$STATIC_SUBPLATFORM);
         $allWorkstreams = $loader->loadIndexed('WORKSTREAM_ID','WORKSTREAM',allTables::$STATIC_WORKSTREAMS);
         $allSubPlatformsByWorkstream = array();
-         $platformWithinStream= array();
+        $platformWithinStream= array();
 
         foreach ($allWorkstreams as $workstream => $workstream_id) {
             $predicate = " WORK_STREAM_ID='$workstream_id' ";
@@ -38,11 +38,6 @@ class staticDataSubPlatformTable extends DbTable
         <script>
 		var platformWithinStream = <?= json_encode($platformWithinStream);?>;
 		var workstreamDetails = <?= json_encode($allWorkstreams); ?>;
-
-		console.log(platformWithinStream);
-		console.log(workstreamDetails);
-
-
         </script>
         <?php
 
