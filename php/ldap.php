@@ -56,9 +56,12 @@ function bluegroups_subgroups($group)
 // returns TRUE or FALSE if $employee is one of the groups in $group.
 // $group can be an array of groups or a string. $employee can be a DN or
 // an email address.
-function employee_in_group($group, $employee, $depth = 2)
-{
-    return BlueGroups::inAGroup($group,$employee, $depth);
+function employee_in_group($group, $employee, $depth = 2){
+    if(!isset($_SESSION['bg'][$group][$employee])){
+        // Cache the answers so we only call it once per Session.
+        $_SESSION['bg'][$group][$employee] = BlueGroups::inAGroup($group,$employee, $depth);     
+    }
+    return   $_SESSION['bg'][$group][$employee];
 
 //     if (! is_array($group)) {
 //         $group = array(
