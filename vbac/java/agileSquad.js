@@ -10,12 +10,7 @@ function agileSquad() {
   var table;
   var spinner =  '<div id="overlay"><i class="fa fa-spinner fa-spin spin-big"></i></div>';
 
-
-
-
   this.init = function(){
-    console.log('+++ Function +++ agileTribe.init');
-    console.log('--- Function --- agileTribe.init');
   };
 
   this.listenForLeader = function(){

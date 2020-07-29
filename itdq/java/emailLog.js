@@ -4,9 +4,6 @@ function EmailLog() {
 	var table;
 
 	this.init = function(){
-		console.log('+++ Function +++ EmailLog.init');
-		console.log('--- Function --- EmailLog.init');
-
 	},
 
 	this.initialiseDataTable = function(){

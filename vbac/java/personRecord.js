@@ -717,11 +717,16 @@ function personRecord() {
 	  $(document).ready(function(){
       var accountOrganisation = $('.accountOrganisation:checked').val();
       var nullFirstEntry  = [''];
-      for(i=0;i<workStream.length;i++){
-        if(workStream[0][i]==accountOrganisation){
-          var workStreamValues = nullFirstEntry.concat(workStream[i+1]);
-        }
-      }
+
+	  if(typeof(workStream)!='undefined'){
+      	for(i=0;i<workStream.length;i++){
+        	if(workStream[0][i]==accountOrganisation){
+          		var workStreamValues = nullFirstEntry.concat(workStream[i+1]);
+        	}
+      	}
+	  }	
+
+
       $('#work_stream').select2('destroy');
       $('#work_stream').html('');
       

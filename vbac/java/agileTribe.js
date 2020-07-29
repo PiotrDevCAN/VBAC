@@ -11,8 +11,6 @@ function agileTribe() {
   var spinner =  '<div id="overlay"><i class="fa fa-spinner fa-spin spin-big"></i></div>';
 
   this.init = function(){
-    console.log('+++ Function +++ agileTribe.init');
-    console.log('--- Function --- agileTribe.init');
   },
 
   this.listenForLeader = function(){
@@ -25,7 +23,6 @@ function agileTribe() {
 
 
   this.initialiseAgileTribeTable = function(version){	  
-	console.log('initialiseAgileTribeTable');
 	 
     // Setup - add a text input to each footer cell
     $('#tribeTable tfoot th').each( function () {

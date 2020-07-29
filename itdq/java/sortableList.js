@@ -5,10 +5,6 @@ function SortableList() {
 	
 	
 	this.init = function(){
-		console.log('+++ Function +++ SortableList.init');
-		
-		console.log('--- Function --- SortableList.init');
-
 	},
 	
 	

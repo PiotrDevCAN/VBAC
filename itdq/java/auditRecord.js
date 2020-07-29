@@ -15,8 +15,6 @@ function auditRecord() {
 	var xhrPool = []; // to save the ajax calls, so they can be cancelled.
 
 	this.init = function(){
-		console.log('+++ Function +++ auditRecord.init');
-		console.log('--- Function --- auditRecord.init');
 	},
 
 

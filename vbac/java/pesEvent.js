@@ -38,8 +38,7 @@ function pesEvent() {
 	var table;
 
   this.init = function(){
-    console.log('+++ Function +++ pesEvent.init');
-    
+   
     $('.pesDateLastChased').datepicker({
     	dateFormat: 'dd M yy',
 		maxDate:0,
@@ -53,7 +52,6 @@ function pesEvent() {
     ).on("change", function() {
         alert("Got change event from field");
     });
-    console.log('--- Function --- pesEvent.init');
   },
   
   this.listenForBtnRecordSelection = function() {
