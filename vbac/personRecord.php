@@ -223,7 +223,7 @@ class personRecord extends DbRecord
 
     private static $pesClearedProvisionalEmail = '<p>Hello &&candidate&&,</p>
                                               <p>Due to the recent situation we understand that many people will be unable to meet with fellow IBM\'ers to have their documents Certified.  We have implemented a \'provisional clearance\' process and will be accepting all documents without certification - however these documents will require to be certified as soon as the restrictions are lifted.</p>
-                                              <p>Therefore I can confirm that you have provisionally passed  Lloyds Bank PES Screening, effective from &&effectiveDate&&</p>
+                                              <p>Therefore I can confirm that you have provisionally passed  Lloyds Bank PES Screening.</p>
                                               <p>Please note that this will not give you full PES clearance, and your account may not recognise Provisional Clearance, therefore, if you can get your documents certified correctly (as per below) please do so.</p>
                                               <p>When sending your document please only send to the PES team.</p>
                                               <p><b>The Certification MUST be done by another IBM’er</b>, to confirm that they have seen the original document. The following statement should be handwritten on <b>each document</b>, on the <b>same side as the image</b>.</p>
@@ -232,7 +232,7 @@ class personRecord extends DbRecord
                                               <p>Many Thanks for your cooperation,</p>
 ';
 
-    private static $pesClearedProvisionalEmailPattern = array('/&&candidate&&/','/&&effectiveDate&&/');
+    private static $pesClearedProvisionalEmailPattern = array('/&&candidate&&/');
 
     private static $offboardingEmail = 'Please initiate OFFBOARDING for the following individual:\n
                                     Name : &&name&&
@@ -1589,7 +1589,7 @@ class personRecord extends DbRecord
             case self::PES_STATUS_PROVISIONAL: // For Covid
                 $pattern   = self::$pesClearedProvisionalEmailPattern;
                 $emailBody = self::$pesClearedProvisionalEmail;
-                $replacements = array($this->FIRST_NAME,$this->PES_DATE_RESPONDED);
+                $replacements = array($this->FIRST_NAME);
                 $title = 'vBAC PES Status Change';
                 !empty($emailAddress) ? $to[] = $emailAddress : null;
                 !empty($fmEmail)      ? $to[] = $fmEmail : null;
