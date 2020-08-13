@@ -1581,7 +1581,7 @@ class personRecord extends DbRecord
             case self::PES_STATUS_CLEARED:
                 $pattern   = self::$pesClearedEmailPattern;
                 $emailBody = self::$pesClearedEmail;
-                $replacements = array($this->FIRST_NAME,$this->PES_DATE_RESPONDED,personRecord::$pesTaskId[0]);
+                $replacements = array($this->FIRST_NAME,$this->PES_CLEARED_DATE,personRecord::$pesTaskId[0]);
                 $title = 'vBAC PES Status Change';
                 !empty($emailAddress) ? $to[] = $emailAddress : null;
                 !empty($fmEmail)      ? $to[] = $fmEmail : null;
