@@ -31,6 +31,23 @@ $config_openidconnect->token_url['staging']      = "https://w3id.alpha.sso.ibm.c
 $config_openidconnect->introspect_url['staging'] = "https://w3id.alpha.sso.ibm.com/isam/oidc/endpoint/amapp-runtime-oidcidp/introspect";
 
 
+$config_openidconnect->client_id['preprod']      = "NjVhM2FkZjQtNmU2Ny00";
+$config_openidconnect->client_secret['preprod']  = "MzJkYjc5YjktNjBhYy00";
+
+$config_openidconnect->authorize_url['preprod']  = "https://preprod.login.w3.ibm.com/oidc/endpoint/default/authorize";
+$config_openidconnect->token_url['preprod']      = "https://preprod.login.w3.ibm.com/oidc/endpoint/default/token";
+$config_openidconnect->introspect_url['preprod'] = "https://preprod.login.w3.ibm.com/oidc/endpoint/default/introspect";
+
+$config_openidconnect->client_id['prod']      = "NjVhM2FkZjQtNmU2Ny00";
+$config_openidconnect->client_secret['prod']  = "MzJkYjc5YjktNjBhYy00";
+
+$config_openidconnect->authorize_url['prod']  = "https://login.w3.ibm.com/oidc/endpoint/default/authorize";
+$config_openidconnect->token_url['prod']      = "https://login.w3.ibm.com/oidc/endpoint/default/token";
+$config_openidconnect->introspect_url['prod'] = "https://login.w3.ibm.com/oidc/endpoint/default/introspect";
+
+
+
+
 // $config_openidconnect->client_id['production']      = "";
 // $config_openidconnect->client_secret['production']  = "";
 
