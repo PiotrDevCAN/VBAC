@@ -46,12 +46,12 @@
 		//verifies openID response
 		private function verifyCodeOpenIDConnect($code)
 		{
-		    $url = $this->config->token_url[strtolower($_ENV['SSO_environment'])];
+		    $url = $this->config->token_url;
 
 		    $fields = array(
 				'code' => $code,
-				'client_id' => $this->config->client_id[strtolower($_ENV['SSO_environment'])],
-				'client_secret' => $this->config->client_secret[strtolower($_ENV['SSO_environment'])],
+				'client_id' => $this->config->client_id,
+				'client_secret' => $this->config->client_secret,
 				'redirect_uri' => $this->config->redirect_url,
 				'grant_type' => 'authorization_code'
 			);
@@ -166,7 +166,7 @@
 		private function generateOpenIDConnectAuthorizeURL()
 		{
 			$current_link = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-			$authorizeString = $this->config->authorize_url[strtolower($_ENV['SSO_environment'])] . "?scope=openid&response_type=code&client_id=".$this->config->client_id[strtolower($_ENV['SSO_environment'])]."&state=".urlencode($current_link)."&redirect_uri=".$this->config->redirect_url;
+			$authorizeString = $this->config->authorize_url . "?scope=openid&response_type=code&client_id=".$this->config->client_id."&state=".urlencode($current_link)."&redirect_uri=".$this->config->redirect_url;
             return $authorizeString;
 		}
 
@@ -192,11 +192,11 @@
 		private function verifyOpenIDConnectConfig($config)
 		{
 			if(isset($config) && !empty($config)
-			    && isset($config->authorize_url[strtolower($_ENV['SSO_environment'])]) && !empty($config->authorize_url[strtolower($_ENV['SSO_environment'])])
-			    && isset($config->token_url[strtolower($_ENV['SSO_environment'])]) && !empty($config->token_url[strtolower($_ENV['SSO_environment'])])
-			    && isset($config->introspect_url[strtolower($_ENV['SSO_environment'])]) && !empty($config->introspect_url[strtolower($_ENV['SSO_environment'])])
-				&& isset($config->client_id[strtolower($_ENV['SSO_environment'])]) && !empty($config->client_id[strtolower($_ENV['SSO_environment'])])
-				&& isset($config->client_secret[strtolower($_ENV['SSO_environment'])]) && !empty($config->client_secret[strtolower($_ENV['SSO_environment'])])
+			    && isset($config->authorize_url) && !empty($config->authorize_url)
+			    && isset($config->token_url) && !empty($config->token_url)
+			    && isset($config->introspect_url) && !empty($config->introspect_url)
+				&& isset($config->client_id) && !empty($config->client_id)
+				&& isset($config->client_secret) && !empty($config->client_secret)
 				&& isset($config->redirect_url) && !empty($config->redirect_url)
 				)
 			{
