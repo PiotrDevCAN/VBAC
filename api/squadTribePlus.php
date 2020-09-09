@@ -50,10 +50,6 @@ $sql.= !empty($notesId) ? " AND lower(P.NOTES_ID) = '" . db2_escape_string(strto
 $sql.= !empty($cnum) ? " AND lower(P.CNUM) = '" . db2_escape_string(strtolower($cnum)) . "'  " : null;
 $sql.= " ORDER BY P.NOTES_ID; ";
 
-echo $sql;
-die('hjere');
-
-
 $rs = db2_exec($GLOBALS['conn'], $sql);
 
 if($rs){
