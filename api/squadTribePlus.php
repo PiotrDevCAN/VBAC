@@ -15,6 +15,9 @@ $notesId = !empty($_GET['notesid']) ? $_GET['notesid'] : null;
 $cnum    = !empty($_GET['cnum']) ? $_GET['cnum'] : null;
 $onlyActiveStr = !empty($_GET['onlyactive']) ? $_GET['onlyactive'] : 'true';
 $onlyActiveBool = $onlyActiveStr=='true';
+$withProvClear = !empty($_GET['withProvClear']) ? $_GET['withProvClear'] : null;
+
+
 
 
 $translatedPlus = str_replace(array('JRSS'                 ,'FLL_CNUM'          ,'FLL_NOTES_ID'              ,'SLL_CNUM'          ,'SLL_NOTES_ID')
@@ -41,11 +44,15 @@ $sql.= " ON P.FM_CNUM = F.CNUM ";
 $sql.= " LEFT JOIN " . $_ENV['environment'] . "." . allTables::$PERSON . " AS U ";
 $sql.= " ON F.FM_CNUM = U.CNUM ";
 $sql.= " WHERE 1=1 AND trim(P.NOTES_ID) != '' ";
-$sql.= $onlyActiveBool ? " AND " . personTable::activePersonPredicate(null,'P') : null;
+$sql.= $onlyActiveBool ? " AND " . personTable::activePersonPredicate($withProvClear,'P') : null;
 $sql.= !empty($emailID) ? " AND lower(P.EMAIL_ADDRESS) = '" . db2_escape_string(strtolower($emailID)) . "'  " : null;
 $sql.= !empty($notesId) ? " AND lower(P.NOTES_ID) = '" . db2_escape_string(strtolower($notesId)) . "'  " : null;
 $sql.= !empty($cnum) ? " AND lower(P.CNUM) = '" . db2_escape_string(strtolower($cnum)) . "'  " : null;
 $sql.= " ORDER BY P.NOTES_ID; ";
+
+echo $sql;
+die('hjere');
+
 
 $rs = db2_exec($GLOBALS['conn'], $sql);
 
