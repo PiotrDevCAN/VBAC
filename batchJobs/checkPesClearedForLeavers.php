@@ -35,7 +35,7 @@ $allPeopleToCheck = $loader->load('CNUM',allTables::$PERSON, $pesToCheck ); //
 AuditTable::audit("PES Revalidation will check " . count($allPeopleToCheck) . " Offboarded & PES Cleared.",AuditTable::RECORD_TYPE_REVALIDATION);
 $slack->sendMessageToChannel("PES Revalidation will check " . count($allPeopleToCheck) . " Offboarded & PES Cleared.", slack::CHANNEL_SM_CDI_AUDIT);
 
-$chunkedCnum = array_chunk($allPeopleToCheck, 300);
+$chunkedCnum = array_chunk($allPeopleToCheck, 200);
 $detailsFromBp = "&notesid";
 $bpEntries = array();
 
