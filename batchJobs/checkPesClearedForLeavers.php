@@ -11,8 +11,8 @@ use vbac\pesEmail;
 
 $slack = new slack();
 
-AuditTable::audit("PES Revalidation invoked.",AuditTable::RECORD_TYPE_REVALIDATION);
-$slack->sendMessageToChannel("PES Revalidation invoked.", slack::CHANNEL_SM_CDI_AUDIT);
+AuditTable::audit("Check for Leavers invoked.",AuditTable::RECORD_TYPE_REVALIDATION);
+$response = $slack->slackApiPostMessage(slack::CHANNEL_SM_CDI_AUDIT,$_ENV['environment'] . ":Check for Leavers invoked.");
 
 set_time_limit(60);
 
@@ -32,8 +32,8 @@ $pesToCheck.= ",'" . personRecord::PES_STATUS_RECHECK_REQ. "'";
 $pesToCheck.= ")";
 
 $allPeopleToCheck = $loader->load('CNUM',allTables::$PERSON, $pesToCheck ); //
-AuditTable::audit("PES Revalidation will check " . count($allPeopleToCheck) . " Offboarded & PES Cleared.",AuditTable::RECORD_TYPE_REVALIDATION);
-$slack->sendMessageToChannel("PES Revalidation will check " . count($allPeopleToCheck) . " Offboarded & PES Cleared.", slack::CHANNEL_SM_CDI_AUDIT);
+AuditTable::audit("Check for Leavers will check " . count($allPeopleToCheck) . " Offboarded & PES Cleared.",AuditTable::RECORD_TYPE_REVALIDATION);
+$response = $slack->slackApiPostMessage(slack::CHANNEL_SM_CDI_AUDIT,$_ENV['environment'] . ":Check for Leavers will check " . count($allPeopleToCheck) . " Offboarded & PES Cleared.");
 
 $chunkedCnum = array_chunk($allPeopleToCheck, 200);
 $detailsFromBp = "&notesid";
@@ -48,11 +48,16 @@ foreach ($chunkedCnum as $key => $cnumList){
     }
 }
 // At this stage, anyone still in the $allNonLeavers array - has NOT been found in BP TWICE and so is now a leaver and needs to be flagged as such.
-AuditTable::audit("PES Revalidation found " . count($allPeopleToCheck) . "  leavers.",AuditTable::RECORD_TYPE_REVALIDATION);
-$slack->sendMessageToChannel("PES Revalidation found  " . count($allPeopleToCheck) . "  leavers.", slack::CHANNEL_SM_CDI_AUDIT);
+AuditTable::audit("Check for Leavers found " . count($allPeopleToCheck) . "  leavers.",AuditTable::RECORD_TYPE_REVALIDATION);
+$response = $slack->slackApiPostMessage(slack::CHANNEL_SM_CDI_AUDIT,$_ENV['environment'] . ":Check for Leavers found  " . count($allPeopleToCheck) . "  leavers.");
+
+foreach ($allPeopleToCheck as $cnum){
+    set_time_limit(10);
+    $personTable->flagPotentialLeaver($cnum);
+}
+
 
 pesEmail::notifyPesTeamOfLeavers($allPeopleToCheck);
-AuditTable::audit("PES Revalidation completed.",AuditTable::RECORD_TYPE_REVALIDATION);
-$slack->sendMessageToChannel("PES Revalidation completed.", slack::CHANNEL_SM_CDI_AUDIT);
-
+AuditTable::audit("Check for Leavers completed.",AuditTable::RECORD_TYPE_REVALIDATION);
+$response = $slack->slackApiPostMessage(slack::CHANNEL_SM_CDI_AUDIT,$_ENV['environment'] . ":Check for Leavers completed. ");
 db2_commit($GLOBALS['conn']);

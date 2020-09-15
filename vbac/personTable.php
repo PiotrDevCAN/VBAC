@@ -1178,10 +1178,8 @@ class personTable extends DbTable {
             return false;
         }
 
-        AuditTable::audit("Revalidation has found a potential leaver: $cnum ",AuditTable::RECORD_TYPE_REVALIDATION);
-
-        $this->slack->sendMessageToChannel("Revalidation has found potential leaver: $cnum ", slack::CHANNEL_SM_CDI_AUDIT);
-
+        AuditTable::audit("Flaging potential leaver : $cnum ",AuditTable::RECORD_TYPE_REVALIDATION);
+        $this->slack->slackApiPostMessage(slack::CHANNEL_SM_CDI_AUDIT,$_ENV['environment'] . " Flaging potential leaver : $cnum ");
         return true;
     }
 

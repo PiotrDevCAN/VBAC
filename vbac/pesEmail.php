@@ -277,7 +277,7 @@ class pesEmail {
         $pesEmail.="</tbody></table>";
         $pesEmail.= "<style> th { background:red; padding:15px; } </style>";
 
-        return BlueMail::send_mail(array('LBGVETPR@uk.ibm.com'), "vbac Leavers", $pesEmail,'LBGVETPR@uk.ibm.com');
+        return BlueMail::send_mail(personRecord::$pesTaskId, "vBAC Leavers", $pesEmail,'LBGVETPR@uk.ibm.com');
     }
 
     static function notifyPesTeamOfOffboarding($cnum, $revalidationStatusWas, $notesId){
