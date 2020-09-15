@@ -1161,7 +1161,7 @@ class personTable extends DbTable {
             return false;
         }
 
-        AuditTable::audit("Revalidation has found leaver: $cnum      ",AuditTable::RECORD_TYPE_REVALIDATION);
+        AuditTable::audit("Flaging leaver: $cnum      ",AuditTable::RECORD_TYPE_REVALIDATION);
         $this->slack->slackApiPostMessage(slack::CHANNEL_SM_CDI_AUDIT,$_ENV['environment'] . " Flaging leaver : $cnum ");
        
         return true;
