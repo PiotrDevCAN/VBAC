@@ -107,8 +107,6 @@ class assetRequestRecord extends DbRecord {
         ?>
         <form id='assetRequestForm'  class="form-horizontal"
         	onsubmit="return false;">
-        <div id='hideTillEducationConfirmed' style='display: inline'>
-
 		<div class="panel panel-primary">
 		<div class="panel-heading">
 			<h3 class="panel-title">Asset Request</h3>
@@ -170,12 +168,6 @@ class assetRequestRecord extends DbRecord {
                      ?>
                     </select>
             		</div>
-            		<div class='form-group required'>
-        			<div class='col-sm-4'>
-        			<label for='educationConfirmed'>Security Education</label>
-        			<input type='checkbox' id='person-1-educationConfirmed' name='EDUCATION_CONFIRMED' value='Yes' disabled class='educationConfirmedCheckbox' >
-        			</div>
-        			</div>
             	</div>
             	<div id='requestableAssetDetailsDiv' style='display:none'>
 				<?php
@@ -247,8 +239,6 @@ class assetRequestRecord extends DbRecord {
         </div>
         </div> <!--  Panel     -->
         </div> <!--  Container -->
-
-        </div>
 
         <input id='revalidationStatus' value='' type='hidden'>
         </form>

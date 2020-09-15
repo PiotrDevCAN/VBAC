@@ -95,10 +95,6 @@ foreach ($_POST as $key => $value){
         $justification = !isset($_POST['person-'.$personId.'-justification-'.$assetId]) ? null : $_POST['person-'.$personId.'-justification-'.$assetId];
         $location = $_POST['person-'.$personId.'-location'];
         $cnum = $_POST['requestee'];
-        $educationConfirmed = personTable::getSecurityEducationForCnum($cnum);
-
-//         $email = $_POST[$cnum];
-
         $email = $personTable->getEmailFromCnum($cnum);
 
         $assetRequest = array(
@@ -110,7 +106,6 @@ foreach ($_POST as $key => $value){
             ,'REQUESTED'=>$requested
             ,'APPROVER_EMAIL'=>$approvingMgrEmail
             ,'APPROVED'=>$approved
-            ,'EDUCATION_CONFIRMED'=>$educationConfirmed
             ,'STATUS'=>$status
             ,'ORDERIT_NUMBER'=>$_POST['ORDERIT_NUMBER']
             ,'ORDERIT_STATUS'=>$orderItStatus
@@ -135,9 +130,6 @@ foreach ($_POST as $key => $value){
             $assetRequests[] = $requestDetails;
 
             $rest = $personTable->updateLbgLocationForCnum($location, $cnum);
-
-//            echo "<br/>Location:$location Cnum:$cnum Result:$rest Security: $educationConfirmed" ;
-
 
         } catch (Exception $e) {
             echo "Exception:" .  $e->getMessage();

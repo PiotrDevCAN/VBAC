@@ -70,9 +70,6 @@ if($myCnum) {
 //     		    }
 	    });
      	var AssetRequest = new assetRequest();
-     	AssetRequest.showEducationConfirmationModal(); // been tweaked to use the Requestees NOTESID
-     	AssetRequest.listenForEducationConfirmation();
-     	AssetRequest.listenForNoEducation();
      	AssetRequest.listenForSelectRequestee();
      	AssetRequest.listenForEnteringCtid();
      	AssetRequest.listenForSelectLocation();
