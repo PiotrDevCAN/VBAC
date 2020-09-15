@@ -13,6 +13,8 @@ ob_start();
 <h2>Data Leakage Protection - DG&amp;CB Licence Tracking</h2>
 <h5>Install DG software from <a href='https://ibm.box.com/s/n6aw9fj0ungblkxcctx4y4y4f2ebk5up' target='_blank' >box here</a></h5>
 <h5>Install CB software from <a href='https://ibm.box.com/s/uv0duml1r8nndxx5089bsvideh7z4ipk' target='_blank' >box here</a></h5>
+<h5>Raise a DLP Support Ticket <a href='https://w3.ibm.com/tools/cio/forms/landing/org/app/f789d11a-c9a3-45f9-8e98-8550a6ef98e2/launch/index.html?form=F_DLPSupportTicketForm' target='_blank' >box here</a></h5>
+</div>
 </div>
 </div>
 
