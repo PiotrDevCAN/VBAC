@@ -3,6 +3,7 @@
 use vbac\allTables;
 use vbac\personTable;
 use itdq\DbTable;
+use vbac\personRecord;
 
 ob_start();
 
@@ -18,6 +19,9 @@ if(isset($_REQUEST['activeoffboarding'])){
         case 'Exc':
             $predicate = " AND REVALIDATION_STATUS like 'offboarding%' ";
             break;
+        case 'Rev':
+            $predicate = " AND PES_STATUS = '" . personRecord::PES_STATUS_REVOKED .  "' AND  REVALIDATION_STATUS not like 'offboarded%' ";
+            break;            
         default:
             $predicate = " AND ( ( " . personTable::activePersonPredicate() . ")  OR REVALIDATION_STATUS like 'offboarding%' ) ";
         break;
