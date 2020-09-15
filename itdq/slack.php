@@ -7,7 +7,7 @@ class slack {
     protected $url;
 
     const CHANNEL_SM_CDI      = 'sm_cognitive_delivery';
-    const CHANNEL_SM_CDI_AUDIT = 'sm_cdi_audit';
+    const CHANNEL_SM_CDI_AUDIT = 'sm-cdi-audit';
     const CHANNEL_GENERAL     = 'general';
 
     const CHANNEL_RTB_WINTEL_OFFSHORE = 'rtb-wintel_offshore';
