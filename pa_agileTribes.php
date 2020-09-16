@@ -29,12 +29,12 @@ $tribeRecord->displayForm(FormClass::$modeDEFINE, 'Original');
 <div class='container'>
 <table id='tribeTable' class='table table-striped table-bordered compact'  style='width:100%'>
 <thead>
-<tr><th>Tribe Number</th><th>Tribe Name</th><th>Tribe Leader</th><th>Organisation</th></tr>
+<tr><th>Tribe Number</th><th>Tribe Name</th><th>Tribe Leader</th><th>Iteration Mgr</th><th>Organisation</th></tr>
 </thead>
 <tbody>
 </tbody>
 <tfoot>
-<tr><th>Tribe Number</th><th>Tribe Name</th><th>Tribe Leader</th><th>Organisation</th></tr>
+<tr><th>Tribe Number</th><th>Tribe Name</th><th>Tribe Leader</th><th>Iteration Mgr</th><th>Organisation</th></tr>
 </tfoot>
 </table>
 </div>
@@ -69,7 +69,7 @@ $(document).ready(function() {
 	version = $('#version').prop('checked') ? 'Original' : 'New';
 	Tribe.initialiseAgileTribeTable(version);
 	Tribe.listenForSubmitTribeForm();
-	Tribe.listenForLeader();
+//	Tribe.listenForLeader();
 	Tribe.listenForEditTribe();
 
     $('#version').bootstrapToggle();

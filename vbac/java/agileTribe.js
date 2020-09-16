@@ -21,7 +21,6 @@ function agileTribe() {
 
   },
 
-
   this.initialiseAgileTribeTable = function(version){	  
 	 
     // Setup - add a text input to each footer cell
@@ -43,6 +42,7 @@ function agileTribe() {
                       { "data": "TRIBE_NUMBER", render: { _:"display", sort:"sort" } },
                       { "data": "TRIBE_NAME"   },
                       { "data": "TRIBE_LEADER" },
+                      { "data": "ITERATION_MGR", "defaultContent":"<i>To be assigned</i>"  },
                       { "data": "ORGANISATION" },
                   ],
           order: [[1, "asc" ]],
@@ -105,6 +105,7 @@ function agileTribe() {
 		      		$('#TRIBE_NUMBER').val('').trigger('change').attr('disabled',false);
 		      		$('#TRIBE_NAME').val('');
 		      		$('#TRIBE_LEADER').val('');	
+		      		$('#ITERATION_MGR').val('');
 		      		$('#radioTribeOrganisationManaged').prop('checked', true)
 		      		agileTribe.table.ajax.reload();
 		      	},
@@ -128,6 +129,8 @@ function agileTribe() {
 		  $('#TRIBE_NUMBER').val($(this).data('tribenumber')).trigger('change').attr('disabled',true);
 		  $('#TRIBE_NAME').val($(this).data('tribename'));
 		  $('#TRIBE_LEADER').val($(this).data('tribeleader'));
+		  $('#ITERATION_MGR').val($(this).data('iterationmgr'));
+
 		  
 		  console.log($(this));
 		  console.log($(this).data('organisation'));

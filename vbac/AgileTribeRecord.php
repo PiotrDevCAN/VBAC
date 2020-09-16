@@ -14,6 +14,7 @@ class AgileTribeRecord extends DbRecord {
     protected $TRIBE_NAME;
     protected $TRIBE_LEADER;
     protected $ORGANISATION;
+    protected $ITERATION_MGR;
 
 
     function displayForm($mode=FormClass::modeDefine,$version=null){
@@ -58,6 +59,14 @@ class AgileTribeRecord extends DbRecord {
 				<input id='TRIBE_LEADER' name='TRIBE_LEADER' class='form-control typeaheadNotesId' value='<?=!empty($this->TRIBE_LEADER) ? $this->TRIBE_LEADER :null ; ?>'/>
             </div>
         </div>
+        
+        <div class="form-group required " >
+            <label for='ITERATION_MGR' class='col-sm-2 control-label ceta-label-left' data-toggle='tooltip' data-placement='top' title='Iteration Manager'>Iteration Manager</label>
+        	<div class='col-md-4'>
+				<input id='ITERATION_MGR' name='ITERATION_MGR' class='form-control typeaheadNotesId' value='<?=!empty($this->ITERATION_MGR) ? $this->ITERATION_MGR :null ; ?>'/>
+            </div>
+        </div>
+        
 
    		<div class='form-group'>
    		<div class='col-sm-offset-2 -col-md-4'>
