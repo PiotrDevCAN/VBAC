@@ -3,17 +3,8 @@
 use itdq\slack;
 include_once 'itdq/slack.php';
 
-
-echo "<br/><br/><br/>";
-
-echo "<pre>";
-print_r($_ENV);
-echo "</pre>";
-
 $slack = new slack();
-
-
-$result = $slack->sendMessageToChannel('Testing from Cirrus',slack::CHANNEL_GENERAL);
+$result = $slack->slackPostMessageWithEmoji(slack::CHANNEL_SM_CDI_AUDIT,'<!channel> testing', array('thumbsup', 'thumbsdown'));
 
 echo "<pre>";
 print_r($result);

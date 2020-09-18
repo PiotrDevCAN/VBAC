@@ -117,10 +117,9 @@ class slack {
     function slackPostMessageWithEmoji($channel, $text ,array $names){
         $postResult = $this->slackApiPostMessage($channel, $text);
         $postResultObj = json_decode($postResult);
-
         if($postResultObj->ok){
             foreach ($names as $name) {
-                $reactionResult = $this->slackAddReaction($channel, $name,$postResultObj->ts );
+                $reactionResult = $this->slackAddReaction($postResultObj->channel, $name,$postResultObj->ts );
                 $reactionResultObj = json_decode($reactionResult);
                 if(!$reactionResultObj->ok){
                     echo "<pre>";
