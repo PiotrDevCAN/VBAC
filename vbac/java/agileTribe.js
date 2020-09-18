@@ -5,6 +5,20 @@
  */
 
 
+var buttonCommon = {
+        exportOptions: {
+            format: {
+                body: function ( data, row, column, node ) {
+                 //   return data ?  data.replace( /<br\s*\/?>/ig, "\n") : data ;
+                 return data ? data.replace( /<br\s*\/?>/ig, "\n").replace(/(&nbsp;|<([^>]+)>)/ig, "") : data ;
+                 //    data.replace( /[$,.]/g, '' ) : data.replace(/(&nbsp;|<([^>]+)>)/ig, "");
+
+                }
+            }
+        }
+    };
+
+
 function agileTribe() {
 
   var table;
@@ -51,9 +65,36 @@ function agileTribe() {
           dom: 'Blfrtip',
           buttons: [
                     'colvis',
-                    'excelHtml5',
-                    'csvHtml5',
-                    'print'
+                    $.extend( true, {}, buttonCommon, {
+                        extend: 'excelHtml5',
+                        exportOptions: {
+                            orthogonal: 'sort',
+                            stripHtml: true,
+                            stripNewLines:false
+                        },
+                         customize: function( xlsx ) {
+                             var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                             var now = new Date();
+ 							 $('c[r=A1] t', sheet).text( 'Ventus Tribes : ' + now );
+
+                         }
+                }),
+                $.extend( true, {}, buttonCommon, {
+                    extend: 'csvHtml5',
+                    exportOptions: {
+                        orthogonal: 'sort',
+                        stripHtml: true,
+                        stripNewLines:false
+                    }
+                }),
+                $.extend( true, {}, buttonCommon, {
+                    extend: 'print',
+                    exportOptions: {
+                        orthogonal: 'sort',
+                        stripHtml: true,
+                        stripNewLines:false
+                    }
+                }),
                 ],
       });
       

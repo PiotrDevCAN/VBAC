@@ -66,7 +66,7 @@ class AgileTribeTable extends DbTable{
         $tribeNumberWithIcon .= " </button> ";
         $tribeNumberWithIcon .= "&nbsp; Tribe " . $tribeNumber;
 
-        $row['TRIBE_NUMBER'] = array('display'=>$tribeNumberWithIcon,'sort'=>'Tribe ' . $tribeNumber);
+        $row['TRIBE_NUMBER'] = array('display'=>$tribeNumberWithIcon,'sort'=>$tribeNumber);
         return $row;
     }
 
