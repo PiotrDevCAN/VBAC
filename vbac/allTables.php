@@ -39,6 +39,7 @@ class allTables
     public static $PERSON                 = 'PERSON';
     public static $PERSON_PORTAL_REPORTS  = 'PERSON_PORTAL_REPORTS';
     public static $PERSON_SUBPLATFORM     = 'PERSON_SUBPLATFORM';
+    public static $PERSON_PORTAL_LITE     = 'PERSON_PORTAL_LITE_VIEW';
 
     public static $PES_EVENTS             = 'PES_EVENTS';
     public static $PES_TRACKER            = 'PES_TRACKER';

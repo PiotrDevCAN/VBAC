@@ -1,13 +1,11 @@
 <?php
-use vbac\personPortalLiteRecord;
-use vbac\personPortalLiteTable;
-use vbac\allTables;
+use vbac\personRecord;
+use vbac\personWithSubPRecord;
 use vbac\staticDataSubPlatformTable;
 use vbac\personTable;
 
-$personRecord = new personPortalLiteRecord();
-$personTable = new personPortalLiteTable(allTables::$PERSON_PORTAL_LITE);
-$headerCells = $personTable->headerRowForDatatable();
+$personRecord = new personWithSubPRecord();
+$headerCells = $personRecord->htmlHeaderCells();
 staticDataSubPlatformTable::prepareJsonObjectForSubPlatformSelect();
 
 ?>
@@ -32,16 +30,17 @@ staticDataSubPlatformTable::prepareJsonObjectForSubPlatformSelect();
 <div id='personDatabaseDiv' class='portalDiv'>
 <table id='personTable' class='table table-striped table-bordered compact'   style='width:100%'>
 <thead>
-<?=$headerCells;?></thead>
+<tr><?=$headerCells;?></tr></thead>
 <tbody>
 </tbody>
-<tfoot><?=$headerCells;?></tfoot>
+<tfoot><tr><?=$headerCells;?></tr>
+</tfoot>
 </table>
 </div>
 </div>
 
 <?php
-$person = new personPortalLiteRecord();
+$person = new personRecord();
 $person->amendPesStatusModal();
 $person->savingBoardingDetailsModal();
 $person->editPersonModal();
@@ -63,7 +62,6 @@ function changeSubplatform(dataCategory){
     .attr('required',true);
 
 };
-
 
 $(document).on( "change", '#work_stream', function(e){
 	if($('.accountOrganisation:checked').val()=='BAU'){
@@ -88,14 +86,18 @@ $(document).on( "change", '#work_stream', function(e){
 
 });
 
+
+
+
 $(document).ready(function(){
 
 	$('[data-toggle="tooltip"]').tooltip();
 	$('[data-toggle="popover"]').popover();
-
 	var person = new personRecord();
-	var PersonPortalLite = new personPortalLite();
-	PersonPortalLite.initialiseDataTable('<?=personTable::PORTAL_ONLY_ACTIVE ?>');
+	var personWithSubP = new personWithSubPRecord();
+	personWithSubP.initialiseDataTable('<?=personTable::PORTAL_ONLY_ACTIVE ?>');
+
+//	person.initialiseDataTable();
 	person.listenForReportPes();
 	person.listenForReportAction();
 	person.listenForReportRevalidation();
@@ -133,7 +135,15 @@ $(document).ready(function(){
 //	person.listenForCancelPes(); Don't let them cancel 2018/12/19
 	person.listenForStopPes();
 
+<?php
+if(isset($_GET['open'])){
+   ?>
+   $(document).on('init.dt',function(){
+	   $('#footerNOTESID').val('<?=trim($_GET['open']);?>').trigger('change');
+	   $('.btnEditPerson').trigger('click');
+   });
+   <?php
+}
+?>
 });
-
-
 </script>

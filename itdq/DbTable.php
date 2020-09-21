@@ -2184,6 +2184,15 @@ class DbTable
         </div>
         <?php
     }
+    
+    function headerRowForDatatable(){
+        $headerRow = "<tr>";
+        foreach ($this->columns as $columnName => $db2ColumnProperties) {
+            $headerRow.= "<th>" . str_replace("_"," ", $columnName );
+        }
+        $headerRow.= "</th></tr>";
+        return $headerRow;
+    }
 
 
 }
