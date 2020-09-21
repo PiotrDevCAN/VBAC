@@ -43,19 +43,16 @@ class personPortalLiteTable extends personTable
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         } else {
-            $rowCounter = 00;
             while(($row=db2_fetch_assoc($rs))==true){
                 // Only editable, if they're not a "pre-Boarder" who has now been boarded.
                 $preparedRow = $this->prepareFields($row);
                 $rowWithButtonsAdded =(substr($row['PES_STATUS_DETAILS'],0,7)=='Boarded') ? $preparedRow : $this->addButtons($preparedRow);
                 $data[] = $rowWithButtonsAdded;                             
-                $rowSql = microtime(true);
-                error_log("Read a row" . $rowSql . "Row:" . ++$rowCounter . "(" . (($rowSql-$startOfSql)/$rowCounter) . ") ");  
             }
         }
         
         $returnSql = microtime(true);
-        error_log("About to returnL" . $returnSql . "(" . ($returnSql-$startOfSql) . ") ");
+        error_log("About to return" . $returnSql . "(" . ($returnSql-$startOfSql) . ") ");
         
         
         return $data;        
