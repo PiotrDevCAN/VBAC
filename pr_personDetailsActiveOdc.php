@@ -34,30 +34,21 @@ $spreadsheet->getProperties()->setCreator('vBAC')
 
 $now = new DateTime();
 
-// $personTable = new personTable(allTables::$PERSON);
-// $activePredicate = personTable::activePersonPredicate();
-// $activePredicate .=" AND ";
-// $activePredicate .= personTable::odcPredicate();
-
-
 try {
 
-    $sql = " Select * ";
-    $sql.= personTable::odcStaffSql();
-//     $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
-//     $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$ODC_ACCESS_LIVE . " as O ";
-//     $sql.= " ON O.OWNER_CNUM_ID = P.CNUM ";
-
-//     $activeSql = $sql . " WHERE 1=1 ";
-//     $activeSql.= " AND " . $activePredicate;
-//     $activeSql.= " AND O.OWNER_CNUM_ID is not null ";// they have to have currect access to ODC
+    $joins = " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS ";
+    $joins.= " ON P.SQUAD_NUMBER = AS.SQUAD_NUMBER ";
+    $joins.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " AS AT ";
+    $joins.= " ON AS.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
+    
+    $sql = " Select P.*, O.*, AS.SQUAD_LEADER, AS.SQUAD_NAME, AT.TRIBE_NUMBER, AT.TRIBE_NAME, AT.TRIBE_LEADER, AT.ORGANISATION, AT.ITERATION_MGR   ";
+    $sql.= personTable::odcStaffSql($joins);
 
     set_time_limit(60);
-
+    
     $rs = db2_exec($GLOBALS['conn'], $sql);
 
     if($rs){
-//         $recordsFound = DbTable::writeResultSetToXls($rs, $spreadsheet);
         $recordsFound = personWithSubPTable::writeResultSetToXls($rs, $spreadsheet);
         if($recordsFound){
             DbTable::autoFilter($spreadsheet);

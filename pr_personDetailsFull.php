@@ -35,9 +35,13 @@ $personTable = new assetRequestsTable(allTables::$PERSON);
 
 try {
     $sheet = 1;
-    $sql = " Select * ";
-    $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
-    $sql .= " WHERE PES_STATUS_DETAILS is null or PES_STATUS_DETAILS not like 'Boarded%' ";  // dont show boarded pre-boarders
+    $sql = " Select P.*, AS.SQUAD_LEADER, AS.SQUAD_NAME, AT.TRIBE_NUMBER, AT.TRIBE_NAME, AT.TRIBE_LEADER, AT.ORGANISATION, AT.ITERATION_MGR  ";
+    $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
+    $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS ";
+    $sql.= " ON P.SQUAD_NUMBER = AS.SQUAD_NUMBER ";
+    $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " AS AT ";
+    $sql.= " ON AS.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
+    $sql .= " WHERE P.PES_STATUS_DETAILS is null or P.PES_STATUS_DETAILS not like 'Boarded%' ";  // dont show boarded pre-boarders
 
     set_time_limit(0);
     $rs = db2_exec($GLOBALS['conn'], $sql);

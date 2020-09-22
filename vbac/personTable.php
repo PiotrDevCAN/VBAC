@@ -1494,13 +1494,14 @@ class personTable extends DbTable {
         return $_SESSION['Odcstaff'];
     }
 
-    static function odcStaffSql(){
+    static function odcStaffSql($joins=null){
         $activePredicate = self::activePersonPredicate();
 
         $sql = " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$ODC_ACCESS_LIVE . " as O ";
         $sql.= " ON O.OWNER_CNUM_ID = P.CNUM ";
-
+        $sql.= !empty($joins) ? $joins : null;
+        
         $activeSql = $sql . " WHERE 1=1 ";
         $activeSql.= " AND " . $activePredicate;
         $activeSql.= " AND O.OWNER_CNUM_ID is not null ";// they have to have currect access to ODC

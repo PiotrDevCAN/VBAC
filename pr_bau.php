@@ -39,8 +39,13 @@ $activePredicate = personTable::activePersonPredicate();
 
 try {
     $sheet = 1;
-    $sql = " Select * ";
-    $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
+    $sql = " Select P.*, AS.SQUAD_LEADER, AS.SQUAD_NAME, AT.TRIBE_NUMBER, AT.TRIBE_NAME, AT.TRIBE_LEADER, AT.ORGANISATION, AT.ITERATION_MGR  ";
+    $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
+    $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS ";
+    $sql.= " ON P.SQUAD_NUMBER = AS.SQUAD_NUMBER ";
+    $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " AS AT ";
+    $sql.= " ON AS.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
+    
 
     $activeSql = $sql . " WHERE 1=1 AND " . $activePredicate;
 
@@ -48,12 +53,10 @@ try {
 //     Filter on  Column " BAUT&T" pick only BAU
 //     Filter on  Column " CTB RTB"  pick CTB& RTB
 //     Filter on column " Revalidation Status" pick only found
-
-
-    $activeSql.= " AND LOB     in ('GTS','Cloud','Security') ";
-    $activeSql.= " AND TT_BAU  in ('BAU') ";
-    $activeSql.= " AND CTB_RTB in ('CTB','RTB') ";
-    $activeSql.= " AND REVALIDATION_STATUS = 'found' ";
+    $activeSql.= " AND P.LOB     in ('GTS','Cloud','Security') ";
+    $activeSql.= " AND P.TT_BAU  in ('BAU') ";
+    $activeSql.= " AND P.CTB_RTB in ('CTB','RTB') ";
+    $activeSql.= " AND P.REVALIDATION_STATUS = 'found' ";
 
     set_time_limit(60);
 
