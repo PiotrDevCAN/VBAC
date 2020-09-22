@@ -24,6 +24,7 @@ staticDataSubPlatformTable::prepareJsonObjectForSubPlatformSelect();
 <button id='reportPes'    		class='btn btn-primary btn-sm '>PES Report</button>
 <button id='reportRevalidation' class='btn btn-primary btn-sm '>Revalidation Report</button>
 <button id='reportMgrsCbn'      class='btn btn-primary btn-sm '>Mgrs CBN Report</button>
+<button id='reportSquads'       class='btn btn-primary btn-sm '>Squad Details</button>
 <button id='reportAll'  		class='btn btn-primary btn-sm '>Show all Columns</button>
 &nbsp;
 <button id='reportRemoveOffb' class='btn btn-warning btn-sm '>Hide Offboarding</button>
@@ -96,16 +97,17 @@ $(document).ready(function(){
 	var person = new personRecord();
 	var PersonPortalLite = new personPortalLite();
 	PersonPortalLite.initialiseDataTable('<?=personTable::PORTAL_ONLY_ACTIVE ?>');
-	person.listenForReportPes();
-	person.listenForReportAction();
-	person.listenForReportRevalidation();
-	person.listenForReportOffboarding();
-	person.listenForReportOffboarded();
-	person.listenForReportMgrsCbn();
-	person.listenForReportRemoveOffb();
-	person.listenForReportReset();
-	person.listenForReportReload();
-	person.listenForReportAll();
+	PersonPortalLite.listenForReportPes();
+	PersonPortalLite.listenForReportAction();
+	PersonPortalLite.listenForReportRevalidation();
+	PersonPortalLite.listenForReportOffboarding();
+	PersonPortalLite.listenForReportOffboarded();
+	PersonPortalLite.listenForReportMgrsCbn();
+	PersonPortalLite.listenForReportSquads();
+	PersonPortalLite.listenForReportRemoveOffb();
+	PersonPortalLite.listenForReportReset();
+	PersonPortalLite.listenForReportReload();
+	PersonPortalLite.listenForReportAll();
 	person.listenForReportSave();
 	person.listenForReportSaveConfirm();
 	person.listenForEditPesStatus();
