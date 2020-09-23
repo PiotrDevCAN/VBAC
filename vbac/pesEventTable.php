@@ -47,7 +47,7 @@ class pesEventTable extends DbTable{
             $sql .= " ON P.CNUM = PE$element.CNUM AND PE$element.EVENT='$event_title' ";
         }
 
-        $sql.= " WHERE P.PES_STATUS IN ('" . personRecord::PES_STATUS_REQUESTED . "','" . personRecord::PES_STATUS_RECHECK_REQ . "') ";
+        $sql.= " WHERE P.PES_STATUS IN ('" . personRecord::PES_STATUS_REQUESTED . "','" . personRecord::PES_STATUS_RECHECK_REQ . "','" . personRecord::PES_STATUS_MOVER . "') ";
 
         $rs = db2_exec($GLOBALS['conn'], $sql);
 

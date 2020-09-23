@@ -61,7 +61,7 @@ class assetRequestRecord extends DbRecord {
 //         $predicate .= " ) ";
         $predicate = " and PES_STATUS in ('" . personRecord::PES_STATUS_CLEARED. "',";
         $predicate.= $includeProvisionallyCleared ? "'" .personRecord::PES_STATUS_PROVISIONAL . "'," : null;
-        $predicate.= "'" . personRecord::PES_STATUS_CLEARED_PERSONAL. "','" . personRecord::PES_STATUS_EXCEPTION. "','" . personRecord::PES_STATUS_RECHECK_REQ. "') ";  // They must be PES Cleared.
+        $predicate.= "'" . personRecord::PES_STATUS_CLEARED_PERSONAL. "','" . personRecord::PES_STATUS_EXCEPTION. "','" . personRecord::PES_STATUS_RECHECK_REQ. "','" . personRecord::PES_STATUS_MOVER. "') ";  // They must be PES Cleared.
         $predicate.= " and ((REVALIDATION_STATUS = '" . personRecord::REVALIDATED_FOUND . "' or REVALIDATION_STATUS is null or REVALIDATION_STATUS= '" . personRecord::REVALIDATED_POTENTIAL . "') "; // They are ACTIVE IBMer
         $predicate.= "        or ( REVALIDATION_STATUS IN ('" . personRecord::REVALIDATED_VENDOR . "') and ( PES_STATUS_DETAILS not like 'Boarded%' or PES_STATUS_DETAILS is null) )  "; // They are a vendor - who has not subsequently been boarded as an IBMer
 	    $predicate.= "        or REVALIDATION_STATUS like 'offboarding%' ) ";  // OR they are in the process of offboarding so need to be able to request things be returned.

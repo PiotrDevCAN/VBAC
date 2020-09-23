@@ -101,7 +101,7 @@ class personTable extends DbTable {
         $activePredicate.= "REVALIDATION_STATUS not like '" . personRecord::REVALIDATED_OFFBOARDING . "%:%" .personRecord::REVALIDATED_LEAVER . "%' " ;
         $activePredicate.= " AND ";
         $activePredicate.= !empty($tableAbbrv) ? $tableAbbrv ."." : null ;
-        $activePredicate.= "PES_STATUS in ('". personRecord::PES_STATUS_CLEARED ."','". personRecord::PES_STATUS_CLEARED_PERSONAL ."','". personRecord::PES_STATUS_EXCEPTION ."','". personRecord::PES_STATUS_RECHECK_REQ ."'";
+        $activePredicate.= "PES_STATUS in ('". personRecord::PES_STATUS_CLEARED ."','". personRecord::PES_STATUS_CLEARED_PERSONAL ."','". personRecord::PES_STATUS_EXCEPTION ."','". personRecord::PES_STATUS_RECHECK_REQ ."','". personRecord::PES_STATUS_MOVER ."'";
         $activePredicate.= $includeProvisionalClearance ? ",'" . personRecord::PES_STATUS_PROVISIONAL . "'" : null ;
         $activePredicate.= " ) ) ";
         return $activePredicate;
@@ -540,6 +540,7 @@ class personTable extends DbTable {
                 break;
             case personRecord::PES_STATUS_REQUESTED:
             case personRecord::PES_STATUS_RECHECK_REQ:
+            case personRecord::PES_STATUS_MOVER:
                 $dateField = 'PES_DATE_EVIDENCE';
                 break;
             case personRecord::PES_STATUS_CLEARED:
@@ -1617,6 +1618,7 @@ class personTable extends DbTable {
             case $status == personRecord::PES_STATUS_PROVISIONAL && $_SESSION['isPes'] :
             case $status == personRecord::PES_STATUS_TBD && $_SESSION['isPes'] :
             case $status == personRecord::PES_STATUS_RECHECK_REQ && $_SESSION['isPes'] :
+            case $status == personRecord::PES_STATUS_MOVER && $_SESSION['isPes'] :
                 $pesStatusWithButton.= "<button type='button' class='btn btn-default btn-xs btnPesStatus' aria-label='Left Align' ";
                 $pesStatusWithButton.= " data-cnum='" .$actualCnum . "' ";
                 $pesStatusWithButton.= " data-notesid='" . $notesId . "' ";
@@ -1634,6 +1636,7 @@ class personTable extends DbTable {
                 break;
             case $status == personRecord::PES_STATUS_REQUESTED && !$_SESSION['isPes'] :
             case $status == personRecord::PES_STATUS_RECHECK_REQ && !$_SESSION['isPes'] :
+            case $status == personRecord::PES_STATUS_MOVER && !$_SESSION['isPes'] :
             case $status == personRecord::PES_STATUS_INITIATED && !$_SESSION['isPes'] ;
                 $pesStatusWithButton.= "<button type='button' class='btn btn-default btn-xs btnPesStop accessRestrict accessFm' aria-label='Left Align' ";
                 $pesStatusWithButton.= " data-cnum='" .$actualCnum . "' ";
@@ -1653,7 +1656,7 @@ class personTable extends DbTable {
                 break;
         }
 
-        if(isset($row['PROCESSING_STATUS']) && ( $row['PES_STATUS']== personRecord::PES_STATUS_INITIATED || $row['PES_STATUS']==personRecord::PES_STATUS_REQUESTED || $row['PES_STATUS']==personRecord::PES_STATUS_RECHECK_REQ ) ){
+        if(isset($row['PROCESSING_STATUS']) && ( $row['PES_STATUS']== personRecord::PES_STATUS_INITIATED || $row['PES_STATUS']==personRecord::PES_STATUS_REQUESTED || $row['PES_STATUS']==personRecord::PES_STATUS_RECHECK_REQ || $row['PES_STATUS']==personRecord::PES_STATUS_MOVER ) ){
 
             $pesStatusWithButton .= "&nbsp;<button type='button' class='btn btn-default btn-xs btnTogglePesTrackerStatusDetails' aria-label='Left Align' data-toggle='tooltip' data-placement='top' title='See PES Tracker Status' >";
             $pesStatusWithButton .= !empty($row['PROCESSING_STATUS']) ? "&nbsp;<small>" . $row['PROCESSING_STATUS'] . "</small>&nbsp;" : null;
@@ -1765,7 +1768,8 @@ class personTable extends DbTable {
         if(trim($ibmerPesStatus) == personRecord::PES_STATUS_INITIATED
                                           || trim($ibmerPesStatus) == personRecord::PES_STATUS_REQUESTED
                                           || trim($ibmerPesStatus) == personRecord::PES_STATUS_NOT_REQUESTED
-                                          || trim($ibmerPesStatus) == personRecord::PES_STATUS_RECHECK_REQ  ){
+                                          || trim($ibmerPesStatus) == personRecord::PES_STATUS_RECHECK_REQ 
+                                          || trim($ibmerPesStatus) == personRecord::PES_STATUS_MOVER){
             $ibmerData['PES_STATUS'] = $preboarderPesStatus;
             $ibmerData['PES_STATUS_DETAILS'] = $ibmerPesStatusD . ":" . $preboarderPesStatusD;
             $ibmerData['PES_DATE_EVIDENCE']  = $preBoarderPesEvidence;
