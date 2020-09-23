@@ -15,7 +15,7 @@ $cnum = $_POST['cnum'];
 $emailAddress = personTable::getEmailFromCnum($cnum);
 
 $pesEmailObj = new pesEmail();
-$emailResponse = $pesEmailObj->sendPesEmailChaser($cnum, $emailAddress, $_POST['chaser'], $_POST['requestor']);
+$emailResponse = $pesEmailObj->sendPesEmailChaser($cnum, $emailAddress, $_POST['chaser'], $_POST['flm']);
 
 $emailStatus = $emailResponse['Status'];
 

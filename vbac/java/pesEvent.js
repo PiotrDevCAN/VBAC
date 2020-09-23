@@ -71,7 +71,7 @@ function pesEvent() {
 		  var cnum = $(details).data('cnum');	
 		  var firstName = $(details).data('firstname');
 		  var lastName = $(details).data('lastname');	
-		  var requestor = $(details).data('requestor');
+		  var flm = $(details).data('flm');
 		  
 		  var buttonObj = $(this);
 		  buttonObj.addClass('spinning');
@@ -84,7 +84,7 @@ function pesEvent() {
 			  		     chaser: chaser,
 			  		     firstName : firstName,
 			  		     lastName : lastName,
-			  		     requestor : requestor
+			  		     flm : flm
 			  			},
 			    success: function(result){
 			    	var resultObj = JSON.parse(result);
@@ -325,7 +325,7 @@ function pesEvent() {
 		  var firstname     = $(dataDiv).data('firstname');
 		  var lastname      = $(dataDiv).data('lastname');
 		  var emailaddress  = $(dataDiv).data('emailaddress');
-		  var requestor     = $(dataDiv).data('emailaddress');
+		  var flm           = $(dataDiv).data('flm');
 //		  $(this).parents('div').prev('div.pesProcessStatusDisplay').html(processStatus);
 		  $(this).addClass('spinning');
 		   $.ajax({
@@ -336,7 +336,7 @@ function pesEvent() {
 		    	       firstname : firstname,
 		    	       lastname : lastname,
 		    	       emailaddress : emailaddress,
-		    	       requestor : requestor
+		    	       flm : flm
 		    	   	   },
 		       success: function(result){
 		           var resultObj = JSON.parse(result);
