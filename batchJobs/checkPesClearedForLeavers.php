@@ -27,6 +27,7 @@ $pesToCheck.= ",'" . personRecord::PES_STATUS_EXCEPTION. "'";
 $pesToCheck.= ",'" . personRecord::PES_STATUS_PROVISIONAL. "'";
 $pesToCheck.= ",'" . personRecord::PES_STATUS_REQUESTED. "'";
 $pesToCheck.= ",'" . personRecord::PES_STATUS_INITIATED. "'";
+$pesToCheck.= ",'" . personRecord::PES_STATUS_RECHECK_PROGRESSING. "'";
 $pesToCheck.= ",'" . personRecord::PES_STATUS_RESTART. "'";
 $pesToCheck.= ",'" . personRecord::PES_STATUS_RECHECK_REQ. "'";
 $pesToCheck.= ",'" . personRecord::PES_STATUS_MOVER. "'";

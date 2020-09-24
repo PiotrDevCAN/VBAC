@@ -160,7 +160,8 @@ function personRecord() {
 			       type: 'GET',
 			       data : {emailaddress:data.emailaddress,
 			    	       country:data.country,
-			    	       cnum:data.cnum
+			    	       cnum:data.cnum,
+						   recheck:data.recheck
 			    	       },
 			       success: function(result){
 			    	   $('.btnSendPesEmail').removeClass('spinning');		    	 

@@ -101,15 +101,52 @@ class pesEmail {
 
         return $pesAttachments;
     }
+    
+    private function getRecheckAttachments($recheckEmailFileName=null){
+        switch ($recheckEmailFileName) {
+            case 'recheck_L1_Core4.php':            
+                $pesAttachments = array('../emailAttachments/Lloyds Global Application Form v2.0.doc');
+                break;
+            case 'recheck_L1_India_Non_Core4.php':
+                $pesAttachments = array('../emailAttachments/Lloyds Global Application Form v2.0.doc'
+                                       ,'../emailAttachments/ODC Global Application Form v2.0.doc'
+                                       ,'../emailAttachments/Ownes_Consent_Form.doc');
+                break;
+            case 'recheck_L1_UK.php':
+                $pesAttachments = array('../emailAttachments/Lloyds Global Application Form v2.0.doc');
+                break;
+            case 'recheck_L2_Core4.php':
+                $pesAttachments = array('../emailAttachments/Lloyds Global Application Form v2.0.doc');
+                break;
+            case 'recheck_L2_India_Non_Core4.php':
+                $pesAttachments = array('../emailAttachments/Lloyds Global Application Form v2.0.doc'
+                                       ,'../emailAttachments/ODC Global Application Form v2.0.doc'
+                                       ,'../emailAttachments/Ownes_Consent_Form.doc');
+                break;
+            case 'recheck_L2_UK.php':
+                $pesAttachments = array('../emailAttachments/Lloyds Global Application Form v2.0.doc');
+                break;
+            case 'recheck_offboarded.php':
+                $pesAttachments = null;
+                break;
+            default:
+                throw new \Exception('No matches found for ' . $recheckEmailFileName, 804);
+                break;
+        }
+        
+        return $pesAttachments;
+    }
+    
 
-    function getEmailDetails($emailAddress, $country,$openSeat=null){
-        $countryCodeTable = new DbTable(allTables::$STATIC_COUNTRY_CODES);
-        $intExt = $this->determineInternalExternal($emailAddress);
-
-        $sql = ' SELECT PES_EMAIL ';
+    function getEmailDetails($emailAddress, $country,$openSeat=null,$recheck=false){
+      
+        $intExt = !$recheck ?  $this->determineInternalExternal($emailAddress) : null;
+        
+        $emailField = $recheck ? "RECHECK_EMAIL" : "PES_EMAIL";
+        $sql = " SELECT $emailField ";
         $sql.= ' FROM ' . strtoupper($_ENV['environment']) . "." . allTables::$STATIC_COUNTRY_CODES;
         $sql.= " WHERE  upper(country_name)= '" . db2_escape_string(strtoupper($country)) . "' ";
-
+        
         $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
@@ -119,31 +156,45 @@ class pesEmail {
 
         $row = db2_fetch_assoc($rs);
 
-        $pesEmail = trim($row['PES_EMAIL']);
+        $pesEmail = trim($row[$emailField]);
 
         if(empty($pesEmail)){
-
-            throw new \Exception('PES_EMAIL not defined for country : ' . $country,800);
+            throw new \Exception("$emailField not defined for country : " . $country,800);
         }
-
-        $results = preg_split('/[-.]/', $pesEmail);
-        $locationType = $results[0];
-        $emailType  = isset($results[1]) ? $results[1] : null;
-        switch ($locationType) {
-            case 'xxx':
-                // Need to know if Internal or External
-                $pesEmailBodyFilename = $intExt . "-" . $emailType . ".php";
-            break;
-            case 'unknown':
-                throw new \Exception('No email defined for ' . $country, 801);
+       
+        switch($recheck){
+            case true :                
+                $pesLevelOrig = personTable::getPesLevelFromEmail($emailAddress);
+                $pesLevel = str_replace('evel ', '', trim($pesLevelOrig)); // Condense to L1, L2 etc.
+                $pesEmailBodyFilename = str_replace('xx', $pesLevel,$pesEmail);
+                $emailType=null;
+                $results = null;
                 break;
-            default:
-                // We don't need to further clarify the PES EMAIL Body file;
-                $pesEmailBodyFilename = $pesEmail;
-            break;
+            case false: 
+                echo "false";
+                $results = preg_split('/[-.]/', $pesEmail);
+                $locationType = $results[0];
+                $emailType  = isset($results[1]) ? $results[1] : null;
+                switch ($locationType) {
+                    case 'xxx':
+                        // Need to know if Internal or External
+                        $pesEmailBodyFilename = $intExt . "-" . $emailType . ".php";
+                        break;
+                    case 'unknown':
+                        throw new \Exception('No email defined for ' . $country, 801);
+                        break;
+                    default:
+                        // We don't need to further clarify the PES EMAIL Body file;
+                        $pesEmailBodyFilename = $pesEmail;
+                        break;
+                }
+                break;
+            default : 
+                throw new \Exception('$recheck is neither TRUE nor FALSE', 801);
+                break;
         }
-
-        $attachments = $this->getAttachments($intExt, $emailType);
+        
+        $attachments = $recheck ? $this->getRecheckAttachments($pesEmailBodyFilename) :  $this->getAttachments($intExt, $emailType);
 
         return array('filename'=> $pesEmailBodyFilename, 'attachments'=>$attachments, 'attachmentFileNames'=> $attachments,'emailType'=>$emailType,'splitResults'=>$results);
     }

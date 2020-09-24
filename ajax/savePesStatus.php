@@ -75,7 +75,8 @@ try {
                     $notificationStatus = 'Email not applicable';
                  }
                  break;
-            case personRecord::PES_STATUS_INITIATED:
+            case personRecord::PES_STATUS_INITIATED:                
+            case personRecord::PES_STATUS_RECHECK_PROGRESSING:
             case personRecord::PES_STATUS_REQUESTED:
                 $notificationStatus = 'Email not applicable';
                 break;

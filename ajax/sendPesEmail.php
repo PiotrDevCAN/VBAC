@@ -25,6 +25,7 @@ $response['success'] = $success;
 $response['messages'] = $messages;
 $response['emailResponse'] = $emailResponse;
 $response['pesStatus'] = personRecord::PES_STATUS_REQUESTED;
+$recheck  = $_POST['recheck']=='true' ? "(recheck)" : null;
 
 $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER   );
 
@@ -41,8 +42,8 @@ if($success){
     $response['messages'] = $messages;
 
     try {
-        $pesTracker->savePesComment($cnum,"Automated PES Email requesting evidence sent to " . $_POST['emailaddress']);
-        $pesTracker->savePesComment($cnum,"Automated PES Email Status :  " . $emailStatus);
+        $pesTracker->savePesComment($cnum,"Automated PES Email $recheck requesting evidence sent to " . $_POST['emailaddress']);
+        $pesTracker->savePesComment($cnum,"Automated PES Email $recheck Status :  " . $emailStatus);
 
         $comment = $pesTracker->getPesComment($cnum);
         $response['comment'] = $comment;
@@ -54,8 +55,8 @@ if($success){
 
 } else {
     try {
-        $pesTracker->savePesComment($cnum,"Error trying to send automated PES Email " . $_POST['emailaddress']);
-        $pesTracker->savePesComment($cnum,"Automated PES Email Status :  " . $emailStatus);
+        $pesTracker->savePesComment($cnum,"Error trying to send automated PES Email $recheck " . $_POST['emailaddress']);
+        $pesTracker->savePesComment($cnum,"Automated PES Email $recheck Status :  " . $emailStatus);
     } catch (Exception $e) {
         // Don't give up just because we didn't save the comment.
         echo $e->getMessage();

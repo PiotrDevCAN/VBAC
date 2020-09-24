@@ -339,6 +339,7 @@ class personRecord extends DbRecord
     const PES_STATUS_CANCEL_CONFIRMED = 'Cancel Confirmed';
     const PES_STATUS_TBD           = 'TBD';
     const PES_STATUS_RECHECK_REQ   = 'Recheck Req';
+    const PES_STATUS_RECHECK_PROGRESSING   = 'Recheck Progressing';
     const PES_STATUS_MOVER         = 'Mover';
     const PES_STATUS_LEFT_IBM      = 'Left IBM';
 
@@ -1126,6 +1127,7 @@ class personRecord extends DbRecord
                     <option value='<?=personRecord::PES_STATUS_REVOKED;?>'><?=personRecord::PES_STATUS_REVOKED?></option>
                     <option value='<?=personRecord::PES_STATUS_TBD;?>'><?=personRecord::PES_STATUS_TBD?></option>
                     <option value='<?=personRecord::PES_STATUS_RECHECK_REQ;?>'><?=personRecord::PES_STATUS_RECHECK_REQ?></option>
+                    <option value='<?=personRecord::PES_STATUS_RECHECK_PROGRESSING;?>'><?=personRecord::PES_STATUS_RECHECK_PROGRESSING?></option>
                     <option value='<?=personRecord::PES_STATUS_MOVER;?>'><?=personRecord::PES_STATUS_MOVER?></option>
                     <option value='<?=personRecord::PES_STATUS_LEFT_IBM;?>'><?=personRecord::PES_STATUS_LEFT_IBM?></option>
 

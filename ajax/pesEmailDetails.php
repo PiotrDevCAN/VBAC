@@ -6,9 +6,9 @@ use vbac\pesEmail;
 ob_start();
 $pesEmailObj = new pesEmail();
 
-
 try {
-    $emailDetails = $pesEmailObj->getEmailDetails($_GET['emailaddress'], $_GET['country']);
+    $recheck = $_GET['recheck']=='true';
+    $emailDetails = $pesEmailObj->getEmailDetails($_GET['emailaddress'],$_GET['country'],null,$recheck);
 } catch ( \Exception $e) {
     switch ($e->getCode()) {
         case 800:
@@ -17,6 +17,10 @@ try {
             echo "Warning";
              break;
         case 803:
+            $emailDetails['warning']['filename'] = 'No email exists for combination of Internal/External and Country';
+            echo "Warning";
+            break;
+        case 804:
             $emailDetails['warning']['filename'] = 'No email exists for combination of Internal/External and Country';
             echo "Warning";
             break;

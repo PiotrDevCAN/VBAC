@@ -501,11 +501,12 @@ class personTable extends DbTable {
         return $row;
     }
 
-    function setPesRequested($cnum=null, $requestor=null){
+    function setPesRequested($cnum=null, $requestor=null,$recheck=false){
         if(!$cnum){
             throw new \Exception('No CNUM provided in ' . __METHOD__);
         }
-        $result =  self::setPesStatus($cnum,personRecord::PES_STATUS_INITIATED, $requestor);
+        $statusToSetTo = $recheck ? personRecord::PES_STATUS_RECHECK_PROGRESSING : personRecord::PES_STATUS_INITIATED;
+        $result =  self::setPesStatus($cnum,$statusToSetTo, $requestor);
         return $result;
     }
 
@@ -535,6 +536,7 @@ class personTable extends DbTable {
 
         switch ($status) {
             case personRecord::PES_STATUS_INITIATED:
+            case personRecord::PES_STATUS_RECHECK_PROGRESSING:    
                 $requestor = empty($requestor) ? 'Unknown' : $requestor;
                 $dateField = 'PES_DATE_REQUESTED';
                 break;
@@ -952,6 +954,22 @@ class personTable extends DbTable {
         $email = trim($row['EMAIL_ADDRESS']);
         return $email;
     }
+    
+    static function getPesLevelFromEmail($email){
+        $sql = " SELECT PES_LEVEL FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
+        $sql .= " WHERE UPPER(EMAIL_ADDRESS) = '" . db2_escape_string(strtoupper(trim($email))) . "' ";
+        
+        $resultSet = db2_exec($GLOBALS['conn'], $sql);
+        if(!$resultSet){
+            DbTable::displayErrorMessage($resultSet, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+        
+        $row = db2_fetch_assoc($resultSet);
+        return trim($row['PES_LEVEL']);
+        
+    }
+    
 
     static function getNamesFromCnum($cnum){
         $sql = " SELECT case when PT.PASSPORT_FIRST_NAME is null then P.FIRST_NAME else PT.PASSPORT_FIRST_NAME end as FIRST_NAME ";
@@ -1556,13 +1574,17 @@ class personTable extends DbTable {
                 $pesStatusWithButton.= "</button>&nbsp;";
                 break;
             case $status == personRecord::PES_STATUS_INITIATED && $_SESSION['isPes'] ;
+            case $status == personRecord::PES_STATUS_RECHECK_PROGRESSING && $_SESSION['isPes'] ;
             case $status == personRecord::PES_STATUS_RESTART   && $_SESSION['isPes'] ;
+            case $status == personRecord::PES_STATUS_RECHECK_REQ && $_SESSION['isPes'] :
                 $emailAddress = trim($row['EMAIL_ADDRESS']);
                 $firstName    = trim($row['FIRST_NAME']);
                 $lastName     = trim($row['LAST_NAME']);
                 $country      = trim($row['COUNTRY']);
                 $openseat     = trim($row['OPEN_SEAT_NUMBER']);
                 $cnum         = trim($row['CNUM']);
+                $recheck      = ($status==personRecord::PES_STATUS_RECHECK_REQ) ? 'true' : 'false' ;
+                $aeroplaneColor= ($status==personRecord::PES_STATUS_RECHECK_REQ)? 'yellow' : 'green' ;
 
                 $missing = !empty($emailAddress) ? '' : ' Email Address';
                 $missing.= !empty($firstName) ? '' : ' First Name';
@@ -1583,10 +1605,11 @@ class personTable extends DbTable {
                 $pesStatusWithButton.= " data-country='$country' ";
                 $pesStatusWithButton.= " data-openseat='$openseat' ";
                 $pesStatusWithButton.= " data-cnum='$cnum' ";
+                $pesStatusWithButton.= " data-recheck='$recheck' ";
                 $pesStatusWithButton.= " data-toggle='tooltip' data-placement='top' title='$tooltip'";
                 $pesStatusWithButton.= " $disabled  ";
                 $pesStatusWithButton.= " > ";
-                $pesStatusWithButton.= "<span class='glyphicon glyphicon-send ' aria-hidden='true' ></span>";
+                $pesStatusWithButton.= "<span class='glyphicon glyphicon-send ' aria-hidden='true' style='color:$aeroplaneColor' ></span>";
                 $pesStatusWithButton.= "</button>&nbsp;";
                 break;
             case $status == personRecord::PES_STATUS_DECLINED && ( $_SESSION['isFm'] || $_SESSION['isCdi'] )  ;
@@ -1638,6 +1661,7 @@ class personTable extends DbTable {
             case $status == personRecord::PES_STATUS_RECHECK_REQ && !$_SESSION['isPes'] :
             case $status == personRecord::PES_STATUS_MOVER && !$_SESSION['isPes'] :
             case $status == personRecord::PES_STATUS_INITIATED && !$_SESSION['isPes'] ;
+            case $status == personRecord::PES_STATUS_RECHECK_PROGRESSING && !$_SESSION['isPes'] ;
                 $pesStatusWithButton.= "<button type='button' class='btn btn-default btn-xs btnPesStop accessRestrict accessFm' aria-label='Left Align' ";
                 $pesStatusWithButton.= " data-cnum='" .$actualCnum . "' ";
                 $pesStatusWithButton.= " data-notesid='" . $notesId . "' ";
@@ -1656,7 +1680,7 @@ class personTable extends DbTable {
                 break;
         }
 
-        if(isset($row['PROCESSING_STATUS']) && ( $row['PES_STATUS']== personRecord::PES_STATUS_INITIATED || $row['PES_STATUS']==personRecord::PES_STATUS_REQUESTED || $row['PES_STATUS']==personRecord::PES_STATUS_RECHECK_REQ || $row['PES_STATUS']==personRecord::PES_STATUS_MOVER ) ){
+        if(isset($row['PROCESSING_STATUS']) && ( $row['PES_STATUS']== personRecord::PES_STATUS_INITIATED || $row['PES_STATUS']==personRecord::PES_STATUS_RECHECK_PROGRESSING || $row['PES_STATUS']==personRecord::PES_STATUS_REQUESTED || $row['PES_STATUS']==personRecord::PES_STATUS_RECHECK_REQ || $row['PES_STATUS']==personRecord::PES_STATUS_MOVER ) ){
 
             $pesStatusWithButton .= "&nbsp;<button type='button' class='btn btn-default btn-xs btnTogglePesTrackerStatusDetails' aria-label='Left Align' data-toggle='tooltip' data-placement='top' title='See PES Tracker Status' >";
             $pesStatusWithButton .= !empty($row['PROCESSING_STATUS']) ? "&nbsp;<small>" . $row['PROCESSING_STATUS'] . "</small>&nbsp;" : null;
@@ -1769,6 +1793,7 @@ class personTable extends DbTable {
                                           || trim($ibmerPesStatus) == personRecord::PES_STATUS_REQUESTED
                                           || trim($ibmerPesStatus) == personRecord::PES_STATUS_NOT_REQUESTED
                                           || trim($ibmerPesStatus) == personRecord::PES_STATUS_RECHECK_REQ 
+                                          || trim($ibmerPesStatus) == personRecord::PES_STATUS_RECHECK_PROGRESSING
                                           || trim($ibmerPesStatus) == personRecord::PES_STATUS_MOVER){
             $ibmerData['PES_STATUS'] = $preboarderPesStatus;
             $ibmerData['PES_STATUS_DETAILS'] = $ibmerPesStatusD . ":" . $preboarderPesStatusD;
