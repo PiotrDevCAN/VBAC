@@ -174,6 +174,7 @@ function personRecord() {
 			   				$('#pesEmailOpenSeat').val(data.openseat);
 			   				$('#pesEmailFilename').val(resultObj.filename);
 			   				$('#pesEmailCnum').val(resultObj.cnum);
+							$('#pesEmailRecheck').val(resultObj.recheck);
 			   				$('#pesEmailFilename').css('background-color','#eeeeee');
 			   				$('#pesEmailAttachments').val(''); // clear it out the first time.
 			   				var arrayLength = resultObj.attachmentFileNames.length;
@@ -190,6 +191,7 @@ function personRecord() {
 							 $('#pesEmailAddress').val(data.emailaddress);
 							 $('#pesEmailCountry').val(data.country);
 							 $('#pesEmailOpenSeat').val(data.openseat);
+							 $('#pesEmailRecheck').val('');
 							 $('#pesEmailAttachments').val(''); // clear it out the first time.
 							 if(resultObj.attachmentFileNames){
 					   			var arrayLength = resultObj.attachmentFileNames.length;
@@ -220,6 +222,7 @@ function personRecord() {
 			var country = $('#pesEmailCountry').val();
 			var openseat = $('#pesEmailOpenSeat').val();
 			var cnum = $('#pesEmailCnum').val();
+			var recheck = $('#pesEmailRecheck').val();
 			   $.ajax({
 				   url: "ajax/sendPesEmail.php",
 			       type: 'POST',
@@ -228,8 +231,8 @@ function personRecord() {
 			    	       lastname:lastname,
 			    	       country:country,
 			    	       openseat:openseat,
-			    	       cnum:cnum
-			    	       
+			    	       cnum:cnum,
+   						   recheck:recheck			    	       
 			    	       },
 			       success: function(result){
 			    	   $('#confirmSendPesEmail').removeClass('spinning');	  		    	   
@@ -237,8 +240,7 @@ function personRecord() {
 			    	   var resultObj = JSON.parse(result);		  	           
 			    	   if(typeof( personWithSubPRecord.table)!='undefined'){
 			    		//   personRecord.table.ajax.reload();
-			    	   }	
-			    	   
+			    	   }				    	   
 			    	  $('.pesComments[data-cnum="' + cnum + '"]').html('<small>' + resultObj.comment + '</small>');
 			    	  $('.pesStatusField[data-cnum="' + cnum + '"]').text(resultObj.pesStatus);	
 			    	  $('.pesStatusField[data-cnum="' + cnum + '"]').siblings('.btnSendPesEmail').remove();

@@ -38,6 +38,7 @@ unset($emailDetails['attachments']); // dont need them at this point.
 $emailDetails['success'] = $success;
 $emailDetails['messages'] = $messages;
 $emailDetails['cnum'] = $_GET['cnum'];
+$emailDetails['recheck'] = $_GET['recheck'];
 
 
 ob_clean();

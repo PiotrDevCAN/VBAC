@@ -171,7 +171,6 @@ class pesEmail {
                 $results = null;
                 break;
             case false: 
-                echo "false";
                 $results = preg_split('/[-.]/', $pesEmail);
                 $locationType = $results[0];
                 $emailType  = isset($results[1]) ? $results[1] : null;
@@ -200,17 +199,23 @@ class pesEmail {
     }
 
 
-    function sendPesEmail($firstName, $lastName, $emailAddress, $country, $openseat, $cnum){
-            $emailDetails = $this->getEmailDetails($emailAddress, $country);
-
+    function sendPesEmail($firstName, $lastName, $emailAddress, $country, $openseat, $cnum,$recheck=null){
+            $emailDetails = $this->getEmailDetails($emailAddress, $country,null,$recheck);
+            
             $emailBodyFileName = $emailDetails['filename'];
             $pesAttachments = $emailDetails['attachments'];
             $replacements = array($firstName,$openseat);
 
+            $pesEmailPattern =""; // It'll get set by the include_once, but this stops IDE flagging a warning.
+            $pesEmail="";         // It'll get set by the include_once, but this stops IDE flagging a warning.
+            
             include_once 'emailBodies/' . $emailBodyFileName;
             $emailBody = preg_replace($pesEmailPattern, $replacements, $pesEmail);
 
-            $sendResponse = BlueMail::send_mail(array($emailAddress), "NEW URGENT - Pre Employment Screening - $cnum : $firstName, $lastName", $emailBody,'LBGVETPR@uk.ibm.com',array(),array(),false,$pesAttachments);
+            $revalidation = $recheck=='true' ? " - REVALIDATION " : "";
+            
+            
+            $sendResponse = BlueMail::send_mail(array($emailAddress), "NEW URGENT - Pre Employment Screening $revalidation - $cnum : $firstName, $lastName", $emailBody,'LBGVETPR@uk.ibm.com',array(),array(),false,$pesAttachments);
             return $sendResponse;
 
     }
