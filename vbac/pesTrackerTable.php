@@ -235,10 +235,11 @@ class pesTrackerTable extends DbTable{
             <?php
             $dateLastChased = !empty($row['DATE_LAST_CHASED']) ? DateTime::createFromFormat('Y-m-d', $row['DATE_LAST_CHASED']) : null;
             $dateLastChasedFormatted = !empty($row['DATE_LAST_CHASED']) ? $dateLastChased->format('d M Y') : null;
+            $dateLastChasedWithLevel = !empty($row['DATE_LAST_CHASED']) ? $dateLastChasedFormatted . $this->extractLastChasedLevelFromComment($row['COMMENT']) : $dateLastChasedFormatted;
             $alertClass = !empty($row['DATE_LAST_CHASED']) ? self::getAlertClassForPesChasedDate($row['DATE_LAST_CHASED']) : 'alert-info';
             ?>
             <div class='alert <?=$alertClass;?>'>
-            <input class="form-control input-sm pesDateLastChased" value="<?=$dateLastChasedFormatted?>" type="text" placeholder='Last Chased' data-toggle='tooltip' title='PES Date Last Chased' data-cnum='<?=$cnum?>'>
+            <input class="form-control input-sm pesDateLastChased" value="<?=$dateLastChasedWithLevel?>" type="text" placeholder='Last Chased' data-toggle='tooltip' title='PES Date Last Chased' data-cnum='<?=$cnum?>'>
             </div>
             <span style='white-space:nowrap' >
             <a class="btn btn-xs btn-info  btnChaser accessPes accessCdi" data-chaser='One'  data-toggle="tooltip" data-placement="top" title="Chaser One" ><i>1</i></a>
@@ -265,6 +266,13 @@ class pesTrackerTable extends DbTable{
 		return $table;
     }
 
+    function extractLastChasedLevelFromComment($comment){
+        $findChasedComment = strpos($comment, 'Automated PES Chaser Level');
+        $level = substr($comment, $findChasedComment+27,6);
+        $level = " (" . substr($level,0,strpos($level," ")) .")";
+        
+        return $level;
+    }
 
 
 
