@@ -1573,8 +1573,7 @@ class personTable extends DbTable {
                 $pesStatusWithButton.= "<span class='glyPesInitiate glyphicon glyphicon-plane ' aria-hidden='true'></span>";
                 $pesStatusWithButton.= "</button>&nbsp;";
                 break;
-            case $status == personRecord::PES_STATUS_INITIATED && $_SESSION['isPes'] ;
-            case $status == personRecord::PES_STATUS_RECHECK_PROGRESSING && $_SESSION['isPes'] ;
+            case $status == personRecord::PES_STATUS_INITIATED && $_SESSION['isPes'] ;           
             case $status == personRecord::PES_STATUS_RESTART   && $_SESSION['isPes'] ;
             case $status == personRecord::PES_STATUS_RECHECK_REQ && $_SESSION['isPes'] :
                 $emailAddress = trim($row['EMAIL_ADDRESS']);
@@ -1640,8 +1639,8 @@ class personTable extends DbTable {
             case $status == personRecord::PES_STATUS_LEFT_IBM && $_SESSION['isPes'] :
             case $status == personRecord::PES_STATUS_PROVISIONAL && $_SESSION['isPes'] :
             case $status == personRecord::PES_STATUS_TBD && $_SESSION['isPes'] :
-            case $status == personRecord::PES_STATUS_RECHECK_REQ && $_SESSION['isPes'] :
-            case $status == personRecord::PES_STATUS_MOVER && $_SESSION['isPes'] :
+               case $status == personRecord::PES_STATUS_MOVER && $_SESSION['isPes'] :
+            case $status == personRecord::PES_STATUS_RECHECK_PROGRESSING && $_SESSION['isPes'] ;
                 $pesStatusWithButton.= "<button type='button' class='btn btn-default btn-xs btnPesStatus' aria-label='Left Align' ";
                 $pesStatusWithButton.= " data-cnum='" .$actualCnum . "' ";
                 $pesStatusWithButton.= " data-notesid='" . $notesId . "' ";
