@@ -231,7 +231,7 @@ class assetRequestRecord extends DbRecord {
         <div class='panel-footer'>
         	<?php
             $allButtons = null;
-            $submitButton =   $this->formButton('submit','Submit','saveAssetRequest','disabled','Save','btn btn-primary');
+            $submitButton =   $this->formButton('submit','Submit','saveAssetRequest','enabled','Save','btn btn-primary');
             $allButtons[] = $submitButton;
             $this->formBlueButtons($allButtons);
             $this->formHiddenInput('requestor',$_SESSION['ssoEmail'],'requestor');
