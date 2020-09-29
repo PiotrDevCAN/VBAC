@@ -110,7 +110,7 @@ class pesEmail {
             case 'recheck_L1_India_Non_Core4.php':
                 $pesAttachments = array('../emailAttachments/Lloyds Global Application Form v2.0.doc'
                                        ,'../emailAttachments/ODC Global Application Form v2.0.doc'
-                                       ,'../emailAttachments/Ownes_Consent_Form.doc');
+                                       ,'../emailAttachments/Owens_Consent_Form.pdf');
                 break;
             case 'recheck_L1_UK.php':
                 $pesAttachments = array('../emailAttachments/Lloyds Global Application Form v2.0.doc');
@@ -121,7 +121,7 @@ class pesEmail {
             case 'recheck_L2_India_Non_Core4.php':
                 $pesAttachments = array('../emailAttachments/Lloyds Global Application Form v2.0.doc'
                                        ,'../emailAttachments/ODC Global Application Form v2.0.doc'
-                                       ,'../emailAttachments/Ownes_Consent_Form.doc');
+                                       ,'../emailAttachments/Owens_Consent_Form.pdf');
                 break;
             case 'recheck_L2_UK.php':
                 $pesAttachments = array('../emailAttachments/Lloyds Global Application Form v2.0.doc');
