@@ -7,7 +7,7 @@ ob_start();
 $pesEmailObj = new pesEmail();
 
 try {
-    $recheck = $_GET['recheck']=='true';
+    $recheck = $_GET['recheck']=='yes';
     $emailDetails = $pesEmailObj->getEmailDetails($_GET['emailaddress'],$_GET['country'],null,$recheck);
 } catch ( \Exception $e) {
     switch ($e->getCode()) {
