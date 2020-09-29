@@ -55,6 +55,12 @@ class BlueMail
         
         if($resp && $attachments){
             foreach ($attachments as $attachment){
+                
+                $exists = file_exists($attachment);
+                error_log("Attachment $attachment exists:" . print_r($exists,true) );
+                
+                
+                
                 $resp = $resp ? $mail->addAttachment($attachment) : $resp;
                 if(!$resp){
                     $status = "Errored";
