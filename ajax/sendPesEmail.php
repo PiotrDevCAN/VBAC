@@ -16,6 +16,7 @@ $pesEmailObj = new pesEmail();
 $emailResponse = $pesEmailObj->sendPesEmail($_POST['firstname'],$_POST['lastname'],$_POST['emailaddress'], $_POST['country'], $_POST['openseat'], $_POST['cnum'],$_POST['recheck']);
 
 $emailStatus = $emailResponse['Status'];
+$emailStatusMessage = $emailResponse['sendResponse']['response'];
 
 $messages = ob_get_clean();
 ob_start();
@@ -48,6 +49,7 @@ if($success){
     try {
         $pesTracker->savePesComment($cnum,"Automated PES Email $recheckWording requesting evidence sent to " . $_POST['emailaddress']);
         $pesTracker->savePesComment($cnum,"Automated PES Email $recheckWording Status :  " . $emailStatus);
+        $pesTracker->savePesComment($cnum,"Automated PES Email $recheckWording Status Message :  " . $emailStatusMessage);
 
         $comment = $pesTracker->getPesComment($cnum);
         $response['comment'] = $comment;
