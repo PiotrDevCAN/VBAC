@@ -138,14 +138,18 @@ class pesEmail {
     }
     
 
-    function getEmailDetails($emailAddress, $country,$openSeat=null,$recheck=false){
-      
-        $intExt = !$recheck ?  $this->determineInternalExternal($emailAddress) : null;
+    function getEmailDetails($emailAddress, $country,$openSeat=null,$recheck='no'){
         
-        $emailField = $recheck ? "RECHECK_EMAIL" : "PES_EMAIL";
+            
+        $intExt = $recheck!='yes' ?  $this->determineInternalExternal($emailAddress) : null;
+        
+        $emailField = $recheck=='yes' ? "RECHECK_EMAIL" : "PES_EMAIL";
         $sql = " SELECT $emailField ";
         $sql.= ' FROM ' . strtoupper($_ENV['environment']) . "." . allTables::$STATIC_COUNTRY_CODES;
         $sql.= " WHERE  upper(country_name)= '" . db2_escape_string(strtoupper($country)) . "' ";
+        
+        error_log('Recheck:'. print_r($recheck,true));
+        error_log($sql);
         
         $rs = db2_exec($GLOBALS['conn'], $sql);
 
@@ -162,7 +166,7 @@ class pesEmail {
             throw new \Exception("$emailField not defined for country : " . $country,800);
         }
        
-        switch($recheck){
+        switch($recheck=='yes'){
             case true :                
                 $pesLevelOrig = personTable::getPesLevelFromEmail($emailAddress);
                 $pesLevel = str_replace('evel ', '', trim($pesLevelOrig)); // Condense to L1, L2 etc.
@@ -193,13 +197,13 @@ class pesEmail {
                 break;
         }
         
-        $attachments = $recheck ? $this->getRecheckAttachments($pesEmailBodyFilename) :  $this->getAttachments($intExt, $emailType);
+        $attachments = $recheck=='yes' ? $this->getRecheckAttachments($pesEmailBodyFilename) :  $this->getAttachments($intExt, $emailType);
 
         return array('filename'=> $pesEmailBodyFilename, 'attachments'=>$attachments, 'attachmentFileNames'=> $attachments,'emailType'=>$emailType,'splitResults'=>$results);
     }
 
 
-    function sendPesEmail($firstName, $lastName, $emailAddress, $country, $openseat, $cnum,$recheck=null){
+    function sendPesEmail($firstName, $lastName, $emailAddress, $country, $openseat, $cnum,$recheck='no'){
             $emailDetails = $this->getEmailDetails($emailAddress, $country,null,$recheck);
             
             $emailBodyFileName = $emailDetails['filename'];
@@ -212,7 +216,7 @@ class pesEmail {
             include_once 'emailBodies/' . $emailBodyFileName;
             $emailBody = preg_replace($pesEmailPattern, $replacements, $pesEmail);
 
-            $revalidation = $recheck=='true' ? " - REVALIDATION " : "";
+            $revalidation = $recheck=='yes' ? " - REVALIDATION " : "";
             
             
             $sendResponse = BlueMail::send_mail(array($emailAddress), "NEW URGENT - Pre Employment Screening $revalidation - $cnum : $firstName, $lastName", $emailBody,'LBGVETPR@uk.ibm.com',array(),array(),false,$pesAttachments);

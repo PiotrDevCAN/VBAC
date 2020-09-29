@@ -21,7 +21,7 @@ $emailStatusMessage = $emailResponse['sendResponse']['response'];
 $messages = ob_get_clean();
 ob_start();
 
-$isrecheck  = $_POST['recheck']=='true';
+$isrecheck  = ($_POST['recheck']=='yes');
 $recheckWording  = $isrecheck ? "(recheck)" : null;
 $success = strlen($messages)==0;
 $response = array();
@@ -44,7 +44,7 @@ if($success){
 
     $response['success'] = $success;
     $response['messages'] = $messages;
-    $response['recheck'] = $isrecheck;
+    $response['recheck'] = $_POST['recheck'];
 
     try {
         $pesTracker->savePesComment($cnum,"Automated PES Email $recheckWording requesting evidence sent to " . $_POST['emailaddress']);

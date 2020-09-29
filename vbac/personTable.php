@@ -101,7 +101,7 @@ class personTable extends DbTable {
         $activePredicate.= "REVALIDATION_STATUS not like '" . personRecord::REVALIDATED_OFFBOARDING . "%:%" .personRecord::REVALIDATED_LEAVER . "%' " ;
         $activePredicate.= " AND ";
         $activePredicate.= !empty($tableAbbrv) ? $tableAbbrv ."." : null ;
-        $activePredicate.= "PES_STATUS in ('". personRecord::PES_STATUS_CLEARED ."','". personRecord::PES_STATUS_CLEARED_PERSONAL ."','". personRecord::PES_STATUS_EXCEPTION ."','". personRecord::PES_STATUS_RECHECK_REQ ."','". personRecord::PES_STATUS_MOVER ."'";
+        $activePredicate.= "PES_STATUS in ('". personRecord::PES_STATUS_CLEARED ."','". personRecord::PES_STATUS_CLEARED_PERSONAL ."','". personRecord::PES_STATUS_EXCEPTION ."','". personRecord::PES_STATUS_RECHECK_REQ ."','". personRecord::PES_STATUS_RECHECK_PROGRESSING ."','". personRecord::PES_STATUS_MOVER ."'";
         $activePredicate.= $includeProvisionalClearance ? ",'" . personRecord::PES_STATUS_PROVISIONAL . "'" : null ;
         $activePredicate.= " ) ) ";
         return $activePredicate;
@@ -1582,7 +1582,7 @@ class personTable extends DbTable {
                 $country      = trim($row['COUNTRY']);
                 $openseat     = trim($row['OPEN_SEAT_NUMBER']);
                 $cnum         = trim($row['CNUM']);
-                $recheck      = ($status==personRecord::PES_STATUS_RECHECK_REQ) ? 'true' : 'false' ;
+                $recheck      = ($status==personRecord::PES_STATUS_RECHECK_REQ) ? 'yes' : 'no' ;
                 $aeroplaneColor= ($status==personRecord::PES_STATUS_RECHECK_REQ)? 'yellow' : 'green' ;
 
                 $missing = !empty($emailAddress) ? '' : ' Email Address';
