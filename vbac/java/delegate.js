@@ -7,6 +7,20 @@
 
 
 function delegate() {
+	
+	var buttonCommon = {
+		exportOptions: {
+	    format: {
+		         body: function ( data, row, column, node ) {
+	             //   return data ?  data.replace( /<br\s*\/?>/ig, "\n") : data ;
+	             return data ? data.replace( /<br\s*\/?>/ig, "\n").replace(/(&nbsp;|<([^>]+)>)/ig, "") : data ;
+	             //    data.replace( /[$,.]/g, '' ) : data.replace(/(&nbsp;|<([^>]+)>)/ig, "");
+                 }
+              }
+           }
+	};
+	
+	
 
 	var myDelegatesTable;
 
@@ -87,8 +101,30 @@ function delegate() {
 			          language: {
 			        	    "emptyTable": "No Delegates Found"
 			          		},
-			      });
-			  }
+        			  dom: 'Blfrtip',
+          			  buttons: [
+                    	$.extend( true, {}, buttonCommon, {
+	                        extend: 'excelHtml5',
+                        	exportOptions: {
+	                            orthogonal: 'sort',
+                            	stripHtml: true,
+                            	stripNewLines:false
+                        	},
+                         	customize: function( xlsx ) {
+                             	var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                         	}
+                	}),
+                	$.extend( true, {}, buttonCommon, {
+	                    extend: 'csvHtml5',
+                    	exportOptions: {
+	                        orthogonal: 'sort',
+                        	stripHtml: true,
+                        	stripNewLines:false
+                    	}
+                	}),
+                ],
+		 });
+	}
 
 
 }
