@@ -105,26 +105,26 @@ class pesEmail {
     private function getRecheckAttachments($recheckEmailFileName=null){
         switch ($recheckEmailFileName) {
             case 'recheck_L1_Core4.php':            
-                $pesAttachments = array('../emailAttachments/Lloyds Global Application Form v2.0.doc');
+                $pesAttachments = array('../emailAttachments/FSS Global Application Form v2.0.doc');
                 break;
             case 'recheck_L1_India_Non_Core4.php':
-                $pesAttachments = array('../emailAttachments/Lloyds Global Application Form v2.0.doc'
+                $pesAttachments = array('../emailAttachments/FSS Global Application Form v2.0.doc'
                                        ,'../emailAttachments/ODC application form v3.0.xls'
                                        ,'../emailAttachments/Owens Consent Form.pdf');
                 break;
             case 'recheck_L1_UK.php':
-                $pesAttachments = array('../emailAttachments/Lloyds Global Application Form v2.0.doc');
+                $pesAttachments = array('../emailAttachments/FSS Global Application Form v2.0.doc');
                 break;
             case 'recheck_L2_Core4.php':
-                $pesAttachments = array('../emailAttachments/Lloyds Global Application Form v2.0.doc');
+                $pesAttachments = array('../emailAttachments/FSS Global Application Form v2.0.doc');
                 break;
             case 'recheck_L2_India_Non_Core4.php':
-                $pesAttachments = array('../emailAttachments/Lloyds Global Application Form v2.0.doc'
+                $pesAttachments = array('../emailAttachments/FSS Global Application Form v2.0.doc'
                                        ,'../emailAttachments/ODC application form v3.0.xls'
                                        ,'../emailAttachments/Owens Consent Form.pdf');
                 break;
             case 'recheck_L2_UK.php':
-                $pesAttachments = array('../emailAttachments/Lloyds Global Application Form v2.0.doc');
+                $pesAttachments = array('../emailAttachments/FSS Global Application Form v2.0.doc');
                 break;
             case 'recheck_offboarded.php':
                 $pesAttachments = null;
