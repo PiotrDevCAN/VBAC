@@ -83,7 +83,7 @@ function personPortalLite() {
                       { "data": "CBN_DATE_FIELD", "defaultContent": "", visible:false },				//25
                       { "data": "CBN_STATUS", "defaultContent": "", visible:false },					//26
                       { "data": "WORK_STREAM", "defaultContent": "", visible:false },					//27
-                      { "data": "SUBPLATFORM", "defaultContent": "", visible:false },					//28
+ //  causes duplicates{ "data": "SUBPLATFORM", "defaultContent": "", visible:false },					//28
                       { "data": "CT_ID", "defaultContent": "", visible:false },							//29	
                       { "data": "PRE_BOARDED", "defaultContent": "" , visible:false},					//30
                       { "data": "PES_DATE_EVIDENCE", "defaultContent": "" , visible:false},				//31
