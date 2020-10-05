@@ -19,7 +19,7 @@ class personPortalLiteTable extends personTable
         
         $predicate = " 1=1  ";
         
-        $predicate .= $isFM ? " AND P.FM_CNUM='" . db2_escape_string(trim($myCnum)) . "' " : "";
+        $predicate .= $isFM ? " AND P.FCNUM='" . db2_escape_string(trim($myCnum)) . "' " : "";
         $predicate .= $justaUser ? " AND P.CNUM='" . db2_escape_string(trim($myCnum)) . "' " : ""; // FM Can only see their own people.
         $predicate .= $preboadersAction==self::PORTAL_PRE_BOARDER_EXCLUDE ? " AND ( PES_STATUS_DETAILS not like 'Boarded as%' or PES_STATUS_DETAILS is null) " : null;
         $predicate .= $preboadersAction==self::PORTAL_PRE_BOARDER_WITH_LINKED ? " AND ( PES_STATUS_DETAILS like 'Boarded as%' or PRE_BOARDED  is not  null) " : null;
@@ -60,7 +60,8 @@ class personPortalLiteTable extends personTable
     }
     
     function  prepareFields($row){
-        $preparedRow = array_map('trim', $row);      
+        unset($row['FCNUM']);
+        $preparedRow = array_map('trim', $row);   
         return $preparedRow;
     }
     
