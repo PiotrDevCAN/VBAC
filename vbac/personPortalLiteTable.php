@@ -30,7 +30,7 @@ class personPortalLiteTable extends personTable
         $sql.= " WHERE " . $predicate;
         
         $startOfSql = microtime(true);
-        error_log("About to run SQL" . $startOfSql);
+        error_log("About to run SQL : $sql : " . $startOfSql);
         
         
         $rs = db2_exec($GLOBALS['conn'], $sql);
