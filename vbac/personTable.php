@@ -50,6 +50,19 @@ class personTable extends DbTable {
     const PES_LEVEL_DEFAULT = self::PES_LEVEL_TWO;
 
     static private $pesRecheckPeriods = array(self::PES_LEVEL_ONE=>'1 Year',self::PES_LEVEL_TWO=>'3 Years'); // must be Db2 date period
+    
+    static private $excludeFromRecheckNotification = "'" . personRecord::PES_STATUS_RECHECK_REQ . "'" 
+                                                  . ",'" . personRecord::PES_STATUS_RECHECK_PROGRESSING . "'"
+                                                  . ",'" . personRecord::PES_STATUS_PROVISIONAL . "'"
+                                                  . ",'" . personRecord::PES_STATUS_LEFT_IBM . "'" 
+                                                  . ",'" . personRecord::PES_STATUS_REVOKED . "'"
+                                                  . ",'" . personRecord::PES_STATUS_DECLINED . "'"
+                                                  . ",'" . personRecord::PES_STATUS_MOVER . "'"
+                                                  . ",'" . personRecord::PES_STATUS_REQUESTED . "'"
+                                                  . ",'" . personRecord::PES_STATUS_FAILED . "'"
+                                                  . ",'" . personRecord::PES_STATUS_INITIATED . "'"
+                                                  . ",'" . personRecord::PES_STATUS_REMOVED . "'"
+                                                  ;
 
 
     function __construct($table,$pwd=null,$log=true){
@@ -1840,9 +1853,8 @@ class personTable extends DbTable {
 
         $sql = " SELECT CNUM, NOTES_ID, PES_STATUS, REVALIDATION_STATUS, PES_RECHECK_DATE ";
         $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
-        $sql.= " WHERE 1=1 and " . self::activePersonPredicate();
-        $sql.= " AND PES_STATUS != '" . personRecord::PES_STATUS_RECHECK_REQ . "' ";
-        $sql.= " AND PES_STATUS != '" . personRecord::PES_STATUS_PROVISIONAL . "' ";
+        $sql.= " WHERE 1=1 ";
+        $sql.= " AND PES_STATUS not in (" . self::$excludeFromRecheckNotification . ") ";
         $sql.= " and PES_RECHECK_DATE is not null ";
         $sql.= " and PES_RECHECK_DATE <= CURRENT DATE + 56 DAYS ";
 
