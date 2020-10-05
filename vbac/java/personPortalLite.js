@@ -102,7 +102,7 @@ function personPortalLite() {
 			          { "data": "TRIBE_LEADER", "defaultContent": "", visible:false },					//44
          			  { "data": "ORGANISATION", "defaultContent": "", visible:false },					//45
          			  { "data": "ITERATION_MGR", "defaultContent": "", visible:false },					//46
-                    	
+         			  { "data": "PMO_STATUS", "defaultContent": "", visible:false },					//47                    	
                       
                   ],
 
