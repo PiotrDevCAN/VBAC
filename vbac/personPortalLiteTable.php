@@ -6,6 +6,10 @@ use itdq\Loader;
 
 class personPortalLiteTable extends personTable
 {
+    function __construct($table,$pwd=null,$log=true){
+        parent::__construct($table,$pwd,$log);
+        unset($this->columns['FCNUM']); // Ignore this column, only there for the predicate for Func Mgrs.        
+    }
     
     
     function returnAsArray($preboadersAction=self::PORTAL_PRE_BOARDER_EXCLUDE){
