@@ -54,8 +54,7 @@ $rs = db2_exec($GLOBALS['conn'], $sql);
 
 if($rs){
     while(($row = db2_fetch_assoc($rs))==true){
-        var_dump($row);
-        $employees[] = $row;
+        $employees[] = array_map('trim',$row);
     }
 } else {
     ob_clean();
