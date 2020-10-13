@@ -922,9 +922,12 @@ class personTable extends DbTable {
 
     }
 
-    static function getRevalidationFromCnum($cnum){
+    static function getRevalidationFromCnum($cnum=null,$email=null){
         $sql = " SELECT REVALIDATION_STATUS FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
-        $sql .= " WHERE CNUM = '" . db2_escape_string(strtoupper(trim($cnum))) . "' ";
+        $sql .= " WHERE " ; 
+        $sql .= !empty($cnum) ? " CNUM = '" . db2_escape_string(strtoupper(trim($cnum))) . "' " : null;
+        $sql .= !empty($email) ? " upper(EMAIL_ADDRESS) = upper('" . db2_escape_string(strtoupper(trim($email))) . "') " : null;
+       
 
         $resultSet = db2_exec($GLOBALS['conn'], $sql);
         if(!$resultSet){

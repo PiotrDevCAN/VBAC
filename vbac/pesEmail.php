@@ -140,27 +140,41 @@ class pesEmail {
 
     function getEmailDetails($emailAddress, $country,$openSeat=null,$recheck='no'){
         
+        $revalidationStatus = personTable::getRevalidationFromCnum(null, $emailAddress);
+        
+        $offboarded = substr($revalidationStatus,0,10)=='offboarded' ? true : false;
+        
+        error_log($emailAddress . ":" . $revalidationStatus);
+        error_log(substr($revalidationStatus,0,10));
+        error_log($offboarded);
             
         $intExt = $recheck!='yes' ?  $this->determineInternalExternal($emailAddress) : null;
         
         $emailField = $recheck=='yes' ? "RECHECK_EMAIL" : "PES_EMAIL";
-        $sql = " SELECT $emailField ";
-        $sql.= ' FROM ' . strtoupper($_ENV['environment']) . "." . allTables::$STATIC_COUNTRY_CODES;
-        $sql.= " WHERE  upper(country_name)= '" . db2_escape_string(strtoupper($country)) . "' ";
         
-        error_log('Recheck:'. print_r($recheck,true));
-        error_log($sql);
-        
-        $rs = db2_exec($GLOBALS['conn'], $sql);
-
-        if(!$rs){
-            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
-            return false;
+        if($offboarded && $recheck=='yes'){
+            $pesEmail = 'recheck_offboarded.php';            
+        } else {
+            $sql = " SELECT $emailField ";
+            $sql.= ' FROM ' . strtoupper($_ENV['environment']) . "." . allTables::$STATIC_COUNTRY_CODES;
+            $sql.= " WHERE  upper(country_name)= '" . db2_escape_string(strtoupper($country)) . "' ";
+            
+            error_log('Recheck:'. print_r($recheck,true));
+            error_log($sql);
+            
+            $rs = db2_exec($GLOBALS['conn'], $sql);
+            
+            if(!$rs){
+                DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+                return false;
+            }
+            
+            $row = db2_fetch_assoc($rs);
+            
+            $pesEmail = trim($row[$emailField]);
         }
+        
 
-        $row = db2_fetch_assoc($rs);
-
-        $pesEmail = trim($row[$emailField]);
 
         if(empty($pesEmail)){
             throw new \Exception("$emailField not defined for country : " . $country,800);
@@ -207,7 +221,7 @@ class pesEmail {
             $emailDetails = $this->getEmailDetails($emailAddress, $country,null,$recheck);
             
             $emailBodyFileName = $emailDetails['filename'];
-            $pesAttachments = $emailDetails['attachments'];
+            $pesAttachments = isset($emailDetails['attachments']) ? $emailDetails['attachments'] : array();
             $replacements = array($firstName,$openseat);
 
             $pesEmailPattern =""; // It'll get set by the include_once, but this stops IDE flagging a warning.

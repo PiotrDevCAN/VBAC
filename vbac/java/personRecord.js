@@ -177,11 +177,18 @@ function personRecord() {
 							$('#pesEmailRecheck').val(resultObj.recheck);
 			   				$('#pesEmailFilename').css('background-color','#eeeeee');
 			   				$('#pesEmailAttachments').val(''); // clear it out the first time.
-			   				var arrayLength = resultObj.attachmentFileNames.length;
-			   				for (var i = 0; i < arrayLength; i++) {
-			   					var attachments = $('#pesEmailAttachments').val();
-			   					$('#pesEmailAttachments').val(resultObj.attachmentFileNames[i] + "\n" + attachments);
-			   				}		
+				
+							console.log(resultObj.attachmentFileNames);
+				
+							if(resultObj.attachmentFileNames==null){
+								$('#pesEmailAttachments').val('');
+							} else {
+			   					var arrayLength = resultObj.attachmentFileNames.length;
+			   					for (var i = 0; i < arrayLength; i++) {
+			   						var attachments = $('#pesEmailAttachments').val();
+			   						$('#pesEmailAttachments').val(resultObj.attachmentFileNames[i] + "\n" + attachments);
+			   					}								
+							}
 			   				$('#confirmSendPesEmail').prop('disabled',false);
 			   				$('#confirmSendPesEmailModal').modal('show');
 			             } else {
