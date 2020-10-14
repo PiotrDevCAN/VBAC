@@ -2,7 +2,7 @@
 
 if(!function_exists('tryConnect')){
     function tryConnect($conn_string){
-        error_log("Attempting Pconnect to DB2 from Pod:" . $_ENV['HOSTNAME']);
+        error_log("Attempting Pconnect to DB2 from Pod:" . $_ENV['HOSTNAME'] . ":" . $conn_string);
         $preConnect = microtime(true);
         $connection =  db2_pconnect( $conn_string, "", "" );
         $postConnect = microtime(true);
