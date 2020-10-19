@@ -140,4 +140,10 @@ td {
     font-size: 10px;
 }
 
+.btnTogglePesTrackerStatusDetails{
+    margin-right: 10px;
+    margin-top: 5px;
+}
+
+
 </style>

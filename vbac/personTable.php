@@ -1610,6 +1610,7 @@ class personTable extends DbTable {
 
                 $disabled = $valid ? '' : 'disabled';
                 $tooltip = $valid ? 'Confirm PES Email details' : "Missing $missing";
+                
 
 
                 $pesStatusWithButton.= "<button type='button' class='btn btn-default btn-xs btnSendPesEmail accessRestrict accessPmo accessFm' ";
@@ -1626,6 +1627,28 @@ class personTable extends DbTable {
                 $pesStatusWithButton.= " > ";
                 $pesStatusWithButton.= "<span class='glyphicon glyphicon-send ' aria-hidden='true' style='color:$aeroplaneColor' ></span>";
                 $pesStatusWithButton.= "</button>&nbsp;";
+                
+                $pesStatusWithButton.= "<button type='button' class='btn btn-default btn-xs btnPesStatus' aria-label='Left Align' ";
+                $pesStatusWithButton.= " data-cnum='" .$actualCnum . "' ";
+                $pesStatusWithButton.= " data-notesid='" . $notesId . "' ";
+                $pesStatusWithButton.= " data-email='" . $email . "' ";
+                $pesStatusWithButton.= " data-pesdaterequested='" .trim($row['PES_DATE_REQUESTED']) . "' ";
+                $pesStatusWithButton.= " data-pesrequestor='" .trim($row['PES_REQUESTOR']) . "' ";
+                $pesStatusWithButton.= " data-revalidationstatus='" .trim($row['REVALIDATION_STATUS']) . "' ";
+                $pesStatusWithButton.= " data-pesstatus='" .$status . "' ";
+                $pesStatusWithButton.= array_key_exists('PASSPORT_FIRST_NAME', $row) ?  " data-passportfirst='" .$passportFirst . "' " : null;
+                $pesStatusWithButton.= array_key_exists('PASSPORT_SURNAME', $row) ? " data-passportsurname='" .$passportSurname . "' " : null;
+                $pesStatusWithButton.= " data-toggle='tooltip' data-placement='top' title='Amend PES Status'";
+                $pesStatusWithButton.= " > ";
+                $pesStatusWithButton.= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
+                $pesStatusWithButton.= "</button> ";
+                
+                
+                
+                
+                
+                
+                
                 break;
             case $status == personRecord::PES_STATUS_DECLINED && ( $_SESSION['isFm'] || $_SESSION['isCdi'] )  ;
             case $status == personRecord::PES_STATUS_FAILED && ( $_SESSION['isFm'] || $_SESSION['isCdi'] )  ;
@@ -1655,7 +1678,7 @@ class personTable extends DbTable {
             case $status == personRecord::PES_STATUS_LEFT_IBM && $_SESSION['isPes'] :
             case $status == personRecord::PES_STATUS_PROVISIONAL && $_SESSION['isPes'] :
             case $status == personRecord::PES_STATUS_TBD && $_SESSION['isPes'] :
-               case $status == personRecord::PES_STATUS_MOVER && $_SESSION['isPes'] :
+            case $status == personRecord::PES_STATUS_MOVER && $_SESSION['isPes'] :
             case $status == personRecord::PES_STATUS_RECHECK_PROGRESSING && $_SESSION['isPes'] ;
                 $pesStatusWithButton.= "<button type='button' class='btn btn-default btn-xs btnPesStatus' aria-label='Left Align' ";
                 $pesStatusWithButton.= " data-cnum='" .$actualCnum . "' ";
@@ -1697,7 +1720,7 @@ class personTable extends DbTable {
 
         if(isset($row['PROCESSING_STATUS']) && ( $row['PES_STATUS']== personRecord::PES_STATUS_INITIATED || $row['PES_STATUS']==personRecord::PES_STATUS_RECHECK_PROGRESSING || $row['PES_STATUS']==personRecord::PES_STATUS_REQUESTED || $row['PES_STATUS']==personRecord::PES_STATUS_RECHECK_REQ || $row['PES_STATUS']==personRecord::PES_STATUS_MOVER ) ){
 
-            $pesStatusWithButton .= "&nbsp;<button type='button' class='btn btn-default btn-xs btnTogglePesTrackerStatusDetails' aria-label='Left Align' data-toggle='tooltip' data-placement='top' title='See PES Tracker Status' >";
+            $pesStatusWithButton .= "<br/><button type='button' class='btn btn-default btn-xs btnTogglePesTrackerStatusDetails' aria-label='Left Align' data-toggle='tooltip' data-placement='top' title='See PES Tracker Status' >";
             $pesStatusWithButton .= !empty($row['PROCESSING_STATUS']) ? "&nbsp;<small>" . $row['PROCESSING_STATUS'] . "</small>&nbsp;" : null;
             $pesStatusWithButton .= "<span class='glyphicon glyphicon-search  ' aria-hidden='true' ></span>";
             $pesStatusWithButton .= "</button>";
