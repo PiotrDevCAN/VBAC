@@ -12,7 +12,7 @@ $cnum = trim($_POST['cnum']);
 $firstName = trim($_POST['firstname']);
 $lastName = trim($_POST['lastname']);
 $emailAddress = trim($_POST['emailaddress']);
-$flm = trim($_POST['flm']);
+$flm = !empty(trim($_POST['flm']))  ? trim($_POST['flm']) : null;
 
 
 try {

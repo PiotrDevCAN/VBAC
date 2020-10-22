@@ -199,7 +199,9 @@ class pesTrackerTable extends DbTable{
             $firstName = trim($row['FIRST_NAME']);
             $lastName = trim($row['LAST_NAME']);
             $emailaddress = trim($row['EMAIL_ADDRESS']);
-            $flm = trim($row['FLM']);
+            
+            $offboarded = substr($row['REVALIDATION_STATUS'],0,10)=='offboarded' ? true : false;            
+            $flm = !$offboarded && !empty(trim($row['FLM'])) ?  trim($row['FLM']) : null;
 
             $formattedIdentityField = self::formatEmailFieldOnTracker($row);
 

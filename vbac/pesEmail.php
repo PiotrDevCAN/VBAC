@@ -268,8 +268,10 @@ class pesEmail {
 
         include_once 'emailBodies/' . $emailBodyFileName;
         $emailBody = preg_replace($pesEmailPattern, $replacements, $pesEmail);
+        
+        $flmArray = empty($flm) ? array() : array($flm);
 
-        $sendResponse = BlueMail::send_mail(array($emailAddress), "Status Change - Pre Employment Screening - $cnum : $firstName, $lastName", $emailBody,'LBGVETPR@uk.ibm.com', array($flm));
+        $sendResponse = BlueMail::send_mail(array($emailAddress), "Status Change - Pre Employment Screening - $cnum : $firstName, $lastName", $emailBody,'LBGVETPR@uk.ibm.com', $flmArray);
         return $sendResponse;
 
 
