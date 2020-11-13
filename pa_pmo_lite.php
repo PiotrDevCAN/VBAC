@@ -117,7 +117,7 @@ $(document).ready(function(){
 	person.listenForSaveAgileNumber();
 	person.listenForClearAgileNumber();
 	person.listenForInitiatePesFromPortal();
-	person.listenForEditPerson();
+	person.listenForEditPerson(<?=$_SESSION['isFm'] ? "'yes'" : "'no'";?>);
 	person.listenForAccountOrganisation();
     person.listenForCtbRtb();
 	person.listenForToggleFmFlag();

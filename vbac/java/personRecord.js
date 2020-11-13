@@ -1541,7 +1541,8 @@ function personRecord() {
     });
   },
 
-  this.listenForEditPerson = function(){
+  this.listenForEditPerson = function(isFmp){
+	var isFm = isFmp;
     $(document).on('click','.btnEditPerson', function(e){
            var cnum = ($(this).data('cnum'));
            var spinner =  '<div id="overlay"><i class="fa fa-spinner fa-spin spin-big"></i></div>';
@@ -1586,6 +1587,15 @@ function personRecord() {
                 		placeholder: 'Approved Location',
                 		allowClear: true
                 	});
+
+					console.log(isFm);
+					
+					if(isFm=='yes'){
+						// Dont let FM Edit the Func Mgr Field, Ant Stark November 12th 2020
+						$('#FM_CNUM').attr('disabled',true);
+					}
+					
+
                 } else {
                     $('#editPersonModal .modal-body').html(resultObj.messages);
                 }
