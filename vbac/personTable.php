@@ -1755,7 +1755,7 @@ class personTable extends DbTable {
         $squadName = $original ? $originalSquadName : $oldSquadName;
         $cnum = $row['actualCNUM'];
 
-        $agileSquadWithButton = $original ? "<button type='button' class='btn btn-default btn-xs btnEditAgileNumber accessRestrict accessFm accessCdi' aria-label='Left Align' " : null;
+        $agileSquadWithButton = $original ? "<button type='button' class='btn btn-default btn-xs btnEditAgileNumber accessRestrict  accessCdi' aria-label='Left Align' " : null;
         $agileSquadWithButton.= $original ? " data-cnum='" .$cnum . "' ": null ;
 //        $agileSquadWithButton.= $original ? " data-version='original' " : " data-version='old' ";
         $agileSquadWithButton.= $original ? " data-version='original' " : null ;
@@ -1768,7 +1768,7 @@ class personTable extends DbTable {
         $agileSquadWithButton.= $original ?"&nbsp;" : null ;
 
         if(!empty($squadNumberField) && $original){
-            $agileSquadWithButton.= "<button type='button' class='btn btn-danger btn-xs btnClearSquadNumber accessRestrict accessFm accessCdi' aria-label='Left Align' ";
+            $agileSquadWithButton.= "<button type='button' class='btn btn-danger btn-xs btnClearSquadNumber accessRestrict  accessCdi' aria-label='Left Align' ";
             $agileSquadWithButton.= " data-cnum='" .$cnum . "' ";
             $agileSquadWithButton.= $original ? " data-version='original' " : " data-version='new' ";
             $agileSquadWithButton.= " data-toggle='tooltip' data-placement='top' ";
