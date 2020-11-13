@@ -1587,8 +1587,6 @@ function personRecord() {
                 		placeholder: 'Approved Location',
                 		allowClear: true
                 	});
-
-					console.log(isFm);
 					
 					if(isFm=='yes'){
 						// Dont let FM Edit the Func Mgr Field, Ant Stark November 12th 2020

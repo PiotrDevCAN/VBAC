@@ -214,24 +214,14 @@ $elapsed = microtime(true);
 error_log("vbac:" . (float)($elapsed-$start));
 
 $isCdi   = stripos($_ENV['environment'], 'dev') ? ".not('.accessCdi')"  : $isCdi;
+$isFm    = stripos($_ENV['environment'], 'dev') ? ".not('.accessFm')"  : $isFm;
 $isPmo   = stripos($_ENV['environment'], 'dev')  ? ".not('.accessPmo')" : $isPmo;
 $isPes   = stripos($_ENV['environment'], 'dev')  ? ".not('.accessPes')" : $isPes;
 $isRep1   = stripos($_ENV['environment'], 'dev')  ? ".not('.accessRepFullPerson')" : $isRep1;
 $isRes   = stripos($_ENV['environment'], 'dev')  ? ".not('.accessRes')" : $isRes;
 
 $isFm = $isPmo ? null : $isFm; // If they are PMO it don't matter if they are FM
-
-
-
-// // Test PES Cancel
-// $isPmo = false;
-// $isCdi = false;
-// $isPes = ".not('.accessPes')" ;
-// $isRep1 = false;
-// $isRes = false;
-// $isFm = false;
-
-
+$isFm = $isCdi ? null : $isFm; // If they are CDI it don't matter if they are FM
 
 $_SESSION['isFm']   = !empty($isFm)   ? true : false;
 $_SESSION['isCdi']  = !empty($isCdi)  ? true : false;
@@ -275,14 +265,21 @@ $(document).ready(function () {
 
     $('button.accessRestrict')<?=$isFm?><?=$isPmo?><?=$isPes?><?=$isCdi?><?=$isUser?><?=$isRep1?><?=$isRes?>.remove();
 
-    <?=!empty($isUser) ? '$("#userLevel").html("User' . $requestor . '&nbsp;' . $rep . '");' : null;?>
+	<?php 
+	
+	$userLevel = '';
+	$userLevel.= !empty($isUser)? 'User:' . $requestor : null;
+	$userLevel.= !empty($isFm)  ? 'Fm:' . $requestor : null;
+	$userLevel.= !empty($isRes) ? 'Res:' . $requestor : null;
+	$userLevel.= !empty($isPmo) ? 'Pmo:' . $requestor : null;
+	$userLevel.= !empty($isCdi) ? 'Cdi:' . $requestor : null;
+	$userLevel.= !empty($isPes) ? 'Pes:' . $requestor : null;
+	$userLevel.= $rep;
+	?>
 
-    <?=!empty($isFm)   ? '$("#userLevel").html("Func.Mgr.' . $requestor . '&nbsp;' . $rep . '");' : null;?>
-    <?=!empty($isRes)  ? '$("#userLevel").html("Req' . $requestor . '&nbsp;' . $rep . '");' : null;?>
-    <?=!empty($isPmo)  ? '$("#userLevel").html("PMO' . $requestor . '&nbsp;' . $rep . '");' : null;?>
-    <?=!empty($isCdi)  ? '$("#userLevel").html("CDI' . $requestor . '&nbsp;' . $rep . '");' : null;?>
-    <?=!empty($isPes)  ? '$("#userLevel").html("PES' . $requestor . '&nbsp;' . $rep . '");' : null;?>
+	$('#userLevel').html('<?=$userLevel?>');
 
+	console.log($('#userLevel').html());
 
     var poContent = $('#<?=$plannedOutagesId?> a').html();
 	var badgedContent = poContent + "&nbsp;" + "<?=$plannedOutages->getBadge();?>";

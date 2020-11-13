@@ -121,7 +121,7 @@ $(document).ready(function(){
 	person.listenForSavePesStatus();
 	person.listenForRestartPes();
 	person.listenForInitiatePesFromPortal();
-	person.listenForEditPerson();
+	person.listenForEditPerson(<?=$_SESSION['isFm'] ? "'yes'":"'no'";?>);
 	person.listenForAccountOrganisation();
     person.listenForCtbRtb();
 	person.listenForToggleFmFlag();
