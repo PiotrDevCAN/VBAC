@@ -515,7 +515,9 @@ class personRecord extends DbRecord
 
         $startDate = \DateTime::createFromFormat('Y-m-d', $this->START_DATE);
         $endDate = \DateTime::createFromFormat('Y-m-d', $this->PROJECTED_END_DATE);
-
+        
+        $pesClearedDate = \DateTime::createFromFormat('Y-m-d', $this->PES_CLEARED_DATE);
+        $pesRecheckDate = \DateTime::createFromFormat('Y-m-d', $this->PES_RECHECK_DATE);
         ?>
         <form id='boardingForm'  class="form-horizontal" onsubmit="return false;">
     	<div class="panel panel-default">
@@ -647,7 +649,7 @@ class personRecord extends DbRecord
 				<div id='editLocationDiv' class='col-sm-6' <?=$allowEditLocation;?>>
            	   	<select class='form-control select select2 locationFor '
                 			  id='LBG_LOCATION'
-                              name='LBG_LOCATION',
+                              name='LBG_LOCATION' 
                               data-placeholder='LBG Work Location'
                 >
                 <option value=''>LBG Work Location</option>
@@ -672,7 +674,7 @@ class personRecord extends DbRecord
           	<select class='form-control select select2' id='FM_CNUM'
                     name='FM_CNUM'
                     required='required'
-                    placeholder='Select functional manager' >
+                    data-placeholder='Select functional manager' >
             <option value=''>Select Functional Mgr</option>
             <?php
                 foreach ($allManagers as $mgrCnum => $mgrNotesid){
@@ -709,7 +711,7 @@ class personRecord extends DbRecord
         <div class='col-sm-6 form-required'>
                <select class='form-control select select2' id='lob'
                               name='LOB'
-                              required='true'
+                              required
               >
                 <option value=''>Select Lob</option>
                 <?php
@@ -879,7 +881,7 @@ class personRecord extends DbRecord
 	           		<div class="col-sm-6" id='ibmerSelect'>
                 	<select class='form-control select select2' id='ibmer_preboarded'
                         name='ibmer_preboarded'
-                        placeholder='Select IBMer:' >
+                        data-placeholder='Select IBMer:' >
                 	<option value=''>IBMer to Link</option>
                 	<?php
                     foreach ($allNonLinkedIbmers as $cnum => $notesId){
@@ -896,7 +898,7 @@ class personRecord extends DbRecord
                         name='person_preboarded'
                         <?=$preBoardersAvailable?>
                         <?=$notEditable?>
-                        placeholder='Was pre-boarded as:' >
+                        data-placeholder='Was pre-boarded as:' >
                 <option value=''>Link to Pre-Boarded</option>
                 <?php
                     foreach ($availableFromPreBoarding as $option){
