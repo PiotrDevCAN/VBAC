@@ -34,7 +34,6 @@ $person->displayLinkForm();
 
 $(document).ready(function() {
 	var person = new personRecord();
-    person.initialisePersonFormSelect2();
-    person.listenForSaveLinking();
+     person.listenForSaveLinking();
 });
 </script>

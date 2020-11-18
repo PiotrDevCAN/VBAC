@@ -8,7 +8,6 @@ use itdq\Loader;
 use vbac\assetRequestsTable;
 use vbac\personRecord;
 use vbac\personTable;
-use vbac\personWithSubPTable;
 
 // require_once __DIR__ . '/../../src/Bootstrap.php';
 $helper = new Sample();
@@ -49,7 +48,7 @@ try {
     $rs = db2_exec($GLOBALS['conn'], $sql);
 
     if($rs){
-        $recordsFound = personWithSubPTable::writeResultSetToXls($rs, $spreadsheet);
+        $recordsFound = personTable::writeResultSetToXls($rs, $spreadsheet);
         if($recordsFound){
             DbTable::autoFilter($spreadsheet);
             DbTable::autoSizeColumns($spreadsheet);

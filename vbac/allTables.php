@@ -38,7 +38,6 @@ class allTables
 
     public static $PERSON                 = 'PERSON';
     public static $PERSON_PORTAL_REPORTS  = 'PERSON_PORTAL_REPORTS';
-    public static $PERSON_SUBPLATFORM     = 'PERSON_SUBPLATFORM';
     public static $PERSON_PORTAL_LITE     = 'PERSON_PORTAL_LITE_VIEW';
 
     public static $PES_EVENTS             = 'PES_EVENTS';
@@ -52,7 +51,6 @@ class allTables
     public static $STATIC_LOCATIONS       = 'STATIC_LOCATIONS';
     public static $STATIC_ROLES           = 'STATIC_ROLES';
     public static $STATIC_WORKSTREAMS     = 'STATIC_WORKSTREAMS';
-    public static $STATIC_SUBPLATFORM     = 'STATIC_SUBPLATFORM';
 
     public static $TRACE                  = 'TRACE';
     public static $TRACE_CONTROL          = 'TRACE_CONTROL';

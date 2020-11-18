@@ -2,7 +2,6 @@
 
 use vbac\personTable;
 use vbac\allTables;
-use vbac\personWithSubPTable;
 use vbac\personPortalLiteTable;
 
 set_time_limit(0);

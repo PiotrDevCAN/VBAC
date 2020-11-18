@@ -1,53 +1,23 @@
 <?php
 
 
-// small change
-
 use vbac\personTable;
-use itdq\Loader;
-use vbac\allTables;
 use vbac\assetRequestRecord;
-use itdq\BlueMail;
 
-// $_ENV['environment'] = 'VBAC';
+include_once 'itdq\xls.php';
+include_once 'itdq\FormClass.php';
+include_once 'itdq\DbRecord.php';
+include_once 'itdq\DbTable.php';
+include_once 'vbac\personRecord.php';
+include_once 'vbac\personTable.php';
+include_once 'vbac\assetRequestRecord.php';
 
-// $loader = new Loader();
+$pred = personTable::activePersonPredicate();
 
-// $activePeople = $loader->loadIndexed('REVALIDATION_STATUS','CNUM',allTables::$PERSON,personTable::activePersonPredicate());
+$pred2 = assetRequestRecord::ableToOwnAssets();
 
-// $predicate = " 1=1 ";
-// $predicate.= assetRequestRecord::ableToOwnAssets();
-// $ableToOwn= $loader->loadIndexed('REVALIDATION_STATUS','CNUM',allTables::$PERSON,$predicate);
+print_r($pred);
 
-// echo "<pre>";
-// var_dump(count($activePeople));
-// echo "</pre>";
-// echo "<pre>";
-// var_dump(count($ableToOwn));
+echo "\n";
 
-// $difference1 = array_diff_key($ableToOwn, $activePeople);
-// $difference2 = array_diff_key($activePeople, $ableToOwn);
-// echo "</pre>";
-// echo "<pre>";
-
-// echo "<pre>";
-// var_dump($difference1);
-// echo "</pre>";
-// var_dump($difference2);
-// echo "</pre>";
-
-phpinfo();
-// $sendResponse = BlueMail::send_mail(array('rob.daniel@uk.ibm.com'), "Test 1",'text here','rob.daniel@uk.ibm.com',array('rob.daniel@uk.ibm.com'));
-// echo "<pre>";
-// print_r($sendResponse);
-// echo "</pre>";
-
-// $sendResponse = BlueMail::send_mail(array('rob.daniel@uk.ibm.com'), "Test 2",'text here','rob.daniel@uk.ibm.com',array(null));
-// echo "<pre>";
-// print_r($sendResponse);
-// echo "</pre>";
-
-// $sendResponse = BlueMail::send_mail(array('rob.daniel@uk.ibm.com'), "Test 3",'text here','rob.daniel@uk.ibm.com',array(""));
-// echo "<pre>";
-// print_r($sendResponse);
-// echo "</pre>";
+print_r($pred2);

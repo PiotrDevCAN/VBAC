@@ -4,7 +4,6 @@ use vbac\personTable;
 use vbac\allTables;
 use itdq\AuditTable;
 use itdq\AuditRecord;
-use vbac\PersonSubPlatformTable;
 use vbac\AgileTribeRecord;
 use vbac\AgileTribeTable;
 use itdq\FormClass;

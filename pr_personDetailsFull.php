@@ -7,7 +7,6 @@ use vbac\allTables;
 use itdq\Loader;
 use vbac\assetRequestsTable;
 use vbac\personRecord;
-use vbac\personWithSubPTable;
 
 ini_set('memory_limit', '512M');
 
@@ -47,7 +46,7 @@ try {
     $rs = db2_exec($GLOBALS['conn'], $sql);
 
     if($rs){
-        $recordsFound = personWithSubPTable::writeResultSetToXls($rs, $spreadsheet);
+        $recordsFound = personTable::writeResultSetToXls($rs, $spreadsheet);
         if($recordsFound){
             DbTable::autoFilter($spreadsheet);
             DbTable::autoSizeColumns($spreadsheet);

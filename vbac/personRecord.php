@@ -58,6 +58,7 @@ class personRecord extends DbRecord
     protected $PES_STATUS_DETAILS;
     protected $PES_STATUS;
 
+
     protected $REVALIDATION_DATE_FIELD;
     protected $REVALIDATION_STATUS;
 
@@ -65,6 +66,7 @@ class personRecord extends DbRecord
     protected $CBN_STATUS;
 
     protected $WORK_STREAM;
+    protected $SUBPLATFORM;
     protected $CT_ID_REQUIRED;
     protected $CT_ID;
     protected $CIO_ALIGNMENT;
@@ -81,13 +83,16 @@ class personRecord extends DbRecord
     protected $RSA_TOKEN;
     protected $CALLSIGN_ID;
 
+    protected $PROCESSING_STATUS;
+    protected $PROCESSING_STATUS_CHANGED;
+    
     protected $PES_LEVEL;
     protected $PES_RECHECK_DATE;
     protected $PES_CLEARED_DATE;
-
+    
     protected $SQUAD_NUMBER;
     protected $OLD_SQUAD_NUMBER;
-
+    
     protected $person_bio;
 
     // Fields to be edited in the DataTables Reports. Need to know their position in the array $row;
@@ -512,9 +517,6 @@ class personRecord extends DbRecord
         $startDate = \DateTime::createFromFormat('Y-m-d', $this->START_DATE);
         $endDate = \DateTime::createFromFormat('Y-m-d', $this->PROJECTED_END_DATE);
 
-        $pesClearedDate = \DateTime::createFromFormat('Y-m-d', $this->PES_CLEARED_DATE);
-        $pesRecheckDate = \DateTime::createFromFormat('Y-m-d', $this->PES_RECHECK_DATE);
-        $allSubplatforms = $mode==FormClass::$modeEDIT ? PersonSubPlatformTable::getValuesForCnum($this->CNUM) : null;
         ?>
         <form id='boardingForm'  class="form-horizontal" onsubmit="return false;">
     	<div class="panel panel-default">
@@ -537,7 +539,7 @@ class personRecord extends DbRecord
 	   	       		</div>
 				</div>
 
-	        	<div id='personDetails' display='<?=$displayForEdit?>'>
+	        	<div id='personDetails' style='display:<?=$displayForEdit?>'>
 	          		<div class='form-group'>
 	            		<div class='col-sm-6'>
 	              		<input class='form-control' id='person_notesid' name='NOTES_ID'
@@ -671,7 +673,7 @@ class personRecord extends DbRecord
           	<select class='form-control select select2' id='FM_CNUM'
                     name='FM_CNUM'
                     required='required'
-                    data-placeholder='Select functional manager' >
+                    placeholder='Select functional manager' >
             <option value=''>Select Functional Mgr</option>
             <?php
                 foreach ($allManagers as $mgrCnum => $mgrNotesid){
@@ -784,14 +786,7 @@ class personRecord extends DbRecord
           </select>
 
         </div>
-        <div class='col-sm-4 storeSelections' data-selections='<?=json_encode($allSubplatforms);?>'>
-             <select class='form-control select select2' id='subPlatform'
-                              name='subPlatform[]'
-                              disabled
-                              data-placeholder='Select SubPlatform(s)'
-                              multiple="multiple">
-                <option value=''></option>
-            </select>
+        <div class='col-sm-4 '>
         </div>
 
 

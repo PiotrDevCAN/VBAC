@@ -130,7 +130,7 @@ function personRecord() {
 			       type: 'POST',
 			       data : {cnum:data.cnum},
 			       success: function(result){
-			    	   personWithSubPRecord.table.ajax.reload();
+			    	   personRecord.table.ajax.reload();
 			           var resultObj = JSON.parse(result);
 			           if(resultObj.success==true){
 			        	   var message = "<div class=panel-heading><h3 class=panel-title>Success</h3>";
@@ -245,7 +245,7 @@ function personRecord() {
 			    	   $('#confirmSendPesEmail').removeClass('spinning');	  		    	   
 	    	   
 			    	   var resultObj = JSON.parse(result);		  	           
-			    	   if(typeof( personWithSubPRecord.table)!='undefined'){
+			    	   if(typeof( personRecord.table)!='undefined'){
 			    		//   personRecord.table.ajax.reload();
 			    	   }				    	   
 			    	  $('.pesComments[data-cnum="' + cnum + '"]').html('<small>' + resultObj.comment + '</small>');
@@ -275,7 +275,7 @@ function personRecord() {
 		       type: 'POST',
 		       data : {cnum:data.cnum},
 		       success: function(result){
-		    	   personWithSubPRecord.table.ajax.reload();
+		    	   personRecord.table.ajax.reload();
 		           var resultObj = JSON.parse(result);
 		           $(this).removeClass('spinning');
 		           $(this).attr('disabled',false);
@@ -309,7 +309,7 @@ function personRecord() {
 	       type: 'POST',
 	       data : {cnum:data.cnum},
 	       success: function(result){
-	    	   personWithSubPRecord.table.ajax.reload();
+	    	   personRecord.table.ajax.reload();
 	           var resultObj = JSON.parse(result);
 	           if(resultObj.success==true){
 	        	   var message = "<div class=panel-heading><h3 class=panel-title>Success</h3>";
@@ -365,7 +365,7 @@ function personRecord() {
 		               $('#confirmOffboardingModal  .panel').addClass('panel-danger');		               
 		             };
                 	 $('#confirmOffboardingModal').modal('show');
-                	 personWithSubPRecord.table.ajax.reload();
+                	 personRecord.table.ajax.reload();
 		       }
 		   });
 		});
@@ -573,7 +573,7 @@ function personRecord() {
 		      	      setpmostatusto: setpmostatusto },
 		        success: function(result){
 		      	  var resultObj = JSON.parse(result);
-		      	 personWithSubPRecord.table.ajax.reload();
+		      	 personRecord.table.ajax.reload();
 		        }
 		    });
 	    });
@@ -937,8 +937,8 @@ function personRecord() {
             };
             $('#editPersonModal').modal('hide');
             $('#savingBoardingDetailsModal').modal('show');
-            if(typeof( personWithSubPRecord.table) != "undefined") {
-            	 personWithSubPRecord.table.ajax.reload();
+            if(typeof( personRecord.table) != "undefined") {
+            	 personRecord.table.ajax.reload();
             }
             if(resultObj.employeetype=='vendor'){
             	 $('#initiatePes').attr('disabled',true);
@@ -1066,8 +1066,35 @@ function personRecord() {
 
 
   },
-  
+
   this.initialiseDataTable = function(preBoardersAction){
+	  
+	  $('#personTable').on('draw.dt', function () {
+		    $('[data-toggle="popover"]').popover();
+		} );
+	  
+	  $('#personTable').on('column-visibility.dt', function () {
+		    $('[data-toggle="popover"]').popover();
+    	} );
+	  
+	  
+	  
+	    var buttonCommon = {
+	            exportOptions: {
+	                format: {
+	                    body: function ( data, row, column, node ) {
+	                     //   return data ?  data.replace( /<br\s*\/?>/ig, "\n") : data ;
+	                     return data ? data.replace( /<br\s*\/?>/ig, "\n").replace(/(&nbsp;|<([^>]+)>)/ig, "") : data ;
+	                     //    data.replace( /[$,.]/g, '' ) : data.replace(/(&nbsp;|<([^>]+)>)/ig, "");
+
+	                    }
+	                }
+	            }
+	        };
+	  
+	  
+	  
+	  
 	  preBoardersAction = typeof(preBoardersAction) == 'undefined' ? null : preBoardersAction;	  
       // Setup - add a text input to each footer cell
       $('#personTable tfoot th').each( function () {
@@ -1114,6 +1141,146 @@ function personRecord() {
                       { "data": "PES_REQUESTOR", "defaultContent": "" },
                       { "data": "PES_DATE_RESPONDED", "defaultContent": "" },
                       { "data": "PES_STATUS_DETAILS", "defaultContent": "" },
+                      { data: "PES_STATUS",
+                   	  render: { _:'display', sort:'sort' },
+                      },
+                      { "data": "REVALIDATION_DATE_FIELD", "defaultContent": "" },
+                      { "data": "REVALIDATION_STATUS", "defaultContent": "" },
+                      { "data": "CBN_DATE_FIELD", "defaultContent": "" },
+                      { "data": "CBN_STATUS", "defaultContent": "" },
+                      { "data": "WORK_STREAM", "defaultContent": "" },
+                      { "data": "SUBPLATFORM", "defaultContent": "" },
+                      { "data": "CT_ID_REQUIRED" , "defaultContent": ""},
+                      { "data": "CT_ID", "defaultContent": "" },
+                      { "data": "CIO_ALIGNMENT", "defaultContent": "" },
+                      { "data": "PRE_BOARDED", "defaultContent": "" },
+                      { "data": "SECURITY_EDUCATION", "defaultContent": "" },
+                      { "data": "PMO_STATUS", "defaultContent": "" },
+                      { "data": "PES_DATE_EVIDENCE", "defaultContent": "" },
+                      { "data": "RSA_TOKEN", "defaultContent": "" },
+                      { "data": "CALLSIGN_ID", "defaultContent": "" },
+                      { "data": "PROCESSING_STATUS", "defaultContent": "" },
+                      { "data": "PROCESSING_STATUS_CHANGED", "defaultContent": "" },  
+                      { "data": "PES_LEVEL", "defaultContent": "" },
+                      { "data": "PES_RECHECK_DATE", "defaultContent": "" },
+                      { "data": "PES_CLEARED_DATE", "defaultContent": "" },
+                      { "data": "SQUAD_NAME", render: { _:'display', sort:'sort' },},
+                      { "data": "OLD_SQUAD_NAME", render: { _:'display', sort:'sort' },},
+                    
+                      
+                  ],
+          columnDefs: [
+                         { "visible": false, "targets": [1,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47] }
+                  ] ,
+//	        colReorder: {
+//	            order: [ 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34]
+//	        },
+          order: [[ 5, "asc" ]],
+          
+          drawCallback: function( settings ) {
+              $('[data-toggle="popover"]').popover();
+          },        
+          
+          
+          autoWidth: true,
+          deferRender: true,
+          processing: true,
+          responsive: true,
+          dom: 'Blfrtip',
+          buttons: [
+                    'colvis',
+                    $.extend( true, {}, buttonCommon, {
+                        extend: 'excelHtml5',
+                        exportOptions: {
+                            orthogonal: 'sort',
+                            stripHtml: true,
+                            stripNewLines:false
+                        },
+                         customize: function( xlsx ) {
+                             var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                         }
+                }),
+                $.extend( true, {}, buttonCommon, {
+                    extend: 'csvHtml5',
+                    exportOptions: {
+                        orthogonal: 'sort',
+                        stripHtml: true,
+                        stripNewLines:false
+                    }
+                }),
+                $.extend( true, {}, buttonCommon, {
+                    extend: 'print',
+                    exportOptions: {
+                        orthogonal: 'sort',
+                        stripHtml: true,
+                        stripNewLines:false
+                    }
+                })
+                ],
+      });
+      // Apply the search
+      personRecord.table.columns().every( function () {
+          var that = this;
+          $( 'input', this.footer() ).on( 'keyup change', function () {
+              if ( that.search() !== this.value ) {
+                  that
+                      .search( this.value )
+                      .draw();
+              }
+          } );
+      } );
+  }
+
+
+
+  
+  this.initialiseDataTablexxx = function(preBoardersAction){
+	  preBoardersAction = typeof(preBoardersAction) == 'undefined' ? null : preBoardersAction;	  
+      // Setup - add a text input to each footer cell
+      $('#personTable tfoot th').each( function () {
+          var title = $(this).text();
+          var titleCondensed = title.replace(' ','');
+          $(this).html( '<input type="text" id="footer'+ titleCondensed + '" placeholder="Search '+title+'" />' );
+      } );
+    // DataTable
+      personRecord.table = $('#personTable').DataTable({
+        ajax: {
+              url: 'ajax/populatePersonDatatable.php',
+              data: { preBoardersAction:preBoardersAction },
+              type: 'GET',
+          }	,
+//	        CNUM         0
+//	        Email        4
+//	        Notes ID     5
+//	        fm_cnum		 8
+//	        PES status   25
+
+         "columns": [
+                      { "data": "CNUM" , "defaultContent": "" },                                 //0
+                      { "data": "OPEN_SEAT_NUMBER" ,"defaultContent": "" },                      
+                      { "data": "FIRST_NAME"       ,"defaultContent": "<i>unknown</i>"},
+                      { "data": "LAST_NAME", "defaultContent": "<i>unknown</i>" },
+                      { "data": "EMAIL_ADDRESS", "defaultContent": "<i>unknown</i>" },
+                      { "data": "NOTES_ID", "defaultContent": "<i>unknown</i>" },
+                      { "data": "LBG_EMAIL", "defaultContent": "<i>unknown</i>" },
+                      { "data": "EMPLOYEE_TYPE", "defaultContent": "" },
+                      { "data": "FM_CNUM", "defaultContent": "" },
+                      { "data": "FM_MANAGER_FLAG", "defaultContent": "" },
+                      { "data": "CTB_RTB", "defaultContent": "" },
+                      { "data": "TT_BAU", "defaultContent": "" },
+                      { "data": "LOB", "defaultContent": "" },
+                      { "data": "ROLE_ON_THE_ACCOUNT", "defaultContent": "" },
+                      { "data": "ROLE_TECHNOLOGY", "defaultContent": "" },
+                      { "data": "START_DATE", "defaultContent": "" },
+                      { "data": "PROJECTED_END_DATE", "defaultContent": "" },
+                      { "data": "COUNTRY", "defaultContent": ""},
+                      { "data": "IBM_BASE_LOCATION", "defaultContent": "" },
+                      { "data": "LBG_LOCATION" , "defaultContent": ""},
+                      { "data": "OFFBOARDED_DATE" , "defaultContent": ""},
+                      { "data": "PES_DATE_REQUESTED" , "defaultContent": ""},
+                      { "data": "PES_REQUESTOR", "defaultContent": "" },
+                      { "data": "PES_DATE_RESPONDED", "defaultContent": "" },
+                      { "data": "PES_STATUS_DETAILS", "defaultContent": "" },
                       { "data": "PES_STATUS", "defaultContent": "" },
                       { "data": "REVALIDATION_DATE_FIELD", "defaultContent": "" },
                       { "data": "REVALIDATION_STATUS", "defaultContent": "" },
@@ -1129,16 +1296,12 @@ function personRecord() {
                       { "data": "PES_DATE_EVIDENCE", "defaultContent": "" },
                       { "data": "RSA_TOKEN", "defaultContent": "" },
                       { "data": "CALLSIGN_ID", "defaultContent": "" },
-                      { "data": "PES_LEVEL", "defaultContent": "" },
-                      { "data": "PES_RECHECK_DATE", "defaultContent": "" },
-                      { "data": "PES_CLEARED_DATE", "defaultContent": "" },
+                      { "data": "PROCESSING_STATUS", "defaultContent": "" },
+                      { "data": "PROCESSING_STATUS_CHANGED", "defaultContent": "" },
                   ],
           columnDefs: [
-                         { "visible": false, "targets": [1,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42] }
+                         { "visible": false, "targets": [1,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41] }
                   ] ,
-//	        colReorder: {
-//	            order: [ 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34]
-//	        },
           order: [[ 5, "asc" ]],
           autoWidth: true,
           deferRender: true,
@@ -1317,18 +1480,18 @@ function personRecord() {
      	$('#reportRemoveOffb').attr('disabled',false);
     	$('#portalTitle').text('Person Portal - PES Report');
     	$.fn.dataTableExt.afnFiltering.pop();
-    	 personWithSubPRecord.table.columns().visible(false,false);
-    	 personWithSubPRecord.table.columns([5,21,22,23,25,27,35,38]).visible(true);
-    	 personWithSubPRecord.table.order([21,'desc'],[5,"asc"]).draw();
+    	 personRecord.table.columns().visible(false,false);
+    	 personRecord.table.columns([5,21,22,23,25,27,35,38]).visible(true);
+    	 personRecord.table.order([21,'desc'],[5,"asc"]).draw();
       });
   },
 
   this.listenForReportPerson = function(){
     $(document).on('click','#reportPerson', function(e){
       $('#reportRemoveOffb').attr('disabled',false);
-      personWithSubPRecord.table.columns([0,1,2,3,4,5,6,7,8,9,10,11,12,13,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47]).visible(true,false);
-      personWithSubPRecord.table.columns([2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,33,34,24]).visible(true);
-      personWithSubPRecord.table.columns.draw();
+      personRecord.table.columns([0,1,2,3,4,5,6,7,8,9,10,11,12,13,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47]).visible(true,false);
+      personRecord.table.columns([2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,33,34,24]).visible(true);
+      personRecord.table.columns.draw();
       });
   },
 
@@ -1337,9 +1500,9 @@ function personRecord() {
      	$('#reportRemoveOffb').attr('disabled',false);
     	$('#portalTitle').text('Person Portal - Action Mode');
     	$.fn.dataTableExt.afnFiltering.pop();
-    	 personWithSubPRecord.table.columns().visible(false,false);
-    	 personWithSubPRecord.table.columns([0,1,5,9,25,37,46,47]).visible(true);
-    	 personWithSubPRecord.table.order([5,'asc']).draw();
+    	 personRecord.table.columns().visible(false,false);
+    	 personRecord.table.columns([0,1,5,9,25,37,46,47]).visible(true);
+    	 personRecord.table.order([5,'asc']).draw();
       });
   },
 
@@ -1348,9 +1511,9 @@ function personRecord() {
      	$('#reportRemoveOffb').attr('disabled',false);
     	$('#portalTitle').text('Person Portal - Revalidation Report');
     	$.fn.dataTableExt.afnFiltering.pop();
-    	 personWithSubPRecord.table.columns().visible(false,false);
-    	 personWithSubPRecord.table.columns([5,8,15,16,26,27,37]).visible(true);
-    	 personWithSubPRecord.table.search('').order([5,'asc']).draw();
+    	 personRecord.table.columns().visible(false,false);
+    	 personRecord.table.columns([5,8,15,16,26,27,37]).visible(true);
+    	 personRecord.table.search('').order([5,'asc']).draw();
     });
   },
   
@@ -1362,7 +1525,7 @@ function personRecord() {
 		    	          return data[27].trim().substring(0,3) != "off";
 		    	        }
 		    	    );
-		    personWithSubPRecord.table.draw();	
+		    personRecord.table.draw();	
 			$('#reportRemoveOffb').attr('disabled',true);
 	  });
   },
@@ -1372,9 +1535,9 @@ function personRecord() {
 	 	$('#reportRemoveOffb').attr('disabled',false);
 	  	$('#portalTitle').text('Person Portal - Managers CBN Report');
 		$.fn.dataTableExt.afnFiltering.pop();
-		 personWithSubPRecord.table.columns().visible(false,false);
-		 personWithSubPRecord.table.columns([0,5,9,16,25,27,46,47]).visible(true);
-		 personWithSubPRecord.table.search('').order([5,'asc']).draw();	
+		 personRecord.table.columns().visible(false,false);
+		 personRecord.table.columns([0,5,9,16,25,27,46,47]).visible(true);
+		 personRecord.table.search('').order([5,'asc']).draw();	
   },
   
   this.listenForReportMgrsCbn = function(){
@@ -1415,11 +1578,11 @@ function personRecord() {
 	    		        }
 	    		});
 
-	        personWithSubPRecord.table.columns().visible(false,false);
-	        personWithSubPRecord.table.columns([5,8,11,12,16,27,37]).visible(true);
-	        personWithSubPRecord.table.order([16,'asc'],[5,'asc']);
+	        personRecord.table.columns().visible(false,false);
+	        personRecord.table.columns([5,8,11,12,16,27,37]).visible(true);
+	        personRecord.table.order([16,'asc'],[5,'asc']);
 
-	        personWithSubPRecord.table.draw();
+	        personRecord.table.draw();
 
 //	      personRecord.table.column(27).data().each().function(){console.log(this)});
 //	      $.fn.dataTableExt.afnFiltering.pop(); - if we pop off here - then when we sort on a column all the rows are back.
@@ -1444,11 +1607,11 @@ function personRecord() {
 		    		        }
 		    		});
 
-		        personWithSubPRecord.table.columns().visible(false,false);
-		        personWithSubPRecord.table.columns([5,8,11,12,16,27,37]).visible(true);
-		        personWithSubPRecord.table.order([16,'asc'],[5,'asc']);
+		        personRecord.table.columns().visible(false,false);
+		        personRecord.table.columns([5,8,11,12,16,27,37]).visible(true);
+		        personRecord.table.order([16,'asc'],[5,'asc']);
 
-		        personWithSubPRecord.table.draw();
+		        personRecord.table.draw();
 
 //		      personRecord.table.column(27).data().each().function(){console.log(this)});
 //		      $.fn.dataTableExt.afnFiltering.pop(); - if we pop off here - then when we sort on a column all the rows are back.
@@ -1461,9 +1624,9 @@ function personRecord() {
     	$('#portalTitle').text('Person Portal');
     	$('#reportRemoveOffb').attr('disabled',false);
     	$.fn.dataTableExt.afnFiltering.pop();
-    	 personWithSubPRecord.table.columns().visible(false,false);
-    	 personWithSubPRecord.table.columns([0,1,2,3,4,25]).visible(true);
-    	 personWithSubPRecord.table.search('').order([5,"asc"]).draw();
+    	 personRecord.table.columns().visible(false,false);
+    	 personRecord.table.columns([0,1,2,3,4,25]).visible(true);
+    	 personRecord.table.search('').order([5,"asc"]).draw();
     });
   },
 
@@ -1473,9 +1636,9 @@ function personRecord() {
     	$('#portalTitle').text('Person Portal - All Columns');
     	$('#reportRemoveOffb').attr('disabled',false);
     	$.fn.dataTableExt.afnFiltering.pop();
-    	 personWithSubPRecord.table.columns().visible(true);
-    	 personWithSubPRecord.table.columns().search('');
-    	 personWithSubPRecord.table.order([5,"asc"]).draw();
+    	 personRecord.table.columns().visible(true);
+    	 personRecord.table.columns().search('');
+    	 personRecord.table.order([5,"asc"]).draw();
       });
   },
 
@@ -1484,7 +1647,7 @@ function personRecord() {
     $(document).on('click','#reportReload', function(e){
     	$('#portalTitle').text('Person Portal');
     	$.fn.dataTableExt.afnFiltering.pop();
-    	 personWithSubPRecord.table.ajax.reload();
+    	 personRecord.table.ajax.reload();
       });
   },
 
@@ -1534,8 +1697,8 @@ function personRecord() {
         $("#initiatePes").removeClass('spinning');
         $(".btnPesInitiate").removeClass('spinning');
         $('#initiatePes').attr('disabled',true);
-        if(typeof( personWithSubPRecord.table)!='undefined'){
-        	 personWithSubPRecord.table.ajax.reload();	
+        if(typeof( personRecord.table)!='undefined'){
+        	 personRecord.table.ajax.reload();	
         }      
       }
     });
@@ -1619,7 +1782,7 @@ function personRecord() {
 	                var resultObj = JSON.parse(result);
 	                if(resultObj.success){
 		                $('.spinning').removeClass('spinning').attr('disabled',false);	
-		                personWithSubPRecord.table.ajax.reload();	                    
+		                personRecord.table.ajax.reload();	                    
 	                } else {
 	                    $('#editAgileSquadModal .modal-body').html(resultObj.messages);
 	                    $('#editAgileSquadModal').modal('show'); 
@@ -1689,7 +1852,7 @@ function personRecord() {
 		            	if(resultObj.success){
 		            		$('.spinning').removeClass('.spinning').attr('disabled',false);
 			            	$('#editAgileSquadModal').modal('hide');
-			            	personWithSubPRecord.table.ajax.reload();	
+			            	personRecord.table.ajax.reload();	
 		            	} else {
 		            		$('#editAgileSquadModal .modal-body').html(resultObj.messages);
 		            	}
@@ -1769,7 +1932,7 @@ function personRecord() {
             data : formData,
             type: 'POST',
             success: function(result){
-            	 personWithSubPRecord.table.ajax.reload();
+            	 personRecord.table.ajax.reload();
               var resultObj = JSON.parse(result);
                 if(!resultObj.messages){
                   $('#confirmChangeFmFlagModal .modal-body').html(resultObj.body);
@@ -1852,15 +2015,15 @@ function personRecord() {
                 if(!success){
                 	alert('Save PES Status, may not have been successful');
                 	alert(resultObj.messages + resultObj.emailResponse);
-                	if(typeof( personWithSubPRecord.table) != 'undefined'){
+                	if(typeof( personRecord.table) != 'undefined'){
                         // We came from the PERSON PORTAL
-                		 personWithSubPRecord.table.ajax.reload();	                		 
+                		 personRecord.table.ajax.reload();	                		 
                 	}
                 	
                 } else {
-                    if(typeof( personWithSubPRecord.table) != 'undefined'){
+                    if(typeof( personRecord.table) != 'undefined'){
                         // We came from the PERSON PORTAL
-                    	personWithSubPRecord.table.ajax.reload();
+                    	personRecord.table.ajax.reload();
                     }  else {
                     	// We came from the PES TRACKER                    	
                     	var pesStatusField = resultObj.formattedPesStatusField;
@@ -1905,9 +2068,9 @@ function personRecord() {
 	                 var resultObj = JSON.parse(result);
 	                 $('#savePesStatus').attr('disabled',false);
 	                
-	                 if(typeof( personWithSubPRecord.table) != 'undefined'){
+	                 if(typeof( personRecord.table) != 'undefined'){
 	                     // We came from the PERSON PORTAL
-	                	 personWithSubPRecord.table.ajax.reload();	
+	                	 personRecord.table.ajax.reload();	
 	                 }  else {
 	                 	// We came from the PES TRACKER
 	                 	var cnum = resultObj.cnum;
@@ -1940,9 +2103,9 @@ function personRecord() {
 		               success: function(result){
 		                 var resultObj = JSON.parse(result);
 		                
-		                 if(typeof( personWithSubPRecord.table) != 'undefined'){
+		                 if(typeof( personRecord.table) != 'undefined'){
 		                     // We came from the PERSON PORTAL
-		                	 personWithSubPRecord.table.ajax.reload();	
+		                	 personRecord.table.ajax.reload();	
 		                 }  else {
 		                 	// We came from the PES TRACKER
 		                 	var cnum = resultObj.cnum;
@@ -1979,9 +2142,9 @@ function personRecord() {
 		               success: function(result){
 		                 var resultObj = JSON.parse(result);
 	                
-		                 if(typeof( personWithSubPRecord.table) != 'undefined'){
+		                 if(typeof( personRecord.table) != 'undefined'){
 		                     // We came from the PERSON PORTAL
-		                	 personWithSubPRecord.table.ajax.reload();	
+		                	 personRecord.table.ajax.reload();	
 		                 }  else {
 		                 	// We came from the PES TRACKER
 		                 	var cnum = resultObj.cnum;
@@ -1999,7 +2162,7 @@ function personRecord() {
 
   this.listenForReportSave = function(){
 	  $(document).on('click','#reportSave', function(e){
-		  var settings =  personWithSubPRecord.table.columns().visible().join(', ');
+		  var settings =  personRecord.table.columns().visible().join(', ');
 		  $('#saveReportModal').modal('show');
 		  var searchBar = [];
 		  $('#personTable tfoot th').each( function () {
@@ -2058,16 +2221,8 @@ function personRecord() {
 
   this.initialisePersonFormSelect2 = function(){
      $('#work_stream').select2();
-     $('#subPlatform').select2();
      $('#person_preboarded').select2();
-     $('#work_stream').trigger('change');
-     
-     if($('.accountOrganisation:checked').val()=='BAU'){
-    	 var subplatformValue = $('#subPlatform').parents('.storeSelections').data('selections');
-   // 	 $('#subPlatform').val(subplatformValue).trigger('change');
-    	 $('#subPlatform').val('').trigger('change');
-    	 $('#subPlatform').attr('disabled',false);
-     }
+     $('#work_stream').trigger('change');  
   },
 
 

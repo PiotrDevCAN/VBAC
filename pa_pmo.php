@@ -1,12 +1,8 @@
 <?php
 use vbac\personRecord;
-use vbac\personWithSubPRecord;
-use vbac\staticDataSubPlatformTable;
 
-$personRecord = new personWithSubPRecord();
+$personRecord = new personRecord();
 $headerCells = $personRecord->htmlHeaderCells();
-
-staticDataSubPlatformTable::prepareJsonObjectForSubPlatformSelect();
 
 ?>
 <div class='container'>
@@ -52,59 +48,12 @@ $person->confirmSendPesEmailModal();
 
 <script>
 
-function changeSubplatform(dataCategory){
-    $("#subPlatform").select2({
-        data:dataCategory,
-        placeholder:'Select'
-    })
-    .attr('disabled',false)
-    .attr('required',true);
-
-};
-
-$(document).on( "change", '#work_stream', function(e){
-    console.log('changing workstream');
-	console.log(e);
-	console.log($('.accountOrganisation:checked').val());
-	console.log($('#subPlatform').parents('.storeSelections').data('selections'));
-
-	if($('.accountOrganisation:checked').val()=='BAU'){
-       	var workstream = $('#work_stream').val();
-   		var workstreamId = workstreamDetails[workstream];
-   		if($('#subPlatform').data('select2')){
-   		   	$("#subPlatform").select2("destroy");
-   			$("#subPlatform").html("<option><option>");
-   			changeSubplatform( platformWithinStream[workstreamId] );
-   			var selections = $('#subPlatform').parents('.storeSelections').data('selections');
-   			$("#subPlatform").val(selections).trigger('change');
-   		}
-	} else {
-       $("#subPlatform").select2({
-       placeholder:'Select'
-   		})
-   		.val('')
-   		.trigger('change')
-   		.attr('disabled',true)
-   		.attr('required',false);
-	}
-
-});
-
-
-
-
 $(document).ready(function(){
 
 	$('[data-toggle="tooltip"]').tooltip();
 
-
-
-
 	var person = new personRecord();
-	var personWithSubP = new personWithSubPRecord();
-	personWithSubP.initialiseDataTable();
-
-//	person.initialiseDataTable();
+	person.initialiseDataTable();
 	person.listenForReportPes();
 	person.listenForReportAction();
 	person.listenForReportRevalidation();

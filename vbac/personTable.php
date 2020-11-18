@@ -216,7 +216,7 @@ class personTable extends DbTable {
         $sql .= " ON ASO.SQUAD_NUMBER = P.OLD_SQUAD_NUMBER ";
 
         $sql .= " WHERE " . $predicate;
-
+        
         $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){
