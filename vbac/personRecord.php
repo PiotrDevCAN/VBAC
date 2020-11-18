@@ -66,7 +66,6 @@ class personRecord extends DbRecord
     protected $CBN_STATUS;
 
     protected $WORK_STREAM;
-    protected $SUBPLATFORM;
     protected $CT_ID_REQUIRED;
     protected $CT_ID;
     protected $CIO_ALIGNMENT;
