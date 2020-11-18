@@ -206,15 +206,12 @@ class personTable extends DbTable {
         $predicate .= $preboadersAction==self::PORTAL_PRE_BOARDER_WITH_LINKED ? " AND ( PES_STATUS_DETAILS like 'Boarded as%' or PRE_BOARDED  is not  null) " : null;
         $predicate .= $preboadersAction==self::PORTAL_ONLY_ACTIVE ? "  AND ( PES_STATUS_DETAILS not like 'Boarded as%' or PES_STATUS_DETAILS is null ) AND " . personTable::activePersonPredicate() : null;
 
-        $sql  = " SELECT P.*, PT.PROCESSING_STATUS , PT.PROCESSING_STATUS_CHANGED, AS.SQUAD_NAME, ASO.SQUAD_NAME as OLD_SQUAD_NAME ";
+        $sql  = " SELECT P.*, PT.PROCESSING_STATUS , PT.PROCESSING_STATUS_CHANGED, AS.SQUAD_NAME ";
         $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName . " as P ";
         $sql .= " LEFT JOIN " .  $GLOBALS['Db2Schema'] . "." . allTables::$PES_TRACKER . " as PT ";
         $sql .= " ON PT.CNUM = P.CNUM ";
         $sql .= " LEFT JOIN " .  $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " as AS ";
         $sql .= " ON AS.SQUAD_NUMBER = P.SQUAD_NUMBER ";
-        $sql .= " LEFT JOIN " .  $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD_OLD . " as ASO ";
-        $sql .= " ON ASO.SQUAD_NUMBER = P.OLD_SQUAD_NUMBER ";
-
         $sql .= " WHERE " . $predicate;
         
         $rs = db2_exec($GLOBALS['conn'], $sql);

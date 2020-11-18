@@ -90,7 +90,7 @@ class personRecord extends DbRecord
     protected $PES_CLEARED_DATE;
     
     protected $SQUAD_NUMBER;
-    protected $OLD_SQUAD_NUMBER;
+
     
     protected $person_bio;
 
