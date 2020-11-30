@@ -7,6 +7,7 @@ use vbac\allTables;
 use itdq\Loader;
 use vbac\assetRequestsTable;
 use vbac\personRecord;
+use vbac\personTable;
 
 ini_set('memory_limit', '512M');
 
