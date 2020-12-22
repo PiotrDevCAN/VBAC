@@ -68,5 +68,6 @@ if($rs){
 $employees = count($employees)==1 ? $employees[0] : $employees;
 
 ob_clean();
+header('Content-Type: application/json');
 echo json_encode($employees);
 
