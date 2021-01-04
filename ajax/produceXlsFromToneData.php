@@ -11,42 +11,34 @@ $response = print_r($_POST,true);
 
 if(isset($_POST['tonetext'])){
     $data = array();    
+    $table=array();
     $toneText = json_decode($_POST['tonetext']);  
 
-    foreach ($toneText->sentences_tone as $key => $sentence){       
-        $data[$sentence->sentence_id]['text'] = $sentence->text;
-        foreach ($sentence->tones as $toneDetails) {
-            foreach ($tones as $tone) {
-                $data[$sentence->sentence_id][$tone] = $toneDetails->tone_id==$tone ? $toneDetails->score : null ;
-            }     
+    foreach ($toneText->sentences_tone as $key => $sentence){ 
+        $toneScores = array();
+        foreach ($tones as $tone) {
+            $toneScores[$tone] = null; // Initialise ToneScores
         }
+        foreach ($sentence->tones as $toneDetails) {
+            $toneScores[$toneDetails->tone_id] = $toneDetails->score; // Set the actual Tone Score
+        }
+        $tableRow = "<tr><td>" .  $sentence->text . "</td>";    
+        foreach ($tones as $tone) {
+            $tableRow.= "<td>" . $toneScores[$tone]  . "</td>";
+        }
+        $tableRow.= "</tr>";
+        $table[] = $tableRow;
     }
     
     $messages = ob_get_clean();
-    ob_start();
-    $headerLine = 'Text';
-    foreach ($tones  as $tone) {
-        $headerLine.= "," .  $tone;
-    }
-    echo $headerLine;
 
-   
-    foreach ($data as $toneRow){
-        $line = $toneRow['text'];
-        foreach ($tones as $tone) {
-            $line.= isset($toneRow[$tone]) ? ",". $toneRow[$tone] : "," ;
-        }
-        echo $line;
-        $line = '';        
-    }    
-    $csv = ob_get_clean();
 } else {
     echo "No data passed to process";
 }
 
 
 
-echo json_encode(array('success'=>empty($messages),'messages'=>$messages,'csv'=>$csv,'data'=>$data));
+echo json_encode(array('success'=>empty($messages),'messages'=>$messages,'tablerows'=>$table));
 
 
 

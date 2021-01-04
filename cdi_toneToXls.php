@@ -22,13 +22,27 @@
 
 <div class='row'>
 
-<div class='col-sm-offset-2 col-sm-8'>
+<div id='toneTableDiv' class='col-sm-offset-2 col-sm-8' style='display:none'>
+
+<table id='toneTable' class='table table-stripped'>
+<thead><tr><th>Text</th><th>Anger</th><th>Fear</th><th>Joy</th><th>Sadness</th><th>Analytical</th><th>Confident</th><th>Tentative</th></tr><template></template></thead>
+<tbody></tbody>
+<tfoot><tr><th>Text</th><th>Anger</th><th>Fear</th><th>Joy</th><th>Sadness</th><th>Analytical</th><th>Confident</th><th>Tentative</th></tr><template></template></tfoot>
+</table>
+
+</div> 
+</div>
+
+
+<div class='row'>
+
+<div id="drop-areaDiv" class='col-sm-offset-2 col-sm-8' style='display:block'>
 <h5>Drop Tone output here:</h5>
 <div id="drop-area" contenteditable style='display:block'>
 </div>
-<div col-sm-offset-2 col-sm-2'>
-<button id='processTone' class='btn btn-primary'>Produce CSV</button>
-<button class='btn btn-secondary' ><a id='downloadCSV'  download>Download CSV</a></button>
+<div class='col-sm-offset-2 col-sm-2'>
+<button id='processTone' class='btn btn-primary'>Process json</button>
+
 </div>
 </div> 
 </div>
@@ -37,6 +51,18 @@
 
 
 <script>
+
+var buttonCommon = {
+		exportOptions: {
+	    	format: {
+	        	body: function ( data, row, column, node ) {
+	            	  return data ? data.replace( /<br\s*\/?>/ig, "\n").replace(/(&nbsp;|<([^>]+)>)/ig, "") : data ;
+	        	}
+	    	}
+		}
+	}
+
+
 
 $(document).on('click','#processTone',function(e){
 
@@ -57,6 +83,51 @@ $(document).on('click','#processTone',function(e){
 			}
      		$('#downloadCSV').attr('href','/ajax/toneAnalysis.csv');
      		$('#processTone').attr('disabled',true);
+
+			console.log(resultObj.tablerows);
+
+			resultObj.tablerows.forEach(function(value, index, array){
+					$('#toneTable > tbody').append(value);
+				});
+	
+			$('#toneTable').DataTable({
+				responsive: true,
+				dom: 'Blfrtip',
+		    	buttons: [
+		            'colvis',
+		            $.extend( true, {}, buttonCommon, {
+		                extend: 'excelHtml5',
+		                exportOptions: {
+		                    orthogonal: 'sort',
+		                    stripHtml: true,
+		                    stripNewLines:false
+		                },
+		                 customize: function( xlsx ) {
+		                     var sheet = xlsx.xl.worksheets['sheet1.xml'];
+		                 }
+		        }),
+		        $.extend( true, {}, buttonCommon, {
+		            extend: 'csvHtml5',
+		            exportOptions: {
+		                orthogonal: 'sort',
+		                stripHtml: true,
+		                stripNewLines:false
+		            }
+		        }),
+		        $.extend( true, {}, buttonCommon, {
+		            extend: 'print',
+		            exportOptions: {
+		                orthogonal: 'sort',
+		                stripHtml: true,
+		                stripNewLines:false
+		            }
+		        })
+		        ]
+				});
+
+			$('#toneTableDiv').show();
+			$('#drop-areaDiv').hide();
+     		
      	}
     });
 
