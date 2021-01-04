@@ -24,7 +24,10 @@ if(isset($_POST['tonetext'])){
         }
         $tableRow = "<tr><td>" .  $sentence->text . "</td>";    
         foreach ($tones as $tone) {
-            $tableRow.= "<td>" . $toneScores[$tone]  . "</td>";
+            $strength= $toneScores[$tone] > 0.5 ? 'normal' : 'none';
+            $strength= $toneScores[$tone] > 0.75 ? 'strong' : $strength;
+            
+            $tableRow.= "<td class='$strength$tone'>" . $toneScores[$tone]  . "</td>";
         }
         $tableRow.= "</tr>";
         $table[] = $tableRow;

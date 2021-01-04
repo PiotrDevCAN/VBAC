@@ -48,6 +48,30 @@
 </div>
 </div>
 
+<style>
+.normalanger { background-color:#ffa197; }
+.stronganger { background-color:#e80521; 
+               color:#ffffff; }
+
+
+.normalanalytical { background-color:#19a3f7; } 
+.stronganalytical { background-color:#075cd8; 
+               color:#ffffff; }
+               
+.normalconfident { background-color:#a779d8; } 
+.strongconfident { background-color:#592684; 
+               color:#ffffff; }               
+               
+.normalfear { background-color:#7db258; } 
+.strongfear { background-color:#325e2b; 
+               color:#ffffff; }  
+               
+.normaltentative { background-color:#94ffef; } 
+.strongtentative { background-color:#1ae5cd ; 
+               color:#000000; }                 
+
+</style>
+
 
 
 <script>
@@ -83,8 +107,6 @@ $(document).on('click','#processTone',function(e){
 			}
      		$('#downloadCSV').attr('href','/ajax/toneAnalysis.csv');
      		$('#processTone').attr('disabled',true);
-
-			console.log(resultObj.tablerows);
 
 			resultObj.tablerows.forEach(function(value, index, array){
 					$('#toneTable > tbody').append(value);
