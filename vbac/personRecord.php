@@ -501,6 +501,7 @@ class personRecord extends DbRecord
         $displayForEdit = $notEditable ? 'hidden' : 'inline' ;
         $onlyEditable = $mode==FormClass::$modeEDIT ? 'text' : 'hidden'; // Some fields the user can edit - but not see/set the first time.
         $hideDivFromEdit = $mode==FormClass::$modeEDIT ? ' style="display: none;"  ' : null; //Some fields we don't show on the edit screen.
+        $hideDivMgrChange =  ' style="display: none;" ' ; //Some fields we don't until they try to change the FM value
 
 //         $availPreBoPredicate  = " CNUM LIKE '%xxx' AND PES_STATUS not like '%xxx' AND PES_STATUS not in (";
 //         $availPreBoPredicate .= " '" . personRecord::PES_STATUS_REMOVED . "' "; // Pre-boarded who haven't been boarded
@@ -668,7 +669,7 @@ class personRecord extends DbRecord
 	<div class="panel-heading">
 	<h3 class="panel-title">Functional Manager Details</h3>
   	</div>
-	<div class="panel-body">
+	<div class="panel-body" id='fmPanelBody' >
     	<div class="form-group">
         	<div class="col-sm-6">
           	<select class='form-control select select2' id='FM_CNUM'
@@ -687,6 +688,18 @@ class personRecord extends DbRecord
           	</select>
 			</div>
 		</div>
+	</div>
+	<div class="panel-body bg-danger" id='fmPanelBodyCheckMsg' <?=$hideDivMgrChange?> >
+		<input type='hidden' id='originalFm' value='<?=$this->FM_CNUM ?>' />
+		<p>Please make sure you know what you're doing</p>
+		<?php
+        $buttons = null;
+        $confirmButton = $this->formButton('button','Confirm','confirmFmChange',null,'Confirm','btn btn-primary') ;
+        $resetButton   = $this->formButton('button','Reset','resetFmChange',null,'Reset','btn btn-primary ');
+        $buttons[] = $confirmButton;
+        $buttons[] = $resetButton;
+        $this->formBlueButtons($buttons); 
+        ?>
 	</div>
 </div>
 

@@ -98,6 +98,9 @@ $(document).ready(function(){
 	person.listenForbtnTogglePesTrackerStatusDetails();
 //	person.listenForCancelPes(); Don't let them cancel 2018/12/19
 	person.listenForStopPes();
+	person.listenForChangeFm();
+	person.listenForResetChangeFm();
+	person.listenForConfirmChangeFm();
 
 });
 

@@ -36,7 +36,7 @@ function personRecord() {
   var currentXmlDoc;
   var spinner =  '<div id="overlay"><i class="fa fa-spinner fa-spin spin-big"></i></div>';
   var boardingFormEnabledInputs;
-
+  
   this.init = function(){
   },
 
@@ -1752,7 +1752,8 @@ function personRecord() {
 					
 					if(isFm=='yes'){
 						// Dont let FM Edit the Func Mgr Field, Ant Stark November 12th 2020
-						$('#FM_CNUM').attr('disabled',true);
+						// Let the FM EDit the FUnc Mgr Field, Ant Start January 26th 2021
+						// $('#FM_CNUM').attr('disabled',true);
 					}
 					
 
@@ -2264,9 +2265,36 @@ function personRecord() {
   }
 
 
+  this.listenForChangeFm = function(){	
+	$(document).on('change','#FM_CNUM', function(e){
+		$('#updateBoarding').attr('disabled',true)
+		$('#fmPanelBodyCheckMsg').show();	
+	});
+  }
+
+
+
+  this.listenForConfirmChangeFm = function(){	
+	$(document).on('click','#confirmFmChange', function(e){
+		$('#updateBoarding').attr('disabled',false);
+		$('#fmPanelBodyCheckMsg').hide();	
+	});
+  }
+
+  this.listenForResetChangeFm = function(){	
+	$(document).on('click','#resetFmChange', function(e){
+		console.log(e);
+		var originalFm = $('#originalFm').val();
+		console.log(originalFm);
+		$(document).off('change','#FM_CNUM');
+		$('#FM_CNUM').val(originalFm).trigger('change');
+		var p = new personRecord();
+		p.listenForChangeFm();
+		$('#updateBoarding').attr('disabled',false);
+		$('#fmPanelBodyCheckMsg').hide();	
+	});
+  }
+
+
 }
 
-$( document ).ready(function() {
-  var person = new personRecord();
-    person.init();
-});
