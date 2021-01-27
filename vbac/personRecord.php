@@ -691,11 +691,11 @@ class personRecord extends DbRecord
 	</div>
 	<div class="panel-body bg-danger" id='fmPanelBodyCheckMsg' <?=$hideDivMgrChange?> >
 		<input type='hidden' id='originalFm' value='<?=$this->FM_CNUM ?>' />
-		<p>Please make sure you know what you're doing</p>
+		<p>Before submitting this change please ensure that all HR/Workday, Bluepages and Department Code (GUDA) updates have been completed as necessary. If moving to a new role please ensure the assignment reference number, JRSS and Squad/Tribe alignment are also correct.</p>
 		<?php
         $buttons = null;
         $confirmButton = $this->formButton('button','Confirm','confirmFmChange',null,'Confirm','btn btn-primary') ;
-        $resetButton   = $this->formButton('button','Reset','resetFmChange',null,'Reset','btn btn-primary ');
+        $resetButton   = $this->formButton('button','Cancel','resetFmChange',null,'Cancel','btn btn-primary ');
         $buttons[] = $confirmButton;
         $buttons[] = $resetButton;
         $this->formBlueButtons($buttons); 
@@ -713,7 +713,7 @@ class personRecord extends DbRecord
           <input class="form-control" id="open_seat" name="OPEN_SEAT_NUMBER"  required maxlength='15' value="<?=$this->OPEN_SEAT_NUMBER?>" type="text" placeholder='Open Seat' data-toggle='tooltip' title='Open Seat' max=12 >
         </div>
         <div class='col-sm-6'>
-          <input class="form-control" id="role_on_account" name="ROLE_ON_THE_ACCOUNT" maxlength='120' value="<?=$this->ROLE_ON_THE_ACCOUNT?>" type="text" placeholder='Role on account' >
+          <input class="form-control" id="role_on_account" name="ROLE_ON_THE_ACCOUNT" maxlength='120' value="<?=$this->ROLE_ON_THE_ACCOUNT?>" type="text" placeholder='JRSS/Role on account' >
        </div>
     </div>
 
