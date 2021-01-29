@@ -274,7 +274,7 @@ class pesEmail {
         
         $flmArray = empty($flm) ? array() : array($flm);
 
-        $sendResponse = BlueMail::send_mail(array($emailAddress), "Status Change - Pre Employment Screening - $cnum : $firstName, $lastName", $emailBody,'LBGVETPR@uk.ibm.com', $flmArray, array(), array(), true, pesEmail::EMAIL_PES_SUPRESSABLE);
+        $sendResponse = BlueMail::send_mail(array($emailAddress), "Status Change - Pre Employment Screening - $cnum : $firstName, $lastName", $emailBody,'LBGVETPR@uk.ibm.com', $flmArray, array(), true,  array(), pesEmail::EMAIL_PES_SUPRESSABLE);
         return $sendResponse;
 
 
