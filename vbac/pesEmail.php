@@ -9,6 +9,9 @@ use itdq\BlueMail;
 use itdq\Loader;
 
 class pesEmail {
+    
+    const EMAIL_PES_SUPRESSABLE = true;
+    const EMAIL_NOT_PES_SUPRESSABLE = false;
 
     private function getLloydsGlobalApplicationForm(){
         // FSS Global Application Form v2.0.doc
@@ -233,7 +236,7 @@ class pesEmail {
             $revalidation = $recheck=='yes' ? " - REVALIDATION " : "";
             
             
-            $sendResponse = BlueMail::send_mail(array($emailAddress), "NEW URGENT - Pre Employment Screening $revalidation - $cnum : $firstName, $lastName", $emailBody,'LBGVETPR@uk.ibm.com',array(),array(),false,$pesAttachments);
+            $sendResponse = BlueMail::send_mail(array($emailAddress), "NEW URGENT - Pre Employment Screening $revalidation - $cnum : $firstName, $lastName", $emailBody,'LBGVETPR@uk.ibm.com',array(),array(),false,$pesAttachments, pesEmail::EMAIL_PES_SUPRESSABLE);
             return $sendResponse;
 
     }
@@ -251,8 +254,8 @@ class pesEmail {
 
         include_once 'emailBodies/' . $emailBodyFileName;
         $emailBody = preg_replace($pesEmailPattern, $replacements, $pesEmail);
-
-        $sendResponse = BlueMail::send_mail(array($emailAddress), "Reminder- Pre Employment Screening - $cnum : $firstName, $lastName", $emailBody,'LBGVETPR@uk.ibm.com',array($flm));
+        
+        $sendResponse = BlueMail::send_mail(array($emailAddress), "Reminder- Pre Employment Screening - $cnum : $firstName, $lastName", $emailBody,'LBGVETPR@uk.ibm.com',array($flm),array(),true, array(),pesEmail::EMAIL_PES_SUPRESSABLE);
         return $sendResponse;
 
 
@@ -271,7 +274,7 @@ class pesEmail {
         
         $flmArray = empty($flm) ? array() : array($flm);
 
-        $sendResponse = BlueMail::send_mail(array($emailAddress), "Status Change - Pre Employment Screening - $cnum : $firstName, $lastName", $emailBody,'LBGVETPR@uk.ibm.com', $flmArray);
+        $sendResponse = BlueMail::send_mail(array($emailAddress), "Status Change - Pre Employment Screening - $cnum : $firstName, $lastName", $emailBody,'LBGVETPR@uk.ibm.com', $flmArray, array(), array(), true, pesEmail::EMAIL_PES_SUPRESSABLE);
         return $sendResponse;
 
 

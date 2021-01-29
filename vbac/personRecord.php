@@ -1581,6 +1581,8 @@ class personRecord extends DbRecord
 
         $to = array();
         $cc = array();
+        $bcc = array();
+        $noAttachments = array();
 
         switch ($this->PES_STATUS) {
             case self::PES_STATUS_CLEARED_PERSONAL:
@@ -1639,9 +1641,8 @@ class personRecord extends DbRecord
         $message = preg_replace($pattern, $replacements, $emailBody);
 
         AuditTable::audit(print_r($message,true),AuditTable::RECORD_TYPE_DETAILS);
-
-        $response = \itdq\BlueMail::send_mail($to, $title ,$message, self::$pesTaskId[0], $cc);
-
+        
+        $response = \itdq\BlueMail::send_mail($to, $title ,$message, self::$pesTaskId[0], $cc, $bcc, true, $noAttachments, pesEmail::EMAIL_PES_SUPRESSABLE );
 
         return $response;
     }
@@ -1723,8 +1724,10 @@ class personRecord extends DbRecord
    }
 
    function informPmoOfPesStatusChange($newPesStatus){
-       $to = self::$pmoTaskId;
-
+       $cc = array();
+       $bcc = array();
+       $noAttachments = array();
+      
        $emailAddress = !empty($this->EMAIL_ADDRESS) ? $this->EMAIL_ADDRESS : "emailAddress  missing from vBAC";
        $notesId = !empty($this->NOTES_ID) ? $this->NOTES_ID : "NotesId  missing from vBAC";
 
@@ -1733,7 +1736,7 @@ class personRecord extends DbRecord
        $emailMessage = preg_replace(self::$preboarderStatusChangeEmailPattern, $replacements, self::$preboarderStatusChangeEmailBody);
 
        set_time_limit(60);
-       \itdq\BlueMail::send_mail($to, 'Pre-Boarder PES Status Change' , $emailMessage, 'vbacNoReply@uk.ibm.com');
+       \itdq\BlueMail::send_mail(self::$pmoTaskId, 'Pre-Boarder PES Status Change' , $emailMessage, 'vbacNoReply@uk.ibm.com',$cc, $bcc, true, $noAttachments, pesEmail::EMAIL_NOT_PES_SUPRESSABLE );
    }
 
 
