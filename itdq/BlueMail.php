@@ -6,6 +6,7 @@ use itdq\AuditTable;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
+use vbac\pesEmail;
 
 /**
  *
@@ -17,9 +18,25 @@ class BlueMail
 
     static function send_mail(array $to, $subject, $message, $replyto, array $cc=array(), array $bcc=array()
         , $asynchronous = true
-        , array $attachments=array())
+        , array $attachments=array()
+        , $isPesSuppressable = false)
     {
+        
+        $suppressingPesEmails = $_ENV['suppressPesEmails'] ? true : false;
+        
+        $suppressingPesEmails ? error_log('suppression of PES emails : ON') : error_log('suppression of PES emails : OFF'); 
+        $isPesSuppressable ? error_log('PES Email eligible for suppression Subject:' . $subject) : null;
+       
+        if($suppressingPesEmails && $isPesSuppressable) {
+            // We're surpressing the PES Related Emails - so do nothing at this point.
+            $response = array('response'=>"Message has not been sent.  Pes releated emails are suppressed");
+            $status = "PES related emails are suppressed. Not sent";
+            error_log('Wont send email Subject:' . $subject);
+            return array('sendResponse' => $response, 'Status'=>$status);
+        }
      
+        error_log('Will send email Subject:' . $subject);
+        
         $emailLogRecordID = null;
 
         $cleanedTo = $to;
