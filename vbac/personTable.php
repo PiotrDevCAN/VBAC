@@ -28,7 +28,7 @@ class personTable extends DbTable {
 
     private $squadNames;
 
-    private $allDelegates;
+    protected $allDelegates;
 
     const PORTAL_PRE_BOARDER_EXCLUDE = 'exclude';
     const PORTAL_PRE_BOARDER_INCLUDE = 'include';
@@ -416,8 +416,10 @@ class personTable extends DbTable {
         if(isset($this->allDelegates[$row['CNUM']]) ){
             $delegates = implode(",", $this->allDelegates[$row['CNUM']]);
             $row['NOTES_ID'] .= " data-placement='bottom' data-toggle='popover' title='' data-content='$delegates' data-original-title='Delegates' ";
+            $row['HAS_DELEGATES'] = 'Yes';
         } else {
             $row['NOTES_ID'] .= " data-placement='bottom' data-toggle='popover' title='' data-content='Has not defined a delegate' data-original-title='Delegates' ";
+            $row['HAS_DELEGATES'] = 'No';
         }
 
         $row['NOTES_ID'] .= " > ";
@@ -1903,5 +1905,17 @@ class personTable extends DbTable {
      return $allRecheckers;
 
     }
+    
+    function headerRowForDatatable(){
+        $headerRow = "<tr>";
+        foreach ($this->columns as $columnName => $db2ColumnProperties) {
+            $headerRow.= "<th>" . str_replace("_"," ", $columnName );
+        }
+        $headerRow.= "</th><th>Has Delegates";
+        $headerRow.= "</th></tr>";
+        return $headerRow;
+    }
+    
+    
 
 }

@@ -1164,6 +1164,7 @@ function personRecord() {
                       { "data": "PES_RECHECK_DATE", "defaultContent": "" },
                       { "data": "PES_CLEARED_DATE", "defaultContent": "" },
                       { "data": "SQUAD_NAME", render: { _:'display', sort:'sort' },},
+                      { "data": "HAS_DELEGATES", "defaultContent": "", visible:false },
  
                     
                       

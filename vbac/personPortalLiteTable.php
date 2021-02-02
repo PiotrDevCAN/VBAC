@@ -13,6 +13,9 @@ class personPortalLiteTable extends personTable
     
     
     function returnAsArray($preboadersAction=self::PORTAL_PRE_BOARDER_EXCLUDE){
+        
+        $this->allDelegates = delegateTable::allDelegates();
+        
         $data = array();
         
         $isFM   = personTable::isManager($_SESSION['ssoEmail']);

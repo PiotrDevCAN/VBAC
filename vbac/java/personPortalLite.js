@@ -103,6 +103,7 @@ function personPortalLite() {
          			  { "data": "ORGANISATION", "defaultContent": "", visible:false },					//45
          			  { "data": "ITERATION_MGR", "defaultContent": "", visible:false },					//46
          			  { "data": "PMO_STATUS", "defaultContent": "", visible:false },					//47                    	
+         			  { "data": "HAS_DELEGATES", "defaultContent": "", visible:false },					//48
                       
                   ],
 

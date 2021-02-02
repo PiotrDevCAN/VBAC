@@ -365,10 +365,13 @@ class personRecord extends DbRecord
         $this->headerTitles['FM_CNUM'] = 'FUNCTIONAL MGR';
         $this->headerTitles['SQUAD_NUMBER'] = 'SQUAD NAME';
         $this->headerTitles['OLD_SQUAD_NUMBER'] = 'OLD SQUAD NAME';
-
         parent::__construct();
-
-
+    }
+    
+    function htmlHeaderCells(){
+        $headerCells = parent::htmlHeaderCells();
+        $headerCells.= "<th>Has Delegates</th>";
+        return $headerCells;
     }
 
 
