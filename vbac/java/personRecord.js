@@ -1141,8 +1141,7 @@ function personRecord() {
                       { "data": "PES_REQUESTOR", "defaultContent": "" },
                       { "data": "PES_DATE_RESPONDED", "defaultContent": "" },
                       { "data": "PES_STATUS_DETAILS", "defaultContent": "" },
-                      { data: "PES_STATUS",
-                   	  render: { _:'display', sort:'sort' },
+                      { "data": "PES_STATUS","defaultContent": "", render: { _:'display', sort:'sort' },
                       },
                       { "data": "REVALIDATION_DATE_FIELD", "defaultContent": "" },
                       { "data": "REVALIDATION_STATUS", "defaultContent": "" },
@@ -1163,7 +1162,7 @@ function personRecord() {
                       { "data": "PES_LEVEL", "defaultContent": "" },
                       { "data": "PES_RECHECK_DATE", "defaultContent": "" },
                       { "data": "PES_CLEARED_DATE", "defaultContent": "" },
-                      { "data": "SQUAD_NAME", render: { _:'display', sort:'sort' },},
+                      { "data": "SQUAD_NAME","defaultContent": "", "render" : { _:'display', sort:'sort' },},
                       { "data": "HAS_DELEGATES", "defaultContent": "", visible:false },
  
                     
