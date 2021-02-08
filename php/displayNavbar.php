@@ -118,7 +118,7 @@ $requestAssets  = new NavbarOption('Request Digital Assets', 'pc_assetRequest.ph
 $returnAsset    = new NavbarOption('Return Digital Assets', 'pc_assetReturn.php','accessCdi accessPmo accessFm accessUser');
 $requestAccess  = new NavbarOption('Request/Return AD Group Access', 'pc_accessRequest.php','accessCdi accessPmo accessFm accessUser');
 $dlpRecord      = new NavbarOption('DLP Licences', 'pc_dlpRecord.php','accessCdi accessPmo accessFm accessUser');
-$iamAdmin       = new NavbarOption('IAM Admin', 'pc_iamAdmin.php','accessCdi accessPmo');
+//$iamAdmin       = new NavbarOption('IAM Admin', 'pc_iamAdmin.php','accessCdi accessPmo');
 // $softRsaToken   =new NavbarOption('Soft RSA Token', 'https://w3.ibm.com/tools/cio/forms/landing/org/app/5e4da88f-3c98-4daf-8a76-4031d661db21/launch/index.html?form=F_SoftRSARequestForm','accessCdi accessPmo accessFm accessUser');
 // https://w3.ibm.com/tools/cio/forms/landing/org/app/5e4da88f-3c98-4daf-8a76-4031d661db21/launch/index.html?form=F_SoftRSARequestForm
 // $assetPortal    = new NavbarOption('Asset Portal', 'pa_assetPortal.php','accessCdi accessPmo  ');
@@ -130,7 +130,7 @@ $access->addOption($requestAssets);
 $access->addOption($returnAsset);
 $access->addOption($requestAccess);
 $access->addOption($dlpRecord);
-$access->addOption($iamAdmin);
+// $access->addOption($iamAdmin);
 // $access->addOption($softRsaToken    );
 
 
