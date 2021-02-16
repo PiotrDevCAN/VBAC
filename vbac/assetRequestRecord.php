@@ -466,8 +466,9 @@ class assetRequestRecord extends DbRecord {
             $preparedCurrLocation = str_replace(array(','), array(''), strtolower(trim($currentLocation)));
 
             $selected = $preparedLocation == $preparedCurrLocation ? ' selected ' : null;
+            $country = $countryByCity[$city];
 
-            $children[trim($countryByCity[$city]) . " - " . trim($city)] .= "<option id='$location' $selected >$location,$city</option>";
+            $children[trim($countryByCity[$city]) . " - " . trim($city)] .= "<option id='$location' $selected >$location,$city,$country</option>";
         }
 
         ksort($children);
