@@ -1,4 +1,5 @@
 FROM registry.access.redhat.com/ubi8/php-74
+ENV DB2CODEPAGE 1208
 USER root
 ADD . /var/www/html/
 ADD ./patch1.sh /patch1.sh
