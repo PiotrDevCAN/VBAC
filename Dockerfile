@@ -18,6 +18,17 @@ RUN chown -R 1001:0 /opt/ibm/dsdriver
 RUN chown -R 1001:0  /var/www/html
 USER 1001
 RUN composer install --no-interaction
+
+# Add this to set the locale - required for DB2 Driver encoding. 
+RUN apt-get clean && apt-get update && apt-get install -y locales
+# Then choose Set the locale. Could be adjusted to your country. This has effect on DB2 driver encoding.
+RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
+    locale-gen
+ENV LANG en_US.UTF-8  
+ENV LANGUAGE en_US:en  
+ENV LC_ALL en_US.UTF-8 
+
+
 USER root
 ADD ./patch2.sh /patch2.sh
 RUN bash /patch2.sh && rm /patch2.sh
