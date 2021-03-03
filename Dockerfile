@@ -10,6 +10,7 @@ RUN bash dsdriver/installDSDriver
 ENV IBM_DB_HOME /opt/ibm/dsdriver
 RUN echo $IBM_DB_HOME | pecl install ibm_db2
 RUN yum -y install php-zip
+RUN yum remove nginx-filesystem -y
 WORKDIR /var/www/html/
 RUN sed -i  "$ a extension=ibm_db2.so" /etc/php.ini
 RUN sed -i  "$ a extension=zip.so"     /etc/php.ini
