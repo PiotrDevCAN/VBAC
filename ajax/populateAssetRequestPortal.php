@@ -6,6 +6,10 @@ use itdq\Loader;
 use vbac\assetRequestRecord;
 use vbac\personRecord;
 
+function ob_html_compress($buf){
+    return str_replace(array("\n","\r"),'',$buf);
+}
+
 set_time_limit(0);
 ob_start();
 
@@ -94,9 +98,18 @@ $data = $dataAndSql['data'];
 $sql  = $dataAndSql['sql'];
 
 $messages = ob_get_clean();
-ob_start();
+// ob_start();
+if (isset($_SERVER['HTTP_ACCEPT_ENCODING'])) {
+    if (substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) {
+        ob_start("ob_gzhandler");
+    } else {
+        ob_start("ob_html_compress");
+    }
+} else {
+    ob_start("ob_html_compress");
+}
 
-$response = array("data"=>$data,'messages'=>$messages,'sql'=>$sql,'post'=>print_r($_POST,true));
+$response = array("data"=>$data, 'messages'=>$messages, 'sql'=>$sql, 'post'=>print_r($_POST,true));
 
-ob_clean();
+// ob_clean();
 echo json_encode($response);
