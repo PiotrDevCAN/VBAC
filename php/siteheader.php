@@ -33,7 +33,22 @@ date_default_timezone_set('UTC');
 while(ob_get_level()>0){
     ob_end_clean();
 }
-ob_start();
+// ob_start();
+function ob_html_compress($buf){
+    return str_replace(array("\n","\r"),'',$buf);
+}
+if (isset($_SERVER['HTTP_ACCEPT_ENCODING'])) {
+    if (substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) {
+        ob_start("ob_gzhandler");
+        // exit('ob_gzhandler');
+    } else {
+        ob_start("ob_html_compress");
+        // exit('ob_html_compress 1');
+    }
+} else {
+    ob_start("ob_html_compress");
+    // exit('ob_html_compress 2');
+}
 $GLOBALS['Db2Schema'] = strtoupper($_ENV['environment']);
 $https = (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == "on");
 

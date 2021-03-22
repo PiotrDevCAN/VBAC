@@ -285,7 +285,7 @@ class pesTrackerTable extends DbTable{
           <form class="form-horizontal">
   			<div class="form-group">
     			<label class="control-label col-sm-1" for="pesTrackerTableSearch">Table Search:</label>
-    			<div class="col-sm-2" >
+    			<div class="col-sm-3" >
       			<input type="text" id="pesTrackerTableSearch" placeholder="Search"  onkeyup=searchTable() width='100%' />
       			<br/>
 

@@ -1108,6 +1108,10 @@ function personRecord() {
               url: 'ajax/populatePersonDatatable.php',
               data: { preBoardersAction:preBoardersAction },
               type: 'GET',
+              headers: {
+                "Accept-Encoding": "gzip",
+                "Content-Encoding": "gzip"
+              },
           }	,
 //	        CNUM         0
 //	        Email        4
@@ -1247,6 +1251,10 @@ function personRecord() {
               url: 'ajax/populatePersonDatatable.php',
               data: { preBoardersAction:preBoardersAction },
               type: 'GET',
+              headers: {
+                "Accept-Encoding": "gzip",
+                "Content-Encoding": "gzip"
+              },
           }	,
 //	        CNUM         0
 //	        Email        4
