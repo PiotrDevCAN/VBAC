@@ -9,8 +9,8 @@ ADD ibmdsdp.tar.gz /opt/ibm/
 RUN bash dsdriver/installDSDriver
 ENV IBM_DB_HOME /opt/ibm/dsdriver
 RUN echo $IBM_DB_HOME | pecl install ibm_db2
-RUN yum -y install php-zip
-RUN yum remove nginx-filesystem -y
+RUN dnf -y install php-zip
+RUN dnf remove nginx-filesystem -y
 WORKDIR /var/www/html/
 RUN sed -i  "$ a extension=ibm_db2.so" /etc/php.ini
 RUN sed -i  "$ a extension=zip.so"     /etc/php.ini
@@ -23,7 +23,7 @@ RUN composer install --no-interaction
 
 USER root
 ## Add this to set the locale - required for DB2 Driver encoding. 
-#RUN yum clean && yum update && yum install -y locales
+#RUN dnf clean && dnf update && dnf install -y locales
 ## Then choose Set the locale. Could be adjusted to your country. This has effect on DB2 driver encoding.
 #RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
 #    locale-gen
