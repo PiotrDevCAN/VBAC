@@ -50,11 +50,12 @@ try {
     
     // Set active sheet index to the first sheet, so Excel opens this as the first sheet
     $spreadsheet->setActiveSheetIndex(0);
-    // Redirect output to a client’s web browser (Xlsx)
+    // Redirect output to a clientï¿½s web browser (Xlsx)
     DbTable::autoSizeColumns($spreadsheet);
     $fileNameSuffix = $now->format('Ymd_His');
     
-    ob_clean();
+    // ob_clean();
+    ob_end_clean();
     header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     header('Content-Disposition: attachment;filename="ventusRingFencedPersonnelReport_' . $fileNameSuffix . '.xlsx"');
     header('Cache-Control: max-age=0');
