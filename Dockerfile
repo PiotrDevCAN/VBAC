@@ -33,5 +33,5 @@ USER root
 
 ADD ./patch2.sh /patch2.sh
 RUN bash /patch2.sh && rm /patch2.sh
-user 1001
+USER 1001
 ENTRYPOINT ["httpd", "-D", "FOREGROUND"]
