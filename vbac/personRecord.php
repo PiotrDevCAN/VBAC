@@ -133,8 +133,8 @@ class personRecord extends DbRecord
     public static $orderITNonBauTaskId = array('aurora.central.pmo@uk.ibm.com');
     public static $smCdiAuditEmail = 'e3h3j0u9u6l2q3a3@ventusdelivery.slack.com';
     public static $securityOps = array('IBM.LBG.Security.Operations@uk.ibm.com');
-    //private static $pesTaskId = 'rob.daniel@uk.ibm.com';
-    //private static $pesTaskId    = array('rob.daniel@uk.ibm.com', 'carrabooth@uk.ibm.com');
+    //private static $pesTaskId = 'piotr.tajanowicz@ibm.com';
+    //private static $pesTaskId    = array('piotr.tajanowicz@ibm.com', 'carrabooth@uk.ibm.com');
 //     private static $pesEmailBody = '<table width="100%" border="0"   cellpadding="0">
 //                              <tr><td align="center">
 //                                 <table width="50%">
@@ -230,7 +230,7 @@ class personRecord extends DbRecord
                                               <p>Therefore I can confirm that you have provisionally passed  Lloyds Bank PES Screening.</p>
                                               <p>Please note that this will not give you full PES clearance, and your account may not recognise Provisional Clearance, therefore, if you can get your documents certified correctly (as per below) please do so.</p>
                                               <p>When sending your document please only send to the PES team.</p>
-                                              <p><b>The Certification MUST be done by another IBM’er</b>, to confirm that they have seen the original document. The following statement should be handwritten on <b>each document</b>, on the <b>same side as the image</b>.</p>
+                                              <p><b>The Certification MUST be done by another IBMï¿½er</b>, to confirm that they have seen the original document. The following statement should be handwritten on <b>each document</b>, on the <b>same side as the image</b>.</p>
                                               <p style=\'text-align:center;color:red\'>True & Certified Copy<br/>Name of certifier  in BLOCK CAPITALS<br/>IBM Serial number of certifier<br/>Certification Date<br/>Signature of certifier</p>
                                               <p>If you need any more information regarding your PES clearance, please let me know.</p>
                                               <p>Many Thanks for your cooperation,</p>
@@ -1712,7 +1712,7 @@ class personRecord extends DbRecord
              * Next few lines - use for Testing. Comment out for Live.
              *
              */
-//             $to  = array('rob.daniel@uk.ibm.com');
+//             $to  = array('piotr.tajanowicz@ibm.com');
 //             $cc  = array('jayhunter@uk.ibm.com');
 //             $bcc = array('daniero@uk.ibm.com','antstark@uk.ibm.com');
             /*

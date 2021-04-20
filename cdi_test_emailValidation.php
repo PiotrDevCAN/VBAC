@@ -1,7 +1,7 @@
 <?php
 use itdq\BlueMail;
 
-$emailAddress = array('rob.daniel@uk.ibm.com','bert@ibm.com','fred@gmail.com');
+$emailAddress = array('piotr.tajanowicz@ibm.com','bert@ibm.com','fred@gmail.com');
 
 
 

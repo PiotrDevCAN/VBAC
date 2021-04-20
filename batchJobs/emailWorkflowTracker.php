@@ -14,7 +14,7 @@ if ($helper->isCli()) {
     return;
 }
 
-$emailAddress = array('rob.daniel@uk.ibm.com');
+$emailAddress = array('piotr.tajanowicz@ibm.com');
 
 // Create new Spreadsheet object
 $spreadsheet = new Spreadsheet();
@@ -51,7 +51,7 @@ try {
     
     // Set active sheet index to the first sheet, so Excel opens this as the first sheet
     $spreadsheet->setActiveSheetIndex(0);
-    // Redirect output to a client’s web browser (Xlsx)
+    // Redirect output to a clientï¿½s web browser (Xlsx)
     DbTable::autoSizeColumns($spreadsheet);
     $fileNameSuffix = $now->format('Ymd_His');    
 
