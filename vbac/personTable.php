@@ -120,25 +120,26 @@ class personTable extends DbTable {
         return $activePredicate;
     }
 
-    static function inactivePersonPredicate($includeProvisionalClearance = true, $tableAbbrv = null ){
-        $inactivePredicate = " ((( " ;
-        $inactivePredicate.= !empty($tableAbbrv) ? $tableAbbrv ."." : null ;
-        $inactivePredicate.= "REVALIDATION_STATUS in ('" . personRecord::REVALIDATED_FOUND . "','" . personRecord::REVALIDATED_VENDOR . "','" . personRecord::REVALIDATED_POTENTIAL . "') or trim(";
-        $inactivePredicate.= !empty($tableAbbrv) ? $tableAbbrv ."." : null ;
-        $inactivePredicate.= "REVALIDATION_STATUS) is null or ";
-        $inactivePredicate.= !empty($tableAbbrv) ? $tableAbbrv ."." : null ;
-        $inactivePredicate.= "REVALIDATION_STATUS like '" . personRecord::REVALIDATED_OFFBOARDING . "%') ";
-        $inactivePredicate.= "   OR ";
-        $inactivePredicate.= " ( trim( ";
-        $inactivePredicate.= !empty($tableAbbrv) ? $tableAbbrv ."." : null ;
-        $inactivePredicate.= "REVALIDATION_STATUS) is null ) )";
-        $inactivePredicate.= " AND ";
-        $inactivePredicate.= !empty($tableAbbrv) ? $tableAbbrv ."." : null ;
-        $inactivePredicate.= "REVALIDATION_STATUS not like '" . personRecord::REVALIDATED_OFFBOARDING . "%:%" .personRecord::REVALIDATED_LEAVER . "%' " ;
-        $inactivePredicate.= " AND ";
-        $inactivePredicate.= !empty($tableAbbrv) ? $tableAbbrv ."." : null ;
-        $inactivePredicate.= "PES_STATUS not in (" . self::$excludeFromRecheckNotification . ") ";
-        $inactivePredicate.= " ) ";
+    static function inactivePersonPredicate($tableAbbrv = null ){
+        // $inactivePredicate = " ((( " ;
+        // $inactivePredicate.= !empty($tableAbbrv) ? $tableAbbrv ."." : null ;
+        // $inactivePredicate.= "REVALIDATION_STATUS in ('" . personRecord::REVALIDATED_FOUND . "','" . personRecord::REVALIDATED_VENDOR . "','" . personRecord::REVALIDATED_POTENTIAL . "') or trim(";
+        // $inactivePredicate.= !empty($tableAbbrv) ? $tableAbbrv ."." : null ;
+        // $inactivePredicate.= "REVALIDATION_STATUS) is null or ";
+        // $inactivePredicate.= !empty($tableAbbrv) ? $tableAbbrv ."." : null ;
+        // $inactivePredicate.= "REVALIDATION_STATUS like '" . personRecord::REVALIDATED_OFFBOARDING . "%') ";
+        // $inactivePredicate.= "   OR ";
+        // $inactivePredicate.= " ( trim( ";
+        // $inactivePredicate.= !empty($tableAbbrv) ? $tableAbbrv ."." : null ;
+        // $inactivePredicate.= "REVALIDATION_STATUS) is not null ) )";
+        // $inactivePredicate.= " AND ";
+        // $inactivePredicate.= !empty($tableAbbrv) ? $tableAbbrv ."." : null ;
+        // $inactivePredicate.= "REVALIDATION_STATUS like '" . personRecord::REVALIDATED_OFFBOARDING . "%:%" .personRecord::REVALIDATED_LEAVER . "%' " ;
+        // $inactivePredicate.= " AND ";
+        // $inactivePredicate.= !empty($tableAbbrv) ? $tableAbbrv ."." : null ;
+        // $inactivePredicate.= "PES_STATUS in (" . self::$excludeFromRecheckNotification . ") ";
+        // $inactivePredicate.= " ) ";
+        $inactivePredicate = "PES_STATUS in (" . self::$excludeFromRecheckNotification . ") ";
         return $inactivePredicate;
     }
 
