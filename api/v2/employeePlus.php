@@ -4,7 +4,13 @@ use vbac\allTables;
 use vbac\personTable;
 use itdq\DbTable;
 
-if($_REQUEST['token']!= $token){
+if(!empty($_REQUEST['token'])){
+    if($_REQUEST['token']!= $token){
+        // echo "Incorrect token provided";
+        return;
+    }
+} else {
+    // echo "No token provided";
     return;
 }
 

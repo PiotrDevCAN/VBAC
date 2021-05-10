@@ -195,7 +195,7 @@ if(stripos($_ENV['environment'], 'dev')) {
     include_once "class/include.php";
     $auth = new Auth();
     if(!$auth->ensureAuthorized()){
-    die('Invalid logon attempt');
+        die('Invalid logon attempt');
     } else {
         $_SESSION['ssoEmail'] = $_SESSION['ssoEmail'];
         if(isset($_SESSION['somethingChanged']))
