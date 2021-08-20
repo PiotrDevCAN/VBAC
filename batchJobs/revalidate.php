@@ -43,33 +43,34 @@ echo 'Total execution time 2 in seconds: ' . (microtime(true) - $time_start_2);
 
 // At start of script
 $time_start_3 = microtime(true); 
-$response = $slack->slackApiPostMessage(slack::CHANNEL_ID_SM_CDI_AUDIT,$_ENV['environment'] . ":Revalidation will ignore " . count($allOffboarders) . " offboarding/ed.");
+// $response = $slack->slackApiPostMessage(slack::CHANNEL_ID_SM_CDI_AUDIT,$_ENV['environment'] . ":Revalidation will ignore " . count($allOffboarders) . " offboarding/ed.");
 // Anywhere else in the script
 echo 'Total execution time 3 in seconds: ' . (microtime(true) - $time_start_3);
-error_log($response);
+// error_log($response);
 $allOffboarders= null; // free up some storage
 
 $preBoardersPredicate = "   ( REVALIDATION_STATUS =  '" . personRecord::REVALIDATED_PREBOARDER . "') ";
 $allPreboarders = $loader->load('CNUM',allTables::$PERSON, $preBoardersPredicate );
 var_dump(count($allPreboarders));
 AuditTable::audit("Revalidation will ignore " . count($allPreboarders) . " pre-boarders.",AuditTable::RECORD_TYPE_REVALIDATION);
-$response = $slack->slackApiPostMessage(slack::CHANNEL_ID_SM_CDI_AUDIT,$_ENV['environment'] . ":Revalidation will ignore " . count($allPreboarders) . " pre-boarders.");
-error_log($response);
+// $response = $slack->slackApiPostMessage(slack::CHANNEL_ID_SM_CDI_AUDIT,$_ENV['environment'] . ":Revalidation will ignore " . count($allPreboarders) . " pre-boarders.");
+// error_log($response);
 $allPreboarders= null; // free up some storage
 
 $vendorsPredicate = "   ( REVALIDATION_STATUS =  '" . personRecord::REVALIDATED_VENDOR . "') ";
 $allVendors = $loader->load('CNUM',allTables::$PERSON, $vendorsPredicate );
 var_dump(count($allVendors));
 AuditTable::audit("Revalidation will ignore " . count($allVendors) . " vendors.",AuditTable::RECORD_TYPE_REVALIDATION);
-$response = $slack->slackApiPostMessage(slack::CHANNEL_ID_SM_CDI_AUDIT,$_ENV['environment'] . ":Revalidation will ignore " . count($allVendors) . " vendors.");
-error_log($response);
+// $response = $slack->slackApiPostMessage(slack::CHANNEL_ID_SM_CDI_AUDIT,$_ENV['environment'] . ":Revalidation will ignore " . count($allVendors) . " vendors.");
+// error_log($response);
 $allVendors= null; // free up some storage
 
 $activeIbmErsPredicate = "   ( trim(REVALIDATION_STATUS) = '' or REVALIDATION_STATUS is null or REVALIDATION_STATUS =  '" . personRecord::REVALIDATED_FOUND . "') ";
 $allNonLeavers = $loader->load('CNUM',allTables::$PERSON, $activeIbmErsPredicate );
 var_dump(count($allNonLeavers));
 AuditTable::audit("Revalidation will check " . count($allNonLeavers) . " people currently flagged as found.",AuditTable::RECORD_TYPE_REVALIDATION);
-$response = $slack->slackApiPostMessage(slack::CHANNEL_ID_SM_CDI_AUDIT,$_ENV['environment'] . ":Revalidation will check " . count($allNonLeavers) . " people currently flagged as found.");
+// $response = $slack->slackApiPostMessage(slack::CHANNEL_ID_SM_CDI_AUDIT,$_ENV['environment'] . ":Revalidation will check " . count($allNonLeavers) . " people currently flagged as found.");
+// error_log($response);
 
 // Anywhere else in the script
 echo 'Total execution time in seconds: ' . (microtime(true) - $time_start);
