@@ -23,7 +23,7 @@ class AgileSquadRecord extends DbRecord {
     }
 
 
-    function displayForm($mode=FormClass::modeDefine){
+    function displayForm($mode){
         $notEditable = $mode == FormClass::$modeEDIT ? ' disabled ' : '';
         $nextAvailableSquadNumber = AgileSquadTable::nextAvailableSquadNumber($this->tribeOrganisation);
         ?>

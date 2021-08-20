@@ -20,6 +20,9 @@ $slack = new slack();
 
 $loader = new Loader();
 
+// At start of script
+$time_start = microtime(true); 
+
 $personTable->flagPreboarders();
 db2_commit($GLOBALS['conn']);
 
@@ -49,6 +52,10 @@ $allNonLeavers = $loader->load('CNUM',allTables::$PERSON, $activeIbmErsPredicate
 AuditTable::audit("Revalidation will check " . count($allNonLeavers) . " people currently flagged as found.",AuditTable::RECORD_TYPE_REVALIDATION);
 $response = $slack->slackApiPostMessage(slack::CHANNEL_ID_SM_CDI_AUDIT,$_ENV['environment'] . ":Revalidation will check " . count($allNonLeavers) . " people currently flagged as found.");
 
+// Anywhere else in the script
+echo 'Total execution time in seconds: ' . (microtime(true) - $time_start);
+
+/*
 $chunkedCnum = array_chunk($allNonLeavers, 100);
 $detailsFromBp = "notesid&mail";
 $bpEntries = array();
@@ -79,7 +86,6 @@ foreach ($allNonLeavers as $cnum){
     $personTable->flagPotentialLeaver($cnum);
 }
 
-
 // foreach ($allNonLeavers as $cnum){
 //     set_time_limit(10);
 //     $personTable->flagLeaver($cnum);
@@ -89,3 +95,4 @@ AuditTable::audit("Revalidation completed.",AuditTable::RECORD_TYPE_REVALIDATION
 $response = $slack->slackApiPostMessage(slack::CHANNEL_ID_SM_CDI_AUDIT,$_ENV['environment'] . ":Revalidation completed.");
 
 db2_commit($GLOBALS['conn']);
+*/

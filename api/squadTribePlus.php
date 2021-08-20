@@ -17,13 +17,23 @@ $onlyActiveStr = !empty($_GET['onlyactive']) ? $_GET['onlyactive'] : 'true';
 $onlyActiveBool = $onlyActiveStr=='true';
 $withProvClear = !empty($_GET['withProvClear']) ? $_GET['withProvClear'] : null;
 
-
-
-
-$translatedPlus = str_replace(array('JRSS'                 ,'FLL_CNUM'          ,'FLL_NOTES_ID'              ,'SLL_CNUM'          ,'SLL_NOTES_ID')
-                             ,array('P.ROLE_ON_THE_ACCOUNT','F.CNUM as FLL_CNUM','F.NOTES_ID as FLL_NOTES_ID','U.CNUM as SLL_CNUM','U.NOTES_ID as SLL_NOTES_ID')
-                             , strtoupper($_REQUEST['plus']));
-
+$translatedPlus = str_replace(
+    array(
+        'JRSS',
+        'FLL_CNUM',
+        'FLL_NOTES_ID',
+        'SLL_CNUM',
+        'SLL_NOTES_ID'
+    ),
+    array(
+        'P.ROLE_ON_THE_ACCOUNT',
+        'F.CNUM as FLL_CNUM',
+        'F.NOTES_ID as FLL_NOTES_ID',
+        'U.CNUM as SLL_CNUM',
+        'U.NOTES_ID as SLL_NOTES_ID'
+    ),
+    strtoupper($_REQUEST['plus'])
+);
 
 $additionalFields = !empty($_REQUEST['plus']) ? explode(",",$translatedPlus) : null;
 $additionalSelect = null;
