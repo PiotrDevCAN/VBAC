@@ -112,8 +112,8 @@ class personRecord extends DbRecord
     const REVALIDATED_LEAVER = 'leaver';
     const REVALIDATED_POTENTIAL = 'potentialLeaver';
     const REVALIDATED_PREBOARDER = 'preboarder';
-    const REVALIDATED_OFFBOARDING = 'offboarding';
-    const REVALIDATED_OFFBOARDED = 'offboarded';
+    const REVALIDATED_OFFBOARDING = 'offboarding'; // 12 
+    const REVALIDATED_OFFBOARDED =  'offboarded'; // 11
 
     const SECURITY_EDUCATION_COMPLETED = 'Yes';
     const SECURITY_EDUCATION_NOT_COMPLETED = 'No';

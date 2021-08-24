@@ -12,13 +12,12 @@ use vbac\pesEmail;
 $slack = new slack();
 
 AuditTable::audit("Potential Leavers re-check invoked.",AuditTable::RECORD_TYPE_REVALIDATION);
-
-$res = $slack->slackApiPostMessage(slack::CHANNEL_SM_CDI_AUDIT,$_ENV['environment'] . ':Potential Leavers re-check invoked.');
+$response = $slack->slackApiPostMessage(slack::CHANNEL_SM_CDI_AUDIT,$_ENV['environment'] . ':Potential Leavers re-check invoked.');
+error_log($response);
 
 set_time_limit(60);
 
 $personTable = new personTable(allTables::$PERSON);
-$slack = new slack();
 $loader = new Loader();
 
 $potentialLeavers = " ( REVALIDATION_STATUS like  'potential%') ";

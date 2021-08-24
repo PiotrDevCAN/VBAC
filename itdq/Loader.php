@@ -28,7 +28,7 @@ class Loader
      * @param string $encode
      *            - Set to FALSE if you want to avoid AT&T becoming AT&amp;T
      * @param string $order
-     * @return multitype:string
+     * @return multitype:array
      */
     function load($column = null, $table = null, $predicate = null, $encode = TRUE, $order = 'asc')
     {

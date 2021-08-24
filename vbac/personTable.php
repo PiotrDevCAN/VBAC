@@ -1258,7 +1258,7 @@ class personTable extends DbTable {
     function flagOffboarding ($cnum, $revalidationStatusWas, $notesId){
         if(!empty($cnum)){
             $sql  = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-            $sql .= " SET REVALIDATION_STATUS= CONCAT(CONCAT(TRIM('" . personRecord::REVALIDATED_OFFBOARDING . "'),':'),REVALIDATION_STATUS),  REVALIDATION_DATE_FIELD = current date ";
+            $sql .= " SET REVALIDATION_STATUS=CONCAT(CONCAT(TRIM('" . personRecord::REVALIDATED_OFFBOARDING . "'),':'),REVALIDATION_STATUS),  REVALIDATION_DATE_FIELD = current date ";
             $sql .= " WHERE CNUM = '" . db2_escape_string($cnum) . "'";
 
             $rs = db2_exec($GLOBALS['conn'],$sql);
@@ -1270,7 +1270,6 @@ class personTable extends DbTable {
 
             $this->notifyFmOfRevalStatusChange($cnum, personRecord::REVALIDATED_OFFBOARDING);
             pesEmail::notifyPesTeamOfOffboarding($cnum, $revalidationStatusWas, $notesId);
-
             AuditTable::audit("CNUM: $cnum (Reval:$revalidationStatusWas) has been flagged as :" . personRecord::REVALIDATED_OFFBOARDING,AuditTable::RECORD_TYPE_AUDIT);
             return true;
         }
@@ -1301,7 +1300,7 @@ class personTable extends DbTable {
     function stopOffboarded ($cnum){
         if(!empty($cnum)){
             $sql  = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-            $sql .= " SET REVALIDATION_STATUS= SUBSTR(REVALIDATION_STATUS,13), REVALIDATION_DATE_FIELD = current date, OFFBOARDED_DATE = null  ";
+            $sql .= " SET REVALIDATION_STATUS=SUBSTR(REVALIDATION_STATUS,13), REVALIDATION_DATE_FIELD = current date, OFFBOARDED_DATE = null  ";
             $sql .= " WHERE CNUM = '" . db2_escape_string($cnum) . "'";
 
             $rs = db2_exec($GLOBALS['conn'],$sql);
@@ -1312,8 +1311,6 @@ class personTable extends DbTable {
             }
 
             $this->notifyFmOfRevalStatusChange($cnum, 'Offboarding Stopped');
-
-
             AuditTable::audit("CNUM: $cnum  has been been STOPPED from Offboarding",AuditTable::RECORD_TYPE_AUDIT);
             return true;
         }
@@ -1323,7 +1320,7 @@ class personTable extends DbTable {
     function deOffboarded ($cnum){
         if(!empty($cnum)){
             $sql  = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-            $sql .= " SET REVALIDATION_STATUS= TRIM(SUBSTR(REVALIDATION_STATUS,12)), REVALIDATION_DATE_FIELD = current date, OFFBOARDED_DATE = null  ";
+            $sql .= " SET REVALIDATION_STATUS=TRIM(SUBSTR(REVALIDATION_STATUS,12)), REVALIDATION_DATE_FIELD = current date, OFFBOARDED_DATE = null  ";
             $sql .= " WHERE CNUM = '" . db2_escape_string($cnum) . "'";
 
             $rs = db2_exec($GLOBALS['conn'],$sql);

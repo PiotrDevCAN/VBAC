@@ -8,17 +8,16 @@ use itdq\AuditTable;
 use itdq\DbTable;
 use itdq\slack;
 
-$slack = new slack();
+// $slack = new slack();
 
-AuditTable::audit("Revalidation invoked.",AuditTable::RECORD_TYPE_REVALIDATION);
-$response = $slack->slackApiPostMessage(slack::CHANNEL_ID_SM_CDI_AUDIT,$_ENV['environment'] . ":Revalidation invoked.");
+// AuditTable::audit("Revalidation invoked.",AuditTable::RECORD_TYPE_REVALIDATION);
+// $response = $slack->slackApiPostMessage(slack::CHANNEL_ID_SM_CDI_AUDIT,$_ENV['environment'] . ":Revalidation invoked.");
+// error_log($response);
 
 set_time_limit(60);
 
 $personTable = new personTable(allTables::$PERSON);
-$slack = new slack();
-
-$loader = new Loader();
+// $loader = new Loader();
 
 // At start of script
 $time_start = microtime(true); 

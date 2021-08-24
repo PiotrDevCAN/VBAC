@@ -17,7 +17,6 @@ $response = $slack->slackApiPostMessage(slack::CHANNEL_SM_CDI_AUDIT,$_ENV['envir
 set_time_limit(60);
 
 $personTable = new personTable(allTables::$PERSON);
-$slack = new slack();
 $loader = new Loader();
 
 $pesToCheck = " ( REVALIDATION_STATUS like '" . personRecord::REVALIDATED_OFFBOARDED . "%' AND REVALIDATION_STATUS not like '%leaver%' ) ";
