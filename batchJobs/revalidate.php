@@ -27,9 +27,10 @@ echo 'Total execution time 0 in seconds: ' . (microtime(true) - $time_start);
 
 db2_commit($GLOBALS['conn']);
 
+/*
 // At start of script
 $time_start_1 = microtime(true); 
-$offboarders = " ( REVALIDATION_STATUS like  'offboard%') ";
+$offboarders = " ( REVALIDATION_STATUS like 'offboard%') ";
 $allOffboarders = $loader->load('CNUM',allTables::$PERSON, $offboarders );
 var_dump(count($allOffboarders));
 AuditTable::audit("Revalidation will ignore " . count($allOffboarders) . " offboarding/ed.",AuditTable::RECORD_TYPE_REVALIDATION);
@@ -41,7 +42,7 @@ echo 'Total execution time in seconds: ' . (microtime(true) - $time_start_1);
 
 // At start of script
 $time_start_2 = microtime(true); 
-$preBoardersPredicate = "   ( REVALIDATION_STATUS =  '" . personRecord::REVALIDATED_PREBOARDER . "') ";
+$preBoardersPredicate = "   ( REVALIDATION_STATUS = '" . personRecord::REVALIDATED_PREBOARDER . "') ";
 $allPreboarders = $loader->load('CNUM',allTables::$PERSON, $preBoardersPredicate );
 var_dump(count($allPreboarders));
 AuditTable::audit("Revalidation will ignore " . count($allPreboarders) . " pre-boarders.",AuditTable::RECORD_TYPE_REVALIDATION);
@@ -53,7 +54,7 @@ echo 'Total execution time in seconds: ' . (microtime(true) - $time_start_2);
 
 // At start of script
 $time_start_3 = microtime(true); 
-$vendorsPredicate = "   ( REVALIDATION_STATUS =  '" . personRecord::REVALIDATED_VENDOR . "') ";
+$vendorsPredicate = "   ( REVALIDATION_STATUS = '" . personRecord::REVALIDATED_VENDOR . "') ";
 $allVendors = $loader->load('CNUM',allTables::$PERSON, $vendorsPredicate );
 var_dump(count($allVendors));
 AuditTable::audit("Revalidation will ignore " . count($allVendors) . " vendors.",AuditTable::RECORD_TYPE_REVALIDATION);
@@ -74,6 +75,7 @@ AuditTable::audit("Revalidation will check " . count($allNonLeavers) . " people 
 $allNonLeavers= null; // free up some storage
 // Anywhere else in the script
 echo 'Total execution time in seconds: ' . (microtime(true) - $time_start_4);
+*/
 
 /*
 $chunkedCnum = array_chunk($allNonLeavers, 100);
