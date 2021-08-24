@@ -8,26 +8,27 @@ use itdq\AuditTable;
 use itdq\DbTable;
 use itdq\slack;
 
-$included_files = get_included_files();
-
-foreach ($included_files as $filename) {
-    echo "$filename\n";
-}
-
 // $slack = new slack();
 
 // AuditTable::audit("Revalidation invoked.",AuditTable::RECORD_TYPE_REVALIDATION);
 // $response = $slack->slackApiPostMessage(slack::CHANNEL_ID_SM_CDI_AUDIT,$_ENV['environment'] . ":Revalidation invoked.");
 // error_log($response);
 
+if( isset($GLOBALS['DB_CONNECTION_TIME']) ) {
+    echo 'DB connection time: ' . $GLOBALS['DB_CONNECTION_TIME'];
+} else {
+    echo 'DB connection time is missing !!';
+}
+
 set_time_limit(60);
 
-$personTable = new personTable(allTables::$PERSON);
+// $personTable = new personTable(allTables::$PERSON);
 // $loader = new Loader();
 
 // At start of script
 $time_start = microtime(true); 
-$personTable->flagPreboarders();
+// $personTable->flagPreboarders();
+echo 'do nothing !!';
 echo 'Total execution time 0 in seconds: ' . (microtime(true) - $time_start);
 
 db2_commit($GLOBALS['conn']);

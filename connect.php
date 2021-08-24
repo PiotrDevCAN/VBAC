@@ -7,6 +7,7 @@ if(!function_exists('tryConnect')){
         $connection =  db2_pconnect( $conn_string, "", "" );
         $postConnect = microtime(true);
         error_log("Db2 Pconnect took:" . (float)($postConnect-$preConnect));
+        $GLOBALS['DB_CONNECTION_TIME'] = (float)($postConnect-$preConnect);
         return $connection;
     }
     
