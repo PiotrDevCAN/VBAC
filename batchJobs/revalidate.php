@@ -8,6 +8,12 @@ use itdq\AuditTable;
 use itdq\DbTable;
 use itdq\slack;
 
+$included_files = get_included_files();
+
+foreach ($included_files as $filename) {
+    echo "$filename\n";
+}
+
 // $slack = new slack();
 
 // AuditTable::audit("Revalidation invoked.",AuditTable::RECORD_TYPE_REVALIDATION);
