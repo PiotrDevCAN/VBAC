@@ -14,12 +14,6 @@ use itdq\slack;
 // $response = $slack->slackApiPostMessage(slack::CHANNEL_ID_SM_CDI_AUDIT,$_ENV['environment'] . ":Revalidation invoked.");
 // error_log($response);
 
-if( isset($GLOBALS['DB_CONNECTION_TIME']) ) {
-    echo 'DB connection time: ' . $GLOBALS['DB_CONNECTION_TIME'];
-} else {
-    echo 'DB connection time is missing !!';
-}
-
 set_time_limit(60);
 
 // $personTable = new personTable(allTables::$PERSON);

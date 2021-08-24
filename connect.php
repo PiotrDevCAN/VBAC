@@ -7,7 +7,6 @@ if(!function_exists('tryConnect')){
         $connection =  db2_pconnect( $conn_string, "", "" );
         $postConnect = microtime(true);
         error_log("Db2 Pconnect took:" . (float)($postConnect-$preConnect));
-        $GLOBALS['DB_CONNECTION_TIME'] = (float)($postConnect-$preConnect);
         return $connection;
     }
     
@@ -32,7 +31,9 @@ if( isset($_ENV['ssldsn']) )
     $driver = "DRIVER={IBM DB2 ODBC DRIVER};";
     //    $conn_string = $driver . $dsn;     # Non-SSL
     $conn_string = $driver . $ssl_dsn; # SSL
-    
+
+    echo $conn_string;
+
     $conn=false;
     $attempts = 0;
 
