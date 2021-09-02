@@ -126,13 +126,17 @@ class personRecord extends DbRecord
     public static $cio = array('CTB Leadership','CTB Central BU','CTB PMO','Commercial & Business Banking','Insurance & Enterprise Programmes','Cyber & TRP','Enterprise Transformation','Retail & Community Banking Transformation','Cross Platform','Product & Engineering');
 
     public static $pesTaskId = array('lbgvetpr@uk.ibm.com'); // Only first entry will be used as the "contact" in the PES status emails.
-    public static $pmoTaskId = array('aurora.central.pmo@uk.ibm.com');
+    // public static $pmoTaskId = array('aurora.central.pmo@uk.ibm.com');
+    // public static $pmpTaskIdKyndryl = array('aurora.central.pmo@kyndryl.com');
+    public static $pmoTaskId = array('aurora.central.pmo@kyndryl.com');
     public static $orderITCtbTaskId = array('jeemohan@in.ibm.com');
     public static $orderITNonCtbTaskId = array('aurora.central.pmo@uk.ibm.com');
     public static $orderITBauTaskId = array('aurora.central.pmo@uk.ibm.com');
     public static $orderITNonBauTaskId = array('aurora.central.pmo@uk.ibm.com');
     public static $smCdiAuditEmail = 'e3h3j0u9u6l2q3a3@ventusdelivery.slack.com';
-    public static $securityOps = array('IBM.LBG.Security.Operations@uk.ibm.com');
+    // public static $securityOps = array('IBM.LBG.Security.Operations@uk.ibm.com');
+    // public static $securityOpsKyndryl = array('Kyndryl.LBG.IAM.Requests@Kyndryl.com');
+    public static $securityOps = array('Kyndryl.LBG.IAM.Requests@Kyndryl.com');
     //private static $pesTaskId = 'piotr.tajanowicz@ibm.com';
     //private static $pesTaskId    = array('piotr.tajanowicz@ibm.com', 'carrabooth@uk.ibm.com');
 //     private static $pesEmailBody = '<table width="100%" border="0"   cellpadding="0">
