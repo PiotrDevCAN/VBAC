@@ -32,9 +32,6 @@ if( isset($_ENV['ssldsn']) )
     //    $conn_string = $driver . $dsn;     # Non-SSL
     $conn_string = $driver . $ssl_dsn; # SSL
 
-    echo $conn_string;
-    // ;ConnectTimeout=60
-
     $conn=false;
     $attempts = 0;
 
