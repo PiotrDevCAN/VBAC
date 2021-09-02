@@ -6,13 +6,7 @@ use itdq\DbTable;
 
 ob_start();
 
-if(!empty($_REQUEST['token'])){
-    if($_REQUEST['token']!= $token){
-        // echo "Incorrect token provided";
-        return;
-    }
-} else {
-    // echo "No token provided";
+if($_REQUEST['token']!= $token){
     return;
 }
 
