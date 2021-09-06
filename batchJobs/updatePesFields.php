@@ -72,7 +72,7 @@ if (isset($url)) {
             !empty($upesData->$fieldName) ? $pesTrackerData[] = $$fieldName : null;
         }
     
-        $updatePesTrackerSql = substr($updatePesTrackerSql,0,-2) . " WHERE CNUM=( SELECT CNUM FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " WHERE lower(EMAIL_ADDRESS) = ? ) ";
+        $updatePesTrackerSql = substr($updatePesTrackerSql,0,-2) . " WHERE CNUM=( SELECT CNUM FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " WHERE lower(EMAIL_ADDRESS) = ? FETCH FIRST 1 ROWS ONLY ) ";
         $pesTrackerData[]    = strtolower($upesData->EMAIL_ADDRESS) ;
         
         $preparedUpdatePesTrackerSql = db2_prepare($GLOBALS['conn'], $updatePesTrackerSql);
