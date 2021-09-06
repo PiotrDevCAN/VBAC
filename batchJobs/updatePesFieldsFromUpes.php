@@ -5,6 +5,9 @@ use itdq\DbTable;
 
 $url = $_ENV['upes_url'] . '/api/pesStatus.php?token=' . $_ENV['upes_api_token'] . '&accountid=1330';
 
+include "updatePesFields.php";
+
+/*
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_HEADER,         1);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -16,9 +19,15 @@ curl_setopt($ch, CURLOPT_URL, $url);
 $pesDataAllJson = curl_exec($ch);
 $pesDataAll = json_decode($pesDataAllJson);
 
-
-$personFields = array('PES_DATE_REQUESTED','PES_DATE_RESPONDED','PES_STATUS_DETAILS'
-                     ,'PES_STATUS','PES_LEVEL','PES_RECHECK_DATE','PES_CLEARED_DATE');
+$personFields = array(
+    'PES_DATE_REQUESTED',
+    'PES_DATE_RESPONDED',
+    'PES_STATUS_DETAILS',
+    'PES_STATUS',
+    'PES_LEVEL',
+    'PES_RECHECK_DATE',
+    'PES_CLEARED_DATE'
+);
 
 $pesTrackerFields = array('PROCESSING_STATUS','PROCESSING_STATUS_CHANGED', 'COMMENT');
 
@@ -42,7 +51,6 @@ foreach ($pesDataAll->data as $upesData){
     
     $updatePersonSql = substr($updatePersonSql,0,-2) . " WHERE lower(EMAIL_ADDRESS)=? ";
     $personData[] = strtolower($upesData->EMAIL_ADDRESS) ;
-    
     
     $preparedUpdatePersonSql = db2_prepare($GLOBALS['conn'], $updatePersonSql);
     
@@ -69,7 +77,6 @@ foreach ($pesDataAll->data as $upesData){
     $updatePesTrackerSql = substr($updatePesTrackerSql,0,-2) . " WHERE CNUM=( SELECT CNUM FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " WHERE lower(EMAIL_ADDRESS) = ? ) ";
     $pesTrackerData[]    = strtolower($upesData->EMAIL_ADDRESS) ;
     
-    
     $preparedUpdatePesTrackerSql = db2_prepare($GLOBALS['conn'], $updatePesTrackerSql);
     
     if(!$preparedUpdatePesTrackerSql){
@@ -80,7 +87,6 @@ foreach ($pesDataAll->data as $upesData){
         return;
     }
     
-   
     $rsPerson = db2_execute($preparedUpdatePersonSql,$personData);    
     if(!$rsPerson){
         DbTable::displayErrorMessage($rsPerson, __FILE__, __FILE__, $updatePersonSql);     
@@ -95,5 +101,6 @@ foreach ($pesDataAll->data as $upesData){
     
     echo "<br/> Updated PES_TRACKER and PERSON Records for Email:" . $upesData->EMAIL_ADDRESS;
     
-     db2_commit($GLOBALS['conn']);
+    db2_commit($GLOBALS['conn']);
 }
+*/
