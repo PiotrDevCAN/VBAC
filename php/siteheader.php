@@ -215,7 +215,7 @@ if(stripos($_ENV['environment'], 'dev')) {
             echo '<br/><br/>Note: When trying to fix this yourself, do remember to always clear cookies when refreshing the page.';
             }
         }
-        
+
         echo "<pre>";
         var_dump($_SESSION['ssoEmail']);
         var_dump(strtolower($_SESSION['ssoEmail']));
@@ -225,7 +225,7 @@ if(stripos($_ENV['environment'], 'dev')) {
 
         if($sp === FALSE){
             // check in BP
-            // echo 'check in BP if Ocean Id exists';
+            echo ' getOceanDetailsFromIntranetId function call ';
             $data = BluePagesSLAPHAPI::getOceanDetailsFromIntranetId($_SESSION['ssoEmail']);
             if (!empty($data)) {
                 // Kyndryl employee
