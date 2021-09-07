@@ -222,7 +222,7 @@ if(stripos($_ENV['environment'], 'dev')) {
 
         $sp = strpos(strtolower($_SESSION['ssoEmail']),'ocean');
 
-        if($sp === FALSE){
+        // if($sp === FALSE){
             // check in BP
             echo 'check in BP if Ocean Id exists';
             $data = BluePagesSLAPHAPI::getOceanDetailsFromIntranetId($_SESSION['ssoEmail']);
@@ -230,11 +230,13 @@ if(stripos($_ENV['environment'], 'dev')) {
             var_dump($data);
             echo "</pre>";
 
-            session_destroy();
-        } else {
-            // logged in with Ocean Id
-            echo 'logged in with Ocean Id';
-        }
+            exit;
+
+        //     session_destroy();
+        // } else {
+        //     // logged in with Ocean Id
+        //     echo 'logged in with Ocean Id';
+        // }
     }
 }
 
