@@ -228,7 +228,10 @@ if(stripos($_ENV['environment'], 'dev')) {
             $data = BluePagesSLAPHAPI::getOceanDetailsFromIntranetId($_SESSION['ssoEmail']);
             if (!empty($data)) {
                 // Kyndryl employee
-                session_unset();
+                // session_destroy();
+                // session_unset();
+
+                $handler->destroy('close');
 
                 echo "<pre>";
                 var_dump($_SESSION);
