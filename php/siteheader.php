@@ -235,9 +235,9 @@ if(stripos($_ENV['environment'], 'dev')) {
                 echo " https://" . $_SERVER['SERVER_NAME'];
                 echo ' redirect to the main page';
 
-                sleep(5);
-                $redirect = "https://" . $_SERVER['SERVER_NAME'];
-                header("Location: $redirect");
+                // sleep(5);
+                // $redirect = "https://" . $_SERVER['SERVER_NAME'];
+                // header("Location: $redirect");
             } else {
                 // employee not found in BP
             }
