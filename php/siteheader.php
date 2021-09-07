@@ -225,11 +225,10 @@ if(stripos($_ENV['environment'], 'dev')) {
 
         if($sp === FALSE){
             // check in BP
-            echo ' getOceanDetailsFromIntranetId function call ';
             $data = BluePagesSLAPHAPI::getOceanDetailsFromIntranetId($_SESSION['ssoEmail']);
             if (!empty($data)) {
                 // Kyndryl employee
-                session_destroy();
+                session_unset();
 
                 echo "<pre>";
                 var_dump($_SESSION);
