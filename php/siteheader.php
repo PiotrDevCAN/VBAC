@@ -212,6 +212,9 @@ if(stripos($_ENV['environment'], 'dev')) {
             echo '<br/><br/>Note: When trying to fix this yourself, do remember to always clear cookies when refreshing the page.';
             }
         }
+        echo "<pre>";
+        var_dump($_SESSION);
+        echo "</pre>";        
     }
 }
 
