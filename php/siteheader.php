@@ -231,6 +231,12 @@ if(stripos($_ENV['environment'], 'dev')) {
                 // Kyndryl employee
                 session_destroy();
 
+                echo "<pre>";
+                var_dump($_SESSION);
+                var_dump($_SESSION['uid']);
+                var_dump($_SESSION['exp']);
+                echo "</pre>";
+                
                 echo 'You have been identified as Kyndryl employee. Please use an appropriate Ocean Id to login into the vBAC tool.';
                 echo " https://" . $_SERVER['SERVER_NAME'];
                 echo ' redirect to the main page';
