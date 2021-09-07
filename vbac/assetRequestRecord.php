@@ -313,7 +313,6 @@ class assetRequestRecord extends DbRecord {
 		<div class="panel-body">
       	<p>User <?=$_SESSION['ssoEmail']?> is not known to this tool</p>
        	<p>Your Functional Manager needs to Onboard you onto vBAC. </p>
-       	<p>Boarding education for your manager can be found at this URL: http://w3.tap.ibm.com/medialibrary/media_set_view?id=47864</p>
        	<p>If you already have a Preboarder record in vBAC your manager will need to onboard you as an IBMer AND link it to your Preboarder Record.</p>
        	<p>They SHOULD NOT Initiate PES in vBAC if you are already PES cleared. Your manager should contact the PES Team (LBG Vetting Process/UK/IBM) asking them to update your PES Status in vBAC if necessary. </p>
       	</div>
