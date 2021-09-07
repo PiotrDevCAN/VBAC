@@ -215,19 +215,22 @@ if(stripos($_ENV['environment'], 'dev')) {
             echo '<br/><br/>Note: When trying to fix this yourself, do remember to always clear cookies when refreshing the page.';
             }
         }
-        // echo "<pre>";
-        // var_dump($_SESSION['ssoEmail']);
-        // echo "</pre>";
+        echo "<pre>";
+        var_dump($_SESSION['ssoEmail']);
+        var_dump(strtolower($_SESSION['ssoEmail']));
+        echo "</pre>";
 
         $sp = strpos(strtolower($_SESSION['ssoEmail']),'ocean');
 
-        if($sp != FALSE){
+        if($sp === FALSE){
             // check in BP
             echo 'check in BP if Ocean Id exists';
             $data = BluePagesSLAPHAPI::getOceanDetailsFromIntranetId($_SESSION['ssoEmail']);
             echo "<pre>";
             var_dump($data);
             echo "</pre>";
+
+            session_destroy();
         } else {
             // logged in with Ocean Id
             echo 'logged in with Ocean Id';
