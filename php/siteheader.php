@@ -215,28 +215,41 @@ if(stripos($_ENV['environment'], 'dev')) {
             echo '<br/><br/>Note: When trying to fix this yourself, do remember to always clear cookies when refreshing the page.';
             }
         }
-        echo "<pre>";
-        var_dump($_SESSION['ssoEmail']);
-        var_dump(strtolower($_SESSION['ssoEmail']));
-        echo "</pre>";
+        // echo "<pre>";
+        // var_dump($_SESSION['ssoEmail']);
+        // var_dump(strtolower($_SESSION['ssoEmail']));
+        // echo "</pre>";
 
         $sp = strpos(strtolower($_SESSION['ssoEmail']),'ocean');
-
-        // if($sp === FALSE){
+var_dump($sp);
+        if($sp === FALSE){
             // check in BP
-            echo 'check in BP if Ocean Id exists';
+            // echo 'check in BP if Ocean Id exists';
             $data = BluePagesSLAPHAPI::getOceanDetailsFromIntranetId($_SESSION['ssoEmail']);
             echo "<pre>";
             var_dump($data);
             echo "</pre>";
 
-            exit;
+            if (!empty($data)) {
+                // Kyndryl employee
+                
+                echo 'You have been identified as Kyndryl employee. Please use an appropriate Ocean Id to login into the vBAC tool.';
+                session_destroy();
 
-        //     session_destroy();
-        // } else {
-        //     // logged in with Ocean Id
-        //     echo 'logged in with Ocean Id';
-        // }
+                // $redirect = "https://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+                // header("Location: $redirect");
+                
+                echo "https://" . $_SERVER['SERVER_NAME'];
+                echo 'redirect to the main page';
+                exit;
+            } else {
+                // employee not found in BP
+                exit;
+            }
+        } else {
+            // logged in with Ocean Id
+            echo 'logged in with Ocean Id';
+        }
     }
 }
 

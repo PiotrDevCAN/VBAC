@@ -765,7 +765,7 @@ class BluePagesSLAPHAPI {
 	static function getBPDetailsFromTemplate($template = ''){
 		$startTime = microtime(true);
 		set_time_limit(120);
-var_dump($template);
+
 		$ch = curl_init ( $template );
 	    curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, true );
 
