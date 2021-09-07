@@ -866,6 +866,7 @@ class personTable extends DbTable {
         }
 
         $row = db2_fetch_assoc($resultSet);
+        var_dump($row);
 
         if(is_bool($row['FM_MANAGER_FLAG'])){
             var_dump($row);

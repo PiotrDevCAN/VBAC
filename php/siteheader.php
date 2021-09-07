@@ -221,31 +221,26 @@ if(stripos($_ENV['environment'], 'dev')) {
         // echo "</pre>";
 
         $sp = strpos(strtolower($_SESSION['ssoEmail']),'ocean');
-var_dump($sp);
+
         if($sp === FALSE){
             // check in BP
             // echo 'check in BP if Ocean Id exists';
             $data = BluePagesSLAPHAPI::getOceanDetailsFromIntranetId($_SESSION['ssoEmail']);
-            echo "<pre>";
-            var_dump($data);
-            echo "</pre>";
-
             if (!empty($data)) {
                 // Kyndryl employee
+                session_destroy();
                 
                 echo 'You have been identified as Kyndryl employee. Please use an appropriate Ocean Id to login into the vBAC tool.';
-                session_destroy();
+                echo " https://" . $_SERVER['SERVER_NAME'];
+                echo ' redirect to the main page';
 
-                // $redirect = "https://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
-                // header("Location: $redirect");
-                
-                echo "https://" . $_SERVER['SERVER_NAME'];
-                echo 'redirect to the main page';
-                exit;
+                sleep(5);
+                $redirect = "https://" . $_SERVER['SERVER_NAME'];
+                header("Location: $redirect");
             } else {
                 // employee not found in BP
-                exit;
             }
+            exit;
         } else {
             // logged in with Ocean Id
             echo 'logged in with Ocean Id';
