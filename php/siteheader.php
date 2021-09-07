@@ -215,10 +215,11 @@ if(stripos($_ENV['environment'], 'dev')) {
             echo '<br/><br/>Note: When trying to fix this yourself, do remember to always clear cookies when refreshing the page.';
             }
         }
-        // echo "<pre>";
-        // var_dump($_SESSION['ssoEmail']);
-        // var_dump(strtolower($_SESSION['ssoEmail']));
-        // echo "</pre>";
+        
+        echo "<pre>";
+        var_dump($_SESSION['ssoEmail']);
+        var_dump(strtolower($_SESSION['ssoEmail']));
+        echo "</pre>";
 
         $sp = strpos(strtolower($_SESSION['ssoEmail']),'ocean');
 
@@ -229,7 +230,7 @@ if(stripos($_ENV['environment'], 'dev')) {
             if (!empty($data)) {
                 // Kyndryl employee
                 session_destroy();
-                
+
                 echo 'You have been identified as Kyndryl employee. Please use an appropriate Ocean Id to login into the vBAC tool.';
                 echo " https://" . $_SERVER['SERVER_NAME'];
                 echo ' redirect to the main page';
