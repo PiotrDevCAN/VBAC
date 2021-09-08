@@ -8,64 +8,8 @@ use itdq\BluePages;
 use itdq\BluePagesSLAPHAPI;
 use itdq\JwtSecureSession;
 
-$start = microtime(true);
-
-set_include_path("./" . PATH_SEPARATOR . "../" . PATH_SEPARATOR . "../../" . PATH_SEPARATOR . "../../../" . PATH_SEPARATOR);
-
-include ('vendor/autoload.php');
-include ('splClassLoader.php');
-
-$sessionConfig = (new \ByJG\Session\SessionConfig($_SERVER['SERVER_NAME']))
-->withTimeoutMinutes(120)
-->withSecret($_ENV['jwt_token']);
-
-$handler = new JwtSecureSession($sessionConfig);
-session_set_save_handler($handler, true);
-
-session_start();
-
-error_log(__FILE__ . "session:" . session_id());
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-date_default_timezone_set('UTC');
-
-while(ob_get_level()>0){
-    ob_end_clean();
-}
-// ob_start();
 function ob_html_compress($buf){
     return str_replace(array("\n","\r"),'',$buf);
-}
-if (isset($_SERVER['HTTP_ACCEPT_ENCODING'])) {
-    if (substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) {
-        ob_start("ob_gzhandler");
-        // exit('ob_gzhandler');
-    } else {
-        ob_start("ob_html_compress");
-        // exit('ob_html_compress 1');
-    }
-} else {
-    ob_start("ob_html_compress");
-    // exit('ob_html_compress 2');
-}
-$GLOBALS['Db2Schema'] = strtoupper($_ENV['environment']);
-$https = (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == "on");
-
-// global var and config file
-include_once ('w3config.php');
-$content = array();
-$page_template = "interior";
-$header_done = FALSE;
-$page_timestamp = filemtime($_SERVER['SCRIPT_FILENAME']);
-$meta['source'] = "w3php v0.5.8, w3v8, 19 June 2008";
-
-// initalize w3v8 navigation
-
-// error reporting
-if ($w3php['debug']) {
-    ini_set("error_reporting", E_ALL);
-    ini_set("display_errors", '1');
 }
 
 # Takes a hash of values and files in a text template
@@ -81,7 +25,6 @@ function build_template($template, $vals) {
     $tmpl = preg_replace('/<%[^ ]*%>/', "", $tmpl);
     return $tmpl;
 }
-
 
 # send the template footer
 function do_footer() {
@@ -183,7 +126,7 @@ function do_error($page = array())
     exit();
 }
 
-function do_auth($group = null, $handler = null)
+function do_auth($group = null)
 {
 
 if(stripos($_ENV['environment'], 'dev')) {
@@ -222,10 +165,12 @@ if(stripos($_ENV['environment'], 'dev')) {
             $data = BluePagesSLAPHAPI::getOceanDetailsFromIntranetId($_SESSION['ssoEmail']);
             if (!empty($data)) {
                 // Kyndryl employee
-                // session_destroy();
-                // session_unset();
 
-                $handler->destroy('close');
+                // remove all session variables
+                session_unset();
+
+                // destroy the session
+                session_destroy();
 
                 echo "<pre>";
                 var_dump($_SESSION);
@@ -352,10 +297,77 @@ function _microtime_float()
     return ((float) $usec + (float) $sec);
 }
 
+$start = microtime(true);
+
+set_include_path("./" . PATH_SEPARATOR . "../" . PATH_SEPARATOR . "../../" . PATH_SEPARATOR . "../../../" . PATH_SEPARATOR);
+
+include ('vendor/autoload.php');
+include ('splClassLoader.php');
+
+// $sessionConfig = (new \ByJG\Session\SessionConfig($_SERVER['SERVER_NAME']))
+// ->withTimeoutMinutes(120)
+// ->withSecret($_ENV['jwt_token']);
+
+$sessionConfig = new \ByJG\Session\SessionConfig($_SERVER['SERVER_NAME']);
+$sessionConfig->withTimeoutMinutes(120);
+$sessionConfig->withSecret($_ENV['jwt_token']);
+
+$handler = new JwtSecureSession($sessionConfig);
+session_set_save_handler($handler, true);
+
+session_start();
+var_dump(headers_sent());
+
+error_log(__FILE__ . "session:" . session_id());
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+date_default_timezone_set('UTC');
+
+while(ob_get_level()>0){
+    ob_end_clean();
+}
+var_dump(headers_sent());
+// ob_start();
+if (isset($_SERVER['HTTP_ACCEPT_ENCODING'])) {
+    if (substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) {
+        ob_start("ob_gzhandler");
+        // exit('ob_gzhandler');
+    } else {
+        ob_start("ob_html_compress");
+        // exit('ob_html_compress 1');
+    }
+} else {
+    ob_start("ob_html_compress");
+    // exit('ob_html_compress 2');
+}
+var_dump(headers_sent());
+$GLOBALS['Db2Schema'] = strtoupper($_ENV['environment']);
+$https = (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == "on");
+var_dump(headers_sent());
+
+// global var and config file
+include_once ('w3config.php');
+$content = array();
+$page_template = "interior";
+$header_done = FALSE;
+$page_timestamp = filemtime($_SERVER['SCRIPT_FILENAME']);
+$meta['source'] = "w3php v0.5.8, w3v8, 19 June 2008";
+
+// initalize w3v8 navigation
+
+// error reporting
+if ($w3php['debug']) {
+    ini_set("error_reporting", E_ALL);
+    ini_set("display_errors", '1');
+}
+
 $elapsed = microtime(true);
 error_log("Pre do_Auth():" . (float)($elapsed-$start));
 
-do_auth(null, $handler);
+var_dump(headers_sent());
+
+do_auth();
 $elapsed = microtime(true);
 error_log("Post do_Auth():" . (float)($elapsed-$start));
 include ('php/ldap.php');
