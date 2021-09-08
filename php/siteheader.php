@@ -30,9 +30,6 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 date_default_timezone_set('UTC');
 
-
-
-
 while(ob_get_level()>0){
     ob_end_clean();
 }
@@ -54,7 +51,6 @@ if (isset($_SERVER['HTTP_ACCEPT_ENCODING'])) {
 }
 $GLOBALS['Db2Schema'] = strtoupper($_ENV['environment']);
 $https = (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == "on");
-
 
 // global var and config file
 include_once ('w3config.php');
@@ -95,8 +91,6 @@ function do_footer() {
     print $template;
     $GLOBALS['header_done'] = FALSE;
 }
-
-
 
 function do_result($page = array())
 {
@@ -189,7 +183,7 @@ function do_error($page = array())
     exit();
 }
 
-function do_auth($group = null)
+function do_auth($group = null, $handler = null)
 {
 
 if(stripos($_ENV['environment'], 'dev')) {
@@ -361,7 +355,7 @@ function _microtime_float()
 $elapsed = microtime(true);
 error_log("Pre do_Auth():" . (float)($elapsed-$start));
 
-do_auth();
+do_auth(null, $handler);
 $elapsed = microtime(true);
 error_log("Post do_Auth():" . (float)($elapsed-$start));
 include ('php/ldap.php');
