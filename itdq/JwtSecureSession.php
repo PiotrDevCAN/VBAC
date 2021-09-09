@@ -55,7 +55,7 @@ Class JwtSecureSession extends JwtSession
                 self::COOKIE_PREFIX . $this->sessionConfig->getSessionContext(),
                 $token,
                 $cookieProperties
-                );
+            );
             if (defined("SETCOOKIE_FORTEST")) {
                 $_COOKIE[self::COOKIE_PREFIX . $this->sessionConfig->getSessionContext()] = $token;
             }

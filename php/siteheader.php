@@ -179,10 +179,14 @@ function do_ocean_auth($group = null)
     // echo "</pre>";
 
     // remove all session variables
-    session_unset();
+    // session_unset();
 
     // destroy the session
-    session_destroy();
+    // session_destroy();
+
+    // clear selected keys
+    unset($_SESSION['uid']);
+    unset($_SESSION['exp']);
 
     // echo "<pre>";
     // echo 'second check';
@@ -200,7 +204,7 @@ function do_ocean_auth($group = null)
     // do_auth();
 
     $auth = new Auth();
-    if(!$auth->logout()){
+    if(!$auth->ensureAuthorized()){
         die('Invalid logon attempt');
     } else {
         die('Valid logon attempt');

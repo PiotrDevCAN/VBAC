@@ -9,4 +9,10 @@ if($auth->verifyResponse($_GET))
     header("Access-Control-Allow-Origin: *");
     header("Location: ".$_GET['state']);
 	exit();
+} else {
+    error_log("get state" . print_r($_GET,true));
+    echo $_GET['state'];
+    // header("Access-Control-Allow-Origin: *");
+    // header("Location: ".$_GET['state']);
+	exit();
 }

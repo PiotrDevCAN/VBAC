@@ -30,20 +30,6 @@
 			return false;
 		}
 
-		//makes sure that user is authorized
-		//returns boolean
-		public function logout()
-		{
-			if(isset($_SESSION['uid']) && isset($_SESSION['exp']) && ($_SESSION['exp']-300) > time()) return true;
-echo 'all clear';
-			switch ($this->technology) {
-				case "openidconnect":
-					$this->unauthenticateOpenIDConnect();
-					break;
-			}
-			return false;
-		}
-
 		//verifies response from authentication service depending on technologies
 		//returns boolean
 		public function verifyResponse($response)
@@ -106,8 +92,8 @@ echo 'all clear';
 				}
 
 				//use this to debug returned values from w3id/IBM ID service if you got to else in the condition below
-				//var_dump($userData);
-				//die();
+				var_dump($userData);
+				die();
 
 				//if using this code on w3ID
 				if(isset($userData) && !empty($userData)
@@ -172,18 +158,6 @@ echo 'all clear';
 		    error_log(__CLASS__ . __FUNCTION__ . __LINE__. " About to pass to  : " . $authorizedUrL);
 		    header("Access-Control-Allow-Origin: *");
 			header("Location: ".$authorizedUrL);
-			exit();
-		}
-
-		//starts authentication process and redirects user to service for authorizing
-		//returns exit();
-		private function unauthenticateOpenIDConnect()
-		{
-		    $authorizedUrL = $this->generateOpenIDConnectAuthorizeURL();
-		    error_log(__CLASS__ . __FUNCTION__ . __LINE__. " About to pass to  : " . $authorizedUrL);
-		    header("Access-Control-Allow-Origin: *");
-			// header("Location: ".$authorizedUrL);
-			echo $authorizedUrL;
 			exit();
 		}
 
