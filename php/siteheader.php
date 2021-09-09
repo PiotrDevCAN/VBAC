@@ -180,6 +180,15 @@ if(stripos($_ENV['environment'], 'dev')) {
                 if (!empty($data)) {
                     // Kyndryl employee
 
+                    echo "<pre>";
+                    echo 'first check';
+                    var_dump($_COOKIE);
+                    var_dump($_SERVER['HTTP_COOKIE']);
+                    // var_dump($_SESSION);
+                    // var_dump($_SESSION['uid']);
+                    // var_dump($_SESSION['exp']);
+                    echo "</pre>";
+
                     // remove all session variables
                     session_unset();
 
@@ -187,7 +196,9 @@ if(stripos($_ENV['environment'], 'dev')) {
                     session_destroy();
 
                     echo "<pre>";
+                    echo 'second check';
                     var_dump($_COOKIE);
+                    var_dump($_SERVER['HTTP_COOKIE']);
                     // var_dump($_SESSION);
                     // var_dump($_SESSION['uid']);
                     // var_dump($_SESSION['exp']);
