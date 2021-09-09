@@ -35,7 +35,7 @@
 		public function logout()
 		{
 			if(isset($_SESSION['uid']) && isset($_SESSION['exp']) && ($_SESSION['exp']-300) > time()) return true;
-
+echo 'all clear';
 			switch ($this->technology) {
 				case "openidconnect":
 					$this->unauthenticateOpenIDConnect();
