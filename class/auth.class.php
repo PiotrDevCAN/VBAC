@@ -90,12 +90,15 @@ class Auth {
 		}
 
 		//verifies openID response
-		public function revokeCodeOpenIDConnect($code)
+		public function revokeCodeOpenIDConnect()
 		{
 			// $url = $this->config->token_url;
 			$url = "https://preprod.login.w3.ibm.com/v1.0/endpoint/default/revoke";
 
 			$token = $_COOKIE[JwtSession::COOKIE_PREFIX . 'default'];
+			echo '<pre>';
+			var_dump($_COOKIE);
+			echo '</pre>';
 
 			$fields = array(
 				'token' => $token,
