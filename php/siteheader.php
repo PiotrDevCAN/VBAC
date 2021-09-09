@@ -136,7 +136,7 @@ function do_error($page = array())
     exit();
 }
 
-function do_auth($group = null, $JwtSession, $sessionConfig)
+function do_auth($group = null)
 {
 
 if(stripos($_ENV['environment'], 'dev')) {
@@ -162,64 +162,75 @@ if(stripos($_ENV['environment'], 'dev')) {
             echo '<br/><br/>Note: When trying to fix this yourself, do remember to always clear cookies when refreshing the page.';
             }
         }
+    }
+}
 
-        // echo "<pre>";
-        // var_dump($_SESSION['ssoEmail']);
-        // var_dump(strtolower($_SESSION['ssoEmail']));
-        // echo "</pre>";
+function do_ocean_auth($group = null)
+{
+    // Kyndryl employee
 
-        $ssoEmail = strtolower($_SESSION['ssoEmail']);
+    echo "<pre>";
+    echo 'first check';
+    var_dump($_COOKIE);
+    var_dump($_SERVER['HTTP_COOKIE']);
+    var_dump($_SESSION);
+    var_dump($_SESSION['uid']);
+    var_dump($_SESSION['exp']);
+    echo "</pre>";
 
-        if ($ssoEmail == 'piotr.tajanowicz@ibm.com') {
+    // remove all session variables
+    session_unset();
 
-            $sp = strpos(strtolower($_SESSION['ssoEmail']),'ocean');
+    // destroy the session
+    session_destroy();
 
-            if($sp === FALSE){
-                // check in BP
-                $data = BluePagesSLAPHAPI::getOceanDetailsFromIntranetId($_SESSION['ssoEmail']);
-                if (!empty($data)) {
-                    // Kyndryl employee
+    echo "<pre>";
+    echo 'second check';
+    var_dump($_COOKIE);
+    var_dump($_SERVER['HTTP_COOKIE']);
+    // var_dump($_SESSION);
+    // var_dump($_SESSION['uid']);
+    // var_dump($_SESSION['exp']);
+    echo "</pre>";
 
-                    echo "<pre>";
-                    echo 'first check';
-                    var_dump($_COOKIE);
-                    var_dump($_SERVER['HTTP_COOKIE']);
-                    // var_dump($_SESSION);
-                    // var_dump($_SESSION['uid']);
-                    // var_dump($_SESSION['exp']);
-                    echo "</pre>";
+    echo 'You have been identified as Kyndryl employee. Please use an appropriate Ocean Id to login into the vBAC tool.';
+    echo " https://" . $_SERVER['SERVER_NAME'];
+    echo ' redirect to the main page';
 
-                    // remove all session variables
-                    session_unset();
+    do_auth();
+    // sleep(5);
+    // $redirect = "https://" . $_SERVER['SERVER_NAME'];
+    // header("Location: $redirect");
+}
 
-                    // destroy the session
-                    session_destroy();
+function check_ocean_employee_logged($group = null)
+{
+    $ssoEmail = strtolower($_SESSION['ssoEmail']);
 
-                    echo "<pre>";
-                    echo 'second check';
-                    var_dump($_COOKIE);
-                    var_dump($_SERVER['HTTP_COOKIE']);
-                    // var_dump($_SESSION);
-                    // var_dump($_SESSION['uid']);
-                    // var_dump($_SESSION['exp']);
-                    echo "</pre>";
-                    
-                    echo 'You have been identified as Kyndryl employee. Please use an appropriate Ocean Id to login into the vBAC tool.';
-                    echo " https://" . $_SERVER['SERVER_NAME'];
-                    echo ' redirect to the main page';
+    if ($ssoEmail == 'piotr.tajanowicz@ibm.com') {
 
-                    // sleep(5);
-                    // $redirect = "https://" . $_SERVER['SERVER_NAME'];
-                    // header("Location: $redirect");
-                } else {
-                    // employee not found in BP
-                }
-                exit;
-            } else {
-                // logged in with Ocean Id
-                echo 'logged in with Ocean Id';
-            }
+        $sp = strpos(strtolower($_SESSION['ssoEmail']),'ocean');
+
+        if($sp === FALSE){
+            return false;
+        } else {
+            return true;
         }
+    } else {
+        return true;
+    }
+}
+
+function check_ocean_employee($group = null)
+{
+    // check in BP
+    $data = BluePagesSLAPHAPI::getOceanDetailsFromIntranetId($_SESSION['ssoEmail']);
+    if (!empty($data)) {
+        // Kyndryl employee
+        return true;
+    } else {
+        // employee not found in BP
+        return false;
     }
 }
 
@@ -390,7 +401,23 @@ if ($w3php['debug']) {
 $elapsed = microtime(true);
 error_log("Pre do_Auth():" . (float)($elapsed-$start));
 
-do_auth(null, $handler, $sessionConfig);
+do_auth();
+
+$checkIsOceanId = check_ocean_employee_logged();
+if ($checkIsOceanId === false) {
+    $checkIsOceanEmployee = check_ocean_employee();
+    if ($checkIsOceanEmployee === false) {
+        // properly logged in with IBM Id
+        echo 'properly logged in with IBM Id';
+    } else {
+        // do logon with Ocean Id
+        do_ocean_auth();
+    }
+} else {
+    // logged in with Ocean Id
+    echo 'logged in with Ocean Id';
+}
+
 $elapsed = microtime(true);
 error_log("Post do_Auth():" . (float)($elapsed-$start));
 include ('php/ldap.php');
