@@ -204,7 +204,7 @@ function do_ocean_auth($group = null)
     // do_auth();
 
     $auth = new Auth();
-    if(!$auth->logout()){
+    if(!$auth->revokeCodeOpenIDConnect()){
         die('Invalid logon attempt');
     } else {
         die('Valid logon attempt');

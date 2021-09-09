@@ -1,5 +1,9 @@
 <?php
-	class Auth {
+
+use ByJG\Session\JwtSession;
+use itdq\JwtSecureSession;
+
+class Auth {
 		private $config = false;
 		private $technology = false;
 
@@ -83,6 +87,40 @@
 			curl_close($ch);
 
 			return $this->processOpenIDConnectCallback($result);
+		}
+
+		//verifies openID response
+		public function revokeCodeOpenIDConnect($code)
+		{
+			// $url = $this->config->token_url;
+			$url = "https://preprod.login.w3.ibm.com/v1.0/endpoint/default/revoke";
+
+			$token = $_COOKIE[JwtSession::COOKIE_PREFIX . 'default'];
+
+			$fields = array(
+				'token' => $token,
+				'client_id' => $this->config->client_id,
+				'client_secret' => $this->config->client_secret
+			);
+
+			$postvars = http_build_query($fields);
+			$ch = curl_init();
+
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_POST, count($fields));
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $postvars);
+
+			$result = curl_exec($ch);
+
+			curl_close($ch);
+
+			$token_response = json_decode($result);
+			if($token_response) {
+				var_dump($token_response);
+				die();
+			}
+			// return $this->processOpenIDConnectCallback($result);
 		}
 
 		//processes openid data and sets session
