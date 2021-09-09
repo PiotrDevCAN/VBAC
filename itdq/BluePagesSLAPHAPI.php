@@ -771,9 +771,6 @@ class BluePagesSLAPHAPI {
 
 	    $curlReturn = curl_exec ( $ch );
 	    $lookupTime = (float)(microtime(true) - $startTime);
-		echo '<pre>';
-		var_dump($curlReturn);
-		echo '</pre>';
 	    $xml = simplexml_load_string($curlReturn);
 
 		$allDetails = array();

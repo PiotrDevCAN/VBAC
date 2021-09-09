@@ -26,6 +26,15 @@ function build_template($template, $vals) {
     return $tmpl;
 }
 
+# send the template header
+function do_header() {
+    global $content, $w3nav;
+    if ($GLOBALS['header_done'] == TRUE) return;
+    $template = build_template($GLOBALS['page_template']. ".header", $GLOBALS['content']);
+    print $template;
+    $GLOBALS['header_done'] = TRUE;
+}
+
 # send the template footer
 function do_footer() {
     global $content, $w3nav;
