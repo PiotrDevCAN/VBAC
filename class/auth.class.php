@@ -30,6 +30,20 @@
 			return false;
 		}
 
+		//makes sure that user is authorized
+		//returns boolean
+		public function logout()
+		{
+			// if(isset($_SESSION['uid']) && isset($_SESSION['exp']) && ($_SESSION['exp']-300) > time()) return true;
+
+			switch ($this->technology) {
+				case "openidconnect":
+					$this->unauthenticateOpenIDConnect();
+					break;
+			}
+			return false;
+		}
+
 		//verifies response from authentication service depending on technologies
 		//returns boolean
 		public function verifyResponse($response)
@@ -92,8 +106,8 @@
 				}
 
 				//use this to debug returned values from w3id/IBM ID service if you got to else in the condition below
-				var_dump($userData);
-				die();
+				// var_dump($userData);
+				// die();
 
 				//if using this code on w3ID
 				if(isset($userData) && !empty($userData)
@@ -170,6 +184,27 @@
             return $authorizeString;
 		}
 
+		//starts authentication process and redirects user to service for authorizing
+		//returns exit();
+		private function unauthenticateOpenIDConnect()
+		{
+		    $authorizedUrL = $this->generateOpenIDConnectUnauthorizeURL();
+		    error_log(__CLASS__ . __FUNCTION__ . __LINE__. " About to pass to  : " . $authorizedUrL);
+		    header("Access-Control-Allow-Origin: *");
+			header("Location: ".$authorizedUrL);
+			exit();
+		}
+
+		//generates correct openidconnect authorize URL
+		//returns string
+		private function generateOpenIDConnectUnauthorizeURL()
+		{
+			$current_link = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+
+			// $authorizeString = $this->config->authorize_url . "?scope=openid&response_type=code&client_id=".$this->config->client_id."&state=".urlencode($current_link)."&redirect_uri=".$this->config->redirect_url;
+			$authorizeString = "https://preprod.login.w3.ibm.com/v1.0/endpoint/default/revoke" . "?scope=openid&response_type=code&client_id=".$this->config->client_id."&state=".urlencode($current_link)."&redirect_uri=".$this->config->redirect_url;
+            return $authorizeString;
+		}
 		//loads openidconnect
 		//uses Config
 		//returns stdClass
