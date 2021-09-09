@@ -4,6 +4,7 @@
 // ** session_cache_limiter('private');
 // ** for fpdf http://www.fpdf.org/ download of pdf files in https;
 
+use ByJG\Session\JwtSession;
 use itdq\BluePages;
 use itdq\BluePagesSLAPHAPI;
 use itdq\JwtSecureSession;
@@ -135,7 +136,7 @@ function do_error($page = array())
     exit();
 }
 
-function do_auth($group = null)
+function do_auth($group = null, $JwtSession, $sessionConfig)
 {
 
 if(stripos($_ENV['environment'], 'dev')) {
@@ -167,40 +168,58 @@ if(stripos($_ENV['environment'], 'dev')) {
         // var_dump(strtolower($_SESSION['ssoEmail']));
         // echo "</pre>";
 
-        $sp = strpos(strtolower($_SESSION['ssoEmail']),'ocean');
+        $ssoEmail = strtolower($_SESSION['ssoEmail']);
 
-        if($sp === FALSE){
-            // check in BP
-            $data = BluePagesSLAPHAPI::getOceanDetailsFromIntranetId($_SESSION['ssoEmail']);
-            if (!empty($data)) {
-                // Kyndryl employee
+        if ($ssoEmail == 'piotr.tajanowicz@ibm.com') {
 
-                // remove all session variables
-                session_unset();
+            $sp = strpos(strtolower($_SESSION['ssoEmail']),'ocean');
 
-                // destroy the session
-                session_destroy();
+            if($sp === FALSE){
+                // check in BP
+                $data = BluePagesSLAPHAPI::getOceanDetailsFromIntranetId($_SESSION['ssoEmail']);
+                if (!empty($data)) {
+                    // Kyndryl employee
 
-                // echo "<pre>";
-                // var_dump($_SESSION);
-                // var_dump($_SESSION['uid']);
-                // var_dump($_SESSION['exp']);
-                // echo "</pre>";
-                
-                echo 'You have been identified as Kyndryl employee. Please use an appropriate Ocean Id to login into the vBAC tool.';
-                echo " https://" . $_SERVER['SERVER_NAME'];
-                echo ' redirect to the main page';
+                    // remove all session variables
+                    session_unset();
 
-                // sleep(5);
-                // $redirect = "https://" . $_SERVER['SERVER_NAME'];
-                // header("Location: $redirect");
+                    // destroy the session
+                    session_destroy();
+
+                    if (!headers_sent()) {
+                        setcookie(
+                            JwtSession::COOKIE_PREFIX . $sessionConfig->getSessionContext(),
+                            null,
+                            (time()-3000),
+                            $sessionConfig->getCookiePath(),
+                            $sessionConfig->getCookieDomain()
+                        );
+                        echo 'session cookie removed';
+                    } else {
+                        echo 'unable to  remove session cookie';
+                    }
+
+                    // echo "<pre>";
+                    // var_dump($_SESSION);
+                    // var_dump($_SESSION['uid']);
+                    // var_dump($_SESSION['exp']);
+                    // echo "</pre>";
+                    
+                    echo 'You have been identified as Kyndryl employee. Please use an appropriate Ocean Id to login into the vBAC tool.';
+                    echo " https://" . $_SERVER['SERVER_NAME'];
+                    echo ' redirect to the main page';
+
+                    // sleep(5);
+                    // $redirect = "https://" . $_SERVER['SERVER_NAME'];
+                    // header("Location: $redirect");
+                } else {
+                    // employee not found in BP
+                }
+                exit;
             } else {
-                // employee not found in BP
+                // logged in with Ocean Id
+                echo 'logged in with Ocean Id';
             }
-            exit;
-        } else {
-            // logged in with Ocean Id
-            echo 'logged in with Ocean Id';
         }
     }
 }
@@ -372,7 +391,7 @@ if ($w3php['debug']) {
 $elapsed = microtime(true);
 error_log("Pre do_Auth():" . (float)($elapsed-$start));
 
-do_auth();
+do_auth(null, $handler, $sessionConfig);
 $elapsed = microtime(true);
 error_log("Post do_Auth():" . (float)($elapsed-$start));
 include ('php/ldap.php');
