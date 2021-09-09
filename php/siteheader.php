@@ -186,19 +186,6 @@ if(stripos($_ENV['environment'], 'dev')) {
                     // destroy the session
                     session_destroy();
 
-                    if (!headers_sent()) {
-                        setcookie(
-                            JwtSession::COOKIE_PREFIX . $sessionConfig->getSessionContext(),
-                            null,
-                            (time()-3000),
-                            $sessionConfig->getCookiePath(),
-                            $sessionConfig->getCookieDomain()
-                        );
-                        echo 'session cookie removed';
-                    } else {
-                        echo 'unable to  remove session cookie';
-                    }
-
                     // echo "<pre>";
                     // var_dump($_SESSION);
                     // var_dump($_SESSION['uid']);

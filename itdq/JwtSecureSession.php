@@ -61,4 +61,33 @@ Class JwtSecureSession extends JwtSession
 
         return true;
     }
+
+    /**
+     * Destroy a session
+     *
+     * @link http://php.net/manual/en/sessionhandlerinterface.destroy.php
+     * @param string $session_id The session ID being destroyed.
+     * @return bool <p>
+     * The return value (usually TRUE on success, FALSE on failure).
+     * Note this value is returned internally to PHP for processing.
+     * </p>
+     * @since 5.4.0
+     */
+    public function destroy($session_id)
+    {
+        if (!headers_sent()) {
+            setcookie(
+                self::COOKIE_PREFIX . $this->sessionConfig->getSessionContext(),
+                null,
+                (time()-3000),
+                $this->sessionConfig->getCookiePath(),
+                $this->sessionConfig->getCookieDomain()
+            );
+            echo 'session cookie removed in JwtSecureSession';
+        } else {
+            echo 'unable to  remove session cookie in JwtSecureSession';
+        }
+
+        return true;
+    }
 }
