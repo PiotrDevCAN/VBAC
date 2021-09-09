@@ -316,7 +316,6 @@ $handler = new JwtSecureSession($sessionConfig);
 session_set_save_handler($handler, true);
 
 session_start();
-var_dump(headers_sent());
 
 error_log(__FILE__ . "session:" . session_id());
 ini_set('display_errors', 1);
@@ -327,7 +326,7 @@ date_default_timezone_set('UTC');
 while(ob_get_level()>0){
     ob_end_clean();
 }
-var_dump(headers_sent());
+
 // ob_start();
 if (isset($_SERVER['HTTP_ACCEPT_ENCODING'])) {
     if (substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) {
@@ -341,10 +340,9 @@ if (isset($_SERVER['HTTP_ACCEPT_ENCODING'])) {
     ob_start("ob_html_compress");
     // exit('ob_html_compress 2');
 }
-var_dump(headers_sent());
+
 $GLOBALS['Db2Schema'] = strtoupper($_ENV['environment']);
 $https = (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == "on");
-var_dump(headers_sent());
 
 // global var and config file
 include_once ('w3config.php');
@@ -364,8 +362,6 @@ if ($w3php['debug']) {
 
 $elapsed = microtime(true);
 error_log("Pre do_Auth():" . (float)($elapsed-$start));
-
-var_dump(headers_sent());
 
 do_auth();
 $elapsed = microtime(true);
