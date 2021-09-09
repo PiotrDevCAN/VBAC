@@ -169,14 +169,14 @@ function do_ocean_auth($group = null)
 {
     // Kyndryl employee
 
-    echo "<pre>";
-    echo 'first check';
-    var_dump($_COOKIE);
-    var_dump($_SERVER['HTTP_COOKIE']);
-    var_dump($_SESSION);
-    var_dump($_SESSION['uid']);
-    var_dump($_SESSION['exp']);
-    echo "</pre>";
+    // echo "<pre>";
+    // echo 'first check';
+    // var_dump($_COOKIE);
+    // var_dump($_SERVER['HTTP_COOKIE']);
+    // var_dump($_SESSION);
+    // var_dump($_SESSION['uid']);
+    // var_dump($_SESSION['exp']);
+    // echo "</pre>";
 
     // remove all session variables
     session_unset();
@@ -184,14 +184,14 @@ function do_ocean_auth($group = null)
     // destroy the session
     session_destroy();
 
-    echo "<pre>";
-    echo 'second check';
-    var_dump($_COOKIE);
-    var_dump($_SERVER['HTTP_COOKIE']);
-    var_dump($_SESSION);
-    var_dump($_SESSION['uid']);
-    var_dump($_SESSION['exp']);
-    echo "</pre>";
+    // echo "<pre>";
+    // echo 'second check';
+    // var_dump($_COOKIE);
+    // var_dump($_SERVER['HTTP_COOKIE']);
+    // var_dump($_SESSION);
+    // var_dump($_SESSION['uid']);
+    // var_dump($_SESSION['exp']);
+    // echo "</pre>";
 
     echo 'You have been identified as Kyndryl employee. Please use an appropriate Ocean Id to login into the vBAC tool.';
     echo " https://" . $_SERVER['SERVER_NAME'];
@@ -200,10 +200,10 @@ function do_ocean_auth($group = null)
     // do_auth();
 
     $auth = new Auth();
-    if(!$auth->logout()){
-        die('Invalid logou attempt');
-    } else {
+    if(!$auth->ensureAuthorized()){
         die('Invalid logon attempt');
+    } else {
+        die('Valid logon attempt');
     }
 
     // sleep(5);
