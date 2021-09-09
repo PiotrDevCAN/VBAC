@@ -78,7 +78,7 @@ Class JwtSecureSession extends JwtSession
     public function destroy($session_id)
     {
         if (!headers_sent()) {
-            setcookie(
+            $clear0 = setcookie(
                 self::COOKIE_PREFIX . $this->sessionConfig->getSessionContext(),
                 null,
                 (time()-3000),
@@ -90,14 +90,18 @@ Class JwtSecureSession extends JwtSession
             if (count($_COOKIE) > 0) {
                 $cookies = $_COOKIE;
                 foreach($cookies as $name => $value) {
-                    setcookie($name, '', time()-1000);
-                    setcookie($name, '', time()-1000, '/');
+                    $clear1 = setcookie($name, '', time()-3000);
+                    $clear2 = setcookie($name, '', time()-3000, '/');
+                    echo '<br>'.$name;
+                    echo '<br>'.var_dump($clear1);
+                    echo '<br>'.var_dump($clear2);
                 }
             }
-            echo self::COOKIE_PREFIX . $this->sessionConfig->getSessionContext();
-            echo 'session cookie removed in JwtSecureSession';
+            echo '<br>'.self::COOKIE_PREFIX . $this->sessionConfig->getSessionContext();
+            echo '<br>'.var_dump($clear0);
+            echo '<br>'.'session cookie removed in JwtSecureSession';
         } else {
-            echo 'unable to  remove session cookie in JwtSecureSession';
+            echo '<br>'.'unable to  remove session cookie in JwtSecureSession';
         }
 
         return true;
