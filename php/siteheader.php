@@ -188,16 +188,24 @@ function do_ocean_auth($group = null)
     echo 'second check';
     var_dump($_COOKIE);
     var_dump($_SERVER['HTTP_COOKIE']);
-    // var_dump($_SESSION);
-    // var_dump($_SESSION['uid']);
-    // var_dump($_SESSION['exp']);
+    var_dump($_SESSION);
+    var_dump($_SESSION['uid']);
+    var_dump($_SESSION['exp']);
     echo "</pre>";
 
     echo 'You have been identified as Kyndryl employee. Please use an appropriate Ocean Id to login into the vBAC tool.';
     echo " https://" . $_SERVER['SERVER_NAME'];
     echo ' redirect to the main page';
 
-    do_auth();
+    // do_auth();
+
+    $auth = new Auth();
+    if(!$auth->logout()){
+        die('Invalid logou attempt');
+    } else {
+        die('Invalid logon attempt');
+    }
+
     // sleep(5);
     // $redirect = "https://" . $_SERVER['SERVER_NAME'];
     // header("Location: $redirect");

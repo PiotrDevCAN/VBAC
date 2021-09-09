@@ -30,6 +30,20 @@
 			return false;
 		}
 
+		//makes sure that user is authorized
+		//returns boolean
+		public function logout()
+		{
+			if(isset($_SESSION['uid']) && isset($_SESSION['exp']) && ($_SESSION['exp']-300) > time()) return true;
+
+			switch ($this->technology) {
+				case "openidconnect":
+					$this->unauthenticateOpenIDConnect();
+					break;
+			}
+			return false;
+		}
+
 		//verifies response from authentication service depending on technologies
 		//returns boolean
 		public function verifyResponse($response)
@@ -158,6 +172,18 @@
 		    error_log(__CLASS__ . __FUNCTION__ . __LINE__. " About to pass to  : " . $authorizedUrL);
 		    header("Access-Control-Allow-Origin: *");
 			header("Location: ".$authorizedUrL);
+			exit();
+		}
+
+		//starts authentication process and redirects user to service for authorizing
+		//returns exit();
+		private function unauthenticateOpenIDConnect()
+		{
+		    $authorizedUrL = $this->generateOpenIDConnectAuthorizeURL();
+		    error_log(__CLASS__ . __FUNCTION__ . __LINE__. " About to pass to  : " . $authorizedUrL);
+		    header("Access-Control-Allow-Origin: *");
+			// header("Location: ".$authorizedUrL);
+			echo $authorizedUrL;
 			exit();
 		}
 
