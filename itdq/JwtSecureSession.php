@@ -87,16 +87,14 @@ Class JwtSecureSession extends JwtSession
             );
 
             // unset cookies
-            if (isset($_SERVER['HTTP_COOKIE'])) {
-                $cookies = explode(';', $_SERVER['HTTP_COOKIE']);
-                foreach($cookies as $cookie) {
-                    $parts = explode('=', $cookie);
-                    $name = trim($parts[0]);
+            if (count($_COOKIE) > 0) {
+                $cookies = $_COOKIE;
+                foreach($cookies as $name => $value) {
                     setcookie($name, '', time()-1000);
                     setcookie($name, '', time()-1000, '/');
                 }
             }
-
+            echo self::COOKIE_PREFIX . $this->sessionConfig->getSessionContext();
             echo 'session cookie removed in JwtSecureSession';
         } else {
             echo 'unable to  remove session cookie in JwtSecureSession';
