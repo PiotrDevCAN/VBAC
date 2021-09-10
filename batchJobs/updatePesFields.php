@@ -36,7 +36,7 @@ if (isset($url)) {
     $commitEvery100Updates = 100;
 
     $loader = new Loader();
-    $employeesEmailsForRaw = $loader->load('EMAIL_ADDRESS',allTables::$PERSON," ");
+    $employeesEmailsForRaw = $loader->load('EMAIL_ADDRESS', allTables::$PERSON);
     $employeesEmailsFor = array_map('strtolower',$employeesEmailsForRaw);
 
     var_dump($employeesEmailsFor);
