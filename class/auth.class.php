@@ -22,7 +22,7 @@ class Auth {
 		}
 
 		public function storeParameters($response)
-		{
+		{ 
 			switch ($this->technology) {
 				case "openidconnect":
 					$_SESSION['SSO_code'] = $response['code'];
