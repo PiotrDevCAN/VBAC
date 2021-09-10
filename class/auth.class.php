@@ -4,6 +4,7 @@ use ByJG\Session\JwtSession;
 use itdq\JwtSecureSession;
 
 class Auth {
+	
 		private $config = false;
 		private $technology = false;
 
@@ -17,6 +18,17 @@ class Auth {
 					break;
 				default:
 					throw new Exception(htmlentities($technology).' not yet implemented.');
+			}
+		}
+
+		public function storeParameters($response)
+		{
+			switch ($this->technology) {
+				case "openidconnect":
+					$_SESSION['SSO_code'] = $response['code'];
+					$_SESSION['SSO_grant_id'] = $response['grant_id'];
+					$_SESSION['SSO_state'] = $response['state'];
+					break;
 			}
 		}
 
@@ -90,20 +102,22 @@ class Auth {
 		}
 
 		//verifies openID response
-		public function revokeCodeOpenIDConnect()
+		public function refreshTokenOpenIDConnect()
 		{
-			// $url = $this->config->token_url;
-			$url = "https://preprod.login.w3.ibm.com/v1.0/endpoint/default/revoke";
+			$url = $this->config->token_url;
+			// $url = "https://preprod.login.w3.ibm.com/v1.0/endpoint/default/revoke";
 
 			$token = $_COOKIE[JwtSession::COOKIE_PREFIX . 'default'];
+			// $token = JwtSecureSession->read();
 			echo '<pre>';
 			var_dump($_COOKIE);
 			echo '</pre>';
 
 			$fields = array(
-				'token' => $token,
-				'client_id' => $this->config->client_id,
-				'client_secret' => $this->config->client_secret
+				'refresh_token' => $token, // must be a valid refresh_token provided by w3id SSO 
+				'grant_type' => 'refresh_token', // is always refresh_token 
+				'client_id' => $this->config->client_id, // must be the client id assigned to your w3id SSO configuration and must match the client_id used in the authorize endpoint 
+				'client_secret' => $this->config->client_secret  // must be the client secret assigned to your w3id SSO configuration 
 			);
 
 			$postvars = http_build_query($fields);

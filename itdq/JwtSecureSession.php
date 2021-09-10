@@ -5,7 +5,41 @@ use ByJG\Session\JwtSession;
 use ByJG\Util\JwtWrapper;
 
 Class JwtSecureSession extends JwtSession
-{
+{   
+    /**
+     * Read session data
+     *
+     * @link http://php.net/manual/en/sessionhandlerinterface.read.php
+     * @param string $session_id The session id to read data for.
+     * @return string <p>
+     * Returns an encoded string of the read data.
+     * If nothing was read, it must return an empty string.
+     * Note this value is returned internally to PHP for processing.
+     * </p>
+     * @since 5.4.0
+     */
+    public function read($session_id)
+    {
+        try {
+            if (isset($_COOKIE[self::COOKIE_PREFIX . $this->sessionConfig->getSessionContext()])) {
+                $jwt = new JwtWrapper(
+                    $this->sessionConfig->getServerName(),
+                    $this->sessionConfig->getKey()
+                );
+                $data = $jwt->extractData($_COOKIE[self::COOKIE_PREFIX . $this->sessionConfig->getSessionContext()]);
+
+                if (empty($data->data)) {
+                    return '';
+                }
+
+                return $data->data;
+            }
+            return '';
+        } catch (\Exception $ex) {
+            return '';
+        }
+    }
+
     /**
      * Write session data
      *
@@ -59,6 +93,9 @@ Class JwtSecureSession extends JwtSession
             if (defined("SETCOOKIE_FORTEST")) {
                 $_COOKIE[self::COOKIE_PREFIX . $this->sessionConfig->getSessionContext()] = $token;
             }
+            echo '<br>'.'session cookie written in JwtSecureSession';
+        } else {
+            echo '<br>'.'session cookie not written in JwtSecureSession';
         }
 
         return true;
@@ -97,8 +134,6 @@ Class JwtSecureSession extends JwtSession
                     echo '<br>'.var_dump($clear2);
                 }
             }
-            echo '<br>'.self::COOKIE_PREFIX . $this->sessionConfig->getSessionContext();
-            echo '<br>'.var_dump($clear0);
             echo '<br>'.'session cookie removed in JwtSecureSession';
         } else {
             echo '<br>'.'unable to  remove session cookie in JwtSecureSession';

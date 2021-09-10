@@ -203,8 +203,17 @@ function do_ocean_auth($group = null)
 
     // do_auth();
 
-    $auth = new Auth();
-    $auth->revokeCodeOpenIDConnect();
+    // $auth = new Auth();
+    // $auth->refreshTokenOpenIDConnect();
+
+
+    echo '<pre>';
+    var_dump($_SESSION);
+    var_dump($_COOKIE);
+    echo '</pre>';
+    // exit;
+
+
     die();
     // if(!$auth->revokeCodeOpenIDConnect()){
     //     die('Invalid logon attempt');
