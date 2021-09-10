@@ -154,13 +154,13 @@ class Auth {
 			$token_response = json_decode($data);
 			if($token_response)
 			{
-				$_SESSION['SSO_access_token'] = $token_response['access_token'];
-				$_SESSION['SSO_refresh_token'] = $token_response['refresh_token'];
-				$_SESSION['SSO_scope'] = $token_response['scope'];
-				$_SESSION['SSO_grant_id'] = $token_response['grant_id'];
-				$_SESSION['SSO_id_token'] = $token_response['id_token'];
-				$_SESSION['SSO_token_type'] = $token_response['token_type'];
-				$_SESSION['SSO_expires_in'] = $token_response['expires_in'];
+				$_SESSION['SSO_access_token'] = $token_response->access_token;
+				$_SESSION['SSO_refresh_token'] = $token_response->refresh_token;
+				$_SESSION['SSO_scope'] = $token_response->scope;
+				$_SESSION['SSO_grant_id'] = $token_response->grant_id;
+				$_SESSION['SSO_id_token'] = $token_response->id_token;
+				$_SESSION['SSO_token_type'] = $token_response->token_type;
+				$_SESSION['SSO_expires_in'] = $token_response->expires_in;
 
 				// var_dump($token_response);
 				// die();
