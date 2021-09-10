@@ -93,9 +93,9 @@ Class JwtSecureSession extends JwtSession
             if (defined("SETCOOKIE_FORTEST")) {
                 $_COOKIE[self::COOKIE_PREFIX . $this->sessionConfig->getSessionContext()] = $token;
             }
-            echo '<br>'.'session cookie written in JwtSecureSession';
+            // echo '<br>'.'session cookie written in JwtSecureSession';
         } else {
-            echo '<br>'.'session cookie not written in JwtSecureSession';
+            // echo '<br>'.'session cookie not written in JwtSecureSession';
         }
 
         return true;
@@ -129,14 +129,14 @@ Class JwtSecureSession extends JwtSession
                 foreach($cookies as $name => $value) {
                     $clear1 = setcookie($name, '', time()-3000);
                     $clear2 = setcookie($name, '', time()-3000, '/');
-                    echo '<br>'.$name;
-                    echo '<br>'.var_dump($clear1);
-                    echo '<br>'.var_dump($clear2);
+                    // echo '<br>'.$name;
+                    // echo '<br>'.var_dump($clear1);
+                    // echo '<br>'.var_dump($clear2);
                 }
             }
-            echo '<br>'.'session cookie removed in JwtSecureSession';
+            // echo '<br>'.'session cookie removed in JwtSecureSession';
         } else {
-            echo '<br>'.'unable to  remove session cookie in JwtSecureSession';
+            // echo '<br>'.'unable to  remove session cookie in JwtSecureSession';
         }
 
         return true;

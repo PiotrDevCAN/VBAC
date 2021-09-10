@@ -151,6 +151,9 @@ class Auth {
 			$token_response = json_decode($data);
 			if($token_response)
 			{
+				var_dump($token_response);
+				die();
+
 				if(isset($token_response->error)) throw new Exception('Error happened while authenticating. Please, try again later.');
 
 				if ( isset( $token_response->id_token ) ) {
