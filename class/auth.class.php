@@ -23,6 +23,7 @@ class Auth {
 
 		public function storeParameters($response)
 		{
+			echo '<br>'.'storeParameters start ';
 			switch ($this->technology) {
 				case "openidconnect":
 					$_SESSION['SSO_code'] = $response['code'];
@@ -30,6 +31,7 @@ class Auth {
 					$_SESSION['SSO_state'] = $response['state'];
 					break;
 			}
+			echo '<br>'.'storeParameters end ';
 		}
 
 		//makes sure that user is authorized
@@ -64,11 +66,13 @@ class Auth {
 		//returns boolean
 		public function verifyResponse($response)
 		{
+			echo '<br>'.'verifyResponse start ';
 			switch ($this->technology) {
 				case "openidconnect":
 					return $this->verifyCodeOpenIDConnect($response['code']);
 					break;
 			}
+			echo '<br>'.'verifyResponse start ';
 		}
 
 		/********* OPEN ID CONNECT RELATED FUNCTIONS *********/
