@@ -2,6 +2,7 @@
 
 use vbac\allTables;
 use itdq\DbTable;
+use itdq\Loader;
 
 // $url = $_ENV['upes_url'] . '/api/pesStatus.php?token=' . $_ENV['upes_api_token'] . '&accountid=1330';
 
@@ -33,6 +34,13 @@ if (isset($url)) {
 
     $updatesPerformed = 0;
     $commitEvery100Updates = 100;
+
+    $loader = new Loader();
+    $employeesEmailsForRaw = $loader->load('EMAIL_ADDRESS',allTables::$PERSON," ");
+    $employeesEmailsFor = array_map('strtolower',$employeesEmailsForRaw);
+
+    var_dump($employeesEmailsFor);
+    exit;
 
     foreach ($pesDataAll->data as $upesData){
         // create and prepare the update statment to the PERSON table
