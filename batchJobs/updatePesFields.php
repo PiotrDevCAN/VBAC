@@ -39,11 +39,9 @@ if (isset($url)) {
     $employeesEmailsRaw = $loader->load('EMAIL_ADDRESS', allTables::$PERSON);
     $employeesEmails = array_map('strtolower',$employeesEmailsRaw);
 
-    // var_dump($employeesEmails);
-    // exit;
-
     foreach ($pesDataAll->data as $upesData){
         if (in_array(strtolower(trim($upesData->EMAIL_ADDRESS)), $employeesEmails)) {
+
             // create and prepare the update statment to the PERSON table
         
             $updatePersonSql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON ;
@@ -111,7 +109,7 @@ if (isset($url)) {
             db2_commit($GLOBALS['conn']);
         } else {
             
-            echo "<br/> Email:" . $upesData->EMAIL_ADDRESS . " read from PES not found in vBAC.";
+            echo "<br/> Email:" . $upesData->EMAIL_ADDRESS . " read from PES Application not found in vBAC.";
             
         }
     }
