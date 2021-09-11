@@ -179,10 +179,10 @@ function do_ocean_auth($group = null)
     // echo "</pre>";
 
     // remove all session variables
-    session_unset();
+    // session_unset();
 
     // destroy the session
-    session_destroy();
+    // session_destroy();
 
     // clear selected keys
     // unset($_SESSION['uid']);
