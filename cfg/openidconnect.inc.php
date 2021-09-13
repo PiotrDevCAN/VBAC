@@ -29,6 +29,7 @@ $config_openidconnect->client_secret  = $_ENV['sso_client_secret'];
 $config_openidconnect->authorize_url  = $_ENV['sso_authorize_url'];
 $config_openidconnect->token_url      = $_ENV['sso_token_url'];
 $config_openidconnect->introspect_url = $_ENV['sso_introspect_url'];
+$config_openidconnect->user_info_url  = $_ENV['sso_user_info_url'];
 
 error_log('Authorising to:' . $config_openidconnect->authorize_url . " as (" . $config_openidconnect->client_id . ") ");
 
