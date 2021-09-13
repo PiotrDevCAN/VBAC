@@ -165,6 +165,7 @@ if(stripos($_ENV['environment'], 'dev')) {
     }
 }
 
+/*
 function do_ocean_auth($group = null)
 {
     // Kyndryl employee
@@ -206,7 +207,6 @@ function do_ocean_auth($group = null)
     $auth = new Auth();
     $auth->refreshTokenOpenIDConnect();
 
-
     echo '<pre>';
     var_dump($_SESSION);
     var_dump($_COOKIE);
@@ -225,7 +225,9 @@ function do_ocean_auth($group = null)
     // $redirect = "https://" . $_SERVER['SERVER_NAME'];
     // header("Location: $redirect");
 }
+*/
 
+/*
 function check_ocean_employee_logged($group = null)
 {
     $ssoEmail = strtolower($_SESSION['ssoEmail']);
@@ -243,7 +245,9 @@ function check_ocean_employee_logged($group = null)
         return true;
     }
 }
+*/
 
+/*
 function check_ocean_employee($group = null)
 {
     // check in BP
@@ -256,6 +260,7 @@ function check_ocean_employee($group = null)
         return false;
     }
 }
+*/
 
 // #
 // # misc user related functions
@@ -426,6 +431,7 @@ error_log("Pre do_Auth():" . (float)($elapsed-$start));
 
 do_auth();
 
+/*
 $checkIsOceanId = check_ocean_employee_logged();
 if ($checkIsOceanId === false) {
     $checkIsOceanEmployee = check_ocean_employee();
@@ -440,6 +446,7 @@ if ($checkIsOceanId === false) {
     // logged in with Ocean Id
     echo 'logged in with Ocean Id';
 }
+*/
 
 $elapsed = microtime(true);
 error_log("Post do_Auth():" . (float)($elapsed-$start));
