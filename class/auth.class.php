@@ -256,15 +256,17 @@
 
 				//use this to debug returned values from w3id/IBM ID service if you got to else in the condition below
 				echo '<pre>';
-				echo '<br> USER DATA';
+				echo '<br> TOKEN FROM RESONSE TO COMPARE AGAINST TOKEN FROM COOKIE ';
+				var_dump($token_response->id_token);
+				echo '<br> USER DATA ';
 				var_dump($userData);
-				echo '<br> SESSION DATA';
+				echo '<br> SESSION DATA ';
 				var_dump($_SESSION);
-				echo '<br> COOKIE DATA';
+				echo '<br> COOKIE DATA ';
 				var_dump($_COOKIE);
 				echo '</pre>';
 				die();
-
+				
 				//if using this code on w3ID
 				if(isset($userData) && !empty($userData)
 					&& isset($userData['emailAddress']) && !empty($userData['emailAddress'])
