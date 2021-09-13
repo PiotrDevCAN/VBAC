@@ -1,10 +1,5 @@
 <?php
-
-use ByJG\Session\JwtSession;
-use itdq\JwtSecureSession;
-
-class Auth {
-	
+	class Auth {
 		private $config = false;
 		private $technology = false;
 
@@ -21,17 +16,6 @@ class Auth {
 			}
 		}
 
-		public function storeParameters($response)
-		{ 
-			switch ($this->technology) {
-				case "openidconnect":
-					$_SESSION['SSO_code'] = $response['code'];
-					$_SESSION['SSO_grant_id'] = $response['grant_id'];
-					$_SESSION['SSO_state'] = $response['state'];
-					break;
-			}
-		}
-
 		//makes sure that user is authorized
 		//returns boolean
 		public function ensureAuthorized()
@@ -41,20 +25,6 @@ class Auth {
 			switch ($this->technology) {
 				case "openidconnect":
 					$this->authenticateOpenIDConnect();
-					break;
-			}
-			return false;
-		}
-
-		//makes sure that user is authorized
-		//returns boolean
-		public function logout()
-		{
-			// if(isset($_SESSION['uid']) && isset($_SESSION['exp']) && ($_SESSION['exp']-300) > time()) return true;
-
-			switch ($this->technology) {
-				case "openidconnect":
-					$this->unauthenticateOpenIDConnect();
 					break;
 			}
 			return false;
@@ -101,52 +71,6 @@ class Auth {
 			return $this->processOpenIDConnectCallback($result);
 		}
 
-		//verifies openID response
-		public function refreshTokenOpenIDConnect()
-		{
-			$url = $this->config->token_url;
-
-			$token = $_COOKIE[JwtSession::COOKIE_PREFIX . 'default'];
-			$refreshToken = $_SESSION['SSO_refresh_token'];
-
-			// $_SESSION['SSO_access_token'] = $token_response['access_token'];
-			// $_SESSION['SSO_refresh_token'] = $token_response['refresh_token'];
-			// $_SESSION['SSO_scope'] = $token_response['scope'];
-			// $_SESSION['SSO_grant_id'] = $token_response['grant_id'];
-			// $_SESSION['SSO_id_token'] = $token_response['id_token'];
-			// $_SESSION['SSO_token_type'] = $token_response['token_type'];
-			// $_SESSION['SSO_expires_in'] = $token_response['expires_in'];
-
-			$fields = array(
-				'refresh_token' => $refreshToken, // must be a valid refresh_token provided by w3id SSO 
-				'grant_type' => 'refresh_token', // is always refresh_token 
-				'client_id' => $this->config->client_id, // must be the client id assigned to your w3id SSO configuration and must match the client_id used in the authorize endpoint 
-				'client_secret' => $this->config->client_secret  // must be the client secret assigned to your w3id SSO configuration 
-			);
-
-			$postvars = http_build_query($fields);
-			$ch = curl_init();
-
-			curl_setopt($ch, CURLOPT_URL, $url);
-			curl_setopt($ch, CURLOPT_POST, count($fields));
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_POSTFIELDS, $postvars);
-
-			$result = curl_exec($ch);
-
-			curl_close($ch);
-
-			$token_response = json_decode($result);
-			if($token_response) {
-				echo '<pre>';
-				echo 'response from refreshTokenOpenIDConnect call ';
-				var_dump($token_response);
-				echo '</pre>';
-				die();
-			}
-			// return $this->processOpenIDConnectCallback($result);
-		}
-
 		//processes openid data and sets session
 		//returns boolean
 		private function processOpenIDConnectCallback($data)
@@ -154,17 +78,6 @@ class Auth {
 			$token_response = json_decode($data);
 			if($token_response)
 			{
-				$_SESSION['SSO_access_token'] = $token_response->access_token;
-				$_SESSION['SSO_refresh_token'] = $token_response->refresh_token;
-				$_SESSION['SSO_scope'] = $token_response->scope;
-				$_SESSION['SSO_grant_id'] = $token_response->grant_id;
-				$_SESSION['SSO_id_token'] = $token_response->id_token;
-				$_SESSION['SSO_token_type'] = $token_response->token_type;
-				$_SESSION['SSO_expires_in'] = $token_response->expires_in;
-
-				// var_dump($token_response);
-				// die();
-
 				if(isset($token_response->error)) throw new Exception('Error happened while authenticating. Please, try again later.');
 
 				if ( isset( $token_response->id_token ) ) {
@@ -179,8 +92,8 @@ class Auth {
 				}
 
 				//use this to debug returned values from w3id/IBM ID service if you got to else in the condition below
-				// var_dump($userData);
-				// die();
+				//var_dump($userData);
+				//die();
 
 				//if using this code on w3ID
 				if(isset($userData) && !empty($userData)
@@ -257,27 +170,6 @@ class Auth {
             return $authorizeString;
 		}
 
-		//starts authentication process and redirects user to service for authorizing
-		//returns exit();
-		private function unauthenticateOpenIDConnect()
-		{
-		    $authorizedUrL = $this->generateOpenIDConnectUnauthorizeURL();
-		    error_log(__CLASS__ . __FUNCTION__ . __LINE__. " About to pass to  : " . $authorizedUrL);
-		    header("Access-Control-Allow-Origin: *");
-			header("Location: ".$authorizedUrL);
-			exit();
-		}
-
-		//generates correct openidconnect authorize URL
-		//returns string
-		private function generateOpenIDConnectUnauthorizeURL()
-		{
-			$current_link = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-
-			// $authorizeString = $this->config->authorize_url . "?scope=openid&response_type=code&client_id=".$this->config->client_id."&state=".urlencode($current_link)."&redirect_uri=".$this->config->redirect_url;
-			$authorizeString = "https://preprod.login.w3.ibm.com/v1.0/endpoint/default/revoke" . "?scope=openid&response_type=code&client_id=".$this->config->client_id."&state=".urlencode($current_link)."&redirect_uri=".$this->config->redirect_url;
-            return $authorizeString;
-		}
 		//loads openidconnect
 		//uses Config
 		//returns stdClass

@@ -165,103 +165,6 @@ if(stripos($_ENV['environment'], 'dev')) {
     }
 }
 
-/*
-function do_ocean_auth($group = null)
-{
-    // Kyndryl employee
-
-    // echo "<pre>";
-    // echo 'first check';
-    // var_dump($_COOKIE);
-    // var_dump($_SERVER['HTTP_COOKIE']);
-    // var_dump($_SESSION);
-    // var_dump($_SESSION['uid']);
-    // var_dump($_SESSION['exp']);
-    // echo "</pre>";
-
-    // remove all session variables
-    // session_unset();
-
-    // destroy the session
-    // session_destroy();
-
-    // clear selected keys
-    // unset($_SESSION['uid']);
-    // unset($_SESSION['exp']);
-
-    // echo "<pre>";
-    // echo 'second check';
-    // var_dump($_COOKIE);
-    // var_dump($_SERVER['HTTP_COOKIE']);
-    // var_dump($_SESSION);
-    // var_dump($_SESSION['uid']);
-    // var_dump($_SESSION['exp']);
-    // echo "</pre>";
-
-    echo 'You have been identified as Kyndryl employee. Please use an appropriate Ocean Id to login into the vBAC tool.';
-    echo " https://" . $_SERVER['SERVER_NAME'];
-    echo ' redirect to the main page';
-
-    // do_auth();
-
-    $auth = new Auth();
-    $auth->refreshTokenOpenIDConnect();
-
-    echo '<pre>';
-    var_dump($_SESSION);
-    var_dump($_COOKIE);
-    echo '</pre>';
-    // exit;
-
-
-    die();
-    // if(!$auth->revokeCodeOpenIDConnect()){
-    //     die('Invalid logon attempt');
-    // } else {
-    //     die('Valid logon attempt');
-    // }
-
-    // sleep(5);
-    // $redirect = "https://" . $_SERVER['SERVER_NAME'];
-    // header("Location: $redirect");
-}
-*/
-
-/*
-function check_ocean_employee_logged($group = null)
-{
-    $ssoEmail = strtolower($_SESSION['ssoEmail']);
-
-    if ($ssoEmail == 'piotr.tajanowicz@ibm.com') {
-
-        $sp = strpos(strtolower($_SESSION['ssoEmail']),'ocean');
-
-        if($sp === FALSE){
-            return false;
-        } else {
-            return true;
-        }
-    } else {
-        return true;
-    }
-}
-*/
-
-/*
-function check_ocean_employee($group = null)
-{
-    // check in BP
-    $data = BluePagesSLAPHAPI::getOceanDetailsFromIntranetId($_SESSION['ssoEmail']);
-    if (!empty($data)) {
-        // Kyndryl employee
-        return true;
-    } else {
-        // employee not found in BP
-        return false;
-    }
-}
-*/
-
 // #
 // # misc user related functions
 // #
@@ -430,23 +333,6 @@ $elapsed = microtime(true);
 error_log("Pre do_Auth():" . (float)($elapsed-$start));
 
 do_auth();
-
-/*
-$checkIsOceanId = check_ocean_employee_logged();
-if ($checkIsOceanId === false) {
-    $checkIsOceanEmployee = check_ocean_employee();
-    if ($checkIsOceanEmployee === false) {
-        // properly logged in with IBM Id
-        echo 'properly logged in with IBM Id';
-    } else {
-        // do logon with Ocean Id
-        do_ocean_auth();
-    }
-} else {
-    // logged in with Ocean Id
-    echo 'logged in with Ocean Id';
-}
-*/
 
 $elapsed = microtime(true);
 error_log("Post do_Auth():" . (float)($elapsed-$start));
