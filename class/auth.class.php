@@ -34,12 +34,7 @@
 		{
 			switch ($this->technology) {
 				case "openidconnect":
-					echo '<pre>';
-					echo '<br> RESOPONSE FROM AUTHORISE ENDPOINT';
-					var_dump($response);
-					echo '</pre>';
-					die();
-					// return $this->verifyCodeOpenIDConnect($response['code']);
+					$_SESSION['ssoCode'] = $response['code'];
 					break;
 			}
 		}
@@ -55,29 +50,29 @@
 			}
 		}
 
-		public function refreshToken($token)
+		public function refreshToken($refreshToken)
 		{
 			switch ($this->technology) {
 				case "openidconnect":
-					return $this->refreshTokenOpenIDConnect($token);
+					return $this->refreshTokenOpenIDConnect($refreshToken);
 					break;
 			}
 		}
 
-		public function getIntrospect($token)
+		public function getIntrospect($access_token)
 		{
 			switch ($this->technology) {
 				case "openidconnect":
-					return $this->introspectOpenIDConnect($token);
+					return $this->introspectOpenIDConnect($access_token);
 					break;
 			}
 		}
 
-		public function getUserInfo($token)
+		public function getUserInfo($access_token)
 		{
 			switch ($this->technology) {
 				case "openidconnect":
-					return $this->userInfoOpenIDConnect($token);
+					return $this->userInfoOpenIDConnect($access_token);
 					break;
 			}
 		}	
@@ -122,7 +117,7 @@
 		}
 
 		//refreshes token id
-		private function refreshTokenOpenIDConnect($token){
+		private function refreshTokenOpenIDConnect($refresh_token){
 			/*
 			Body parameters: 
 				refresh_token - must be a valid refresh_token provided by w3id SSO 
@@ -134,7 +129,7 @@
 		    $url = $this->config->token_url;
 
 		    $fields = array(
-				'refresh_token' => $token,
+				'refresh_token' => $refresh_token,
 				'grant_type' => 'refresh_token',
 				'client_id' => $this->config->client_id,
 				'client_secret' => $this->config->client_secret
@@ -162,7 +157,7 @@
 		}
 
 		//reads introspection data
-		private function introspectOpenIDConnect($token){
+		private function introspectOpenIDConnect($access_token){
 			/*
 			Body parameters: 
 				token - must be a valid access_token provided by w3id SSO 
@@ -173,7 +168,7 @@
 		    $url = $this->config->introspect_url;
 
 		    $fields = array(
-				'token' => $token,
+				'token' => $access_token,
 				'client_id' => $this->config->client_id,
 				'client_secret' => $this->config->client_secret
 			);
@@ -200,7 +195,7 @@
 		}
 
 		//reads user info data
-		private function userInfoOpenIDConnect($token){
+		private function userInfoOpenIDConnect($access_token){
 			/*
 			Body parameters: 
 				access_token - must be a valid access_token provided by w3id SSO  
@@ -212,7 +207,7 @@
 			$url = 'https://preprod.login.w3.ibm.com/oidc/endpoint/default/userinfo';
 
 		    $fields = array(
-				'access_token' => $token,
+				'access_token' => $access_token,
 				'client_id' => $this->config->client_id,
 				'client_secret' => $this->config->client_secret
 			);
@@ -267,13 +262,13 @@
 					$userData = json_decode( $decoded, true );
 
 					// check Introspect
-					$this->getIntrospect($token_response->id_token);
+					$this->getIntrospect($_SESSION['ssoToken']['access_token']);
 					
 					// check user info
-					$this->getUserInfo($token_response->id_token);
+					$this->getUserInfo($_SESSION['ssoToken']['access_token']);
 					
 					// check refresh
-					$this->refreshToken($token_response->id_token);
+					$this->refreshToken($_SESSION['ssoToken']['refresh_token']);
 					
 				} else {
 					return false;
@@ -360,23 +355,32 @@
 			exit();
 		}
 
+		/*
+		Implicit flow
+
+		The URL host depends on the w3id SSO environment. 
+			response_type - can be  id_token or id_token+token 
+			scope -  is always openid 
+			nonce -is a string used to associate a Client session with an ID Token, and to mitigate replay attacks 
+			client_id - must be the client id assigned to your w3id SSO configuration 
+			redirect_uri - must be the redirection URI to which the authentication response will be sent and it has to match with one of the URIs registered in your SSO configuration 
+		*/
+
 		//generates correct openidconnect authorize URL
 		//returns string
 		private function generateOpenIDConnectAuthorizeURL()
 		{
-			/*
+			/* 
+			Authorization code flow
+
 			The URL host depends on the w3id SSO environment. 
-				response_type - can be  id_token or id_token+token 
-				scope -  is always openid 
-				nonce -is a string used to associate a Client session with an ID Token, and to mitigate replay attacks 
-				client_id - must be the client id assigned to your w3id SSO configuration 
-				redirect_uri - must be the redirection URI to which the authentication response will be sent and it has to match with one of the URIs registered in your SSO configuration 
+				response_type value is always code 
+				scope value is usually openid  (scope openid will return id_token in the call to token endpoint) 
+				client_id value must be the client id assigned to your w3id SSO configuration 
+				redirect_uri  value must be the redirection URI to which the authentication response will be sent and it has to match with one of the URIs registered in your SSO configuration 
 			*/
 			$current_link = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-			// $authorizeString = $this->config->authorize_url . "?scope=openid&response_type=code&client_id=".$this->config->client_id."&state=".urlencode($current_link)."&redirect_uri=".$this->config->redirect_url;
-
-			$authorizeString = $this->config->authorize_url . "?scope=openid&nonce=123&response_type=".urlencode('id_token+token')."&client_id=".$this->config->client_id."&redirect_uri=".$this->config->redirect_url."&state=".urlencode($current_link);
-
+			$authorizeString = $this->config->authorize_url . "?scope=openid&response_type=code&client_id=".$this->config->client_id."&state=".urlencode($current_link)."&redirect_uri=".$this->config->redirect_url;
 			return $authorizeString;
 		}
 
