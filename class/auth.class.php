@@ -375,7 +375,7 @@
 			$current_link = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 			// $authorizeString = $this->config->authorize_url . "?scope=openid&response_type=code&client_id=".$this->config->client_id."&state=".urlencode($current_link)."&redirect_uri=".$this->config->redirect_url;
 
-			$authorizeString = $this->config->authorize_url . "?scope=openid&nonce=123&response_type=id_token+token&client_id=".$this->config->client_id."&redirect_uri=".$this->config->redirect_url."&state=".urlencode($current_link);
+			$authorizeString = $this->config->authorize_url . "?scope=openid&nonce=123&response_type=".urlencode('id_token+token')."&client_id=".$this->config->client_id."&redirect_uri=".$this->config->redirect_url."&state=".urlencode($current_link);
 
 			return $authorizeString;
 		}
