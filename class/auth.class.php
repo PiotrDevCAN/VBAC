@@ -30,6 +30,19 @@
 			return false;
 		}
 
+		public function storeResponse($response)
+		{
+			switch ($this->technology) {
+				case "openidconnect":
+					echo '<pre>';
+					echo '<br> RESOPONSE FROM AUTHORISE ENDPOINT';
+					var_dump($response);
+					echo '</pre>';
+					// return $this->verifyCodeOpenIDConnect($response['code']);
+					break;
+			}
+		}
+
 		//verifies response from authentication service depending on technologies
 		//returns boolean
 		public function verifyResponse($response)
@@ -232,6 +245,17 @@
 			if($token_response)
 			{
 				if(isset($token_response->error)) throw new Exception('Error happened while authenticating. Please, try again later.');
+
+				$tokenData = array(
+					'access_token' => $token_response->access_token,
+					'refresh_token' => $token_response->refresh_token,
+					'scope' => $token_response->scope,
+					'grant_id' => $token_response->grant_id,
+					'id_token' => $token_response->id_token,
+					'token_type' => $token_response->token_type,
+					'expires_in' => $token_response->expires_in
+				);
+				$_SESSION['ssoToken'] = $tokenData;
 
 				if ( isset( $token_response->id_token ) ) {
 					$jwt_arr = explode('.', $token_response->id_token );
