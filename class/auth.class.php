@@ -38,6 +38,7 @@
 					echo '<br> RESOPONSE FROM AUTHORISE ENDPOINT';
 					var_dump($response);
 					echo '</pre>';
+					die();
 					// return $this->verifyCodeOpenIDConnect($response['code']);
 					break;
 			}
@@ -363,9 +364,28 @@
 		//returns string
 		private function generateOpenIDConnectAuthorizeURL()
 		{
+			/*
+			The URL host depends on the w3id SSO environment. 
+				response_type - can be  id_token or id_token+token 
+				scope -  is always openid 
+				nonce -is a string used to associate a Client session with an ID Token, and to mitigate replay attacks 
+				client_id - must be the client id assigned to your w3id SSO configuration 
+				redirect_uri - must be the redirection URI to which the authentication response will be sent and it has to match with one of the URIs registered in your SSO configuration 
+			*/
 			$current_link = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+			// $authorizeString = $this->config->authorize_url . "?scope=openid&response_type=code&client_id=".$this->config->client_id."&state=".urlencode($current_link)."&redirect_uri=".$this->config->redirect_url;
+
+			$authorizeString = $this->config->authorize_url . "?scope=openid&nonce=123&response_type=id_token+token&client_id=".$this->config->client_id."&redirect_uri=".$this->config->redirect_url."&state=".urlencode($current_link);
+
+			return $authorizeString;
+		}
+
+		//generates correct openidconnect authorize URL
+		//returns string
+		private function generateOpenIDConnectAuthorizeURL_OLD()
+		{
 			$authorizeString = $this->config->authorize_url . "?scope=openid&response_type=code&client_id=".$this->config->client_id."&state=".urlencode($current_link)."&redirect_uri=".$this->config->redirect_url;
-            return $authorizeString;
+			return $authorizeString;
 		}
 
 		//loads openidconnect
