@@ -256,6 +256,8 @@
 
 				//use this to debug returned values from w3id/IBM ID service if you got to else in the condition below
 				echo '<pre>';
+				echo '<br> RESOPONSE FROM TOKEN ENDPOINT';
+				var_dump($token_response);
 				echo '<br> TOKEN FROM RESONSE TO COMPARE AGAINST TOKEN FROM COOKIE ';
 				var_dump($token_response->id_token);
 				echo '<br> USER DATA ';
