@@ -147,13 +147,7 @@
 
 			curl_close($ch);
 
-			echo '<pre>';
-			$response = json_decode($result);
-			var_dump($response);
-			echo '</pre>';
-
-			return null;
-			// return $this->processOpenIDConnectCallback($result);
+			return json_decode($result);
 		}
 
 		//reads introspection data
@@ -185,13 +179,7 @@
 
 			curl_close($ch);
 
-			echo '<pre>';
-			$response = json_decode($result);
-			var_dump($response);
-			echo '</pre>';
-
-			return null;
-			// return $this->processOpenIDConnectCallback($result);
+			return json_decode($result);
 		}
 
 		//reads user info data
@@ -203,8 +191,7 @@
 				client_secret - must be the client secret assigned to your w3id SSO configuration 
 			*/
 			
-		    // $url = $this->config->user_info_url;
-			$url = 'https://preprod.login.w3.ibm.com/oidc/endpoint/default/userinfo';
+		    $url = $this->config->user_info_url;
 
 		    $fields = array(
 				'access_token' => $access_token,
@@ -224,37 +211,31 @@
 
 			curl_close($ch);
 
-			echo '<pre>';
-			$response = json_decode($result);
-			var_dump($response);
-			echo '</pre>';
-
-			return null;
-			// return $this->processOpenIDConnectCallback($result);
+			return json_decode($result);
 		}
 
 		//processes openid data and sets session
 		//returns boolean
 		private function processOpenIDConnectCallback($data)
 		{
-			$token_response = json_decode($data);
-			if($token_response)
+			$response = json_decode($data);
+			if($response)
 			{
-				if(isset($token_response->error)) throw new Exception('Error happened while authenticating. Please, try again later.');
+				if(isset($response->error)) throw new Exception('Error happened while authenticating. Please, try again later.');
 
 				$tokenData = array(
-					'access_token' => $token_response->access_token,
-					'refresh_token' => $token_response->refresh_token,
-					'scope' => $token_response->scope,
-					'grant_id' => $token_response->grant_id,
-					'id_token' => $token_response->id_token,
-					'token_type' => $token_response->token_type,
-					'expires_in' => $token_response->expires_in
+					'access_token' => $response->access_token,
+					'refresh_token' => $response->refresh_token,
+					'scope' => $response->scope,
+					'grant_id' => $response->grant_id,
+					'id_token' => $response->id_token,
+					'token_type' => $response->token_type,
+					'expires_in' => $response->expires_in
 				);
 				$_SESSION['ssoToken'] = $tokenData;
 
-				if ( isset( $token_response->id_token ) ) {
-					$jwt_arr = explode('.', $token_response->id_token );
+				if ( isset( $response->id_token ) ) {
+					$jwt_arr = explode('.', $response->id_token );
 					$encoded = $jwt_arr[1];
 					$decoded = "";
 					for ($i=0; $i < ceil(strlen($encoded)/4); $i++)
@@ -262,14 +243,23 @@
 					$userData = json_decode( $decoded, true );
 
 					// check Introspect
-					$this->getIntrospect($_SESSION['ssoToken']['access_token']);
-					
+					$introspectData = $this->getIntrospect($_SESSION['ssoToken']['access_token']);
+
 					// check user info
-					$this->getUserInfo($_SESSION['ssoToken']['access_token']);
-					
+					$userInfoData = $this->getUserInfo($_SESSION['ssoToken']['access_token']);
+
 					// check refresh
-					$this->refreshToken($_SESSION['ssoToken']['refresh_token']);
-					
+					$refreshTokenData = $this->refreshToken($_SESSION['ssoToken']['refresh_token']);
+
+					echo '<pre>';
+					echo '<br> introspectData DATA';
+					var_dump($introspectData);
+					echo '<br> userInfoData DATA ';
+					var_dump($userInfoData);
+					echo '<br> refreshTokenData DATA ';
+					var_dump($refreshTokenData);
+					echo '</pre>';
+
 				} else {
 					return false;
 				}
@@ -277,9 +267,7 @@
 				//use this to debug returned values from w3id/IBM ID service if you got to else in the condition below
 				echo '<pre>';
 				echo '<br> RESOPONSE FROM TOKEN ENDPOINT';
-				var_dump($token_response);
-				echo '<br> TOKEN FROM RESONSE TO COMPARE AGAINST TOKEN FROM COOKIE ';
-				var_dump($token_response->id_token);
+				var_dump($response);
 				echo '<br> USER DATA ';
 				var_dump($userData);
 				echo '<br> SESSION DATA ';
