@@ -391,7 +391,9 @@ function personRecord() {
       $('#notAnIbmer :input').attr('required',true);
       $('#existingIbmer :input').attr('required',false);
       $('#saveBoarding').attr('disabled',false);
-      $('#resource_country').select2('destroy');
+      if( $('#resource_country').data('select2')){
+        $('#resource_country').select2('destroy');
+      }
       $('#resource_country').select2();
       $('#person_preboarded').val('').trigger('change');  // incase they already selected a pre-boarder - we need to clear this field.
       $('#editCtidDiv').show();
