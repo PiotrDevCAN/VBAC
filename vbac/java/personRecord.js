@@ -388,13 +388,13 @@ function personRecord() {
     	$('#resource_first_name').val('').trigger('change');
     	$('#resource_last_name').val('').trigger('change');
     	$('#open_seat').attr('placeholder','IBM Hiring Number');
-        $('#notAnIbmer :input').attr('required',true);
-        $('#existingIbmer :input').attr('required',false);
-        $('#saveBoarding').attr('disabled',false);
-        $('#resource_country').select2('destroy');
-        $('#resource_country').select2();
-        $('#person_preboarded').val('').trigger('change');  // incase they already selected a pre-boarder - we need to clear this field.
-        $('#editCtidDiv').show();
+      $('#notAnIbmer :input').attr('required',true);
+      $('#existingIbmer :input').attr('required',false);
+      $('#saveBoarding').attr('disabled',false);
+      $('#resource_country').select2('destroy');
+      $('#resource_country').select2();
+      $('#person_preboarded').val('').trigger('change');  // incase they already selected a pre-boarder - we need to clear this field.
+      $('#editCtidDiv').show();
       } else {
     	$('#person_name').val('').trigger('change');
     	$('#person_serial').val('').trigger('change');
@@ -709,7 +709,7 @@ function personRecord() {
           .attr('disabled',false)
           .attr('required',true);
       } else {
-    	$('#cioAlignment').val('').trigger('change');  
+    	  $('#cioAlignment').val('').trigger('change');  
         $('#cioAlignment').select2({
           placeholder:"Not required",
           })
@@ -724,22 +724,22 @@ function personRecord() {
   this.listenForAccountOrganisation = function(){
     // var workStream is created in PHP in the personRecord class and loaded to javascript using Javascript::buildSelectArray
 //    $(document).on('click','.accountOrganisation', function(){
-	  $(document).ready(function(){
+    $(document).ready(function(){
       var accountOrganisation = $('.accountOrganisation:checked').val();
       var nullFirstEntry  = [''];
 
-	  if(typeof(workStream)!='undefined'){
-      	for(i=0;i<workStream.length;i++){
-        	if(workStream[0][i]==accountOrganisation){
-          		var workStreamValues = nullFirstEntry.concat(workStream[i+1]);
-        	}
-      	}
-	  }	
+      if(typeof(workStream)!='undefined'){
+          for(i=0;i<workStream.length;i++){
+            if(workStream[0][i]==accountOrganisation){
+                var workStreamValues = nullFirstEntry.concat(workStream[i+1]);
+            }
+          }
+      }
 
-
-      $('#work_stream').select2('destroy');
-      $('#work_stream').html('');
-      
+      if( $('#work_stream').data('select2')){
+        $('#work_stream').select2('destroy');
+      }
+      // $('#work_stream').html('');
       
       if(typeof(workStreamValues)!='undefined'){
         $('#work_stream').select2({
