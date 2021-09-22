@@ -1,99 +1,61 @@
 <?php
 	class Auth {
-
 		private $config = false;
 		private $technology = false;
 
-		//gets technology to use for authenticating
-		//uses Config
-		//returns string
-		private function getTechnology()
-		{
-			$cfg = new Config();
-			return $cfg->getTechnology();
+		//construct function, automatically gets which technology to use and loads its config
+		function __construct() {
+			$technology = $this->getTechnology();
+			switch (mb_strtolower($technology)) {
+				case "openidconnect":
+					$this->config = $this->loadOpenIDConnectConfig();
+					$this->technology = mb_strtolower($technology);
+					break;
+				default:
+					throw new Exception(htmlentities($technology).' not yet implemented.');
+			}
 		}
 
-		//verifies if all openidconnect config data are filled out correctly
+		//makes sure that user is authorized
 		//returns boolean
-		private function verifyOpenIDConnectConfig($config)
+		public function ensureAuthorized()
 		{
-			if(isset($config) && !empty($config)
-			    && isset($config->authorize_url) && !empty($config->authorize_url)
-			    && isset($config->token_url) && !empty($config->token_url)
-			    && isset($config->introspect_url) && !empty($config->introspect_url)
-				&& isset($config->user_info_url) && !empty($config->user_info_url)
-				&& isset($config->client_id) && !empty($config->client_id)
-				&& isset($config->client_secret) && !empty($config->client_secret)
-				&& isset($config->redirect_url) && !empty($config->redirect_url)
-				)
-			{
-				return true;
+			if(isset($_SESSION['uid']) && isset($_SESSION['exp']) && ($_SESSION['exp']-300) > time()) return true;
+
+			switch ($this->technology) {
+				case "openidconnect":
+					$this->authenticateOpenIDConnect();
+					break;
 			}
-			else
-			{
-				return false;
-			}
+			return false;
 		}
 
-		//loads openidconnect
-		//uses Config
-		//returns stdClass
-		private function loadOpenIDConnectConfig()
+		//verifies response from authentication service depending on technologies
+		//returns boolean
+		public function verifyResponse($response)
 		{
-			$cfg = new Config();
-			$authData = $cfg->getConfig("openidconnect");
-			if($this->verifyOpenIDConnectConfig($authData))
-			{
-				return $authData;
-			}
-			else
-			{
-				throw new Exception('OpenIDConnect data not correct. Please check if everything is filled out in OpenIDConnect configuration.');
+			switch ($this->technology) {
+				case "openidconnect":
+					return $this->verifyCodeOpenIDConnect($response['code']);
+					break;
 			}
 		}
 
-		/*
-		Implicit flow
+		/********* OPEN ID CONNECT RELATED FUNCTIONS *********/
 
-		The URL host depends on the w3id SSO environment. 
-			response_type - can be  id_token or id_token+token 
-			scope -  is always openid 
-			nonce -is a string used to associate a Client session with an ID Token, and to mitigate replay attacks 
-			client_id - must be the client id assigned to your w3id SSO configuration 
-			redirect_uri - must be the redirection URI to which the authentication response will be sent and it has to match with one of the URIs registered in your SSO configuration 
-		*/
-
-		//generates correct openidconnect authorize URL
-		//returns string
-		private function generateOpenIDConnectAuthorizeURL()
+		//verifies openID response
+		private function verifyCodeOpenIDConnect($code)
 		{
-			/* 
-			Authorization code flow
+		    $url = $this->config->token_url;
 
-			The URL host depends on the w3id SSO environment. 
-				response_type value is always code 
-				scope value is usually openid  (scope openid will return id_token in the call to token endpoint) 
-				client_id value must be the client id assigned to your w3id SSO configuration 
-				redirect_uri  value must be the redirection URI to which the authentication response will be sent and it has to match with one of the URIs registered in your SSO configuration 
-			*/
-			$current_link = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-			$authorizeString = $this->config->authorize_url . "?scope=openid&response_type=code&client_id=".$this->config->client_id."&state=".urlencode($current_link)."&redirect_uri=".$this->config->redirect_url;
-			return $authorizeString;
-		}
+		    $fields = array(
+				'code' => $code,
+				'client_id' => $this->config->client_id,
+				'client_secret' => $this->config->client_secret,
+				'redirect_uri' => $this->config->redirect_url,
+				'grant_type' => 'authorization_code'
+			);
 
-		//starts authentication process and redirects user to service for authorizing
-		//returns exit();
-		private function authenticateOpenIDConnect()
-		{
-		    $authorizedUrL = $this->generateOpenIDConnectAuthorizeURL();
-		    error_log(__CLASS__ . __FUNCTION__ . __LINE__. " About to pass to  : " . $authorizedUrL);
-		    header("Access-Control-Allow-Origin: *");
-			header("Location: ".$authorizedUrL);
-			exit();
-		}
-
-		private function makePostCurlCall($url = '', $fields = array() )
-		{
 			$postvars = http_build_query($fields);
 			$ch = curl_init();
 
@@ -106,198 +68,33 @@
 
 			curl_close($ch);
 
-			return $result;
-		}
-
-		/********* OPEN ID CONNECT RELATED FUNCTIONS *********/
-
-		//verifies openID response
-		private function verifyCodeOpenIDConnect($code)
-		{
-			/*
-			Body parameters: 
-				code - must be the code that w3id SSO NextGen provided after the authentication was successful  
-				grant_type - is always authorization_code 
-				client_id - must be the client id assigned to your w3id SSO configuration and must match the client_id used in the authorize endpoint 
-				client_secret - must be the client secret assigned to your w3id SSO configuration 
-				redirect_uri - must be the redirection URI to which the authentication response will be sent and it has to match with one of the URIs registered in your SSO configuration 
-			*/
-
-		    $url = $this->config->token_url;
-
-		    $fields = array(
-				'code' => $code,
-				'grant_type' => 'authorization_code',
-				'client_id' => $this->config->client_id,
-				'client_secret' => $this->config->client_secret,
-				'redirect_uri' => $this->config->redirect_url
-			);
-
-			$result = $this->makePostCurlCall($url, $fields);
-
-			return $this->processVerifyCodeOpenIDConnectCallback($result);
-		}
-
-		//refreshes token id
-		private function refreshTokenOpenIDConnect($refresh_token){
-			/*
-			Body parameters: 
-				refresh_token - must be a valid refresh_token provided by w3id SSO 
-				grant_type - is always refresh_token 
-				client_id - must be the client id assigned to your w3id SSO configuration and must match the client_id used in the authorize endpoint 
-				client_secret - must be the client secret assigned to your w3id SSO configuration 
-			*/
-
-		    $url = $this->config->token_url;
-
-		    $fields = array(
-				'refresh_token' => $refresh_token,
-				'grant_type' => 'refresh_token',
-				'client_id' => $this->config->client_id,
-				'client_secret' => $this->config->client_secret
-			);
-
-			$result = $this->makePostCurlCall($url, $fields);
-
-			return json_decode($result);
-		}
-
-		//reads introspection data
-		private function introspectOpenIDConnect($access_token){
-			/*
-			Body parameters: 
-				token - must be a valid access_token provided by w3id SSO 
-				client_id - must be the client id assigned to your w3id SSO configuration and must match the client_id used in the authorize endpoint 
-				client_secret - must be the client secret assigned to your w3id SSO configuration 
-			*/
-
-		    $url = $this->config->introspect_url;
-
-		    $fields = array(
-				'token' => $access_token,
-				'client_id' => $this->config->client_id,
-				'client_secret' => $this->config->client_secret
-			);
-
-			$result = $this->makePostCurlCall($url, $fields);
-
-			return json_decode($result);
-		}
-
-		//reads user info data
-		private function userInfoOpenIDConnect($access_token){
-			/*
-			Body parameters: 
-				access_token - must be a valid access_token provided by w3id SSO  
-				client_id - must be the client id assigned to your w3id SSO configuration and must match the client_id used in the authorize endpoint 
-				client_secret - must be the client secret assigned to your w3id SSO configuration 
-			*/
-			
-		    $url = $this->config->user_info_url;
-
-		    $fields = array(
-				'access_token' => $access_token,
-				'client_id' => $this->config->client_id,
-				'client_secret' => $this->config->client_secret
-			);
-
-			$result = $this->makePostCurlCall($url, $fields);
-
-			return $this->processUserInfoOpenIDConnectCallback($result);
+			return $this->processOpenIDConnectCallback($result);
 		}
 
 		//processes openid data and sets session
 		//returns boolean
-		private function processVerifyCodeOpenIDConnectCallback($data)
+		private function processOpenIDConnectCallback($data)
 		{
-			$response = json_decode($data);
-			if($response)
+			$token_response = json_decode($data);
+			if($token_response)
 			{
-				if (isset($response->error)) throw new Exception('Error happened while authenticating. Please, try again later.');
+				if(isset($token_response->error)) throw new Exception('Error happened while authenticating. Please, try again later.');
 
-				if (isset($response->id_token)) {
-					$tokenData = array(
-						'access_token' => $response->access_token,
-						'refresh_token' => $response->refresh_token,
-						'scope' => $response->scope,
-						'grant_id' => $response->grant_id,
-						'id_token' => $response->id_token,
-						'token_type' => $response->token_type,
-						'expires_in' => $response->expires_in
-					);
-					$_SESSION['ssoToken'] = $tokenData;
-					$_SESSION['exp'] = $tokenData['expires_in'];
-					return true;
-				} else {
-					return false;
-				}
-			}
-			return false;
-		}
-
-		//processes openid data and sets session
-		//returns boolean
-		private function processVerifyCodeOpenIDConnectCallback_OLD($data)
-		{
-			$response = json_decode($data);
-			if($response)
-			{
-				if(isset($response->error)) throw new Exception('Error happened while authenticating. Please, try again later.');
-
-				$tokenData = array(
-					'access_token' => $response->access_token,
-					'refresh_token' => $response->refresh_token,
-					'scope' => $response->scope,
-					'grant_id' => $response->grant_id,
-					'id_token' => $response->id_token,
-					'token_type' => $response->token_type,
-					'expires_in' => $response->expires_in
-				);
-				$_SESSION['ssoToken'] = $tokenData;
-
-				if ( isset( $response->id_token ) ) {
-					$jwt_arr = explode('.', $response->id_token );
+				if ( isset( $token_response->id_token ) ) {
+					$jwt_arr = explode('.', $token_response->id_token );
 					$encoded = $jwt_arr[1];
 					$decoded = "";
 					for ($i=0; $i < ceil(strlen($encoded)/4); $i++)
 						$decoded = $decoded . base64_decode(substr($encoded,$i*4,4));
 					$userData = json_decode( $decoded, true );
-
-					// check Introspect
-					$introspectData = $this->getIntrospect($_SESSION['ssoToken']['access_token']);
-
-					// check user info
-					$userInfoData = $this->getUserInfo($_SESSION['ssoToken']['access_token']);
-
-					// check refresh
-					$refreshTokenData = $this->refreshToken($_SESSION['ssoToken']['refresh_token']);
-
-					echo '<pre>';
-					echo '<br> introspectData DATA';
-					var_dump($introspectData);
-					echo '<br> userInfoData DATA ';
-					var_dump($userInfoData);
-					echo '<br> refreshTokenData DATA ';
-					var_dump($refreshTokenData);
-					echo '</pre>';
-
 				} else {
 					return false;
 				}
 
 				//use this to debug returned values from w3id/IBM ID service if you got to else in the condition below
-				echo '<pre>';
-				echo '<br> RESOPONSE FROM TOKEN ENDPOINT';
-				var_dump($response);
-				echo '<br> USER DATA ';
-				var_dump($userData);
-				echo '<br> SESSION DATA ';
-				var_dump($_SESSION);
-				echo '<br> COOKIE DATA ';
-				var_dump($_COOKIE);
-				echo '</pre>';
-				die();
-				
+				//var_dump($userData);
+				//die();
+
 				//if using this code on w3ID
 				if(isset($userData) && !empty($userData)
 					&& isset($userData['emailAddress']) && !empty($userData['emailAddress'])
@@ -344,122 +141,70 @@
 			return false;
 		}
 
-		//processes openid data and sets session
-		//returns boolean
-		private function processUserInfoOpenIDConnectCallback($data)
+		//gets technology to use for authenticating
+		//uses Config
+		//returns string
+		private function getTechnology()
 		{
-			$userData = json_decode($data);
-			if($userData)
+			$cfg = new Config();
+			return $cfg->getTechnology();
+		}
+
+		//starts authentication process and redirects user to service for authorizing
+		//returns exit();
+		private function authenticateOpenIDConnect()
+		{
+		    $authorizedUrL = $this->generateOpenIDConnectAuthorizeURL();
+		    error_log(__CLASS__ . __FUNCTION__ . __LINE__. " About to pass to  : " . $authorizedUrL);
+		    header("Access-Control-Allow-Origin: *");
+			header("Location: ".$authorizedUrL);
+			exit();
+		}
+
+		//generates correct openidconnect authorize URL
+		//returns string
+		private function generateOpenIDConnectAuthorizeURL()
+		{
+			$current_link = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+			$authorizeString = $this->config->authorize_url . "?scope=openid&response_type=code&client_id=".$this->config->client_id."&state=".urlencode($current_link)."&redirect_uri=".$this->config->redirect_url;
+            return $authorizeString;
+		}
+
+		//loads openidconnect
+		//uses Config
+		//returns stdClass
+		private function loadOpenIDConnectConfig()
+		{
+			$cfg = new Config();
+			$authData = $cfg->getConfig("openidconnect");
+			if($this->verifyOpenIDConnectConfig($authData))
 			{
-				if(
-					property_exists($userData, 'emailAddress')
-					&& property_exists($userData, 'firstName')
-					&& property_exists($userData, 'lastName')
-					&& property_exists($userData, 'uid')
-				) {
-					// if using this code on w3ID
-					$_SESSION['ssoEmail'] = $userData->emailAddress;
-					$_SESSION['firstName'] = $userData->firstName;
-					$_SESSION['lastName'] = $userData->lastName;
-					$_SESSION['uid'] = $userData->uid;
-					return true;
-				} else if(
-					property_exists($userData, 'ssoEmail')
-					&& property_exists($userData, 'given_name')
-					&& property_exists($userData, 'family_name')
-					&& property_exists($userData, 'uniqueSecurityName')
-				) {
-					//if using this code on IBM ID
-					$_SESSION['ssoEmail'] = $userData->email;
-					$_SESSION['firstName'] = $userData->given_name;
-					$_SESSION['lastName'] = $userData->family_name;
-					$_SESSION['uid'] = $userData->uniqueSecurityName;
-					return true;
-				} else {
-					//if something in the future gets changed and the strict checking on top of this is not working any more
-					//please note, that you should always use strict matching in this function on your prod app so that you can handle changes correctly and not fill in the session with all the data
-					//so basically, if you get to the else below, adjust it, open an issue on github so that the strict matching can be adjusted and it doesnt get to the else below
-					
-					//throw new Exception('OpenIDConnect returned values were not correct.');
-					$_SESSION = serialize($userData);
-					$_SESSION['somethingChanged'] = true;
-					return true;
-				}
+				return $authData;
 			}
-			return false;
-		}
-
-		//construct function, automatically gets which technology to use and loads its config
-		function __construct() {
-			$technology = $this->getTechnology();
-			switch (mb_strtolower($technology)) {
-				case "openidconnect":
-					$this->config = $this->loadOpenIDConnectConfig();
-					$this->technology = mb_strtolower($technology);
-					break;
-				default:
-					throw new Exception(htmlentities($technology).' not yet implemented.');
+			else
+			{
+				throw new Exception('OpenIDConnect data not correct. Please check if everything is filled out in OpenIDConnect configuration.');
 			}
 		}
 
-		//makes sure that user is authorized
+		//verifies if all openidconnect config data are filled out correctly
 		//returns boolean
-		public function ensureAuthorized()
+		private function verifyOpenIDConnectConfig($config)
 		{
-			if(isset($_SESSION['uid']) && isset($_SESSION['exp']) && ($_SESSION['exp']-300) > time()) return true;
-
-			switch ($this->technology) {
-				case "openidconnect":
-					$this->authenticateOpenIDConnect();
-					break;
+			if(isset($config) && !empty($config)
+			    && isset($config->authorize_url) && !empty($config->authorize_url)
+			    && isset($config->token_url) && !empty($config->token_url)
+			    && isset($config->introspect_url) && !empty($config->introspect_url)
+				&& isset($config->client_id) && !empty($config->client_id)
+				&& isset($config->client_secret) && !empty($config->client_secret)
+				&& isset($config->redirect_url) && !empty($config->redirect_url)
+				)
+			{
+				return true;
 			}
-			return false;
-		}
-
-		public function storeResponse($response)
-		{
-			switch ($this->technology) {
-				case "openidconnect":
-					$_SESSION['ssoCode'] = $response['code'];
-					break;
-			}
-		}
-
-		//verifies response from authentication service depending on technologies
-		//returns boolean
-		public function verifyResponse($response)
-		{
-			switch ($this->technology) {
-				case "openidconnect":
-					return $this->verifyCodeOpenIDConnect($response['code']);
-					break;
-			}
-		}
-
-		public function refreshToken($refreshToken)
-		{
-			switch ($this->technology) {
-				case "openidconnect":
-					return $this->refreshTokenOpenIDConnect($refreshToken);
-					break;
-			}
-		}
-
-		public function getIntrospect($access_token)
-		{
-			switch ($this->technology) {
-				case "openidconnect":
-					return $this->introspectOpenIDConnect($access_token);
-					break;
-			}
-		}
-
-		public function getUserInfo($access_token)
-		{
-			switch ($this->technology) {
-				case "openidconnect":
-					return $this->userInfoOpenIDConnect($access_token);
-					break;
+			else
+			{
+				return false;
 			}
 		}
 	}
