@@ -75,21 +75,25 @@ function personRecord() {
 	  $(document).on('focusout','#resource_email',function(){
 		  var newEmail = $('#resource_email').val();
 		  var trimmedEmail = newEmail.trim();
-		  var allreadyExists = ($.inArray(trimmedEmail, knownEmail) >= 0 );
-		  var ibmEmailAddress = (trimmedEmail.search(/ibm/i) != -1);
-          if(allreadyExists){ // comes back with Position in array(true) or false is it's NOT in the array.
+      if (trimmedEmail !== "") {
+        var allreadyExists = ($.inArray(trimmedEmail, knownEmail) >= 0 );
+		    var ibmEmailAddress = (trimmedEmail.search(/ibm/i) != -1);
+        if(allreadyExists){ // comes back with Position in array(true) or false is it's NOT in the array.
+          $('#saveBoarding').attr('disabled',true);
+          $('#resource_email').css("background-color","LightPink");
+          alert('Email address already defined to VBAC');
+          return false;
+        } else if(ibmEmailAddress){
             $('#saveBoarding').attr('disabled',true);
-            $('#resource_email').css("background-color","LightPink");
-            alert('Email address already defined to VBAC');
-            return false;
-          } else if(ibmEmailAddress){
-              $('#saveBoarding').attr('disabled',true);
-              $('#resource_email').css("background-color","Red");
-              alert('IBMers should NOT BE Pre-Boarded. Please board as an IBMer');        	  
-          } else {
-            $('#resource_email').css("background-color","LightGreen");
-            $('#saveBoarding').attr('disabled',false);
-          }
+            $('#resource_email').css("background-color","Red");
+            alert('IBMers should NOT BE Pre-Boarded. Please board as an IBMer');        	  
+        } else {
+          $('#resource_email').css("background-color","LightGreen");
+          $('#saveBoarding').attr('disabled',false);
+        }
+      } else {
+        // no need to check
+      }
 	  });
 
   },
@@ -2195,6 +2199,7 @@ function personRecord() {
 
   this.listenForEmployeeTypeRadioBtn = function(){
 	  $(document).on('click','.employeeTypeRadioBtn', function(e){
+      
 		  var employeeType = $('input[name=employeeType]:checked').val();
 		  $('#resource_employee_type').val(employeeType);
 		  var type = $('input[name=employeeType]:checked').data('type');
