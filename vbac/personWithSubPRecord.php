@@ -204,7 +204,7 @@ class personWithSubPRecord extends personRecord
               			<input class='form-control' id='resource_email'
                 			   name='resEMAIL_ADDRESS' value='<?=$this->EMAIL_ADDRESS?>'
                 			   type='text' placeholder="Email Address"
-                			   disabled	>
+                			   <?=$notEditable?>>
 		            	</div>
         		    	<div class='col-sm-6'>
 		                <select class='form-control select select2 ' id='resource_country'
