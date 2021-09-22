@@ -231,11 +231,11 @@ class personWithSubPRecord extends personRecord
 				<div class='form-group'>
             		<div class='col-sm-12'>
 						<label class="radio-inline employeeTypeRadioBtn" data-toggle='tooltip' data-placement='auto top' title='IBM Regular and IBM Contractors'>
-						<input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_PREBOARDER ?>' data-type='ibmer' >
+						<input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_PREBOARDER ?>' data-type='ibmer' checked>
 						IBMer Pre-Hire (Regular or Contractor)
 						</label>
 						<label class="radio-inline employeeTypeRadioBtn" data-toggle='tooltip' data-placement='auto top' title='3rd Party Vendors'>
-						<input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_VENDOR?>' data-type='other'      >
+						<input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_VENDOR?>' data-type='other'>
 						Other (ie.3rd Party Vendor)
 						</label>
 		        	</div>

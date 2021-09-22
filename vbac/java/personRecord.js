@@ -379,34 +379,34 @@ function personRecord() {
       $('#linkToPreBoarded').toggle();
 
       if($('#notAnIbmer').is(":visible")){
-    	$('.employeeTypeRadioBtn input[type=radio]').prop('required',true);
-    	$('#person_name').val('').trigger('change');
-    	$('#person_serial').val('').trigger('change');
-    	$('#person_notesid').val('').trigger('change');
-    	$('#person_intranet').val('').trigger('change');
-    	$('#resource_email').val('').trigger('change');
-    	$('#resource_first_name').val('').trigger('change');
-    	$('#resource_last_name').val('').trigger('change');
-    	$('#open_seat').attr('placeholder','IBM Hiring Number');
-      $('#notAnIbmer :input').attr('required',true);
-      $('#existingIbmer :input').attr('required',false);
-      $('#saveBoarding').attr('disabled',false);
-      if( $('#resource_country').data('select2')){
-        $('#resource_country').select2('destroy');
-      }
-      $('#resource_country').select2();
-      $('#person_preboarded').val('').trigger('change');  // incase they already selected a pre-boarder - we need to clear this field.
-      $('#editCtidDiv').show();
+        $('.employeeTypeRadioBtn input[type=radio]').prop('required',true);
+        $('#person_name').val('').trigger('change');
+        $('#person_serial').val('').trigger('change');
+        $('#person_notesid').val('').trigger('change');
+        $('#person_intranet').val('').trigger('change');
+        $('#resource_email').val('').trigger('change');
+        $('#resource_first_name').val('').trigger('change');
+        $('#resource_last_name').val('').trigger('change');
+        $('#open_seat').attr('placeholder','IBM Hiring Number');
+        $('#notAnIbmer :input').attr('required',true);
+        $('#existingIbmer :input').attr('required',false);
+        $('#saveBoarding').attr('disabled',false);
+        if( $('#resource_country').data('select2')){
+          $('#resource_country').select2('destroy');
+        }
+        $('#resource_country').select2();
+        $('#person_preboarded').val('').trigger('change');  // incase they already selected a pre-boarder - we need to clear this field.
+        $('#editCtidDiv').show();
       } else {
-    	$('#person_name').val('').trigger('change');
-    	$('#person_serial').val('').trigger('change');
-    	$('#person_notesid').val('').trigger('change');
-    	$('#person_intranet').val('').trigger('change');
-    	$('#resource_email').val('').trigger('change');
-    	$('#resource_first_name').val('').trigger('change');
-    	$('#resource_last_name').val('').trigger('change');
-    	$('.employeeTypeRadioBtn input[type=radio]').removeAttr('required');
-    	$('#open_seat').attr('placeholder','Open Seat Number');
+        $('#person_name').val('').trigger('change');
+        $('#person_serial').val('').trigger('change');
+        $('#person_notesid').val('').trigger('change');
+        $('#person_intranet').val('').trigger('change');
+        $('#resource_email').val('').trigger('change');
+        $('#resource_first_name').val('').trigger('change');
+        $('#resource_last_name').val('').trigger('change');
+        $('.employeeTypeRadioBtn input[type=radio]').removeAttr('required');
+        $('#open_seat').attr('placeholder','Open Seat Number');
         $('#notAnIbmer :input').attr('required',false);
         $('#existingIbmer :input').attr('required',true);
         $('#editCtidDiv').hide();
@@ -496,13 +496,11 @@ function personRecord() {
                      $('#work_stream').val(workStream.trim()).trigger('change');
                    }
 
-
                    var roleOnAccount = resultObj.data.ROLE_ON_THE_ACCOUNT;
                    if(roleOnAccount){
                      $('#role_on_account').val(roleOnAccount.trim());
                    }
                    $('#role_on_account').attr('disabled',false);
-
 
                    var sDate = resultObj.data.START_DATE;
                    $('#start_date').attr('disabled',false);
@@ -545,7 +543,6 @@ function personRecord() {
                 };
               }
           });
-
       };
     });
   },
@@ -727,6 +724,7 @@ function personRecord() {
     // var workStream is created in PHP in the personRecord class and loaded to javascript using Javascript::buildSelectArray
 //    $(document).on('click','.accountOrganisation', function(){
     $(document).ready(function(){
+
       var accountOrganisation = $('.accountOrganisation:checked').val();
       var nullFirstEntry  = [''];
 
@@ -755,8 +753,8 @@ function personRecord() {
           data:[''],
           placeholder:"No workstream required",
           })
-        .attr('disabled',true)
-        .attr('required',false);
+          .attr('disabled',true)
+          .attr('required',false);
       };
 
       var currentWorkstream = $('#currentWorkstream').val();
