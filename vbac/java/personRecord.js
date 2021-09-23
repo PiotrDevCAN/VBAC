@@ -95,7 +95,7 @@ function personRecord() {
       } else {
         // no need to check
         $('#resource_email').val('');
-        $('#resource_email').css("background-color","white").attr('placeholder','Email Address');	
+        $('#resource_email').css("background-color","white");
       }
 	  });
 
