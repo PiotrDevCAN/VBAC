@@ -2202,7 +2202,7 @@ class assetRequestsTable extends DbTable{
         $message .= !empty($comment) ? "<b>Comment</b>&nbsp;" . $comment : "&nbsp;<b>No comment was provided</b>";
         $message .= "<br/>You can access the tool here  <a href='" . $_SERVER['HTTP_HOST'] . "/pa_assetPortal.php'  target='_blank' >vBAC Asset Portal</a>";
 
-        \itdq\BlueMail::send_mail(array($emailAddress), 'vBAC Request : ' . $orderItStatus , $message , 'vbacNoReply@uk.ibm.com');
+        \itdq\BlueMail::send_mail(array($emailAddress), 'vBAC Request : ' . $orderItStatus , $message , 'vbacNoReply@kyndryl.com');
     }
 
     function setStatus($reference, $status, $comment=null,$dateReturned=null, $orderItStatus=null, $isPmo = false ){
@@ -2472,7 +2472,7 @@ class assetRequestsTable extends DbTable{
     function notifyApprovingMgr(array $approvingMgr){
         $notifyApprovingMgr = "Requests have been created in vBAC that require your approval.<br/>You can access the tool here  <a href='" . $_SERVER['HTTP_HOST'] . "/pa_assetPortal.php'  target='_blank' >vBAC Asset Portal</a>";
 
-        \itdq\BlueMail::send_mail($approvingMgr, 'vBAC Approval Required', $notifyApprovingMgr, 'vbacNoReply@uk.ibm.com');
+        \itdq\BlueMail::send_mail($approvingMgr, 'vBAC Approval Required', $notifyApprovingMgr, 'vbacNoReply@kyndryl.com');
     }
 
 
@@ -2611,7 +2611,7 @@ class assetRequestsTable extends DbTable{
          $replacements = array($reference, $assetTitle, $status, $comment, $varbRef, $orderIt, $vStatus, $orderItStatus);
          $message = preg_replace(self::$statusChangeEmailPattern, $replacements, self::$statusChangeEmail);
 
-         \itdq\BlueMail::send_mail($requestee, "vBAC Request :$reference ($assetTitle ) - Status Change($status)", $message, 'vbacNoReply@uk.ibm.com',$requestor);
+         \itdq\BlueMail::send_mail($requestee, "vBAC Request :$reference ($assetTitle ) - Status Change($status)", $message, 'vbacNoReply@kyndryl.com',$requestor);
      }
 
 

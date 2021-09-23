@@ -14,7 +14,7 @@
 <p>If this is not correct then update the individuals "End date" in their boarding record per the instructions above. Once an individual is marked as "offboarded" by the PMO that person will disappear from the offboarding report.</p>
 
 <p>For audit purposes the individual will continue to appear in your list of employees but with a validation status of "Offboarded".
-Please contact the Central PMO for more information: <b>Aurora Central PMO/UK/IBM</b></p>
+Please contact the Central PMO for more information: <b>aurora.central.pmo@kyndryl.com</b></p>
 </div>
 <?php
 

@@ -11,7 +11,7 @@ ob_start();
 <div class='col-sm-2'></div>
 <div class='col-sm-8'>
 <h2>Data Leakage Protection - DG&amp;CB Licence Tracking</h2>
-<h5>Install DG / CB Software from <a href='https://ibm.box.com/s/n6aw9fj0ungblkxcctx4y4y4f2ebk5up' target='_blank' >here</a></h5>
+<h5>Install DG / CB Software from <a href='https://kyndryl.box.com/s/spr0ndbw659o3yumbnnnu239a038fbr6' target='_blank' >here</a></h5>
 <h5>Raise a <a href='https://w3.ibm.com/tools/cio/forms/landing/org/app/f789d11a-c9a3-45f9-8e98-8550a6ef98e2/launch/index.html?form=F_DLPSupportTicketForm' target='_blank' >DLP Support Ticket</a></h5>
 </div>
 </div>

@@ -1368,7 +1368,7 @@ class personTable extends DbTable {
 
             $message = preg_replace(self::$revalStatusChangeEmailPattern, $replacements, self::$revalStatusChangeEmail);
 
-            \itdq\BlueMail::send_mail(array($fmsEmailAddress), "vBAC Revalidation Status Change Notification", $message, 'vbacNoReply@uk.ibm.com');
+            \itdq\BlueMail::send_mail(array($fmsEmailAddress), "vBAC Revalidation Status Change Notification", $message, 'vbacNoReply@kyndryl.com');
 
 
 

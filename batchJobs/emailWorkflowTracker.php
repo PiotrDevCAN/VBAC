@@ -67,7 +67,7 @@ try {
     $attachments = array();
     $attachments[] = !empty($excelFile) ? array('filename'=>'Dlp Licenses Report - ' . $fileNameSuffix . ".xls",'content_type'=>'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','data'=>$base64EncodedExcelFile) : null;
     
-    BlueMail::send_mail($emailAddress, 'DLP Licenses Report : ' . $fileNameSuffix, 'Please find attached DLP License Report XLS','vbacNoReply@uk.ibm.com',array(),array(),true,$attachments);    
+    BlueMail::send_mail($emailAddress, 'DLP Licenses Report : ' . $fileNameSuffix, 'Please find attached DLP License Report XLS','vbacNoReply@kyndryl.com',array(),array(),true,$attachments);    
     
 } catch (Exception $e) {
     

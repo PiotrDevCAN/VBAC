@@ -419,7 +419,7 @@ function personRecord() {
         $('#editCtidDiv').hide();
       }
       var currentHeading = $('#employeeResourceHeading').text();
-      var newHeading = currentHeading=='Employee Details' ? 'Resource Details' : 'Employee Details';
+      var newHeading = currentHeading=='Employee Details' ? 'Resource Details - Kyndryl employees use Ocean IDs' : 'Employee Details';
       $('#employeeResourceHeading').text(newHeading);
     });
   },

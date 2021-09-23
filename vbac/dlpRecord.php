@@ -202,7 +202,7 @@ class dlpRecord extends DbRecord
         $delegates = $delegates ? $delegates : array();
         
         
-        \itdq\BlueMail::send_mail(array($approvingMgr), 'DLP(BG&CB) License Approval Request ', $message, 'vbacNoReply@uk.ibm.com', $delegates);
+        \itdq\BlueMail::send_mail(array($approvingMgr), 'DLP(BG&CB) License Approval Request ', $message, 'vbacNoReply@kyndryl.com', $delegates);
     }
     
     

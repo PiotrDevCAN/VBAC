@@ -132,7 +132,7 @@ if(empty($base64EncodedData) && empty($base64EncodedDataNonPmo)){
 
     $messages .= $bau && !empty($nonPmoRequestData) ? "<br/> User created requests have been attached to the email" : null;
 
-    $sendResponse = BlueMail::send_mail($pmoTaskid, 'vBac LBG Export' . $titlePrefix . ': ' . $varbRange, $actualAttachments,'vbacNoReply@uk.ibm.com',array(),array(),true,$attachments);
+    $sendResponse = BlueMail::send_mail($pmoTaskid, 'vBac LBG Export' . $titlePrefix . ': ' . $varbRange, $actualAttachments,'vbacNoReply@kyndryl.com',array(),array(),true,$attachments);
 
 //    $messages = ob_get_clean();
     $response = array('success'=>true,'messages'=>$messages,"sendResponse"=>$sendResponse,'post'=>print_r($_REQUEST,true),'lastSql'=>print_r($lastSql,true));

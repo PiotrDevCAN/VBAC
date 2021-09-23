@@ -290,7 +290,7 @@ class assetRequestRecord extends DbRecord {
       			<div class="modal-body" >
       				<p style="text-align:center">Please confirm <b><span id='educationNotesid'></span></b> has successfully completed the mandatory Aurora Security Education Modules for IBMers before continuing</p>
       				<p style="text-align:center">Access to these self paced online courses is via the following link <a href='http://ltc.sl.bluecloud.ibm.com/aurora/' target='_blank'>http://ltc.sl.bluecloud.ibm.com/aurora/</a></p>
-      				<p style="text-align:center">Please contact <a href='mailto:Aurora.Central.PMO@uk.ibm.com'>Aurora Central PMO/UK/IBM</a> if you do not have access.</p>
+      				<p style="text-align:center">Please contact <a href='mailto:aurora.central.pmo@kyndryl.com'>aurora.central.pmo@kyndryl.com</a> if you do not have access.</p>
 					<p style="text-align:center">Please note a false declaration of completion constitutes a breach of IBM Business Conduct Guidelines and may lead to disciplinary action.</p>
       			</div>
       			<div class="modal-footer">
@@ -358,7 +358,7 @@ class assetRequestRecord extends DbRecord {
         <h3 class="panel-title" id='requestableAssetListTitle'>Education</h3>
         </div>
         <div class="panel-body">
-        <p>Please complete the required <b>Aurora Security Education</b>, contact the <b>Aurora Central PMO/UK/IBM</b> for details.</p>
+        <p>Please complete the required <b>Aurora Security Education</b>, contact the <b>aurora.central.pmo@kyndryl.com</b> for details.</p>
         </div>
         <div class='panel-footer'>
         <button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>

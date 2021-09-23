@@ -62,25 +62,9 @@ body {
 <div class="panel panel-default">
 <div class='panel-body'>
 <ul class='helpLink'>
-<li><a href='https://ibm.ent.box.com/folder/83248737881' target='_blank' class=''>User Guide</a>&nbsp;<small>(Request Access from <a href='mailto:Aurora.Central.PMO@uk.ibm.com'>Aurora Central PMO/UK/IBM</a>)</small></li>
+<li><a href='https://kyndryl.ent.box.com/folder/83248737881' target='_blank' class=''>User Guide</a>&nbsp;<small>(Request Access from <a href='mailto:aurora.central.pmo@kyndryl.com'>aurora.central.pmo@kyndryl.com</a>)</small></li>
 <li><a href='https://yourlearning.ibm.com/#channel/CNL_LCB_1547052865067' target='_blank' class=''>Ventus Your Learning</a></li>
-
-<li class=' feedback'>Questions
-<div id='feedbackDiv'>
-<form id='feedbackForm' onsubmit='return false'>
-<div class='row'>
-<div class='form-group col-sm-6'>
-<textarea id='feedbackText' rows="4" cols="25" style='font-size:14px' placeholder="Type questions for the IAM support team then click 'Send' below. But please check FAQ first, how to resolve many issues are covered in the FAQ"></textarea>
-</div>
-</div>
-<div class='row'>
-<div class='form-group col-sm-1'>
-<button id='feedbackSend' class='btn btn-xs btn-primary form-control col-sm-2'>Send</button>
-</div>
-</div>
-</form>
-</div>
-<li>For ID and Access process issues please contact  :<a href='mailto:IBM.LBG.IAM.Requests@uk.ibm.com'>IBM LBG IAM Requests/UK/IBM</a></li>
+<li>For ID and Access process issues please contact  :<a href='mailto:Kyndryl.LBG.IAM.Requests@kyndryl.com'>Kyndryl.LBG.IAM.Requests@kyndryl.com</a></li>
 <li>For technical issues please contact application support :<a href='https://ventusdelivery.slack.com/messages/C8DLE1DFH/' target='_blank' ># sm-cognitive-delivery</a></li>
 </ul>
 </div>

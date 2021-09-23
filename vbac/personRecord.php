@@ -130,9 +130,9 @@ class personRecord extends DbRecord
     // public static $pmpTaskIdKyndryl = array('aurora.central.pmo@kyndryl.com');
     public static $pmoTaskId = array('aurora.central.pmo@kyndryl.com');
     public static $orderITCtbTaskId = array('jeemohan@in.ibm.com');
-    public static $orderITNonCtbTaskId = array('aurora.central.pmo@uk.ibm.com');
-    public static $orderITBauTaskId = array('aurora.central.pmo@uk.ibm.com');
-    public static $orderITNonBauTaskId = array('aurora.central.pmo@uk.ibm.com');
+    public static $orderITNonCtbTaskId = array('aurora.central.pmo@kyndryl.com');
+    public static $orderITBauTaskId = array('aurora.central.pmo@kyndryl.com');
+    public static $orderITNonBauTaskId = array('aurora.central.pmo@kyndryl.com');
     public static $smCdiAuditEmail = 'e3h3j0u9u6l2q3a3@ventusdelivery.slack.com';
     // public static $securityOps = array('IBM.LBG.Security.Operations@uk.ibm.com');
     // public static $securityOpsKyndryl = array('Kyndryl.LBG.IAM.Requests@Kyndryl.com');
@@ -199,7 +199,7 @@ class personRecord extends DbRecord
                                               <br/>I can confirm that you have successfully passed Lloyds Bank PES Screening, with a personal reference, effective from &&effectiveDate&&
                                               <br/>If you need any more information regarding your PES clearance, please contact the taskid &&taskid&&.
                                               <br/>You are now required to successfully complete the mandatory Aurora Security Education for IBMers.
-                                              <br/>Please contact <a href="mailto:Aurora.Central.PMO@uk.ibm.com">Aurora Central PMO/UK/IBM</a> to gain access to these self-paced online courses which are available here:- <a href="http://ltc.sl.bluecloud.ibm.com/aurora/">http://ltc.sl.bluecloud.ibm.com/aurora/</a>
+                                              <br/>Please contact <a href="mailto:aurora.central.pmo@kyndryl.com">aurora.central.pmo@kyndryl.com</a> to gain access to these self-paced online courses which are available here:- <a href="http://ltc.sl.bluecloud.ibm.com/aurora/">http://ltc.sl.bluecloud.ibm.com/aurora/</a>
                                               <br/>Please note that your PES clearance will require revalidation after 1 or 3 years (depending on your access levels), you will be contacted 8 weeks before your revalidation date with instructions.
                                               <br/>Many Thanks for your cooperation';
 
@@ -213,7 +213,7 @@ class personRecord extends DbRecord
 
                                               <br/>If this is the first time you have been PES Cleared for Lloyds Bank, you are required to successfully complete the mandatory Aurora Security Education for IBMers.
                                               <br/>If you have previously successfully completed the Aurora Security Education, then this requirement does not apply.
-                                              <br/>To undertake the training, first contact <a href="mailto:Aurora.Central.PMO@uk.ibm.com">Aurora Central PMO/UK/IBM</a> who will grant you access to these self-paced online courses, which are available here:- <a href="http://ltc.sl.bluecloud.ibm.com/aurora/">http://ltc.sl.bluecloud.ibm.com/aurora/</a>
+                                              <br/>To undertake the training, first contact <a href="mailto:aurora.central.pmo@kyndryl.com">aurora.central.pmo@kyndryl.com</a> who will grant you access to these self-paced online courses, which are available here:- <a href="http://ltc.sl.bluecloud.ibm.com/aurora/">http://ltc.sl.bluecloud.ibm.com/aurora/</a>
                                               <br/>Please note that your PES clearance will require revalidation after 1 or 3 years (depending on your access levels), you will be contacted 8 weeks before your revalidation date with instructions.
                                               <br/>Many Thanks for your cooperation,';
     private static $pesClearedEmailPattern = array('/&&candidate&&/','/&&effectiveDate&&/','/&&taskid&&/');
@@ -464,7 +464,7 @@ class personRecord extends DbRecord
                 // private static $cbcEmailPattern = array('/&&notesid&&/','/&&cnum&&/','/&&countryCode&&/','/&&lbgLocation&&/','/&&role&&/');
                 $replacements = array($this->NOTES_ID, $this->CNUM, $this->COUNTRY, $this->LBG_LOCATION,  $this->ROLE_ON_THE_ACCOUNT );
                 $message = preg_replace(self::$cbcEmailPattern, $replacements, self::$cbcEmailBody);
-                \itdq\BlueMail::send_mail(self::$pmoTaskId, 'vBAC CBC Check Required -' . $this->CNUM ." (" . trim($this->FIRST_NAME) . " " . trim($this->LAST_NAME) . ")", $message, 'vbacNoReply@uk.ibm.com', self::$securityOps);
+                \itdq\BlueMail::send_mail(self::$pmoTaskId, 'vBAC CBC Check Required -' . $this->CNUM ." (" . trim($this->FIRST_NAME) . " " . trim($this->LAST_NAME) . ")", $message, 'vbacNoReply@kyndryl.com', self::$securityOps);
             break;
         }
     }
@@ -1562,7 +1562,7 @@ class personRecord extends DbRecord
         );
         $message = preg_replace(self::$pesEmailPatterns, $replacements, self::$pesEmailBody);
 
-        \itdq\BlueMail::send_mail(self::$pesTaskId, 'vBAC PES Request - ' . $this->CNUM ." (" . trim($this->FIRST_NAME) . " " . trim($this->LAST_NAME) . ")", $message, 'vbacNoReply@uk.ibm.com');
+        \itdq\BlueMail::send_mail(self::$pesTaskId, 'vBAC PES Request - ' . $this->CNUM ." (" . trim($this->FIRST_NAME) . " " . trim($this->LAST_NAME) . ")", $message, 'vbacNoReply@kyndryl.com');
 
     }
 
@@ -1694,7 +1694,7 @@ class personRecord extends DbRecord
             $fmEmail);
         $message = preg_replace(self::$warnPmoDateChangePattern, $replacements, self::$warnPmoDateChange);
 
-        \itdq\BlueMail::send_mail(self::$pmoTaskId, 'vBAC Projected End Date Change - ' . $this->CNUM ." (" . trim($this->FIRST_NAME) . " " . trim($this->LAST_NAME) . ")", $message, 'vbacNoReply@uk.ibm.com');
+        \itdq\BlueMail::send_mail(self::$pmoTaskId, 'vBAC Projected End Date Change - ' . $this->CNUM ." (" . trim($this->FIRST_NAME) . " " . trim($this->LAST_NAME) . ")", $message, 'vbacNoReply@kyndryl.com');
     }
 
 
@@ -1726,7 +1726,7 @@ class personRecord extends DbRecord
              */
             $bcc[] = self::$smCdiAuditEmail;  // Always copy the slack channel.
             set_time_limit(60);
-            \itdq\BlueMail::send_mail($to, 'CBN Initiation Request' , $emailMessage, 'vbacNoReply@uk.ibm.com',$cc,$bcc);
+            \itdq\BlueMail::send_mail($to, 'CBN Initiation Request' , $emailMessage, 'vbacNoReply@kyndryl.com',$cc,$bcc);
         }
    }
 
@@ -1743,7 +1743,7 @@ class personRecord extends DbRecord
        $emailMessage = preg_replace(self::$preboarderStatusChangeEmailPattern, $replacements, self::$preboarderStatusChangeEmailBody);
 
        set_time_limit(60);
-       \itdq\BlueMail::send_mail(self::$pmoTaskId, 'Pre-Boarder PES Status Change' , $emailMessage, 'vbacNoReply@uk.ibm.com',$cc, $bcc, true, $noAttachments, pesEmail::EMAIL_NOT_PES_SUPRESSABLE );
+       \itdq\BlueMail::send_mail(self::$pmoTaskId, 'Pre-Boarder PES Status Change' , $emailMessage, 'vbacNoReply@kyndryl.com',$cc, $bcc, true, $noAttachments, pesEmail::EMAIL_NOT_PES_SUPRESSABLE );
    }
 
 

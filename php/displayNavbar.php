@@ -31,7 +31,7 @@ $traceDelete    = new NavbarOption('Trace Deletion', 'pi_traceDelete.php','acces
 $revalidation   = new NavbarOption('Batch Reval','batchJobs/revalidate.php','accessCdi');
 $recheck        = new NavbarOption('Batch ReCheck','batchJobs/recheckPotentialLeavers.php','accessCdi');
 $cbn            = new NavbarOption('Initiate CBN','batchJobs/sendCbnEmail.php','accessCdi');
-$link           = new NavbarOption('Link IBMer to PreB','pi_linkIbmerToPreboarder.php','accessCdi');
+$link           = new NavbarOption('Link Reg to PreB','pi_linkIbmerToPreboarder.php','accessCdi');
 $emailDlp       = new NavbarOption('Email DLP','batchJobs/emailWorkflowTracker.php','accessCdi');
 $cdiAdmin->addOption($trace);
 $cdiAdmin->addOption($traceControl);
@@ -165,9 +165,8 @@ $navbar->addMenu($reports);
 $outages = new NavbarOption($plannedOutagesLabel, 'ppo_PlannedOutages.php','accessCdi accessPmo accessFm accessUser ');
 $navbar->addOption($outages);
 
-$privacy = new NavbarOption('Privacy','https://w3.ibm.com/w3publisher/w3-privacy-notice','accessCdi accessPmo accessFm accessUser ');
-$navbar->addOption($privacy);
-
+// $privacy = new NavbarOption('Privacy','https://w3.ibm.com/w3publisher/w3-privacy-notice','accessCdi accessPmo accessFm accessUser ');
+// $navbar->addOption($privacy);
 
 $navbar->createNavbar($page);
 $start = microtime(true);

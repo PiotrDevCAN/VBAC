@@ -131,7 +131,7 @@ class requestableAssetListRecord extends DbRecord
 <!-- Record Dates  -->
 					<div class="form-group">
 						<div class="col-sm-3">
-						<input  data-toggle="toggle" type="checkbox" class='toggle' data-width='250' data-on="Record Date Issued to IBM" data-off="Do Not Record Date to IBM" id='RecordDateToIbm' name='RECORD_DATE_ISSUED_TO_IBM' value='1' data-onstyle='success' data-offstyle='warning'>
+						<input  data-toggle="toggle" type="checkbox" class='toggle' data-width='250' data-on="Record Date Issued to IBM" data-off="Do Not Record Date to Internally" id='RecordDateToIbm' name='RECORD_DATE_ISSUED_TO_IBM' value='1' data-onstyle='success' data-offstyle='warning'>
 						</div>
 						<div class='col-sm-3'>
 						<input  data-toggle="toggle" type="checkbox" class='toggle' data-width='250' data-on="Record Date Issued to User" data-off="Do Not Record Date to User" id='RecordDateToUser' name='RECORD_DATE_ISSUED_TO_USER' value='1' data-onstyle='success' data-offstyle='warning'>
