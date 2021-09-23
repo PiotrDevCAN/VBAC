@@ -73,6 +73,7 @@ function personRecord() {
 
   this.listenForEmail = function(){
 	  $(document).on('focusout','#resource_email',function(){
+      $('#open_seat').attr('placeholder','IBM Hiring Number');
 		  var newEmail = $('#resource_email').val();
 		  var trimmedEmail = newEmail.trim();
       if (trimmedEmail !== "") {
@@ -93,6 +94,7 @@ function personRecord() {
         }
       } else {
         // no need to check
+        $('#resource_email').value();
       }
 	  });
 
