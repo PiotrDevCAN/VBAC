@@ -94,7 +94,7 @@ function personRecord() {
         }
       } else {
         // no need to check
-        $('#resource_email').value();
+        $('#resource_email').val('');
       }
 	  });
 
