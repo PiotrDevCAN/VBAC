@@ -80,7 +80,7 @@ function personWithSubPRecord() {
                       { "data": "START_DATE", "defaultContent": "" },
                       { "data": "PROJECTED_END_DATE", "defaultContent": "" },
                       { "data": "COUNTRY", "defaultContent": ""},
-                      { "data": "IBM_BASE_LOCATION", "defaultContent": "" },
+                      { "data": "BASE_LOCATION", "defaultContent": "" },
                       { "data": "LBG_LOCATION" , "defaultContent": ""},
                       { "data": "OFFBOARDED_DATE" , "defaultContent": ""},
                       { "data": "PES_DATE_REQUESTED" , "defaultContent": ""},

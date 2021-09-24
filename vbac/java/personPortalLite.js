@@ -69,7 +69,7 @@ function personPortalLite() {
                       { "data": "START_DATE", "defaultContent": "", visible:false },					//13
                       { "data": "PROJECTED_END_DATE", "defaultContent": "", visible:false },			//14
                       { "data": "COUNTRY", "defaultContent": "", visible:false},						//15
-                      { "data": "IBM_BASE_LOCATION", "defaultContent": "", visible:false },				//16	
+                      { "data": "BASE_LOCATION", "defaultContent": "", visible:false },				//16	
                       { "data": "LBG_LOCATION" , "defaultContent": "", visible:false},					//17
                       { "data": "PES_DATE_REQUESTED" , "defaultContent": "", visible:false},			//18
                       { "data": "PES_REQUESTOR", "defaultContent": "" , visible:false},					//19
