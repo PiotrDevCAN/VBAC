@@ -53,59 +53,59 @@ function personPortalLite() {
           }	,
 
          "columns": [
-                      { "name": "CNUM", "data": "CNUM", "defaultContent": "", visible:true },							//00
-                      { "name": "OPEN_SEAT_NUMBER", "data": "OPEN_SEAT_NUMBER", "defaultContent": "", visible:false },				//01
-                      { "name": "FIRST_NAME", "data": "FIRST_NAME", "defaultContent": "<i>unknown</i>", visible:true},	//02
-                      { "name": "LAST_NAME", "data": "LAST_NAME", "defaultContent": "<i>unknown</i>", visible:true },		//03
-                      { "name": "EMAIL_ADDRESS", "data": "EMAIL_ADDRESS", "defaultContent": "<i>unknown</i>", visible:true },	//04
-                      { "name": "NOTES_ID", "data": "NOTES_ID", "defaultContent": "<i>unknown</i>", visible:true },			//05
-                      { "name": "LBG_EMAIL", "data": "LBG_EMAIL", "defaultContent": "<i>unknown</i>", visible:false },		//06
-                      { "name": "EMPLOYEE_TYPE", "data": "EMPLOYEE_TYPE", "defaultContent": "", visible:false },					//07
-                      { "name": "FM_CNUM", "data": "FM_CNUM", "defaultContent": "", visible:false },						//08
-                      { "name": "FM_MANAGER_FLAG", "data": "FM_MANAGER_FLAG", "defaultContent": "", visible:false },				//09	
-                      { "name": "TT_BAU", "data": "TT_BAU", "defaultContent": "", visible:false },						//10
-                      { "name": "LOB", "data": "LOB", "defaultContent": "", visible:false },							//11
-                      { "name": "ROLE_ON_THE_ACCOUNT", "data": "ROLE_ON_THE_ACCOUNT", "defaultContent": "", visible:false },			//12	
-                      { "name": "START_DATE", "data": "START_DATE", "defaultContent": "", visible:false },					//13
-                      { "name": "PROJECTED_END_DATE", "data": "PROJECTED_END_DATE", "defaultContent": "", visible:false },			//14
-                      { "name": "COUNTRY", "data": "COUNTRY", "defaultContent": "", visible:false},						//15
-                      { "name": "BASE_LOCATION", "data": "IBM_BASE_LOCATION", "defaultContent": "", visible:false },				//16	
-                      { "name": "LBG_LOCATION", "data": "LBG_LOCATION", "defaultContent": "", visible:false},					//17
-                      { "name": "PES_DATE_REQUESTED", "data": "PES_DATE_REQUESTED" , "defaultContent": "", visible:false},			//18
-                      { "name": "PES_REQUESTOR", "data": "PES_REQUESTOR", "defaultContent": "" , visible:false},					//19
-                      { "name": "PES_DATE_RESPONDED", "data": "PES_DATE_RESPONDED", "defaultContent": "" , visible:false},			//20	
-                      { "name": "PES_STATUS_DETAILS", "data": "PES_STATUS_DETAILS", "defaultContent": "" , visible:false},			//21
-                      { "name": "PES_STATUS", "data": "PES_STATUS",																//22
-                        render: { _:'display', sort:'sort', visible:true },
-                      },
-                      { "name": "REVALIDATION_DATE_FIELD", "data": "REVALIDATION_DATE_FIELD", "defaultContent": "", visible:false },		//23
-                      { "name": "REVALIDATION_STATUS", "data": "REVALIDATION_STATUS", "defaultContent": "", visible:false },			//24
-                      { "name": "CBN_DATE_FIELD", "data": "CBN_DATE_FIELD", "defaultContent": "", visible:false },				//25
-                      { "name": "CBN_STATUS", "data": "CBN_STATUS", "defaultContent": "", visible:false },					//26
-                      { "name": "WORK_STREAM", "data": "WORK_STREAM", "defaultContent": "", visible:false },					//27
-                      { "name": "CT_ID", "data": "CT_ID", "defaultContent": "", visible:false },							//29	
-                      { "name": "PRE_BOARDED", "data": "PRE_BOARDED", "defaultContent": "" , visible:false},					//30
-                      { "name": "PES_DATE_EVIDENCE", "data": "PES_DATE_EVIDENCE", "defaultContent": "" , visible:false},				//31
-                      { "name": "RSA_TOKEN", "data": "RSA_TOKEN", "defaultContent": "", visible:false },						//32
-                      { "name": "CALLSIGN_ID", "data": "CALLSIGN_ID", "defaultContent": "" , visible:false},					//33
-                      { "name": "PROCESSING_STATUS", "data": "PROCESSING_STATUS", "defaultContent": "", visible:false },				//34
-                      { "name": "PROCESSING_STATUS_CHANGED", "data": "PROCESSING_STATUS_CHANGED", "defaultContent": "" , visible:false},  	//35	
-                      { "name": "PES_LEVEL", "data": "PES_LEVEL", "defaultContent": "", visible:false },						//36
-                      { "name": "PES_RECHECK_DATE", "data": "PES_RECHECK_DATE", "defaultContent": "" , visible:false},				//37
-                      { "name": "PES_CLEARED_DATE", "data": "PES_CLEARED_DATE", "defaultContent": "" , visible:false},				//38
-                      { "name": "SQUAD_NUMBER", "data": "SQUAD_NUMBER", "defaultContent": "", visible:false },             //39	    			
-					            { "name": "SQUAD_NAME", "data": "SQUAD_NAME", 
-                        render: { _:'display', sort:'sort',  visible:false},                    //40
-                      },
-                      { "name": "SQUAD_LEADER", "data": "SQUAD_LEADER", "defaultContent": "", visible:false },					//41
-                      { "name": "TRIBE_NUMBER", "data": "TRIBE_NUMBER", "defaultContent": "", visible:false },					//42
-					            { "name": "TRIBE_NAME", "data": "TRIBE_NAME", "defaultContent": "", visible:false },					//43
-                      { "name": "TRIBE_LEADER", "data": "TRIBE_LEADER", "defaultContent": "", visible:false },					//44
-                      { "name": "ORGANISATION", "data": "ORGANISATION", "defaultContent": "", visible:false },					//45
-                      { "name": "ITERATION_MGR", "data": "ITERATION_MGR", "defaultContent": "", visible:false },					//46
-                      { "name": "PMO_STATUS", "data": "PMO_STATUS", "defaultContent": "", visible:false },					//47                    	
-                      { "name": "HAS_DELEGATES", "data": "HAS_DELEGATES", "defaultContent": "", visible:false },					//48
-                  ],
+            { "name": "CNUM", "data": "CNUM", "defaultContent": "", visible:true },							//00
+            { "name": "OPEN_SEAT_NUMBER", "data": "OPEN_SEAT_NUMBER", "defaultContent": "", visible:false },				//01
+            { "name": "FIRST_NAME", "data": "FIRST_NAME", "defaultContent": "<i>unknown</i>", visible:true},	//02
+            { "name": "LAST_NAME", "data": "LAST_NAME", "defaultContent": "<i>unknown</i>", visible:true },		//03
+            { "name": "EMAIL_ADDRESS", "data": "EMAIL_ADDRESS", "defaultContent": "<i>unknown</i>", visible:true },	//04
+            { "name": "NOTES_ID", "data": "NOTES_ID", "defaultContent": "<i>unknown</i>", visible:true },			//05
+            { "name": "LBG_EMAIL", "data": "LBG_EMAIL", "defaultContent": "<i>unknown</i>", visible:false },		//06
+            { "name": "EMPLOYEE_TYPE", "data": "EMPLOYEE_TYPE", "defaultContent": "", visible:false },					//07
+            { "name": "FM_CNUM", "data": "FM_CNUM", "defaultContent": "", visible:false },						//08
+            { "name": "FM_MANAGER_FLAG", "data": "FM_MANAGER_FLAG", "defaultContent": "", visible:false },				//09	
+            { "name": "TT_BAU", "data": "TT_BAU", "defaultContent": "", visible:false },						//10
+            { "name": "LOB", "data": "LOB", "defaultContent": "", visible:false },							//11
+            { "name": "ROLE_ON_THE_ACCOUNT", "data": "ROLE_ON_THE_ACCOUNT", "defaultContent": "", visible:false },			//12	
+            { "name": "START_DATE", "data": "START_DATE", "defaultContent": "", visible:false },					//13
+            { "name": "PROJECTED_END_DATE", "data": "PROJECTED_END_DATE", "defaultContent": "", visible:false },			//14
+            { "name": "COUNTRY", "data": "COUNTRY", "defaultContent": "", visible:false},						//15
+            { "name": "BASE_LOCATION", "data": "IBM_BASE_LOCATION", "defaultContent": "", visible:false },				//16	
+            { "name": "LBG_LOCATION", "data": "LBG_LOCATION", "defaultContent": "", visible:false},					//17
+            { "name": "PES_DATE_REQUESTED", "data": "PES_DATE_REQUESTED" , "defaultContent": "", visible:false},			//18
+            { "name": "PES_REQUESTOR", "data": "PES_REQUESTOR", "defaultContent": "" , visible:false},					//19
+            { "name": "PES_DATE_RESPONDED", "data": "PES_DATE_RESPONDED", "defaultContent": "" , visible:false},			//20	
+            { "name": "PES_STATUS_DETAILS", "data": "PES_STATUS_DETAILS", "defaultContent": "" , visible:false},			//21
+            { "name": "PES_STATUS", "data": "PES_STATUS",																//22
+              "render": { _:'display', sort:'sort', visible:true },
+            },
+            { "name": "REVALIDATION_DATE_FIELD", "data": "REVALIDATION_DATE_FIELD", "defaultContent": "", visible:false },		//23
+            { "name": "REVALIDATION_STATUS", "data": "REVALIDATION_STATUS", "defaultContent": "", visible:false },			//24
+            { "name": "CBN_DATE_FIELD", "data": "CBN_DATE_FIELD", "defaultContent": "", visible:false },				//25
+            { "name": "CBN_STATUS", "data": "CBN_STATUS", "defaultContent": "", visible:false },					//26
+            { "name": "WORK_STREAM", "data": "WORK_STREAM", "defaultContent": "", visible:false },					//27
+            { "name": "CT_ID", "data": "CT_ID", "defaultContent": "", visible:false },							//29	
+            { "name": "PRE_BOARDED", "data": "PRE_BOARDED", "defaultContent": "" , visible:false},					//30
+            { "name": "PES_DATE_EVIDENCE", "data": "PES_DATE_EVIDENCE", "defaultContent": "" , visible:false},				//31
+            { "name": "RSA_TOKEN", "data": "RSA_TOKEN", "defaultContent": "", visible:false },						//32
+            { "name": "CALLSIGN_ID", "data": "CALLSIGN_ID", "defaultContent": "" , visible:false},					//33
+            { "name": "PROCESSING_STATUS", "data": "PROCESSING_STATUS", "defaultContent": "", visible:false },				//34
+            { "name": "PROCESSING_STATUS_CHANGED", "data": "PROCESSING_STATUS_CHANGED", "defaultContent": "" , visible:false},  	//35	
+            { "name": "PES_LEVEL", "data": "PES_LEVEL", "defaultContent": "", visible:false },						//36
+            { "name": "PES_RECHECK_DATE", "data": "PES_RECHECK_DATE", "defaultContent": "" , visible:false},				//37
+            { "name": "PES_CLEARED_DATE", "data": "PES_CLEARED_DATE", "defaultContent": "" , visible:false},				//38
+            { "name": "SQUAD_NUMBER", "data": "SQUAD_NUMBER", "defaultContent": "", visible:false },             //39	    			
+            { "name": "SQUAD_NAME", "data": "SQUAD_NAME", 
+              "render": { _:'display', sort:'sort',  visible:false},                    //40
+            },
+            { "name": "SQUAD_LEADER", "data": "SQUAD_LEADER", "defaultContent": "", visible:false },					//41
+            { "name": "TRIBE_NUMBER", "data": "TRIBE_NUMBER", "defaultContent": "", visible:false },					//42
+            { "name": "TRIBE_NAME", "data": "TRIBE_NAME", "defaultContent": "", visible:false },					//43
+            { "name": "TRIBE_LEADER", "data": "TRIBE_LEADER", "defaultContent": "", visible:false },					//44
+            { "name": "ORGANISATION", "data": "ORGANISATION", "defaultContent": "", visible:false },					//45
+            { "name": "ITERATION_MGR", "data": "ITERATION_MGR", "defaultContent": "", visible:false },					//46
+            { "name": "PMO_STATUS", "data": "PMO_STATUS", "defaultContent": "", visible:false },					//47                    	
+            { "name": "HAS_DELEGATES", "data": "HAS_DELEGATES", "defaultContent": "", visible:false },					//48
+        ],
 
           drawCallback: function( settings ) {
               $('[data-toggle="popover"]').popover();
