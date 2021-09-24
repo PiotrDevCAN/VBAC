@@ -10,21 +10,18 @@ function toTitleCase(str) {
 	    });
 };
 
-
 var buttonCommon = {
-        exportOptions: {
-            format: {
-                body: function ( data, row, column, node ) {
-                 //   return data ?  data.replace( /<br\s*\/?>/ig, "\n") : data ;
-                 return data ? data.replace( /<br\s*\/?>/ig, "\n").replace(/(&nbsp;|<([^>]+)>)/ig, "") : data ;
-                 //    data.replace( /[$,.]/g, '' ) : data.replace(/(&nbsp;|<([^>]+)>)/ig, "");
+  exportOptions: {
+    format: {
+      body: function ( data, row, column, node ) {
+        //   return data ?  data.replace( /<br\s*\/?>/ig, "\n") : data ;
+        return data ? data.replace( /<br\s*\/?>/ig, "\n").replace(/(&nbsp;|<([^>]+)>)/ig, "") : data ;
+        //    data.replace( /[$,.]/g, '' ) : data.replace(/(&nbsp;|<([^>]+)>)/ig, "");
 
-                }
-            }
-        }
-    };
-
-
+      }
+    }
+  }
+};
 
 function personRecord() {
 
@@ -67,9 +64,7 @@ function personRecord() {
 	 		$('#person_contractor_id').select2();
 	 		$('#person_functionalMgr').select2();
 		});
-
   },
-
 
   this.listenForEmail = function(){
 	  $(document).on('focusout','#resource_email',function(){
@@ -122,10 +117,7 @@ function personRecord() {
 
 	       }
 	   });
-
     })
-
-
   },
 
   this.listenForDeoffBoarding = function() {
@@ -265,12 +257,9 @@ function personRecord() {
 			});	  
   },
 
-
-
-
   this.populateSelectOffboarderModal = function(){
 
-  }
+  }.
 
   this.listenForStopOffBoarding = function(){
 		$(document).on('click','.btnStopOffboarding', function(e){
@@ -303,11 +292,10 @@ function personRecord() {
 		       }
 		   });
 		});
-	  }
-
+  },
 
   this.listenForOffBoardingCompleted = function(){
-	$(document).on('click','.btnOffboarded', function(e){
+	  $(document).on('click','.btnOffboarded', function(e){
 		var data = $(this).data();
 		 $(this).addClass('spinning');
 		 $(this).attr('disabled',true);
@@ -334,8 +322,8 @@ function personRecord() {
             	 $('#confirmOffboardingModal').modal('show');
 	       }
 	   });
-	});
-  }
+	  });
+  },
 
   this.listenForBtnOffboarding = function(){
 		$(document).on('click','.btnOffboarding', function(e){
@@ -377,7 +365,6 @@ function personRecord() {
 		   });
 		});
   },
-
 
   this.listenForHasBpEntry = function(){
     $(document).on('change','#hasBpEntry', function(){
@@ -554,7 +541,6 @@ function personRecord() {
     });
   },
 
-
   this.listenForSerial = function(){
     $(document).on('keyup change','#person_serial',function(e){
       var cnum = $(this).val();
@@ -565,8 +551,7 @@ function personRecord() {
 
     });
   },
-  
-  
+
   this.listenForSetPmoStatus = function(){
 	  $(document).on('click','.btnSetPmoStatus', function(e){
 		  $(this).addClass('spinning');
@@ -585,7 +570,6 @@ function personRecord() {
 	    });
 	  },
   
-
   this.fetchBluepagesDetailsForCnum = function(cnum){
       $('#saveBoarding').attr('disabled',true);
 
@@ -699,7 +683,6 @@ function personRecord() {
             }
         });
     };
-
   },
   
   this.listenForCtbRtb = function(){
@@ -724,8 +707,6 @@ function personRecord() {
       }
     });
   },
-
-
 
   this.listenForAccountOrganisation = function(){
     // var workStream is created in PHP in the personRecord class and loaded to javascript using Javascript::buildSelectArray
@@ -770,7 +751,6 @@ function personRecord() {
         $('#work_stream').val(currentWorkstream); // Select the option with a value of currentWorkstream
         $('#work_stream').trigger('change');
       }
-
     });
   },
 
@@ -819,7 +799,6 @@ function personRecord() {
 		    }
 	    });
 	  },
-	  
 	  
 	  this.listenForSaveRfFlag = function(){
 		    $(document).on('click','#saveRfFlag', function(){
@@ -892,7 +871,6 @@ function personRecord() {
 					   });
 				 });
   },
-			  
 
   this.saveBoarding = function(mode){
     $("#saveBoarding").addClass('spinning');
@@ -1023,7 +1001,6 @@ function personRecord() {
           } );
       } );
   },
-
   
   this.initialiseRfFlagReport = function(){
       // Setup - add a text input to each footer cell
@@ -1070,8 +1047,6 @@ function personRecord() {
               }
           } );
       } );
-
-
   },
 
   this.initialiseDataTable = function(preBoardersAction){
@@ -1083,25 +1058,20 @@ function personRecord() {
 	  $('#personTable').on('column-visibility.dt', function () {
 		    $('[data-toggle="popover"]').popover();
     	} );
-	  
-	  
-	  
-	    var buttonCommon = {
-	            exportOptions: {
-	                format: {
-	                    body: function ( data, row, column, node ) {
-	                     //   return data ?  data.replace( /<br\s*\/?>/ig, "\n") : data ;
-	                     return data ? data.replace( /<br\s*\/?>/ig, "\n").replace(/(&nbsp;|<([^>]+)>)/ig, "") : data ;
-	                     //    data.replace( /[$,.]/g, '' ) : data.replace(/(&nbsp;|<([^>]+)>)/ig, "");
 
-	                    }
-	                }
-	            }
-	        };
-	  
-	  
-	  
-	  
+	    var buttonCommon = {
+        exportOptions: {
+            format: {
+                body: function ( data, row, column, node ) {
+                  //   return data ?  data.replace( /<br\s*\/?>/ig, "\n") : data ;
+                  return data ? data.replace( /<br\s*\/?>/ig, "\n").replace(/(&nbsp;|<([^>]+)>)/ig, "") : data ;
+                  //    data.replace( /[$,.]/g, '' ) : data.replace(/(&nbsp;|<([^>]+)>)/ig, "");
+
+                }
+            }
+        }
+    };
+    
 	  preBoardersAction = typeof(preBoardersAction) == 'undefined' ? null : preBoardersAction;	  
       // Setup - add a text input to each footer cell
       $('#personTable tfoot th').each( function () {
@@ -1120,12 +1090,6 @@ function personRecord() {
                 "Content-Encoding": "gzip"
               },
           }	,
-//	        CNUM         0
-//	        Email        4
-//	        Notes ID     5
-//	        fm_cnum		 8
-//	        PES status   25
-
           "columns": [
             { "title": "CNUM", "data": "CNUM" , "defaultContent": "" },
             { "title": "OPEN_SEAT_NUMBER", "data": "OPEN_SEAT_NUMBER" ,"defaultContent": "" },
@@ -1239,103 +1203,6 @@ function personRecord() {
               }
           } );
       } );
-  }
-
-
-
-  
-  this.initialiseDataTablexxx = function(preBoardersAction){
-	  preBoardersAction = typeof(preBoardersAction) == 'undefined' ? null : preBoardersAction;	  
-      // Setup - add a text input to each footer cell
-      $('#personTable tfoot th').each( function () {
-          var title = $(this).text();
-          var titleCondensed = title.replace(' ','');
-          $(this).html( '<input type="text" id="footer'+ titleCondensed + '" placeholder="Search '+title+'" />' );
-      } );
-    // DataTable
-      personRecord.table = $('#personTable').DataTable({
-        ajax: {
-              url: 'ajax/populatePersonDatatable.php',
-              data: { preBoardersAction:preBoardersAction },
-              type: 'GET',
-              headers: {
-                "Accept-Encoding": "gzip",
-                "Content-Encoding": "gzip"
-              },
-          },
-
-         "columns": [
-          { "title": "CNUM", "data": "CNUM" , "defaultContent": "" },
-          { "title": "OPEN_SEAT_NUMBER", "data": "OPEN_SEAT_NUMBER" ,"defaultContent": "" },
-          { "title": "FIRST_NAME", "data": "FIRST_NAME","defaultContent": "<i>unknown</i>"},
-          { "title": "LAST_NAME", "data": "LAST_NAME", "defaultContent": "<i>unknown</i>" },
-          { "title": "EMAIL_ADDRESS", "data": "EMAIL_ADDRESS", "defaultContent": "<i>unknown</i>" },
-          { "title": "NOTES_ID", "data": "NOTES_ID", "defaultContent": "<i>unknown</i>" },
-          { "title": "LBG_EMAIL", "data": "LBG_EMAIL", "defaultContent": "<i>unknown</i>" },
-          { "title": "EMPLOYEE_TYPE", "data": "EMPLOYEE_TYPE", "defaultContent": "" },
-          { "title": "FM_CNUM", "data": "FM_CNUM", "defaultContent": "" },
-          { "title": "FM_MANAGER_FLAG", "data": "FM_MANAGER_FLAG", "defaultContent": "" },
-          { "title": "CTB_RTB", "data": "CTB_RTB", "defaultContent": "" },
-          { "title": "TT_BAU", "data": "TT_BAU", "defaultContent": "" },
-          { "title": "LOB", "data": "LOB", "defaultContent": "" },
-          { "title": "ROLE_ON_THE_ACCOUNT", "data": "ROLE_ON_THE_ACCOUNT", "defaultContent": "" },
-          { "title": "ROLE_TECHNOLOGY", "data": "ROLE_TECHNOLOGY", "defaultContent": "" },
-          { "title": "START_DATE", "data": "START_DATE", "defaultContent": "" },
-          { "title": "PROJECTED_END_DATE", "data": "PROJECTED_END_DATE", "defaultContent": "" },
-          { "title": "COUNTRY", "data": "COUNTRY", "defaultContent": ""},
-          { "title": "BASE_LOCATION", "data": "IBM_BASE_LOCATION", "defaultContent": "" },
-          { "title": "LBG_LOCATION", "data": "LBG_LOCATION" , "defaultContent": ""},
-          { "title": "OFFBOARDED_DATE", "data": "OFFBOARDED_DATE" , "defaultContent": ""},
-          { "title": "PES_DATE_REQUESTED", "data": "PES_DATE_REQUESTED" , "defaultContent": ""},
-          { "title": "PES_REQUESTOR", "data": "PES_REQUESTOR", "defaultContent": "" },
-          { "title": "PES_DATE_RESPONDED", "data": "PES_DATE_RESPONDED", "defaultContent": "" },
-          { "title": "PES_STATUS_DETAILS", "data": "PES_STATUS_DETAILS", "defaultContent": "" },
-          { "title": "PES_STATUS", "data": "PES_STATUS", "defaultContent": "" },
-          { "title": "REVALIDATION_DATE_FIELD", "data": "REVALIDATION_DATE_FIELD", "defaultContent": "" },
-          { "title": "REVALIDATION_STATUS", "data": "REVALIDATION_STATUS", "defaultContent": "" },
-          { "title": "CBN_DATE_FIELD", "data": "CBN_DATE_FIELD", "defaultContent": "" },
-          { "title": "CBN_STATUS", "data": "CBN_STATUS", "defaultContent": "" },
-          { "title": "WORK_STREAM", "data": "WORK_STREAM", "defaultContent": "" },
-          { "title": "CT_ID_REQUIRED", "data": "CT_ID_REQUIRED" , "defaultContent": ""},
-          { "title": "CT_ID", "data": "CT_ID", "defaultContent": "" },
-          { "title": "CIO_ALIGNMENT", "data": "CIO_ALIGNMENT", "defaultContent": "" },
-          { "title": "PRE_BOARDED", "data": "PRE_BOARDED", "defaultContent": "" },
-          { "title": "PRE_BOARDED", "data": "PRE_BOARDED", "defaultContent": "" },
-          { "title": "PMO_STATUS", "data": "PMO_STATUS", "defaultContent": "" },
-          { "title": "PES_DATE_EVIDENCE", "data": "PES_DATE_EVIDENCE", "defaultContent": "" },
-          { "title": "RSA_TOKEN", "data": "RSA_TOKEN", "defaultContent": "" },
-          { "title": "CALLSIGN_ID", "data": "CALLSIGN_ID", "defaultContent": "" },
-          { "title": "PROCESSING_STATUS", "data": "PROCESSING_STATUS", "defaultContent": "" },
-          { "title": "PROCESSING_STATUS_CHANGED", "data": "PROCESSING_STATUS_CHANGED", "defaultContent": "" },
-        ],
-          columnDefs: [
-                         { "visible": false, "targets": [1,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41] }
-                  ] ,
-          order: [[ 5, "asc" ]],
-          autoWidth: true,
-          deferRender: true,
-          processing: true,
-          responsive: true,
-          dom: 'Blfrtip',
-          buttons: [
-                    'colvis',
-                    'excelHtml5',
-                    'csvHtml5',
-                    'print'
-                ],
-      });
-      // Apply the search
-      personRecord.table.columns().every( function () {
-          var that = this;
-
-          $( 'input', this.footer() ).on( 'keyup change', function () {
-              if ( that.search() !== this.value ) {
-                  that
-                      .search( this.value )
-                      .draw();
-              }
-          } );
-      } );
   },
   
   this.initialiseSquadALog = function(preBoardersAction){
@@ -1431,16 +1298,12 @@ function personRecord() {
       } );
   },
   
-  
-  
-
   this.listenForbtnTogglePesTrackerStatusDetails = function(){
 	  $(document).on('click','.btnTogglePesTrackerStatusDetails', function(e){  
 		  $(this).parent().children('.pesProcessStatusDisplay').toggle();
 
       });
   }, 
-  
   
   this.listenForBtnTransfer = function(){
 	  $(document).on('click','.btnTransfer', function(e){  
@@ -1475,14 +1338,8 @@ function personRecord() {
 	              $('#confirmTransferModal').modal('hide');
 	          }
 	        });
-		  
-		  
-		  
-		  
       });
   },  
-  
-  
 
   this.listenForReportPes = function(){
     $(document).on('click','#reportPes', function(e){
@@ -1539,7 +1396,6 @@ function personRecord() {
 	  });
   },
   
-
   this.showReportMgrsCbn = function(){
 	 	$('#reportRemoveOffb').attr('disabled',false);
 	  	$('#portalTitle').text('Person Portal - Managers CBN Report');
@@ -1556,7 +1412,6 @@ function personRecord() {
     });
   },
   
-
   this.listenForReportOffboarding = function(){
 	    $(document).on('click','#reportOffboarding', function(e){
 	     	$('#reportRemoveOffb').attr('disabled',false);
@@ -1775,9 +1630,7 @@ function personRecord() {
             });
       });
   },
-  
-  
-  
+
   this.listenForClearAgileNumber = function(){
 	    $(document).on('click','.btnClearSquadNumber', function(e){
 	    	   $(this).addClass('spinning').attr('disabled',true);
@@ -1802,9 +1655,7 @@ function personRecord() {
 	            });
 	      });
 	  },
-  
-  
-  
+
   this.listenForEditAgileNumber = function(){
 	    $(document).on('click','.btnEditAgileNumber', function(e){
 	    	   $(this).addClass('spinning').attr('disabled',true);
@@ -1906,8 +1757,6 @@ function personRecord() {
 			  });
 		  });		  
 	  },
-	  
-	  
 
   this.listenForToggleFmFlag = function(){
     $(document).on('click','.btnSetFmFlag', function(e){
@@ -1954,11 +1803,7 @@ function personRecord() {
       };
       return false;
     });
-
   },
-
-
-
 
   this.listenForEditPesStatus = function(){
     $(document).on('click','.btnPesStatus', function(e){
@@ -2051,7 +1896,6 @@ function personRecord() {
         return false;
       });
   },
-  
   
   this.listenForCancelPes = function(){
 	    $(document).on('click','.btnPesCancel', function(e){
@@ -2165,10 +2009,6 @@ function personRecord() {
 		             });
 		    	});
 		  },
-	  
-	  
-	  
-
 
   this.listenForReportSave = function(){
 	  $(document).on('click','#reportSave', function(e){
@@ -2193,7 +2033,6 @@ function personRecord() {
 		  var form =  $('#reportSaveForm').serialize();
 	  });
   },
-
 
   this.listenForEmployeeTypeRadioBtn = function(){
 	  $(document).on('click','.employeeTypeRadioBtn', function(e){
@@ -2228,14 +2067,11 @@ function personRecord() {
 	  });
   },
 
-
-
   this.initialisePersonFormSelect2 = function(){
      $('#work_stream').select2();
      $('#person_preboarded').select2();
      $('#work_stream').trigger('change');  
   },
-
 
   this.initialiseStartEndDate = function(){
 
@@ -2254,7 +2090,7 @@ function personRecord() {
 			   altFormat: 'yy-mm-dd',
 			   minDate: startDate }
 			  );
-  }
+  },
   
   this.initialiseRfStartEndDate = function(){
 
@@ -2273,39 +2109,34 @@ function personRecord() {
 			   altFormat: 'yy-mm-dd',
 			   minDate: rfStartDate }
 			  );
-  }
-
+  },
 
   this.listenForChangeFm = function(){	
-	$(document).on('change','#FM_CNUM', function(e){
-		$('#updateBoarding').attr('disabled',true)
-		$('#fmPanelBodyCheckMsg').show();	
-	});
-  }
-
-
+    $(document).on('change','#FM_CNUM', function(e){
+      $('#updateBoarding').attr('disabled',true)
+      $('#fmPanelBodyCheckMsg').show();	
+    });
+  },
 
   this.listenForConfirmChangeFm = function(){	
-	$(document).on('click','#confirmFmChange', function(e){
-		$('#updateBoarding').attr('disabled',false);
-		$('#fmPanelBodyCheckMsg').hide();	
-	});
-  }
+    $(document).on('click','#confirmFmChange', function(e){
+      $('#updateBoarding').attr('disabled',false);
+      $('#fmPanelBodyCheckMsg').hide();	
+    });
+  },
 
   this.listenForResetChangeFm = function(){	
-	$(document).on('click','#resetFmChange', function(e){
-		console.log(e);
-		var originalFm = $('#originalFm').val();
-		console.log(originalFm);
-		$(document).off('change','#FM_CNUM');
-		$('#FM_CNUM').val(originalFm).trigger('change');
-		var p = new personRecord();
-		p.listenForChangeFm();
-		$('#updateBoarding').attr('disabled',false);
-		$('#fmPanelBodyCheckMsg').hide();	
-	});
+    $(document).on('click','#resetFmChange', function(e){
+      console.log(e);
+      var originalFm = $('#originalFm').val();
+      console.log(originalFm);
+      $(document).off('change','#FM_CNUM');
+      $('#FM_CNUM').val(originalFm).trigger('change');
+      var p = new personRecord();
+      p.listenForChangeFm();
+      $('#updateBoarding').attr('disabled',false);
+      $('#fmPanelBodyCheckMsg').hide();	
+    });
   }
-
-
 }
 
