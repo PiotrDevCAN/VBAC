@@ -902,7 +902,7 @@ class personRecord extends DbRecord
                 	<select class='form-control select select2' id='ibmer_preboarded'
                         name='ibmer_preboarded'
                         data-placeholder='Select IBMer:' >
-                	<option value=''>IBMer to Link</option>
+                	<option value=''>Reg to Link</option>
                 	<?php
                     foreach ($allNonLinkedIbmers as $cnum => $notesId){
                         ?><option value='<?=$cnum?>'><?=$notesId . "(" . $cnum . ")" ?></option><?php
