@@ -259,7 +259,7 @@ function personRecord() {
 
   this.populateSelectOffboarderModal = function(){
 
-  }.
+  },
 
   this.listenForStopOffBoarding = function(){
 		$(document).on('click','.btnStopOffboarding', function(e){
