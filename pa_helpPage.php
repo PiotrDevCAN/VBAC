@@ -65,7 +65,6 @@ body {
 <li><a href='https://kyndryl.ent.box.com/folder/83248737881' target='_blank' class=''>User Guide</a>&nbsp;<small>(Request Access from <a href='mailto:aurora.central.pmo@kyndryl.com'>aurora.central.pmo@kyndryl.com</a>)</small></li>
 <li><a href='https://yourlearning.ibm.com/#channel/CNL_LCB_1547052865067' target='_blank' class=''>Ventus Your Learning</a></li>
 <li>For ID and Access process issues please contact  :<a href='mailto:Kyndryl.LBG.IAM.Requests@kyndryl.com'>Kyndryl.LBG.IAM.Requests@kyndryl.com</a></li>
-<li>For technical issues please contact application support :<a href='https://ventusdelivery.slack.com/messages/C8DLE1DFH/' target='_blank' ># sm-cognitive-delivery</a></li>
 </ul>
 </div>
 </div>
