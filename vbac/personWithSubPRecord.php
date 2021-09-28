@@ -56,7 +56,6 @@ class personWithSubPRecord extends personRecord
     protected $PES_STATUS_DETAILS;
     protected $PES_STATUS;
 
-
     protected $REVALIDATION_DATE_FIELD;
     protected $REVALIDATION_STATUS;
 
@@ -85,6 +84,9 @@ class personWithSubPRecord extends personRecord
     protected $PROCESSING_STATUS_CHANGED;
 
     protected $person_bio;
+
+    const EMP_RESOURCE_REG = 'Resource Details - Kyndryl employees use Ocean IDs';
+    const EMP_RESOURCE_EXT = 'Resource Details - Use external email addresses';
 
     function displayBoardingForm($mode){
         $loader = new Loader();

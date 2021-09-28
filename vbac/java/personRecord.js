@@ -406,7 +406,8 @@ function personRecord() {
         $('#editCtidDiv').hide();
       }
       var currentHeading = $('#employeeResourceHeading').text();
-      var newHeading = currentHeading=='Employee Details' ? 'Resource Details - Kyndryl employees use Ocean IDs' : 'Employee Details';
+      var newHeading = currentHeading == 'Resource Details - Use external email addresses' ? 'Resource Details - Kyndryl employees use Ocean IDs' : 'Resource Details - Use external email addresses';
+      
       $('#employeeResourceHeading').text(newHeading);
     });
   },

@@ -58,7 +58,6 @@ class personRecord extends DbRecord
     protected $PES_STATUS_DETAILS;
     protected $PES_STATUS;
 
-
     protected $REVALIDATION_DATE_FIELD;
     protected $REVALIDATION_STATUS;
 
@@ -91,7 +90,6 @@ class personRecord extends DbRecord
     
     protected $SQUAD_NUMBER;
 
-    
     protected $person_bio;
 
     // Fields to be edited in the DataTables Reports. Need to know their position in the array $row;
@@ -351,6 +349,8 @@ class personRecord extends DbRecord
     const PES_STATUS_MOVER         = 'Mover';
     const PES_STATUS_LEFT_IBM      = 'Left IBM';
 
+    const EMP_RESOURCE_REG = 'Resource Details - Kyndryl employees use Ocean IDs';
+    const EMP_RESOURCE_EXT = 'Resource Details - Use external email addresses';
 
 //     function htmlHeaderCells(){
 //         $headerCols = array('Notesid','Fm Cnum','Pes Status','Revalidation Status','Email','CNUM');
@@ -530,7 +530,7 @@ class personRecord extends DbRecord
         <form id='boardingForm'  class="form-horizontal" onsubmit="return false;">
     	<div class="panel panel-default">
       		<div class="panel-heading">
-        	<h3 class="panel-title" id='employeeResourceHeading'>Employee Details</h3>
+        	<h3 class="panel-title" id='employeeResourceHeading'><?=personRecord::EMP_RESOURCE_REG;?></h3>
       		</div>
 	    	<div class="panel-body">
     			<div id='existingIbmer'>
