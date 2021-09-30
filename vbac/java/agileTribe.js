@@ -153,11 +153,11 @@ function agileTribe() {
 		      	fail: function(response){
 			      	console.log('Failed');
 					console.log(response);
-		            $('.modalInfo-body').html("<h2>Json call to save record Failed.Tell Rob</h2>");
+		            $('.modalInfo-body').html("<h2>Json call to save record Failed.Tell Piotr</h2>");
 		            $('#modalInfo').modal('show');
 				},
 		      	error: function(error){
-		            $('.modalInfo-body').html("<h2>Json call to save record Errored " + error.statusText + " Tell Rob</h2>");
+		            $('.modalInfo-body').html("<h2>Json call to save record Errored " + error.statusText + " Tell Piotr</h2>");
 		            $('#modalInfo').modal('show');
 		      	}
 		  });

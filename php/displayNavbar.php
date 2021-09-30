@@ -33,6 +33,9 @@ $recheck        = new NavbarOption('Batch ReCheck','batchJobs/recheckPotentialLe
 $cbn            = new NavbarOption('Initiate CBN','batchJobs/sendCbnEmail.php','accessCdi');
 $link           = new NavbarOption('Link Reg to PreB','pi_linkIbmerToPreboarder.php','accessCdi');
 $emailDlp       = new NavbarOption('Email DLP','batchJobs/emailWorkflowTracker.php','accessCdi');
+
+$workLocation       = new NavbarOption('Work Location','pi_manageLocation.php','accessCdi');
+
 $cdiAdmin->addOption($trace);
 $cdiAdmin->addOption($traceControl);
 $cdiAdmin->addOption($traceDelete);
@@ -42,6 +45,7 @@ $cdiAdmin->addOption($recheck);
 $cdiAdmin->addOption($link);
 $cdiAdmin->addOption($emailDlp);
 
+$cdiAdmin->addOption($workLocation);
 
 $adminMenu      = new NavbarMenu('vBac Admin');
 $pmo            = new NavbarOption('Person Portal', 'pa_pmo.php','accessCdi accessPmo accessFm accessUser');
