@@ -1120,7 +1120,7 @@ function personRecord() {
             { "title": "PES_STATUS", "data": "PES_STATUS","defaultContent": "", 
               "render": { _:'display', sort:'sort' },
             },
-            { "title": "PES_STATUS", "data": "REVALIDATION_DATE_FIELD", "defaultContent": "" },
+            { "title": "REVALIDATION_DATE_FIELD", "data": "REVALIDATION_DATE_FIELD", "defaultContent": "" },
             { "title": "REVALIDATION_STATUS", "data": "REVALIDATION_STATUS", "defaultContent": "" },
             { "title": "CBN_DATE_FIELD", "data": "CBN_DATE_FIELD", "defaultContent": "" },
             { "title": "CBN_STATUS", "data": "CBN_STATUS", "defaultContent": "" },
