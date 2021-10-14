@@ -225,7 +225,7 @@ class pesEmail {
             
             $emailBodyFileName = $emailDetails['filename'];
             $pesAttachments = isset($emailDetails['attachments']) ? $emailDetails['attachments'] : array();
-            $pesTaskId = personRecord::$pesTaskId[0];
+            $pesTaskId = personRecord::getPesTaskId();
             $replacements = array($firstName, $openseat, $pesTaskId);
 
             $pesEmailPattern =""; // It'll get set by the include_once, but this stops IDE flagging a warning.
@@ -248,7 +248,7 @@ class pesEmail {
         $names = personTable::getNamesFromCnum($cnum);
         $firstName = $names['FIRST_NAME'];
         $lastName = $names['LAST_NAME'];
-        $pesTaskId = personRecord::$pesTaskId[0];
+        $pesTaskId = personRecord::getPesTaskId();
 
         $emailBodyFileName = 'chaser' . trim($chaserLevel) . ".php";
         $replacements = array($firstName, $pesTaskId);
@@ -267,7 +267,7 @@ class pesEmail {
         $pesEmailPattern = array(); // Will be overridden when we include_once from emailBodies later.
         $pesEmail = null;          // Will be overridden when we include_once from emailBodies later.
 
-        $pesTaskId = personRecord::$pesTaskId[0];
+        $pesTaskId = personRecord::getPesTaskId();
 
         $emailBodyFileName = 'processStatus' . trim($processStatus) . ".php";
         $replacements = array($firstName, $pesTaskId);
@@ -289,7 +289,7 @@ class pesEmail {
         $now = new \DateTime();
         $pesEmail = null;          // Will be overridden when we include_once from emailBodies later.
 
-        $pesTaskId = personRecord::$pesTaskId[0];
+        $pesTaskId = personRecord::getPesTaskId();
 
         include_once 'emailBodies/recheckReport.php';
 
@@ -315,7 +315,7 @@ class pesEmail {
         $now = new \DateTime();
         $pesEmail = null;          // Will be overridden when we include_once from emailBodies later.
 
-        $pesTaskId = personRecord::$pesTaskId[0];
+        $pesTaskId = personRecord::getPesTaskId();
 
         include_once 'emailBodies/recheckReport.php';
 
@@ -333,7 +333,7 @@ class pesEmail {
         $now = new \DateTime();
         $pesEmail = null;          // Will be overridden when we include_once from emailBodies later.
 
-        $pesTaskId = personRecord::$pesTaskId[0];
+        $pesTaskId = personRecord::getPesTaskId();
 
         $cnumPredicate = " CNUM IN ('" . implode("','",$leavers) . "') ";
         $allPesStatus = $loader->loadIndexed('PES_STATUS','CNUM',allTables::$PERSON,$cnumPredicate);
@@ -363,7 +363,7 @@ class pesEmail {
         $now = new \DateTime();
         $pesEmail = null;          // Will be overridden when we include_once from emailBodies later.
 
-        $pesTaskId = personRecord::$pesTaskId[0];
+        $pesTaskId = personRecord::getPesTaskId();
 
         $cnumPredicate = " CNUM = '" . trim($cnum) . "' ";
         $allPesStatus = $loader->loadIndexed('PES_STATUS','CNUM',allTables::$PERSON,$cnumPredicate);
@@ -387,7 +387,7 @@ class pesEmail {
         $now = new \DateTime();
         $pesEmail = null;          // Will be overridden when we include_once from emailBodies later.
 
-        $pesTaskId = personRecord::$pesTaskId[0];
+        $pesTaskId = personRecord::getPesTaskId();
         
         $cnumPredicate = " CNUM = '" . trim($cnum) . "' ";
         $allPesStatus = $loader->loadIndexed('PES_STATUS','CNUM',allTables::$PERSON,$cnumPredicate);

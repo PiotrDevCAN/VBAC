@@ -22,7 +22,6 @@ use itdq\AuditRecord;
  */
 class personRecord extends DbRecord
 {
-
     protected $CNUM;
     protected $OPEN_SEAT_NUMBER;
     protected $FIRST_NAME;
@@ -124,7 +123,11 @@ class personRecord extends DbRecord
     public static $cio = array('CTB Leadership','CTB Central BU','CTB PMO','Commercial & Business Banking','Insurance & Enterprise Programmes','Cyber & TRP','Enterprise Transformation','Retail & Community Banking Transformation','Cross Platform','Product & Engineering');
 
     // public static $pesTaskId = array('LBGVETPR@uk.ibm.com'); // Only first entry will be used as the "contact" in the PES status emails.
-    public static $pesTaskId = array('Kyndryl.Lloyds.PES@ibm.com'); // Only first entry will be used as the "contact" in the PES status emails.
+    // Only first entry will be used as the "contact" in the PES status emails.
+    public static $pesTaskId = array(
+      'Kyndryl' => 'Kyndryl.Lloyds.PES@ibm.com', 
+      'IBM' => 'LBGVETPR@uk.ibm.com'
+    );
 
     // public static $pmoTaskId = array('aurora.central.pmo@uk.ibm.com');
     // public static $pmpTaskIdKyndryl = array('aurora.central.pmo@kyndryl.com');
@@ -158,6 +161,7 @@ class personRecord extends DbRecord
 //                             </td></tr>
 //                             </table>';
     private static $pesEmailBody = 'Please initiate PES check for the following individual : Name : &&name&&, Email Address : &&email&&, Notes Id : &&notesid&&, Country working in : &&country&&, LoB : &&lob&&, Role on Project : &&role&&, Contract : &&contract&&, Open Seat : &&openSeat&&, Requested By : &&requestor&&, Requested Timestamp : &&requested&&, Functional Mgr (on CC) : &&functionalMgr&&, PES Level : &&level&&';
+    
     private static $pesEmailPatterns = array(
         '/&&name&&/',
         '/&&email&&/',
@@ -173,7 +177,6 @@ class personRecord extends DbRecord
         '/&&level&&/',
     );
 
-
     private static $preboarderStatusChangeEmailBody = '<table width="100%" border="0"   cellpadding="0">
                              <tr><td align="center">
                                 <table width="50%">
@@ -186,6 +189,7 @@ class personRecord extends DbRecord
                                 </table>
                             </td></tr>
                             </table>';
+
     private static $preboarderStatusChangeEmailPattern = array(
         '/&&email&&/',
         '/&&notesid&&/',
@@ -194,7 +198,6 @@ class personRecord extends DbRecord
         '/&&changed&&/'
     );
 
-
     private static $pesClearedPersonalEmail = 'Hello &&candidate&&,
                                               <br/>I can confirm that you have successfully passed Lloyds Bank PES Screening, with a personal reference, effective from &&effectiveDate&&
                                               <br/>If you need any more information regarding your PES clearance, please contact the taskid &&taskid&&.
@@ -202,8 +205,6 @@ class personRecord extends DbRecord
                                               <br/>Please contact <a href="mailto:aurora.central.pmo@kyndryl.com">aurora.central.pmo@kyndryl.com</a> to gain access to these self-paced online courses which are available here:- <a href="http://ltc.sl.bluecloud.ibm.com/aurora/">http://ltc.sl.bluecloud.ibm.com/aurora/</a>
                                               <br/>Please note that your PES clearance will require revalidation after 1 or 3 years (depending on your access levels), you will be contacted 8 weeks before your revalidation date with instructions.
                                               <br/>Many Thanks for your cooperation';
-
-
 
     private static $pesClearedPersonalEmailPattern = array('/&&candidate&&/','/&&effectiveDate&&/','/&&taskid&&/');
 
@@ -216,6 +217,7 @@ class personRecord extends DbRecord
                                               <br/>To undertake the training, first contact <a href="mailto:aurora.central.pmo@kyndryl.com">aurora.central.pmo@kyndryl.com</a> who will grant you access to these self-paced online courses, which are available here:- <a href="http://ltc.sl.bluecloud.ibm.com/aurora/">http://ltc.sl.bluecloud.ibm.com/aurora/</a>
                                               <br/>Please note that your PES clearance will require revalidation after 1 or 3 years (depending on your access levels), you will be contacted 8 weeks before your revalidation date with instructions.
                                               <br/>Many Thanks for your cooperation,';
+
     private static $pesClearedEmailPattern = array('/&&candidate&&/','/&&effectiveDate&&/','/&&taskid&&/');
 
     private static $pesCancelPesEmail = 'PES Team,
@@ -230,34 +232,31 @@ class personRecord extends DbRecord
     private static $pesRestartPesEmailPattern = array('/&&candidateFirstName&&/','/&&candidateSurname&&/','/&&cnum&&/','/&&requestor&&/');
 
     private static $pesClearedProvisionalEmail = '<p>Hello &&candidate&&,</p>
-                                              <p>Due to the recent situation we understand that many people will be unable to meet with fellow IBM\'ers to have their documents Certified.  We have implemented a \'provisional clearance\' process and will be accepting all documents without certification - however these documents will require to be certified as soon as the restrictions are lifted.</p>
-                                              <p>Therefore I can confirm that you have provisionally passed  Lloyds Bank PES Screening.</p>
-                                              <p>Please note that this will not give you full PES clearance, and your account may not recognise Provisional Clearance, therefore, if you can get your documents certified correctly (as per below) please do so.</p>
-                                              <p>When sending your document please only send to the PES team.</p>
-                                              <p><b>The Certification MUST be done by another IBM�er</b>, to confirm that they have seen the original document. The following statement should be handwritten on <b>each document</b>, on the <b>same side as the image</b>.</p>
-                                              <p style=\'text-align:center;color:red\'>True & Certified Copy<br/>Name of certifier  in BLOCK CAPITALS<br/>IBM Serial number of certifier<br/>Certification Date<br/>Signature of certifier</p>
-                                              <p>If you need any more information regarding your PES clearance, please let me know.</p>
-                                              <p>Many Thanks for your cooperation,</p>
-';
+      <p>Due to the recent situation we understand that many people will be unable to meet with fellow IBM\'ers to have their documents Certified.  We have implemented a \'provisional clearance\' process and will be accepting all documents without certification - however these documents will require to be certified as soon as the restrictions are lifted.</p>
+      <p>Therefore I can confirm that you have provisionally passed  Lloyds Bank PES Screening.</p>
+      <p>Please note that this will not give you full PES clearance, and your account may not recognise Provisional Clearance, therefore, if you can get your documents certified correctly (as per below) please do so.</p>
+      <p>When sending your document please only send to the PES team.</p>
+      <p><b>The Certification MUST be done by another IBM�er</b>, to confirm that they have seen the original document. The following statement should be handwritten on <b>each document</b>, on the <b>same side as the image</b>.</p>
+      <p style=\'text-align:center;color:red\'>True & Certified Copy<br/>Name of certifier  in BLOCK CAPITALS<br/>IBM Serial number of certifier<br/>Certification Date<br/>Signature of certifier</p>
+      <p>If you need any more information regarding your PES clearance, please let me know.</p>
+      <p>Many Thanks for your cooperation,</p>'
+    ;
 
     private static $pesClearedProvisionalEmailPattern = array('/&&candidate&&/');
 
     private static $offboardingEmail = 'Please initiate OFFBOARDING for the following individual:\n
-                                    Name : &&name&&
-                                    Serial: &&cnum&&
-                                    Email Address : &&email&&
-                                    Notes Id : &&notesid&&
+      Name : &&name&&
+      Serial: &&cnum&&
+      Email Address : &&email&&
+      Notes Id : &&notesid&&
 
-                                    Projected End Date : &&projectedEndDate&&
+      Projected End Date : &&projectedEndDate&&
 
-                                    Country working in : &&country&&
-                                    LoB : &&lob&&
-                                    Employee Type:&&type&&
-                                    Functional Mgr: &&functionalMgr&&'
-
-
+      Country working in : &&country&&
+      LoB : &&lob&&
+      Employee Type:&&type&&
+      Functional Mgr: &&functionalMgr&&'
     ;
-
 
     private static $offboardingEmailPattern = array(
         '/&&name&&/',
@@ -272,35 +271,31 @@ class personRecord extends DbRecord
     );
 
     private static $warnPmoDateChange = 'Please consider OFFBOARDING the following individual:
-                                    Name : &&name&&
-                                    Serial: &&cnum&&
-                                    Email Address : &&email&&
-                                    Notes Id : &&notesid&&
+      Name : &&name&&
+      Serial: &&cnum&&
+      Email Address : &&email&&
+      Notes Id : &&notesid&&
 
-                                    Projected End Date : &&projectedEndDate&&
+      Projected End Date : &&projectedEndDate&&
 
-                                    Country working in : &&country&&
-                                    LoB : &&lob&&
-                                    Employee Type:&&type&&
-                                    Functional Mgr: &&functionalMgr&&'
+      Country working in : &&country&&
+      LoB : &&lob&&
+      Employee Type:&&type&&
+      Functional Mgr: &&functionalMgr&&'
+    ;
 
-
-        ;
-
-
-        private static $warnPmoDateChangePattern = array(
-            '/&&name&&/',
-            '/&&cnum&&/',
-            '/&&email&&/',
-            '/&&notesid&&/',
-            '/&&projectedEndDate&&/',
-            '/&&country&&/',
-            '/&&lob&&/',
-            '/&&type&&/',
-            '/&&functionalMgr&&/',
-        );
-
-
+    private static $warnPmoDateChangePattern = array(
+      '/&&name&&/',
+      '/&&cnum&&/',
+      '/&&email&&/',
+      '/&&notesid&&/',
+      '/&&projectedEndDate&&/',
+      '/&&country&&/',
+      '/&&lob&&/',
+      '/&&type&&/',
+      '/&&functionalMgr&&/',
+    );
+    
     private static $cbnEmailBody = "You are recorded in the <a href='&&host&&'>vBAC</a> tool, as a Functional Manager for one or more people.<h3>Please review the people assigned to you for continued business need and/or to correct any inaccuracies. <a href='&&host&&/pa_pmo.php'>Link here</a></h3>"
                                  . "<p>Select the <b><em>Mgrs CBN Report</em></b> and use the <b><em>Hide Offboarded/ing</em></b> option, both are buttons on the Person Portal page.</p>"
                                  . "<ul><li>If your reportee has moved to a new functional manager or changed roles, you can amend their details using the <b>Edit Icon</b> in the <em>Notes ID</em> column to do this. All mandatory information must be completed to save the person record. </li>"
@@ -309,8 +304,6 @@ class personRecord extends DbRecord
                                  . "<li>If the person needs to be boarded, then please use the <a href='&&host&&/pb_onboard.php'>Boarding</a> screen</li></ul>";
 
     private static $cbnEmailPattern = array('/&&host&&/');
-
-
 
     private static $cbcEmailBody = "<h3>The following person has been boarded with a location that may not have a CBC/DOU in place.</h3>"
                                  . "<table>"
@@ -325,11 +318,7 @@ class personRecord extends DbRecord
 
     private static $cbcEmailPattern = array('/&&notesid&&/','/&&cnum&&/','/&&countryCode&&/','/&&lbgLocation&&/','/&&role&&/');
 
-
-    private static  $lobValue = array('GTS','GBS','IMI','Cloud','Security','Other');
-
-
-
+    private static $lobValue = array('GTS','GBS','IMI','Cloud','Security','Other');
 
     const PES_STATUS_NOT_REQUESTED = 'Not Requested';
     const PES_STATUS_CLEARED       = 'Cleared';
@@ -366,6 +355,9 @@ class personRecord extends DbRecord
 //         return $headerCells;
 //     }
 
+    static function getPesTaskId(){
+      return self::$pesTaskId['Kyndryl'];
+    }
 
     function __construct($pwd=null){
         $this->headerTitles['FM_CNUM'] = 'FUNCTIONAL MGR';
@@ -1577,7 +1569,7 @@ class personRecord extends DbRecord
 
         $fmEmail = $fmIsIbmEmail ? $fmEmail : null;
 
-        $pesTaskId = personRecord::$pesTaskId[0];
+        $pesTaskId = personRecord::getPesTaskId();
 
         $emailAddress = trim($this->EMAIL_ADDRESS);
         $isIbmEmail = strtolower(substr($emailAddress,-7))=='ibm.com';
@@ -1603,7 +1595,7 @@ class personRecord extends DbRecord
             case self::PES_STATUS_CLEARED:
                 $pattern   = self::$pesClearedEmailPattern;
                 $emailBody = self::$pesClearedEmail;
-                $replacements = array($this->FIRST_NAME,$this->PES_CLEARED_DATE,$pesTaskId;
+                $replacements = array($this->FIRST_NAME,$this->PES_CLEARED_DATE,$pesTaskId);
                 $title = 'vBAC PES Status Change';
                 !empty($emailAddress) ? $to[] = $emailAddress : null;
                 !empty($fmEmail)      ? $to[] = $fmEmail : null;
@@ -1649,7 +1641,7 @@ class personRecord extends DbRecord
 
         AuditTable::audit(print_r($message,true),AuditTable::RECORD_TYPE_DETAILS);
         
-        $response = \itdq\BlueMail::send_mail($to, $title ,$message, self::$pesTaskId[0], $cc, $bcc, true, $noAttachments, pesEmail::EMAIL_PES_SUPRESSABLE );
+        $response = \itdq\BlueMail::send_mail($to, $title ,$message, $pesTaskId, $cc, $bcc, true, $noAttachments, pesEmail::EMAIL_PES_SUPRESSABLE );
 
         return $response;
     }

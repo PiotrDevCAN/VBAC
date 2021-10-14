@@ -305,7 +305,7 @@ class assetRequestRecord extends DbRecord {
     }
 
     function unknownUser(){
-        $pesTaskId = personRecord::$pesTaskId[0];
+        $pesTaskId = personRecord::getPesTaskId();
         ?>
         <div class="panel panel-danger">
         <div class="panel-heading">
