@@ -123,7 +123,9 @@ class personRecord extends DbRecord
 
     public static $cio = array('CTB Leadership','CTB Central BU','CTB PMO','Commercial & Business Banking','Insurance & Enterprise Programmes','Cyber & TRP','Enterprise Transformation','Retail & Community Banking Transformation','Cross Platform','Product & Engineering');
 
-    public static $pesTaskId = array('lbgvetpr@uk.ibm.com'); // Only first entry will be used as the "contact" in the PES status emails.
+    // public static $pesTaskId = array('LBGVETPR@uk.ibm.com'); // Only first entry will be used as the "contact" in the PES status emails.
+    public static $pesTaskId = array('Kyndryl.Lloyds.PES@ibm.com'); // Only first entry will be used as the "contact" in the PES status emails.
+
     // public static $pmoTaskId = array('aurora.central.pmo@uk.ibm.com');
     // public static $pmpTaskIdKyndryl = array('aurora.central.pmo@kyndryl.com');
     public static $pmoTaskId = array('aurora.central.pmo@kyndryl.com');
@@ -566,8 +568,8 @@ class personRecord extends DbRecord
             			<div class='col-sm-12' <?=$hideDivFromEdit?>>
 		              	<input class='form-control' id='person_bio' name='person_bio'  value='' required type='text' disabled='disabled' placeholder="Bio">
                 		<input id='person_uid'           name='person_uid'        value='' type='hidden' required>
-                		<input id='person_is_mgr'	     name='FM_MANAGER_FLAG'   value='<?=$this->FM_MANAGER_FLAG?>'   type='hidden'  >
-                		<input id='person_employee_type' name='EMPLOYEE_TYPE'     value='<?=$this->EMPLOYEE_TYPE?>'		type='Hidden'  >
+                		<input id='person_is_mgr'	       name='FM_MANAGER_FLAG'   value='<?=$this->FM_MANAGER_FLAG?>'   type='hidden'  >
+                		<input id='person_employee_type' name='EMPLOYEE_TYPE'     value='<?=$this->EMPLOYEE_TYPE?>'		  type='Hidden'  >
                 		<input id='person_first_name'    name='FIRST_NAME'        value='<?=$this->FIRST_NAME?>'        type='hidden'   <?=$notEditable?>>
                 		<input id='person_last_name'     name='LAST_NAME'         value='<?=$this->LAST_NAME?>'         type='hidden'   <?=$notEditable?>>
                 		<input id='person_ibm_location'  name='IBM_BASE_LOCATION' value='<?=$this->IBM_BASE_LOCATION?>'	type='hidden'  >
@@ -577,7 +579,6 @@ class personRecord extends DbRecord
           			</div>
         		</div>
       		</div>
-
 
       		<div id='notAnIbmer' style='display:none'>
         		<div class="form-group">
@@ -617,7 +618,7 @@ class personRecord extends DbRecord
               			</select>
         				</div>
         			</div>
-				<input id='resource_uid'           name='resperson_uid'        value='<?=$this->CNUM?>'   				type='hidden' >
+				    <input id='resource_uid'           name='resperson_uid'        value='<?=$this->CNUM?>'   				type='hidden' >
         		<input id='resource_is_mgr'	       name='resFM_MANAGER_FLAG'   value='No'              			    	type='hidden' >
         		<input id='resource_employee_type' name='resEMPLOYEE_TYPE'     value='setByRadioButtons'	    		type='hidden' >
         		<input id='resource_ibm_location'  name='resIBM_BASE_LOCATION' value='<?=$this->IBM_BASE_LOCATION?>'	type='hidden' >
@@ -626,17 +627,17 @@ class personRecord extends DbRecord
 				</div>
 
 				<div class='form-group'>
-            		<div class='col-sm-12'>
+          <div class='col-sm-12'>
 						<label class="radio-inline employeeTypeRadioBtn" data-toggle='tooltip' data-placement='auto top' title='IBM Regular and IBM Contractors'>
-						<input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_PREBOARDER ?>' data-type='ibmer' checked>
-						IBMer Pre-Hire (Regular or Contractor)
+              <input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_PREBOARDER ?>' data-type='ibmer' checked>
+              IBMer Pre-Hire (Regular or Contractor)
 						</label>
 						<label class="radio-inline employeeTypeRadioBtn" data-toggle='tooltip' data-placement='auto top' title='3rd Party Vendors'>
-						<input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_VENDOR?>' data-type='other'>
-						Other (ie.3rd Party Vendor)
+              <input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_VENDOR?>' data-type='other'>
+              Other (ie.3rd Party Vendor)
 						</label>
-		        	</div>
-        		</div>
+          </div>
+        </div>
 			</div>
         	<div class='form-group' id='linkToPreBoardedFormgroupDiv'>
 	            <div class="col-sm-6" id='linkToPreBoarded'>
@@ -1524,9 +1525,6 @@ class personRecord extends DbRecord
         }
     }
 
-
-
-
     function sendPesRequest(){
         $loader = new Loader();
 
@@ -1548,17 +1546,17 @@ class personRecord extends DbRecord
 
         $now = new \DateTime();
         $replacements = array($firstName . " " . $lastName,
-                              $emailAddress,
-                              $notesId,
-                              $country,
-                              $lob,
-                              $role,
-                              'Ventus',
-                              $openSeat,
-                              $_SESSION['ssoEmail'],
-                              $now->format('Y-m-d H:i:s'),
-                              $fmEmail,
-                              $level
+          $emailAddress,
+          $notesId,
+          $country,
+          $lob,
+          $role,
+          'Ventus',
+          $openSeat,
+          $_SESSION['ssoEmail'],
+          $now->format('Y-m-d H:i:s'),
+          $fmEmail,
+          $level
         );
         $message = preg_replace(self::$pesEmailPatterns, $replacements, self::$pesEmailBody);
 

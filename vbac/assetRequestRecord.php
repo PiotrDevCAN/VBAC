@@ -314,7 +314,7 @@ class assetRequestRecord extends DbRecord {
       	<p>User <?=$_SESSION['ssoEmail']?> is not known to this tool</p>
        	<p>Your Functional Manager needs to Onboard you onto vBAC. </p>
        	<p>If you already have a Preboarder record in vBAC your manager will need to onboard you as an IBMer AND link it to your Preboarder Record.</p>
-       	<p>They SHOULD NOT Initiate PES in vBAC if you are already PES cleared. Your manager should contact the PES Team (LBGVETPR@uk.ibm.com) asking them to update your PES Status in vBAC if necessary. </p>
+       	<p>They SHOULD NOT Initiate PES in vBAC if you are already PES cleared. Your manager should contact the PES Team (<?=personRecord::$pesTaskId?>) asking them to update your PES Status in vBAC if necessary. </p>
       	</div>
         <div class='panel-footer'>
         </div>

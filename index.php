@@ -1,5 +1,4 @@
 <?php
-use vbac\personRecord;
 ?>
 <style type="text/css" class="init">
 body {
@@ -11,8 +10,6 @@ body {
 	background-size: cover;
 }
 </style>
-
-
 
 <div class="container">
 	<!--  <div class="jumbotron"> -->

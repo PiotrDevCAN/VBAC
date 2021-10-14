@@ -231,17 +231,17 @@ class personWithSubPRecord extends personRecord
 				</div>
 
 				<div class='form-group'>
-            		<div class='col-sm-12'>
+          <div class='col-sm-12'>
 						<label class="radio-inline employeeTypeRadioBtn" data-toggle='tooltip' data-placement='auto top' title='IBM Regular and IBM Contractors'>
-						<input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_PREBOARDER ?>' data-type='ibmer' checked>
-						IBMer Pre-Hire (Regular or Contractor)
+              <input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_PREBOARDER ?>' data-type='ibmer' checked>
+              IBMer Pre-Hire (Regular or Contractor)
 						</label>
 						<label class="radio-inline employeeTypeRadioBtn" data-toggle='tooltip' data-placement='auto top' title='3rd Party Vendors'>
-						<input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_VENDOR?>' data-type='other'>
-						Other (ie.3rd Party Vendor)
+              <input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_VENDOR?>' data-type='other'>
+              Other (ie.3rd Party Vendor)
 						</label>
-		        	</div>
-        		</div>
+          </div>
+        </div>
 			</div>
         	<div class='form-group' id='linkToPreBoardedFormgroupDiv'>
 	            <div class="col-sm-6" id='linkToPreBoarded'>

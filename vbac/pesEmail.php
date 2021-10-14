@@ -225,7 +225,8 @@ class pesEmail {
             
             $emailBodyFileName = $emailDetails['filename'];
             $pesAttachments = isset($emailDetails['attachments']) ? $emailDetails['attachments'] : array();
-            $replacements = array($firstName,$openseat);
+            $pesTaskId = personRecord::$pesTaskId;
+            $replacements = array($firstName, $openseat, $pesTaskId);
 
             $pesEmailPattern =""; // It'll get set by the include_once, but this stops IDE flagging a warning.
             $pesEmail="";         // It'll get set by the include_once, but this stops IDE flagging a warning.
@@ -235,8 +236,7 @@ class pesEmail {
 
             $revalidation = $recheck=='yes' ? " - REVALIDATION " : "";
             
-            
-            $sendResponse = BlueMail::send_mail(array($emailAddress), "NEW URGENT - Pre Employment Screening $revalidation - $cnum : $firstName, $lastName", $emailBody,'LBGVETPR@uk.ibm.com',array(),array(),false,$pesAttachments, pesEmail::EMAIL_PES_SUPRESSABLE);
+            $sendResponse = BlueMail::send_mail(array($emailAddress), "NEW URGENT - Pre Employment Screening $revalidation - $cnum : $firstName, $lastName", $emailBody,personRecord::$pesTaskId,array(),array(),false,$pesAttachments, pesEmail::EMAIL_PES_SUPRESSABLE);
             return $sendResponse;
 
     }
@@ -248,14 +248,15 @@ class pesEmail {
         $names = personTable::getNamesFromCnum($cnum);
         $firstName = $names['FIRST_NAME'];
         $lastName = $names['LAST_NAME'];
+        $pesTaskId = personRecord::$pesTaskId;
 
         $emailBodyFileName = 'chaser' . trim($chaserLevel) . ".php";
-        $replacements = array($firstName);
+        $replacements = array($firstName, $pesTaskId);
 
         include_once 'emailBodies/' . $emailBodyFileName;
         $emailBody = preg_replace($pesEmailPattern, $replacements, $pesEmail);
         
-        $sendResponse = BlueMail::send_mail(array($emailAddress), "Reminder- Pre Employment Screening - $cnum : $firstName, $lastName", $emailBody,'LBGVETPR@uk.ibm.com',array($flm),array(),true, array(),pesEmail::EMAIL_PES_SUPRESSABLE);
+        $sendResponse = BlueMail::send_mail(array($emailAddress), "Reminder- Pre Employment Screening - $cnum : $firstName, $lastName", $emailBody,personRecord::$pesTaskId,array($flm),array(),true, array(),pesEmail::EMAIL_PES_SUPRESSABLE);
         return $sendResponse;
 
 
@@ -266,15 +267,17 @@ class pesEmail {
         $pesEmailPattern = array(); // Will be overridden when we include_once from emailBodies later.
         $pesEmail = null;          // Will be overridden when we include_once from emailBodies later.
 
+        $pesTaskId = personRecord::$pesTaskId;
+
         $emailBodyFileName = 'processStatus' . trim($processStatus) . ".php";
-        $replacements = array($firstName);
+        $replacements = array($firstName, $pesTaskId);
 
         include_once 'emailBodies/' . $emailBodyFileName;
         $emailBody = preg_replace($pesEmailPattern, $replacements, $pesEmail);
         
         $flmArray = empty($flm) ? array() : array($flm);
 
-        $sendResponse = BlueMail::send_mail(array($emailAddress), "Status Change - Pre Employment Screening - $cnum : $firstName, $lastName", $emailBody,'LBGVETPR@uk.ibm.com', $flmArray, array(), true,  array(), pesEmail::EMAIL_PES_SUPRESSABLE);
+        $sendResponse = BlueMail::send_mail(array($emailAddress), "Status Change - Pre Employment Screening - $cnum : $firstName, $lastName", $emailBody,personRecord::$pesTaskId, $flmArray, array(), true,  array(), pesEmail::EMAIL_PES_SUPRESSABLE);
         return $sendResponse;
 
 
@@ -305,7 +308,7 @@ class pesEmail {
 
         $emailBody = $pesEmail;
 
-        $sendResponse = BlueMail::send_mail(array('LBGVETPR@uk.ibm.com'), "Upcoming Rechecks", $emailBody,'LBGVETPR@uk.ibm.com');
+        $sendResponse = BlueMail::send_mail(array(personRecord::$pesTaskId), "Upcoming Rechecks", $emailBody,personRecord::$pesTaskId);
         return $sendResponse;
 
 
@@ -323,7 +326,7 @@ class pesEmail {
         $pesEmail.= "<p>No upcoming rechecks have been found</p>";
         $emailBody = $pesEmail;
 
-        $sendResponse = BlueMail::send_mail(array('LBGVETPR@uk.ibm.com'), "Upcoming Rechecks-None", $emailBody,'LBGVETPR@uk.ibm.com');
+        $sendResponse = BlueMail::send_mail(array(personRecord::$pesTaskId), "Upcoming Rechecks-None", $emailBody,personRecord::$pesTaskId);
         return $sendResponse;
 
 
@@ -355,7 +358,7 @@ class pesEmail {
         $pesEmail.="</tbody></table>";
         $pesEmail.= "<style> th { background:red; padding:15px; } </style>";
 
-        return BlueMail::send_mail(personRecord::$pesTaskId, "vBAC Leavers", $pesEmail,'LBGVETPR@uk.ibm.com');
+        return BlueMail::send_mail(personRecord::$pesTaskId, "vBAC Leavers", $pesEmail,personRecord::$pesTaskId);
     }
 
     static function notifyPesTeamOfOffboarding($cnum, $revalidationStatusWas, $notesId){
@@ -377,7 +380,7 @@ class pesEmail {
         $pesEmail.="</tbody></table>";
         $pesEmail.= "<style> th { background:red; padding:15px; } </style>";
 
-        return BlueMail::send_mail(array('LBGVETPR@uk.ibm.com'), "vbac Offboarding - $cnum : $notesId (Reval:$revalidationStatusWas)", $pesEmail,'LBGVETPR@uk.ibm.com');
+        return BlueMail::send_mail(array(personRecord::$pesTaskId), "vbac Offboarding - $cnum : $notesId (Reval:$revalidationStatusWas)", $pesEmail,personRecord::$pesTaskId);
     }
 
     static function notifyPesTeamOfOffboarded($cnum,$revalidationStatus){
@@ -400,7 +403,7 @@ class pesEmail {
         $pesEmail.="</tbody></table>";
         $pesEmail.= "<style> th { background:red; padding:15px; } </style>";
 
-        return BlueMail::send_mail(array('LBGVETPR@uk.ibm.com'), "vbac Offboarded - $cnum : $notesId", $pesEmail,'LBGVETPR@uk.ibm.com');
+        return BlueMail::send_mail(array(personRecord::$pesTaskId), "vbac Offboarded - $cnum : $notesId", $pesEmail,personRecord::$pesTaskId);
     }
 
     static function notifyPesTeamOfOffStopRequest($cnum,$requestor=null){
@@ -427,7 +430,7 @@ class pesEmail {
         $pesEmail.="</tbody></table>";
         $pesEmail.= "<style> th { background:red; padding:15px; } </style>";
 
-        return BlueMail::send_mail(array('LBGVETPR@uk.ibm.com'), "vbac Stop Requested - $cnum : $notesId", $pesEmail,'LBGVETPR@uk.ibm.com');
+        return BlueMail::send_mail(array(personRecord::$pesTaskId), "vbac Stop Requested - $cnum : $notesId", $pesEmail,personRecord::$pesTaskId);
     }
 
 
