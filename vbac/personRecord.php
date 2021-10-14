@@ -1577,6 +1577,8 @@ class personRecord extends DbRecord
 
         $fmEmail = $fmIsIbmEmail ? $fmEmail : null;
 
+        $pesTaskId = personRecord::$pesTaskId[0];
+
         $emailAddress = trim($this->EMAIL_ADDRESS);
         $isIbmEmail = strtolower(substr($emailAddress,-7))=='ibm.com';
 
@@ -1593,7 +1595,7 @@ class personRecord extends DbRecord
             case self::PES_STATUS_CLEARED_PERSONAL:
                 $pattern   = self::$pesClearedPersonalEmailPattern;
                 $emailBody = self::$pesClearedPersonalEmail;
-                $replacements = array($this->FIRST_NAME,$this->PES_DATE_RESPONDED,personRecord::$pesTaskId[0]);
+                $replacements = array($this->FIRST_NAME,$this->PES_DATE_RESPONDED,$pesTaskId);
                 $title = 'vBAC PES Status Change';
                 !empty($emailAddress) ? $to[] = $emailAddress : null;
                 !empty($fmEmail)      ? $to[] = $fmEmail : null;
@@ -1601,7 +1603,7 @@ class personRecord extends DbRecord
             case self::PES_STATUS_CLEARED:
                 $pattern   = self::$pesClearedEmailPattern;
                 $emailBody = self::$pesClearedEmail;
-                $replacements = array($this->FIRST_NAME,$this->PES_CLEARED_DATE,personRecord::$pesTaskId[0]);
+                $replacements = array($this->FIRST_NAME,$this->PES_CLEARED_DATE,$pesTaskId;
                 $title = 'vBAC PES Status Change';
                 !empty($emailAddress) ? $to[] = $emailAddress : null;
                 !empty($fmEmail)      ? $to[] = $fmEmail : null;
@@ -1619,7 +1621,7 @@ class personRecord extends DbRecord
                 $emailBody = self::$pesCancelPesEmail;
                 $title = 'vBAC Cancel Request';
                 $replacements = array($this->FIRST_NAME,$this->LAST_NAME,$this->CNUM, $_SESSION['ssoEmail']);
-                $to[] = personRecord::$pesTaskId[0];
+                $to[] = $pesTaskId;
                 !empty($fmEmail) ? $cc[] = $fmEmail : null;
                 $cc[] = $_SESSION['ssoEmail'];
                 break;
@@ -1628,7 +1630,7 @@ class personRecord extends DbRecord
                 $emailBody = self::$pesRestartPesEmail;
                 $title = 'vBAC Restart Request';
                 $replacements = array($this->FIRST_NAME,$this->LAST_NAME,$this->CNUM, $_SESSION['ssoEmail']);
-                $to[] = personRecord::$pesTaskId[0];
+                $to[] = $pesTaskId;
                 !empty($fmEmail) ? $cc[] = $fmEmail : null;
                 $cc[] = $_SESSION['ssoEmail'];
 
