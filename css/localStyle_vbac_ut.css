@@ -12,9 +12,7 @@ table.dataTable th, table.dataTable td {
 td {
 	cursor: pointer;
 	cursor: hand;
-}cursor: hand;
 }
-
 
 .required .control-label:after {
   content:"*";
