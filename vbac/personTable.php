@@ -866,7 +866,9 @@ class personTable extends DbTable {
         }
 
         $row = db2_fetch_assoc($resultSet);
-        var_dump($row);
+        if($row === false){
+            return false;
+        }
 
         if(is_bool($row['FM_MANAGER_FLAG'])){
             var_dump($row);
@@ -1368,7 +1370,7 @@ class personTable extends DbTable {
 
             $message = preg_replace(self::$revalStatusChangeEmailPattern, $replacements, self::$revalStatusChangeEmail);
 
-            \itdq\BlueMail::send_mail(array($fmsEmailAddress), "vBAC Revalidation Status Change Notification", $message, 'vbacNoReply@kyndryl.com');
+            \itdq\BlueMail::send_mail(array($fmsEmailAddress), "vBAC Revalidation Status Change Notification", $message, personRecord::$vbacNoReplyId);
 
 
 

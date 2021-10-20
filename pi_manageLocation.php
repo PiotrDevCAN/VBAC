@@ -5,7 +5,7 @@ use vbac\assetRequestRecord;
 use vbac\personTable;
 use vbac\AgileTribeRecord;
 use itdq\FormClass;
-use vbac\WorkLocationRecord;
+use vbac\workLocationRecord;
 
 set_time_limit(0);
 ob_start();
@@ -13,7 +13,7 @@ ob_start();
 <div class='container'>
 <h2>Manage Work Location Records</h2>
 <?php
-$locationRecord = new WorkLocationRecord();
+$locationRecord = new workLocationRecord();
 $locationRecord->displayForm(FormClass::$modeDEFINE);
 ?>
 </div>

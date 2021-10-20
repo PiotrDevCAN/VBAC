@@ -3,7 +3,7 @@ namespace vbac;
 
 use itdq\DbTable;
 
-class WorkLocationTable extends DbTable{
+class workLocationTable extends DbTable{
 
     function returnAsArray(){
         $sql = " SELECT * ";
@@ -24,7 +24,6 @@ class WorkLocationTable extends DbTable{
     }
 
     function addIcons($row){
-
         $onShore = $row['ONSHORE'];
         switch($onShore) {
             case '0':
@@ -48,9 +47,11 @@ class WorkLocationTable extends DbTable{
         }
         $row['CBC_IN_PLACE'] = $CBCInPlace;
 
+        $id = $row['ID'];
         $country = $row['COUNTRY'];
 
         $countryWithIcon  = "<button type='button' class='btn btn-default btn-xs btnEditLocation' aria-label='Left Align' ";
+        $countryWithIcon .= "data-id='" .$id . "' ";
         $countryWithIcon .= "data-country='" .$country . "' ";
         $countryWithIcon .= "data-city='" .$row['CITY'] . "' ";
         $countryWithIcon .= "data-address='" .$row['ADDRESS'] . "' ";

@@ -125,6 +125,7 @@ function workLocation() {
 			      		$('#modalInfo').modal('show');
 		      		}
 		      		$('.spinning').removeClass('spinning').attr('disabled',false);
+                    $('#ID').val('');
                     $('#COUNTRY').val('');
 		      		$('#CITY').val('');
 		      		$('#ADDRESS').val('');	
@@ -149,6 +150,7 @@ function workLocation() {
   this.listenForEditLocation = function(){
 	  $(document).on('click','.btnEditLocation',function(){
 
+          $('#ID').val($(this).data('id'));  
           $('#COUNTRY').val($(this).data('country'));
 		  $('#CITY').val($(this).data('city'));
 		  $('#ADDRESS').val($(this).data('address'));

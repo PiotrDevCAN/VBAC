@@ -129,19 +129,15 @@ class personRecord extends DbRecord
       'IBM' => 'LBGVETPR@uk.ibm.com'
     );
 
-    // public static $pmoTaskId = array('aurora.central.pmo@uk.ibm.com');
-    // public static $pmpTaskIdKyndryl = array('aurora.central.pmo@kyndryl.com');
+    public static $vbacNoReplyId = 'vbacNoReply@kyndryl.com';
+
     public static $pmoTaskId = array('aurora.central.pmo@kyndryl.com');
     public static $orderITCtbTaskId = array('jeemohan@in.ibm.com');
     public static $orderITNonCtbTaskId = array('aurora.central.pmo@kyndryl.com');
     public static $orderITBauTaskId = array('aurora.central.pmo@kyndryl.com');
     public static $orderITNonBauTaskId = array('aurora.central.pmo@kyndryl.com');
     public static $smCdiAuditEmail = 'e3h3j0u9u6l2q3a3@ventusdelivery.slack.com';
-    // public static $securityOps = array('IBM.LBG.Security.Operations@uk.ibm.com');
-    // public static $securityOpsKyndryl = array('Kyndryl.LBG.IAM.Requests@Kyndryl.com');
     public static $securityOps = array('Kyndryl.LBG.IAM.Requests@Kyndryl.com');
-    //private static $pesTaskId = 'piotr.tajanowicz@ibm.com';
-    //private static $pesTaskId    = array('piotr.tajanowicz@ibm.com', 'carrabooth@uk.ibm.com');
 //     private static $pesEmailBody = '<table width="100%" border="0"   cellpadding="0">
 //                              <tr><td align="center">
 //                                 <table width="50%">
@@ -458,7 +454,7 @@ class personRecord extends DbRecord
                 // private static $cbcEmailPattern = array('/&&notesid&&/','/&&cnum&&/','/&&countryCode&&/','/&&lbgLocation&&/','/&&role&&/');
                 $replacements = array($this->NOTES_ID, $this->CNUM, $this->COUNTRY, $this->LBG_LOCATION,  $this->ROLE_ON_THE_ACCOUNT );
                 $message = preg_replace(self::$cbcEmailPattern, $replacements, self::$cbcEmailBody);
-                \itdq\BlueMail::send_mail(self::$pmoTaskId, 'vBAC CBC Check Required -' . $this->CNUM ." (" . trim($this->FIRST_NAME) . " " . trim($this->LAST_NAME) . ")", $message, 'vbacNoReply@kyndryl.com', self::$securityOps);
+                \itdq\BlueMail::send_mail(self::$pmoTaskId, 'vBAC CBC Check Required -' . $this->CNUM ." (" . trim($this->FIRST_NAME) . " " . trim($this->LAST_NAME) . ")", $message, self::$vbacNoReplyId, self::$securityOps);
             break;
         }
     }
@@ -1552,7 +1548,7 @@ class personRecord extends DbRecord
         );
         $message = preg_replace(self::$pesEmailPatterns, $replacements, self::$pesEmailBody);
 
-        \itdq\BlueMail::send_mail(self::$pesTaskId, 'vBAC PES Request - ' . $this->CNUM ." (" . trim($this->FIRST_NAME) . " " . trim($this->LAST_NAME) . ")", $message, 'vbacNoReply@kyndryl.com');
+        \itdq\BlueMail::send_mail(self::$pesTaskId, 'vBAC PES Request - ' . $this->CNUM ." (" . trim($this->FIRST_NAME) . " " . trim($this->LAST_NAME) . ")", $message, self::$vbacNoReplyId);
 
     }
 
@@ -1686,7 +1682,7 @@ class personRecord extends DbRecord
             $fmEmail);
         $message = preg_replace(self::$warnPmoDateChangePattern, $replacements, self::$warnPmoDateChange);
 
-        \itdq\BlueMail::send_mail(self::$pmoTaskId, 'vBAC Projected End Date Change - ' . $this->CNUM ." (" . trim($this->FIRST_NAME) . " " . trim($this->LAST_NAME) . ")", $message, 'vbacNoReply@kyndryl.com');
+        \itdq\BlueMail::send_mail(self::$pmoTaskId, 'vBAC Projected End Date Change - ' . $this->CNUM ." (" . trim($this->FIRST_NAME) . " " . trim($this->LAST_NAME) . ")", $message, self::$vbacNoReplyId);
     }
 
 
@@ -1718,7 +1714,7 @@ class personRecord extends DbRecord
              */
             $bcc[] = self::$smCdiAuditEmail;  // Always copy the slack channel.
             set_time_limit(60);
-            \itdq\BlueMail::send_mail($to, 'CBN Initiation Request' , $emailMessage, 'vbacNoReply@kyndryl.com',$cc,$bcc);
+            \itdq\BlueMail::send_mail($to, 'CBN Initiation Request' , $emailMessage, self::$vbacNoReplyId, $cc, $bcc);
         }
    }
 
@@ -1735,7 +1731,7 @@ class personRecord extends DbRecord
        $emailMessage = preg_replace(self::$preboarderStatusChangeEmailPattern, $replacements, self::$preboarderStatusChangeEmailBody);
 
        set_time_limit(60);
-       \itdq\BlueMail::send_mail(self::$pmoTaskId, 'Pre-Boarder PES Status Change' , $emailMessage, 'vbacNoReply@kyndryl.com',$cc, $bcc, true, $noAttachments, pesEmail::EMAIL_NOT_PES_SUPRESSABLE );
+       \itdq\BlueMail::send_mail(self::$pmoTaskId, 'Pre-Boarder PES Status Change' , $emailMessage, self::$vbacNoReplyId, $cc, $bcc, true, $noAttachments, pesEmail::EMAIL_NOT_PES_SUPRESSABLE );
    }
 
 

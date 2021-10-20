@@ -2,15 +2,14 @@
 
 use vbac\personTable;
 use vbac\allTables;
-use vbac\AgileTribeTable;
-use vbac\WorkLocationTable;
+use vbac\workLocationTable;
 
 set_time_limit(0);
 ob_start();
 
 $table = allTables::$STATIC_LOCATIONS;
 
-$workLocationTable = new WorkLocationTable($table);
+$workLocationTable = new workLocationTable($table);
 $data = $workLocationTable->returnAsArray();
 
 $dataJsonAble = json_encode($data);

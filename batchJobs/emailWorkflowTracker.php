@@ -7,6 +7,8 @@ use vbac\allTables;
 use vbac\dlpTable;
 use vbac\dlpRecord;
 use itdq\BlueMail;
+use vbac\personRecord;
+
 // require_once __DIR__ . '/../../src/Bootstrap.php';
 $helper = new Sample();
 if ($helper->isCli()) {
@@ -67,7 +69,7 @@ try {
     $attachments = array();
     $attachments[] = !empty($excelFile) ? array('filename'=>'Dlp Licenses Report - ' . $fileNameSuffix . ".xls",'content_type'=>'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','data'=>$base64EncodedExcelFile) : null;
     
-    BlueMail::send_mail($emailAddress, 'DLP Licenses Report : ' . $fileNameSuffix, 'Please find attached DLP License Report XLS','vbacNoReply@kyndryl.com',array(),array(),true,$attachments);    
+    BlueMail::send_mail($emailAddress, 'DLP Licenses Report : ' . $fileNameSuffix, 'Please find attached DLP License Report XLS',personRecord::$vbacNoReplyId,array(),array(),true,$attachments);    
     
 } catch (Exception $e) {
     

@@ -7,7 +7,7 @@ use itdq\JavaScript;
 use itdq\AuditTable;
 use itdq\FormClass;
 
-class WorkLocationRecord extends DbRecord {
+class workLocationRecord extends DbRecord {
 
     protected $ID;
     protected $COUNTRY;
@@ -95,6 +95,7 @@ class WorkLocationRecord extends DbRecord {
                 <div class='col-sm-offset-2 -col-md-4'>
                     <?php
                     $this->formHiddenInput('mode',$mode,'mode');
+                    $this->formHiddenInput('ID',$this->ID,'ID');
                     $allButtons = array();
                     $submitButton = $mode==FormClass::$modeEDIT ?  $this->formButton('submit','Submit','updateTribe',null,'Update') :  $this->formButton('submit','Submit','saveTribe',null,'Submit');
                     $resetButton  = $this->formButton('reset','Reset','resetTribe  Form',null,'Reset','btn-warning');

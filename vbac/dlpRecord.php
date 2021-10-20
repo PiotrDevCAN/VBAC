@@ -23,7 +23,6 @@ class dlpRecord extends DbRecord
     protected $EXCEPTION_CODE;
     protected $STATUS;
     
-    
     const STATUS_PENDING = 'pending';
     const STATUS_APPROVED = 'approved';
     const STATUS_REJECTED = 'rejected';
@@ -202,7 +201,7 @@ class dlpRecord extends DbRecord
         $delegates = $delegates ? $delegates : array();
         
         
-        \itdq\BlueMail::send_mail(array($approvingMgr), 'DLP(BG&CB) License Approval Request ', $message, 'vbacNoReply@kyndryl.com', $delegates);
+        \itdq\BlueMail::send_mail(array($approvingMgr), 'DLP(BG&CB) License Approval Request ', $message, personRecord::$vbacNoReplyId, $delegates);
     }
     
     
