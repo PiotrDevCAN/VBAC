@@ -56,6 +56,8 @@ var WorkLocation = new workLocation();
 
 $(document).ready(function() {
 
+  $('.select2').select2();
+  
   $('#COUNTRY.select2, #CITY.select2').select2({
 		tags: true,
 		selectOnClose: true,
@@ -68,8 +70,6 @@ $(document).ready(function() {
       }
 		}
   });
-
-  $('.select2').select2();
 
 	WorkLocation.initialiseWorkLocationTable();
 	WorkLocation.listenForSubmitLocationForm();
