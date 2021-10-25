@@ -27,7 +27,7 @@ class workLocationRecord extends DbRecord {
                 <label for='COUNTRY' class='col-sm-2 control-label ceta-label-left' data-toggle='tooltip' data-placement='top' title='Country'>Country</label>
                 <div class='col-md-4'>
                     <select class='form-control select select2' id='COUNTRY' name='COUNTRY'>
-                        <option value=''></option>
+                        <option value=''>Select..</option>
                         <?php
                         foreach ($allCountries as $key =>  $value) {
                             ?><option value='<?=trim($key)?>'><?=trim($value)?>
@@ -43,7 +43,7 @@ class workLocationRecord extends DbRecord {
                 <label for='CITY' class='col-sm-2 control-label ceta-label-left' data-toggle='tooltip' data-placement='top' title='City'>City</label>
                 <div class='col-md-4'>
                     <select class='form-control select select2' id='CITY' name='CITY'>
-                        <option value=''></option>
+                        <option value=''>Select..</option>
                         <?php
                         foreach ($allCities as $key =>  $value) {
                             ?><option value='<?=trim($key)?>'><?=trim($value)?>
@@ -65,7 +65,7 @@ class workLocationRecord extends DbRecord {
                 <label for='ONSHORE' class='col-sm-2 control-label ceta-label-left' data-toggle='tooltip' data-placement='top' title='On Shore'>On Shore</label>
                 <div class='col-md-4'>
                     <select id='ONSHORE' class='form-control select2' <?=$notEditable ?> name='ONSHORE' >
-                        <option value=''></option>
+                        <option value=''>Select..</option>
                         <?php
                         foreach (array('Y'=>'Yes','N'=>'No') as $key =>  $value) {
                             ?><option value='<?=trim($value)?>'><?=trim($value)?>
@@ -80,7 +80,7 @@ class workLocationRecord extends DbRecord {
                 <label for='CBC_IN_PLACE' class='col-sm-2 control-label ceta-label-left' data-toggle='tooltip' data-placement='top' title='CBC In Place'>CBC In Place</label>
                 <div class='col-md-4'>
                     <select id='CBC_IN_PLACE' class='form-control select2' <?=$notEditable ?> name='CBC_IN_PLACE' >
-                        <option value=''></option>
+                        <option value=''>Select..</option>
                         <?php
                         foreach (array('Y'=>'Yes','N'=>'No') as $key =>  $value) {
                             ?><option value='<?=trim($value)?>'><?=trim($value)?>

@@ -56,9 +56,25 @@ var WorkLocation = new workLocation();
 
 $(document).ready(function() {
 
+  $('#COUNTRY.select2, #CITY.select2').select2({
+		tags: true,
+		selectOnClose: true,
+		//Allow manually entered text in drop down.
+		createTag: function (params) {
+      var name = params.term.charAt(0).toUpperCase() + params.term.slice(1);
+      return {
+        id: name,
+        text: name
+      }
+		}
+  });
+
+  $('.select2').select2();
+
 	WorkLocation.initialiseWorkLocationTable();
 	WorkLocation.listenForSubmitLocationForm();
   WorkLocation.listenForEditLocation();
+  WorkLocation.listenForDeleteLocation();
 });
 
 </script>

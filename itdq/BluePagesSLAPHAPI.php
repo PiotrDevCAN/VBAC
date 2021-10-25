@@ -212,7 +212,7 @@ class BluePagesSLAPHAPI {
 		}
 		set_time_limit(120);
 		$url = self::$wsapiUrl . "?byInternetAddr=INTRANET_ID_HERE";
-		echo "<BR/>" . str_replace('INTRANET_ID_HERE',urlencode($intranetId),$url);
+		// echo "<BR/>" . str_replace('INTRANET_ID_HERE',urlencode($intranetId),$url);
 		$ch = curl_init ( str_replace('INTRANET_ID_HERE',urlencode($intranetId),$url) );
 		curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, true );
 

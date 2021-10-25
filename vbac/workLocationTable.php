@@ -5,6 +5,19 @@ use itdq\DbTable;
 
 class workLocationTable extends DbTable{
 
+    static function deleteLocation($id){
+        $sql = " DELETE FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$STATIC_LOCATIONS;
+        $sql.= " WHERE ID='" . db2_escape_string($id) . "' ";
+
+        $rs = db2_exec($GLOBALS['conn'],$sql);
+
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+        return true;
+    }
+
     function returnAsArray(){
         $sql = " SELECT * ";
         $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
@@ -50,18 +63,26 @@ class workLocationTable extends DbTable{
         $id = $row['ID'];
         $country = $row['COUNTRY'];
 
-        $countryWithIcon  = "<button type='button' class='btn btn-default btn-xs btnEditLocation' aria-label='Left Align' ";
-        $countryWithIcon .= "data-id='" .$id . "' ";
-        $countryWithIcon .= "data-country='" .$country . "' ";
-        $countryWithIcon .= "data-city='" .$row['CITY'] . "' ";
-        $countryWithIcon .= "data-address='" .$row['ADDRESS'] . "' ";
-        $countryWithIcon .= "data-onshore='" .$onShore . "' ";
-        $countryWithIcon .= "data-cbcinplace='" .$CBCInPlace . "' ";
-        $countryWithIcon .= "data-toggle='tooltip' data-placement='top' title='Edit Location'";
-        $countryWithIcon .= " > ";
-        $countryWithIcon .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
-        $countryWithIcon .= " </button> ";
-        $countryWithIcon .= "&nbsp; " . $country;
+        $editButton  = "<button type='button' class='btn btn-default btn-xs btnEditLocation' aria-label='Left Align' ";
+        $editButton .= "data-id='" .$id . "' ";
+        $editButton .= "data-country='" .$country . "' ";
+        $editButton .= "data-city='" .$row['CITY'] . "' ";
+        $editButton .= "data-address='" .$row['ADDRESS'] . "' ";
+        $editButton .= "data-onshore='" .$onShore . "' ";
+        $editButton .= "data-cbcinplace='" .$CBCInPlace . "' ";
+        $editButton .= "data-toggle='tooltip' data-placement='top' title='Edit Location'";
+        $editButton .= " > ";
+        $editButton .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
+        $editButton .= " </button> ";
+
+        $deleteButton  = "<button type='button' class='btn btn-default btn-xs btnDeleteLocation btn-danger' aria-label='Left Align' ";
+        $deleteButton .= "data-id='" .$id . "' ";
+        $deleteButton .= "data-toggle='tooltip' data-placement='top' title='Remove Location'";
+        $deleteButton .= " > ";
+        $deleteButton .= "<span class='glyphicon glyphicon-trash ' aria-hidden='true'></span>";
+        $deleteButton .= " </button> ";
+
+        $countryWithIcon = $editButton . $deleteButton . " &nbsp; " . $country;
 
         $row['COUNTRY'] = array('display'=>$countryWithIcon,'sort'=>$country);
         return $row;

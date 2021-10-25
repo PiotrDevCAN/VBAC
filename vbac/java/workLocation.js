@@ -126,11 +126,11 @@ function workLocation() {
 		      		}
 		      		$('.spinning').removeClass('spinning').attr('disabled',false);
                     $('#ID').val('');
-                    $('#COUNTRY').val('');
-		      		$('#CITY').val('');
-		      		$('#ADDRESS').val('');	
-		      		$('#ONSHORE').val('');
-                    $('#CBC_IN_PLACE').val('');
+                    $('#COUNTRY').val('').trigger('change');
+		      		$('#CITY').val('').trigger('change');
+		      		$('#ADDRESS').val('').trigger('change');
+		      		$('#ONSHORE').val('').trigger('change');
+                    $('#CBC_IN_PLACE').val('').trigger('change');
 		      		workLocation.table.ajax.reload();
 		      	},
 		      	fail: function(response){
@@ -151,17 +151,35 @@ function workLocation() {
 	  $(document).on('click','.btnEditLocation',function(){
 
           $('#ID').val($(this).data('id'));  
-          $('#COUNTRY').val($(this).data('country'));
-		  $('#CITY').val($(this).data('city'));
-		  $('#ADDRESS').val($(this).data('address'));
-		  $('#ONSHORE').val($(this).data('onshore'));
-          $('#CBC_IN_PLACE').val($(this).data('cbcinplace'));
-
-		  console.log($(this));
+          $('#COUNTRY').val($(this).data('country')).trigger('change');
+		  $('#CITY').val($(this).data('city')).trigger('change');
+		  $('#ADDRESS').val($(this).data('address')).trigger('change');
+		  $('#ONSHORE').val($(this).data('onshore')).trigger('change');
+          $('#CBC_IN_PLACE').val($(this).data('cbcinplace')).trigger('change');
 
 		  $('#mode').val('edit');		  
 	  });
-  }
+  },
+
+  this.listenForDeleteLocation = function(){
+    $(document).on('click','.btnDeleteLocation', function(e){
+        $(this).addClass('spinning');
+        var id = $(this).data('id');
+        $.ajax({
+            url: "ajax/deleteLocation.php",
+            type: 'POST',
+            data: {
+                id:id
+            },
+            success: function(result){
+                $('.btnDeleteLocation').removeClass('spinning');
+                var resultObj = JSON.parse(result);
+                console.log(resultObj);
+                workLocation.table.ajax.reload();
+            }
+            });
+        });
+    }
 }
 
 $( document ).ready(function() {

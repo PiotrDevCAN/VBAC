@@ -903,6 +903,10 @@ class personTable extends DbTable {
         }
 
         $row = db2_fetch_assoc($resultSet);
+        if($row === false){
+            return false;
+        }
+        
         $myCnum = strtoupper(trim($row['CNUM']));
         $_SESSION['myCnum'] = $myCnum;
         return $_SESSION['myCnum'];
@@ -942,8 +946,6 @@ class personTable extends DbTable {
         $activeManagers = array_intersect_key($allActivePeople, $allFuncMgr);
 
         return $activeManagers;
-
-
     }
 
     static function getRevalidationFromCnum($cnum=null,$email=null){
