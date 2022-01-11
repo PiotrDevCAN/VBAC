@@ -4,8 +4,6 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use itdq\DbTable;
 use vbac\allTables;
-use itdq\Loader;
-use vbac\assetRequestsTable;
 use vbac\personRecord;
 use vbac\personTable;
 
@@ -17,7 +15,6 @@ if ($helper->isCli()) {
 }
 
 echo "<pre>";
-
 
 // Create new Spreadsheet object
 $spreadsheet = new Spreadsheet();
@@ -56,7 +53,7 @@ try {
     $activeSql.= " AND P.LOB     in ('GTS','Cloud','Security') ";
     $activeSql.= " AND P.TT_BAU  in ('BAU') ";
     $activeSql.= " AND P.CTB_RTB in ('CTB','RTB') ";
-    $activeSql.= " AND P.REVALIDATION_STATUS = 'found' ";
+    $activeSql.= " AND trim(P.REVALIDATION_STATUS) = '" . personRecord::REVALIDATED_FOUND . "' ";
 
     set_time_limit(60);
 

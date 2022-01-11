@@ -47,7 +47,7 @@ try {
     $sql .= "    FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
     $sql .= "    WHERE 1=1 AND $activePredicate ";
     $sql .= "    ) ";
-    $sql .= " AND (PES_STATUS_DETAILS is null or PES_STATUS_DETAILS not like 'Boarded%' )"; // dont show boarded pre-boarders
+    $sql .= " AND (PES_STATUS_DETAILS is null or PES_STATUS_DETAILS not like '" . personRecord::PES_STATUS_DETAILS_BOARDED_AS . "%' )"; // dont show boarded pre-boarders
 
     set_time_limit(60);
 

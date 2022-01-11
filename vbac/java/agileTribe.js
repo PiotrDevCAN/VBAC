@@ -139,7 +139,7 @@ function agileTribe() {
 			      		$('.modalInfo-body').html("<p>Tribe Record Saved</p>");
 			      		$('#modalInfo').modal('show');		      			
 		      		} else {
-			      		$('.modalInfo-body').html("<p>Save has encountered a problem</p><p>" + responseObj.message + "</p>");
+			      		$('.modalInfo-body').html("<p>Save has encountered a problem</p><p>" + responseObj.messages + "</p>");
 			      		$('#modalInfo').modal('show');
 		      		}
 		      		$('.spinning').removeClass('spinning').attr('disabled',false);

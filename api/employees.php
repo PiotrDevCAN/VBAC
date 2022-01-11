@@ -17,14 +17,14 @@ $predicate =  " AND ( " . personTable::activePersonPredicate() . ") ";
 if(isset($_REQUEST['activeoffboarding'])){
     switch (trim($_REQUEST['activeoffboarding'])) {
         case 'Exc':
-            $predicate = " AND REVALIDATION_STATUS like 'offboarding%' ";
+            $predicate = " AND REVALIDATION_STATUS like '" . personRecord::REVALIDATED_OFFBOARDING . "%' ";
             break;
         case 'Rev':
-            $predicate = " AND ( ( ( " . personTable::activePersonPredicate() . ")  OR REVALIDATION_STATUS like 'offboarding%' ) ";
-            $predicate.= "      OR  ( PES_STATUS = '" . personRecord::PES_STATUS_REVOKED .  "' AND  REVALIDATION_STATUS not like 'offboarded%' ) )  ";
+            $predicate = " AND ( ( ( " . personTable::activePersonPredicate() . ")  OR REVALIDATION_STATUS like '" . personRecord::REVALIDATED_OFFBOARDING . "%' ) ";
+            $predicate.= " OR  ( PES_STATUS = '" . personRecord::PES_STATUS_REVOKED .  "' AND  REVALIDATION_STATUS not like '" . personRecord::REVALIDATED_OFFBOARDED . "%' ) )  ";
             break;            
         default:
-            $predicate = " AND ( ( " . personTable::activePersonPredicate() . ")  OR REVALIDATION_STATUS like 'offboarding%' ) ";
+            $predicate = " AND ( ( " . personTable::activePersonPredicate() . ")  OR REVALIDATION_STATUS like '" . personRecord::REVALIDATED_OFFBOARDING . "%' ) ";
         break;
     }
 }

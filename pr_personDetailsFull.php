@@ -41,7 +41,7 @@ try {
     $sql.= " ON P.SQUAD_NUMBER = AS.SQUAD_NUMBER ";
     $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " AS AT ";
     $sql.= " ON AS.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
-    $sql .= " WHERE P.PES_STATUS_DETAILS is null or P.PES_STATUS_DETAILS not like 'Boarded%' ";  // dont show boarded pre-boarders
+    $sql .= " WHERE P.PES_STATUS_DETAILS is null or P.PES_STATUS_DETAILS not like '" . personRecord::PES_STATUS_DETAILS_BOARDED_AS . "%' ";  // dont show boarded pre-boarders
 
     set_time_limit(0);
     $rs = db2_exec($GLOBALS['conn'], $sql);

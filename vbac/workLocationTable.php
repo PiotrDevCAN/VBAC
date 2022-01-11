@@ -40,9 +40,11 @@ class workLocationTable extends DbTable{
         $onShore = $row['ONSHORE'];
         switch($onShore) {
             case '0':
+            case 0:
                 $onShore = 'No';
                 break;
             case '1':
+            case 1:
                 $onShore = 'Yes';
                 break;
             default:

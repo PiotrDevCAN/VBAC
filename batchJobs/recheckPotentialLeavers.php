@@ -20,7 +20,7 @@ set_time_limit(60);
 $personTable = new personTable(allTables::$PERSON);
 $loader = new Loader();
 
-$potentialLeavers = " ( REVALIDATION_STATUS like  'potential%') ";
+$potentialLeavers = " ( REVALIDATION_STATUS like '" . personRecord::REVALIDATED_POTENTIAL_BEGINNING . "%') ";
 $allpotentialLeavers = $loader->load('CNUM',allTables::$PERSON, $potentialLeavers ); //
 AuditTable::audit("Potential Leavers re-check will re-check " . count($allpotentialLeavers) . " potential leavers.",AuditTable::RECORD_TYPE_REVALIDATION);
 $response = $slack->slackApiPostMessage(slack::CHANNEL_ID_SM_CDI_AUDIT,$_ENV['environment'] . ":Potential Leavers re-check will re-check " . count($allpotentialLeavers) . " potential leavers.", slack::CHANNEL_SM_CDI_AUDIT);

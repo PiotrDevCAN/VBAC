@@ -108,7 +108,9 @@ class personRecord extends DbRecord
     const REVALIDATED_VENDOR = 'vendor';
     const REVALIDATED_LEAVER = 'leaver';
     const REVALIDATED_POTENTIAL = 'potentialLeaver';
+    const REVALIDATED_POTENTIAL_BEGINNING = 'potential';
     const REVALIDATED_PREBOARDER = 'preboarder';
+    const REVALIDATED_OFFBOARD = 'offboard';
     const REVALIDATED_OFFBOARDING = 'offboarding'; // 12 
     const REVALIDATED_OFFBOARDED =  'offboarded'; // 11
 
@@ -335,6 +337,8 @@ class personRecord extends DbRecord
     const PES_STATUS_RECHECK_PROGRESSING   = 'Recheck Progressing';
     const PES_STATUS_MOVER         = 'Mover';
     const PES_STATUS_LEFT_IBM      = 'Left IBM';
+
+    const PES_STATUS_DETAILS_BOARDED_AS = 'Boarded as';
 
     const EMP_RESOURCE_REG = 'Resource Details - Kyndryl employees use Ocean IDs';
     const EMP_RESOURCE_EXT = 'Resource Details - Use external email addresses';

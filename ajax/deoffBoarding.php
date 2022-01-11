@@ -20,8 +20,6 @@ if(!empty($_POST['cnum'])){
     echo "No cnum provided";
 }
 
-
-
 $messages = ob_get_clean();
 ob_start();
 $success = empty($messages);

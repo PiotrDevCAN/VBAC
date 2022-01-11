@@ -2,11 +2,10 @@
 
 
 
-use itdq\Loader;
-use vbac\allTables;
 use itdq\JavaScript;
+use vbac\personRecord;
 
-$sql = " SELECT CNUM, FIRST_NAME FROM " . $GLOBALS['Db2Schema'] . ".PERSON WHERE FIRST_NAME is null and REVALIDATION_STATUS = 'found' ";
+$sql = " SELECT CNUM, FIRST_NAME FROM " . $GLOBALS['Db2Schema'] . ".PERSON WHERE FIRST_NAME is null and trim(REVALIDATION_STATUS) = '" . personRecord::REVALIDATED_FOUND . "' ";
 $rs = db2_exec($GLOBALS['conn'], $sql);
 $firstNames = array();
 while(($row=db2_fetch_assoc($rs))==true){

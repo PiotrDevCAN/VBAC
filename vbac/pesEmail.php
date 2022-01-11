@@ -145,7 +145,7 @@ class pesEmail {
         
         $revalidationStatus = personTable::getRevalidationFromCnum(null, $emailAddress);
         
-        $offboarded = substr($revalidationStatus,0,10)=='offboarded' ? true : false;
+        $offboarded = substr($revalidationStatus,0,10)==personRecord::REVALIDATED_OFFBOARDED ? true : false;
         
         error_log($emailAddress . ":" . $revalidationStatus);
         error_log(substr($revalidationStatus,0,10));

@@ -100,7 +100,7 @@ class personTable extends DbTable {
     static function activePersonPredicate($includeProvisionalClearance = true, $tableAbbrv = null ){
         $activePredicate = " ((( " ;
         $activePredicate.= !empty($tableAbbrv) ? $tableAbbrv ."." : null ;
-        $activePredicate.= "REVALIDATION_STATUS in ('" . personRecord::REVALIDATED_FOUND . "','" . personRecord::REVALIDATED_VENDOR . "','" . personRecord::REVALIDATED_POTENTIAL . "') or trim(";
+        $activePredicate.= "trim(REVALIDATION_STATUS) in ('" . personRecord::REVALIDATED_FOUND . "','" . personRecord::REVALIDATED_VENDOR . "','" . personRecord::REVALIDATED_POTENTIAL . "') or trim(";
         $activePredicate.= !empty($tableAbbrv) ? $tableAbbrv ."." : null ;
         $activePredicate.= "REVALIDATION_STATUS) is null or ";
         $activePredicate.= !empty($tableAbbrv) ? $tableAbbrv ."." : null ;
@@ -123,7 +123,7 @@ class personTable extends DbTable {
     static function inactivePersonPredicate($includeProvisionalClearance = true, $tableAbbrv = null ){
         $inactivePredicate = " ((( " ;
         $inactivePredicate.= !empty($tableAbbrv) ? $tableAbbrv ."." : null ;
-        $inactivePredicate.= "REVALIDATION_STATUS in ('" . personRecord::REVALIDATED_FOUND . "','" . personRecord::REVALIDATED_VENDOR . "','" . personRecord::REVALIDATED_POTENTIAL . "') or trim(";
+        $inactivePredicate.= "trim(REVALIDATION_STATUS) in ('" . personRecord::REVALIDATED_FOUND . "','" . personRecord::REVALIDATED_VENDOR . "','" . personRecord::REVALIDATED_POTENTIAL . "') or trim(";
         $inactivePredicate.= !empty($tableAbbrv) ? $tableAbbrv ."." : null ;
         $inactivePredicate.= "REVALIDATION_STATUS) is null or ";
         $inactivePredicate.= !empty($tableAbbrv) ? $tableAbbrv ."." : null ;
@@ -224,9 +224,9 @@ class personTable extends DbTable {
 
         $predicate .= $isFM ? " AND P.FM_CNUM='" . db2_escape_string(trim($myCnum)) . "' " : "";
         $predicate .= $justaUser ? " AND P.CNUM='" . db2_escape_string(trim($myCnum)) . "' " : ""; // FM Can only see their own people.
-        $predicate .= $preboadersAction==self::PORTAL_PRE_BOARDER_EXCLUDE ? " AND ( PES_STATUS_DETAILS not like 'Boarded as%' or PES_STATUS_DETAILS is null) " : null;
-        $predicate .= $preboadersAction==self::PORTAL_PRE_BOARDER_WITH_LINKED ? " AND ( PES_STATUS_DETAILS like 'Boarded as%' or PRE_BOARDED  is not  null) " : null;
-        $predicate .= $preboadersAction==self::PORTAL_ONLY_ACTIVE ? "  AND ( PES_STATUS_DETAILS not like 'Boarded as%' or PES_STATUS_DETAILS is null ) AND " . personTable::activePersonPredicate() : null;
+        $predicate .= $preboadersAction==self::PORTAL_PRE_BOARDER_EXCLUDE ? " AND ( PES_STATUS_DETAILS not like '" . personRecord::PES_STATUS_DETAILS_BOARDED_AS . "%' or PES_STATUS_DETAILS is null) " : null;
+        $predicate .= $preboadersAction==self::PORTAL_PRE_BOARDER_WITH_LINKED ? " AND ( PES_STATUS_DETAILS like '" . personRecord::PES_STATUS_DETAILS_BOARDED_AS . "%' or PRE_BOARDED  is not  null) " : null;
+        $predicate .= $preboadersAction==self::PORTAL_ONLY_ACTIVE ? "  AND ( PES_STATUS_DETAILS not like '" . personRecord::PES_STATUS_DETAILS_BOARDED_AS . "%' or PES_STATUS_DETAILS is null ) AND " . personTable::activePersonPredicate() : null;
 
         $sql  = " SELECT P.*, PT.PROCESSING_STATUS , PT.PROCESSING_STATUS_CHANGED, AS.SQUAD_NAME ";
         $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName . " as P ";
@@ -245,7 +245,7 @@ class personTable extends DbTable {
             while(($row=db2_fetch_assoc($rs))==true){
                 // Only editable, if they're not a "pre-Boarder" who has now been boarded.
                 $preparedRow = $this->prepareFields($row);
-                $rowWithButtonsAdded =(substr($row['PES_STATUS_DETAILS'],0,7)=='Boarded') ? $preparedRow : $this->addButtons($preparedRow);
+                $rowWithButtonsAdded =(substr($row['PES_STATUS_DETAILS'],0,10)==personRecord::PES_STATUS_DETAILS_BOARDED_AS) ? $preparedRow : $this->addButtons($preparedRow);
                 $data[] = $rowWithButtonsAdded;
             }
         }
@@ -1074,8 +1074,8 @@ class personTable extends DbTable {
 
         if(empty($preBoarded)){
             $availPreBoPredicate  = " ( CNUM LIKE '%xxx' or CNUM LIKE '%XXX' or CNUM LIKE '%999' ) ";
-            $availPreBoPredicate .= " AND ( REVALIDATION_STATUS in ('" . personRecord::REVALIDATED_PREBOARDER . "','" . personRecord::REVALIDATED_VENDOR . "')) ";
-            $availPreBoPredicate .= " AND ((PES_STATUS_DETAILS not like 'Boarded as%' )  or ( PES_STATUS_DETAILS is null)) ";
+            $availPreBoPredicate .= " AND ( trim(REVALIDATION_STATUS) in ('" . personRecord::REVALIDATED_PREBOARDER . "','" . personRecord::REVALIDATED_VENDOR . "')) ";
+            $availPreBoPredicate .= " AND ((PES_STATUS_DETAILS not like '" . personRecord::PES_STATUS_DETAILS_BOARDED_AS . "%' )  or ( PES_STATUS_DETAILS is null)) ";
             $availPreBoPredicate .= " AND PES_STATUS not in (";
             $availPreBoPredicate .= " '" . personRecord::PES_STATUS_FAILED . "' "; // Pre-boarded who haven't been boarded
             $availPreBoPredicate .= ",'" . personRecord::PES_STATUS_REMOVED ."' ";
@@ -1126,7 +1126,7 @@ class personTable extends DbTable {
     private function prepareRevalidationStmt(){
         if(empty($this->preparedRevalidationStmt)){
             $sql  = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-            $sql .= " SET NOTES_ID=?, EMAIL_ADDRESS = ?,  REVALIDATION_STATUS='" . personRecord::REVALIDATED_FOUND . "' , REVALIDATION_DATE_FIELD = current date ";
+            $sql .= " SET NOTES_ID = ?, EMAIL_ADDRESS = ?,  REVALIDATION_STATUS = '" . personRecord::REVALIDATED_FOUND . "' , REVALIDATION_DATE_FIELD = current date ";
             $sql .= " WHERE CNUM=? ";
 
             $this->preparedRevalidationStmt = db2_prepare($GLOBALS['conn'], $sql);
@@ -1158,7 +1158,7 @@ class personTable extends DbTable {
     private function prepareRevalidationLeaverStmt(){
         if(empty($this->preparedRevalidationLeaverStmt)){
             $sql  = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-            $sql .= " SET REVALIDATION_STATUS='" . personRecord::REVALIDATED_LEAVER . "' , REVALIDATION_DATE_FIELD = current date ";
+            $sql .= " SET REVALIDATION_STATUS = '" . personRecord::REVALIDATED_LEAVER . "' , REVALIDATION_DATE_FIELD = current date ";
             $sql .= " WHERE CNUM=? ";
 
             $this->preparedRevalidationLeaverStmt = db2_prepare($GLOBALS['conn'], $sql);
@@ -1174,8 +1174,8 @@ class personTable extends DbTable {
     private function prepareRevalidationPotentialLeaverStmt(){
         if(empty($this->preparedRevalidationPotentialLeaverStmt)){
             $sql  = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-//            $sql .= " SET REVALIDATION_STATUS='" . personRecord::REVALIDATED_POTENTIAL . "' , REVALIDATION_DATE_FIELD = current date ";
-            $sql .= " SET REVALIDATION_STATUS='" . personRecord::REVALIDATED_POTENTIAL . "'  "; // Storing the date waa cutting to many history records
+//            $sql .= " SET REVALIDATION_STATUS = '" . personRecord::REVALIDATED_POTENTIAL . "' , REVALIDATION_DATE_FIELD = current date ";
+            $sql .= " SET REVALIDATION_STATUS = '" . personRecord::REVALIDATED_POTENTIAL . "'  "; // Storing the date waa cutting to many history records
             $sql .= " WHERE CNUM=? ";
 
             $this->preparedRevalidationPotentialLeaverStmt = db2_prepare($GLOBALS['conn'], $sql);
@@ -1246,7 +1246,7 @@ class personTable extends DbTable {
 
     function flagPreboarders (){
         $sql  = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql .= " SET REVALIDATION_STATUS='" . personRecord::REVALIDATED_PREBOARDER . "', REVALIDATION_DATE_FIELD = current date ";
+        $sql .= " SET REVALIDATION_STATUS = '" . personRecord::REVALIDATED_PREBOARDER . "', REVALIDATION_DATE_FIELD = current date ";
         $sql .= " WHERE (CNUM like '%999' or CNUM like '%xxx' or CNUM like '%XXX' )  AND ( REVALIDATION_STATUS is null )";
 
         $rs = db2_exec($GLOBALS['conn'],$sql);
@@ -1262,7 +1262,7 @@ class personTable extends DbTable {
     function flagOffboarding ($cnum, $revalidationStatusWas, $notesId){
         if(!empty($cnum)){
             $sql  = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-            $sql .= " SET REVALIDATION_STATUS=CONCAT(CONCAT(TRIM('" . personRecord::REVALIDATED_OFFBOARDING . "'),':'),REVALIDATION_STATUS),  REVALIDATION_DATE_FIELD = current date ";
+            $sql .= " SET REVALIDATION_STATUS = CONCAT(CONCAT(TRIM('" . personRecord::REVALIDATED_OFFBOARDING . "'),':'),TRIM(REVALIDATION_STATUS)), REVALIDATION_DATE_FIELD = current date ";
             $sql .= " WHERE CNUM = '" . db2_escape_string($cnum) . "'";
 
             $rs = db2_exec($GLOBALS['conn'],$sql);
@@ -1283,7 +1283,15 @@ class personTable extends DbTable {
     function flagOffboarded ($cnum, $revalidationStatus){
         if(!empty($cnum)){
             $sql  = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-            $sql .= " SET REVALIDATION_STATUS=CONCAT(CONCAT('" . personRecord::REVALIDATED_OFFBOARDED . "',':'),SUBSTR(REVALIDATION_STATUS,13)), REVALIDATION_DATE_FIELD = current date, OFFBOARDED_DATE = current date ";
+            // $sql .= " SET REVALIDATION_STATUS = CONCAT(CONCAT(TRIM('" . personRecord::REVALIDATED_OFFBOARDED . "'),':'),TRIM(SUBSTR(REVALIDATION_STATUS,13))), REVALIDATION_DATE_FIELD = current date, OFFBOARDED_DATE = current date ";
+            $sql .= " SET REVALIDATION_STATUS = CONCAT(
+                CONCAT(TRIM('" . personRecord::REVALIDATED_OFFBOARDED. "'),':'),
+                CASE 
+                    WHEN REVALIDATION_STATUS LIKE '" . personRecord::REVALIDATED_OFFBOARDING. "%' THEN TRIM(SUBSTR(REVALIDATION_STATUS,13))
+                    WHEN REVALIDATION_STATUS LIKE '" . personRecord::REVALIDATED_OFFBOARDED. "%' THEN TRIM(SUBSTR(REVALIDATION_STATUS,12))
+                    ELSE TRIM(REVALIDATION_STATUS)
+                END
+            ), REVALIDATION_DATE_FIELD = current date, OFFBOARDED_DATE = current date ";
             $sql .= " WHERE CNUM = '" . db2_escape_string($cnum) . "'";
 
             $rs = db2_exec($GLOBALS['conn'],$sql);
@@ -1304,7 +1312,12 @@ class personTable extends DbTable {
     function stopOffboarded ($cnum){
         if(!empty($cnum)){
             $sql  = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-            $sql .= " SET REVALIDATION_STATUS=SUBSTR(REVALIDATION_STATUS,13), REVALIDATION_DATE_FIELD = current date, OFFBOARDED_DATE = null  ";
+            // $sql .= " SET REVALIDATION_STATUS = TRIM(SUBSTR(REVALIDATION_STATUS,13)), REVALIDATION_DATE_FIELD = current date, OFFBOARDED_DATE = null  ";
+            $sql .= " SET REVALIDATION_STATUS = CASE 
+                WHEN REVALIDATION_STATUS LIKE '" . personRecord::REVALIDATED_OFFBOARDING. "%' THEN TRIM(SUBSTR(REVALIDATION_STATUS,13))
+                WHEN REVALIDATION_STATUS LIKE '" . personRecord::REVALIDATED_OFFBOARDED. "%' THEN TRIM(SUBSTR(REVALIDATION_STATUS,12))
+                ELSE TRIM(REVALIDATION_STATUS)
+            END, REVALIDATION_DATE_FIELD = current date, OFFBOARDED_DATE = null  ";
             $sql .= " WHERE CNUM = '" . db2_escape_string($cnum) . "'";
 
             $rs = db2_exec($GLOBALS['conn'],$sql);
@@ -1324,7 +1337,12 @@ class personTable extends DbTable {
     function deOffboarded ($cnum){
         if(!empty($cnum)){
             $sql  = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-            $sql .= " SET REVALIDATION_STATUS=TRIM(SUBSTR(REVALIDATION_STATUS,12)), REVALIDATION_DATE_FIELD = current date, OFFBOARDED_DATE = null  ";
+            // $sql .= " SET REVALIDATION_STATUS = TRIM(SUBSTR(REVALIDATION_STATUS,12)), REVALIDATION_DATE_FIELD = current date, OFFBOARDED_DATE = null  ";
+            $sql .= " SET REVALIDATION_STATUS = CASE 
+                WHEN REVALIDATION_STATUS LIKE '" . personRecord::REVALIDATED_OFFBOARDING. "%' THEN TRIM(SUBSTR(REVALIDATION_STATUS,13))
+                WHEN REVALIDATION_STATUS LIKE '" . personRecord::REVALIDATED_OFFBOARDED. "%' THEN TRIM(SUBSTR(REVALIDATION_STATUS,12))
+                ELSE TRIM(REVALIDATION_STATUS)
+            END, REVALIDATION_DATE_FIELD = current date, OFFBOARDED_DATE = null  ";
             $sql .= " WHERE CNUM = '" . db2_escape_string($cnum) . "'";
 
             $rs = db2_exec($GLOBALS['conn'],$sql);
@@ -1591,7 +1609,7 @@ class personTable extends DbTable {
         $actualCnum = isset($row['actualCNUM']) ? trim($row['actualCNUM']) : trim($row['CNUM']);
         $status  = trim($row['PES_STATUS']);
         $currentValue = $status;
-        $boarder = stripos(trim($row['PES_STATUS_DETAILS']),'Boarded as')!== false ;
+        $boarder = stripos(trim($row['PES_STATUS_DETAILS']), personRecord::PES_STATUS_DETAILS_BOARDED_AS)!== false ;
         $passportFirst   = array_key_exists('PASSPORT_FIRST_NAME', $row) ? $row['PASSPORT_FIRST_NAME'] : null;
         $passportSurname = array_key_exists('PASSPORT_SURNAME', $row)    ? $row['PASSPORT_SURNAME'] : null;
 
@@ -1871,7 +1889,7 @@ class personTable extends DbTable {
             return false;
         }
 
-        $preBoarderData['PES_STATUS_DETAILS'] = 'Boarded as ' . $ibmerData['CNUM'] . ":" . $ibmerData['NOTES_ID'] . " Status was:" . $preboarderPesStatus;
+        $preBoarderData['PES_STATUS_DETAILS'] = personRecord::PES_STATUS_DETAILS_BOARDED_AS . ' . $ibmerData['CNUM'] . ":" . $ibmerData['NOTES_ID'] . " Status was:" . $preboarderPesStatus;
         $preBoarderData['EMAIL_ADDRESS'] = str_replace('ibm.com', '###.com', strtolower($preBoarderData['EMAIL_ADDRESS']));
         $preBoarder->setFromArray($preBoarderData);
         if(!$this->update($preBoarder)){

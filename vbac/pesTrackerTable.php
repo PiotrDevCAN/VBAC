@@ -117,7 +117,7 @@ class pesTrackerTable extends DbTable{
         $sql.= " ON P.FM_CNUM = F.CNUM ";
         $sql.= " WHERE 1=1 ";
         $sql.= " and (PT.CNUM is not null or ( PT.CNUM is null  AND P.PES_STATUS_DETAILS is null )) "; // it has a tracker record
-        $sql.= " and (P.PES_STATUS_DETAILS not like 'Boarded as%'  or P.PES_STATUS_DETAILS is null ) ";
+        $sql.= " and (P.PES_STATUS_DETAILS not like '" . personRecord::PES_STATUS_DETAILS_BOARDED_AS . "%'  or P.PES_STATUS_DETAILS is null ) ";
         $sql.= " AND " . $pesStatusPredicate;
 
         AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
@@ -200,7 +200,7 @@ class pesTrackerTable extends DbTable{
             $lastName = trim($row['LAST_NAME']);
             $emailaddress = trim($row['EMAIL_ADDRESS']);
             
-            $offboarded = substr($row['REVALIDATION_STATUS'],0,10)=='offboarded' ? true : false;            
+            $offboarded = substr($row['REVALIDATION_STATUS'],0,10)==personRecord::REVALIDATED_OFFBOARDED ? true : false;            
             $flm = !$offboarded && !empty(trim($row['FLM'])) ?  trim($row['FLM']) : null;
 
             $formattedIdentityField = self::formatEmailFieldOnTracker($row);
