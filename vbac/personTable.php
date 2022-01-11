@@ -1889,7 +1889,7 @@ class personTable extends DbTable {
             return false;
         }
 
-        $preBoarderData['PES_STATUS_DETAILS'] = personRecord::PES_STATUS_DETAILS_BOARDED_AS . ' . $ibmerData['CNUM'] . ":" . $ibmerData['NOTES_ID'] . " Status was:" . $preboarderPesStatus;
+        $preBoarderData['PES_STATUS_DETAILS'] = personRecord::PES_STATUS_DETAILS_BOARDED_AS . " " . $ibmerData['CNUM'] . ":" . $ibmerData['NOTES_ID'] . " Status was:" . $preboarderPesStatus;
         $preBoarderData['EMAIL_ADDRESS'] = str_replace('ibm.com', '###.com', strtolower($preBoarderData['EMAIL_ADDRESS']));
         $preBoarder->setFromArray($preBoarderData);
         if(!$this->update($preBoarder)){
