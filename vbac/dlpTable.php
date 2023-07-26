@@ -67,9 +67,6 @@ class dlpTable extends DbTable {
         return true;
     }
     
-
-    
-    
     function getForPortal($predicate=null, $withButtons=true, $resultSetOnly = false){
         $sql = "select distinct D.cnum ";
         $sql.= ", case when P.notes_id is not null then P.notes_id else A.CNUM end as Licensee ";
@@ -81,6 +78,7 @@ class dlpTable extends DbTable {
         $sql.= ", D.EXCEPTION_CODE as CODE";
         $sql.= ", T.hostname as OLD_HOSTNAME ";
         $sql.= ", T.TRANSFERRED_DATE as TRANSFERRED ";
+        $sql.= ", T.TRANSFERRED_TO_HOSTNAME ";
         $sql.= ", case when N.NOTES_ID is not null then N.NOTES_ID else T.TRANSFERRED_EMAIL end  as TRANSFERRER ";
         $sql.= ", D.STATUS ";
         $sql.= " from ". $GLOBALS['Db2Schema'] . "." . allTables::$DLP . " as D ";
@@ -96,7 +94,6 @@ class dlpTable extends DbTable {
         $sql.= " on T.transferred_email = N.EMAIL_ADDRESS ";
         $sql.= " left join ". $GLOBALS['Db2Schema'] . "." . allTables::$DELEGATE . " as G ";
         $sql.= " on F.CNUM = G.CNUM  ";
-        
         
         $sql.= " where 1=1 ";
         $sql.= !empty($predicate) ? $predicate : null;
@@ -115,19 +112,17 @@ class dlpTable extends DbTable {
         
         $report = array();
         while (($row=db2_fetch_assoc($rs))==true) {
-            
-            var_dump($row);
-            
             $report[] = $withButtons ? $this->addButtons(array_map('trim', $row)) : array_map('trim', $row);
         }
         
-        return !empty($report) ? array('data'=>$report,'sql'=>$sql) : false;
+        return array('data'=>$report,'sql'=>$sql);
     }
     
     function addButtons($row){
         
         $cnum = trim($row['CNUM']);
         $hostname = trim($row['HOSTNAME']); 
+        $transferred = trim($row['TRANSFERRED_TO_HOSTNAME']);
             
         $approveButton  = "<button type='button' class='btn btn-default btn-xs btnDlpLicenseApprove btn-success' aria-label='Left Align' ";
         $approveButton .= "data-cnum='" .$cnum . "' ";
@@ -146,11 +141,10 @@ class dlpTable extends DbTable {
         $deleteButton  = "<button type='button' class='btn btn-default btn-xs btnDlpLicenseDelete ' aria-label='Left Align' ";
         $deleteButton .= "data-cnum='" .$cnum . "' ";
         $deleteButton .= "data-hostname='" .$hostname . "' ";
-        $deleteButton .= "data-transferred='" . trim($row['TRANSFERRED_TO_HOSTNAME']) . "' ";
+        $deleteButton .= "data-transferred='" . $transferred . "' ";
         $deleteButton .= " > ";
         $deleteButton .= "<span class='glyphicon glyphicon-trash ' aria-hidden='true'></span>";
         $deleteButton .= " </button> ";
-        
         
         $approvedValue = trim($row['APPROVED']);
          
@@ -192,11 +186,6 @@ class dlpTable extends DbTable {
         $sql.= " AND HOSTNAME='" . db2_escape_string(trim($hostname)) . "' ";
         $sql.= " AND TRANSFERRED_TO_HOSTNAME is null ";
         
-        var_dump($approveReject);
-        var_dump($sql);
-        
-        
-        
         $rs = db2_exec($GLOBALS['conn'], $sql);
         
         if(!$rs){
@@ -224,7 +213,4 @@ class dlpTable extends DbTable {
         
         return true;
     }
-    
-    
-    
 };

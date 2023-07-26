@@ -9,10 +9,7 @@ if(!function_exists('tryConnect')){
         error_log("Db2 Pconnect took:" . (float)($postConnect-$preConnect));
         return $connection;
     }
-    
 }
-
-
 
 if( isset($_ENV['ssldsn']) )
 {
@@ -46,7 +43,6 @@ if( isset($_ENV['ssldsn']) )
         }
     }
     
-
     if( $conn )
     {
         $GLOBALS['conn'] = $conn;
@@ -60,7 +56,6 @@ if( isset($_ENV['ssldsn']) )
             echo "<pre>";
             print_r($_SESSION);
             echo "</pre>";
-
 
             echo "<BR>" . db2_stmt_errormsg() . "<BR>";
             echo "<BR>" . db2_stmt_error() . "<BR>";

@@ -53,11 +53,8 @@ trait xls{
         $spreadsheet->getActiveSheet()->setAutoFilter(
             $spreadsheet->getActiveSheet()
             ->calculateWorksheetDimension()
-            );
-
+        );
     }
-
-
 
     static function setRowColor(Spreadsheet $spreadsheet,$color='80333333',$rowNumber=1){
         $sheet = $spreadsheet->getActiveSheet();
@@ -70,15 +67,6 @@ trait xls{
             ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
             ->getStartColor()
             ->setARGB($color);
-
-
-
-
         }
-
     }
-
-
-
-
 }

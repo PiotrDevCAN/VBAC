@@ -2,6 +2,7 @@
 namespace itdq;
 use DateTime;
 use itdq\FormClass;
+use itdq\DbTable;
 /**
  * Class to deal manipulate data that has come from a DB2 Records.
  *

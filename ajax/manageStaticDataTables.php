@@ -37,8 +37,6 @@ if($uid != 'newEntry'){
     $data = array($value);
 }
 
-
-
 if(!$preparedStmt){
     echo db2_stmt_error();
     echo db2_stmt_errormsg();

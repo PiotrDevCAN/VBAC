@@ -1,6 +1,7 @@
 <?php
 use vbac\personRecord;
 use vbac\personTable;
+use vbac\pesEmail;
 use vbac\pesTrackerTable;
 use vbac\allTables;
 use itdq\AuditTable;
@@ -10,8 +11,6 @@ ob_start();
 AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_POST,true) . "</b>",AuditTable::RECORD_TYPE_DETAILS);
 
 $formattedEmailField= null;
-
-
 
 try {
     $personTable= new personTable(allTables::$PERSON);
@@ -37,7 +36,6 @@ try {
              $pesTracker->createNewTrackerRecord($_POST['psm_cnum']);
         }
 
-
         $pesTracker->setPesPassportNames($_POST['psm_cnum'],trim($_POST['psm_passportFirst']), trim($_POST['psm_passportSurname']));
 
         $pesTrackerData = $pesTracker->getRecord($pesTrackeRecord);
@@ -57,24 +55,22 @@ try {
         AuditTable::audit("Db2 Error in " . __FILE__ . " Code:<b>" . db2_stmt_error() . "</b> Msg:<b>" . db2_stmt_errormsg() . "</b>", AuditTable::RECORD_TYPE_DETAILS);
         $success = false;
     } else {
-//         echo "<br/>PES Status set to : " . $_POST['psm_status'];
-//         echo "<br/>Detail : " . $_POST['psm_detail'];
-
-
-
+        // echo "<br/>PES Status set to : " . $_POST['psm_status'];
+        // echo "<br/>Detail : " . $_POST['psm_detail'];
         switch ($_POST['psm_status']) {
             case personRecord::PES_STATUS_REMOVED:
             case personRecord::PES_STATUS_DECLINED:
             case personRecord::PES_STATUS_FAILED:
             case personRecord::PES_STATUS_LEFT_IBM:
             case personRecord::PES_STATUS_REVOKED:
-                 if($_POST['psm_revalidationstatus']==personRecord::REVALIDATED_PREBOARDER) {
-                     $person->informPmoOfPesStatusChange($_POST['psm_status']);
-                     $notificationStatus = 'Email sent to PMO. PES Status is:' . $_POST['psm_status'];
-                 } else {
+                $ctbRtb = !empty($personData['CTB_RTB']) ? trim($personData['CTB_RTB']) : null;
+                if (endsWith($_POST['psm_revalidationstatus'], personRecord::REVALIDATED_PREBOARDER)) {
+                    $person->informPmoOfPesStatusChange($_POST['psm_status'], $ctbRtb);
+                    $notificationStatus = 'Email sent to PMO. PES Status is: ' . $_POST['psm_status'];
+                } else {
                     $notificationStatus = 'Email not applicable';
-                 }
-                 break;
+                }
+                break;
             case personRecord::PES_STATUS_INITIATED:                
             case personRecord::PES_STATUS_RECHECK_PROGRESSING:
             case personRecord::PES_STATUS_REQUESTED:
@@ -82,9 +78,16 @@ try {
                 break;
             case personRecord::PES_STATUS_CLEARED:
             case personRecord::PES_STATUS_CLEARED_PERSONAL:
+            case personRecord::PES_STATUS_CLEARED_AMBER:
             case personRecord::PES_STATUS_CANCEL_REQ:
             case personRecord::PES_STATUS_PROVISIONAL: // For Covid
-                $emailResponse = $person->sendPesStatusChangedEmail();
+                $emailResponseData = $person->sendPesStatusChangedEmail(pesEmail::EMAIL_NOT_PES_SUPRESSABLE);
+                list(
+                    'response' => $emailResponse,
+                    'to' => $to,
+                    'message' => $message,
+                    'pesTaskId' => $pesTaskId
+                ) = $emailResponseData;
                 $notificationStatus = $emailResponse ? 'Email sent' : 'No email sent';
                 break;
             default:
@@ -92,7 +95,7 @@ try {
             break;
         }
 
-        AuditTable::audit("PES Status Email:" . $notificationStatus ,AuditTable::RECORD_TYPE_DETAILS);
+        AuditTable::audit("PES Status Email: " . $notificationStatus ,AuditTable::RECORD_TYPE_DETAILS);
 
         $success = true;
 
@@ -108,9 +111,13 @@ try {
 $messages = ob_get_clean();
 ob_start();
 $success = $success && empty($messages);
-$response = array('success'=>$success,'messages'=>$messages, "emailResponse"=>$notificationStatus,"cnum"=>$_POST['psm_cnum']
-                , 'formattedEmailField'=>$formattedEmailField
-                , 'formattedPesStatusField'=>$formattedPesStatusField
+$response = array(
+    'success' => $success,
+    'messages' => $messages, 
+    'emailResponse' => $notificationStatus,
+    'cnum' => $_POST['psm_cnum'],
+    'formattedEmailField' => $formattedEmailField, 
+    'formattedPesStatusField' => $formattedPesStatusField
 );
 $jse = json_encode($response);
 echo $jse ? $jse : json_encode(array('success'=>false,'messages'=>'Failed to json_encode : ' . json_last_error() . json_last_error_msg()));

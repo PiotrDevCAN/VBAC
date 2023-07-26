@@ -2,9 +2,6 @@
 namespace vbac;
 
 use itdq\DbTable;
-use itdq\AuditTable;
-use itdq\Loader;
-use itdq\slack;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class personWithSubPTable extends personTable {
@@ -46,7 +43,6 @@ class personWithSubPTable extends personTable {
         $originalConnection = $GLOBALS['conn'];
 
         include("connect.php");
-
 
         $sql = " SELECT * FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON_SUBPLATFORM;
         $rs = db2_exec($GLOBALS['conn'], $sql);

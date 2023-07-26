@@ -2,10 +2,6 @@
 use vbac\pesTrackerTable;
 use vbac\allTables;
 
-function ob_html_compress($buf){
-    return str_replace(array("\n","\r"),'',$buf);
-}
-
 set_time_limit(0);
 // ob_start();
 

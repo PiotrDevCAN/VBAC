@@ -15,8 +15,8 @@ $(document).ready(function(){
 	      datumTokenizer: Bloodhound.tokenizers.whitespace, 
 		  queryTokenizer: Bloodhound.tokenizers.whitespace,
 		  remote: {
-		    url: 'http://w3-services1.w3-969.ibm.com/myw3/unified-profile/v1/search/user?query=%QUERY&searchConfig=optimized_search',
-		    wildcard: '%QUERY'
+		    url: 'https://w3-unifiedprofile-search.dal1a.cirrus.ibm.com/search?query=%QUERY&searchConfig=optimized_search',
+			wildcard: '%QUERY'
 		  }
 		});
 

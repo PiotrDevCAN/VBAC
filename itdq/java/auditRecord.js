@@ -4,8 +4,6 @@
  *
  */
 
-
-
 function auditRecord() {
 
 	var table;
@@ -17,7 +15,6 @@ function auditRecord() {
 	this.init = function(){
 	},
 
-
 	this.initialiseAuditTable = function(){
 	    $.ajax({
 	    	url: "ajax/createHtmlForAuditTable.php",
@@ -28,7 +25,6 @@ function auditRecord() {
 	    		Audit.initialiseDataTable();
 	    	}
 	    });
-
 	},
 
 	this.initialiseDataTable = function(){
@@ -38,6 +34,8 @@ function auditRecord() {
 	        var title = $(this).text();
 	        $(this).html( '<input type="text" placeholder="Search '+title+'"  id="dtSearch_' + columnNumber++ + '"  />');
 	    } );
+		// Show DataTable
+		$('#auditTable').show();
 		// DataTable
 	    auditRecord.table = $('#auditTable').DataTable({
 	        processing: true,
@@ -65,34 +63,34 @@ function auditRecord() {
 	             	console.log($('#auditTable_processing').is(":visible")); 
 	            	
 	            	$.each(xhrPool, function(idx, jqXHR) {
-	            	          jqXHR.abort();  // basically, cancel any existing request, so this one is the only one running
-	            	          xhrPool.splice(idx, 1);
+						jqXHR.abort();  // basically, cancel any existing request, so this one is the only one running
+						xhrPool.splice(idx, 1);
 	            	});
 	                xhrPool.push(jqXHR);
 	            	},
 	        	},
 	        language: {
-	                    searchPlaceholder: "Search ALL fields - Very slow",
-	                    emptyTable: "No records found",
-	                    processing: "Processing<i class='fas fa-spinner fa-spin '></i>"
+				searchPlaceholder: "Search ALL fields - Very slow",
+				emptyTable: "No records found",
+				processing: "Processing<i class='fas fa-spinner fa-spin '></i>"
 	        },
 	    	autoWidth: true,
 	        responsive: false,
 	    	dom: 'Blfrtip',
 	        buttons: [
-	                  'colvis',
-	                  'excelHtml5',
-	                  'csvHtml5',
-	                  'print'
-	              ],
+				'colvis',
+				'excelHtml5',
+				'csvHtml5',
+				'print'
+			],
   	        order: [[ 1, "desc" ]]
 	    });
 	    
 	    var searchAt = $.fn.dataTable.util.throttle(
-	      	    function ( val, col ) {
-	      	    	auditRecord.table.columns(col).search( val ).draw();
-	      	    },
-	       	    500
+			function ( val, col ) {
+				auditRecord.table.columns(col).search( val ).draw();
+			},
+			500
 	    );
 	    
 	    // Apply the search
@@ -113,10 +111,7 @@ function auditRecord() {
 	    		$('#auditTable_processing').hide(); 
 	    		$('tbody').show();
 	    	}
-	    	
 	    } );
-	    
-	    
 	},
 	        
 	this.initialiseRevalidationAuditTable = function(){
@@ -130,7 +125,6 @@ function auditRecord() {
 	    		Audit.initialiseRevalidationTable();
 	    	}
 	    });
-
 	},
 
 	this.initialiseRevalidationTable = function(){
@@ -140,6 +134,8 @@ function auditRecord() {
 	        var title = $(this).text();
 	        $(this).html( '<input type="text" placeholder="Search '+title+'"  id="dtSearch_' + columnNumber++ + '"  />');
 	    } );
+		// Show DataTable
+		$('#auditTable').show();
 		// DataTable
 	    auditRecord.table = $('#auditTable').DataTable({
 	        processing: true,
@@ -149,11 +145,10 @@ function auditRecord() {
 	    	ajax: {
 	            url: 'ajax/populateAuditDatatable.php',
 	            type: 'POST',
-	            
 	            data: function ( d ) {
 	            	console.log(d);
 	                d.type = "Revalidation";
-	            	},
+				},
 	            dataSrc: function ( json ) {
 	            	console.log('dataSrc');
 	            	console.log(json);
@@ -165,41 +160,41 @@ function auditRecord() {
 	            	}  
 	            	console.log(json.data);
 	                return json.data;
-	            	},
+				},
 	            beforeSend: function (jqXHR, settings) {	
 	            	console.log('before send');
 	             	console.log($('.dataTables_processing'));
 	             	console.log($('#auditTable_processing').is(":visible")); 
 	            	
 	            	$.each(xhrPool, function(idx, jqXHR) {
-	            	          jqXHR.abort();  // basically, cancel any existing request, so this one is the only one running
-	            	          xhrPool.splice(idx, 1);
+						jqXHR.abort();  // basically, cancel any existing request, so this one is the only one running
+						xhrPool.splice(idx, 1);
 	            	});
 	                xhrPool.push(jqXHR);
 	            	},
 	        	},
 	        language: {
-	                    searchPlaceholder: "Search ALL fields - Very slow",
-	                    emptyTable: "No records found",
-	                    processing: "Processing<i class='fas fa-spinner fa-spin '></i>"
+				searchPlaceholder: "Search ALL fields - Very slow",
+				emptyTable: "No records found",
+				processing: "Processing<i class='fas fa-spinner fa-spin '></i>"
 	        },
 	    	autoWidth: true,
 	        responsive: false,
 	    	dom: 'Blfrtip',
 	        buttons: [
-	                  'colvis',
-	                  'excelHtml5',
-	                  'csvHtml5',
-	                  'print'
-	                ],
+				'colvis',
+				'excelHtml5',
+				'csvHtml5',
+				'print'
+			],
 	        order: [[ 1, "desc" ]]
 	    });
 	    
 	    var searchAt = $.fn.dataTable.util.throttle(
-	      	    function ( val, col ) {
-	      	    	auditRecord.table.columns(col).search( val ).draw();
-	      	    },
-	       	    500
+			function ( val, col ) {
+				auditRecord.table.columns(col).search( val ).draw();
+			},
+			500
 	    );
 	    
 	    // Apply the search
@@ -220,14 +215,8 @@ function auditRecord() {
 	    		$('#auditTable_processing').hide(); 
 	    		$('tbody').show();
 	    	}
-	    	
-	    } );
-	    
-
-
-
+	    });
 	}
-
 }
 
 $( document ).ready(function() {

@@ -16,8 +16,6 @@ try {
     echo $e->getMessage();
 }
 
-
-
 // $preBoarder = new personRecord();
 // $preBoarder->setFromArray(array('CNUM'=>$_POST['person_preboarded']));
 // $preBoarderData = $table->getFromDb($preBoarder);
@@ -52,6 +50,6 @@ $messages = ob_get_clean();
 ob_start();
 $success = empty($messages);
 
-$response = array( 'success'=>$success,'messages'=>$messages,'post'=>print_r($_POST,true));
+$response = array('success'=>$success,'messages'=>$messages,'post'=>print_r($_POST,true));
 ob_clean();
 echo json_encode($response);

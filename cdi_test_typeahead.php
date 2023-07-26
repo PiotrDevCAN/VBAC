@@ -40,9 +40,12 @@ $(document).ready(function(){
 		  },	      
 		  remote: {
 			//  http://unified-profile.w3ibm.mybluemix.net
-			//	  http://w3-services1.w3-969.ibm.com
-		    url: 'http://w3-services1.w3-969.ibm.com/myw3/unified-profile/v1/search/user?query=%QUERY&searchConfig=optimized_search',
-		    wildcard: '%QUERY',
+			//	http://w3-services1.w3-969.ibm.com
+			//  http://w3-services1.w3-969.ibm.com/myw3/unified-profile/v1/search/user
+			//  https://unified-profile-search-service.us-south-k8s.intranet.ibm.com/search
+		    //  https://unified-profile-search-service.us-south-k8s.intranet.ibm.com/search?query=%QUERY&searchConfig=optimized_search
+			url: 'https://w3-unifiedprofile-search.dal1a.cirrus.ibm.com/search?query=%QUERY&searchConfig=optimized_search',
+			wildcard: '%QUERY',
 		    filter: function(data) {  
 			        
 		        var dataObject = $.map(data.results, function(obj) {
@@ -56,22 +59,20 @@ $(document).ready(function(){
 		});
 
 	$('#custom-templates .typeahead').typeahead(null, {
-		  limit : 3,
-		  name: 'bluepages',
-		  display: 'value',
-		  displayKey: 'value',
-		  source: bluepages,		 
-		  templates: {
-		    empty: [
-		      '<div class="empty-message">',
-		        'unable to find any IBMers that match the current query',
-		      '</div>'
-		    	].join('\n'),
-		  	suggestion: Handlebars.compile('<div> <img src="http://w3-services1.w3-969.ibm.com/myw3/unified-profile-photo/v1/image/{{cnum}}?type=bp&def=blue&s=50" alt="Profile" height="42" width="42"> <strong>{{value}}</strong><br/><small>{{preferredIdentity}}<br/>{{role}}</small></div>')
-		  }
-		});
-
-	// http://w3-services1.w3-969.ibm.com/myw3/unified-profile-photo/v1/image/001399866?type=bp&def=blue&s=100
+		limit : 3,
+		name: 'bluepages',
+		display: 'value',
+		displayKey: 'value',
+		source: bluepages,		 
+		templates: {
+		empty: [
+			'<div class="empty-message">',
+			'unable to find any IBMers that match the current query',
+			'</div>'
+			].join('\n'),
+		suggestion: Handlebars.compile('<div> <img src="https://w3-unifiedprofile-api.dal1a.cirrus.ibm.com/v3/image/{{cnum}}?type=bp&def=blue&s=50" alt="Profile" height="42" width="42"> <strong>{{value}}</strong><br/><small>{{preferredIdentity}}<br/>{{role}}</small></div>')
+		}
+	});
 
  	$('.typeahead').bind('typeahead:select', function(ev, suggestion) {
  		 $('#notesId').val(suggestion.notesEmail);

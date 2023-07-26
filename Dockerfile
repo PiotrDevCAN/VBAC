@@ -15,6 +15,8 @@ RUN dnf remove nginx-filesystem -y
 WORKDIR /var/www/html/
 # RUN sed -i  "$ a extension=ibm_db2.so" /etc/php.ini
 # RUN sed -i  "$ a extension=zip.so"     /etc/php.ini
+# RUN echo "net.ipv4.ping_group_range = 0 2147483647" > /etc/sysctl.d/99-sysctl.conf
+RUN chmod +s "$(which ping)"
 RUN echo "extension=ibm_db2.so" > /etc/php.d/30-pdo_ibm_db2.ini
 #ADD db2consv_ee.lic /opt/ibm/dsdriver/license/db2consv_ee.lic ### for zOS host, enable this line to add your license
 #RUN echo "PassEnv /opt/ibm/dsdriver/lib" > /etc/httpd/conf.d/db2-lib.conf
@@ -25,6 +27,7 @@ RUN chown -R 1001:0 /run
 RUN chown -R 1001:0 /etc/httpd/run
 RUN chmod -R 777 /run
 RUN chmod -R 777 /etc/httpd/run
+RUN chmod -R 777 /var/www/html/extracts
 USER 1001
 RUN composer install --no-interaction
 

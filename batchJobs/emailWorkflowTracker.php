@@ -16,7 +16,7 @@ if ($helper->isCli()) {
     return;
 }
 
-$emailAddress = array('piotr.tajanowicz@ibm.com');
+$emailAddress = array($_ENV['devemailid']);
 
 // Create new Spreadsheet object
 $spreadsheet = new Spreadsheet();
@@ -64,7 +64,6 @@ try {
     $excelFile = ob_get_clean();
     ob_end_clean();
     $base64EncodedExcelFile = base64_encode($excelFile);
-
     
     $attachments = array();
     $attachments[] = !empty($excelFile) ? array('filename'=>'Dlp Licenses Report - ' . $fileNameSuffix . ".xls",'content_type'=>'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','data'=>$base64EncodedExcelFile) : null;

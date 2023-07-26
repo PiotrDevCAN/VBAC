@@ -14,30 +14,26 @@ use itdq\FormClass;
 <?php
 $requestableAssetListRecord = new requestableAssetListRecord();
 $requestableAssetListRecord->displayForm(FormClass::$modeDEFINE);
+
+$headerCells = $requestableAssetListRecord->htmlHeaderCells();
+
 ?>
 </div>
 </div>
 
-
 <div class='container-fluid'>
 <h3>Requestable Asset List</h3>
 <div id='requestableAssetListDiv'>
+<table id='requestableAssetTable' class='table table-striped table-bordered compact' cellspacing='0' width='100%' style='display: none;'>
+<thead>
+<tr><?=$headerCells;?></tr>
+</thead>
+<tbody>
+</tbody>
+<tfoot>
+<tr><?=$headerCells;?></tr>
+</tfoot>
+</table>
 </div>
 
 </div>
-
-
-<script>
-$( document ).ready(function() {
-	
-//	$('[data-toggle="tooltip"]').tooltip();
-	
-	var RequestableAsset = new requestableAsset();
-	    RequestableAsset.initialiseTable();
-	    RequestableAsset.initialiseSelect2();
-	    RequestableAsset.listenForSaveRequestableAsset();
-	    RequestableAsset.listenForEditButton();
-	    RequestableAsset.listenForDeleteButton();
-	    RequestableAsset.listenForJustificationButton();
-});
-</script>

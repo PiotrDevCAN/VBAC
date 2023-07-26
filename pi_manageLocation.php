@@ -1,9 +1,5 @@
 <?php
 
-use vbac\personRecord;
-use vbac\assetRequestRecord;
-use vbac\personTable;
-use vbac\AgileTribeRecord;
 use itdq\FormClass;
 use vbac\workLocationRecord;
 
@@ -30,51 +26,3 @@ $locationRecord->displayForm(FormClass::$modeDEFINE);
 </tfoot>
 </table>
 </div>
-
-<!-- Modal -->
-<div id="modalInfo" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modalInfo-title">Information</h4>
-      </div>
-      <div class="modalInfo-body" >
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default modalButton" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<script type="text/javascript">
-var WorkLocation = new workLocation();
-
-$(document).ready(function() {
-
-  $('.select2').select2();
-  
-  $('#COUNTRY.select2, #CITY.select2').select2({
-		tags: true,
-		selectOnClose: true,
-		//Allow manually entered text in drop down.
-		createTag: function (params) {
-      var name = params.term.charAt(0).toUpperCase() + params.term.slice(1);
-      return {
-        id: name,
-        text: name
-      }
-		}
-  });
-
-	WorkLocation.initialiseWorkLocationTable();
-	WorkLocation.listenForSubmitLocationForm();
-  WorkLocation.listenForEditLocation();
-  WorkLocation.listenForDeleteLocation();
-});
-
-</script>

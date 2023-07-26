@@ -31,7 +31,7 @@ $odcAccessTable = new odcAccessTable(allTables::$ODC_ACCESS_LIVE);
 
 try {
     set_time_limit(0);
-    ini_set('memory_limit', '256M');
+    ini_set('memory_limit', '512M');
     
     $rs = $odcAccessTable->locationMismatch();
     
@@ -46,7 +46,8 @@ try {
             DbTable::autoSizeColumns($spreadsheet);
             $fileNameSuffix = $now->format('Ymd_His');
             
-            ob_clean();
+            // ob_clean();
+            ob_end_clean();
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             header('Content-Disposition: attachment;filename="odcLocationMismatch' . $fileNameSuffix . '.xlsx"');
             header('Cache-Control: max-age=0');
@@ -60,6 +61,8 @@ try {
             $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
             $writer->save('php://output');
             exit;
+        } else {
+            echo "<h1>No records found to prepare this report (ODC Access Live Table)</h1>";
         }
     }
 } catch (Exception $e) {

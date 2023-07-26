@@ -1,4 +1,7 @@
 <?php
+
+use vbac\allTables;
+
 if($_REQUEST['token']!= $token){
     http_response_code(405);
     die();
@@ -9,7 +12,7 @@ ob_start();
 switch (true) {
     case isset($_GET['email_address']) && isset($_GET['title']):
         // Get a specific template
-        $sql = " SELECT TEMPLATE FROM " . $_ENV['environment'] . "." . \vbac\allTables::$FEB_TRAVEL_REQUEST_TEMPLATES;
+        $sql = " SELECT TEMPLATE FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$FEB_TRAVEL_REQUEST_TEMPLATES;
         $sql .= " WHERE EMAIL_ADDRESS='" . db2_escape_string(trim($_GET['email_address'])) . "' ";
         $sql .= " AND TITLE='" . db2_escape_string(trim($_GET['title'])) . "' ";
         $rs = db2_exec($GLOBALS['conn'], $sql);
@@ -56,7 +59,7 @@ switch (true) {
         break;
     case isset($_GET['email_address']):
         // Get list of titles for this person
-        $sql = " SELECT DISTINCT TITLE FROM " . $_ENV['environment'] . "." . \vbac\allTables::$FEB_TRAVEL_REQUEST_TEMPLATES;
+        $sql = " SELECT DISTINCT TITLE FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$FEB_TRAVEL_REQUEST_TEMPLATES;
         $sql .= " WHERE UPPER(EMAIL_ADDRESS)='" . db2_escape_string(strtoupper(trim($_GET['email_address']))) . "' ";
         $response['sql'] = $sql;
         

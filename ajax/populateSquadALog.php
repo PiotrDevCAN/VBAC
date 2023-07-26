@@ -37,7 +37,10 @@ $sql.= " ON S.TRIBE_NUMBER  = T.TRIBE_NUMBER ";
 $sql.= " WHERE " . personTable::activePersonPredicate(true,"P");
 $sql.= " AND ( P.SQUAD_NUMBER is not null  AND P.SQUAD_NUMBER > 0 ) ";
 
-$rs = db2_exec($GLOBALS['conn'], $sql);
+$preparedStmt = db2_prepare($GLOBALS['conn'], $sql);
+
+$data = array();
+$rs = db2_execute($preparedStmt, $data);
 
 if(!$rs){
     DbTable::displayErrorMessage($rs, null, __FILE__, $sql);
@@ -45,7 +48,7 @@ if(!$rs){
 
 $data = false;
 
-while(($row = db2_fetch_assoc($rs))==true){
+while(($row = db2_fetch_assoc($preparedStmt))==true){
     $row = array_map('trim',$row);
     $cnum = $row['CNUM'];
     $row['CNUM'] = array('display'=>$row['CNUM'] . "<br/><small>" . $row['NOTES_ID'] . "</small>", 'sort'=>$row['CNUM']);

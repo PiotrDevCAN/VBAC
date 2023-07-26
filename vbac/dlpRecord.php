@@ -1,6 +1,7 @@
 <?php
 namespace vbac;
 
+use itdq\BlueMail;
 use itdq\DbRecord;
 use itdq\Loader;
 use itdq\JavaScript;
@@ -40,9 +41,6 @@ class dlpRecord extends DbRecord
         '/&&server&&/',
     );
     
-    
-    
-    
     function displayForm($mode){
         $loader = new Loader();
         $predicate = " 1=1 " . assetRequestRecord::ableToOwnAssets();
@@ -50,6 +48,10 @@ class dlpRecord extends DbRecord
         
         $selectableNotesId = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON,$predicate);
         $selectableEmailAddress = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON,$predicate);
+
+        $allNotesId = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON);
+        $allEmailAddress = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON);
+
         $selectableRevalidationStatus = $loader->loadIndexed('REVALIDATION_STATUS','CNUM',allTables::$PERSON,$predicate);   
         
         $currentLicences = $loader->loadIndexed('HOSTNAME','CNUM', allTables::$DLP," TRANSFERRED_TO_HOSTNAME is null ");   
@@ -60,8 +62,6 @@ class dlpRecord extends DbRecord
         
         $cnumFm = $loader->loadIndexed('FM_CNUM','CNUM', allTables::$PERSON,$predicate);
         JavaScript::buildObjectFromLoadIndexedPair($cnumFm,'cnumfm');
-        
-        
         
         ?>
         <form id='dlpRecordingForm'  class="form-horizontal"
@@ -87,10 +87,17 @@ class dlpRecord extends DbRecord
                 foreach ($selectableNotesId as $cnum => $notesId){
                     $isOffboarding = substr($selectableRevalidationStatus[$cnum],0,11)==personRecord::REVALIDATED_OFFBOARDING;
                     $dataOffboarding = " data-revalidationstatus" . "='" . $selectableRevalidationStatus[$cnum] . "' ";
-                    $displayedName = !empty(trim($notesId)) ?  trim($notesId) : $selectableEmailAddress[$cnum];
+                    $displayedName = !empty(trim($notesId)) ?  trim($notesId) : $allEmailAddress[$cnum];
                     $hostname = isset($currentLicences[trim($cnum)]) ? " (" .  $currentLicences[trim($cnum)] . ")" : " (no licence)";
                     if(!$isOffboarding){
-                        ?><option value='<?=trim($cnum)?>'><?=$displayedName?></option><?php                    
+                        if (!empty(trim($displayedName))) {
+                            $disabled = false;
+                        } else {
+                            // $disabled = " disabled ";
+                            $disabled = null;
+                            $displayedName = 'Missing Email Address or Notes Id for '.$cnum;
+                        }
+                        ?><option value='<?=trim($cnum)?>'<?=$disabled?>><?=$displayedName?></option><?php                    
                     }
                 };
                 ?>    
@@ -105,47 +112,51 @@ class dlpRecord extends DbRecord
             	<label for='currentHostname'>Current Hostname</label>  
         		<input class="form-control"  id='currentHostname' name='currentHostname' value='' type='text'  placeholder='Current Hostname' style="text-transform:uppercase" disabled>
         		</div>
-
-
-
         	</div>
 
         	<div class='form-group required'>
         		<div class='col-sm-4'>
         		<label for='approvingManager'>Approving Manager</label>
                 <select class='form-control select select2 '
-                			  id='approvingManager'
-                              name='approvingManager'
-                              required
-                      >
+                    id='approvingManager'
+                    name='approvingManager'
+                    required
+                >
                     <option value=''>
                     </option>
                     <?php
                     $isFm = $_SESSION['isFm'];
-                    $myCnum = personTable::myCnum();                    
+                    $myCnum = personTable::myCnum();
                     foreach ($approvingMgrs as $cnum => $notesId){
-                            $displayedName = !empty(trim($notesId)) ?  trim($notesId) : $selectableEmailAddress[$cnum];
+                        $displayedName = !empty(trim($notesId)) ?  trim($notesId) : $allEmailAddress[$cnum];
+                        if (!empty(trim($displayedName))) {
                             $selected = null;
-
+                            $disabled = null;
                             if(!$isFm && (trim($cnum)== trim($myManagersCnum))){
                                 /*
-                                 * The user is NOT a manager, and this entry is their Mgr
-                                 *
-                                 * Stops users who are managers having the drop down default to THEIR mgr, when it should default to them.
-                                 * JS code will remove the entry in this list, if they pick themselves as the Requestee.
-                                 *
-                                 */
+                                * The user is NOT a manager, and this entry is their Mgr
+                                *
+                                * Stops users who are managers having the drop down default to THEIR mgr, when it should default to them.
+                                * JS code will remove the entry in this list, if they pick themselves as the Requestee.
+                                *
+                                */
                                 $selected = " selected ";
                             } elseif ($isFm && (trim($cnum)==trim($myCnum))){
                                 /*
-                                 * They ARE an FM and this is their entry, so select it by default.
-                                 * If the requestee becomes themselves, we'll remove the entry from the dropdown.
-                                 */
+                                * They ARE an FM and this is their entry, so select it by default.
+                                * If the requestee becomes themselves, we'll remove the entry from the dropdown.
+                                */
                                 $selected = " selected ";
                             }
-                            ?><option value='<?=trim($cnum);?>'<?=$selected?>><?=$displayedName?></option><?php
-                        };
-                        ?>
+                        } else {
+                            $selected = null;
+                            // $disabled = " disabled ";
+                            $disabled = null;
+                            $displayedName = 'Missing Email Address or Notes Id for '.$cnum;
+                        }
+                        ?><option value='<?=trim($cnum);?>'<?=$selected?><?=$disabled?>><?=$displayedName?></option><?php
+                    };
+                    ?>
             	</select>
             	</div>
         		</div>
@@ -169,40 +180,14 @@ class dlpRecord extends DbRecord
         </form>
 		<?php
     }  
-    
-    function saveResponseModal(){
-        ?>
-        <!-- Modal -->
-		<div id="dlpSaveResponseModal" class="modal fade" role="dialog">
-  			<div class="modal-dialog">
-	        <!-- Modal content-->
-    		<div class="modal-content">
-      			<div class="modal-header">
-        		   <h4 class="modal-title">Record Save Response</h4>
-      			</div>
-      			<div class="modal-body" >
-      			</div>
-        		<div class='modal-footer'>
-      		  		<button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
-      			</div>
-        </div>
-        </div>
-        </div>
-        <?php
-    }
-    
-    
+
     static function notifyApprover($licensee, $hostname, $approvingMgr){
-        $replacements = array($licensee, $hostname, $_SERVER['HTTP_HOST']);
+        $replacements = array($licensee, $hostname, "https://" . $_SERVER['HTTP_HOST']);
         $message = preg_replace(self::$dlpEmailPatterns, $replacements, self::$dlpEmailBody);  
         
         $delegates = delegateTable::delegatesFromEmail($approvingMgr);
-        
         $delegates = $delegates ? $delegates : array();
         
-        
-        \itdq\BlueMail::send_mail(array($approvingMgr), 'DLP(BG&CB) License Approval Request ', $message, personRecord::$vbacNoReplyId, $delegates);
+        BlueMail::send_mail(array($approvingMgr), 'DLP(BG&CB) License Approval Request ', $message, personRecord::$vbacNoReplyId, $delegates);
     }
-    
-    
 }

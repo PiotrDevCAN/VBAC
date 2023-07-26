@@ -14,9 +14,8 @@ $_SESSION['ssoEmail'] = $_SESSION['ssoEmail'];
 $loader = new Loader();
 $personTable = new personTable(allTables::$PERSON);
 
-$data = $personTable->getForRfFlagReport();
-// $data = $dataAndSql['data'];
-// $sql  = $dataAndSql['sql'];
+$dataAndSql = $personTable->getForRfFlagReport();
+list('data' => $data, 'sql' => $sql) = $dataAndSql;
 
 $messages = ob_get_clean();
 ob_start();

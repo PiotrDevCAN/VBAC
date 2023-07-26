@@ -6,6 +6,7 @@ use itdq\FormClass;
 use itdq\Loader;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use itdq\AuditTable;
+use itdq\BlueMail;
 use itdq\DbRecord;
 
 
@@ -27,12 +28,38 @@ class assetRequestsTable extends DbTable{
     private $preparedRefToOrderIt;
     private $preparedDevarb;
 
-    private static $portalHeaderCells = array('REFERENCE','CT_ID','PERSON','ASSET','STATUS','JUSTIFICATION','REQUESTOR','APPROVER','FM',
+    private static $portalHeaderCells = array(
+        'REFERENCE',
+        'CT_ID',
+        'PERSON',
+        'ASSET',
+        'STATUS',
+        'JUSTIFICATION',
+        'REQUESTOR',
+        'APPROVER','FM',
         'LOCATION'
-        ,'PRIMARY_UID','SECONDARY_UID','DATE_ISSUED_TO_IBM','DATE_ISSUED_TO_USER','DATE_RETURNED',
-        'LBG_VARB_REF','LBG_REF_NUMBER','LBG_STATUS','LBG_TYPE', 'COMMENT'
-        ,'USER_CREATED','REQUESTEE_EMAIL','REQUESTEE_NOTES', 'APPROVER_EMAIL', 'FM_EMAIL','FM_NOTES',
-        'CTB_RTB','TT_BAU','LOB', 'WORK_STREAM','PRE_REQ_REQUEST','REQUEST_RETURN'
+        ,'PRIMARY_UID',
+        'SECONDARY_UID',
+        'DATE_ISSUED_TO_IBM',
+        'DATE_ISSUED_TO_USER',
+        'DATE_RETURNED',
+        'LBG_VARB_REF',
+        'LBG_REF_NUMBER',
+        'LBG_STATUS',
+        'LBG_TYPE',
+        'COMMENT',
+        'USER_CREATED',
+        'REQUESTEE_EMAIL',
+        'REQUESTEE_NOTES',
+        'APPROVER_EMAIL', 
+        'FM_EMAIL',
+        'FM_NOTES',
+        'CTB_RTB',
+        'TT_BAU',
+        'LOB', 
+        'WORK_STREAM',
+        'PRE_REQ_REQUEST',
+        'REQUEST_RETURN'
     );
 
     private static $statusChangeEmail = "This is to inform you that your vBAC Request<b>&&requestReference&& (&&assetTitle&&)</b> has now moved to status :<b>&&status&&</b>.
@@ -51,22 +78,17 @@ class assetRequestsTable extends DbTable{
         $created = parent::saveRecord($record,$populatedColumns,$nullColumns,false);
 
         if($created){
-            $requestReference = self::lastId();
+            $requestReference = $this->lastId();
             $this->assetRequestEventsTable->logEventForRequest(assetRequestsEventsTable::EVENT_CREATED, $requestReference);
         }
         if($commit){
-            self::commitUpdates();
+            $this->commitUpdates();
         }
-
     }
-
-
 
     static function portalHeaderCells(){
         $headerCells = null;
-       // $widths = array(5,5,5,5,10,10,10,10,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
          foreach (self::$portalHeaderCells as $key => $value) {
-//                 $width = 'width="' . $widths[$key] . '"';
                 $headerCells .= "<th>";
                 $headerCells .= str_replace("_", " ", $value);
                 $headerCells .= "</th>";
@@ -107,11 +129,8 @@ class assetRequestsTable extends DbTable{
         $sql .= " ON TRIM(RAL.ASSET_TITLE) = TRIM(AR.ASSET_TITLE) ";
         $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$DELEGATE . " as D "; // needed for the predicate.
         $sql .= " ON F.CNUM = D.CNUM ";
-
-
         $sql .= " WHERE 1=1 ";
         $sql .=  $predicate;
-
 
     //    AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
         $rs = db2_exec($GLOBALS['conn'],$sql);
@@ -143,7 +162,6 @@ class assetRequestsTable extends DbTable{
             $isRequestor = (strtolower(trim($row['REQUESTOR_EMAIL'])) == strtolower(trim($_SESSION['ssoEmail'])) or (in_array(strtolower(trim($row['REQUESTOR_EMAIL'])), $amADelegateFor)));
             $isRequestee = (strtolower(trim($row['REQUESTEE_EMAIL'])) == strtolower(trim($_SESSION['ssoEmail'])) or (in_array(strtolower(trim($row['REQUESTEE_EMAIL'])), $amADelegateFor)));
             $isApprover  = (strtolower(trim($row['APPROVER_EMAIL']))  == strtolower(trim($_SESSION['ssoEmail'])) or (in_array(strtolower(trim($row['APPROVER_EMAIL'])), $amADelegateFor)));
-
 
             $row['REFERENCE'] =  $startItalics . trim($row['ORDERIT_NUMBER']) . ":" . $reference;
             $row['REFERENCE'] .= !empty($preReq) ? "<small> requires </small>" . $preReq : null;
@@ -258,7 +276,6 @@ class assetRequestsTable extends DbTable{
             $row['REQUESTOR'] = array('display'=> $row['REQUESTOR_EMAIL'] . "<br/><small>" . $row['REQUESTED_DATE'] . "</small>",'timestamp'=>$sortableRequestedDate);
             $row['FM'] = !empty($row['FM_NOTES']) ? $row['FM_NOTES'] . "<br/><small>" . $row['FM_EMAIL'] . "</small>" : $row['FM_CNUM'];
 
-
             $editUidButton  = "<button type='button' class='btn btn-default btn-xs btnEditUid btn-primary' aria-label='Left Align' ";
             $editUidButton .= "data-reference='" .$reference . "' ";
             $editUidButton .= "data-requestee='" .trim($row['PERSON']) . "' ";
@@ -310,9 +327,7 @@ class assetRequestsTable extends DbTable{
                 break;
             }
 
-
             $returnedButton = $returnable && $status!= assetRequestRecord::STATUS_RETURNED ? $returnedButton : null;
-
 
 //             $row['ASSET'] =  ($returnable && $row['REQUEST_RETURN']!='Yes' ) ? $returnedButton . "&nbsp;<i>" .  $asset . "(Return/Remove)</i>" : $asset;
 
@@ -321,7 +336,6 @@ class assetRequestsTable extends DbTable{
             /*
              * Allow requestor and approver to add to the Justification Text
              */
-
 
             $canAddToJusification = $isApprover || $isRequestor || $isRequestee;
 
@@ -333,15 +347,12 @@ class assetRequestsTable extends DbTable{
             $justificationButton .= "data-asset='"     .trim($row['ASSET']) . "' ";
             $justificationButton .= "data-status='"     .trim($status) . "' ";
 
-
 //             $justificationButton .= "data-justification='" .trim($justification) . "' ";
 //             $justificationButton .= "data-comment='" .trim($row['COMMENT']) . "' ";
             $justificationButton .= "data-toggle='tooltip' data-placement='top' title='Amend Justification'";
             $justificationButton .= " > ";
             $justificationButton .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
             $justificationButton .= " </button> ";
-
-
 
             $row['JUSTIFICATION'] = $canAddToJusification && $justificationEditAllowed ? $justificationButton . "&nbsp;" . $justification : $justification;
             $row['JUSTIFICATION'] .= "<hr/>" . $row['COMMENT'];
@@ -350,7 +361,6 @@ class assetRequestsTable extends DbTable{
         }
 
         return array('data'=>$data,'sql'=>$sql);
-
     }
 
     private function getNextVarb(){
@@ -472,7 +482,6 @@ class assetRequestsTable extends DbTable{
         $sql .= " ORDER BY ASSET_TITLE, REQUEST_REFERENCE desc";
 
         $data = array();
-//         $data[] = "";
         $data[] = $first ? '"VARB","REQUEST","CT ID","CTB/RTB","TT/BAU","LOB","WORK STREAM","ASSET TITLE","REQUESTEE EMAIL","JUSTIFICATION","STATUS","LOCATION","REQUESTOR","REQUESTED","APPROVER","APPROVED","FM EMAIL","EXPORTED"' : null;
 
         $rs2 = db2_exec($GLOBALS['conn'],$sql);
@@ -528,7 +537,6 @@ class assetRequestsTable extends DbTable{
         $sql .= " ORDER BY ORDERIT_NUMBER desc, ASSET_TITLE, REQUEST_REFERENCE desc";
 
         $data = array();
-        //         $data[] = "";
         $data[] = '"VARB","LBG","REQUEST","CT ID","CTB/RTB","TT/BAU","LOB","WORK STREAM","ASSET TITLE","REQUESTEE EMAIL","JUSTIFICATION","STATUS","LOCATION","REQUESTOR","REQUESTED","APPROVER","APPROVED","FM EMAIL","EXPORTED"';
 
         $rs2 = db2_exec($GLOBALS['conn'],$sql);
@@ -579,6 +587,23 @@ class assetRequestsTable extends DbTable{
         return $row['TICKETS'];
     }
 
+    function countRequestsAll(){
+
+        $sql = " SELECT count(*) as tickets ";
+        $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
+
+        $rs2 = db2_exec($GLOBALS['conn'],$sql);
+        if(!$rs2){
+            db2_rollback($GLOBALS['conn']);
+            DbTable::displayErrorMessage($rs2, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+
+        $row=db2_fetch_assoc($rs2);
+
+        return $row['TICKETS'];
+    }
+
     function countRequestsAwaitingIam(){
 
         $sql = " SELECT count(*) as tickets ";
@@ -596,7 +621,6 @@ class assetRequestsTable extends DbTable{
 
         return $row['TICKETS'];
     }
-
 
     function countRequestsForPmoExport($bauRequest){
 
@@ -616,7 +640,6 @@ class assetRequestsTable extends DbTable{
         $sql .= " ON F.CNUM = P.FM_CNUM ";
         $sql .= "  LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$REQUESTABLE_ASSET_LIST . " AS RAL ";
         $sql .= "  ON RAL.ASSET_TITLE = AR.ASSET_TITLE ";
-
 
         $sql .= " WHERE 1=1 ";
         $sql .= $bau ? " AND P.TT_BAU='BAU' " : null;
@@ -681,8 +704,6 @@ class assetRequestsTable extends DbTable{
         return $row['TICKETS'];
     }
 
-
-
     function predicateExportNonPmoRequests(){
         $predicate = " AND STATUS IN('" . assetRequestRecord::STATUS_APPROVED . "','" . assetRequestRecord::STATUS_RAISED_ORDERIT . "') AND ORDERIT_NUMBER is not NULL AND USER_CREATED='" . assetRequestRecord::CREATED_USER . "' ";
         $predicate .= " AND ORDERIT_STATUS in ('" . assetRequestRecord::STATUS_ORDERIT_RAISED . "') ";
@@ -692,12 +713,10 @@ class assetRequestsTable extends DbTable{
 
     }
 
-
     function exportForOrderIT($orderItGroup = 0){
         $rows = $this->getRequestsForOrderIt($orderItGroup);
         return $rows;
     }
-
 
     function predicateForPmoExportableRequest() {
         $predicate  = " AND  ( ";
@@ -745,6 +764,7 @@ class assetRequestsTable extends DbTable{
        <!-- Modal -->
     <div id="approveRejectModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
+          <!-- Modal content-->
           <div class="modal-content">
           <div class="modal-header">
              <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -822,6 +842,7 @@ class assetRequestsTable extends DbTable{
        <!-- Modal -->
     <div id="justificationEditModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
+          <!-- Modal content-->
           <div class="modal-content">
           <div class="modal-header">
              <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -897,6 +918,7 @@ class assetRequestsTable extends DbTable{
        <!-- Modal -->
     	<div id="confirmReturnedModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
+          <!-- Modal content-->
           <div class="modal-content">
           <div class="modal-header">
              <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -990,6 +1012,7 @@ class assetRequestsTable extends DbTable{
        <!-- Modal -->
     <div id="exportResultsModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
+          <!-- Modal content-->
           <div class="modal-content">
           <div class="modal-header">
              <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -1012,6 +1035,7 @@ class assetRequestsTable extends DbTable{
        <!-- Modal -->
     <div id="editUidModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
+          <!-- Modal content-->
           <div class="modal-content">
           <div class="modal-header">
              <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -1076,7 +1100,6 @@ class assetRequestsTable extends DbTable{
                 $form->formHiddenInput('user',$_SESSION['ssoEmail'],'user');
             ?>
 
-
              <button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
              </div>
              </form>
@@ -1094,6 +1117,7 @@ class assetRequestsTable extends DbTable{
        <!-- Modal -->
     <div id="mapVarbToOrderItModal" class="modal fade" role="dialog">
         <div class="modal-dialog modal-xl">
+          <!-- Modal content-->
           <div class="modal-content">
           <div class="modal-header">
              <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -1258,12 +1282,11 @@ class assetRequestsTable extends DbTable{
             return false;
         }
 
-
+        $data = array();
         while(($row=db2_fetch_assoc($rs))==true){
             $data[]=$row['ORDERIT_VARB_REF'];
         }
         return $data;
-
     }
 
     function getUnmappedref(){
@@ -1279,11 +1302,11 @@ class assetRequestsTable extends DbTable{
             return false;
         }
 
+        $data = array();
         while(($row=db2_fetch_assoc($rs))==true){
             $data[]=$row['REQUEST_REFERENCE'];
         }
         return $data;
-
     }
 
     function getMappedVarb(){
@@ -1299,12 +1322,11 @@ class assetRequestsTable extends DbTable{
             return false;
         }
 
-
+        $data = array();
         while(($row=db2_fetch_assoc($rs))==true){
             $data[]=$row['ORDERIT_VARB_REF'];
         }
         return $data;
-
     }
 
     function getMappedref(){
@@ -1320,14 +1342,12 @@ class assetRequestsTable extends DbTable{
             return false;
         }
 
+        $data = array();
         while(($row=db2_fetch_assoc($rs))==true){
             $data[]=$row['REQUEST_REFERENCE'];
         }
         return $data;
-
     }
-
-
 
     function setOitStatusModal(){
         ?>
@@ -1357,7 +1377,6 @@ class assetRequestsTable extends DbTable{
       </div>
     <?php
     }
-
 
     function setOrderItStatusForm(){
         $loader = new Loader();
@@ -1403,8 +1422,6 @@ class assetRequestsTable extends DbTable{
 				</select>
             	</div>
 
-
-
             	<div class='col-sm-3'>
                 <select class='form-control select select2 '
                 			  id='mappedRef'
@@ -1418,7 +1435,6 @@ class assetRequestsTable extends DbTable{
                         ?>
 				</select>
             	</div>
-
 
          		<div class='col-sm-7'>
          		</div>
@@ -1481,7 +1497,6 @@ class assetRequestsTable extends DbTable{
 
                     AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
-
                     if($rs){
                         $recordsFound = static::writeResultSetToXls($rs, $spreadsheet);
 
@@ -1530,7 +1545,7 @@ class assetRequestsTable extends DbTable{
 //             foreach ($ctbOnly as $isThisCtb){
         foreach ($age as $ageTitle => $agePredicate) {
         $sql = " SELECT AR.*, P.FIRST_NAME, P.LAST_NAME, P.NOTES_ID, P.EMAIL_ADDRESS, P.LBG_EMAIL ";
-        $sql.= ", case when EM.DESCRIPTION is not null then EM.DESCRIPTION else P.EMPLOYEE_TYPE as EMPLOYEE_TYPE ";
+        $sql.= ", CASE WHEN EM.DESCRIPTION IS NOT NULL THEN EM.DESCRIPTION ELSE P.EMPLOYEE_TYPE END AS EMPLOYEE_TYPE ";
         $sql.= ", P.CNUM, P.CT_ID, P.FM_CNUM as MGR_CNUM, FM.EMAIL_ADDRESS as MGR_EMAIL, FM.NOTES_ID as MGR_NOTESID, P.PES_STATUS, P.WORK_STREAM,P.CTB_RTB, P.TT_BAU, P.LOB, P.ROLE_ON_THE_ACCOUNT, P.CIO_ALIGNMENT, A.EMAIL_ADDRESS as APPROVER_EMAIL, A.NOTES_ID as APPROVER_NOTESID,A.WORK_STREAM as APPROVER_WORK_STREAM, A.TT_BAU as APPROVER_TT_BAU  ";
         $sql .= " FROM " . $GLOBALS['Db2Schema']. "." . allTables::$ASSET_REQUESTS  . " as AR ";
         $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema']. "." . allTables::$PERSON . " as P ";
@@ -1589,17 +1604,15 @@ class assetRequestsTable extends DbTable{
 
 
     function getVarbTracker(Spreadsheet $spreadsheet,$fullExtract = false){
-        ini_set('max_execution_time', 60);
         $recordsFound = false;
         $loader = new Loader();
-        array_map('trim',$allStatus);
+//        array_map('trim',$allStatus);
 //        $ctbOnly =  array(false,true);
         $userCreated = array(false,true);
         $sheet = 1;
 
 //         if(!empty($allStatus)){
         foreach ($userCreated as $uCreated  ) {
-            ini_set('max_execution_time', 60);
 //            foreach ($ctbOnly as $isThisCtb){
 //                 foreach ($allStatus as $key => $value) {
                     $sql = " SELECT AR.REQUEST_REFERENCE, AR.ORDERIT_NUMBER, AR.ORDERIT_VARB_REF, V.CREATED_DATE, V.CREATED_BY,AR.STATUS, AR.ORDERIT_STATUS ";
@@ -1626,6 +1639,8 @@ class assetRequestsTable extends DbTable{
 //                     $sql.= "    ) ";
 //                    $sql.= $isThisCtb ? " AND upper(P.CTB_RTB='CTB') " : " AND (upper(P.CTB_RTB != 'CTB') or P.CTB_RTB is null ) ";
                     $sql.= " ORDER BY Ar.REQUEST_REFERENCE desc ";
+                    // echo $sql;
+                    // exit;
                     $rs = db2_exec($GLOBALS['conn'], $sql);
 
                     AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
@@ -1779,7 +1794,7 @@ class assetRequestsTable extends DbTable{
         return true;
     }
 
-    function  prepareRefToOrderItMapping(){
+    function prepareRefToOrderItMapping(){
 
         if(!empty($this->preparedRefToOrderIt)){
             return $this->preparedRefToOrderIt;
@@ -2200,9 +2215,9 @@ class assetRequestsTable extends DbTable{
 
         $message = "vBAC Requests for : $actualAsset ($reference) -  has been set to $orderItStatus status in LBG.<br/>";
         $message .= !empty($comment) ? "<b>Comment</b>&nbsp;" . $comment : "&nbsp;<b>No comment was provided</b>";
-        $message .= "<br/>You can access the tool here  <a href='" . $_SERVER['HTTP_HOST'] . "/pa_assetPortal.php'  target='_blank' >vBAC Asset Portal</a>";
+        $message .= "<br/>You can access the tool here  <a href='https://" . $_SERVER['HTTP_HOST'] . "/pa_assetPortal.php'  target='_blank' >vBAC Asset Portal</a>";
 
-        \itdq\BlueMail::send_mail(array($emailAddress), 'vBAC Request : ' . $orderItStatus , $message , personRecord::$vbacNoReplyId);
+        BlueMail::send_mail(array($emailAddress), 'vBAC Request : ' . $orderItStatus , $message , personRecord::$vbacNoReplyId);
     }
 
     function setStatus($reference, $status, $comment=null,$dateReturned=null, $orderItStatus=null, $isPmo = false ){
@@ -2396,9 +2411,7 @@ class assetRequestsTable extends DbTable{
         }
 
         $dataAndSql = $this->returnForPortal(null,self::RETURN_WITHOUT_BUTTONS);
-        $data = $dataAndSql['data'];
-        $sql  = $dataAndSql['sql'];
-
+        list('data' => $data, 'sql' => $sql) = $dataAndSql;
 
         foreach ($data as $key => $record){
             $assetRequests[$record['EMAIL_ADDRESS']][$record['ASSET']] = $record;
@@ -2408,7 +2421,7 @@ class assetRequestsTable extends DbTable{
 
         <div class='container-fluid'>
 
-        <table class='table table-striped table-bordered compact' >
+        <table class='table table-striped table-bordered compact' style='width:100%'>
         <thead>
         <tr>
         <th>IBMer</th>
@@ -2470,9 +2483,9 @@ class assetRequestsTable extends DbTable{
 
 
     function notifyApprovingMgr(array $approvingMgr){
-        $notifyApprovingMgr = "Requests have been created in vBAC that require your approval.<br/>You can access the tool here  <a href='" . $_SERVER['HTTP_HOST'] . "/pa_assetPortal.php'  target='_blank' >vBAC Asset Portal</a>";
+        $notifyApprovingMgr = "Requests have been created in vBAC that require your approval.<br/>You can access the tool here  <a href='https://" . $_SERVER['HTTP_HOST'] . "/pa_assetPortal.php'  target='_blank' >vBAC Asset Portal</a>";
 
-        \itdq\BlueMail::send_mail($approvingMgr, 'vBAC Approval Required', $notifyApprovingMgr, personRecord::$vbacNoReplyId);
+        BlueMail::send_mail($approvingMgr, 'vBAC Approval Required', $notifyApprovingMgr, personRecord::$vbacNoReplyId);
     }
 
 
@@ -2485,10 +2498,10 @@ class assetRequestsTable extends DbTable{
         $listOfAssetRefs = implode("','", $assetReferences);
 
         $sql  = "select ar.request_reference, ar.asset_title, ARL.asset_prerequisite, AR2.REQUEST_REFERENCE as pre_req ";
-        $sql .= "from " . $GLOBALS['Db2Schema'] . "." . \vbac\allTables::$ASSET_REQUESTS . " as AR  ";
-        $sql .= "left join " . $GLOBALS['Db2Schema'] .  "." . \vbac\allTables::$REQUESTABLE_ASSET_LIST . " as ARL  ";
+        $sql .= "from " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR  ";
+        $sql .= "left join " . $GLOBALS['Db2Schema'] .  "." . allTables::$REQUESTABLE_ASSET_LIST . " as ARL  ";
         $sql .= "on AR.ASSET_TITLE = ARL.ASSET_TITLE  ";
-        $sql .= "left join " . $GLOBALS['Db2Schema'] . "." . \vbac\allTables::$ASSET_REQUESTS . " as AR2  ";
+        $sql .= "left join " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR2  ";
         $sql .= "on ARL.ASSET_PREREQUISITE = AR2.ASSET_TITLE  ";
         $sql .= "where AR.request_reference in ('" . $listOfAssetRefs . "')  ";
         $sql .= "and AR2.request_reference in ('" . $listOfAssetRefs  . "')  ";
@@ -2548,7 +2561,6 @@ class assetRequestsTable extends DbTable{
         AuditTable::audit("Prepare SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>prepared sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
         $rs = db2_prepare($GLOBALS['conn'], $sql);
-
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -2611,7 +2623,7 @@ class assetRequestsTable extends DbTable{
          $replacements = array($reference, $assetTitle, $status, $comment, $varbRef, $orderIt, $vStatus, $orderItStatus);
          $message = preg_replace(self::$statusChangeEmailPattern, $replacements, self::$statusChangeEmail);
 
-         \itdq\BlueMail::send_mail($requestee, "vBAC Request :$reference ($assetTitle ) - Status Change($status)", $message, personRecord::$vbacNoReplyId,$requestor);
+         BlueMail::send_mail($requestee, "vBAC Request :$reference ($assetTitle ) - Status Change($status)", $message, personRecord::$vbacNoReplyId,$requestor);
      }
 
 

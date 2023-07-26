@@ -1,5 +1,6 @@
 <?php
 namespace itdq;
+use itdq\DbTable;
 
 /**
  * This class knows how to call a SELECT against a Table or View and display all the columns that are returned to it.

@@ -6,7 +6,6 @@ use vbac\allTables;
 
 ob_start();
 
-
 $_SESSION['ssoEmail'] = $_SESSION['ssoEmail'];
 
 ini_set('display_errors',1);

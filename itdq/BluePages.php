@@ -12,8 +12,6 @@ class BluePages {
 		return $cleanId;
 	}
 
-
-
 	static function getDetailsFromCnumSlapMulti($cnumArray,$parms="&uid&dept&div&cr&notesId&mail&managerSerialNumber&managerCountryCode&notesEmail&isManager"){
 	    $startTime = microtime(true);
 	    set_time_limit(120);
@@ -459,7 +457,6 @@ class BluePages {
 			}
 		}
 	}
-
 
 	function saveDeptToDb() {
 		if (isset ( $this->dept )) {

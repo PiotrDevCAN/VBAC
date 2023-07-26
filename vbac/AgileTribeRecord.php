@@ -2,9 +2,6 @@
 namespace vbac;
 
 use itdq\DbRecord;
-use itdq\Loader;
-use itdq\JavaScript;
-use itdq\AuditTable;
 use itdq\FormClass;
 
 
@@ -16,7 +13,6 @@ class AgileTribeRecord extends DbRecord {
     protected $ORGANISATION;
     protected $ITERATION_MGR;
 
-
     function displayForm($mode,$version=null){
         $notEditable = $mode == FormClass::$modeEDIT ? ' disabled ' : '';
         $nextAvailableTribeNumber = AgileTribeTable::nextAvailableTribeNumber($version);
@@ -27,7 +23,7 @@ class AgileTribeRecord extends DbRecord {
          <div class="form-group required" >
             <label for='TRIBE_NUMBER' class='col-sm-2 control-label ceta-label-left' data-toggle='tooltip' data-placement='top' title='Tribe Number'>Tribe Number</label>
         	<div class='col-md-4'>
-				<input id='TRIBE_NUMBER' name='TRIBE_NUMBER' class='form-control' type='number'  <?=$notEditable;?> value='<?=!empty($this->TRIBE_NUMBER) ? $this->TRIBE_NUMBER :$nextAvailableTribeNumber ; ?>' />
+				<input id='TRIBE_NUMBER' name='TRIBE_NUMBER' class='form-control' type='number'  <?=$notEditable;?> value='<?=!empty($this->TRIBE_NUMBER) ? $this->TRIBE_NUMBER :$nextAvailableTribeNumber ; ?>' placeholder="Tribe Number"/>
             </div>
         </div>
         <div class="form-group " >
@@ -45,25 +41,23 @@ class AgileTribeRecord extends DbRecord {
             </div>
         </div>
 
-
-
         <div class="form-group required " >
             <label for='TRIBE_NAME' class='col-sm-2 control-label ceta-label-left' data-toggle='tooltip' data-placement='top' title='Full Name'>Tribe Name</label>
         	<div class='col-md-4'>
-				<input id='TRIBE_NAME' name='TRIBE_NAME' class='form-control' value='<?=!empty($this->TRIBE_NAME) ? $this->TRIBE_NAME :null ; ?>' />
+				<input id='TRIBE_NAME' name='TRIBE_NAME' class='form-control' value='<?=!empty($this->TRIBE_NAME) ? $this->TRIBE_NAME :null ; ?>' placeholder="Tribe Name"/>
             </div>
         </div>
         <div class="form-group " >
             <label for='TRIBE_LEADER' class='col-sm-2 control-label ceta-label-left' data-toggle='tooltip' data-placement='top' title='Tribe Leader'>Tribe Leader</label>
         	<div class='col-md-4'>
-				<input id='TRIBE_LEADER' name='TRIBE_LEADER' class='form-control typeaheadNotesId' value='<?=!empty($this->TRIBE_LEADER) ? $this->TRIBE_LEADER :null ; ?>'/>
+				<input id='TRIBE_LEADER' name='TRIBE_LEADER' class='form-control typeaheadNotesId' value='<?=!empty($this->TRIBE_LEADER) ? $this->TRIBE_LEADER :null ; ?>' placeholder="Tribe Leader"/>
             </div>
         </div>
         
         <div class="form-group required " >
             <label for='ITERATION_MGR' class='col-sm-2 control-label ceta-label-left' data-toggle='tooltip' data-placement='top' title='Iteration Manager'>Iteration Manager</label>
         	<div class='col-md-4'>
-				<input id='ITERATION_MGR' name='ITERATION_MGR' class='form-control typeaheadNotesId' value='<?=!empty($this->ITERATION_MGR) ? $this->ITERATION_MGR :null ; ?>'/>
+				<input id='ITERATION_MGR' name='ITERATION_MGR' class='form-control typeaheadNotesId' value='<?=!empty($this->ITERATION_MGR) ? $this->ITERATION_MGR :null ; ?>' placeholder="Iteration Manager"/>
             </div>
         </div>
         

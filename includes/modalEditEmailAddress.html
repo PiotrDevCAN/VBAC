@@ -1,0 +1,40 @@
+<!-- Modal -->
+<div id="editEmailAddressModal" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <form id='editEmailAddressForm' class="form-horizontal" method='post'>
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Edit Email Address</h4>
+        </div>
+        <div class="modal-body">
+          <div class="container-fluid"> 
+            <input type="hidden" id="eam_field" name="eam_field" value='' >
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">Employee Details</h3>
+              </div>
+              <div class="panel-body">
+                <div class='form-group'>
+                  <div class='col-sm-6'>
+                    <input class="form-control" id="eam_cnum" name="eam_cnum" value="" type="text"
+                      placeholder='CNUM' readonly>
+                  </div>
+                  <div class='col-sm-6'>
+                    <input class="form-control" id="eam_email" name="eam_email" value="" type="text"
+                      placeholder='Email Address'>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class='modal-footer'>
+          <input class="btn btn-success" type="submit" name="Submit" id="updateEmailAddress" value="Update">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>    
+      </form>
+    </div>
+  </div>
+</div>

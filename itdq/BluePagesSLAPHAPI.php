@@ -600,7 +600,6 @@ class BluePagesSLAPHAPI {
 		}
 	}
 
-
 	function saveDeptToDb() {
 		if (isset ( $this->dept )) {
 		//	$sql = " INSERT INTO " . $_SESSION ['prefix'] . "." . $this->table . " ( NAME, SERIAL, COUNTRY_CODE, LOCATION, MGR_SERIAL, MGR_CTRY_CODE, REG_OR_SUBCO, INTERNET, EMPTYPE, HRACTIVE, HREMPLOYEETYPE, DEPT, HRFAMILYNAME, NOTESID, JOBRESPONSIB) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)  ";
@@ -825,7 +824,7 @@ class BluePagesSLAPHAPI {
 
 	static function getOceanDetailsFromCNUM($cnum){
 	    $urlTemplate = self::$slaphapiUrl . "?" . self::$objectIbmPerson . "/";
-	    $urlTemplate .= "(additional=*;" . $cnum . ";*)(mail=*ocean*)";
+		$urlTemplate .= "(additional=*" . trim($cnum) . ";*)(mail=*ocean*)";
 		$urlTemplate .= "." . self::$verbSearch . "/" . self::$adverbByxml;
 
 		return self::getBPDetailsFromTemplate($urlTemplate);
@@ -849,7 +848,7 @@ class BluePagesSLAPHAPI {
 
 	static function getIBMDetailsFromCNUM($cnum){
 		$urlTemplate = self::$slaphapiUrl . "?" . self::$objectIbmPerson . "/";
-	    $urlTemplate .= "(cnum=" . $cnum . ")";
+	    $urlTemplate .= "(UID=" . trim($cnum) . ")";
 		$urlTemplate .= "." . self::$verbSearch . "/" . self::$adverbByxml;
 
 		return self::getBPDetailsFromTemplate($urlTemplate);

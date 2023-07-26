@@ -9,9 +9,11 @@ use itdq\BlueMail;
 use itdq\Loader;
 
 class pesEmail {
-    
     const EMAIL_PES_SUPRESSABLE = true;
     const EMAIL_NOT_PES_SUPRESSABLE = false;
+    const FILE_TYPE_WORD = 'application/msword';
+    const FILE_TYPE_PDF = 'application/pdf';
+    const FILE_TYPE_XLS = 'application/xls';
 
     private function getLloydsGlobalApplicationForm(){
         // FSS Global Application Form v2.0.doc
@@ -71,77 +73,125 @@ class pesEmail {
         return $ibmEmail ? 'Internal' : 'External';
     }
 
-    private function getAttachments($intExt,$emailType){
+
+    private function getAttachments($intExt, $emailType, $attachFiles = true){
         switch (true) {
             case $intExt=='External' && $emailType=='UK':
             case $intExt=='Internal' && $emailType=='UK':
-                $pesAttachments = array('../emailAttachments/FSS Global Application Form v2.0.doc');
+                $pesAttachmentsFileNames = array(
+                    '../emailAttachments/FSS Global Application Form v2.0.doc'
+                );
                 break;
             case $intExt=='External' && $emailType=='India':
-                $pesAttachments = array('../emailAttachments/ODC application form v3.0.xls'
-                                       ,'../emailAttachments/FSS Global Application Form v2.0.doc');
+                $pesAttachmentsFileNames = array(
+                    '../emailAttachments/ODC application form v3.0.xls',
+                    '../emailAttachments/FSS Global Application Form v2.0.doc'
+                );
                 break;
             case $intExt=='Internal' && $emailType=='India':
-                $pesAttachments = array('../emailAttachments/FSS Global Application Form v2.0.doc'
-                                       ,'../emailAttachments/ODC application form v3.0.xls');
+                $pesAttachmentsFileNames = array(
+                    '../emailAttachments/FSS Global Application Form v2.0.doc',
+                    '../emailAttachments/ODC application form v3.0.xls'
+                );
                 break;
             case $emailType=='Czech':
-                $pesAttachments = array('../emailAttachments/FSS Global Application Form v2.0.doc');
+                $pesAttachmentsFileNames = array(
+                    '../emailAttachments/FSS Global Application Form v2.0.doc'
+                );
                 break;
             case $emailType=='USA':
             case $intExt=='Internal' && $emailType=='International_CRC':
             case $intExt=='Internal' && $emailType=='International_Credit_Check':
-                $pesAttachments = array('../emailAttachments/FSS Global Application Form v2.0.doc'
-                                       ,'../emailAttachments/New Overseas Consent Form GDPR.pdf');
+                $pesAttachmentsFileNames = array(
+                    '../emailAttachments/FSS Global Application Form v2.0.doc',
+                    '../emailAttachments/New Overseas Consent Form GDPR.pdf'
+                );
                 break;
             case $emailType=='core_4':
-                $pesAttachments = array('../emailAttachments/FSS Global Application Form v2.0.doc');
+                $pesAttachmentsFileNames = array(
+                    '../emailAttachments/FSS Global Application Form v2.0.doc'
+                );
                 break;
             default:
                 throw new \Exception('No matches found for ' . $intExt . ' and ' . $emailType, 803);
                 break;
         }
 
-        return $pesAttachments;
+        if ($attachFiles) {
+            $pesAttachments = array();
+            foreach($pesAttachmentsFileNames as $pesAttachmentFileName) {
+                $pesAttachments[] = $this->getAttachmentFile($pesAttachmentFileName);
+            }
+        } else {
+            $pesAttachments = array();
+        }
+
+        return array(
+            'attachments' => $pesAttachments,
+            'attachmentFileNames' => $pesAttachmentsFileNames
+        );
     }
     
-    private function getRecheckAttachments($recheckEmailFileName=null){
+    private function getRecheckAttachments($recheckEmailFileName=null, $attachFiles = true){
         switch ($recheckEmailFileName) {
             case 'recheck_L1_Core4.php':            
-                $pesAttachments = array('../emailAttachments/FSS Global Application Form v2.0.doc');
+                $pesAttachmentsFileNames = array(
+                    '../emailAttachments/FSS Global Application Form v2.0.doc'
+                );
                 break;
             case 'recheck_L1_India_Non_Core4.php':
-                $pesAttachments = array('../emailAttachments/FSS Global Application Form v2.0.doc'
-                                       ,'../emailAttachments/ODC application form v3.0.xls'
-                                       ,'../emailAttachments/Owens Consent Form.pdf');
+                $pesAttachmentsFileNames = array(
+                    '../emailAttachments/FSS Global Application Form v2.0.doc',
+                    '../emailAttachments/ODC application form v3.0.xls',
+                    '../emailAttachments/Owens Consent Form.pdf'
+                );
                 break;
             case 'recheck_L1_UK.php':
-                $pesAttachments = array('../emailAttachments/FSS Global Application Form v2.0.doc');
+                $pesAttachmentsFileNames = array(
+                    '../emailAttachments/FSS Global Application Form v2.0.doc'
+                );
                 break;
             case 'recheck_L2_Core4.php':
-                $pesAttachments = array('../emailAttachments/FSS Global Application Form v2.0.doc');
+                $pesAttachmentsFileNames = array(
+                    '../emailAttachments/FSS Global Application Form v2.0.doc'
+                );
                 break;
             case 'recheck_L2_India_Non_Core4.php':
-                $pesAttachments = array('../emailAttachments/FSS Global Application Form v2.0.doc'
-                                       ,'../emailAttachments/ODC application form v3.0.xls'
-                                       ,'../emailAttachments/Owens Consent Form.pdf');
+                $pesAttachmentsFileNames = array(
+                    '../emailAttachments/FSS Global Application Form v2.0.doc',
+                    '../emailAttachments/ODC application form v3.0.xls',
+                    '../emailAttachments/Owens Consent Form.pdf'
+                );
                 break;
             case 'recheck_L2_UK.php':
-                $pesAttachments = array('../emailAttachments/FSS Global Application Form v2.0.doc');
+                $pesAttachmentsFileNames = array(
+                    '../emailAttachments/FSS Global Application Form v2.0.doc'
+                );
                 break;
             case 'recheck_offboarded.php':
-                $pesAttachments = null;
+                $pesAttachmentsFileNames = null;
                 break;
             default:
                 throw new \Exception('No matches found for ' . $recheckEmailFileName, 804);
                 break;
         }
-        
-        return $pesAttachments;
-    }
-    
 
-    function getEmailDetails($emailAddress, $country,$openSeat=null,$recheck='no'){
+        if ($attachFiles) {
+            $pesAttachments = array();
+            foreach($pesAttachmentsFileNames as $pesAttachmentFileName) {
+                $pesAttachments[] = $this->getAttachmentFile($pesAttachmentFileName);
+            }
+        } else {
+            $pesAttachments = array();
+        }
+
+        return array(
+            'attachments' => $pesAttachments,
+            'attachmentFileNames' => $pesAttachmentsFileNames
+        );
+    }
+
+    function getEmailDetails($emailAddress, $country, $openSeat=null, $recheck='no', $attachFiles = true){
         
         $revalidationStatus = personTable::getRevalidationFromCnum(null, $emailAddress);
         
@@ -177,8 +227,6 @@ class pesEmail {
             $pesEmail = trim($row[$emailField]);
         }
         
-
-
         if(empty($pesEmail)){
             throw new \Exception("$emailField not defined for country : " . $country,800);
         }
@@ -187,7 +235,7 @@ class pesEmail {
             case true :                
                 $pesLevelOrig = personTable::getPesLevelFromEmail($emailAddress);
                 $pesLevel = str_replace('evel ', '', trim($pesLevelOrig)); // Condense to L1, L2 etc.
-                $pesEmailBodyFilename = str_replace('xx', $pesLevel,$pesEmail);
+                $pesEmailBodyFileName = str_replace('xx', $pesLevel,$pesEmail);
                 $emailType=null;
                 $results = null;
                 break;
@@ -198,14 +246,14 @@ class pesEmail {
                 switch ($locationType) {
                     case 'xxx':
                         // Need to know if Internal or External
-                        $pesEmailBodyFilename = $intExt . "-" . $emailType . ".php";
+                        $pesEmailBodyFileName = $intExt . "-" . $emailType . ".php";
                         break;
                     case 'unknown':
                         throw new \Exception('No email defined for ' . $country, 801);
                         break;
                     default:
                         // We don't need to further clarify the PES EMAIL Body file;
-                        $pesEmailBodyFilename = $pesEmail;
+                        $pesEmailBodyFileName = $pesEmail;
                         break;
                 }
                 break;
@@ -214,40 +262,126 @@ class pesEmail {
                 break;
         }
         
-        $attachments = $recheck=='yes' ? $this->getRecheckAttachments($pesEmailBodyFilename) :  $this->getAttachments($intExt, $emailType);
+        $attachmentsData = $recheck=='yes' ? $this->getRecheckAttachments($pesEmailBodyFileName, $attachFiles) :  $this->getAttachments($intExt, $emailType, $attachFiles);
+        list('attachments' => $attachments, 'attachmentFileNames' => $attachmentFileNames) = $attachmentsData;
 
-        return array('filename'=> $pesEmailBodyFilename, 'attachments'=>$attachments, 'attachmentFileNames'=> $attachments,'emailType'=>$emailType,'splitResults'=>$results);
+        return array(
+            'filename' => $pesEmailBodyFileName, 
+            'attachments' => $attachments, 
+            'attachmentFileNames' => $attachmentFileNames, 
+            'emailType' =>$emailType, 
+            'splitResults' => $results
+        );
     }
 
 
+    private static function getApplicationFormFile($fileName)
+    {
+        $handle = fopen($fileName, "r", true);
+        $applicationForm = fread($handle, filesize($fileName));
+        fclose($handle);
+        return base64_encode($applicationForm);
+    }
+
+
+    private static function getXlsApplicationFormFile($fileName)
+    {
+        $inputFileName = $fileName;
+
+        /** Load $inputFileName to a Spreadsheet Object  **/
+        $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($inputFileName);
+
+        // $spreadsheet = new Spreadsheet();
+        // Set document properties
+        $spreadsheet->getProperties()->setCreator('vBAC')
+            ->setLastModifiedBy('vBAC')
+            ->setTitle('PES Application Form generated by vBAC')
+            ->setSubject('PES Application')
+            ->setDescription('PES Application Form generated by vBAC')
+            ->setKeywords('office 2007 openxml php vbac tracker')
+            ->setCategory('category');
+
+        $spreadsheet->getActiveSheet()
+            ->getCell('C17')
+            ->setValue('Emp no. here');
+
+        $spreadsheet->setActiveSheetIndex(0);
+        // ob_clean();
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        ob_start();
+        $writer->save('php://output');
+        $xlsAttachment = ob_get_clean();
+
+        return base64_encode($xlsAttachment);
+    }
+
+    function getAttachmentFile($fileName = ''){
+        $fileNameShort = str_replace('../emailAttachments/', '' ,$fileName);
+        $fileExtension = substr($fileName, -3);
+        $contentType = '';
+        $encodedAttachmentFile = null;
+        $directoryPath = $fileName;
+        switch($fileExtension) {
+            case 'pdf':
+                $contentType = self::FILE_TYPE_PDF;
+                $encodedAttachmentFile = self::getApplicationFormFile($fileName);
+                break;
+            case 'doc':
+                $contentType = self::FILE_TYPE_WORD;
+                $encodedAttachmentFile = self::getApplicationFormFile($fileName);
+                break;
+            case 'xls':
+                $contentType = self::FILE_TYPE_XLS;
+                $encodedAttachmentFile = self::getXlsApplicationFormFile($fileName);
+                break;
+            default:
+                break;
+        }
+        if (!empty($fileName)) {
+            $data = array(
+                'filename' => $fileNameShort,
+                'content_type' => $contentType,
+                'data' => $encodedAttachmentFile,
+                'path' => $directoryPath
+            );
+        } else {
+            $data = array();
+        }
+        return $data;
+    }
+
     function sendPesEmail($firstName, $lastName, $emailAddress, $country, $openseat, $cnum,$recheck='no'){
-            $emailDetails = $this->getEmailDetails($emailAddress, $country,null,$recheck);
-            
-            $emailBodyFileName = $emailDetails['filename'];
-            $pesAttachments = isset($emailDetails['attachments']) ? $emailDetails['attachments'] : array();
-            $pesTaskId = personRecord::getPesTaskId();
-            $replacements = array($firstName, $openseat, $pesTaskId);
 
-            $pesEmailPattern =""; // It'll get set by the include_once, but this stops IDE flagging a warning.
-            $pesEmail="";         // It'll get set by the include_once, but this stops IDE flagging a warning.
-            
-            include_once 'emailBodies/' . $emailBodyFileName;
-            $emailBody = preg_replace($pesEmailPattern, $replacements, $pesEmail);
+        $emailDetailsData = $this->getEmailDetails($emailAddress, $country, null, $recheck, true);
+        list('filename' => $filename, 'attachments' => $attachments, 'attachmentFileNames' => $attachmentFileNames) = $emailDetailsData;
 
-            $revalidation = $recheck=='yes' ? " - REVALIDATION " : "";
-            
-            $sendResponse = BlueMail::send_mail(array($emailAddress), "NEW URGENT - Pre Employment Screening $revalidation - $cnum : $firstName, $lastName", $emailBody, $pesTaskId, array(), array(),false,$pesAttachments, pesEmail::EMAIL_PES_SUPRESSABLE);
-            return $sendResponse;
+        $emailBodyFileName = $filename;
+        $pesAttachments = isset($attachments) ? $attachments : array();
 
+        $pesTaskId = personRecord::getPesTaskId();
+        $replacements = array($firstName, $openseat, $pesTaskId);
+
+        $pesEmailPattern =""; // It'll get set by the include_once, but this stops IDE flagging a warning.
+        $pesEmail="";         // It'll get set by the include_once, but this stops IDE flagging a warning.
+        
+        include_once 'emailBodies/' . $emailBodyFileName;
+        $emailBody = preg_replace($pesEmailPattern, $replacements, $pesEmail);
+
+        $revalidation = $recheck=='yes' ? " - REVALIDATION " : "";
+        
+        $sendResponse = BlueMail::send_mail(array($emailAddress), "NEW URGENT - Pre Employment Screening $revalidation - $cnum : $firstName, $lastName", $emailBody, $pesTaskId, array(), array(),false,$pesAttachments, pesEmail::EMAIL_PES_SUPRESSABLE);
+        // $sendResponse = BlueMail::send_mail(array($emailAddress), "NEW URGENT - Pre Employment Screening $revalidation - $cnum : $firstName, $lastName", $emailBody, $pesTaskId, array(), array(),false,$pesAttachments, pesEmail::EMAIL_NOT_PES_SUPRESSABLE);
+        return $sendResponse;
     }
 
     function sendPesEmailChaser($cnum, $emailAddress, $chaserLevel, $flm){
 
         $pesEmailPattern = array(); // Will be overridden when we include_once from emailBodies later.
-        $pesEmail = null;          // Will be overridden when we include_once from emailBodies later.
+        // $pesEmail = null;          // Will be overridden when we include_once from emailBodies later.
+        $pesEmail = '';          // Will be overridden when we include_once from emailBodies later.
         $names = personTable::getNamesFromCnum($cnum);
-        $firstName = $names['FIRST_NAME'];
-        $lastName = $names['LAST_NAME'];
+        list('FIRST_NAME' => $firstName, 'LAST_NAME' => $lastName) = $names;
+
         $pesTaskId = personRecord::getPesTaskId();
 
         $emailBodyFileName = 'chaser' . trim($chaserLevel) . ".php";
@@ -257,15 +391,15 @@ class pesEmail {
         $emailBody = preg_replace($pesEmailPattern, $replacements, $pesEmail);
         
         $sendResponse = BlueMail::send_mail(array($emailAddress), "Reminder- Pre Employment Screening - $cnum : $firstName, $lastName", $emailBody, $pesTaskId, array($flm),array(),true, array(),pesEmail::EMAIL_PES_SUPRESSABLE);
+        // $sendResponse = BlueMail::send_mail(array($emailAddress), "Reminder- Pre Employment Screening - $cnum : $firstName, $lastName", $emailBody, $pesTaskId, array($flm),array(),true, array(),pesEmail::EMAIL_NOT_PES_SUPRESSABLE);
         return $sendResponse;
-
-
     }
 
     function sendPesProcessStatusChangedConfirmation($cnum, $firstName, $lastName, $emailAddress, $processStatus, $flm=null){
 
         $pesEmailPattern = array(); // Will be overridden when we include_once from emailBodies later.
-        $pesEmail = null;          // Will be overridden when we include_once from emailBodies later.
+        // $pesEmail = null;          // Will be overridden when we include_once from emailBodies later.
+        $pesEmail = '';          // Will be overridden when we include_once from emailBodies later.
 
         $pesTaskId = personRecord::getPesTaskId();
 
@@ -278,12 +412,9 @@ class pesEmail {
         $flmArray = empty($flm) ? array() : array($flm);
 
         $sendResponse = BlueMail::send_mail(array($emailAddress), "Status Change - Pre Employment Screening - $cnum : $firstName, $lastName", $emailBody, $pesTaskId, $flmArray, array(), true,  array(), pesEmail::EMAIL_PES_SUPRESSABLE);
+        // $sendResponse = BlueMail::send_mail(array($emailAddress), "Status Change - Pre Employment Screening - $cnum : $firstName, $lastName", $emailBody, $pesTaskId, $flmArray, array(), true,  array(), pesEmail::EMAIL_NOT_PES_SUPRESSABLE);
         return $sendResponse;
-
-
     }
-
-
     static function notifyPesTeamOfUpcomingRechecks($detialsOfPeopleToBeRechecked=null){
 
         $now = new \DateTime();
@@ -308,8 +439,6 @@ class pesEmail {
         $sendResponse = BlueMail::send_mail(array($pesTaskId), "Upcoming Rechecks", $emailBody, $pesTaskId);
         return $sendResponse;
     }
-
-
     static function notifyPesTeamNoUpcomingRechecks(){
 
         $now = new \DateTime();
@@ -326,8 +455,6 @@ class pesEmail {
         $sendResponse = BlueMail::send_mail(array($pesTaskId), "Upcoming Rechecks-None", $emailBody, $pesTaskId);
         return $sendResponse;
     }
-
-
     static function notifyPesTeamOfLeavers(array $leavers){
         $loader = new Loader();
         $now = new \DateTime();
@@ -357,7 +484,6 @@ class pesEmail {
 
         return BlueMail::send_mail(array($pesTaskId), "vBAC Leavers", $pesEmail, $pesTaskId);
     }
-
     static function notifyPesTeamOfOffboarding($cnum, $revalidationStatusWas, $notesId){
         $loader = new Loader();
         $now = new \DateTime();
@@ -414,6 +540,8 @@ class pesEmail {
         $loader = new Loader();
         $now = new \DateTime();
         $pesEmail = null;          // Will be overridden when we include_once from emailBodies later.
+
+        $pesTaskId = personRecord::getPesTaskId();
 
         $cnumPredicate = " CNUM = '" . trim($cnum) . "' ";
         $allPesStatus = $loader->loadIndexed('PES_STATUS','CNUM',allTables::$PERSON,$cnumPredicate);

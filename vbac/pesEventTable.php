@@ -2,7 +2,6 @@
 namespace vbac;
 
 use itdq\DbTable;
-use itdq\Loader;
 use vbac\pesEventRecord;
 
 class pesEventTable extends DbTable{
@@ -43,7 +42,7 @@ class pesEventTable extends DbTable{
         $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
 
         foreach ($allEvents as $element => $event_title) {
-            $sql .= " left join " . $GLOBALS['Db2Schema'] . "." . \vbac\allTables::$PES_EVENTS . " as PE$element ";
+            $sql .= " left join " . $GLOBALS['Db2Schema'] . "." . allTables::$PES_EVENTS . " as PE$element ";
             $sql .= " ON P.CNUM = PE$element.CNUM AND PE$element.EVENT='$event_title' ";
         }
 

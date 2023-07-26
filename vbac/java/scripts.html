@@ -1,14 +1,195 @@
-<script type="text/javascript" src="vbac/java/agileTribe.js"></script>
-<script type="text/javascript" src="vbac/java/agileSquad.js"></script>
-<script type="text/javascript" src="vbac/java/personRecord.js"></script>
-<script type="text/javascript" src="vbac/java/personPortalLite.js"></script>
-<script type="text/javascript" src="vbac/java/pesEvent.js"></script>
-<script type="text/javascript" src="vbac/java/delegate.js"></script>
-<script type="text/javascript" src="vbac/java/requestableAsset.js"></script>
-<script type="text/javascript" src="vbac/java/staticDataTable.js"></script>
-<script type="text/javascript" src="vbac/java/assetRequest.js"></script>
-<script type="text/javascript" src="vbac/java/assetPortal.js"></script>
-<script type="text/javascript" src="vbac/java/dlp.js"></script>
-<script type="text/javascript" src="vbac/java/workLocation.js"></script>
-<script type="text/javascript" src="vbac/java/typeahead.js"></script>
+<?php
 
+function get_page_mod_time() {
+    $incls = get_included_files();
+    $incls = array_filter($incls, "is_file");
+    $mod_times = array_map('filemtime', $incls);
+    $mod_time = max($mod_times);
+    
+    return $mod_time;
+}
+
+// $hash = `git log -1 --pretty=%h`;
+// $hash = rand(10,100);
+
+$hashMain = date("d F Y", get_page_mod_time());
+$hash = sha1($hashMain);
+$hash = substr($hash, 0, 7);
+?>
+
+<script type="text/javascript">
+    var VERSION = '<?=$hash;?>';
+    var xhrPool = [];
+</script>
+<script type="module" src="vbac/java/versioning.js?<?=$hash;?>"></script>
+<script type="module" src="vbac/java/modules/helper.js?<?=$hash;?>"></script>
+<script type="text/javascript" src="vbac/java/typeahead.js?<?=$hash;?>"></script>
+<script type="text/javascript" src="vbac/java/staticDataTable.js?<?=$hash;?>"></script>
+
+<?php
+
+$file = $_SERVER['PHP_SELF'];
+
+$isIndex = strpos($file, 'index.php') !== false;
+
+// boarding section
+$isOnBoarding = strpos($file, 'pb_onboard.php') !== false;
+$isOffBoarding = strpos($file, 'pb_offboard.php') !== false;
+
+$isOnBoardingWithcFirst = strpos($file, 'cdi_test_first_form.php') !== false;
+
+// admin section
+$isPMOFull = strpos($file, 'pa_pmo.php') !== false;
+$isPMOArchive = strpos($file, 'pa_pmo_archive.php') !== false;
+$isPMOLite = strpos($file, 'pa_pmo_lite.php') !== false;
+$isPMOLinked = strpos($file, 'pa_pmoLinked.php') !== false;
+$isPersonFinder = strpos($file, 'pa_personFinder.php') !== false;
+$isRequestableAsset = strpos($file, 'pa_requestableAssets.php') !== false;
+$isDelegate = strpos($file, 'pc_delegate.php') !== false;
+$isAgileTribes = strpos($file, 'pa_agileTribes.php') !== false;
+$isAgileSquads = strpos($file, 'pa_agileSquads.php') !== false;
+$isSquadALog = strpos($file, 'pa_squadalog.php') !== false;
+$isPESTracker = strpos($file, 'pc_pesTracker.php') !== false;
+$isPESStatusChange = strpos($file, 'pr_pesStatusChangeReport.php') !== false;
+$isStatusUpdate = strpos($file, 'pa_statusUpdate.php') !== false;
+$isWorklocation = strpos($file, 'pi_manageLocation.php') !== false;
+$isSkillSet = strpos($file, 'pi_manageSkillset.php') !== false;
+$isRingFencing = strpos($file, 'pa_ringFencing.php') !== false;
+$isLinkIbmerToPreboarder = strpos($file, 'pi_linkIbmerToPreboarder.php') !== false;
+
+// assets section
+$isAssetRequest = strpos($file, 'pc_assetRequest.php') !== false;
+$isAssetPortal = strpos($file, 'pa_assetPortal.php') !== false;
+$isAssetReturn = strpos($file, 'pc_assetReturn.php') !== false;
+$isDLPLicences = strpos($file, 'pc_dlpRecord.php') !== false;
+
+switch (true) {
+    case $isIndex:
+        ?>
+            <script type="module" src="vbac/java/index.js?<?=$hash;?>"></script>
+        <?php
+        break;
+    case $isOnBoarding:
+        ?>
+            <script type="module" src="vbac/java/boarding/onBoarding.js?<?=$hash;?>"></script>
+        <?php
+        break;
+    case $isOnBoardingWithcFirst:
+        ?>
+            <script type="module" src="vbac/java/boarding/onBoardingWithCFirst.js?<?=$hash;?>"></script>
+        <?php
+        break;
+    case $isOffBoarding:
+        ?>
+            <script type="module" src="vbac/java/boarding/offBoarding.js?<?=$hash;?>"></script>
+        <?php
+        break;
+    case $isPMOFull:
+        ?>
+            <script type="module" src="vbac/java/admin/personPortal.js?<?=$hash;?>"></script>
+        <?php
+        break;
+    case $isPMOArchive:
+        ?>
+            <script type="module" src="vbac/java/admin/personPortalArchive.js?<?=$hash;?>"></script>
+        <?php
+        break;
+    case $isPMOLite:
+        ?>
+            <script type="module" src="vbac/java/admin/personPortalLite.js?<?=$hash;?>"></script>
+        <?php
+        break;
+    case $isPMOLinked:
+        ?>
+            <script type="module" src="vbac/java/admin/personPortalLinked.js?<?=$hash;?>"></script>
+        <?php
+        break;
+    case $isPersonFinder:
+        ?>
+            <script type="module" src="vbac/java/admin/personFinder.js?<?=$hash;?>"></script>
+        <?php
+        break;
+    case $isRequestableAsset:
+        ?>
+            <script type="module" src="vbac/java/admin/requestableAsset.js?<?=$hash;?>"></script>
+        <?php
+        break;
+    case $isDelegate:
+        ?>
+            <script type="module" src="vbac/java/admin/delegate.js?<?=$hash;?>"></script>
+        <?php
+        break;
+    case $isAgileTribes:
+        ?>
+            <script type="module" src="vbac/java/admin/agileTribe.js?<?=$hash;?>"></script>
+        <?php
+        break;
+    case $isAgileSquads:
+        ?>
+            <script type="module" src="vbac/java/admin/agileSquad.js?<?=$hash;?>"></script>
+        <?php
+        break;
+    case $isSquadALog:
+        ?>
+            <script type="module" src="vbac/java/admin/squadALog.js?<?=$hash;?>"></script>
+        <?php
+        break;
+    case $isPESTracker:
+        ?>
+            <script type="module" src="vbac/java/admin/PESTracker.js?<?=$hash;?>"></script>        
+        <?php
+        break;
+    case $isPESStatusChange:
+        ?>
+            <script type="module" src="vbac/java/admin/PESStatusChange.js?<?=$hash;?>"></script>        
+        <?php
+        break;
+    case $isStatusUpdate:
+        ?>
+            <script type="module" src="vbac/java/admin/manualPESStatusUpdate.js?<?=$hash;?>"></script>
+        <?php
+        break;
+    case $isWorklocation:
+        ?>
+            <script type="module" src="vbac/java/admin/workLocation.js?<?=$hash;?>"></script>        
+        <?php
+        break;
+    case $isSkillSet:
+        ?>
+            <script type="module" src="vbac/java/admin/skillSet.js?<?=$hash;?>"></script>        
+        <?php
+        break;
+    case $isRingFencing:
+        ?>
+            <script type="module" src="vbac/java/admin/ringFencing.js?<?=$hash;?>"></script>        
+        <?php
+        break;
+    case $isLinkIbmerToPreboarder: 
+        ?>
+            <script type="module" src="vbac/java/admin/linkIbmerToPreboarder.js?<?=$hash;?>"></script>        
+        <?php
+        break;
+    case $isAssetRequest:
+        ?>
+            <script type="module" src="vbac/java/assets/assetRequest.js?<?=$hash;?>"></script>
+        <?php
+        break;
+    case $isAssetPortal:
+        ?>
+            <script type="module" src="vbac/java/assets/assetPortal.js?<?=$hash;?>"></script>
+        <?php
+        break;
+    case $isAssetReturn:
+        ?>
+            <script type="module" src="vbac/java/assets/assetReturn.js?<?=$hash;?>"></script>
+        <?php
+        break;
+    case $isDLPLicences:
+        ?>
+            <script type="module" src="vbac/java/assets/dlp.js?<?=$hash;?>"></script>        
+        <?php
+        break;
+    default:
+        break;
+}
+?>

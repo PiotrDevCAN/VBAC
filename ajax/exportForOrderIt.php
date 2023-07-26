@@ -113,7 +113,11 @@ if(empty($base64EncodedData) && empty($base64EncodedDataNonPmo)){
     $titlePrefix = $bau ? "(BAU)" : "(Non-BAU)";
 
     $attachments = array();
-    $attachments[] = !empty($requestData) ? array('filename'=>$csvName,'content_type'=>'text/plain','data'=>$base64EncodedData) : null;
+    $attachments[] = !empty($requestData) ? array(
+        'filename'=>$csvName,
+        'content_type'=>'text/plain',
+        'data'=>$base64EncodedData
+    ) : null;
     $attachments[] = $bau && !empty($nonPmoRequestData) ? array('filename'=>$csvNameNonPmo,'content_type'=>'text/plain','data'=>$base64EncodedDataNonPmo) : null;
 
     $actualAttachments = 'Details of attachments to this email<br/> ';

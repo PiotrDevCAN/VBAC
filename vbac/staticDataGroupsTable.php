@@ -17,9 +17,9 @@ class staticDataGroupsTable extends staticDataTable {
     static function getStaticDataValuesForEdit(){
         $sql = " SELECT * FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$STATIC_GROUPS;
 
-        $resultSet = db2_exec($GLOBALS['conn'], $sql);
+        $rs = db2_exec($GLOBALS['conn'], $sql);
 
-        if(!$resultSet){
+        if(!$rs){
             db2_stmt_error();
             db2_stmt_errormsg();
             return false;
@@ -30,7 +30,7 @@ class staticDataGroupsTable extends staticDataTable {
         $row[] = "<button type='button' class='btn btn-default btn-xs newEntry' aria-label='Left Align' data-value='' data-uid='newEntry' ><span class='glyphicon glyphicon-plus ' aria-hidden='true'></span></button><span style='font-style:italic'>new_entry</span>";
         $row[] = null;
         $row[] = null;
-        while (($record=db2_fetch_assoc($resultSet))==true){
+        while (($record=db2_fetch_assoc($rs))==true){
             $allData[] = $row;
             $row = array();
             $groupName  = "<button type='button' class='btn btn-default btn-xs editRecord' aria-label='Left Align' ";

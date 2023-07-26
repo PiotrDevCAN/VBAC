@@ -1,0 +1,44 @@
+<!-- Modal -->
+<div id="confirmEducationModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Security Education Confirmation</h4>
+      </div>
+      <div class="modal-body">
+        <p style="text-align: center">
+          Please confirm <b><span id="educationNotesid"></span></b> has
+          successfully completed the mandatory Aurora Security Education Modules
+          for IBMers before continuing
+        </p>
+        <p style="text-align: center">
+          Access to these self paced online courses is via the following link
+          <a href="https://kyndryl.percipio.com/track/26c2c517-29c2-4671-bfc1-024271d8fe6b" target="_blank"
+            >https://kyndryl.percipio.com/track/26c2c517-29c2-4671-bfc1-024271d8fe6b</a
+          >
+        </p>
+        <p style="text-align: center">
+          Please contact
+          <a href="mailto:aurora.central.pmo@kyndryl.com"
+            >aurora.central.pmo@kyndryl.com</a
+          >
+          if you do not have access.
+        </p>
+        <p style="text-align: center">
+          Please note a false declaration of completion constitutes a breach of
+          IBM Business Conduct Guidelines and may lead to disciplinary action.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" id="confirmedEducation">
+          Education Completed
+        </button>
+        <button type="button" class="btn btn-danger" id="noEducation">
+          Education NOT Completed
+        </button>
+      </div>
+      <input id="cnumForSecurityModal" val="" type="hidden" />
+    </div>
+  </div>
+</div>

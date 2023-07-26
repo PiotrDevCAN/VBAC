@@ -57,7 +57,7 @@ p {
 
 <div id="drop-area">
   <form class="my-form">
-    <p>TO upload and ODC Access XLS file simply drag and drop it onto the dashed region</p>
+    <p>To upload and ODC Access XLS file simply drag and drop it onto the dashed region</p>
     <input type="file" id="fileElem" multiple accept="image/*" onchange="handleFiles(this.files)">
     <label class="button" for="fileElem">or Select File here</label>
   </form>

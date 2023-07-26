@@ -26,8 +26,6 @@ class requestableAssetListRecord extends DbRecord
     protected $ORDER_IT_TYPE;
     protected $ORDER_IT_REQUIRED;
 
-
-
     function displayForm($mode){
         $notEditable = $mode==FormClass::$modeEDIT ? ' disabled ' : null;
 
@@ -150,7 +148,6 @@ class requestableAssetListRecord extends DbRecord
 			<input type='hidden' name='LISTING_ENTRY_CREATED' id='listingEntryCreated' value='<?=$created?>'>
 		</form>
 
-
 		 <?php
             $allButtons = null;
             $submitButton = $mode==FormClass::$modeEDIT ?  $this->formButton('submit','Submit','updateRequestableAsset',null,'Update','btn btn-primary') :  $this->formButton('submit','Submit','saveRequestableAsset',null,'Save','btn btn-primary');
@@ -158,5 +155,4 @@ class requestableAssetListRecord extends DbRecord
             $this->formBlueButtons($allButtons);
             $this->formHiddenInput('requestor',$_SESSION['ssoEmail'],'requestor');
      }
-
 }

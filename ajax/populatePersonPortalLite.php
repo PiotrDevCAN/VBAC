@@ -1,6 +1,5 @@
 <?php
 
-use vbac\personTable;
 use vbac\allTables;
 use vbac\personPortalLiteTable;
 
@@ -9,14 +8,14 @@ ob_start();
 
 // session_start();
 
-function ob_html_compress($buf){
-   return str_replace(array("\n","\r"),'',$buf);
-}
+// $GLOBALS['Db2Schema'] = 'VBAC';
 
-$personTable = new personPortalLiteTable(allTables::$PERSON_PORTAL_LITE);
+// $personTable = new personPortalLiteTable(allTables::$PERSON_PORTAL_LITE);
+$personTable = new personPortalLiteTable(allTables::$PERSON);
 $preBoardersAction = isset($_REQUEST['preBoardersAction']) ? $_REQUEST['preBoardersAction'] : null;
 
-$data = $personTable->returnAsArray($preBoardersAction);
+$dataAndSql = $personTable->returnAsArray($preBoardersAction);
+list('data' => $data, 'sql' => $sql) = $dataAndSql;
 
 $dataJsonAble = json_encode($data);
 
@@ -24,7 +23,7 @@ $messages = ob_get_clean();
 ob_start();
 
 if($dataJsonAble) {
-   $response = array("data"=>$data,'messages'=>$messages,'post'=>print_r($_POST,true));
+   $response = array("data"=>$data,'messages'=>$messages,'sql'=>$sql,'post'=>print_r($_POST,true));
 } else {
    $personTable->findDirtyData();
    $dirtyDetails = ob_get_clean();

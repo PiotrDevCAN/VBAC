@@ -4,11 +4,6 @@ use vbac\allTables;
 use vbac\personTable;
 use itdq\Loader;
 use vbac\assetRequestRecord;
-use vbac\personRecord;
-
-function ob_html_compress($buf){
-    return str_replace(array("\n","\r"),'',$buf);
-}
 
 set_time_limit(0);
 ob_start();
@@ -92,10 +87,8 @@ switch (true) {
     break;
 }
 
-
 $dataAndSql = assetRequestsTable::returnForPortal($predicate, $withButtons);
-$data = $dataAndSql['data'];
-$sql  = $dataAndSql['sql'];
+list('data' => $data, 'sql' => $sql) = $dataAndSql;
 
 $messages = ob_get_clean();
 // ob_start();

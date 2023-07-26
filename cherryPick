@@ -87,6 +87,6 @@ index 3b4cb26..34974a7 100644
          if($_SESSION['isPmo'] || $_SESSION['isCdi']){
              // depending on what the current status is - well give buttons to set to "Confirmed" or "Aware";
              $pmoStatus = trim($row['PMO_STATUS']);
-             $pmoStatus = empty($pmoStatus) ? 'To be assessed' : $pmoStatus;
+             $pmoStatus = empty($pmoStatus) ? personRecord::PMO_STATUS_TBA : $pmoStatus;
              $row['PMO_STATUS']  = "";
  

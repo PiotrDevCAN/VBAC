@@ -3,7 +3,6 @@ namespace vbac;
 
 use itdq\DbTable;
 use itdq\AuditTable;
-use itdq\AuditRecord;
 
 class requestableAssetListTable extends DbTable {
 

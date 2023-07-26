@@ -9,7 +9,8 @@ ob_start();
 // session_start();
 
 $personTable = new personTable(allTables::$PERSON);
-$data = $personTable->returnPersonFinderArray(personTable::ACTIVE_WITH_PROVISIONAL_CLEARANCE);
+$dataAndSql = $personTable->returnPersonFinderArray(personTable::ACTIVE_WITH_PROVISIONAL_CLEARANCE);
+list('data' => $data, 'sql' => $sql) = $dataAndSql;
 
 $dataJsonAble = json_encode($data);
 
@@ -17,7 +18,7 @@ $messages = ob_get_clean();
 ob_start();
 
 if($dataJsonAble) {
-    $response = array("data"=>$data,'messages'=>$messages);
+    $response = array("data"=>$data,'messages'=>$messages,'sql'=>$sql);
 } else {
     $personTable->findDirtyData();
     $dirtyDetails = ob_get_clean();

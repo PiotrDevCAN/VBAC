@@ -22,7 +22,10 @@ class delegateRecord extends DbRecord
         $loader = new Loader();
         $predicate = "  trim(REVALIDATION_STATUS) in ('". personRecord::REVALIDATED_FOUND . "','" . personRecord::REVALIDATED_VENDOR . "','" . personRecord::REVALIDATED_POTENTIAL . "') or REVALIDATION_STATUS is null ";
         $selectableNotesId = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON,$predicate);
-
+        $selectableEmailAddress = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON,$predicate);
+        
+        $allNotesId = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON);
+        $allEmailAddress = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON);
         ?>
 
   		<div class="panel panel-primary">
@@ -42,10 +45,17 @@ class delegateRecord extends DbRecord
                     <option value=''></option>
                     <?php
                     foreach ($selectableNotesId as $cnum => $notesId){
-                            $displayedName = !empty(trim($notesId)) ?  trim($notesId) : $selectableEmailAddress[$cnum];
+                            $displayedName = !empty(trim($notesId)) ?  trim($notesId) : $allEmailAddress[$cnum];
                             //$selected = !$isFm && trim($cnum)==trim($myCnum) ? ' selected ' : null    // If they don't select the user - we don't fire the CT ID & Education prompts.
                             $selected = null;
-                            ?><option value='<?=trim($cnum);?>'><?=$displayedName?></option><?php
+                            if (!empty(trim($displayedName))) {
+                                $disabled = false;
+                            } else {
+                                // $disabled = " disabled ";
+                                $disabled = null;
+                                $displayedName = 'Missing Email Address or Notes Id for '.$cnum;
+                            }
+                            ?><option value='<?=trim($cnum);?>'<?=$selected?><?=$disabled?>><?=$displayedName?></option><?php
                         };
                         ?>
             	</select>

@@ -1,6 +1,5 @@
 <?php
 
-use vbac\personTable;
 use vbac\allTables;
 use vbac\workLocationTable;
 

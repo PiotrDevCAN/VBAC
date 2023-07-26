@@ -50,7 +50,7 @@ function saveAllOptions(selectId, savedSelectArray) {
 	var select = document.getElementById(selectId);
 	console.log(savedSelectArray);
 
-	for (i = 0; i < select.length; i++) {
+	for (var i = 0; i < select.length; i++) {
 		savedSelectArray.push(select.options[i]);
 	}
 
@@ -122,7 +122,7 @@ function applyFilterToTable(tableId, columnNumber) {// called when one of the
 
 
 function setAllInputElementsDisabledState(allInputElements, disabledState) {
-	for (i = 0; i < allInputElements.length; i++) {
+	for (var i = 0; i < allInputElements.length; i++) {
 		var inputElement = allInputElements[i];
 		$(inputElement).bootstrapSwitch('disabled', disabledState);
 	}
@@ -225,9 +225,6 @@ function enableDatepicker() {
 			daysOfWeekDisabled : [ 0, 6 ],
 		}).on('changeDate', function(e) {
 			showModal('changeDateModal');
-//			showModal('changeDateModalHiden');
-//			console.log($('changeDateModal'));
-//			console.log($('changeDateModalHiden'));
 			console.log(e);
 		});
 	});

@@ -9,7 +9,7 @@
 
 <p>If an individuals end date is updated into the past or to today's date then an email is sent to the PMO task id. The PMO will actively offboard any individuals when their end date is reached.
 <p>A list of your reportees who will be offboarded within the next  30 days can be found in the offboarding report in the person portal.</p>
-<p>[vBAC Admin > Person Portal > Offboarding report button]</p>
+<p>[vBAC Admin > <a href='/pa_pmo.php'>Person Portal</a> > Offboarding report button]</p>
 
 <p>If this is not correct then update the individuals "End date" in their boarding record per the instructions above. Once an individual is marked as "offboarded" by the PMO that person will disappear from the offboarding report.</p>
 

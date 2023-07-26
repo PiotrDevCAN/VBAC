@@ -9,7 +9,7 @@ $headerCells = $auditRecord->htmlHeaderCells();
 
 ob_clean();
 ?>
-<table id='auditTable' class='table table-striped table-bordered compact'   style='width:100%'>
+<table id='auditTable' class='table table-striped table-bordered compact' cellspacing='0' width='100%' style='display: none;'>
 <thead>
 <tr><?=$headerCells;?></tr></thead>
 <tbody>

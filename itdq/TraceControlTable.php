@@ -1,5 +1,7 @@
 <?php
 namespace itdq;
+use itdq\DbTable;
+
 /**
  * @author GB001399
  *

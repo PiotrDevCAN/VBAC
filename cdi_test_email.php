@@ -3,8 +3,6 @@ use itdq\BlueMail;
 use vbac\personTable;
 use vbac\allTables;
 
-$GLOBALS['Db2Schema'] = 'VBAC';
-
 $sql = " SELECT * ";
 $sql.= " FROM VBAC.EMAIL_LOG ";
 $sql.= " WHERE  SUBJECT like 'Reminder%' ";
@@ -19,7 +17,7 @@ $nonRecipients = false;
 
 
 while (($row=db2_fetch_assoc($rs))==true){
-    ini_set('max_execution_time', 60);
+    ini_set('max_execution_time', 360);
     echo "<br/>";
     echo "<br/><b>To: </b>" . implode(",",unserialize($row['TO']));
     echo "<br/><b>Subject: </b>" . $row['SUBJECT'];

@@ -7,7 +7,6 @@ use vbac\personRecord;
 
 ob_start();
 
-
 if($_REQUEST['token']!= $token){
     return;
 }
@@ -30,8 +29,7 @@ if(isset($_REQUEST['activeoffboarding'])){
 }
 
 $sql = " SELECT P.NOTES_ID ";
-$sql.= " FROM " . $_ENV['environment'] . "." . allTables::$PERSON . " AS P ";
-
+$sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
 $sql.= " WHERE 1=1 ";
 $sql.= " AND trim(NOTES_ID) != ''  ";
 $sql.=  $predicate;

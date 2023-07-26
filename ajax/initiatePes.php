@@ -40,8 +40,6 @@ echo "<pre>" . print_r($personData,true) . "</pre><br/>";
 $diags = ob_get_clean();
 ob_start();
 
-
-
 $response = array('success'=>$success,'messages'=>$messages,'diags'=>$diags);
 ob_clean();
 echo json_encode($response);

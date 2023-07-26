@@ -2,7 +2,6 @@
 namespace vbac;
 
 use itdq\DbTable;
-use itdq\DbRecord;
 
 
 class odcAccessTable extends DbTable {
@@ -190,7 +189,7 @@ class odcAccessTable extends DbTable {
         $sql.= "end as BANGALORE_MATCHED ";
         $sql.= ",P.CNUM, P.REVALIDATION_STATUS, P.PES_STATUS ";
         $sql.= "from " . $GLOBALS['Db2Schema'] . "." . allTables::$ODC_ACCESS_LIVE . " as O ";
-        $sql.= "left join " . $GLOBALS['Db2Schema'] . "." . \vbac\allTables::$PERSON . " as P ";
+        $sql.= "left join " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql.= "on O.OWNER_CNUM_ID = P.CNUM ";
         $sql.= ") ";
         $sql.= "WHERE 1=1 ";
@@ -214,7 +213,7 @@ class odcAccessTable extends DbTable {
 
         $sql = "SELECT O.*";
         $sql.= "from " . $GLOBALS['Db2Schema'] . "." . allTables::$ODC_ACCESS_LIVE . " as O ";
-        $sql.= "left join " . $GLOBALS['Db2Schema'] . "." . \vbac\allTables::$PERSON . " as P ";
+        $sql.= "left join " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql.= "on O.OWNER_CNUM_ID = P.CNUM ";
         $sql.= "WHERE P.CNUM is null ";
 

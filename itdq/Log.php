@@ -1,5 +1,7 @@
 <?php
 namespace itdq;
+use itdq\DbTable;
+
 /**
  * This class logs simple messages to a LOG table.
  *

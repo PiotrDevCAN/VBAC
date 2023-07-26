@@ -2,6 +2,7 @@
 namespace itdq;
 use \DateTime;
 use itdq\TraceControlRecord;
+use itdq\DbTable;
 /**
  * Displays the LOG table
  *

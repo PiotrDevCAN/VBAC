@@ -30,7 +30,6 @@ $response['messages'] = $messages;
 $response['emailResponse'] = $emailResponse;
 $response['pesStatus'] = $isrecheck ?  personRecord::PES_STATUS_RECHECK_PROGRESSING : personRecord::PES_STATUS_REQUESTED;
 
-
 $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER   );
 
 if($success){

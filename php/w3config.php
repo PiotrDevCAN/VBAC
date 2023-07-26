@@ -19,7 +19,7 @@ $site = array(
     'bread_crumbs' => TRUE,
 
     // url to send feedback too. See meta tags below as well
-    'feedback_uri' => 'mailto:daniero@uk.ibm.com',
+    'feedback_uri' => 'mailto:piotr.tajanowicz@ocean.ibm.com',
 
     // base location of css, js, and images
     'assets' => '/ui',
@@ -50,14 +50,18 @@ $site = array(
     'csvPrefix' => $_ENV['environment'],
 
     'cdiBg' => 'ventus_cdi',
+    'rsBg'  => 'ventus_resource_strategy',
+    'fmBg'  => 'vbac_functional_managers',
     'pmoBg' => 'vbac_pmo',
     'pesBg' => 'vbac_pes',
+    'reqBg' => 'vbac_requestor',
+    'rfpBg' => 'vbac_Reports_Full_Person',
     'userBg' => null,
     'nullBg' => null,
 
     'email' => false,
     'emailId' => 'DoNotReply_vbac@uk.ibm.com',
-    'devEmailId' => 'piotr.tajanowicz@ibm.com',
+    'devEmailId' => 'piotr.tajanowicz@ocean.ibm.com',
 
     'AuditLife' => '13 months',
     'AuditDetailsLife' => '6 months',
@@ -90,7 +94,7 @@ $meta = array(
     // feedback email received through the central Intranet Feedback
     // Form (w3.ibm.com/feedback) to the correct handler, without human
     // intervention.
-    'feedback' => 'piotr.tajanowicz@ibm.com',
+    'feedback' => 'piotr.tajanowicz@ocean.ibm.com',
 
     // security class for this web site
     'security' => 'IBM internal use only',

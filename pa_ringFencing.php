@@ -15,7 +15,6 @@ ob_start();
 </div>
 </div>
 
-
 <div class='row'>
 <?php
 $mode = personRecord::$modeDEFINE;
@@ -37,7 +36,6 @@ if(!$myCnum){
 <a class='btn btn-sm btn-link accessRes' href='/dn_ringFenced.php'><i class="glyphicon glyphicon-download-alt"></i> Ring Fenced Report</a>
 </div>
 
-
 <div id='rfFlagReport'>
 <table id='rfFlagTable' class='table table-striped table-bordered compact'   style='width:100%'>
 <thead>
@@ -51,21 +49,3 @@ if(!$myCnum){
 
 </div>
 </div>
-
-
-<script type="text/javascript">
-var Person = new personRecord();
-
-$(document).ready(function() {
-
-	Person.initialiseRfStartEndDate();
-	Person.initialiseRfFlagReport();
-	Person.listenForSaveRfFlag();
-	Person.listenForDeleteRfFlag();
-
-
-
-
-});
-
-</script>

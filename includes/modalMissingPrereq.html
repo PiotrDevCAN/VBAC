@@ -1,0 +1,34 @@
+<!-- Modal -->
+<div id="missingPrereqModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Missing Pre-Req</h4>
+      </div>
+      <div class="modal-body">
+        <p style="text-align: center">
+          You have requested Asset :
+          <b><span id="requestedAssetTitle"></span></b>
+        </p>
+        <p style="text-align: center">
+          However, this asset has a pre-req of :
+          <b><span id="prereqAssetTitle"></span></b> which you have
+          <b>NOT</b> selected.
+        </p>
+        <p style="text-align: center">
+          If <b><span id="requesteeNotesid"></span></b> already has that asset,
+          then simply close this window, and continue
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" id="addPreReq">
+          Add Asset to request
+        </button>
+        <button type="button" class="btn btn-warning" id="ignorePreReq">
+          Asset already acquired
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,5 +1,7 @@
 <?php
 
+use vbac\allTables;
+
 if($_REQUEST['token']!= $token){
     http_response_code(405);
     die(); 
@@ -9,14 +11,12 @@ ob_start();
 
 // Problem with FEB when using API - you need to perform a "fetch", that's how FEB understands what the API returnes, but this "FETCH" is always a GET - so we can't distinguish POST from GET as we can't configure the api in FEB
 
-
-
 switch ($_REQUEST['mode']) {
     case 'write':
         switch (true) {
             case !empty($_REQUEST['email_address']) && !empty($_REQUEST['title']) && !empty($_REQUEST['template']):
                 // Save a template to the database
-                $sql = "INSERT INTO " . $_ENV['environment'] . "." . \vbac\allTables::$FEB_TRAVEL_REQUEST_TEMPLATES ;
+                $sql = "INSERT INTO " . $GLOBALS['Db2Schema'] . "." . allTables::$FEB_TRAVEL_REQUEST_TEMPLATES ;
                 $sql.= " (EMAIL_ADDRESS, TITLE, TEMPLATE) VALUES ('" . db2_escape_string($_REQUEST['email_address']) . "','" .  db2_escape_string($_REQUEST['title']) . "','" . db2_escape_string(print_r($_REQUEST['template'],true)) . "') ";
                 $rs = db2_exec($GLOBALS['conn'], $sql);
                 
@@ -43,7 +43,7 @@ switch ($_REQUEST['mode']) {
         switch (true) {
             case isset($_GET['email_address']) && isset($_GET['title']):
                 // Get a specific template
-                $sql = " SELECT TEMPLATE FROM " . $_ENV['environment'] . "." . \vbac\allTables::$FEB_TRAVEL_REQUEST_TEMPLATES ;
+                $sql = " SELECT TEMPLATE FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$FEB_TRAVEL_REQUEST_TEMPLATES ;
                 $sql.= " WHERE EMAIL_ADDRESS='" . db2_escape_string(trim($_GET['email_address'])) . "' ";
                 $sql.= " AND TITLE='" . db2_escape_string(trim($_GET['title'])) . "' ";   
                 ob_start();
@@ -80,7 +80,7 @@ switch ($_REQUEST['mode']) {
 
             case isset($_GET['email_address']):
                 // Get list of titles for this person
-                $sql = " SELECT DISTINCT TITLE FROM " . $_ENV['environment'] . "." . \vbac\allTables::$FEB_TRAVEL_REQUEST_TEMPLATES ;
+                $sql = " SELECT DISTINCT TITLE FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$FEB_TRAVEL_REQUEST_TEMPLATES ;
                 $sql.= " WHERE UPPER(EMAIL_ADDRESS)='" . db2_escape_string(strtoupper(trim($_GET['email_address']))) . "' ";
                 ob_start();
                 

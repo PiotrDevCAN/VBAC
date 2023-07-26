@@ -22,6 +22,7 @@ $loader = new Loader();
 $pesToCheck = " ( REVALIDATION_STATUS like '" . personRecord::REVALIDATED_OFFBOARDED . "%' AND REVALIDATION_STATUS not like '%" . personRecord::REVALIDATED_LEAVER . "%' ) ";
 $pesToCheck.= " AND PES_STATUS in ('" . personRecord::PES_STATUS_CLEARED . "'";
 $pesToCheck.= ",'" . personRecord::PES_STATUS_CLEARED_PERSONAL . "'";
+$pesToCheck.= ",'" . personRecord::PES_STATUS_CLEARED_AMBER . "'";
 $pesToCheck.= ",'" . personRecord::PES_STATUS_EXCEPTION. "'";
 $pesToCheck.= ",'" . personRecord::PES_STATUS_PROVISIONAL. "'";
 $pesToCheck.= ",'" . personRecord::PES_STATUS_REQUESTED. "'";

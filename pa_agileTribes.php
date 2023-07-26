@@ -1,8 +1,5 @@
 <?php
 
-use vbac\personRecord;
-use vbac\assetRequestRecord;
-use vbac\personTable;
 use vbac\AgileTribeRecord;
 use itdq\FormClass;
 
@@ -19,15 +16,14 @@ ob_start();
     </div>
 </form>
 
-
 <?php
 $tribeRecord = new AgileTribeRecord();
 $tribeRecord->displayForm(FormClass::$modeDEFINE, 'Original');
 ?>
 </div>
 
-<div class='container'>
-<table id='tribeTable' class='table table-striped table-bordered compact'  style='width:100%'>
+<div class='container-fluid'>
+<table id='tribeTable' class='table table-striped table-bordered compact' cellspacing='0' width='100%' style='display: none;'>
 <thead>
 <tr><th>Tribe Number</th><th>Tribe Name</th><th>Tribe Leader</th><th>Iteration Mgr</th><th>Organisation</th></tr>
 </thead>
@@ -38,49 +34,3 @@ $tribeRecord->displayForm(FormClass::$modeDEFINE, 'Original');
 </tfoot>
 </table>
 </div>
-
-<!-- Modal -->
-<div id="modalInfo" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modalInfo-title">Information</h4>
-      </div>
-      <div class="modalInfo-body" >
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default modalButton" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-
-
-<script type="text/javascript">
-var Tribe = new agileTribe();
-
-$(document).ready(function() {
-
-	version = $('#version').prop('checked') ? 'Original' : 'New';
-	Tribe.initialiseAgileTribeTable(version);
-	Tribe.listenForSubmitTribeForm();
-//	Tribe.listenForLeader();
-	Tribe.listenForEditTribe();
-
-    $('#version').bootstrapToggle();
-    $('#version').change({tribe: agileTribe.table}, function(event) {
-        console.log(event);
-        console.log(event.data);
-    	event.data.tribe.ajax.reload();
-    });
-
-
-
-});
-
-</script>

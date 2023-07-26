@@ -14,7 +14,6 @@ class Navbar
 
     protected $menuItems;
 
-
     function __construct($image,$brand,$search=false){
         $this->navbarImage = $image;
         $this->navbarBrand = $brand;
@@ -28,7 +27,6 @@ class Navbar
     function addOption(NavbarOption $navbarOption){
         $this->menuItems[] = $navbarOption;
     }
-
 
     function createNavbar($page){
         ?>
@@ -57,8 +55,19 @@ class Navbar
             $menu->createItem();
         }
 
-        $hash = `git log -1 --pretty=%h`;
+        function get_page_mod_time() {
+            $incls = get_included_files();
+            $incls = array_filter($incls, "is_file");
+            $mod_times = array_map('filemtime', $incls);
+            $mod_time = max($mod_times);
+            
+            return $mod_time;
+        }
 
+        // $hash = `git log -1 --pretty=%h`;
+        $hashMain = date("d F Y", get_page_mod_time());
+        $hash = sha1($hashMain);
+        $hash = substr($hash, 0, 7);
 
         ?>
         </ul>
@@ -75,7 +84,5 @@ class Navbar
         </nav>
         <?php
     }
-
-
 }
 ?>

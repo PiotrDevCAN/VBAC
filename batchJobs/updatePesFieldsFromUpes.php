@@ -1,8 +1,8 @@
 <?php
 
-use vbac\allTables;
-use itdq\DbTable;
+// $url = $_ENV['upes_url'] . '/api/pesStatus.php?token=' . $_ENV['upes_api_token'] . '&accountid=1330';
+$url = $_ENV['upes_url'] . '/api/pesStatus.php';
+$rootScriptName = __FILE__;
 
-$url = $_ENV['upes_url'] . '/api/pesStatus.php?token=' . $_ENV['upes_api_token'] . '&accountid=1330';
-
-include "updatePesFields.php";
+// include "updatePesFields.php";
+include "updatePesFieldsAsProcess.php";

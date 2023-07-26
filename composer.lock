@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dc1242889efa5251a71d5fab93ade25c",
+    "content-hash": "23ee9ef402283a8feeb7b0504e3b13a7",
     "packages": [
         {
             "name": "byjg/jwt-session",
@@ -889,6 +889,54 @@
             "time": "2017-10-23T01:57:42+00:00"
         },
         {
+            "name": "sebbmeyer/php-microsoft-teams-connector",
+            "version": "0.2.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sebbmeyer/php-microsoft-teams-connector.git",
+                "reference": "b8440c10856581b06575592864027c439a2599f2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sebbmeyer/php-microsoft-teams-connector/zipball/b8440c10856581b06575592864027c439a2599f2",
+                "reference": "b8440c10856581b06575592864027c439a2599f2",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Sebbmyr\\Teams\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sebastian Meyer",
+                    "email": "sebbmyr@gmail.com"
+                }
+            ],
+            "description": "PHP Microsoft Teams Connector",
+            "keywords": [
+                "Teams",
+                "connector",
+                "connectors",
+                "messagecard",
+                "microsoft",
+                "php"
+            ],
+            "support": {
+                "issues": "https://github.com/sebbmeyer/php-microsoft-teams-connector/issues",
+                "source": "https://github.com/sebbmeyer/php-microsoft-teams-connector/tree/0.2.2"
+            },
+            "time": "2021-01-23T15:03:04+00:00"
+        },
+        {
             "name": "symfony/polyfill-mbstring",
             "version": "v1.22.1",
             "source": {
@@ -967,6 +1015,62 @@
                 }
             ],
             "time": "2021-01-22T09:19:47+00:00"
+        },
+        {
+            "name": "tcdent/php-restclient",
+            "version": "0.1.8.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tcdent/php-restclient.git",
+                "reference": "9df496460b2ee5ed6729819280246448411a68ad"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tcdent/php-restclient/zipball/9df496460b2ee5ed6729819280246448411a68ad",
+                "reference": "9df496460b2ee5ed6729819280246448411a68ad",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "php": ">=7.2"
+            },
+            "require-dev": {
+                "php": ">=8.0",
+                "phpunit/phpunit": ">=9.5"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "restclient.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Travis Dent",
+                    "email": "tcdent@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A generic REST API client for PHP",
+            "homepage": "http://github.com/tcdent/php-restclient",
+            "keywords": [
+                "api",
+                "client",
+                "curl",
+                "json",
+                "rest",
+                "xml"
+            ],
+            "support": {
+                "issues": "http://github.com/tcdent/php-restclient/issues",
+                "source": "https://github.com/tcdent/php-restclient/tree/0.1.8.2"
+            },
+            "time": "2023-03-07T02:20:52+00:00"
         }
     ],
     "packages-dev": [],
@@ -979,5 +1083,5 @@
         "ext-gd": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.1.0"
 }

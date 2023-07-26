@@ -30,8 +30,6 @@ class pesTrackerTable extends DbTable{
     const PES_TRACKER_RECORDS_ACTIVE_REQUESTED = 'Active Requested';
     const PES_TRACKER_RECORDS_ACTIVE_PROVISIONAL = 'Active Provisional';
 
-
-
     const PES_TRACKER_RETURN_RESULTS_AS_ARRAY      = 'array';
     const PES_TRACKER_RETURN_RESULTS_AS_RESULT_SET = 'resultSet';
 
@@ -45,7 +43,6 @@ class pesTrackerTable extends DbTable{
     const PES_TRACKER_STAGE_ACTIVITY = 'Activity';
 
     const PES_TRACKER_STAGES =  array('CONSENT','RIGHT_TO_WORK','PROOF_OF_ID','PROOF_OF_RESIDENCY','CREDIT_CHECK','FINANCIAL_SANCTIONS','CRIMINAL_RECORDS_CHECK','PROOF_OF_ACTIVITY');
-
 
     static function returnPesEventsTable($records='Active',$returnResultsAs='array'){
 
@@ -77,6 +74,7 @@ class pesTrackerTable extends DbTable{
 
         $sql = " SELECT P.CNUM ";
         $sql.= ", P.EMAIL_ADDRESS  ";
+        $sql.= ", P.KYN_EMAIL_ADDRESS  ";
         $sql.= ", P.NOTES_ID  ";
         $sql.= ", PT.PASSPORT_FIRST_NAME ";
         $sql.= ", PT.PASSPORT_SURNAME ";
@@ -111,9 +109,9 @@ class pesTrackerTable extends DbTable{
         $sql.= ", F.EMAIL_ADDRESS as FLM ";
 
         $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
-        $sql.= " left join " . $GLOBALS['Db2Schema'] . "." . \vbac\allTables::$PES_TRACKER . " as PT ";
+        $sql.= " left join " . $GLOBALS['Db2Schema'] . "." . allTables::$PES_TRACKER . " as PT ";
         $sql.= " ON P.CNUM = PT.CNUM ";
-        $sql.= " left join " . $GLOBALS['Db2Schema'] . "." . \vbac\allTables::$PERSON . " as F ";
+        $sql.= " left join " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as F ";
         $sql.= " ON P.FM_CNUM = F.CNUM ";
         $sql.= " WHERE 1=1 ";
         $sql.= " and (PT.CNUM is not null or ( PT.CNUM is null  AND P.PES_STATUS_DETAILS is null )) "; // it has a tracker record
@@ -192,8 +190,6 @@ class pesTrackerTable extends DbTable{
 
             $date = DateTime::createFromFormat('Y-m-d', $row['PES_DATE_REQUESTED']);
             $age  = !empty($row['PES_DATE_REQUESTED']) ?  $date->diff($today)->format('%R%a days') : null ;
-            // $age = !empty($row['PES_DATE_REQUESTED']) ? $interval->format('%R%a days') : null;
-
 
             $cnum = $row['CNUM'];
             $firstName = trim($row['FIRST_NAME']);
@@ -259,7 +255,6 @@ class pesTrackerTable extends DbTable{
             </tr>
         <?php
         }
-
         ?>
         </tbody>
 		</table>
@@ -276,12 +271,10 @@ class pesTrackerTable extends DbTable{
         return $level;
     }
 
-
-
     function displayTable($records='Active Initiated'){
         ?>
         <div class='container-fluid' >
-        <div class='col-sm-8 col-sm-offset-1'>
+        <div class='col-sm-10 col-sm-offset-1'>
           <form class="form-horizontal">
   			<div class="form-group">
     			<label class="control-label col-sm-1" for="pesTrackerTableSearch">Table Search:</label>
@@ -324,20 +317,23 @@ class pesTrackerTable extends DbTable{
 				<a class='btn btn-sm btn-link accessBasedBtn accessPes accessCdi' href='/dn_pesTrackerActivePlus.php'><i class="glyphicon glyphicon-download-alt"></i> PES Tracker(Active+)</a>
 				</span>
             	</div>
-
-
   			</div>
 		  </form>
 		  </div>
 		</div>
 
-		<div id='pesTrackerTableDiv' class='center-block' width='100%'>
-		</div>
+		<div id='pesTrackerTableDiv' class='center-block' width='100%'></div>
 		<?php
     }
 
     static function formatEmailFieldOnTracker($row){
 
+        $cnum = trim($row['CNUM']);
+        $email = trim($row['EMAIL_ADDRESS']);
+        $firstName = trim($row['FIRST_NAME']);
+        $lastName = trim($row['LAST_NAME']);
+        $passportFirstName = trim($row['PASSPORT_FIRST_NAME']);
+        $passportSurName= trim($row['PASSPORT_SURNAME']);
         $priority = !empty($row['PRIORITY']) ? ucfirst(trim($row['PRIORITY'])) : 'TBD';
 
         switch (trim($row['PRIORITY'])){
@@ -358,18 +354,23 @@ class pesTrackerTable extends DbTable{
                 break;
         }
 
-        $formattedField = trim($row['EMAIL_ADDRESS']) . "<br/><small>";
-        $formattedField.= "<i>" . trim($row['PASSPORT_FIRST_NAME']) . "&nbsp;<b>" . trim($row['PASSPORT_SURNAME']) . "</b></i><br/>";
-        $formattedField.= trim($row['FIRST_NAME']) . "&nbsp;<b>" . trim($row['LAST_NAME']) . "</b></small><br/>" . trim($row['CNUM']);
+        $formattedField = $email . "<br/>";
+        $formattedField.= "<small><i>"; 
+        $formattedField.= $passportFirstName . "&nbsp;<b>" . $passportSurName . "</b>";
+        $formattedField.= "</i><br/>";
+        $formattedField.= $firstName . "&nbsp;<b>" . $lastName . "</b>";
+        $formattedField.="</small><br/>";
+        $formattedField.= $cnum . "<br/>";
+        if (endsWith($email, 'ocean.ibm.com')) {
+            $formattedField.= trim($row['KYN_EMAIL_ADDRESS']) . "<br/>";
+        }
         $formattedField.= "<div class='alert $alertClass priorityDiv'>Priority:" . $priority . "</div>";
-
         $formattedField.="<span style='white-space:nowrap' >
-            <button class='btn btn-xs btn-danger  btnPesPriority accessPes accessCdi' data-pespriority='1' data-cnum='" . $row['CNUM'] ."'  data-toggle='tooltip'  title='High' ><span class='glyphicon glyphicon-king' ></button>
-            <button class='btn btn-xs btn-warning  btnPesPriority accessPes accessCdi' data-pespriority='2' data-cnum='" . $row['CNUM'] ."' data-toggle='tooltip'  title='Medium' ><span class='glyphicon glyphicon-knight' ></button>
-            <button class='btn btn-xs btn-success  btnPesPriority accessPes accessCdi' data-pespriority='3' data-cnum='" . $row['CNUM'] ."' data-toggle='tooltip'  title='Low'><span class='glyphicon glyphicon-pawn' ></button>
-            <button class='btn btn-xs btn-info btnPesPriority accessPes accessCdi' data-pespriority='99' data-cnum='" . $row['CNUM'] ."'data-toggle='tooltip'  title='Unknown'><span class='glyphicon glyphicon-erase' ></button>
+            <button class='btn btn-xs btn-danger  btnPesPriority accessPes accessCdi' data-pespriority='1' data-cnum='" . $cnum ."'  data-toggle='tooltip'  title='High' ><span class='glyphicon glyphicon-king' ></button>
+            <button class='btn btn-xs btn-warning  btnPesPriority accessPes accessCdi' data-pespriority='2' data-cnum='" . $cnum ."' data-toggle='tooltip'  title='Medium' ><span class='glyphicon glyphicon-knight' ></button>
+            <button class='btn btn-xs btn-success  btnPesPriority accessPes accessCdi' data-pespriority='3' data-cnum='" . $cnum ."' data-toggle='tooltip'  title='Low'><span class='glyphicon glyphicon-pawn' ></button>
+            <button class='btn btn-xs btn-info btnPesPriority accessPes accessCdi' data-pespriority='99' data-cnum='" . $cnum ."'data-toggle='tooltip'  title='Unknown'><span class='glyphicon glyphicon-erase' ></button>
             </span>";
-
 
         return $formattedField;
     }
@@ -778,7 +779,6 @@ class pesTrackerTable extends DbTable{
 
     }
 
-
     function getPesComment($cnum){
         $preparedStmt = $this->prepareGetPesCommentStmt();
 
@@ -794,8 +794,6 @@ class pesTrackerTable extends DbTable{
         $row = db2_fetch_assoc($preparedStmt);
         return $row['COMMENT'];
     }
-
-
 
     function getTracker($records=self::PES_TRACKER_RECORDS_ACTIVE, Spreadsheet $spreadsheet){
         $sheet = 1;
@@ -826,7 +824,7 @@ class pesTrackerTable extends DbTable{
     }
 
 
-    function changeCnum($fromCnum,$toCnum){
+    function changeCnum($fromCnum, $toCnum){
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql.= " SET CNUM='" . db2_escape_string(trim($toCnum)) . "' ";
         $sql.= " WHERE CNUM='" . db2_escape_string(trim($fromCnum)) . "' ";

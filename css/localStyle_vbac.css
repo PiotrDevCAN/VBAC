@@ -222,3 +222,7 @@ dropdown-menu > li > a {
       z-index: 11000 !important;
 }
 
+.required .control-label:after {
+  content:"*";
+  color:red;
+}

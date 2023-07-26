@@ -2,7 +2,6 @@
 namespace vbac;
 
 use itdq\DbTable;
-use itdq\DbRecord;
 
 
 class odcAssetRemovalTable extends DbTable {
@@ -47,7 +46,7 @@ class odcAssetRemovalTable extends DbTable {
     function rightToRemove(){
         $sql = "SELECT P.NOTES_ID, P.FIRST_NAME, P.LAST_NAME, O.CNUM, O.ASSET_SERIAL_NUMBER, O.START_DATE, O.END_DATE, P.WORK_STREAM ";
         $sql.= "from " . $GLOBALS['Db2Schema'] . "." . $this->tableName . " as O ";
-        $sql.= "left join " . $GLOBALS['Db2Schema'] . "." . \vbac\allTables::$PERSON . " as P ";
+        $sql.= "left join " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql.= "on O.CNUM = P.CNUM ";
         $sql.= " ORDER BY NOTES_ID ";
         

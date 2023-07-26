@@ -1,11 +1,11 @@
 <?php
+
 use itdq\PlannedOutages;
 use itdq\Navbar;
 use itdq\NavbarMenu;
 use itdq\NavbarOption;
 use vbac\personTable;
 use itdq\NavbarDivider;
-
 
 $beginNavBar = microtime(true);
 
@@ -29,27 +29,31 @@ $trace          = new NavbarOption('View Trace','pi_trace.php','accessCdi');
 $traceControl   = new NavbarOption('Trace Control','pi_traceControl.php','accessCdi');
 $traceDelete    = new NavbarOption('Trace Deletion', 'pi_traceDelete.php','accessCdi');
 $revalidation   = new NavbarOption('Batch Reval','batchJobs/revalidate.php','accessCdi');
-$recheck        = new NavbarOption('Batch ReCheck','batchJobs/recheckPotentialLeavers.php','accessCdi');
 $cbn            = new NavbarOption('Initiate CBN','batchJobs/sendCbnEmail.php','accessCdi');
-$link           = new NavbarOption('Link Reg to PreB','pi_linkIbmerToPreboarder.php','accessCdi');
+$recheck        = new NavbarOption('Batch ReCheck','batchJobs/recheckPotentialLeavers.php','accessCdi');
 $emailDlp       = new NavbarOption('Email DLP','batchJobs/emailWorkflowTracker.php','accessCdi');
-
-$workLocation       = new NavbarOption('Work Location','pi_manageLocation.php','accessCdi');
-
+$employeeData	= new NavbarOption('Email Employee Data','batchJobs/sendEmplyeeData.php','accessCdi');
+$link           = new NavbarOption('Link Reg to PreB','pi_linkIbmerToPreboarder.php','accessCdi');
+$workLocation   = new NavbarOption('Work Location','pi_manageLocation.php','accessCdi');
+$skillSet       = new NavbarOption('Skillset','pi_manageSkillset.php','accessCdi');
 $cdiAdmin->addOption($trace);
 $cdiAdmin->addOption($traceControl);
 $cdiAdmin->addOption($traceDelete);
+$cdiAdmin->addOption( new NavbarDivider('accessCdi'));
 $cdiAdmin->addOption($revalidation);
 $cdiAdmin->addOption($cbn);
 $cdiAdmin->addOption($recheck);
-$cdiAdmin->addOption($link);
 $cdiAdmin->addOption($emailDlp);
-
+$cdiAdmin->addOption($employeeData);
+$cdiAdmin->addOption( new NavbarDivider('accessCdi'));
+$cdiAdmin->addOption($link);
 $cdiAdmin->addOption($workLocation);
+$cdiAdmin->addOption($skillSet);
 
 $adminMenu      = new NavbarMenu('vBac Admin');
 $pmo            = new NavbarOption('Person Portal', 'pa_pmo.php','accessCdi accessPmo accessFm accessUser');
 $pmoLite        = new NavbarOption('Person Portal (Lite)', 'pa_pmo_lite.php','accessCdi accessPmo accessFm accessUser');
+$pmoArchive     = new NavbarOption('Person Portal (Archive)', 'pa_pmo_archive.php','accessCdi accessPmo');
 $personFinder   = new NavbarOption('Person Finder','pa_personFinder.php','accessCdi accessFm');
 $revalidation   = new NavbarOption('Revalidation Portal','pa_revalidation.php','accessCdi accessPmo');
 $linkedReport   = new NavbarOption('Linked Portal','pa_pmoLinked.php','accessCdi accessPmo');
@@ -61,15 +65,16 @@ $requestableAssets  = new NavbarOption('Requestable Assets', 'pa_requestableAsse
 $delegate       = new NavbarOption('Delegates', 'pc_delegate.php','accessCdi accessPmo accessFm accessUser');
 $pesTracker     = new NavbarOption('PES Tracker', 'pc_pesTracker.php','accessCdi accessPes');
 $pesStatusChange= new NavbarOption('PES Status Changes', 'pr_pesStatusChangeReport.php','accessCdi accessPes');
+$pesStatusUpdate= new NavbarOption('PES Status Manual Update', 'pa_statusUpdate.php','accessCdi accessPes');
 $odcDataUpload  = new NavbarOption('ODC Access Upload', 'pc_odcAccessUpload.php','accessCdi accessPmo');
 // $email          = new NavbarOption('Email Log', 'pi_emailLog.php','accessCdi');
 $tribes         = new NavbarOption('Tribes','pa_agileTribes.php','accessCdi accessPmo ');
 $squads         = new NavbarOption('Squad(Current)','pa_agileSquads.php','accessCdi accessPmo ');
-// $squadsOld         = new NavbarOption('Squad(Old)','pa_agileSquadsOld.php','accessCdi accessPmo ');
-$squadALog       = new NavbarOption('Squadalog', 'pa_squadalog.php','accessCdi accessPmo accessFm');
-
+$squadALog      = new NavbarOption('Squadalog', 'pa_squadalog.php','accessCdi accessPmo accessFm');
 $adminMenu->addOption($pmo);
 $adminMenu->addOption($pmoLite);
+$adminMenu->addOption($pmoArchive);
+$adminMenu->addOption( new NavbarDivider('accessPmo accessCdi'));
 $adminMenu->addOption($personFinder);
 $adminMenu->addOption($revalidation);
 $adminMenu->addOption($linkedReport);
@@ -81,40 +86,29 @@ $adminMenu->addOption( new NavbarDivider('accessPmo accessCdi accessUser accessF
 $adminMenu->addOption($delegate);
 // $adminMenu->addOption( new NavbarDivider('accessRes'));
 // $adminMenu->addOption($ringFenced);
-
 //$adminMenu->addOption( new NavbarDivider('accessCdi'));
 // $adminMenu->addOption($audit);
 // $adminMenu->addOption($email);
 $adminMenu->addOption( new NavbarDivider('accessPes accessCdi'));
 $adminMenu->addOption($pesTracker);
 $adminMenu->addOption($pesStatusChange);
+$adminMenu->addOption($pesStatusUpdate);
 $adminMenu->addOption( new NavbarDivider('accessPmo accessCdi'));
 $adminMenu->addOption($odcDataUpload);
 $adminMenu->addOption( new NavbarDivider('accessPmo accessCdi'));
 $adminMenu->addOption($tribes);
 $adminMenu->addOption($squads);
-// $adminMenu->addOption($squadsOld);
 $adminMenu->addOption($squadALog);
 
-
-
-
-
 // $agileMenu      = new NavbarMenu('Agile');
-
-
 // $agileMenu->addOption($tribes);
 // $agileMenu->addOption($squads);
 
-
-
-
 $boarding       = new NavbarMenu('Boarding');
 $onBoarding     = new NavbarOption('OnBoard','pb_onboard.php','accessCdi accessPmo accessFm');
-$offBoarding    = new NavbarOption('OffBoard', 'pb_offboard.php','accessCdi accessPmo accessFm');
+// $offBoarding    = new NavbarOption('OffBoard', 'pb_offboard.php','accessCdi accessPmo accessFm');
 $boarding->addOption($onBoarding);
-$boarding->addOption($offBoarding);
-
+// $boarding->addOption($offBoarding);
 
 $access         = new NavbarMenu('Access/Assets');
 $assetPortal    = new NavbarOption('Asset Portal', 'pa_assetPortal.php','accessCdi accessPmo accessFm accessUser');
@@ -137,17 +131,17 @@ $access->addOption($dlpRecord);
 // $access->addOption($iamAdmin);
 // $access->addOption($softRsaToken    );
 
-
 $reports         = new NavbarMenu('Downloadable Reports');
-// $original        = new NavbarOption('Person Details - Original', 'pr_personDetails.php','accessCdi accessPmo accessRepFullPerson');
-$fullExtract     = new NavbarOption('Person Details - Full', 'pr_personDetailsFull.php','accessCdi accessPmo accessRepFullPerson');
-$active          = new NavbarOption('Person Details - Active', 'pr_personDetailsActive.php','accessCdi accessPmo accessRepFullPerson');
-$activeOdc       = new NavbarOption('Person Details - Active(ODC)<span id="odcPopulation" class="badge">**</span>', 'pr_personDetailsActiveOdc.php','accessCdi accessPmo accessRepFullPerson');
-$bauReport       = new NavbarOption('Person Details - BAU Report', 'pr_bau.php','accessCdi accessPmo accessRepFullPerson');
-$inactive        = new NavbarOption('Person Details - Inactive', 'pr_personDetailsInactive.php','accessCdi accessPmo accessRepFullPerson');
+$original        = new NavbarOption('Person Details - Original', 'pr_personDetailsEmail.php','accessCdi accessPmo accessRepFullPerson');
+$fullExtract     = new NavbarOption('Person Details - Full', 'pr_personDetailsFullEmail.php','accessCdi accessPmo accessRepFullPerson');
+$active          = new NavbarOption('Person Details - Active', 'pr_personDetailsActiveEmail.php','accessCdi accessPmo accessRepFullPerson');
+$activeOdc       = new NavbarOption('Person Details - Active(ODC)<span id="odcPopulation" class="badge">**</span>', 'pr_personDetailsActiveOdcEmail.php','accessCdi accessPmo accessRepFullPerson');
+$bauReport       = new NavbarOption('Person Details - BAU Report', 'pr_bauEmail.php','accessCdi accessPmo accessRepFullPerson');
+$inactive        = new NavbarOption('Person Details - Inactive', 'pr_personDetailsInactiveEmail.php','accessCdi accessPmo accessRepFullPerson');
 $locMismatch     = new NavbarOption('Location Mismatch', 'pr_odcMismatchReport.php','accessCdi accessPmo accessRepFullPerson');
 $odcNotInVbac    = new NavbarOption('ODC Access but no Vbac Record', 'pr_odcAccessMissingFromVbac.php','accessCdi accessPmo accessRepFullPerson');
 $assetRemoval    = new NavbarOption('Asset Removal', 'pr_assetRemovalReport.php','accessCdi accessPmo');
+$reports->addOption($original);
 $reports->addOption($fullExtract);
 $reports->addOption($active);
 $reports->addOption($activeOdc);
@@ -158,18 +152,18 @@ $reports->addOption($locMismatch);
 $reports->addOption($odcNotInVbac);
 $reports->addOption($assetRemoval);
 
+$outages = new NavbarOption($plannedOutagesLabel, 'ppo_PlannedOutages.php','accessCdi accessPmo accessFm accessUser ');
 
+// $privacy = new NavbarOption('Privacy','https://w3.ibm.com/w3publisher/w3-privacy-notice','accessCdi accessPmo accessFm accessUser ');
+
+// bind all menus together
 $navbar->addMenu($cdiAdmin);
 $navbar->addMenu($adminMenu);
 // $navbar->addMenu($agileMenu);
 $navbar->addMenu($boarding);
 $navbar->addMenu($access);
 $navbar->addMenu($reports);
-
-$outages = new NavbarOption($plannedOutagesLabel, 'ppo_PlannedOutages.php','accessCdi accessPmo accessFm accessUser ');
 $navbar->addOption($outages);
-
-// $privacy = new NavbarOption('Privacy','https://w3.ibm.com/w3publisher/w3-privacy-notice','accessCdi accessPmo accessFm accessUser ');
 // $navbar->addOption($privacy);
 
 $navbar->createNavbar($page);
@@ -177,7 +171,7 @@ $start = microtime(true);
 
 error_log("to isFm:" . (float)($beginNavBar-$start));
 
-$isFm   = personTable::isManager($_SESSION['ssoEmail'])                 ? ".not('.accessFm')" : null;
+$isFm   = personTable::isManager($_SESSION['ssoEmail']) ? ".not('.accessFm')" : null;
 
 $elapsed = microtime(true);
 
@@ -187,7 +181,6 @@ $isCdi  = employee_in_group($_SESSION['cdiBg'],  $_SESSION['ssoEmail']) ? ".not(
 
 $elapsed = microtime(true);
 error_log("CDI:" . (float)($elapsed-$start));
-
 
 $isPmo  = employee_in_group($_SESSION['pmoBg'],  $_SESSION['ssoEmail']) ? ".not('.accessPmo')" : null;
 
@@ -199,29 +192,28 @@ $isPes  = employee_in_group($_SESSION['pesBg'],  $_SESSION['ssoEmail']) ? ".not(
 $elapsed = microtime(true);
 error_log("Pes:" . (float)($elapsed-$start));
 
-$isRep1  = employee_in_group('vbac_Reports_Full_Person',  $_SESSION['ssoEmail']) ? ".not('.accessRepFullPerson')" : null;
+$isRep1  = employee_in_group($_SESSION['rfpBg'],  $_SESSION['ssoEmail']) ? ".not('.accessRepFullPerson')" : null;
 
 $elapsed = microtime(true);
 error_log("Rep1:" . (float)($elapsed-$start));
 
-$isRes   = employee_in_group('ventus_resource_strategy',  $_SESSION['ssoEmail'],3) ? ".not('.accessRes')" : null;
+$isRes   = employee_in_group($_SESSION['rsBg'],  $_SESSION['ssoEmail'],3) ? ".not('.accessRes')" : null;
 
 $elapsed = microtime(true);
 error_log("vent:" . (float)($elapsed-$start));
 
-
 $isUser = ".not('.accessUser')";
-$isRequestor = employee_in_group('vbac_requestor', $_SESSION['ssoEmail']);
+$isRequestor = employee_in_group($_SESSION['reqBg'], $_SESSION['ssoEmail']);
 
 $elapsed = microtime(true);
 error_log("vbac:" . (float)($elapsed-$start));
 
-$isCdi   = stripos($_ENV['environment'], 'dev') ? ".not('.accessCdi')"  : $isCdi;
+$isCdi   = stripos($_ENV['environment'], 'dev') ? ".not('.accessCdi')" : $isCdi;
 $isFm    = stripos($_ENV['environment'], 'dev') ? ".not('.accessFm')"  : $isFm;
-$isPmo   = stripos($_ENV['environment'], 'dev')  ? ".not('.accessPmo')" : $isPmo;
-$isPes   = stripos($_ENV['environment'], 'dev')  ? ".not('.accessPes')" : $isPes;
-$isRep1   = stripos($_ENV['environment'], 'dev')  ? ".not('.accessRepFullPerson')" : $isRep1;
-$isRes   = stripos($_ENV['environment'], 'dev')  ? ".not('.accessRes')" : $isRes;
+$isPmo   = stripos($_ENV['environment'], 'dev') ? ".not('.accessPmo')" : $isPmo;
+$isPes   = stripos($_ENV['environment'], 'dev') ? ".not('.accessPes')" : $isPes;
+$isRep1  = stripos($_ENV['environment'], 'dev') ? ".not('.accessRepFullPerson')" : $isRep1;
+$isRes   = stripos($_ENV['environment'], 'dev') ? ".not('.accessRes')" : $isRes;
 
 $isFm = $isPmo ? null : $isFm; // If they are PMO it don't matter if they are FM
 $isFm = $isCdi ? null : $isFm; // If they are CDI it don't matter if they are FM
@@ -232,8 +224,7 @@ $_SESSION['isPmo']  = !empty($isPmo)  ? true : false;
 $_SESSION['isPes']  = !empty($isPes)  ? true : false;
 $_SESSION['isUser'] = !empty($isUser) ? true : false;
 $_SESSION['isRep1'] = !empty($isRep1) ? true : false;
-$_SESSION['isRes']  = !empty($isRes) ? true : false;
-
+$_SESSION['isRes']  = !empty($isRes)  ? true : false;
 
 $plannedOutagesId = str_replace(" ","_",$plannedOutagesLabel);
 $odcStaff = personTable::countOdcStaff();
@@ -245,8 +236,6 @@ $('.navbarMenu').not(':has(li)').remove();
 
 $('li[data-pagename="<?=$page;?>"]').addClass('active').closest('li.dropdown').addClass('active');
 <?php
-
-
 
 if($page != "index.php" && substr($page,0,3)!='cdi'){
     ?>
@@ -262,6 +251,7 @@ $rep = null;
 !empty($isRep1) ? $rep .= '<small>(R1)</small>' : '';
 
 $requestor= $isRequestor ? "+" : null;
+// var_dump($requestor);
 ?>
 
 $(document).ready(function () {
@@ -271,8 +261,8 @@ $(document).ready(function () {
 	<?php 
 	
 	$userLevel = '';
-	$userLevel.= !empty($isUser)? 'User:' . $requestor : null;
-	$userLevel.= !empty($isFm)  ? 'Fm:' . $requestor : null;
+	$userLevel.= !empty($isUser)? 'User:'. $requestor : null;
+	$userLevel.= !empty($isFm)  ? 'Fm:'  . $requestor : null;
 	$userLevel.= !empty($isRes) ? 'Res:' . $requestor : null;
 	$userLevel.= !empty($isPmo) ? 'Pmo:' . $requestor : null;
 	$userLevel.= !empty($isCdi) ? 'Cdi:' . $requestor : null;
@@ -292,7 +282,6 @@ $(document).ready(function () {
 </script>
 
 <?php 
-$elapsed = microtime(true);
-error_log("Navbar ended:" . (float)($elapsed-$beginNavBar));
-
+	$elapsed = microtime(true);
+	error_log("Navbar ended:" . (float)($elapsed-$beginNavBar));
 ?>

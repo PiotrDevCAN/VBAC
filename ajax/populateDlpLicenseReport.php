@@ -10,8 +10,8 @@ use vbac\dlpRecord;
 set_time_limit(0);
 ob_start();
 
-
 $_SESSION['ssoEmail'] = $_SESSION['ssoEmail'];
+// $GLOBALS['Db2Schema'] = 'VBAC';
 
 $loader = new Loader();
 $dlpTable = new dlpTable(allTables::$DLP);
@@ -68,8 +68,7 @@ $withButtons = isset($allDelegates[$myCnum]) && $withButtons ? true : $withButto
 $withButtons = $_POST['withButtons']=='true' ? $withButtons : false;  // Only if this report allows buttons.
 
 $dataAndSql = $dlpTable->getForPortal($predicate, $withButtons);
-$data = $dataAndSql['data'];
-$sql  = $dataAndSql['sql'];
+list('data' => $data, 'sql' => $sql) = $dataAndSql;
 
 $messages = ob_get_clean();
 ob_start();

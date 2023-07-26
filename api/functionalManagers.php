@@ -9,7 +9,7 @@ if($_REQUEST['token']!= $token){
 
 ob_start();
 
-$sql = " SELECT P.NOTES_ID  FROM " . $_ENV['environment'] . "." . allTables::$PERSON . " AS P ";
+$sql = " SELECT P.NOTES_ID  FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
 
 $sql.= " WHERE 1=1 AND trim(NOTES_ID) != ''  AND " . personTable::activePersonPredicate();
 $sql.= " AND FM_MANAGER_FLAG='Yes' ";

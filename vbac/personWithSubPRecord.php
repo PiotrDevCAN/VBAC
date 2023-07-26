@@ -1,17 +1,13 @@
 <?php
 namespace vbac;
 
-use itdq\DbRecord;
 use itdq\FormClass;
 use itdq\Loader;
 use itdq\JavaScript;
-use itdq\DbTable;
 use vbac\allTables;
-use itdq\AuditTable;
 use vbac\personTable;
 use vbac\personRecord;
 use DateTime;
-use DateInterval;
 
 /**
  *
@@ -95,7 +91,7 @@ class personWithSubPRecord extends personRecord
         //$allManagers = array('bob Mgr'=>'bob@email.com','cheryl mgr'=>'cheryl@email.com','cheryl two'=>'cheryl2@email.com');
 
         /*
-         * Functional Mgr can board to ANY Functional Mgr Ant Start 16th Jan 2018
+         * Functional Mgr can board to ANY Functional Mgr Ant Stark 16th Jan 2018
          */
 
        // $isFM = personTable::isManager($_SESSION['ssoEmail']);
@@ -113,7 +109,7 @@ class personWithSubPRecord extends personRecord
         JavaScript::buildSelectArray($allWorkstream, 'workStream');
 
         $notEditable = $mode==FormClass::$modeEDIT ? ' disabled ' : null;
-        $displayForEdit = $notEditable ? 'hidden' : 'inline' ;
+        $displayForEdit = $notEditable ? 'none' : 'inline' ;
         $onlyEditable = $mode==FormClass::$modeEDIT ? 'text' : 'hidden'; // Some fields the user can edit - but not see/set the first time.
         $hideDivFromEdit = $mode==FormClass::$modeEDIT ? ' style="display: none;"  ' : null; //Some fields we don't show on the edit screen.
 
@@ -222,19 +218,19 @@ class personWithSubPRecord extends personRecord
               			</select>
         				</div>
         			</div>
-				<input id='resource_uid'           name='resperson_uid'        value='<?=$this->CNUM?>'   				type='hidden' >
-        		<input id='resource_is_mgr'	       name='resFM_MANAGER_FLAG'   value='No'              			    	type='hidden' >
-        		<input id='resource_employee_type' name='resEMPLOYEE_TYPE'     value='setByRadioButtons'	    		type='hidden' >
-        		<input id='resource_ibm_location'  name='resIBM_BASE_LOCATION' value='<?=$this->IBM_BASE_LOCATION?>'	type='hidden' >
-        		<input id='resource_pes_status'    name='resPES_STATUS'        value='<?=$pesStatus?>'                  type='hidden' >
-        		<input id='resource_pes_status_details'    name='resPES_STATUS_DETAILS'        value='<?=$pesStatusDetails?>'                 type='hidden' >
+				    <input id='resource_uid'                  name='resperson_uid'          value='<?=$this->CNUM?>'   				    type='hidden' >
+        		<input id='resource_is_mgr'	              name='resFM_MANAGER_FLAG'     value='No'              			    	  type='hidden' >
+        		<input id='resource_employee_type'        name='resEMPLOYEE_TYPE'       value='setByRadioButtons'	    		    type='hidden' >
+        		<input id='resource_ibm_location'         name='resIBM_BASE_LOCATION'   value='<?=$this->IBM_BASE_LOCATION?>'	type='hidden' >
+        		<input id='resource_pes_status'           name='resPES_STATUS'          value='<?=$pesStatus?>'               type='hidden' >
+        		<input id='resource_pes_status_details'   name='resPES_STATUS_DETAILS'  value='<?=$pesStatusDetails?>'        type='hidden' >
 				</div>
 
 				<div class='form-group'>
           <div class='col-sm-12'>
 						<label class="radio-inline employeeTypeRadioBtn" data-toggle='tooltip' data-placement='auto top' title='IBM Regular and IBM Contractors'>
               <input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_PREBOARDER ?>' data-type='ibmer' checked>
-              IBMer Pre-Hire (Regular or Contractor)
+              Kyndryl Pre-Hire (Regular or Contractor)
 						</label>
 						<label class="radio-inline employeeTypeRadioBtn" data-toggle='tooltip' data-placement='auto top' title='3rd Party Vendors'>
               <input  type="radio" name="employeeType"  value='<?=personRecord::REVALIDATED_VENDOR?>' data-type='other'>
@@ -321,7 +317,7 @@ class personWithSubPRecord extends personRecord
 
     <div class='form-group' >
 
-        <div class='col-sm-6 form-required'>
+        <div class='col-sm-6'>
                <select class='form-control select select2' id='lob'
                               name='LOB'
                               required="true"
@@ -447,10 +443,11 @@ class personWithSubPRecord extends personRecord
     <?php
     }
 
-    function displayLinkForm(){
+    function displayLinkForm($mode){
         $loader = new Loader();
         $availableFromPreBoarding = personTable::optionsForPreBoarded();
         $preBoardersAvailable = count($availableFromPreBoarding) > 1 ? null : " disabled='disabled' ";
+        $notEditable = $mode==FormClass::$modeEDIT ? ' disabled ' : null;
 
         $availableForLinking = " PRE_BOARDED is null and CNUM not like '%XXX' ";
         $allNonLinkedIbmers = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON, $availableForLinking);

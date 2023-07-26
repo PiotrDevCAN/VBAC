@@ -1,0 +1,108 @@
+function amendPesStatusModal(){
+$now = new \DateTime();
+?>
+<!-- Modal -->
+<div id="amendPesStatusModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Amend PES Status</h4>
+      </div>
+      <div class="modal-body">
+        <form id='psmForm' class="form-horizontal" method='post'>
+
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Employee Details</h3>
+            </div>
+            <div class="panel-body">
+              <div class='row'>
+                <div class='form-group'>
+                  <div class='col-sm-6'>
+                    <input class="form-control" id="psm_notesid" name="psm_notesid" value="" type="text" disabled>
+                  </div>
+                  <div class='col-sm-6'>
+                    <input class="form-control" id="psm_cnum" name="psm_cnum" value="" type="text" disabled>
+                  </div>
+                </div>
+              </div>
+              <div class='row' id='passportNameDetails'>
+                <div class='form-group'>
+                  <div class='col-sm-6'>
+                    <input class="form-control" id="psm_passportFirst" name="psm_passportFirst" value="" type="text"
+                      placeholder='Passport First Name' disabled>
+                  </div>
+                  <div class='col-sm-6'>
+                    <input class="form-control" id="psm_passportSurname" name="psm_passportSurname" value="" type="text"
+                      placeholder='Passport Surname'>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">PES Status</h3>
+            </div>
+            <div class="panel-body">
+              <div class='row'>
+                <div class='form-group required'>
+                  <label for='psm_status' class='col-md-2 control-label '>Status</label>
+                  <div class='col-md-4'>
+                    <select class='form-control select' id='psm_status' name='psm_status' required='required'
+                      data-tags="true" data-placeholder="Status" data-allow-clear="true">
+                      <option value=''>Status</option>
+                      <?php
+                      foreach (self::$pesStatus as $key => $status) {
+                      ?>
+                        <option value='<?=$status;?>'><?=$status;?></option>
+                      <?php
+                      }
+                      ?>
+                    </select>
+                  </div>
+                  <label for='pes_date' class='col-md-1 control-label '>Date</label>
+                  <div class='col-md-3'>
+                    <input class="form-control" id="pes_date" value="<?=$now->format('d M Y')?>" type="text"
+                      placeholder='Pes Status Changed' data-toggle='tooltip' title='PES Date Responded'>
+                    <input class="form-control" id="pes_date_db2" value="<?=$now->format('Y-m-d')?>"
+                      name="PES_DATE_RESPONDED" type='hidden'>
+                  </div>
+                </div>
+              </div>
+
+              <div class='row'>
+                <div class='form-group required'>
+                  <label for='psm_detail' class='col-md-2 control-label '>Detail</label>
+                  <div class='col-md-8' id='pesDateDiv'>
+                    <input class="form-control" id="psm_detail" name="psm_detail" value="" type="text">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <?php
+      $allButtons = null;
+      $submitButton = $this->formButton('submit','Submit','savePesStatus',null,'Submit','btn-primary');
+      $allButtons[] = $submitButton;
+      $this->formBlueButtons($allButtons);
+      ?>
+
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+          <input id='psm_revalidationstatus' name='psm_revalidationstatus' type='hidden' />
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<?php
+
+
+}

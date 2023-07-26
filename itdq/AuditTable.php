@@ -9,10 +9,13 @@ class AuditTable extends DbTable {
     const RECORD_TYPE_DETAILS = 'Details';
     const RECORD_TYPE_REVALIDATION = 'Revalidation';
 
-
     static function audit($statement,$type='Details'){
         if(property_exists('itdq\AllItdqTables','AUDIT')){
-            $sql = " INSERT INTO " . $GLOBALS['Db2Schema'] . "." . \itdq\AllItdqTables::$AUDIT;
+
+            $table = new AuditTable(AllItdqTables::$AUDIT);
+            $statement = $table->truncateValueToFitColumn($statement, 'DATA');
+
+            $sql = " INSERT INTO " . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$AUDIT;
             $sql . " ('TIMESTAMP','EMAIL_ADDRESS','DATA','TYPE') ";
             $sql .= " VALUES ";
             $sql .= " ( CURRENT TIMESTAMP, '" . db2_escape_string($_SESSION['ssoEmail']) . "','" . db2_escape_string($statement) . "','" . db2_escape_string($type) . "' )";
@@ -68,7 +71,6 @@ class AuditTable extends DbTable {
 
         set_time_limit(0);
 
-
         // echo $sql;
 
         $rs = db2_exec($GLOBALS['conn'],$sql);
@@ -78,6 +80,7 @@ class AuditTable extends DbTable {
         }
 
         $data = array();
+        $data['rows'] = array();
 
         while(($row=db2_fetch_array($rs))==true){
             $trimmedRow = array_map('trim', $row);

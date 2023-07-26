@@ -1,8 +1,12 @@
 <?php
+
+use vbac\allTables;
 use vbac\personRecord;
+use vbac\personTable;
 
 $personRecord = new personRecord();
-$headerCells = $personRecord->htmlHeaderCells();
+$personTable = new personTable(allTables::$PERSON);
+$headerCells = $personTable->headerRowForFullDatatable();
 
 ?>
 <div class='container'>
@@ -12,24 +16,26 @@ $headerCells = $personRecord->htmlHeaderCells();
 <div class='container-fluid'>
 <h3>Person Database</h3>
 
-<button id='reportAction' 		class='btn btn-primary btn-sm '>Action Mode</button>
+<button id='reportAction' 		  class='btn btn-primary btn-sm '>Action Mode</button>
 <button id='reportOffboarding' 	class='btn btn-primary btn-sm '>Offboarding Report</button>
 <button id='reportOffboarded' 	class='btn btn-primary btn-sm '>Offboarded Report</button>
-<button id='reportPes'    		class='btn btn-primary btn-sm '>PES Report</button>
+<button id='reportPes'    		  class='btn btn-primary btn-sm '>PES Report</button>
 <button id='reportRevalidation' class='btn btn-primary btn-sm '>Revalidation Report</button>
 <button id='reportMgrsCbn'      class='btn btn-primary btn-sm '>Mgrs CBN Report</button>
-<button id='reportAll'  		class='btn btn-primary btn-sm '>Show all Columns</button>
+<button id='reportAll'  		    class='btn btn-primary btn-sm '>Show all Columns</button>
 &nbsp;
 <button id='reportRemoveOffb' class='btn btn-warning btn-sm '>Hide Offboarded/ing</button>
 <button id='reportReload'  		class='btn btn-warning btn-sm '>Reload Data</button>
 <button id='reportReset'  		class='btn btn-warning btn-sm '>Reset</button>
-<div id='personDatabaseDiv' class='portalDiv'>
-<table id='personTable' class='table table-striped table-bordered compact'   style='width:100%'>
+<div id='personDatabaseDiv'   class='portalDiv'>
+<table id='personTable'       class='table table-striped table-bordered compact' cellspacing='0' width='100%' style='display: none;'>
 <thead>
-<tr><?=$headerCells;?></tr></thead>
+<?=$headerCells;?>
+</thead>
 <tbody>
 </tbody>
-<tfoot><tr><?=$headerCells;?></tr>
+<tfoot>
+<?=$headerCells;?>
 </tfoot>
 </table>
 </div>
@@ -38,66 +44,46 @@ $headerCells = $personRecord->htmlHeaderCells();
 <?php
 $person = new personRecord();
 $person->amendPesStatusModal();
-$person->savingBoardingDetailsModal();
-$person->editPersonModal();
+$person->amendPesLevelModal();
+$person->editAgileSquadModal();
 $person->portalReportSaveModal();
 $person->confirmChangeFmFlagModal();
-$person->confirmOffboardingModal();
 $person->confirmSendPesEmailModal();
+$person->confirmOffboardingModal();
+$person->confirmOffboardingInfoModal();
+include_once 'includes/modalSavingBoardingDetails.html';
+include_once 'includes/modalEditPerson.html';
+include_once 'includes/modalEditEmailAddress.html';
+// include_once 'includes/modalConfirmOffboarding.html';
 ?>
 
-<script>
+<script type="text/javascript">
 
-$(document).ready(function(){
-
-	$('[data-toggle="tooltip"]').tooltip();
-
-	var person = new personRecord();
-	person.initialiseDataTable();
-	person.listenForReportPes();
-	person.listenForReportAction();
-	person.listenForReportRevalidation();
-	person.listenForReportOffboarding();
-	person.listenForReportOffboarded();
-	person.listenForReportMgrsCbn();
-	person.listenForReportRemoveOffb();
-	person.listenForReportReset();
-	person.listenForReportReload();
-	person.listenForReportAll();
-	person.listenForReportSave();
-	person.listenForReportSaveConfirm();
-	person.listenForEditPesStatus();
-	person.listenForSavePesStatus();
-	person.listenForRestartPes();
-	person.listenForInitiatePesFromPortal();
-	person.listenForEditPerson(<?=$_SESSION['isFm'] ? "'yes'":"'no'";?>);
-	person.listenForAccountOrganisation();
-    person.listenForCtbRtb();
-	person.listenForToggleFmFlag();
-	person.listenForConfirmFmFlag();
-	person.listenforUpdateBoarding();
-	person.listenForStopOffBoarding();
-	person.listenForDeoffBoarding();
-	person.listenForOffBoardingCompleted();
-	person.listenForBtnOffboarding();
-	person.listenForClearCtid();
-	person.listenForSetPmoStatus();
-	person.listenforSendPesEmail();
-	person.listenforConfirmSendPesEmail();
-	person.listenForbtnTogglePesTrackerStatusDetails();
-//	person.listenForCancelPes(); Don't let them cancel 2018/12/19
-	person.listenForStopPes();
+document.isCdi = <?= $_SESSION['isCdi'] ? "'yes'" : "'no'";?>;
+document.isFm = <?= $_SESSION['isFm'] ? "'yes'" : "'no'";?>;
+document.tableType = '<?=personTable::PORTAL_PRE_BOARDER_EXCLUDE ?>';
 
 <?php
 if(isset($_GET['open'])){
-   ?>
-   $(document).on('init.dt',function(){
-	   $('#footerNOTESID').val('<?=trim($_GET['open']);?>').trigger('change');
-	   console.log($('.btnEditPerson'));
-	   $('.btnEditPerson').trigger('click');
-   });
-   <?php
+  ?>
+    document.open = '<?= $_GET['open'] ?>';
+  <?php
+} else {
+  ?>
+    document.open = '';
+  <?php
 }
 ?>
-});
+
 </script>
+<style>
+  .toolTipDetails {
+    width:  600px;
+    max-width: 600px;
+    overflow:auto;
+  } 
+  .toolTipDetails p {
+      margin: 0;
+      font-weight: bold;
+  }
+</style>

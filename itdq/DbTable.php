@@ -593,7 +593,7 @@ class DbTable
 
         $row = db2_fetch_assoc($this->execute($sql));
         if (! $row) {
-            DbTable::displayErrorMessage($row, __CLASS__, __METHOD__, $sql);
+            self::displayErrorMessage($row, __CLASS__, __METHOD__, $sql);
         } else {
             foreach ($row as $key => $value) {
                 $row[$key] = trim($value);
@@ -883,7 +883,11 @@ class DbTable
         $colNames = " (";
         $values = " (";
         foreach ($this->columns as $key => $properties) {
-            if ((($insertArray != null && isset($insertArray[$key])) or (($insertArray == null)) && (! isset($this->nonMandatoryColumns[$key])))) {
+            if ((
+                ($insertArray != null && isset($insertArray[$key])) 
+                or (($insertArray == null)) 
+                && (! isset($this->nonMandatoryColumns[$key]))
+            )) {
                 Trace::traceComment('Processing' . $key . "type " . $properties['DATA_TYPE'] . "Len:" . strlen($insertArray[$key]), __METHOD__, __LINE__);
                 // They have passed us an Array to use - AND - This field has a value in that array
                 // or
@@ -963,7 +967,6 @@ class DbTable
         if (! $rs) {
             $this->lastDb2StmtError = db2_stmt_error();
             $this->lastDb2StmtErrorMsg = db2_stmt_errormsg();
-
             echo "<BR/>Insert Array@<pre>" . __METHOD__ . __LINE__ ;
             print_r($insertArray);
             echo "</pre>";
@@ -991,7 +994,6 @@ class DbTable
         if (! $rs) {
             $this->lastDb2StmtError = db2_stmt_error();
             $this->lastDb2StmtErrorMsg = db2_stmt_errormsg();
-
             echo "<br/>Method:" . __METHOD__ . " Line:" .  __LINE__ ;
             echo "<br/>Insert Array:";
             echo "<pre>";
@@ -1093,7 +1095,7 @@ class DbTable
             Trace::traceVariable($rs, __METHOD__, __LINE__);
 
             if (! $rs) {
-                DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+                self::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             }
             return $rs==true;
         } else {
@@ -1905,7 +1907,9 @@ class DbTable
 
         if (isset(AllItdqTables::$DB2_ERRORS)) {
             echo "<BR/>" . $method . "<B>DB2 Error:</B><span style='color:red'>" . $db2Error . "</span><B>Message:</B><span style='color:red'>" . $db2ErrorMsg . "</span>$sql";
+            $printableSql = empty($pwd) ? $sql : str_replace($pwd, "******", $sql);
             DbTable::logDb2Error($data);
+            trigger_error("Error in: '$method' running: $printableSql code: $db2Error", E_USER_ERROR);
             return array(
                 'Db2Error' => $db2Error,
                 'Db2ErrorMsg' => $db2ErrorMsg
@@ -1924,7 +1928,6 @@ class DbTable
                     $field = preg_split($pattern, $db2ErrorMsg);
                     var_dump($field);
                     break;
-
                 default:
                     ;
                     break;
@@ -1935,6 +1938,7 @@ class DbTable
 
     static function logDb2Error($data = null)
     {
+        $table = new DbTable(AllItdqTables::$DB2_ERRORS);
         $userid = isset($_SESSION['ssoEmail']) ? $_SESSION['ssoEmail'] : 'userNotDefined';
         $elapsed = isset($_SESSION['tracePageOpenTime']) ? microtime(true) - $_SESSION['tracePageOpenTime'] : null;
 
@@ -1947,7 +1951,8 @@ class DbTable
         $backtrace = ob_get_contents();
         @ob_end_clean();
 
-        $backtrace = strlen(db2_escape_string($backtrace)) > 1024 ? substr(db2_escape_string($backtrace), 0, 1000) : db2_escape_string($backtrace);
+        // $backtrace = strlen(db2_escape_string($backtrace)) > 1024 ? substr(db2_escape_string($backtrace), 0, 1000) : db2_escape_string($backtrace);
+        $backtrace = $table->truncateValueToFitColumn(db2_escape_string($backtrace), 'BACKTRACE');
 
         ob_start();
         print_r($_REQUEST);
@@ -1960,8 +1965,18 @@ class DbTable
             $request .= ":data:" . ob_get_contents();
             @ob_end_clean();
         }
-        $request = strlen(db2_escape_string($request)) > 1024 ? substr(db2_escape_string($request), 0, 1000) : db2_escape_string($request);
-        $sql .= " VALUES ('" . $userid . "','" . $_SERVER['PHP_SELF'] . "','" . db2_stmt_error() . "','" . db2_stmt_errormsg() . "','" . $backtrace . "','" . $request . "')";
+        // $request = strlen(db2_escape_string($request)) > 1024 ? substr(db2_escape_string($request), 0, 1000) : db2_escape_string($request);
+        $request = $table->truncateValueToFitColumn(db2_escape_string($request), 'REQUEST');
+
+        $db2StmtError = db2_stmt_error();
+        // $db2StmtError = strlen(db2_escape_string($db2StmtError)) > 50 ? substr(db2_escape_string($db2StmtError), 0, 50) : db2_escape_string($db2StmtError);
+        $db2StmtError = $table->truncateValueToFitColumn(db2_escape_string($db2StmtError), 'DB2_ERROR');
+
+        $db2StmeErrorMsg = db2_stmt_errormsg();
+        // $db2StmeErrorMsg = strlen(db2_escape_string($db2StmeErrorMsg)) > 50 ? substr(db2_escape_string($db2StmeErrorMsg), 0, 50) : db2_escape_string($db2StmeErrorMsg);
+        $db2StmeErrorMsg = $table->truncateValueToFitColumn(db2_escape_string($db2StmeErrorMsg), 'DB2_MESSAGE');
+
+        $sql .= " VALUES ('" . $userid . "','" . $_SERVER['PHP_SELF'] . "','" . $db2StmtError . "','" . $db2StmeErrorMsg . "','" . $backtrace . "','" . $request . "')";
 
         if (isset($_SESSION['phoneHome']) && class_exists('Email')) {
             $to = $_SESSION['phoneHome'];
@@ -2014,7 +2029,15 @@ class DbTable
     function truncateValueToFitColumn($columnValue, $columnName)
     {
         $lengthOfValue = strlen(trim($columnValue));
-        $lengthColumnWillSupport = $this->columns[strtoupper($columnName)]['COLUMN_SIZE'];
+        $type = $this->columns[strtoupper($columnName)]['TYPE_NAME'];
+        switch ($type) {
+            case 'CLOB':
+                $lengthColumnWillSupport = 32672;
+                break;
+            default :
+                $lengthColumnWillSupport = $this->columns[strtoupper($columnName)]['COLUMN_SIZE'];
+                break;
+        }
         $truncatedValue = substr(trim($columnValue), 0, $lengthColumnWillSupport);
         return $truncatedValue;
     }
@@ -2190,9 +2213,7 @@ class DbTable
         foreach ($this->columns as $columnName => $db2ColumnProperties) {
             $headerRow.= "<th>" . str_replace("_"," ", $columnName );
         }
-        $headerRow.= "</th></tr>";
+        $headerRow.= "</th><th>HAS_DELEGATES</tr></tr>";
         return $headerRow;
     }
-
-
 }

@@ -1,8 +1,5 @@
 <?php
 use vbac\personRecord;
-use itdq\FormClass;
-use itdq\Loader;
-use vbac\allTables;
 
 set_time_limit(0);
 
@@ -13,12 +10,42 @@ set_time_limit(0);
 <div class='row'>
 <div class='col-sm-2'></div>
 <div class='col-sm-8'>
-<h2>Onboard Individual
-<input checked data-size="mini" data-toggle="toggle" type="checkbox" class='toggle' data-width='120' data-on="Reg/Contractor" data-off="Pre-Hire/Vendor" data-onstyle="primary" data-offstyle="warning" id='hasBpEntry'>
-</h2>
+<h2>Onboard Individual</h2>
 </div>
 </div>
 
+<div class='row'>
+  <div class='col-sm-2'></div>
+  <div class='col-sm-8'>
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" id="myTabs" role="tablist">
+      <li role="presentation"><a href="#regularTab" aria-controls="regularTab" role="tab"  id="showRegularForm"><b>Reg/Contractor</b></a></li>
+      <li role="presentation"><a href="#vendorTab" aria-controls="vendorTab" role="tab" id="showVendorForm"><b>Pre-Hire/Vendor</b></a></li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in" id="regularTab">
+        <?php
+        $mode = personRecord::$modeDEFINE;
+        $person = new personRecord();
+        $person->displayRegularBoardingForm($mode);
+        ?>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="vendorTab">
+        <?php
+        $mode = personRecord::$modeDEFINE;
+        $person = new personRecord();
+        $person->displayVendorBoardingForm($mode);
+        ?>
+      </div>
+    </div>
+  </div>
+</div>
+
+<br/>
+<hr/>
+<br/>
 
 <div class='row'>
 <div class='col-sm-2'></div>
@@ -26,49 +53,25 @@ set_time_limit(0);
 
 <?php
 $mode = personRecord::$modeDEFINE;
-personRecord::loadKnownCnum();
-personRecord::loadKnownEmail();
-$person = new personRecord();
-$person->displayBoardingForm($mode);
 ?>
 </div>
 <div class='col-sm-2'></div>
 </div>
 </div>
 <?php
-$person->savingBoardingDetailsModal();
-// $loader = new Loader();
-// $countryCodes = $loader->loadIndexed('COUNTRY_NAME','COUNTRY_CODE',allTables::$STATIC_COUNTRY_CODES);
+include_once 'includes/modalAdditionalBoardingDetails.html';
+include_once 'includes/modalSavingBoardingDetails.html';
 ?>
 
-<script type="text/javascript">
-var startDate,endDate;
-var startPicker, endPicker;
-
-
-$(document).ready(function() {
-	$('.toggle').bootstrapToggle()
-
-	var person = new personRecord();
-    person.initialiseStartEndDate();
-    person.listenForHasBpEntry();
-	person.listenForName();
-	person.listenForEmail();
-    person.listenForSerial();
-    person.listenForSaveBoarding();
-    person.listenForAccountOrganisation();
-    person.listenForCtbRtb();
-    person.listenForInitiatePesFromBoarding();
-    person.listenForLinkToPreBoarded();
-    person.listenForEmployeeTypeRadioBtn();
-
-});
-
-
-
-
-
-</script>
-
+<style>
+  .toolTipDetails {
+    width:  600px;
+    max-width: 600px;
+    overflow:auto;
+  } 
+  .toolTipDetails p {
+      margin: 0;
+      font-weight: bold;
+  }
+</style>
 <?php
-

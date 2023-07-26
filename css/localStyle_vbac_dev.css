@@ -243,8 +243,12 @@ dropdown-menu > li > a {
 	
 }
 
-
 .pesComments {
 	overflow-y: auto;
     height: 100px;
 }
+
+.required .control-label:after {
+	content:"*";
+	color:red;
+  }

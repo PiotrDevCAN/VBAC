@@ -15,7 +15,6 @@ if(!$updateResult){
     echo db2_stmt_errormsg();
 }
 
-
 $messages = ob_get_clean();
 ob_start();
 

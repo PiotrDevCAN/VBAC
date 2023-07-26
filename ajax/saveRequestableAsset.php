@@ -14,7 +14,7 @@ $requesableAssetRecord->setFromArray($_POST);
 
 AuditTable::audit("Saved RequestableAssetListRecord:<pre>". print_r($requesableAssetRecord,true) . "</pre>", AuditTable::RECORD_TYPE_DETAILS);
 
-$saveRecordResult = $requesableAssetListTable->saveRecord($requesableAssetRecord);
+$saveRecordResult = $requesableAssetListTable($requesableAssetRecord);
 if(($saveRecordResult && $_POST['mode']=='Save') || (!$saveRecordResult && $_POST['mode']=='Update')){
     $success = true;
 } else {

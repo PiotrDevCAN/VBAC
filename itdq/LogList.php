@@ -1,5 +1,7 @@
 <?php
 namespace itdq;
+use itdq\DbTable;
+
 /*
  * This class Displays the LOG table.
  * 

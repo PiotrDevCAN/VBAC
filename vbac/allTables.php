@@ -38,6 +38,7 @@ class allTables
 
     public static $PERSON                 = 'PERSON';
     public static $PERSON_PORTAL_REPORTS  = 'PERSON_PORTAL_REPORTS';
+    public static $PERSON_PORTAL          = 'PERSON_PORTAL_VIEW';
     public static $PERSON_PORTAL_LITE     = 'PERSON_PORTAL_LITE_VIEW';
 
     public static $PES_EVENTS             = 'PES_EVENTS';
@@ -51,7 +52,15 @@ class allTables
     public static $STATIC_LOCATIONS       = 'STATIC_LOCATIONS';
     public static $STATIC_ROLES           = 'STATIC_ROLES';
     public static $STATIC_WORKSTREAMS     = 'STATIC_WORKSTREAMS';
+    public static $STATIC_SKILLSETS       = 'STATIC_SKILLSETS';
 
     public static $TRACE                  = 'TRACE';
     public static $TRACE_CONTROL          = 'TRACE_CONTROL';
+
+    public static $ADD_CANDIDATE          = 'ADD_CANDIDATE_REQUEST';
+    public static $CANDIDATE_STATUS_REQ   = 'CANDIDATE_STATUS_REQUEST';
+
+    public static $CANDIDATE_DETAILS      = 'CANDIDATE_DETAILS';
+    public static $CANDIDATE_STATUS       = 'CANDIDATE_STATUS';
+    public static $CANDIDATE_DOCUMENTS    = 'CANDIDATE_DOCUMENT';
 }

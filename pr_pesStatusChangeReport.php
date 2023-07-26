@@ -24,8 +24,6 @@ $rs = db2_exec($GLOBALS['conn'], $sql);
 
 ?>
 <h2>PES Status Change Details Report</h2>
-
-
 <table id='pesStatus' class='table table-responsive table-condensed' >
 <thead><tr><th>Cnum</th><th>Notes Id</th><th>Status</th><th>Actioner</th><th>Date</th><th>Time	</th></tr>
 </thead>
@@ -58,34 +56,5 @@ echo $otherRecords;
 ?>
 
 </div>
-
-
-<script>
-
-$(document).ready(function(){
-
-	$('#pesStatus').DataTable({
-        orderCellsTop: true,
-    	autoWidth: true,
-    	responsive: true,
-    	processing: true,
-    	dom: 'Blfrtip',
-        buttons: [
-                  'colvis',
-                  'excelHtml5'
-             ],
-
-        order: [[ 1, "asc" ]],
-
-
-		});
-
-
-});
-
-
-
-</script>
-
 <?php
 Trace::pageLoadComplete($_SERVER['PHP_SELF']);

@@ -1,6 +1,8 @@
 <?php
 namespace itdq;
 use itdq\AllItdqTables;
+use itdq\DbTable;
+
 /**
  * Interfaces to the DIARY table, basically by inserting entries.
  *
@@ -8,7 +10,7 @@ use itdq\AllItdqTables;
  * @package esoft
  *
  */
-class DiaryTable  extends DbTable {
+class DiaryTable extends DbTable {
 
 	static function insertEntry( $entry) {
 		$sql = "INSERT INTO " . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$DIARY . " ( ENTRY, INTRANET_ID) ";

@@ -2,8 +2,6 @@
 namespace vbac;
 
 use itdq\DbRecord;
-use itdq\Loader;
-use itdq\JavaScript;
 
 /**
  *

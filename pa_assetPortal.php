@@ -3,9 +3,12 @@ use vbac\assetRequestsTable;
 use vbac\allTables;
 use vbac\personTable;
 
-ini_set('MEMORY_LIMIT', '150M');
+ini_set('MEMORY_LIMIT', '512M');
 
 $assetTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
+
+$headerCells = assetRequestsTable::portalHeaderCells();
+
 ?>
 <div class='container'>
 <h1 id='portalTitle'>Asset Request Portal</h1>
@@ -15,7 +18,7 @@ $assetTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
 <h3>Asset Requests</h3>
 
 <div class='row'>
-<button id='reportShowAll'  		class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>All Requests</button>
+<button id='reportShowAll'  		class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>All Requests&nbsp;<span class="badge" id='countAll'>**</span></button>
 <button id='reportShowAwaitingIam'  class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Awaiting IAM&nbsp;<span class="badge" id='countAwaitingIam'>**</span></button>
 <button id='reportShowExportable'   class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>PMO To Raise&nbsp;<span class="badge" id='countPmoForExport'>**</span></button>
 <button id='reportShowExported'     class='btn btn-primary btn-sm accessBasedBtn accessPmo accessCdi'>Exported&nbsp;<span class="badge" id='countPmoExported'>**</span></button>
@@ -42,9 +45,16 @@ $assetTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
 </div>
 
 <div id='assetRequestsDatatablesDiv' class='portalDiv'>
+<table id='assetPortalTable' class='table table-striped table-bordered compact' cellspacing='0' width='100%' style='display: none;'>
+<thead>
+<tr><?=$headerCells;?></tr>
+</thead>
+<tbody>
+</tbody>
+<tfoot><tr><?=$headerCells;?></tr></tfoot>
+</table>
 </div>
 </div>
-
 
 <?php
 
@@ -64,7 +74,6 @@ $isPes  = $_SESSION['isPes']  ? ".not('.accessPes')"  : null;
 $isUser = $_SESSION['isUser'] ? ".not('.accessUser')" : null;
 $myCnum = personTable::myCnum();
 
-
 ?>
 <input type='hidden' id='isPmo' value='<?=$_SESSION['isPmo']?>' />
 <input type='hidden' id='isFm' value='<?=$_SESSION['isFm']?>' />
@@ -75,49 +84,8 @@ $myCnum = personTable::myCnum();
 var dateReturned;
 var returnedPicker;
 
-
 $(document).ready(function(){
-
 	$('.accessBasedBtn')<?=$isFm?><?=$isPmo?><?=$isCdi?><?=$isUser?>.remove();
-
-	var AssetPortal = new assetPortal();
-	AssetPortal.initialiseAssetRequestPortal();
-
- 	AssetPortal.listenForExportBauButton();
- 	AssetPortal.listenForExportNonBauButton();
- 	AssetPortal.listenForMapVarbButton();
- 	AssetPortal.listenForDeVarbButton();
- 	AssetPortal.listenForMapVarbModalShown();
- 	AssetPortal.listenForSetOitStatusButton();
- 	AssetPortal.listenForSetOitStatusModalShown();
-
- 	AssetPortal.listenForAssetReturned();
-	AssetPortal.listenForConfirmedAssetReturnedModalShown();
- 	AssetPortal.listenForConfirmedAssetReturned();
-
- 	AssetPortal.listenForReportReset();
- 	AssetPortal.listenForReportReload();
- 	AssetPortal.listenForReportShowAll();
- 	AssetPortal.listenForReportShowExportable();
- 	AssetPortal.listenForReportShowAwaitingIam();
- 	AssetPortal.listenForReportExported();
- 	AssetPortal.listenForReportBauRaised();
- 	AssetPortal.listenForReportNonBauRaised();
- 	AssetPortal.listenForReportShowUserRaised();
- 	AssetPortal.listenForReportShowUid();
- 	AssetPortal.listenForEditUid();
- 	AssetPortal.listenForSaveEditUid();
- 	AssetPortal.listenForSaveMapping();
- 	AssetPortal.listenForSaveOrderItStatus();
- 	AssetPortal.listenForAddToJustification();
- 	AssetPortal.listenForSaveAmendedJustification();
- 	AssetPortal.listenForAssetRequestApprove();
- 	AssetPortal.listenForAssetRequestReject();
- 	AssetPortal.listenForAssetRequestApproveRejectToggle();
- 	AssetPortal.listenForAssetRequestApproveRejectConfirm();
-
- 	AssetPortal.listenForAmendOrderIt();
- 	AssetPortal.listenForSaveAmendedOrderIt();
 });
 
 </script>

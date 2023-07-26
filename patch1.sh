@@ -9,9 +9,11 @@ sed -i 's:variables_order = "GPCS":variables_order = "GPCES":g' /etc/php.ini
 rm -rf /var/cache/dnf && dnf remove -y nodejs && dnf clean all && dnf update -y && dnf upgrade -y
 # dnf install unzip zip libpng-devel libjpeg-turbo-devel postgresql-devel
 # dnf install -y unzip zip 
-dnf install -y php-pear php-devel unzip zip 
+dnf install -y php-pear php-devel unzip zip sudo iputils nmap
 curl -sS https://getcomposer.org/installer | tac | tac | php -- --install-dir=/usr/local/bin --filename=composer
 chmod 777 /usr/local/bin/composer
+
+cp /var/www/html/cache.conf /etc/httpd/conf.d
 
 #echo "<?php phpinfo();?>" > /var/www/html/index.php
 #echo 'auto_prepend_file="/var/www/html/php/siteheader.php"' > /etc/php.d/rob.ini

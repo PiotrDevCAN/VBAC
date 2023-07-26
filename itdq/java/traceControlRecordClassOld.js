@@ -39,7 +39,7 @@ var TraceControlRecordClass = {
 					methods = xmlDoc.getElementsByTagName("METHOD");
 					var numberOfMethods = methods.length;
 					// populateMessagePlaceHolder(0,numberOfMethods,0);
-					for (i = 0; i < methods.length; i++) {
+					for (var i = 0; i < methods.length; i++) {
 						// populateMessagePlaceHolder(0,numberOfMethods,i);
 						method = methods[i].childNodes[0];
 						option = document.createElement("option");

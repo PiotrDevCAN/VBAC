@@ -64,6 +64,11 @@ switch (true) {
                 $CBCInPlace = '';
                 break;
         }
+
+        // override CBCInPlace to 'Yes' if location is OnShore
+        if ($onShore = '1') {
+            $CBCInPlace = 'Yes';
+        }
         
         $additionalFields = array();
         $additionalFields['ONSHORE'] = $onShore;

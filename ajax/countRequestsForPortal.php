@@ -4,6 +4,7 @@ use vbac\assetRequestsTable;
 
 ob_start();
 $assetTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
+$all                = $assetTable->countRequestsAll();
 $awaitingIam        = $assetTable->countRequestsAwaitingIam();
 $pmoForExportBau    = $assetTable->countRequestsForPmoExport('true');
 $pmoForExportNonBau = $assetTable->countRequestsForPmoExport('false');
@@ -15,9 +16,17 @@ $nonBauRaised       = $assetTable->countRequestsRaised(false);
 
 $messages = ob_get_clean();
 ob_start();
-$response = array('awaitingIam'=>$awaitingIam,'pmoForExport'=>$pmoForExport,'nonPmoForExport'=>$nonPmoForExport
-    ,'pmoExported'=>$pmoExported,'bauForExport'=>$pmoForExportBau
-    ,'nonBauForExport'=>$pmoForExportNonBau,'bauRaised'=>$bauRaised
-    ,'nonBauRaised'=>$nonBauRaised,'messages'=>$messages);
+$response = array(
+    'all'=>$all,
+    'awaitingIam'=>$awaitingIam,
+    'pmoForExport'=>$pmoForExport,
+    'nonPmoForExport'=>$nonPmoForExport,
+    'pmoExported'=>$pmoExported,
+    'bauForExport'=>$pmoForExportBau,
+    'nonBauForExport'=>$pmoForExportNonBau,
+    'bauRaised'=>$bauRaised,
+    'nonBauRaised'=>$nonBauRaised,
+    'messages'=>$messages
+);
 ob_clean();
 echo json_encode($response);

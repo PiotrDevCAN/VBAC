@@ -14,7 +14,7 @@ while(($row=db2_fetch_assoc($rs))==true){
 
 echo count($firstNames);
 
-JavaScript::buildArrayOfObjectsFromArrayOfRows($firstNames, 'firstNames','firstNamesObj');
+JavaScript::buildArrayOfObjectsFromArrayOfRows($firstNames, 'firstNames', 'firstNamesObj');
 
 ?>
 

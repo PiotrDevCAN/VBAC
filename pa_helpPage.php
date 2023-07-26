@@ -71,8 +71,6 @@ body {
 </div>
 
 <script type="text/javascript">
-
-
 $(document).click('#feedbackSend',function (){
 	var sender = '<?=$_SESSION['ssoEmail']?>'
 	var feedback = $('#feedbackText').val();
@@ -85,10 +83,6 @@ $(document).click('#feedbackSend',function (){
         	$('#feedbackText').val('');
         }
   });
-
-
-
-
 });
 </script>
 

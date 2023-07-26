@@ -11,7 +11,7 @@ $cnum    = !empty($_GET['cnum']) ? $_GET['cnum'] : null;
 $row = false;
 
 $sql = " SELECT count(*) as FOUND ";
-$sql.= " FROM " . $_ENV['environment'] . "." . allTables::$ODC_ACCESS_LIVE . " AS O ";
+$sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$ODC_ACCESS_LIVE . " AS O ";
 $sql.= " WHERE 1=1 ";
 $sql.= !empty($notesId) ? " AND lower(O.OWNER_NOTES_ID) = '" . db2_escape_string(strtolower($notesId)) . "'; " : null;
 $sql.= !empty($cnum) ? " AND lower(O.OWNER_CNUM_ID) = '" . db2_escape_string(strtolower($cnum)) . "'; " : null;

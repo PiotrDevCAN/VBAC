@@ -17,24 +17,3 @@ $delegate = new delegateRecord();
 <?=$delegate->displayMyDelegates();?>
 </div>
 </div>
-
-
-<script>
-
-$(document).ready(function() {
-
-	var Delegate = new delegate();
-
-	var AssetPortal = new assetPortal();
-
-    $('.select2').select2({
-        'placeholder' : 'Select your delegate'
-
-        });
-
-    Delegate.listenForSaveDelegate();
-    Delegate.initialiseMyDelegatesDataTable();
-    Delegate.listenForDeleteDelegate();
-
-})
-</script>

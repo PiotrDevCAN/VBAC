@@ -2,7 +2,6 @@
 
 use vbac\assetRequestRecord;
 use vbac\personTable;
-use itdq\AuditTable;
 
 set_time_limit(0);
 ob_start();
@@ -15,8 +14,6 @@ ob_start();
 <div class='col-sm-1 col-sm-offset-7'>
 <button type='button' id='assetHelp' class='btn btn-info' >Help</button>
 </div>
-
-
 </div>
 
 <div class='row'>
@@ -33,12 +30,12 @@ if(!$myCnum){
 ?>
 </div>
 <?php
-$assetRequest->helpModal();
-$assetRequest->doTheEducationModal();
-$assetRequest->confirmEducationModal();
-$assetRequest->ctIdRequiredModal();
-$assetRequest->missingPrereqModal();
-$assetRequest->saveFeedbackModal();
+include_once 'includes/modalAssetHelp.html';
+include_once 'includes/modalConfirmEducation.html';
+include_once 'includes/modalDoTheEducation.html';
+include_once 'includes/modalMissingPrereq.html';
+include_once 'includes/modalObtainCtid.html';
+include_once 'includes/modalSaveFeedback.html';
 
 ob_flush();
 $assetRequest->createJsCtidLookup();
@@ -46,51 +43,11 @@ $assetRequest->createJsCtidLookup();
 
 </div>
 <script type="text/javascript">
-<?php
-if($myCnum) {
-    ?>
-    $(document).ready(function() {
-    	$('[data-toggle="tooltip"]').tooltip();
-    	$('.toggle').bootstrapToggle();
-    	$('#requestees').select2({
-        	width:'100%',
-      		placeholder: 'Request For:',
-    		allowClear: true});
-    	$('#approvingManager').select2({
-        	width:'100%',
-      		placeholder: 'Approving Manager:',
-    		allowClear: true});
-    	$('.locationFor').select2({
-        	width:'100%',
-      		placeholder: 'Approved Location',
-    		allowClear: true,
-//     		ajax: {
-//     		    url: '/ajax/select2Locations.php',
-//     		    dataType: 'json'
-//     		    }
-	    });
-     	var AssetRequest = new assetRequest();
-     	AssetRequest.listenForSelectRequestee();
-     	AssetRequest.listenForEnteringCtid();
-     	AssetRequest.listenForSelectLocation();
-     	AssetRequest.listenForSelectAsset();
-     	AssetRequest.listenForSaveAssetRequest();
-     	AssetRequest.listenForToggleReturnRequest();
-     	AssetRequest.listenForClosingSaveFeedbackModal();
-     	AssetRequest.listenForAddPrereq();
-     	AssetRequest.listenForIgnorePrereq();
-     	AssetRequest.listenForClosingPrereqModal();
-     	AssetRequest.countCharsInTextarea();
-    });
-    <?php
-}
-?>
 
+document.myCnum = '<?= $myCnum;?>';
 
 $('#assetHelp').on('click',function(){
 	$('#assetHelpModal').modal('show');
 });
-
-
 
 </script>

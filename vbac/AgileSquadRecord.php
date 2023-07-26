@@ -2,8 +2,6 @@
 namespace vbac;
 
 use itdq\DbRecord;
-use itdq\Loader;
-use itdq\AuditTable;
 use itdq\FormClass;
 use vbac\AgileSquadTable;
 
@@ -16,12 +14,12 @@ class AgileSquadRecord extends DbRecord {
     protected $SHIFT;
     protected $SQUAD_LEADER;
     protected $SQUAD_NAME;
+    protected $ORGANISATION;
     protected $tribeOrganisation;
 
     function setTribeOrganisation($version){
         $this->tribeOrganisation = $version;
     }
-
 
     function displayForm($mode){
         $notEditable = $mode == FormClass::$modeEDIT ? ' disabled ' : '';
@@ -31,19 +29,19 @@ class AgileSquadRecord extends DbRecord {
          <div class="form-group required" >
             <label for=SQUAD_NUMBER class='col-sm-2 control-label ceta-label-left' data-toggle='tooltip' data-placement='top' title='Squad Number'>Squad Number</label>
         	<div class='col-md-4'>
-				<input id='SQUAD_NUMBER' name='SQUAD_NUMBER' class='form-control' type='number' <?=$notEditable;?> value='<?=!empty($this->SQUAD_NUMBER) ? $this->SQUAD_NUMBER :$nextAvailableSquadNumber ; ?>' />
+				<input id='SQUAD_NUMBER' name='SQUAD_NUMBER' class='form-control' type='number' <?=$notEditable;?> value='<?=!empty($this->SQUAD_NUMBER) ? $this->SQUAD_NUMBER :$nextAvailableSquadNumber ; ?>' placeholder="Squad Number"/>
             </div>
         </div>
         <div class="form-group required" >
-            <label for='Organisation' class='col-sm-2 control-label ceta-label-left' data-toggle='tooltip' data-placement='top' title='Organisation'>Organisation</label>
+            <label for='ORGANISATION' class='col-sm-2 control-label ceta-label-left' data-toggle='tooltip' data-placement='top' title='Organisation'>Organisation</label>
         	<div class='col-md-4'>
         	 <div class="form-check">
-             <input class="form-check-input" name='Organisation'  type="radio" id="radioTribeOrganisationManaged" value="Managed Services" >
+             <input class="form-check-input" name='ORGANISATION'  type="radio" id="radioTribeOrganisationManaged" value="Managed Services" checked='checked'>
              <label class="form-check-label " for="radioTribeOrganisationManaged" >Managed Services</label>
              </div>
 
              <div class="form-check">
-             <input class="form-check-input" name='Organisation'  type="radio" id="radioTribeOrganisationProject" value="Project Services" >
+             <input class="form-check-input" name='ORGANISATION'  type="radio" id="radioTribeOrganisationProject" value="Project Services" >
              <label class="form-check-label " for="radioTribeOrganisationProject">Project Services</label>
              </div>
             </div>
@@ -51,20 +49,20 @@ class AgileSquadRecord extends DbRecord {
         <div class="form-group required " >
             <label for='SQUAD_TYPE' class='col-sm-2 control-label ceta-label-left' data-toggle='tooltip' data-placement='top' title='Squad Type'>Squad Type</label>
         	<div class='col-md-4'>
-				<input id='SQUAD_TYPE' name='SQUAD_TYPE' class='form-control' value='<?=!empty($this->SQUAD_TYPE) ? $this->SQUAD_TYPE :null ; ?>' />
+				<input id='SQUAD_TYPE' name='SQUAD_TYPE' class='form-control' value='<?=!empty($this->SQUAD_TYPE) ? $this->SQUAD_TYPE :null ; ?>' placeholder="Squad Type"/>
             </div>
         </div>
         <div class="form-group required " >
             <label for='SQUAD_NAME' class='col-sm-2 control-label ceta-label-left' data-toggle='tooltip' data-placement='top' title='Squad Name'>Squad Name</label>
         	<div class='col-md-4'>
-				<input id='SQUAD_NAME' name='SQUAD_NAME' class='form-control' value='<?=!empty($this->SQUAD_NAME) ? $this->SQUAD_NAME :null ; ?>' />
+				<input id='SQUAD_NAME' name='SQUAD_NAME' class='form-control' value='<?=!empty($this->SQUAD_NAME) ? $this->SQUAD_NAME :null ; ?>' placeholder="Squad Name"/>
             </div>
         </div>
         <div class="form-group required" >
             <label for='TRIBE_NUMBER' class='col-sm-2 control-label ceta-label-left' data-toggle='tooltip' data-placement='top' title='Tribe'>Tribe</label>
         	<div class='col-md-4'>
-				<SELECT id='TRIBE_NUMBER' class='form-control select2'  name='TRIBE_NUMBER' >
-    				<option value=''></option>
+				<select id='TRIBE_NUMBER' class='form-control select2'  name='TRIBE_NUMBER' >
+                <option value=''>Select Tribe</option>
     			</select>
         	</div>
         </div>
@@ -72,8 +70,8 @@ class AgileSquadRecord extends DbRecord {
         <div class="form-group required" >
             <label for='SHIFT' class='col-sm-2 control-label ceta-label-left' data-toggle='tooltip' data-placement='top' title='Squad works Shifts'>Shifts</label>
         	<div class='col-md-4'>
-				<SELECT id='SHIFT' class='form-control select2' <?=$notEditable ?> name='SHIFT' >
-    				<option value=''></option>
+				<select id='SHIFT' class='form-control select2' <?=$notEditable ?> name='SHIFT' >
+    				<option value=''>Select Shifts</option>
     				<?php
     				foreach (array('Y'=>'Yes','N'=>'No') as $key =>  $shift) {
     				    ?><option value='<?=trim($key)?>'><?=trim($shift)?>
@@ -87,7 +85,7 @@ class AgileSquadRecord extends DbRecord {
         <div class="form-group " >
             <label for='SQUAD_LEADER' class='col-sm-2 control-label ceta-label-left' data-toggle='tooltip' data-placement='top' title='Squad Leader'>Squad Leader</label>
         	<div class='col-md-4'>
-				<input id='SQUAD_LEADER' name='SQUAD_LEADER' class='form-control typeaheadNotesId' value='<?=!empty($this->SQUAD_LEADER) ? $this->SQUAD_LEADER :null ; ?>'/>
+				<input id='SQUAD_LEADER' name='SQUAD_LEADER' class='form-control typeaheadNotesId' value='<?=!empty($this->SQUAD_LEADER) ? $this->SQUAD_LEADER :null ; ?>' placeholder="Squad Leader"/>
             </div>
         </div>
    		<div class='form-group'>

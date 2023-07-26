@@ -2,6 +2,7 @@
 
 use vbac\personTable;
 use vbac\dlpRecord;
+use vbac\personRecord;
 
 set_time_limit(0);
 ob_start();
@@ -12,30 +13,35 @@ ob_start();
 <div class='col-sm-8'>
 <h2>Data Leakage Protection - DG&amp;CB Licence Tracking</h2>
 <h5>Install DG / CB Software from <a href='https://kyndryl.box.com/s/spr0ndbw659o3yumbnnnu239a038fbr6' target='_blank' >here</a></h5>
-<h5>Raise a <a href='https://w3.ibm.com/tools/cio/forms/landing/org/app/f789d11a-c9a3-45f9-8e98-8550a6ef98e2/launch/index.html?form=F_DLPSupportTicketForm' target='_blank' >DLP Support Ticket</a></h5>
+<h5 style="font-weight: bold;">
+Please drop a mail to Kyndryl IBM LBG IAM Requests <a href='<?=personRecord::$securityOps[0];?>'><?=personRecord::$securityOps[0];?></a> team if you want to raise any concern related to DG/CB with details like
+Laptop Host Name, is it an issue with DG or CB and provide detailed description of issue or error.
+</h5>
 </div>
 </div>
-</div>
-
-
-
 
 <div class='row'>
 <?php
 $mode = dlpRecord::$modeDEFINE;
 $dlpRecord = new dlpRecord();
 $myCnum = personTable::myCnum();
+$myCnum = 'aaa';
 if(!$myCnum){
-   throw new Exception("Didnt find user in PERSON table.");
+    $notFound = true;
+    echo '<div class="col-lg-12"><h3>Didnt find user in PERSON table.</h3></div>';
+    // throw new Exception("Didnt find user in PERSON table.");
 } else {
+    $notFound = false;
     $dlpRecord->displayForm($mode);
 }
 ?>
 </div>
-
-<?=$dlpRecord->saveResponseModal();?>
 </div>
+<?php
+if(!$myCnum){
 
+} else {
+?>
 <div class='container-fluid'>
 <h3 id='portalTitle'>Licenses</h3>
 <div class='row'>
@@ -49,10 +55,6 @@ if(!$myCnum){
 <div class='row'>
 <a class='btn btn-sm btn-link accessBasedBtn accessPmo accessCdi' href='/dn_dlpActive.php'><i class="glyphicon glyphicon-download-alt"></i> DLP Download</a>
 </div>
-
-
-
-
 <div id='dlpLicencesReport'>
 <table id='dlpLicensesTable' class='table table-striped table-bordered compact'   style='width:100%'>
 <thead>
@@ -62,77 +64,13 @@ if(!$myCnum){
 <tfoot><tr><th>CNUM</th><th>LICENSEE</th><th>HOSTNAME</th><th>APPROVER</th><th>APPROVED</th><th>FUNCTIONAL_MGR</th><th>CREATION_DATE</th><th>EXCEPTION_CODE</th><th>OLD_HOSTNAME</th><th>TRANSFERRED_DATE</th><th>TRANSFERRED_BY</th><th>STATUS</th></tr>
 </tfoot>
 </table>
-
 </div>
 </div>
-
-<!-- Modal' Follow -->
-
-		<div id="confirmInstalled" class="modal fade" role="dialog">
-  			<div class="modal-dialog">
-	        <!-- Modal content-->
-    		<div class="modal-content">
-      			<div class="modal-header">
-        		   <h4 class="modal-title">Confirm DLP is Installed</h4>
-      			</div>
-      			<div class="modal-body" >
-      			<h1 class='text-center' style='font-size:43px;background-color:red;color:white'>STOP</h1>
-				<p>You must download and install the software <b>BEFORE</b> raising this request. It is against BCGs to create a DLP record if you don't have the software installed.</p>
-				<label for='dlpInstalConfirmed'>Confirm DLP software is installed</label>
-				<input type='checkbox' id='dlpInstalConfirmed'>
-        		</div>
-        		<div class='modal-footer'>
-      		  		<button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
-      			</div>
-        </div>
-        </div>
-        </div>
-
-        	<div id="confirmVerified" class="modal fade" role="dialog">
-  			<div class="modal-dialog">
-	        <!-- Modal content-->
-    		<div class="modal-content">
-      			<div class="modal-header">
-        		   <h4 class="modal-title">Confirm DLP instalation has been verified</h4>
-      			</div>
-      			<div class="modal-body" >
-      			<h1 class='text-center' style='font-size:56px;background-color:red;color:white'>STOP</h1>
-				<p>Before approving this request, it is your responsibility to ensure the software is installed on the individual's machine.</p>
-					<label for='dlpInstallVerfied'>Confirm DLP software is installed</label>
-					<input type='checkbox' id='dlpInstallVerfied'>
-
-        		</div>
-        		<div class='modal-footer'>
-      		  		<button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
-      			</div>
-        </div>
-        </div>
-        </div>
-
-
-
-
-
-<script type="text/javascript">
-var Dlp = new dlp();
-
-$(document).ready(function() {
-
-	Dlp.init();
-	Dlp.listenForSaveDlp();
-	Dlp.listenForSelectLicencee();
-	Dlp.initialiseLicenseeReport();
-	Dlp.listenForRejectDlp();
-	Dlp.listenForApproveDlp();
-	Dlp.listenForDeleteDlp();
-	Dlp.listenForReportShowDlpActive();
-	Dlp.listenForReportShowDlpPending();
-	Dlp.listenForReportShowDlpTransferred();
-	Dlp.listenForReportShowDlpRejected();
-	Dlp.listenForReportShowDlpAll();
-
-
-
-});
-
-</script>
+<?php    
+}
+?>
+<?php
+include_once "includes/modalSaveResponse.html";
+include_once 'includes/modalConfirmInstalled.html';
+include_once 'includes/modalConfirmVerified.html';
+?>

@@ -4,8 +4,6 @@ namespace vbac;
 use itdq\DbRecord;
 use itdq\Loader;
 use itdq\JavaScript;
-use itdq\AuditTable;
-
 
 class assetRequestRecord extends DbRecord {
 
@@ -54,13 +52,9 @@ class assetRequestRecord extends DbRecord {
     const CREATED_PMO              = 'No';
 
     static function ableToOwnAssets($includeProvisionallyCleared =true){
-//         $predicate  = " and ((( trim(REVALIDATION_STATUS) = '" . personRecord::REVALIDATED_FOUND . "' or (REVALIDATION_STATUS is null or (REVALIDATION_STATUS is null ) or (trim(REVALIDATION_STATUS) = '" . personRecord::REVALIDATED_POTENTIAL . "') ) and PES_STATUS in ('" . personRecord::PES_STATUS_CLEARED. "','" . personRecord::PES_STATUS_CLEARED_PERSONAL. "','" . personRecord::PES_STATUS_EXCEPTION. "') ) ";
-//         $predicate .= " or  ( trim(REVALIDATION_STATUS) IN ('" . personRecord::REVALIDATED_VENDOR . "') and ( PES_STATUS_DETAILS not like '" . personRecord::PES_STATUS_DETAILS_BOARDED_AS . "%' or PES_STATUS_DETAILS is null) and PES_STATUS in ('" . personRecord::PES_STATUS_CLEARED. "','" . personRecord::PES_STATUS_CLEARED_PERSONAL. "','" . personRecord::PES_STATUS_EXCEPTION. "') )";
-//         $predicate .= " or (REVALIDATION_STATUS like '" . personRecord::REVALIDATED_OFFBOARDING . "%' ) ";
-//         $predicate .= " ) ";
         $predicate = " and PES_STATUS in ('" . personRecord::PES_STATUS_CLEARED. "',";
         $predicate.= $includeProvisionallyCleared ? "'" .personRecord::PES_STATUS_PROVISIONAL . "'," : null;
-        $predicate.= "'" . personRecord::PES_STATUS_CLEARED_PERSONAL. "','" . personRecord::PES_STATUS_EXCEPTION. "','" . personRecord::PES_STATUS_RECHECK_REQ. "','" . personRecord::PES_STATUS_RECHECK_PROGRESSING. "','" . personRecord::PES_STATUS_MOVER. "') ";  // They must be PES Cleared.
+        $predicate.= "'" . personRecord::PES_STATUS_CLEARED_PERSONAL. "','" . personRecord::PES_STATUS_CLEARED_AMBER. "','" . personRecord::PES_STATUS_EXCEPTION. "','" . personRecord::PES_STATUS_RECHECK_REQ. "','" . personRecord::PES_STATUS_RECHECK_PROGRESSING. "','" . personRecord::PES_STATUS_MOVER. "') ";  // They must be PES Cleared.
         $predicate.= " and ((trim(REVALIDATION_STATUS) = '" . personRecord::REVALIDATED_FOUND . "' or REVALIDATION_STATUS is null or trim(REVALIDATION_STATUS) = '" . personRecord::REVALIDATED_POTENTIAL . "') "; // They are ACTIVE IBMer
         $predicate.= " or ( trim(REVALIDATION_STATUS) IN ('" . personRecord::REVALIDATED_VENDOR . "') and ( PES_STATUS_DETAILS not like '" . personRecord::PES_STATUS_DETAILS_BOARDED_AS . "%' or PES_STATUS_DETAILS is null) )  "; // They are a vendor - who has not subsequently been boarded as an IBMer
 	    $predicate.= " or REVALIDATION_STATUS like '" . personRecord::REVALIDATED_OFFBOARDING . "%' ) ";  // OR they are in the process of offboarding so need to be able to request things be returned.
@@ -73,7 +67,7 @@ class assetRequestRecord extends DbRecord {
         $myManagersCnum = personTable::myManagersCnum();
         $isFm   = personTable::isManager($_SESSION['ssoEmail']);
         $isPmo  = $_SESSION['isPmo'];
-        $isRequestor = employee_in_group('vbac_requestor', $_SESSION['ssoEmail']);
+        $isRequestor = employee_in_group($_SESSION['reqBg'], $_SESSION['ssoEmail']);
 
         $iAmDelegateForArray = $loader->load('CNUM',allTables::$DELEGATE," AND DELEGATE_CNUM='" . db2_escape_string($myCnum) . "' ");
         $iAmDelegateForTrimmed = array_map('trim', $iAmDelegateForArray);
@@ -97,6 +91,10 @@ class assetRequestRecord extends DbRecord {
 
         $selectableNotesId = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON,$predicate);
         $selectableEmailAddress = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON,$predicate);
+        
+        $allNotesId = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON);
+        $allEmailAddress = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON);
+
         $selectableRevalidationStatus = $loader->loadIndexed('REVALIDATION_STATUS','CNUM',allTables::$PERSON,$predicate);
 
         $approvingMgrPredicate = " upper(FM_MANAGER_FLAG) like 'Y%' ";
@@ -115,26 +113,30 @@ class assetRequestRecord extends DbRecord {
         		<div class='col-sm-4'>
 
                 <select class='form-control select select2 '
-                			  id='requestees'
-                              name='requestee'
-                              required
-                              data-toggle="tooltip" title="Only PES Cleared IBMers & Vendors will appear in this list. If you feel someone is missing, please ensure they have a FULL Boarded record in the system."
-
-
-                      >
+                    id='requestees'
+                    name='requestee'
+                    required
+                    data-toggle="tooltip" title="Only PES Cleared IBMers & Vendors will appear in this list. If you feel someone is missing, please ensure they have a FULL Boarded record in the system."
+                >
                     <option value=''></option>
                     <?php
                     foreach ($selectableNotesId as $cnum => $notesId){
-                            $isOffboarding = substr($selectableRevalidationStatus[$cnum],0,11)==personRecord::REVALIDATED_OFFBOARDING;
-
-                            $dataOffboarding = " data-revalidationstatus" . "='" . $selectableRevalidationStatus[$cnum] . "' ";
-                           // $dataOffboarding.= $isOffboarding ? "='true' " : "='false'";
-                            $displayedName = !empty(trim($notesId)) ?  trim($notesId) : $selectableEmailAddress[$cnum];
-                            //$selected = !$isFm && trim($cnum)==trim($myCnum) ? ' selected ' : null    // If they don't select the user - we don't fire the CT ID & Education prompts.
-                            $selected = null;
-                            ?><option value='<?=trim($cnum);?>'<?=$selected?><?=$dataOffboarding?>><?=$displayedName?></option><?php
-                        };
-                        ?>
+                        $isOffboarding = substr($selectableRevalidationStatus[$cnum],0,11)==personRecord::REVALIDATED_OFFBOARDING;
+                        $dataOffboarding = " data-revalidationstatus" . "='" . $selectableRevalidationStatus[$cnum] . "' ";
+                        // $dataOffboarding.= $isOffboarding ? "='true' " : "='false'";
+                        $displayedName = !empty(trim($notesId)) ?  trim($notesId) : $allEmailAddress[$cnum];
+                        //$selected = !$isFm && trim($cnum)==trim($myCnum) ? ' selected ' : null    // If they don't select the user - we don't fire the CT ID & Education prompts.
+                        $selected = null;
+                        if (!empty(trim($displayedName))) {
+                            $disabled = false;
+                        } else {
+                            // $disabled = " disabled ";
+                            $disabled = null;
+                            $displayedName = 'Missing Email Address or Notes Id for '.$cnum;
+                        }
+                        ?><option value='<?=trim($cnum);?>'<?=$selected?><?=$dataOffboarding?>><?=$displayedName?></option><?php
+                    };
+                ?>
             	</select>
             	</div>
             	<div class='col-sm-4'>
@@ -189,26 +191,33 @@ class assetRequestRecord extends DbRecord {
                     </option>
                     <?php
                     foreach ($approvingMgrs as $cnum => $notesId){
-                            $displayedName = !empty(trim($notesId)) ?  trim($notesId) : $selectableEmailAddress[$cnum];
-                            $selected = null;
-
-                            if(!$isFm && (trim($cnum)== trim($myManagersCnum))){
-                                /*
-                                 * The user is NOT a manager, and this entry is their Mgr
-                                 *
-                                 * Stops users who are managers having the drop down default to THEIR mgr, when it should default to them.
-                                 * JS code will remove the entry in this list, if they pick themselves as the Requestee.
-                                 *
-                                 */
-                                $selected = " selected ";
-                            } elseif ($isFm && (trim($cnum)==trim($myCnum))){
-                                /*
-                                 * They ARE an FM and this is their entry, so select it by default.
-                                 * If the requestee becomes themselves, we'll remove the entry from the dropdown.
-                                 */
-                                $selected = " selected ";
+                            $displayedName = !empty(trim($notesId)) ?  trim($notesId) : $allEmailAddress[$cnum];
+                            if (!empty(trim($displayedName))) {
+                                $selected = null;
+                                $disabled = null;
+                                if(!$isFm && (trim($cnum)== trim($myManagersCnum))){
+                                    /*
+                                     * The user is NOT a manager, and this entry is their Mgr
+                                     *
+                                     * Stops users who are managers having the drop down default to THEIR mgr, when it should default to them.
+                                     * JS code will remove the entry in this list, if they pick themselves as the Requestee.
+                                     *
+                                     */
+                                    $selected = " selected ";
+                                } elseif ($isFm && (trim($cnum)==trim($myCnum))){
+                                    /*
+                                     * They ARE an FM and this is their entry, so select it by default.
+                                     * If the requestee becomes themselves, we'll remove the entry from the dropdown.
+                                     */
+                                    $selected = " selected ";
+                                }
+                            } else {
+                                $selected = null;
+                                // $disabled = " disabled ";
+                                $disabled = null;
+                                $displayedName = 'Missing Email Address or Notes Id for '.$cnum;
                             }
-                            ?><option value='<?=trim($cnum);?>'<?=$selected?>><?=$displayedName?></option><?php
+                            ?><option value='<?=trim($cnum);?>'<?=$selected?><?=$disabled?>><?=$displayedName?></option><?php
                         };
                         ?>
             	</select>
@@ -221,10 +230,7 @@ class assetRequestRecord extends DbRecord {
             	<div class='col-sm-4' >
 
             	</div>
-
-
         		</div>
-
 
         <div class='panel-footer'>
         	<?php
@@ -251,57 +257,6 @@ class assetRequestRecord extends DbRecord {
         JavaScript::buildObjectFromLoadIndexedPair($ctbFlag,'cnum2ctbflag');
     }
 
-    function saveFeedbackModal(){
-        ?>
-        <!-- Modal -->
-		<div id="saveFeedbackModal" class="modal fade" role="dialog">
-  			<div class="modal-dialog">
-	        <!-- Modal content-->
-    		<div class="modal-content">
-      			<div class="modal-header">
-        		   <h4 class="modal-title">Asset Request Creation</h4>
-      			</div>
-      			<div class="modal-body" >
-      			</div>
-      			<div class="modal-footer">
-      				<p class="text-center">When you close this modal, please allow time for the page to refresh before attempting to create another request</p>
-      				<button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
-
-      			</div>
-    		</div>
-  			</div>
-		</div>
-        <?php
-    }
-
-
-    function confirmEducationModal(){
-        ?>
-        <!-- Modal -->
-		<div id="confirmEducationModal" class="modal fade" role="dialog">
-  			<div class="modal-dialog">
-	        <!-- Modal content-->
-    		<div class="modal-content">
-      			<div class="modal-header">
-        		   <h4 class="modal-title">Security Education Confirmation</h4>
-      			</div>
-      			<div class="modal-body" >
-      				<p style="text-align:center">Please confirm <b><span id='educationNotesid'></span></b> has successfully completed the mandatory Aurora Security Education Modules for IBMers before continuing</p>
-      				<p style="text-align:center">Access to these self paced online courses is via the following link <a href='http://ltc.sl.bluecloud.ibm.com/aurora/' target='_blank'>http://ltc.sl.bluecloud.ibm.com/aurora/</a></p>
-      				<p style="text-align:center">Please contact <a href='mailto:aurora.central.pmo@kyndryl.com'>aurora.central.pmo@kyndryl.com</a> if you do not have access.</p>
-					<p style="text-align:center">Please note a false declaration of completion constitutes a breach of IBM Business Conduct Guidelines and may lead to disciplinary action.</p>
-      			</div>
-      			<div class="modal-footer">
-      		  		<button type="button" class="btn btn-success" id='confirmedEducation'>Education Completed</button>
-      		  		<button type="button" class="btn btn-danger" id='noEducation'>Education NOT Completed</button>
-      			</div>
-      			<input id='cnumForSecurityModal' val='' type='hidden' />
-    		</div>
-  			</div>
-		</div>
-        <?php
-    }
-
     function unknownUser(){
         $pesTaskId = personRecord::getPesTaskId();
         ?>
@@ -321,152 +276,37 @@ class assetRequestRecord extends DbRecord {
         <?php
     }
 
-    function helpModal(){
-        ?>
-        <!-- Modal -->
-		<div id="assetHelpModal" class="modal fade" role="dialog">
-  			<div class="modal-dialog">
-	        <!-- Modal content-->
-    		<div class="modal-content">
-      			<div class="modal-header">
-        		   <h4 class="modal-title">Help/Guidance</h4>
-      			</div>
-      			<div class="modal-body" >
-			        <p>For a new CT ID : </p>
-			        <ul>
-			        <li>Ask your line manager to create a<b>"New Starter"</b> request in <b>IT@LBG</b>.</li>
-			        <li>Raise a vBAC request ONLY for a CT ID and enter the <b>IT@LBG Request reference in the LBG Ref Number field</b></li>
-			        </ul>
-        			<p>Once your CT ID is recorded in vBAC you may raise all other access requests..</p>
-        		</div>
-        		<div class='modal-footer'>
-      		  		<button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
-      			</div>
-        </div>
-        </div>
-        </div>
-        <?php
-    }
-
-
-    function doTheEducationModal(){
-        ?>
-        <div id='doTheEducation' style='display: none;'>
-        <div class="panel panel-danger">
-        <div class="panel-heading">
-        <h3 class="panel-title" id='requestableAssetListTitle'>Education</h3>
-        </div>
-        <div class="panel-body">
-        <p>Please complete the required <b>Aurora Security Education</b>, contact the <b>aurora.central.pmo@kyndryl.com</b> for details.</p>
-        </div>
-        <div class='panel-footer'>
-        <button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
-        </div>
-        </div>
-        </div>
-        <?php
-    }
-
-    function ctIdRequiredModal(){
-        ?>
-        <!-- Modal -->
-		<div id="obtainCtid" class="modal fade" role="dialog">
-  			<div class="modal-dialog">
-	        <!-- Modal content-->
-    		<div class="modal-content">
-      			<div class="modal-header">
-        		   <h4 class="modal-title">Contractor ID (CT ID) - LBG ID(7 Digits)</h4>
-      			</div>
-      			<div class="modal-body" >
-      			<h1 class='text-center' style='font-size:56px;background-color:red;color:white'>STOP</h1>
-        		<p>Before requests can be made on LBG, the individual needs to have a Contractor ID (CT ID/LBG ID).</p>
-        		<p>We do not have a record of the CT ID/LBG ID for:</p>
-        		<input id='requesteeName' value='' disabled>
-        		<input id='ctbflag' value='' type='hidden'></p></p>
-        		<label for='requesteeCtid'><b>Either</b> enter it here</label>
-        		<input id='requesteeCtid' value='' type="number" min='999999' max='9999999'></p>
-        		<p><b>Or</b> simply close this Modal to generate a new CT ID/LBG ID request.</p>
-        		<p class='text-center'>Closing this modal without entering a CT ID/LBG ID will cause a request for a CT ID/LBG ID to be generated.</p>
-        		<h4 class='bg-warning text-center'>Please do not close this Modal without entering a valid CTID (LBG ID) if the individual already has one. If you are unsure please check now before proceeding</h4>
-        		<p>Creating duplicate requests introduces significant delay to the process of obtaining Digital Assets</p>
-        		<p><small>The terms CT ID and LBG ID are interchangable and refer to the same thing</small></p>
-        		</div>
-        		<div class='modal-footer'>
-      		  		<button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
-      			</div>
-        </div>
-        </div>
-        </div>
-        <?php
-    }
-
-    function missingPrereqModal(){
-        ?>
-        <!-- Modal -->
-		<div id="missingPrereqModal" class="modal fade" role="dialog">
-  			<div class="modal-dialog">
-	        <!-- Modal content-->
-    		<div class="modal-content">
-      			<div class="modal-header">
-        		   <h4 class="modal-title">Missing Pre-Req</h4>
-      			</div>
-      			<div class="modal-body" >
-      				<p style="text-align:center">You have requested Asset : <b><span id='requestedAssetTitle'></span></b></p>
-      				<p style="text-align:center">However, this asset has a pre-req of : <b><span id='prereqAssetTitle'></span></b> which you have <b>NOT</b> selected.</p>
-      				<p style="text-align:center">If <b><span id='requesteeNotesid'></span></b> already has that asset, then simply close this window, and continue</p>
-
-      			</div>
-      			<div class="modal-footer">
-      		  		<button type="button" class="btn btn-success" id='addPreReq'>Add Asset to request</button>
-      		  		<button type="button" class="btn btn-warning" id='ignorePreReq'>Asset already acquired</button>
-      			</div>
-    		</div>
-  			</div>
-		</div>
-        <?php
-    }
-
-
-    function exportResponseModal(){
-        ?>
-        <!-- Modal -->
-		<div id="exportResponse" class="modal fade" role="dialog">
-  			<div class="modal-dialog">
-	        <!-- Modal content-->
-    		<div class="modal-content">
-      			<div class="modal-header">
-        		   <h4 class="modal-title">Export Responde</h4>
-      			</div>
-      			<div class="modal-body" >
-        		<div class='modal-footer'>
-      		  		<button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
-      			</div>
-                </div>
-            </div>
-            </div>
-        </div>
-        <?php
-    }
-
-
-
     static function buildLocationOptions($currentLocation=null){
         $loader = new Loader();
         $locationsByCity = $loader->loadIndexed('CITY','ADDRESS',allTables::$STATIC_LOCATIONS);
         $countryByCity = $loader->loadIndexed('COUNTRY','CITY', allTables::$STATIC_LOCATIONS);
         $children = array();
 
+        $preparedCurrLocation = str_replace(array(','), array(''), strtolower(trim($currentLocation)));
 
         foreach ($locationsByCity as $location => $city){
-            $children[trim($countryByCity[$city]) . " - " . trim($city)] = empty($children[trim($countryByCity[$city]) . " - " . trim($city)]) ? "" : $children[trim($countryByCity[$city]) . " - " . trim($city)];
+            $city = trim($city);
+            $country = trim($countryByCity[$city]);
+            $childrenKey = $country . " - " . $city;
+            $children[$childrenKey] = empty($children[$childrenKey]) ? "" : $children[$childrenKey];
 
-            $preparedLocation = str_replace(array(','), array(''), strtolower(trim($location . $city)));
-            $preparedCurrLocation = str_replace(array(','), array(''), strtolower(trim($currentLocation)));
-
-            $selected = $preparedLocation == $preparedCurrLocation ? ' selected ' : null;
-            $country = $countryByCity[$city];
-
-            $children[trim($countryByCity[$city]) . " - " . trim($city)] .= "<option id='$location' $selected >$location,$city,$country</option>";
+            $preparedLocation = str_replace(array(','), array(''), strtolower(trim($location)));
+            if ($preparedLocation == $preparedCurrLocation) {
+                $selected = ' selected ';
+            } else {
+                $preparedLocation = str_replace(array(','), array(''), strtolower(trim($location . $city)));
+                if ($preparedLocation == $preparedCurrLocation) {
+                    $selected = ' selected ';
+                } else {
+                    $preparedLocation = str_replace(array(','), array(''), strtolower(trim($location . $city . $country)));
+                    if ($preparedLocation == $preparedCurrLocation) {
+                        $selected = ' selected ';
+                    } else {
+                        $selected = null;
+                    }
+                }
+            }
+            $children[$childrenKey] .= "<option id='$location' $selected >$location,$city,$country</option>";
         }
 
         ksort($children);

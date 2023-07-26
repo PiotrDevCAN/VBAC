@@ -1,5 +1,6 @@
 <?php
 namespace itdq;
+use itdq\DbTable;
 
 class Loader
 {

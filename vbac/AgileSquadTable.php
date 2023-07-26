@@ -40,12 +40,14 @@ class AgileSquadTable extends DbTable{
     function returnAsArray($version=null){
         $tribeTable = $version=='Original' ? allTables::$AGILE_TRIBE : allTables::$AGILE_TRIBE_OLD;
 
-        $sql = " SELECT S.*, T.ORGANISATION ";
+        $sql = " SELECT S.SQUAD_NUMBER, S.SQUAD_TYPE, S.TRIBE_NUMBER, S.SHIFT, S.SQUAD_LEADER, S.SQUAD_NAME,    
+        CASE WHEN S.ORGANISATION is null THEN T.ORGANISATION ELSE S.ORGANISATION END AS ORGANISATION, T.TRIBE_NAME ";
         $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName . " as S ";
         $sql.= " LEFT JOIN ". $GLOBALS['Db2Schema'] . "." . $tribeTable . " as T ";
         $sql.= " ON S.TRIBE_NUMBER = T.TRIBE_NUMBER ";
         $rs = db2_exec($GLOBALS['conn'], $sql);
-
+// echo $sql;
+// exit;
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
@@ -116,24 +118,68 @@ class AgileSquadTable extends DbTable{
         $allTribeSelects['old']['managed'] = $loader->loadIndexed('TRIBE_NAME','TRIBE_NUMBER', allTables::$AGILE_TRIBE_OLD, " ORGANISATION='Managed Services' ");
         $allTribeSelects['old']['project'] = $loader->loadIndexed('TRIBE_NAME','TRIBE_NUMBER', allTables::$AGILE_TRIBE_OLD, " ORGANISATION='Project Services' ");
         ?>
-<script type="text/javascript">
-<?php
+        <script type="text/javascript">
+        <?php
         foreach ($allTribeSelects as $tableSet => $organisation) {
             foreach ($organisation as $org => $selectData) {?>
-var tribes<?=ucfirst($tableSet);?><?=ucfirst($org);?> = [];
-    tribes<?=ucfirst($tableSet);?><?=ucfirst($org)?>.push({id:0,text:""});
-<?php
-                foreach ($selectData as $tribeNumber => $tribeName) {?>
-    tribes<?=ucfirst($tableSet);?><?=ucfirst($org)?>.push({id:"<?=$tribeNumber?>",text:"<?=$tribeName?>"});
-<?php
+                var tribes<?=ucfirst($tableSet);?><?=ucfirst($org);?> = [];
+                // tribes<?=ucfirst($tableSet);?><?=ucfirst($org)?>.push({id:0,text:""});
+                <?php
+                foreach ($selectData as $tribeNumber => $tribeName) {
+                ?>
+                    tribes<?=ucfirst($tableSet);?><?=ucfirst($org)?>.push({
+                        id:"<?=$tribeNumber?>",
+                        text:"<?=$tribeName?>",
+                        // organisation: "TEST",
+                        // leader: "TEST 2",
+                        // iterationMgr: "TEST 3",
+                    });
+                <?php
                 }
             }
         }
         ?>
-</script>
+        </script>
         <?php
-
     }
 
+    static function buildTribeSelects_NEW(){
 
+        $sql = " SELECT T.*";
+        $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " as T ";
+        $rs = db2_exec($GLOBALS['conn'], $sql);
+
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+        $data = false;
+        while(($row=db2_fetch_assoc($rs))==true){
+            $row = array_map('trim',$row);
+            $data[] = $row;
+        }
+        ?>
+        <script type="text/javascript">
+        var tribes = [];
+        <?php
+        foreach ($data as $key => $tribe) {
+            $tribeNumber = $tribe['TRIBE_NUMBER'];
+            $tribeName = $tribe['TRIBE_NAME'];
+            $tribeOrganisation = $tribe['ORGANISATION'];
+            $tribeLeader = $tribe['TRIBE_LEADER'];
+            $tribeIterationMgr = $tribe['ITERATION_MGR'];
+            ?>
+            tribes.push({
+                id:"<?=$tribeNumber?>",
+                text:"<?=$tribeName?>",
+                organisation: "<?=$tribeOrganisation?>",
+                leader: "<?=$tribeLeader?>",
+                iterationMgr: "<?=$tribeIterationMgr?>",
+            });
+            <?php
+        }
+        ?>
+        </script>
+        <?php
+    }
 }

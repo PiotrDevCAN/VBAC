@@ -46,7 +46,16 @@ $data = $auditTable->returnAsArray($start, $length , $predicate, $orderBy);
 $messages = ob_get_clean();
 ob_start();
 
-$response = array('draw'=>$draw,'recordsTotal'=>$recordsTotal,'recordsFiltered'=>$recordsFiltered,'data'=>$data['rows'],'sql'=>$data['sql'],'messages'=>trim($messages),'post'=>print_r($_POST,true),'predicate'=>$predicate);
+$response = array(
+    'draw'=>$draw,
+    'recordsTotal'=>$recordsTotal,
+    'recordsFiltered'=>$recordsFiltered,
+    'data'=>$data['rows'],
+    'sql'=>$data['sql'],
+    'messages'=>trim($messages),
+    'post'=>print_r($_POST,true),
+    'predicate'=>$predicate
+);
 
 ob_clean();
 echo json_encode($response);

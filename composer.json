@@ -4,7 +4,9 @@
 		"phpoffice/phpspreadsheet" : "~1.12",
 		"ext-gd" : "*",
 		"phpmailer/phpmailer" : "~6.1",
-		"byjg/jwt-session" : "~2.0"
+		"byjg/jwt-session" : "~2.0",
+		"sebbmeyer/php-microsoft-teams-connector": "^0.2.2",
+		"tcdent/php-restclient": "0.1.8.2"
 	},
 	"repositories" : [{
 			"type" : "composer",

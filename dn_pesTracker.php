@@ -13,9 +13,7 @@ if ($helper->isCli()) {
     $helper->log('This example should only be run from a Web Browser' . PHP_EOL);
     return;
 }
-
 echo "<pre>";
-
 
 // Create new Spreadsheet object
 $spreadsheet = new Spreadsheet();

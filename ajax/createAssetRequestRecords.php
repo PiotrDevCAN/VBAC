@@ -33,8 +33,6 @@ $notifyApprovingMgr = false;
 // $orderItStatus = empty($_POST['ORDERIT_NUMBER']) ? assetRequestRecord::STATUS_ORDERIT_YET : assetRequestRecord::STATUS_ORDERIT_RAISED;
 // $userCreated   = empty($_POST['ORDERIT_NUMBER']) ? assetRequestRecord::CREATED_PMO : assetRequestRecord::CREATED_USER;
 
-
-
 switch (true) {
     case isset($_POST['REQUEST_RETURN']) && !empty($_POST['ORDERIT_NUMBER']) :
         // Raising a Return request that has already been Raised with LBG.

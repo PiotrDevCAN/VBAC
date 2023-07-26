@@ -9,10 +9,6 @@ use itdq\BluePages;
 use itdq\BluePagesSLAPHAPI;
 use itdq\JwtSecureSession;
 
-function ob_html_compress($buf){
-    return str_replace(array("\n","\r"),'',$buf);
-}
-
 # Takes a hash of values and files in a text template
 function build_template($template, $vals) {
     $file = dirname(__FILE__) . "/templates/" . $template;
@@ -138,17 +134,16 @@ function do_error($page = array())
 
 function do_auth($group = null)
 {
-
-if(stripos($_ENV['environment'], 'dev')) {
-    $_SESSION['ssoEmail'] = $_ENV['SERVER_ADMIN'];
-} else {
-    include_once "class/include.php";
-    $auth = new Auth();
-    if(!$auth->ensureAuthorized()){
-        die('Invalid logon attempt');
+    if(stripos($_ENV['environment'], 'dev')) {
+        $_SESSION['ssoEmail'] = $_ENV['SERVER_ADMIN'];
     } else {
-        $_SESSION['ssoEmail'] = $_SESSION['ssoEmail'];
-        if(isset($_SESSION['somethingChanged']))
+        include_once "class/include.php";
+        $auth = new Auth();
+        if(!$auth->ensureAuthorized()){
+            die('Invalid logon attempt');
+        } else {
+            $_SESSION['ssoEmail'] = $_SESSION['ssoEmail'];
+            if(isset($_SESSION['somethingChanged']))
             {
             echo "<br/><br/><span style='font-weight:bold;'>Warning: </span> The values that are returned from w3ID/IBMID has probably been changed.<br/><br/>No need to panic, this is very easy to fix.<br/>This is your session currently:<br/><br/><code>";
             var_dump($_SESSION);
@@ -270,8 +265,12 @@ $start = microtime(true);
 
 set_include_path("./" . PATH_SEPARATOR . "../" . PATH_SEPARATOR . "../../" . PATH_SEPARATOR . "../../../" . PATH_SEPARATOR);
 
+include ('includes/obHtmlCompress.php');
 include ('vendor/autoload.php');
 include ('splClassLoader.php');
+
+include ('includes/startsWith.php');
+include ('includes/endsWith.php');
 
 // $sessionConfig = (new \ByJG\Session\SessionConfig($_SERVER['SERVER_NAME']))
 // ->withTimeoutMinutes(120)
@@ -290,6 +289,15 @@ error_log(__FILE__ . "session:" . session_id());
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+
+ini_set('memory_limit', '512M');
+ini_set('max_execution_time', 360);
+
+require_once("php/errorHandlers.php");
+
+set_error_handler('myErrorHandler');
+register_shutdown_function('fatalErrorShutdownHandler');
+
 date_default_timezone_set('UTC');
 
 while(ob_get_level()>0){

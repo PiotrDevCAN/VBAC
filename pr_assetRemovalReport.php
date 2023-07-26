@@ -32,7 +32,7 @@ $odcAssetRemovalTable = new odcAssetRemovalTable(allTables::$ODC_ASSET_REMOVAL);
 
 try {
     set_time_limit(0);
-    ini_set('memory_limit', '256M');
+    ini_set('memory_limit', '512M');
     
     $rs = $odcAssetRemovalTable->rightToRemove();
     
@@ -47,7 +47,8 @@ try {
             DbTable::autoSizeColumns($spreadsheet);
             $fileNameSuffix = $now->format('Ymd_His');
             
-            ob_clean();
+            // ob_clean();
+            ob_end_clean();
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             header('Content-Disposition: attachment;filename="odcAsetRemovalReport-' . $fileNameSuffix . '.xlsx"');
             header('Cache-Control: max-age=0');
@@ -61,6 +62,8 @@ try {
             $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
             $writer->save('php://output');
             exit;
+        } else {
+            echo "<h1>No records found to prepare this report (ODC Access Removal Table)</h1>";
         }
     }
 } catch (Exception $e) {

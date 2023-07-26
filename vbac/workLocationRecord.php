@@ -3,8 +3,6 @@ namespace vbac;
 
 use itdq\DbRecord;
 use itdq\Loader;
-use itdq\JavaScript;
-use itdq\AuditTable;
 use itdq\FormClass;
 
 class workLocationRecord extends DbRecord {

@@ -1,5 +1,7 @@
 <?php
 namespace itdq;
+use itdq\DbTable;
+
 /**
  * Interfaces to ICON_as_a_Service.
  *

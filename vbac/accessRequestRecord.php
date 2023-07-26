@@ -3,7 +3,6 @@ namespace vbac;
 
 use itdq\DbRecord;
 
-
 /**
  *
  * @author gb001399

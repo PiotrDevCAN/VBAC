@@ -15,7 +15,6 @@ set_time_limit(0);
 </div>
 </div>
 
-
 <div class='row'>
 <div class='col-sm-2'></div>
 <div class='col-sm-8'>
@@ -23,17 +22,9 @@ set_time_limit(0);
 <?php
 $mode = personRecord::$modeDEFINE;
 $person = new personRecord();
-$person->displayLinkForm();
+$person->displayLinkForm($mode);
 ?>
 </div>
 <div class='col-sm-2'></div>
 </div>
 </div>
-
-<script type="text/javascript">
-
-$(document).ready(function() {
-	var person = new personRecord();
-     person.listenForSaveLinking();
-});
-</script>
