@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: env-configmap
+data:
+  SERVER_ADMIN: piotr.tajanowicz@ocean.ibm.com
+  SERVER_NAME: Azure vBAC
+  email: dev
+  environment: upes_newco_dev
+  devemailid: piotr.tajanowicz@ocean.ibm.com
+  noreplyemailid: vbac@noreply.ibm.com
+  noreplykyndrylemailid: vbacNoReply@kyndryl.com
+  upes_audit: https://hooks.slack.com/services/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

@@ -1,12 +1,7 @@
 /.buildpath
+/.github/workflows/create-secrets.yml
 /.project
 /vendor/
 /cfg/
 .htaccess
 dev_env.list
-/UsersRobDanielDocumentswordCloud.csv
-/UsersRobDanielDocumentswordCloud2.csv
-/UsersRobDanielDocumentswordCloud3.csv
-/UsersRobDanielDocumentswordCloud4.csv
-/wordCloud (2).csv
-/wordCloud.csv

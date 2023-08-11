@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vbac
+spec:
+  selector:
+    matchLabels:
+      app: vbac
+  template:
+    metadata:
+      labels:
+        app: vbac
+    spec:
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 5
+      securityContext: {}
+      automountServiceAccountToken: false
+      dnsPolicy: ClusterFirst
+      containers:
+      - name: vbac
+        image: kyndryl.jfrog.io/uki-business-intelligence-test-docker-local/vbac:dev_${{ github.run_number }}
+        resources:
+          limits:
+            cpu: 500m
+            memory: 512Mi
+          requests:
+            cpu: 32m
+            memory: 128Mi
+        terminationMessagePath: /dev/termination-log
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        imagePullPolicy: Always
+        terminationMessagePolicy: File
+        env:
+        - name: PORT
+          value: "8080"
+        - name: TEMP_INLINE_VALUE
+          # we can also pass env variables like in this way 
+          value: Linux
+        envFrom:
+        - configMapRef:
+            name: env-configmap
+        - secretRef:
+            # name: vbac-app-docker-secrets-generic
+            name: env-secrets

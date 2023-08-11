@@ -13,8 +13,6 @@ dnf install -y php-pear php-devel unzip zip sudo iputils nmap
 curl -sS https://getcomposer.org/installer | tac | tac | php -- --install-dir=/usr/local/bin --filename=composer
 chmod 777 /usr/local/bin/composer
 
-cp /var/www/html/cache.conf /etc/httpd/conf.d
-
 #echo "<?php phpinfo();?>" > /var/www/html/index.php
 #echo 'auto_prepend_file="/var/www/html/php/siteheader.php"' > /etc/php.d/rob.ini
 #echo 'auto_append_file="/var/www/html/php/sitefooter.php"' >> /etc/php.d/rob.ini
