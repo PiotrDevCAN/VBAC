@@ -43,5 +43,4 @@ spec:
         - configMapRef:
             name: env-configmap
         - secretRef:
-            # name: vbac-app-docker-secrets-generic
-            name: env-secrets
+            name: vbac-app-docker-secrets-generic

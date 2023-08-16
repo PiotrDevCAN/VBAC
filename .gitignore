@@ -5,3 +5,5 @@
 /cfg/
 .htaccess
 dev_env.list
+dev.tar.gz
+msphpsql-dev/

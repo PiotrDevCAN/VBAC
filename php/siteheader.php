@@ -4,9 +4,6 @@
 // ** session_cache_limiter('private');
 // ** for fpdf http://www.fpdf.org/ download of pdf files in https;
 
-use ByJG\Session\JwtSession;
-use itdq\BluePages;
-use itdq\BluePagesSLAPHAPI;
 use itdq\JwtSecureSession;
 
 # Takes a hash of values and files in a text template
