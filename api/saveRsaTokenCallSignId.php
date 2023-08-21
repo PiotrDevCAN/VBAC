@@ -29,7 +29,7 @@ $cnumValidated = true;
 
 if(isset($_REQUEST['CNUM'])){
     $activePeople = $personTable->activePersonPredicate();
-    $cnumArray = $loader->load('CNUM',allTables::$PERSON, $activePeople . " AND (CNUM='" . db2_escape_string(trim($_REQUEST['CNUM'])) . "') ");
+    $cnumArray = $loader->load('CNUM',allTables::$PERSON, $activePeople . " AND (CNUM='" . htmlspecialchars(trim($_REQUEST['CNUM'])) . "') ");
     $cnumValidated = isset($cnumArray[trim($_REQUEST['CNUM'])]);
 } else {
     $cnumValidated = false;
@@ -87,10 +87,10 @@ if( !$rsaTokenSupplied or !$callSignIdSupplied or !$cnumValidated ){
 
 $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON ;
 $sql.= " SET ";
-$sql.= isset($_REQUEST['RSA_TOKEN']) ? " RSA_TOKEN='" . db2_escape_string(trim($_REQUEST['RSA_TOKEN'])) . "' " : null;
+$sql.= isset($_REQUEST['RSA_TOKEN']) ? " RSA_TOKEN='" . htmlspecialchars(trim($_REQUEST['RSA_TOKEN'])) . "' " : null;
 $sql.= isset($_REQUEST['RSA_TOKEN']) && isset($_REQUEST['CALLSIGN_ID']) ? " , " : null;
-$sql.= isset($_REQUEST['CALLSIGN_ID']) ? " CALLSIGN_ID='" .  db2_escape_string(trim($_REQUEST['CALLSIGN_ID'])) . "' " : null;
-$sql.= " WHERE CNUM='" . db2_escape_string($_REQUEST['CNUM']) . "' ";
+$sql.= isset($_REQUEST['CALLSIGN_ID']) ? " CALLSIGN_ID='" .  htmlspecialchars(trim($_REQUEST['CALLSIGN_ID'])) . "' " : null;
+$sql.= " WHERE CNUM='" . htmlspecialchars($_REQUEST['CNUM']) . "' ";
 
 $rs = db2_exec($GLOBALS['conn'], $sql);
 

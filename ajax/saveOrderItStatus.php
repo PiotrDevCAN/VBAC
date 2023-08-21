@@ -48,7 +48,7 @@ foreach ($_POST['status'] as $reference => $statusIndicator){
     if($success && trim($statusIndicator)==assetRequestRecord::STATUS_ORDERIT_APPROVED){
         $assetRequestEventsTable = new assetRequestsEventsTable(allTables::$ASSET_REQUESTS_EVENTS);
         $loader = new Loader();
-        $postReqs = $loader->load('REQUEST_REFERENCE',allTables::$ASSET_REQUESTS," PRE_REQ_REQUEST='" . db2_escape_string($reference) . "' ");
+        $postReqs = $loader->load('REQUEST_REFERENCE',allTables::$ASSET_REQUESTS," PRE_REQ_REQUEST='" . htmlspecialchars($reference) . "' ");
         foreach ($postReqs as $postReqReference){
             $assetRequestEventsTable->logEventForRequest(assetRequestsEventsTable::EVENT_PRE_REQ_APPROVED, $postReqReference);
         }

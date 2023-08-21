@@ -79,7 +79,7 @@ if (!is_null($additionalFields)) {
         $tableField = str_replace($personTableAliases, '', $field);
 
         if (array_key_exists($tableField, $availablePersonColumns)) {
-            $additionalSelect .= ", " . db2_escape_string("P.".$tableField);
+            $additionalSelect .= ", " . htmlspecialchars("P.".$tableField);
             continue;
         }
         
@@ -87,7 +87,7 @@ if (!is_null($additionalFields)) {
         $tableField = str_replace($agileSquadTableAliases, '', $field);
 
         if (array_key_exists($tableField, $availableAgileSquadColumns)) {
-            $additionalSelect .= ", " . db2_escape_string("AS.".$tableField);
+            $additionalSelect .= ", " . htmlspecialchars("AS.".$tableField);
             continue;
         }
 
@@ -95,7 +95,7 @@ if (!is_null($additionalFields)) {
         $tableField = str_replace($agileTribeTableAliases, '', $field);
 
         if (array_key_exists($tableField, $availableAgileTribeColumns)) {
-            $additionalSelect .= ", " . db2_escape_string("AT.".$tableField);
+            $additionalSelect .= ", " . htmlspecialchars("AT.".$tableField);
             continue;
         }
 
@@ -103,7 +103,7 @@ if (!is_null($additionalFields)) {
         $tableField = str_replace($skillseTableAliases, '', $field);
 
         if (array_key_exists($tableField, $skillsetRecordColumns)) {
-            $additionalSelect .= ", " . db2_escape_string("SS.".$tableField);
+            $additionalSelect .= ", " . htmlspecialchars("SS.".$tableField);
             continue;
         }
     }

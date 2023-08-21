@@ -99,8 +99,8 @@ class requestableAssetListTable extends DbTable {
 
     static function flagAsDeleted($assetTitle,$deletedBy){
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . allTables::$REQUESTABLE_ASSET_LIST;
-        $sql .= " SET LISTING_ENTRY_REMOVED= current timestamp, LISTING_ENTRY_REMOVED_BY='" . db2_escape_string($deletedBy) . "' ";
-        $sql .= " WHERE ASSET_TITLE='" . db2_escape_string($assetTitle) . "' ";
+        $sql .= " SET LISTING_ENTRY_REMOVED= current timestamp, LISTING_ENTRY_REMOVED_BY='" . htmlspecialchars($deletedBy) . "' ";
+        $sql .= " WHERE ASSET_TITLE='" . htmlspecialchars($assetTitle) . "' ";
 
         $rs = db2_exec($GLOBALS['conn'], $sql);
         if(!$rs){

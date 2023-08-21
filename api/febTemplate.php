@@ -17,7 +17,7 @@ switch ($_REQUEST['mode']) {
             case !empty($_REQUEST['email_address']) && !empty($_REQUEST['title']) && !empty($_REQUEST['template']):
                 // Save a template to the database
                 $sql = "INSERT INTO " . $GLOBALS['Db2Schema'] . "." . allTables::$FEB_TRAVEL_REQUEST_TEMPLATES ;
-                $sql.= " (EMAIL_ADDRESS, TITLE, TEMPLATE) VALUES ('" . db2_escape_string($_REQUEST['email_address']) . "','" .  db2_escape_string($_REQUEST['title']) . "','" . db2_escape_string(print_r($_REQUEST['template'],true)) . "') ";
+                $sql.= " (EMAIL_ADDRESS, TITLE, TEMPLATE) VALUES ('" . htmlspecialchars($_REQUEST['email_address']) . "','" .  htmlspecialchars($_REQUEST['title']) . "','" . htmlspecialchars(print_r($_REQUEST['template'],true)) . "') ";
                 $rs = db2_exec($GLOBALS['conn'], $sql);
                 
                 if(!$rs){
@@ -44,8 +44,8 @@ switch ($_REQUEST['mode']) {
             case isset($_GET['email_address']) && isset($_GET['title']):
                 // Get a specific template
                 $sql = " SELECT TEMPLATE FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$FEB_TRAVEL_REQUEST_TEMPLATES ;
-                $sql.= " WHERE EMAIL_ADDRESS='" . db2_escape_string(trim($_GET['email_address'])) . "' ";
-                $sql.= " AND TITLE='" . db2_escape_string(trim($_GET['title'])) . "' ";   
+                $sql.= " WHERE EMAIL_ADDRESS='" . htmlspecialchars(trim($_GET['email_address'])) . "' ";
+                $sql.= " AND TITLE='" . htmlspecialchars(trim($_GET['title'])) . "' ";   
                 ob_start();
                 $rs = db2_exec($GLOBALS['conn'], $sql);
                 
@@ -81,7 +81,7 @@ switch ($_REQUEST['mode']) {
             case isset($_GET['email_address']):
                 // Get list of titles for this person
                 $sql = " SELECT DISTINCT TITLE FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$FEB_TRAVEL_REQUEST_TEMPLATES ;
-                $sql.= " WHERE UPPER(EMAIL_ADDRESS)='" . db2_escape_string(strtoupper(trim($_GET['email_address']))) . "' ";
+                $sql.= " WHERE UPPER(EMAIL_ADDRESS)='" . htmlspecialchars(strtoupper(trim($_GET['email_address']))) . "' ";
                 ob_start();
                 
                 $response['sql']= $sql;

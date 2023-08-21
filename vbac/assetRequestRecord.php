@@ -69,7 +69,7 @@ class assetRequestRecord extends DbRecord {
         $isPmo  = $_SESSION['isPmo'];
         $isRequestor = employee_in_group($_SESSION['reqBg'], $_SESSION['ssoEmail']);
 
-        $iAmDelegateForArray = $loader->load('CNUM',allTables::$DELEGATE," AND DELEGATE_CNUM='" . db2_escape_string($myCnum) . "' ");
+        $iAmDelegateForArray = $loader->load('CNUM',allTables::$DELEGATE," AND DELEGATE_CNUM='" . htmlspecialchars($myCnum) . "' ");
         $iAmDelegateForTrimmed = array_map('trim', $iAmDelegateForArray);
         $iAmDelegateForString = !empty($iAmDelegateForTrimmed) ? implode("','", $iAmDelegateForTrimmed) : null;
         $iAmDelegateForPredicate = !empty($iAmDelegateForTrimmed) ? " OR FM_CNUM in ('" . $iAmDelegateForString . "' )" : null;
@@ -80,10 +80,10 @@ class assetRequestRecord extends DbRecord {
                 $predicate = " 1=1 ";
                 break;
             case $isFm:
-                $predicate = " ( FM_CNUM='" . db2_escape_string($myCnum) . "' or CNUM='" . db2_escape_string($myCnum) . "' $iAmDelegateForPredicate ) ";
+                $predicate = " ( FM_CNUM='" . htmlspecialchars($myCnum) . "' or CNUM='" . htmlspecialchars($myCnum) . "' $iAmDelegateForPredicate ) ";
             break;
             default:
-                $predicate = " ( CNUM='" . db2_escape_string($myCnum) . "' $iAmDelegateForPredicate  ) ";
+                $predicate = " ( CNUM='" . htmlspecialchars($myCnum) . "' $iAmDelegateForPredicate  ) ";
             break;
         }
 

@@ -13,8 +13,8 @@ switch (true) {
     case isset($_GET['email_address']) && isset($_GET['title']):
         // Get a specific template
         $sql = " SELECT TEMPLATE FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$FEB_TRAVEL_REQUEST_TEMPLATES;
-        $sql .= " WHERE EMAIL_ADDRESS='" . db2_escape_string(trim($_GET['email_address'])) . "' ";
-        $sql .= " AND TITLE='" . db2_escape_string(trim($_GET['title'])) . "' ";
+        $sql .= " WHERE EMAIL_ADDRESS='" . htmlspecialchars(trim($_GET['email_address'])) . "' ";
+        $sql .= " AND TITLE='" . htmlspecialchars(trim($_GET['title'])) . "' ";
         $rs = db2_exec($GLOBALS['conn'], $sql);
         
         $response['sql'] = $sql;
@@ -60,7 +60,7 @@ switch (true) {
     case isset($_GET['email_address']):
         // Get list of titles for this person
         $sql = " SELECT DISTINCT TITLE FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$FEB_TRAVEL_REQUEST_TEMPLATES;
-        $sql .= " WHERE UPPER(EMAIL_ADDRESS)='" . db2_escape_string(strtoupper(trim($_GET['email_address']))) . "' ";
+        $sql .= " WHERE UPPER(EMAIL_ADDRESS)='" . htmlspecialchars(strtoupper(trim($_GET['email_address']))) . "' ";
         $response['sql'] = $sql;
         
         $rs = db2_exec($GLOBALS['conn'], $sql);

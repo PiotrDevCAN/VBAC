@@ -120,12 +120,23 @@ class BlueMail
                         $emailLogRecordID = self::prelog($to, $subject, $message, null, $cc, $bcc);
                     }
 
+                    // $mail->SMTPDebug = SMTP::DEBUG_OFF; // Enable verbose debug output ; SMTP::DEBUG_OFF
+                    // $mail->isSMTP(); // Send using SMTP
+                    // $mail->Host = 'na.relay.ibm.com'; // Set the SMTP server to send through
+                    // $mail->SMTPAuth = false;
+                    // $mail->SMTPAutoTLS = false;
+                    // $mail->Port = 25;
+
                     $mail->SMTPDebug = SMTP::DEBUG_OFF; // Enable verbose debug output ; SMTP::DEBUG_OFF
                     $mail->isSMTP(); // Send using SMTP
-                    $mail->Host = 'na.relay.ibm.com'; // Set the SMTP server to send through
-                    $mail->SMTPAuth = false;
-                    $mail->SMTPAutoTLS = false;
-                    $mail->Port = 25;
+                    $mail->Host = 'authnz.proofpoint.com'; // Set the SMTP server to send through
+                    $mail->SMTPAuth = true;
+                    $mail->SMTPAutoTLS = true;
+                    $mail->Port = 465; // 25, 465, or 587
+                    $mail->Username = "55745349-a422-4d7c-aa40-5c52dab03574";             
+                    $mail->Password = "mG46S=caDv+G"; 
+    
+                    $replyto = 'UKI.Business.Intelligence@kyndryl.com';
 
                     $mail->setFrom($replyto);
                     $mail->isHTML(true);
@@ -180,11 +191,11 @@ class BlueMail
     static function prelog(array $to, $subject, $message, $data_json, $cc=null, $bcc=null)
     {
         $auditString = "Invoked:<b>" . __METHOD__ . "</b>To:" . serialize($to) . "</br>";
-        $auditString.= !empty($cc) ? "CC:" . db2_escape_string(serialize($cc)) ."<br/>" : null;
-        $auditString.= !empty($cc) ? "BCC:" . db2_escape_string(serialize($bcc)) . "<br/>" : null;
-        $auditString.= "Subject:" . db2_escape_string($subject) . "-" . $subject . "</br>";
-        $auditString.= "Message:" . db2_escape_string(substr($message,0,200)) . "</br>";
-//         $auditString.= "DataJson:" . db2_escape_string(substr(serialize($data_json),0,20));
+        $auditString.= !empty($cc) ? "CC:" . htmlspecialchars(serialize($cc)) ."<br/>" : null;
+        $auditString.= !empty($cc) ? "BCC:" . htmlspecialchars(serialize($bcc)) . "<br/>" : null;
+        $auditString.= "Subject:" . htmlspecialchars($subject) . "-" . $subject . "</br>";
+        $auditString.= "Message:" . htmlspecialchars(substr($message,0,200)) . "</br>";
+//         $auditString.= "DataJson:" . htmlspecialchars(substr(serialize($data_json),0,20));
 
         AuditTable::audit($auditString,AuditTable::RECORD_TYPE_DETAILS);
 
@@ -226,8 +237,8 @@ class BlueMail
     static function updatelog($recordId, $result)
     {
         $sql  = " UPDATE " . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$EMAIL_LOG;
-        $sql .= " SET RESPONSE = '" . db2_escape_string($result) . "'" ;
-        $sql .= " WHERE RECORD_ID= " . db2_escape_string($recordId) . "; ";
+        $sql .= " SET RESPONSE = '" . htmlspecialchars($result) . "'" ;
+        $sql .= " WHERE RECORD_ID= " . htmlspecialchars($recordId) . "; ";
 
         $rs = db2_exec($GLOBALS['conn'], $sql);
 
@@ -242,8 +253,8 @@ class BlueMail
     static function logStatus($recordId, $status)
     {
         $sql  = " UPDATE " . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$EMAIL_LOG;
-        $sql .= " SET LAST_STATUS = '" . db2_escape_string($status) . "', STATUS_TIMESTAMP = CURRENT TIMESTAMP " ;
-        $sql .= " WHERE RECORD_ID= " . db2_escape_string($recordId) . "; ";
+        $sql .= " SET LAST_STATUS = '" . htmlspecialchars($status) . "', STATUS_TIMESTAMP = CURRENT TIMESTAMP " ;
+        $sql .= " WHERE RECORD_ID= " . htmlspecialchars($recordId) . "; ";
 
         $rs = db2_exec($GLOBALS['conn'], $sql);
 
@@ -265,7 +276,7 @@ class BlueMail
 
     static function getEmailDetails($recordID){
         $sql  = " SELECT * FROM " . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$EMAIL_LOG;
-        $sql .= ' WHERE RECORD_ID = ' . db2_escape_string($recordID);
+        $sql .= ' WHERE RECORD_ID = ' . htmlspecialchars($recordID);
         $rs = db2_exec($GLOBALS['conn'], $sql);
 
         if(!$rs){

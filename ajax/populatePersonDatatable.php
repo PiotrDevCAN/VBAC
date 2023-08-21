@@ -18,7 +18,7 @@ $length = isset($_REQUEST['length']) ? $_REQUEST['length'] : 50;
 
 $order = isset($_REQUEST['order']) ? $_REQUEST['order'] : array();
 $columns = isset($_REQUEST['columns']) ? $_REQUEST['columns'] : array();
-$searchValue = isset($_REQUEST['search']) && isset($_REQUEST['search']['value']) ? db2_escape_string(trim($_REQUEST['search']['value'])) : '';
+$searchValue = isset($_REQUEST['search']) && isset($_REQUEST['search']['value']) ? htmlspecialchars(trim($_REQUEST['search']['value'])) : '';
 
 $columnsFromQuery = array(
     'CNUM',

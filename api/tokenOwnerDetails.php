@@ -43,8 +43,8 @@ $sql.= $rsaTokenSupplied ? ", RSA_TOKEN " : null;
 $sql.= $callSignIdSupplied ? ", CALLSIGN_ID " : null;
 $sql.= " FROM ". $GLOBALS['Db2Schema'] . "." . allTables::$PERSON ;
 $sql.= " WHERE  ";
-$sql.= $rsaTokenSupplied ? " RSA_TOKEN = '" . db2_escape_string($_REQUEST['RSA_TOKEN']) . "'  " : null;
-$sql.= $callSignIdSupplied ? " CALLSIGN_ID = '" . db2_escape_string($_REQUEST['CALLSIGN_ID']) . "'  " : null;
+$sql.= $rsaTokenSupplied ? " RSA_TOKEN = '" . htmlspecialchars($_REQUEST['RSA_TOKEN']) . "'  " : null;
+$sql.= $callSignIdSupplied ? " CALLSIGN_ID = '" . htmlspecialchars($_REQUEST['CALLSIGN_ID']) . "'  " : null;
 $rs = db2_exec($GLOBALS['conn'], $sql);
 
 if(!$rs){

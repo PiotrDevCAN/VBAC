@@ -23,9 +23,9 @@ $allDelegates = $loader->load('DELEGATE_CNUM',allTables::$DELEGATE);
 switch (true) {
     case $_SESSION['isFm']:
         $myCnum = personTable::myCnum();
-        $predicate .= " AND ( F.CNUM='". db2_escape_string($myCnum) . "' ";
+        $predicate .= " AND ( F.CNUM='". htmlspecialchars($myCnum) . "' ";
         $predicate .= "       OR ";
-        $predicate .= "       G.DELEGATE_CNUM='" . db2_escape_string($myCnum) . "' ";
+        $predicate .= "       G.DELEGATE_CNUM='" . htmlspecialchars($myCnum) . "' ";
         $predicate .= "     ) ";
         break;
     case $_SESSION['isCdi']:
@@ -34,8 +34,8 @@ switch (true) {
         break;
     default:
         $myCnum = personTable::myCnum();
-        $predicate .= " AND  ( D.CNUM = '". db2_escape_string($myCnum) . "' ";
-        $predicate .= "        OR G.DELEGATE_CNUM='" . db2_escape_string($myCnum) . "' ";
+        $predicate .= " AND  ( D.CNUM = '". htmlspecialchars($myCnum) . "' ";
+        $predicate .= "        OR G.DELEGATE_CNUM='" . htmlspecialchars($myCnum) . "' ";
         $predicate .= "      ) ";
         $withButtons = false;
         break;

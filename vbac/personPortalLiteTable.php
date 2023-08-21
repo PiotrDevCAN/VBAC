@@ -27,8 +27,8 @@ class personPortalLiteTable extends personTable
         $predicate = " 1=1  ";
         $withProvClear = true;
         
-        $predicate .= $isFM ? " AND P.FM_CNUM='" . db2_escape_string(trim($myCnum)) . "' " : "";
-        $predicate .= $justaUser ? " AND P.CNUM='" . db2_escape_string(trim($myCnum)) . "' " : ""; // FM Can only see their own people.
+        $predicate .= $isFM ? " AND P.FM_CNUM='" . htmlspecialchars(trim($myCnum)) . "' " : "";
+        $predicate .= $justaUser ? " AND P.CNUM='" . htmlspecialchars(trim($myCnum)) . "' " : ""; // FM Can only see their own people.
         
         $predicate .= $preboadersAction==self::PORTAL_PRE_BOARDER_EXCLUDE ? " AND ( P.PES_STATUS_DETAILS not like '" . personRecord::PES_STATUS_DETAILS_BOARDED_AS . "%' or P.PES_STATUS_DETAILS is null) " : null;
         $predicate .= $preboadersAction==self::PORTAL_PRE_BOARDER_WITH_LINKED ? " AND ( P.PES_STATUS_DETAILS like '" . personRecord::PES_STATUS_DETAILS_BOARDED_AS . "%' or P.PRE_BOARDED  is not  null) " : null;

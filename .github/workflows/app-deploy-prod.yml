@@ -1,0 +1,138 @@
+---
+name: ci-build-and-deploy-production
+on:
+  push:
+    branches:
+      - cirrus
+jobs:
+  Build:
+    runs-on:
+      - aro-dev-westus3
+    environment: production
+    steps:
+      - name: Get JFROG Credentials
+        id: import-secrets
+        uses: hashicorp/vault-action@v2
+        with:
+          url: https://vault.kyndryl.net
+          method: token
+          namespace: kyndryl/KYNDRYL_PRACTICES/
+          token: ${{ secrets.VAULT_TOKEN }}
+          tlsSkipVerify: false
+          secrets: |
+            kps-gd-app-vbac/data/dev/w3us/jfrog  JFROG_USER | JFROG_USER ; 
+            kps-gd-app-vbac/data/dev/w3us/jfrog  JFROG_TOKEN | JFROG_TOKEN
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Login to Jfrog
+        uses: docker/login-action@v2
+        with:
+          registry: kyndryl.jfrog.io
+          username: ${{ steps.import-secrets.outputs.JFROG_USER }}
+          password: ${{ steps.import-secrets.outputs.JFROG_TOKEN }}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: | 
+            kyndryl.jfrog.io/uki-business-intelligence-test-docker-local/vbac:prod_${{ github.run_number }}
+  Deploy:
+    name: Deploy
+    needs:
+      - Build
+    runs-on:
+      - aro-dev-westus3
+    environment: production
+    steps:
+      - name: Checkout Sourcecode
+        uses: actions/checkout@v3
+      - name: Import JFROG & ARO Secrets
+        id: import-secrets
+        uses: hashicorp/vault-action@v2
+        with:
+          url: https://vault.kyndryl.net
+          method: token
+          namespace: kyndryl/KYNDRYL_PRACTICES/
+          token: ${{ secrets.VAULT_TOKEN }}
+          tlsSkipVerify: false
+          secrets: |
+            kps-gd-app-vbac/data/dev/w3us/jfrog  JFROG_USER | JFROG_USER ;
+            kps-gd-app-vbac/data/dev/w3us/jfrog  JFROG_TOKEN | JFROG_TOKEN ;
+            kps-gd-app-vbac/data/dev/w3us/openshift-sa  SERVER_URL | SERVER_URL ;
+            kps-gd-app-vbac/data/dev/w3us/openshift-sa  SA_TOKEN | SA_TOKEN ;
+            kps-gd-app-vbac/data/dev/w3us/openshift-sa  NAMESPACE | NAMESPACE ;
+            kps-gd-app-vbac/data/dev/w3us/sqlserver_wus3 server | DB_SERVER ;
+            kps-gd-app-vbac/data/dev/w3us/sqlserver_wus3 username | DB_USER_NAME ;
+            kps-gd-app-vbac/data/dev/w3us/sqlserver_wus3 password | DB_USER_PW
+      - name: Login to ARO Cluster
+        id: set-aro-context
+        uses: redhat-actions/oc-login@v1
+        with:
+          openshift_server_url: ${{ steps.import-secrets.outputs.SERVER_URL }}
+          openshift_token: eyJhbGciOiJSUzI1NiIsImtpZCI6InRUZEpQeHdGSDRxQ3YteDgtQV95SEY3WGcxYkFfcmZOSjB6bjB2eGRSMFEifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJucy12YmFjLWdkLWtwcy1kZXYtd3VzMyIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJzYS12YmFjLWdkLWtwcy1kZXYtd3VzMy10b2tlbi02bnZ2biIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJzYS12YmFjLWdkLWtwcy1kZXYtd3VzMyIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6ImRlMWVmMjIxLWYyOWUtNDQwOC05ODhlLTg1ZDM4M2IyYWU0ZCIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDpucy12YmFjLWdkLWtwcy1kZXYtd3VzMzpzYS12YmFjLWdkLWtwcy1kZXYtd3VzMyJ9.objKPf7sq5zfE9UTWGhXqbGQ4Dgo4qzCVbnX8eLDZccHKRkUsJxEzWMbHPQGLVZk-kGU9VKDbf1NgSaqANxQV3bJq2HbD2XVRmack9T5FW6OA5PO475wnGPTS7tIFOOYQEqGECIvtQfhVwhRIQZOqYcf4sT8pNw6Ds6Z4vwpLByBTNdFknF3XfXCK38M4PKruzQZ2Yw19M_vpi_fqTm3-2ig9RkOI2jsUAxK85AAlntPqv_-ZMvOgd9uenIkgZr3IQmyU4TzkKl-8HljY2_sClG5wTrpJEMN4pyyuvzgjlrlXUeTFGRdD3Bg156S6KTf0gIF57FbdYZv1oQqANl4xzCU4dOnmk6Jtf7_8zRlQqvl7520mGaSuQz4vvNOtz4uztLbU9jvznqz3o5KU3ebEWjGBUB5j4nuSvbNNr8J7rlo_cilAGM5W93LpLJry--1XBr6MqynwsrgLA48FcpMs0lTTykfnu0ehu__1dR2f91vbYV0KI5jj-yAywXt-BlCp7aSAqNWixjuFS2vnEAvftGuWDgFgXWbku2fUyWhc2j6wR1b6XUaGAzlscgk2X1FlmhoXrzlKPaQ-JTlq1aYtMyVmJIgO31glXaB5NeaXdqQkgKva8gN5lhO4Yousf3pUTDh6FV71zpgjVBdwQqcFCeN1mTAeIyYouPyfxR_2M4
+          insecure_skip_tls_verify: true
+          namespace: ${{ steps.import-secrets.outputs.NAMESPACE }}
+      - name: Set ImagePullSecrets
+        id: image_secret
+        uses: Azure/k8s-create-secret@v4.0
+        with:
+          namespace: ${{ steps.import-secrets.outputs.NAMESPACE }}
+          secret-name: vbac-app-docker-secrets
+          container-registry-url: kyndryl.jfrog.io
+          container-registry-username: ${{ steps.import-secrets.outputs.JFROG_USER }}
+          container-registry-password: ${{ steps.import-secrets.outputs.JFROG_TOKEN }}
+      - name: Set ImagePullSecrets DB
+        id: image_secret-db
+        uses: azure/k8s-actions/k8s-create-secret@master
+        # uses: Azure/k8s-create-secret@v4.0
+        with:
+          namespace: ${{ steps.import-secrets.outputs.NAMESPACE }}
+          secret-name: vbac-app-docker-secrets-db
+          secret-type: 'generic'
+          arguments: --from-literal=db-server=${{ steps.import-secrets.outputs.DB_SERVER }} --from-literal=db-name=${{ steps.import-secrets.outputs.DB_NAME }} --from-literal=db-user-name=${{ steps.import-secrets.outputs.DB_USER_NAME }} --from-literal=db-user-pw=${{ steps.import-secrets.outputs.DB_USER_PW }}
+      - name: Set ImagePullSecrets SMTP
+        id: image_secret-smtp
+        uses: azure/k8s-actions/k8s-create-secret@master
+        # uses: Azure/k8s-create-secret@v4.0
+        with:
+          namespace: ${{ steps.import-secrets.outputs.NAMESPACE }}
+          secret-name: vbac-app-docker-secrets-smtp
+          secret-type: 'generic'
+          arguments: --from-literal=smtp-server=${{ steps.import-secrets.outputs.SMTP_HOST }} --from-literal=smtp-user-name=${{ steps.import-secrets.outputs.SMTP_USER_NAME }} --from-literal=smtp-user-pw=${{ steps.import-secrets.outputs.SMTP_USER_PW }}
+      - name: Set ImagePullSecrets SSO
+        id: image_secret-sso
+        uses: azure/k8s-actions/k8s-create-secret@master
+        # uses: Azure/k8s-create-secret@v4.0
+        with:
+          namespace: ${{ steps.import-secrets.outputs.NAMESPACE }}
+          secret-name: vbac-app-docker-secrets-sso
+          secret-type: 'generic'
+          arguments: --from-literal=sso_host=${{ steps.import-secrets.outputs.SSO_HOST }} --from-literal=sso_client_id=${{ steps.import-secrets.outputs.SSO_CLIENT_ID }} --from-literal=sso_client_secret=${{ steps.import-secrets.outputs.SSO_CLIENT_SECRET }}
+      - name: Deploy application
+        id: deploy-app
+        uses: Azure/k8s-deploy@v4
+        with:
+          namespace: ${{ steps.import-secrets.outputs.NAMESPACE }}
+          images: |
+            kyndryl.jfrog.io/uki-business-intelligence-test-docker-local/vbac:prod_${{ github.run_number }}
+          # Path to the manifest files to be used for deployment. 
+          manifests: |
+            ./env-configmap.yml
+            ./env-secrets.yml
+            ./myapp-deployment.yml
+            ./myapp-service.yml
+            ./myapp-sn-dev_route.yml
+          # Multiline input where each line contains the name of a docker-registry secret 
+          # that has already been setup within the cluster. 
+          # Each of these secret names are added under imagePullSecrets field for the workloads found in the input manifest files
+          imagepullsecrets: |
+            vbac-app-docker-secrets
+            vbac-app-docker-secrets-db
+            vbac-app-docker-secrets-smtp
+            vbac-app-docker-secrets-sso
+            env-configmap
+            env-secrets

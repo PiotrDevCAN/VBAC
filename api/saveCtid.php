@@ -26,7 +26,7 @@ $ctidLength = 0;
 
 if(isset($_REQUEST['CNUM'])){
     $activePeople = $personTable->activePersonPredicate();
-    $cnumArray = $loader->load('CNUM',allTables::$PERSON, $activePeople . " AND (CNUM='" . db2_escape_string(trim($_REQUEST['CNUM'])) . "') ");
+    $cnumArray = $loader->load('CNUM',allTables::$PERSON, $activePeople . " AND (CNUM='" . htmlspecialchars(trim($_REQUEST['CNUM'])) . "') ");
     $cnumValidated = isset($cnumArray[trim($_REQUEST['CNUM'])]);
 } else {
     $cnumValidated = false;
@@ -76,8 +76,8 @@ if( !$ctidValidated or !$cnumValidated ){
 
 $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON ;
 $sql.= " SET ";
-$sql.= isset($_REQUEST['CT_ID']) ? " CT_ID='" . db2_escape_string(trim($_REQUEST['CT_ID'])) . "' " : 'invalid sql no ctid' ;
-$sql.= " WHERE CNUM='" . db2_escape_string($_REQUEST['CNUM']) . "' ";
+$sql.= isset($_REQUEST['CT_ID']) ? " CT_ID='" . htmlspecialchars(trim($_REQUEST['CT_ID'])) . "' " : 'invalid sql no ctid' ;
+$sql.= " WHERE CNUM='" . htmlspecialchars($_REQUEST['CNUM']) . "' ";
 
 $rs = db2_exec($GLOBALS['conn'], $sql);
 

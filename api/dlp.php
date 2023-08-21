@@ -15,9 +15,9 @@ $status   = !empty($_GET['status'])   ? trim($_GET['status']) : null;
 
 $sql = " SELECT lower(D.STATUS) as STATUS, count(*) as RECORDS ";
 $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$DLP . " AS D ";
-$sql.= " WHERE 1=1 AND lower(status) = '" . db2_escape_string($status) . "' " ;
-$sql.= !empty($cnum)     ? " AND D.CNUM = '" . db2_escape_string($cnum) . "'  " : null;
-$sql.= !empty($hostname) ? " AND lower(D.HOSTNAME) = '" . db2_escape_string(strtolower($hostname)) . "'  " : null;
+$sql.= " WHERE 1=1 AND lower(status) = '" . htmlspecialchars($status) . "' " ;
+$sql.= !empty($cnum)     ? " AND D.CNUM = '" . htmlspecialchars($cnum) . "'  " : null;
+$sql.= !empty($hostname) ? " AND lower(D.HOSTNAME) = '" . htmlspecialchars(strtolower($hostname)) . "'  " : null;
 $sql.= " GROUP BY D.STATUS ";
 
 $rs = db2_exec($GLOBALS['conn'], $sql);

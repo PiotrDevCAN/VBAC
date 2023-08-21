@@ -35,12 +35,12 @@ if($startDate===false || $endDate===false){
                     $sql.= " ( CNUM,  ASSET_SERIAL_NUMBER, START_DATE ";
                     $sql.= !empty($endDate) ? " , END_DATE " : null ;
                     $sql.= " ) VALUES ( '";
-                    $sql.= db2_escape_string($cnum);
+                    $sql.= htmlspecialchars($cnum);
                     $sql.= "','";
-                    $sql.= db2_escape_string($assetSerial);
+                    $sql.= htmlspecialchars($assetSerial);
                     $sql.= "',";
-                    $sql.= "'" . db2_escape_string($startDate->format('Y-m-d')) . "' ";
-                    $sql.= !empty($endDate) ? ",'" . db2_escape_string($endDate->format('Y-m-d')) . "' " : ",'2099-12-31' " ;
+                    $sql.= "'" . htmlspecialchars($startDate->format('Y-m-d')) . "' ";
+                    $sql.= !empty($endDate) ? ",'" . htmlspecialchars($endDate->format('Y-m-d')) . "' " : ",'2099-12-31' " ;
                     $sql.= ") ";
                     
                     $rs = db2_exec($GLOBALS['conn'], $sql);
@@ -65,8 +65,8 @@ if($startDate===false || $endDate===false){
                     $sql.= " WHERE 1=1 ";
                     $sql.= "                        and START_DATE <= CURRENT DATE ";
                     $sql.= "                        and END_DATE >= CURRENT DATE ";
-                    $sql.= !empty($assetSerial) ? " and ASSET_SERIAL_NUMBER='" . db2_escape_string($assetSerial) . "' " : null;
-                    $sql.= !empty($cnum) ?        " and CNUM='" . db2_escape_string($cnum) . "' " : null;
+                    $sql.= !empty($assetSerial) ? " and ASSET_SERIAL_NUMBER='" . htmlspecialchars($assetSerial) . "' " : null;
+                    $sql.= !empty($cnum) ?        " and CNUM='" . htmlspecialchars($cnum) . "' " : null;
                     $rs = db2_exec($GLOBALS['conn'], $sql);
                     
                     if(!$rs){
@@ -98,8 +98,8 @@ if($startDate===false || $endDate===false){
                     $sql = " DELETE  ";
                     $sql.= " FROM ". $GLOBALS['Db2Schema']  . "." . allTables::$ODC_ASSET_REMOVAL ;
                     $sql.= " WHERE 1=1 ";
-                    $sql.= !empty($assetSerial) ? " AND ASSET_SERIAL_NUMBER='" . db2_escape_string($assetSerial) . "' " : null;
-                    $sql.= !empty($cnum) ?        " AND CNUM='" . db2_escape_string($cnum) . "' " : null;
+                    $sql.= !empty($assetSerial) ? " AND ASSET_SERIAL_NUMBER='" . htmlspecialchars($assetSerial) . "' " : null;
+                    $sql.= !empty($cnum) ?        " AND CNUM='" . htmlspecialchars($cnum) . "' " : null;
                     $rs = db2_exec($GLOBALS['conn'], $sql);
                     
                     if(!$rs){
@@ -121,10 +121,10 @@ if($startDate===false || $endDate===false){
                 default :
                     $sql = " UPDATE  " . $GLOBALS['Db2Schema']  . "." . allTables::$ODC_ASSET_REMOVAL ;
                     $sql.= " SET ";
-                    $sql.= " END_DATE='" . db2_escape_string($endDate->format('Y-m-d')) . "' ";
+                    $sql.= " END_DATE='" . htmlspecialchars($endDate->format('Y-m-d')) . "' ";
                     $sql.= " WHERE 1=1 ";
-                    $sql.= !empty($assetSerial) ? " AND ASSET_SERIAL_NUMBER='" . db2_escape_string($assetSerial) . "' " : null;
-                    $sql.= !empty($cnum) ?        " AND CNUM='" . db2_escape_string($cnum) . "' " : null;
+                    $sql.= !empty($assetSerial) ? " AND ASSET_SERIAL_NUMBER='" . htmlspecialchars($assetSerial) . "' " : null;
+                    $sql.= !empty($cnum) ?        " AND CNUM='" . htmlspecialchars($cnum) . "' " : null;
                     $rs = db2_exec($GLOBALS['conn'], $sql);
                     
                     if(!$rs){
@@ -148,8 +148,8 @@ if($startDate===false || $endDate===false){
                     $sql.= " WHERE 1=1 ";
                     $sql.= "   and START_DATE <= CURRENT DATE ";
                     $sql.= "   and END_DATE >= CURRENT DATE ";
-                    $sql.= "   and ASSET_SERIAL_NUMBER='" . db2_escape_string($assetSerial) . "' " ;
-                    $sql.= "   and CNUM='" . db2_escape_string($cnum) . "' " ;
+                    $sql.= "   and ASSET_SERIAL_NUMBER='" . htmlspecialchars($assetSerial) . "' " ;
+                    $sql.= "   and CNUM='" . htmlspecialchars($cnum) . "' " ;
                     $rs = db2_exec($GLOBALS['conn'], $sql);
                     
                     if(!$rs){

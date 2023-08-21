@@ -19,7 +19,7 @@ function displayBoardingForm($mode){
         $countryCodes = $loader->loadIndexed('COUNTRY_NAME','COUNTRY_CODE',allTables::$STATIC_COUNTRY_CODES);
         $skillSets = $loader->loadIndexed('SKILLSET','SKILLSET_ID',allTables::$STATIC_SKILLSETS);
 
-        $userDetails = $loader->loadIndexed('CNUM','EMAIL_ADDRESS',allTables::$PERSON, " EMAIL_ADDRESS='" . db2_escape_string($_SESSION['ssoEmail']) . "' ");
+        $userDetails = $loader->loadIndexed('CNUM','EMAIL_ADDRESS',allTables::$PERSON, " EMAIL_ADDRESS='" . htmlspecialchars($_SESSION['ssoEmail']) . "' ");
         $userCnum = isset($userDetails[$_SESSION['ssoEmail']]) ? $userDetails[$_SESSION['ssoEmail']] : false;
         $allWorkstream = $workstreamTable->getallWorkstream();
         JavaScript::buildSelectArray($allWorkstream, 'workStream');

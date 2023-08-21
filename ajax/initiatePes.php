@@ -18,7 +18,7 @@ try {
     $pesTracker->createNewTrackerRecord($_POST['cnum']);
 
     $table = new personTable(allTables::$PERSON);
-    $personData = $table->getWithPredicate(" CNUM='" . db2_escape_string(trim($_POST['cnum'])) . "' ");
+    $personData = $table->getWithPredicate(" CNUM='" . htmlspecialchars(trim($_POST['cnum'])) . "' ");
 
     $person = new personRecord();
     $person->setFromArray($personData);

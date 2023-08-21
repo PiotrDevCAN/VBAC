@@ -476,11 +476,11 @@ class pesTrackerTable extends DbTable{
     }
 
     function prepareStageUpdate($stage){
-        if(isset($this->preparedStageUpdateStmts[strtoupper(db2_escape_string($stage))] )) {
-            return $this->preparedStageUpdateStmts[strtoupper(db2_escape_string($stage))];
+        if(isset($this->preparedStageUpdateStmts[strtoupper(htmlspecialchars($stage))] )) {
+            return $this->preparedStageUpdateStmts[strtoupper(htmlspecialchars($stage))];
         }
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql.= " SET " . strtoupper(db2_escape_string($stage)) . " =? ";
+        $sql.= " SET " . strtoupper(htmlspecialchars($stage)) . " =? ";
         $sql.= " WHERE CNUM=? ";
 
         $this->preparedSelectSQL = $sql;
@@ -488,7 +488,7 @@ class pesTrackerTable extends DbTable{
         $preparedStmt = db2_prepare($GLOBALS['conn'], $sql);
 
          if($preparedStmt){
-             $this->preparedStageUpdateStmts[strtoupper(db2_escape_string($stage))] = $preparedStmt;
+             $this->preparedStageUpdateStmts[strtoupper(htmlspecialchars($stage))] = $preparedStmt;
          }
 
          return $preparedStmt;
@@ -661,8 +661,8 @@ class pesTrackerTable extends DbTable{
 
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql.= " SET PRIORITY=";
-        $sql.= !empty($pesPriority) ? "'" . db2_escape_string($pesPriority) . "' " : " null, ";
-        $sql.= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
+        $sql.= !empty($pesPriority) ? "'" . htmlspecialchars($pesPriority) . "' " : " null, ";
+        $sql.= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
 
         $rs = db2_exec($GLOBALS['conn'],$sql);
 
@@ -686,10 +686,10 @@ class pesTrackerTable extends DbTable{
 
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql.= " SET PASSPORT_FIRST_NAME=";
-        $sql.= !empty($passportFirstname) ? "'" . db2_escape_string($passportFirstname) . "', " : " null, ";
+        $sql.= !empty($passportFirstname) ? "'" . htmlspecialchars($passportFirstname) . "', " : " null, ";
         $sql.= " PASSPORT_SURNAME=";
-        $sql.= !empty($passportSurname) ? "'" . db2_escape_string($passportSurname) . "'  " : " null ";
-        $sql.= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
+        $sql.= !empty($passportSurname) ? "'" . htmlspecialchars($passportSurname) . "'  " : " null ";
+        $sql.= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
 
         $rs = db2_exec($GLOBALS['conn'],$sql);
 
@@ -710,8 +710,8 @@ class pesTrackerTable extends DbTable{
         }
 
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql.= " SET DATE_LAST_CHASED=DATE('" . db2_escape_string($dateLastChased) . "') ";
-        $sql.= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
+        $sql.= " SET DATE_LAST_CHASED=DATE('" . htmlspecialchars($dateLastChased) . "') ";
+        $sql.= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
 
         $rs = db2_exec($GLOBALS['conn'],$sql);
 
@@ -746,8 +746,8 @@ class pesTrackerTable extends DbTable{
 
 
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql.= " SET COMMENT='" . db2_escape_string($newComment) . "' ";
-        $sql.= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
+        $sql.= " SET COMMENT='" . htmlspecialchars($newComment) . "' ";
+        $sql.= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
 
         $rs = db2_exec($GLOBALS['conn'], $sql);
 
@@ -826,8 +826,8 @@ class pesTrackerTable extends DbTable{
 
     function changeCnum($fromCnum, $toCnum){
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql.= " SET CNUM='" . db2_escape_string(trim($toCnum)) . "' ";
-        $sql.= " WHERE CNUM='" . db2_escape_string(trim($fromCnum)) . "' ";
+        $sql.= " SET CNUM='" . htmlspecialchars(trim($toCnum)) . "' ";
+        $sql.= " WHERE CNUM='" . htmlspecialchars(trim($fromCnum)) . "' ";
 
         $rs = db2_exec($GLOBALS['conn'], $sql);
 
@@ -839,7 +839,7 @@ class pesTrackerTable extends DbTable{
         db2_commit($GLOBALS['conn']);
 
 //         $sql = " DELETE FROM  " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-//         $sql.= " WHERE CNUM='" . db2_escape_string(trim($fromCnum)) . "' ";
+//         $sql.= " WHERE CNUM='" . htmlspecialchars(trim($fromCnum)) . "' ";
 
 //         $rs = db2_exec($GLOBALS['conn'], $sql);
 
@@ -849,7 +849,7 @@ class pesTrackerTable extends DbTable{
 //         }
 
         $loader = new Loader();
-        $emailAddress = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON," CNUM in('" . db2_escape_string(trim($fromCnum)) . "','" . db2_escape_string(trim($toCnum)) . "') ");
+        $emailAddress = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON," CNUM in('" . htmlspecialchars(trim($fromCnum)) . "','" . htmlspecialchars(trim($toCnum)) . "') ");
 
         $this->savePesComment($toCnum, "Serial Number changed from $fromCnum to $toCnum");
         $this->savePesComment($toCnum, "Email Address changed from $emailAddress[$fromCnum] to $emailAddress[$toCnum] ");

@@ -7,7 +7,7 @@ ob_start();
 switch ($_REQUEST['mode']) {
     case 'write':
         $sql = "DELETE FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$FEB_TRAVEL_REQUEST_TEMPLATES ;
-        $sql.= " WHERE EMAIL_ADDRESS='". db2_escape_string($_REQUEST['email_address']) . "' AND TITLE='" . db2_escape_string($_REQUEST['title']) . "' ";
+        $sql.= " WHERE EMAIL_ADDRESS='". htmlspecialchars($_REQUEST['email_address']) . "' AND TITLE='" . htmlspecialchars($_REQUEST['title']) . "' ";
 
         $rs = db2_exec($GLOBALS['conn'], $sql);
         
@@ -20,7 +20,7 @@ switch ($_REQUEST['mode']) {
         db2_commit($GLOBALS['conn']);
         
         $sql = "INSERT INTO " . $GLOBALS['Db2Schema'] . "." . allTables::$FEB_TRAVEL_REQUEST_TEMPLATES ;
-        $sql.= " (EMAIL_ADDRESS, TITLE, TEMPLATE) VALUES ('" . db2_escape_string($_REQUEST['email_address']) . "','" . db2_escape_string($_REQUEST['title']) . "','" . db2_escape_string($_REQUEST['template']) . "') ";
+        $sql.= " (EMAIL_ADDRESS, TITLE, TEMPLATE) VALUES ('" . htmlspecialchars($_REQUEST['email_address']) . "','" . htmlspecialchars($_REQUEST['title']) . "','" . htmlspecialchars($_REQUEST['template']) . "') ";
         
         $rs = db2_exec($GLOBALS['conn'], $sql);
         

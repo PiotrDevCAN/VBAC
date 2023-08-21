@@ -94,7 +94,7 @@ class AgileSquadTable extends DbTable{
         $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . $squadTable . " AS S ";
         $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . $tribeTable . " AS T ";
         $sql.= " ON S.TRIBE_NUMBER = T.TRIBE_NUMBER ";
-        $sql.= " WHERE S.SQUAD_NUMBER = " . db2_escape_string($squadNumber);
+        $sql.= " WHERE S.SQUAD_NUMBER = " . htmlspecialchars($squadNumber);
 
         $rs = db2_exec($GLOBALS['conn'], $sql);
 

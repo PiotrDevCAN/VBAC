@@ -10,9 +10,9 @@ if($_REQUEST['token']!= $token){
     return;
 }
 
-$sql = " SELECT CNUM, " . db2_escape_string($_REQUEST['fieldName']) ;
+$sql = " SELECT CNUM, " . htmlspecialchars($_REQUEST['fieldName']) ;
 $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
-$sql.= " FOR SYSTEM_TIME as of '" . db2_escape_string($_REQUEST['systemTime']) . "' ";
+$sql.= " FOR SYSTEM_TIME as of '" . htmlspecialchars($_REQUEST['systemTime']) . "' ";
 $sql.= " ORDER BY CNUM ";
 
 $rs = db2_exec($GLOBALS['conn'], $sql);

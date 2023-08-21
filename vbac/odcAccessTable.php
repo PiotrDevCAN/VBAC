@@ -57,7 +57,7 @@ class odcAccessTable extends DbTable {
                     // delete the previous data for this Secured Area.
                     $secureAreaName = trim($recordData['SECURED_AREA_NAME']);
                     $sql = " DELETE FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-                    $sql.= " WHERE SECURED_AREA_NAME = '" . db2_escape_string($secureAreaName) . "' ";
+                    $sql.= " WHERE SECURED_AREA_NAME = '" . htmlspecialchars($secureAreaName) . "' ";
                     $rs = db2_exec($GLOBALS['conn'], $sql);
 
 
@@ -153,7 +153,7 @@ class odcAccessTable extends DbTable {
         $sql = " SELECT COUNT(*) as RECORDS ";
         $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql.= " WHERE 1= 1 ";
-        $sql.= !empty($location) ? " AND SECURED_AREA_NAME='" . db2_escape_string($location) . "' " : null;
+        $sql.= !empty($location) ? " AND SECURED_AREA_NAME='" . htmlspecialchars($location) . "' " : null;
 
         $rs = db2_exec($GLOBALS['conn'], $sql);
 

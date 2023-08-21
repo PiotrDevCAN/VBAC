@@ -280,12 +280,12 @@ try {
                             if ($boardingIbmer && !empty($_POST['person_preboarded'])) {
                 
                                 $table = new personTable(allTables::$PERSON);
-                                $personData = $table->getWithPredicate(" EMAIL_ADDRESS='" . db2_escape_string(trim($_POST['person_preboarded'])) . "' ");
+                                $personData = $table->getWithPredicate(" EMAIL_ADDRESS='" . htmlspecialchars(trim($_POST['person_preboarded'])) . "' ");
                                 
                                 if (!empty($personData)) {
                                     echo '<br/>Preboarded person data read from EMAIL_ADDRESS.';
                                 } else {
-                                    $personData = $table->getWithPredicate(" CNUM='" . db2_escape_string(trim($_POST['person_preboarded'])) . "' ");
+                                    $personData = $table->getWithPredicate(" CNUM='" . htmlspecialchars(trim($_POST['person_preboarded'])) . "' ");
                                     if (!empty($personData)) {
                                         echo '<br/>Preboarded person data read from CNUM.';
                                     } else {

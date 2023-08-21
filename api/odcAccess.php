@@ -13,8 +13,8 @@ $row = false;
 $sql = " SELECT count(*) as FOUND ";
 $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$ODC_ACCESS_LIVE . " AS O ";
 $sql.= " WHERE 1=1 ";
-$sql.= !empty($notesId) ? " AND lower(O.OWNER_NOTES_ID) = '" . db2_escape_string(strtolower($notesId)) . "'; " : null;
-$sql.= !empty($cnum) ? " AND lower(O.OWNER_CNUM_ID) = '" . db2_escape_string(strtolower($cnum)) . "'; " : null;
+$sql.= !empty($notesId) ? " AND lower(O.OWNER_NOTES_ID) = '" . htmlspecialchars(strtolower($notesId)) . "'; " : null;
+$sql.= !empty($cnum) ? " AND lower(O.OWNER_CNUM_ID) = '" . htmlspecialchars(strtolower($cnum)) . "'; " : null;
 
 $rs = db2_exec($GLOBALS['conn'], $sql);
 

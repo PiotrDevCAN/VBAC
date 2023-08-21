@@ -99,7 +99,7 @@ class assetRequestsTable extends DbTable{
     static function returnForPortal($predicate=null,$withButtons=true){
         $loader = new Loader();
         $myCnum = personTable::myCnum();
-        $amADelegateForRaw = $loader->load('EMAIL_ADDRESS',allTables::$DELEGATE," DELEGATE_CNUM='" . db2_escape_string($myCnum) . "' ");
+        $amADelegateForRaw = $loader->load('EMAIL_ADDRESS',allTables::$DELEGATE," DELEGATE_CNUM='" . htmlspecialchars($myCnum) . "' ");
         $amADelegateFor = array_map('strtolower',$amADelegateForRaw);
 
         $sql  = " SELECT distinct";
@@ -365,7 +365,7 @@ class assetRequestsTable extends DbTable{
 
     private function getNextVarb(){
         $sql  = " INSERT INTO " . $GLOBALS['Db2Schema'] . "." . allTables::$ORDER_IT_VARB_TRACKER;
-        $sql .= " ( CREATED_BY ) VALUES ('" . db2_escape_string($_SESSION['ssoEmail']) . "' )" ;
+        $sql .= " ( CREATED_BY ) VALUES ('" . htmlspecialchars($_SESSION['ssoEmail']) . "' )" ;
 
         $rs = db2_exec($GLOBALS['conn'], $sql);
 
@@ -385,17 +385,17 @@ class assetRequestsTable extends DbTable{
         /*
          *   ORDERIT_VARB_REF is null - Has not previously been exported.
          *   ORDER_IT_NUMBER is null  - Hasn't already been raised by the individual
-         *   RAL.ORDER_IT_TYPE = '" . db2_escape_string($orderItGroup) . "'  - the ASSET_TITLE has a TYPE that matches the type we're processing
+         *   RAL.ORDER_IT_TYPE = '" . htmlspecialchars($orderItGroup) . "'  - the ASSET_TITLE has a TYPE that matches the type we're processing
          *   AR.STATUS='" . assetRequestRecord::STATUS_APPROVED . "'  - It's approved for processing
          *
-         *   '" . db2_escape_string($orderItType) . "' == 1  - It's a TYPE1 - ie it doesn't need a CT ID
+         *   '" . htmlspecialchars($orderItType) . "' == 1  - It's a TYPE1 - ie it doesn't need a CT ID
          *   or P.CONTRACTOR_ID is not null                  - It's not a TYPE 1 - so it does need a CT ID, so CONTRACTOR ID can't be empty.
          *
          *
          */
         $predicate  = "";
-        $predicate .= "   AND ORDERIT_VARB_REF is null and ORDERIT_NUMBER is null and RAL.ORDER_IT_TYPE = '" . db2_escape_string($orderItType) . "' AND AR.STATUS='" . assetRequestRecord::STATUS_APPROVED . "' ";
-        $predicate .= "   AND ('" . db2_escape_string($orderItType) . "' = '1' or P.CT_ID is not null)";
+        $predicate .= "   AND ORDERIT_VARB_REF is null and ORDERIT_NUMBER is null and RAL.ORDER_IT_TYPE = '" . htmlspecialchars($orderItType) . "' AND AR.STATUS='" . assetRequestRecord::STATUS_APPROVED . "' ";
+        $predicate .= "   AND ('" . htmlspecialchars($orderItType) . "' = '1' or P.CT_ID is not null)";
         $predicate .= $this->predicateForPmoExportableRequest();
 
         return $predicate;
@@ -1679,7 +1679,7 @@ class assetRequestsTable extends DbTable{
 
         $sql = " SELECT CNUM, ASSET_TITLE ";
         $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql .= " WHERE REQUEST_REFERENCE= '" . db2_escape_string($reference) . "' ";
+        $sql .= " WHERE REQUEST_REFERENCE= '" . htmlspecialchars($reference) . "' ";
 
         AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
@@ -1708,8 +1708,8 @@ class assetRequestsTable extends DbTable{
         $sql .= " ON RAL.ASSET_TITLE = AR.ASSET_TITLE ";
 
         $sql .=  " WHERE 1=1 " ;
-        $sql .= !empty($varb) ? " AND ORDERIT_VARB_REF='" . db2_escape_string($varb) . "' " : null;
-        $sql .= !empty($ref) ? " AND REQUEST_REFERENCE='" . db2_escape_string($ref) . "' " : null;
+        $sql .= !empty($varb) ? " AND ORDERIT_VARB_REF='" . htmlspecialchars($varb) . "' " : null;
+        $sql .= !empty($ref) ? " AND REQUEST_REFERENCE='" . htmlspecialchars($ref) . "' " : null;
 
         AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
@@ -1746,10 +1746,10 @@ class assetRequestsTable extends DbTable{
 
         $sql  = " UPDATE ";
         $sql .= $GLOBALS['Db2Schema'] . "." . $this->tableName ;
-        $sql .= " SET ORDERIT_NUMBER='" . db2_escape_string($orderIt) . "' ";
+        $sql .= " SET ORDERIT_NUMBER='" . htmlspecialchars($orderIt) . "' ";
         $sql .= ",STATUS='" . assetRequestRecord::STATUS_RAISED_ORDERIT . "' ";
         $sql .= ",ORDERIT_STATUS='" . assetRequestRecord::STATUS_ORDERIT_RAISED . "' ";
-        $sql .= " WHERE ORDERIT_VARB_REF='" . db2_escape_string($varb) . "' and STATUS='" . assetRequestRecord::STATUS_EXPORTED . "' ";
+        $sql .= " WHERE ORDERIT_VARB_REF='" . htmlspecialchars($varb) . "' and STATUS='" . assetRequestRecord::STATUS_EXPORTED . "' ";
         $sql .= " AND REQUEST_REFERENCE in (" . $requestList . ") " ;
 
 
@@ -1774,7 +1774,7 @@ class assetRequestsTable extends DbTable{
         $sql .= ", ORDERIT_VARB_REF = null ";
         $sql .= ", ORDERIT_STATUS = '" . assetRequestRecord::STATUS_ORDERIT_YET . "' ";
         $sql .= ", ORDERIT_NUMBER = null ";
-        $sql .= " WHERE ORDERIT_VARB_REF='" . db2_escape_string($varb) . "' and STATUS='" . assetRequestRecord::STATUS_EXPORTED . "' ";
+        $sql .= " WHERE ORDERIT_VARB_REF='" . htmlspecialchars($varb) . "' and STATUS='" . assetRequestRecord::STATUS_EXPORTED . "' ";
 
         AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
@@ -1844,7 +1844,7 @@ class assetRequestsTable extends DbTable{
 //         $sql .= ", ORDERIT_VARB_REF = null ";
 //         $sql .= ", ORDERIT_STATUS = '" . assetRequestRecord::STATUS_ORDERIT_YET . "' ";
 //         $sql .= ", ORDERIT_NUMBER = null ";
-//         $sql .= " WHERE ORDERIT_VARB_REF='" . db2_escape_string($varb) . "' and STATUS='" . assetRequestRecord::STATUS_EXPORTED . "' ";
+//         $sql .= " WHERE ORDERIT_VARB_REF='" . htmlspecialchars($varb) . "' and STATUS='" . assetRequestRecord::STATUS_EXPORTED . "' ";
 
 //         AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
@@ -1876,9 +1876,9 @@ class assetRequestsTable extends DbTable{
 
 
         $sql .= " WHERE 1=1 " ;
-        $sql .= !empty($orderIt) ? " AND ORDERIT_NUMBER='" . db2_escape_string($orderIt) . "' " : null;
-        $sql .= !empty($varb) ? " AND ORDERIT_VARB_REF='" . db2_escape_string($varb) . "' " : null;
-        $sql .= !empty($ref) ? " AND REQUEST_REFERENCE='" . db2_escape_string($ref) . "' " : null;
+        $sql .= !empty($orderIt) ? " AND ORDERIT_NUMBER='" . htmlspecialchars($orderIt) . "' " : null;
+        $sql .= !empty($varb) ? " AND ORDERIT_VARB_REF='" . htmlspecialchars($varb) . "' " : null;
+        $sql .= !empty($ref) ? " AND REQUEST_REFERENCE='" . htmlspecialchars($ref) . "' " : null;
 
         AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
@@ -2036,8 +2036,8 @@ class assetRequestsTable extends DbTable{
 
 //         $sql  = " UPDATE ";
 //         $sql .= $GLOBALS['Db2Schema'] . "." . $this->tableName ;
-//         $sql .= " SET ORDERIT_STATUS='" . db2_escape_string($orderItStatus) . "' ";
-//         $sql .= " WHERE REQUEST_REFERENCE ='" . db2_escape_string($reference) . "' " ;
+//         $sql .= " SET ORDERIT_STATUS='" . htmlspecialchars($orderItStatus) . "' ";
+//         $sql .= " WHERE REQUEST_REFERENCE ='" . htmlspecialchars($reference) . "' " ;
 
         $data = array($orderItStatus,$reference);
         $preparedStmt = $this->prepareSetRequestsOrderItStatus();
@@ -2201,8 +2201,8 @@ class assetRequestsTable extends DbTable{
 
     function notifyRequestee($reference, $orderItStatus,$comment=null){
         $loader = new Loader();
-        $cnum   = $loader->load('CNUM',$this->tableName," REQUEST_REFERENCE='" . db2_escape_string($reference) . "' ");
-        $asset   = $loader->load('ASSET_TITLE',$this->tableName," REQUEST_REFERENCE='" . db2_escape_string($reference) . "' ");
+        $cnum   = $loader->load('CNUM',$this->tableName," REQUEST_REFERENCE='" . htmlspecialchars($reference) . "' ");
+        $asset   = $loader->load('ASSET_TITLE',$this->tableName," REQUEST_REFERENCE='" . htmlspecialchars($reference) . "' ");
 
         foreach ($cnum as $actualCnum){
         }
@@ -2224,7 +2224,7 @@ class assetRequestsTable extends DbTable{
 
         if(!empty($comment)){
             $now = new \DateTime();
-            $sql = " SELECT COMMENT FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' ";
+            $sql = " SELECT COMMENT FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " WHERE REQUEST_REFERENCE='" . htmlspecialchars($reference) . "' ";
             $rs = db2_exec($GLOBALS['conn'], $sql);
 
             if(!$rs){
@@ -2264,14 +2264,14 @@ class assetRequestsTable extends DbTable{
 
         $sql  = " UPDATE ";
         $sql .= $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS;
-        $sql .= " SET STATUS='" . db2_escape_string($status) . "' ";
-        $sql .= !empty($orderItStatus) ? " ,ORDERIT_STATUS='" . db2_escape_string($orderItStatus) . "' " : null ;
-        $sql .= !empty($newComment) ? ", COMMENT='" . db2_escape_string(substr($newComment,0,500)) . "' " : null;
+        $sql .= " SET STATUS='" . htmlspecialchars($status) . "' ";
+        $sql .= !empty($orderItStatus) ? " ,ORDERIT_STATUS='" . htmlspecialchars($orderItStatus) . "' " : null ;
+        $sql .= !empty($newComment) ? ", COMMENT='" . htmlspecialchars(substr($newComment,0,500)) . "' " : null;
         $sql .= trim($status)==assetRequestRecord::STATUS_AWAITING_IAM ? ", APPROVER_EMAIL='" . $_SESSION['ssoEmail'] . "' , APPROVED = current timestamp " : null;
         $sql .= $isPmo != true  && trim($status)==assetRequestRecord::STATUS_APPROVED ? ", APPROVER_EMAIL='" . $_SESSION['ssoEmail'] . "' , APPROVED = current timestamp " : null;
-        $sql .= trim($status)==assetRequestRecord::STATUS_RETURNED ? ", DATE_RETURNED = DATE('" . db2_escape_string($dateReturned). "') " : null;
-        $sql .= " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' ";
-        $sql .= trim($status)==assetRequestRecord::STATUS_REJECTED ? " OR PRE_REQ_REQUEST='" . db2_escape_string($reference) . "' " : null;
+        $sql .= trim($status)==assetRequestRecord::STATUS_RETURNED ? ", DATE_RETURNED = DATE('" . htmlspecialchars($dateReturned). "') " : null;
+        $sql .= " WHERE REQUEST_REFERENCE='" . htmlspecialchars($reference) . "' ";
+        $sql .= trim($status)==assetRequestRecord::STATUS_REJECTED ? " OR PRE_REQ_REQUEST='" . htmlspecialchars($reference) . "' " : null;
 
         AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
@@ -2289,7 +2289,7 @@ class assetRequestsTable extends DbTable{
             $sql  = " UPDATE ";
             $sql .= $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS;
             $sql .= " SET ORDERIT_STATUS = '" . assetRequestRecord::STATUS_ORDERIT_YET . "' " ;
-            $sql .= " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' AND USER_CREATED='" . assetRequestRecord::CREATED_PMO . "' ";
+            $sql .= " WHERE REQUEST_REFERENCE='" . htmlspecialchars($reference) . "' AND USER_CREATED='" . assetRequestRecord::CREATED_PMO . "' ";
 
             AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
@@ -2344,9 +2344,9 @@ class assetRequestsTable extends DbTable{
     function setToProvisionedStatus($reference){
         $sql  = " UPDATE ";
         $sql .= $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS;
-        $sql .= " SET STATUS='" . db2_escape_string(assetRequestRecord::STATUS_PROVISIONED) . "' ";
+        $sql .= " SET STATUS='" . htmlspecialchars(assetRequestRecord::STATUS_PROVISIONED) . "' ";
         $sql .= " , ORDERIT_STATUS='" . db2_escape_String(assetRequestRecord::STATUS_ORDERIT_APPROVED)  . "' ";
-        $sql .= " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' ";
+        $sql .= " WHERE REQUEST_REFERENCE='" . htmlspecialchars($reference) . "' ";
         $sql .= " AND STATUS not in ('" . assetRequestRecord::STATUS_REJECTED . "','" . assetRequestRecord::STATUS_RETURNED ."') ";
 
         AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
@@ -2367,8 +2367,8 @@ class assetRequestsTable extends DbTable{
 
         $sql = " UPDATE ";
         $sql.= $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql.= " SET BUSINESS_JUSTIFICATION='" . db2_escape_string($justification) . "' ";
-        $sql.= " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' ";
+        $sql.= " SET BUSINESS_JUSTIFICATION='" . htmlspecialchars($justification) . "' ";
+        $sql.= " WHERE REQUEST_REFERENCE='" . htmlspecialchars($reference) . "' ";
 
         $rs = db2_exec($GLOBALS['conn'], $sql);
 
@@ -2384,8 +2384,8 @@ class assetRequestsTable extends DbTable{
 
         $sql = " UPDATE ";
         $sql.= $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql.= " SET ORDERIT_NUMBER='" . db2_escape_string($orderIt) . "' ";
-        $sql.= " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' ";
+        $sql.= " SET ORDERIT_NUMBER='" . htmlspecialchars($orderIt) . "' ";
+        $sql.= " WHERE REQUEST_REFERENCE='" . htmlspecialchars($reference) . "' ";
 
         $rs = db2_exec($GLOBALS['conn'], $sql);
 
@@ -2518,8 +2518,8 @@ class assetRequestsTable extends DbTable{
 
             while (($row=db2_fetch_assoc($rs1))==true) {
                 $sql = " update " . $GLOBALS['Db2Schema'] . "." . $this->tableName ;
-                $sql .= " SET PRE_REQ_REQUEST='" . db2_escape_string(trim($row['PRE_REQ'])) . "' ";
-                $sql .= " WHERE REQUEST_REFERENCE='" . db2_escape_string(trim($row['REQUEST_REFERENCE']))  . "' " ;
+                $sql .= " SET PRE_REQ_REQUEST='" . htmlspecialchars(trim($row['PRE_REQ'])) . "' ";
+                $sql .= " WHERE REQUEST_REFERENCE='" . htmlspecialchars(trim($row['REQUEST_REFERENCE']))  . "' " ;
 
                 $rs2 = db2_exec($GLOBALS['conn'], $sql);
 
@@ -2600,7 +2600,7 @@ class assetRequestsTable extends DbTable{
          $sql.= " FROM ". $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " AS AR ";
          $sql.= " LEFT JOIN ". $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
          $sql.= " ON P.CNUM = AR.CNUM ";
-         $sql.= " WHERE REQUEST_REFERENCE='" . db2_escape_string($reference) . "' " ;
+         $sql.= " WHERE REQUEST_REFERENCE='" . htmlspecialchars($reference) . "' " ;
 
          $rs = db2_exec($GLOBALS['conn'], $sql);
 
@@ -2630,7 +2630,7 @@ class assetRequestsTable extends DbTable{
      function getOpenRequestsForCnum($cnum){
          $sql = " select distinct Asset_title ";
          $sql.= " from " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-         $sql.= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
+         $sql.= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
          $sql.= " AND ORDERIT_STATUS in ('" . assetRequestRecord::STATUS_ORDERIT_YET . "','" . assetRequestRecord::STATUS_ORDERIT_RAISED . "') ";
          $sql.= " AND ASSET_TITLE NOT LIKE 'Other%' ";
          $sql.= " AND ASSET_TITLE NOT LIKE 'MPW Renewal%' ";

@@ -151,8 +151,8 @@ class personPortalReport extends DbTable
 
         $preBoardersPredicate = " 1=1  ";
 
-        $preBoardersPredicate .= $isFM ? " AND P.FM_CNUM='" . db2_escape_string(trim($myCnum)) . "' " : "";
-        $preBoardersPredicate .= $justaUser ? " AND P.CNUM='" . db2_escape_string(trim($myCnum)) . "' " : ""; // FM Can only see their own people.
+        $preBoardersPredicate .= $isFM ? " AND P.FM_CNUM='" . htmlspecialchars(trim($myCnum)) . "' " : "";
+        $preBoardersPredicate .= $justaUser ? " AND P.CNUM='" . htmlspecialchars(trim($myCnum)) . "' " : ""; // FM Can only see their own people.
 
         // $preBoardersPredicate .= $preboadersAction==personTable::PORTAL_PRE_BOARDER_EXCLUDE ? " AND ( PES_STATUS_DETAILS not like '" . personRecord::PES_STATUS_DETAILS_BOARDED_AS . "%' or PES_STATUS_DETAILS is null) " : null;
         // $preBoardersPredicate .= $preboadersAction==personTable::PORTAL_PRE_BOARDER_WITH_LINKED ? " AND ( PES_STATUS_DETAILS like '" . personRecord::PES_STATUS_DETAILS_BOARDED_AS . "%' or PRE_BOARDED is not null) " : null;

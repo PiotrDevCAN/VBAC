@@ -33,9 +33,9 @@ $sql.= " ON SQ.SQUAD_LEADER = SQP.NOTES_ID ";
 $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON .  " AS TRP ";
 $sql.= " ON TR.TRIBE_LEADER = TRP.NOTES_ID ";
 $sql.= " WHERE 1=1 ";
-$sql.= !empty($emailID) ? " AND (lower(P.EMAIL_ADDRESS) = '" . db2_escape_string(strtolower($emailID)) . "' OR lower(P.KYN_EMAIL_ADDRESS) = '" . db2_escape_string(strtolower($emailID)) . "') " : null;
-$sql.= !empty($notesId) ? " AND lower(P.NOTES_ID) = '" . db2_escape_string(strtolower($notesId)) . "'; " : null;
-$sql.= !empty($cnum) ? " AND lower(P.CNUM) = '" . db2_escape_string(strtolower($cnum)) . "'; " : null;
+$sql.= !empty($emailID) ? " AND (lower(P.EMAIL_ADDRESS) = '" . htmlspecialchars(strtolower($emailID)) . "' OR lower(P.KYN_EMAIL_ADDRESS) = '" . htmlspecialchars(strtolower($emailID)) . "') " : null;
+$sql.= !empty($notesId) ? " AND lower(P.NOTES_ID) = '" . htmlspecialchars(strtolower($notesId)) . "'; " : null;
+$sql.= !empty($cnum) ? " AND lower(P.CNUM) = '" . htmlspecialchars(strtolower($cnum)) . "'; " : null;
 
 error_log($sql);
 

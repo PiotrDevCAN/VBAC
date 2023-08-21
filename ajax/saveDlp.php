@@ -14,9 +14,9 @@ AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($parms,
 
 $actionsTaken = null;
 $loader = new Loader();
-$approvingMgr = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON, " CNUM='" . db2_escape_string($parms['approvingManager']) . "' " );
+$approvingMgr = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON, " CNUM='" . htmlspecialchars($parms['approvingManager']) . "' " );
 $approverEmail = $approvingMgr[$parms['approvingManager']];
-$licencee = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON," CNUM='" . db2_escape_string($parms['licencee']) . "' " );
+$licencee = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON," CNUM='" . htmlspecialchars($parms['licencee']) . "' " );
 $licenceeNotes = trim($licencee[$parms['licencee']]);
 
 $dlpTable = new dlpTable(allTables::$DLP);

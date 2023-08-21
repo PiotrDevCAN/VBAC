@@ -9,8 +9,8 @@ class dlpTable extends DbTable {
     function licencedAlready($cnum,$hostname){
         $sql = " SELECT COUNT(*) as LICENCES ";
         $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$DLP;
-        $sql.= " WHERE CNUM='" . db2_escape_string($cnum) ."' ";
-        $sql.= " AND HOSTNAME='" . strtoupper(db2_escape_string($hostname)) . "' ";
+        $sql.= " WHERE CNUM='" . htmlspecialchars($cnum) ."' ";
+        $sql.= " AND HOSTNAME='" . strtoupper(htmlspecialchars($hostname)) . "' ";
         $sql.= " AND TRANSFERRED_TO_HOSTNAME is null ";
        
         $rs = db2_exec($GLOBALS['conn'], $sql);
@@ -28,13 +28,13 @@ class dlpTable extends DbTable {
     function recordTransfer($cnum,$fromHostname, $toHostname){
         $sql = " UPDATE ";
         $sql.=  $GLOBALS['Db2Schema'] . "." . allTables::$DLP;
-        $sql.= "  SET TRANSFERRED_TO_HOSTNAME='" . strtoupper(db2_escape_string($toHostname)) . "' ";
+        $sql.= "  SET TRANSFERRED_TO_HOSTNAME='" . strtoupper(htmlspecialchars($toHostname)) . "' ";
         $sql.= " ,TRANSFERRED_DATE = CURRENT DATE ";
-        $sql.= " ,TRANSFERRED_EMAIL='" . db2_escape_string($_SESSION['ssoEmail']) . "' ";
+        $sql.= " ,TRANSFERRED_EMAIL='" . htmlspecialchars($_SESSION['ssoEmail']) . "' ";
         $sql.= " ,STATUS='" . dlpRecord::STATUS_TRANSFERRED . "' ";
         $sql.= " WHERE ";
-        $sql.= " CNUM='" . db2_escape_string(trim($cnum)) . "' ";
-        $sql.= " AND HOSTNAME='" . db2_escape_string(strtoupper(trim($fromHostname))) . "' ";
+        $sql.= " CNUM='" . htmlspecialchars(trim($cnum)) . "' ";
+        $sql.= " AND HOSTNAME='" . htmlspecialchars(strtoupper(trim($fromHostname))) . "' ";
         $sql.= " AND TRANSFERRED_TO_HOSTNAME is null ";
        
         $rs = db2_exec($GLOBALS['conn'], $sql);
@@ -52,8 +52,8 @@ class dlpTable extends DbTable {
         $sql.=  $GLOBALS['Db2Schema'] . "." . allTables::$DLP;
         $sql.= "( CNUM, HOSTNAME, APPROVER_EMAIL, CREATION_DATE, EXCEPTION_CODE, STATUS ) ";
         $sql.= " values ";
-        $sql.= " ('" . db2_escape_string($cnum) . "','" . strtoupper(db2_escape_string($hostname)) . "'";
-        $sql.= ",'" . db2_escape_string($approvingEmail) . "', CURRENT DATE, '266'";
+        $sql.= " ('" . htmlspecialchars($cnum) . "','" . strtoupper(htmlspecialchars($hostname)) . "'";
+        $sql.= ",'" . htmlspecialchars($approvingEmail) . "', CURRENT DATE, '266'";
         $sql.= ",'" . dlpRecord::STATUS_PENDING . "' ";
         $sql.= " ) ";
        
@@ -182,8 +182,8 @@ class dlpTable extends DbTable {
         $sql.= ", APPROVED_DATE = Current date ";
         $sql.= ", APPROVER_EMAIL='" . $_SESSION['ssoEmail'] . "' ";
         $sql.= " WHERE ";
-        $sql.= " CNUM='" . db2_escape_string(trim($cnum)) . "' ";
-        $sql.= " AND HOSTNAME='" . db2_escape_string(trim($hostname)) . "' ";
+        $sql.= " CNUM='" . htmlspecialchars(trim($cnum)) . "' ";
+        $sql.= " AND HOSTNAME='" . htmlspecialchars(trim($hostname)) . "' ";
         $sql.= " AND TRANSFERRED_TO_HOSTNAME is null ";
         
         $rs = db2_exec($GLOBALS['conn'], $sql);
@@ -200,9 +200,9 @@ class dlpTable extends DbTable {
         $sql = " DELETE FROM ";
         $sql.= $GLOBALS['Db2Schema'] . "." . allTables::$DLP;
         $sql.= " WHERE ";
-        $sql.= " CNUM='" . db2_escape_string(trim($cnum)) . "' ";
-        $sql.= " AND HOSTNAME='" . db2_escape_string(trim($hostname)) . "' ";
-        $sql.= empty(($transferred)) ? " AND TRANSFERRED_TO_HOSTNAME is null " : " AND TRANSFERRED_TO_HOSTNAME='" . db2_escape_string(trim(strtoupper($transferred))) . "' ";
+        $sql.= " CNUM='" . htmlspecialchars(trim($cnum)) . "' ";
+        $sql.= " AND HOSTNAME='" . htmlspecialchars(trim($hostname)) . "' ";
+        $sql.= empty(($transferred)) ? " AND TRANSFERRED_TO_HOSTNAME is null " : " AND TRANSFERRED_TO_HOSTNAME='" . htmlspecialchars(trim(strtoupper($transferred))) . "' ";
         
         $rs = db2_exec($GLOBALS['conn'], $sql);
         

@@ -210,7 +210,7 @@ class pesEmail {
         } else {
             $sql = " SELECT $emailField ";
             $sql.= ' FROM ' . strtoupper($_ENV['environment']) . "." . allTables::$STATIC_COUNTRY_CODES;
-            $sql.= " WHERE  upper(country_name)= '" . db2_escape_string(strtoupper($country)) . "' ";
+            $sql.= " WHERE  upper(country_name)= '" . htmlspecialchars(strtoupper($country)) . "' ";
             
             error_log('Recheck:'. print_r($recheck,true));
             error_log($sql);

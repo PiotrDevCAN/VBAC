@@ -1068,14 +1068,14 @@ class DbTable
                         if (empty($updateArray[$key]) or $updateArray[$key] == 'null') {
                             $values .= ", $key = 0 ";
                         } else {
-                            $values .= ", $key = '" . db2_escape_string($updateArray[$key]) . "' ";
+                            $values .= ", $key = '" . htmlspecialchars($updateArray[$key]) . "' ";
                         }
                         break;
                     default:
                         if (empty($updateArray[$key])) {
                             $values .= ", $key = null ";
                         } else {
-                            $values .= ", $key = '" . db2_escape_string($updateArray[$key]) . "' ";
+                            $values .= ", $key = '" . htmlspecialchars($updateArray[$key]) . "' ";
                         }
                         break;
                 }
@@ -1566,7 +1566,7 @@ class DbTable
             } elseif ($this->columns[$key]['DATA_TYPE'] == 93) {
                 $predicate .= " AND $key = TIMESTAMP('" . $record->getValue($key) . "') ";
             } else {
-                $predicate .= " AND $key='" . db2_escape_string($record->getValue($key)) . "' ";
+                $predicate .= " AND $key='" . htmlspecialchars($record->getValue($key)) . "' ";
             }
         }
         Trace::traceVariable(str_replace('define a primary key AND', ' ', str_replace("=''", " is null", $predicate)), __METHOD__);
@@ -1951,8 +1951,8 @@ class DbTable
         $backtrace = ob_get_contents();
         @ob_end_clean();
 
-        // $backtrace = strlen(db2_escape_string($backtrace)) > 1024 ? substr(db2_escape_string($backtrace), 0, 1000) : db2_escape_string($backtrace);
-        $backtrace = $table->truncateValueToFitColumn(db2_escape_string($backtrace), 'BACKTRACE');
+        // $backtrace = strlen(htmlspecialchars($backtrace)) > 1024 ? substr(htmlspecialchars($backtrace), 0, 1000) : htmlspecialchars($backtrace);
+        $backtrace = $table->truncateValueToFitColumn(htmlspecialchars($backtrace), 'BACKTRACE');
 
         ob_start();
         print_r($_REQUEST);
@@ -1965,16 +1965,16 @@ class DbTable
             $request .= ":data:" . ob_get_contents();
             @ob_end_clean();
         }
-        // $request = strlen(db2_escape_string($request)) > 1024 ? substr(db2_escape_string($request), 0, 1000) : db2_escape_string($request);
-        $request = $table->truncateValueToFitColumn(db2_escape_string($request), 'REQUEST');
+        // $request = strlen(htmlspecialchars($request)) > 1024 ? substr(htmlspecialchars($request), 0, 1000) : htmlspecialchars($request);
+        $request = $table->truncateValueToFitColumn(htmlspecialchars($request), 'REQUEST');
 
         $db2StmtError = db2_stmt_error();
-        // $db2StmtError = strlen(db2_escape_string($db2StmtError)) > 50 ? substr(db2_escape_string($db2StmtError), 0, 50) : db2_escape_string($db2StmtError);
-        $db2StmtError = $table->truncateValueToFitColumn(db2_escape_string($db2StmtError), 'DB2_ERROR');
+        // $db2StmtError = strlen(htmlspecialchars($db2StmtError)) > 50 ? substr(htmlspecialchars($db2StmtError), 0, 50) : htmlspecialchars($db2StmtError);
+        $db2StmtError = $table->truncateValueToFitColumn(htmlspecialchars($db2StmtError), 'DB2_ERROR');
 
         $db2StmeErrorMsg = db2_stmt_errormsg();
-        // $db2StmeErrorMsg = strlen(db2_escape_string($db2StmeErrorMsg)) > 50 ? substr(db2_escape_string($db2StmeErrorMsg), 0, 50) : db2_escape_string($db2StmeErrorMsg);
-        $db2StmeErrorMsg = $table->truncateValueToFitColumn(db2_escape_string($db2StmeErrorMsg), 'DB2_MESSAGE');
+        // $db2StmeErrorMsg = strlen(htmlspecialchars($db2StmeErrorMsg)) > 50 ? substr(htmlspecialchars($db2StmeErrorMsg), 0, 50) : htmlspecialchars($db2StmeErrorMsg);
+        $db2StmeErrorMsg = $table->truncateValueToFitColumn(htmlspecialchars($db2StmeErrorMsg), 'DB2_MESSAGE');
 
         $sql .= " VALUES ('" . $userid . "','" . $_SERVER['PHP_SELF'] . "','" . $db2StmtError . "','" . $db2StmeErrorMsg . "','" . $backtrace . "','" . $request . "')";
 

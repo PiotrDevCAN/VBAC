@@ -30,7 +30,7 @@ class requestableAssetListRecord extends DbRecord
         $notEditable = $mode==FormClass::$modeEDIT ? ' disabled ' : null;
 
         $loader = new Loader();
-        $predicate = empty($this->ASSET_TITLE) ? " LISTING_ENTRY_REMOVED is null " : " ASSET_TITLE != '" . db2_escape_string($this->ASSET_TITLE) . "' AND LISTING_ENTRY_REMOVED is null ";
+        $predicate = empty($this->ASSET_TITLE) ? " LISTING_ENTRY_REMOVED is null " : " ASSET_TITLE != '" . htmlspecialchars($this->ASSET_TITLE) . "' AND LISTING_ENTRY_REMOVED is null ";
         $possiblePrerequsites = $loader->load('ASSET_TITLE',allTables::$REQUESTABLE_ASSET_LIST,$predicate);
        
         $now = new \DateTime();

@@ -25,7 +25,7 @@ $secEdLength = (int)$personTable->getColumnLength('SECURITY_EDUCATION');
 
 if(isset($_REQUEST['CNUM'])){
     $activePeople = $personTable->activePersonPredicate();
-    $cnumArray = $loader->load('CNUM',allTables::$PERSON, $activePeople . " AND (CNUM='" . db2_escape_string(trim($_REQUEST['CNUM'])) . "') ");
+    $cnumArray = $loader->load('CNUM',allTables::$PERSON, $activePeople . " AND (CNUM='" . htmlspecialchars(trim($_REQUEST['CNUM'])) . "') ");
     $cnumValidated = isset($cnumArray[trim($_REQUEST['CNUM'])]);
 } else {
     $cnumValidated = false;
@@ -67,8 +67,8 @@ if( !$securityEducationSupplied or !$validSecEdLength or  !$cnumValidated ){
 
 $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON ;
 $sql.= " SET ";
-$sql.= " SECURITY_EDUCATION='" . db2_escape_string(trim($_REQUEST['SECURITY_EDUCATION'])) . "' " ;
-$sql.= " WHERE CNUM='" . db2_escape_string($_REQUEST['CNUM']) . "' ";
+$sql.= " SECURITY_EDUCATION='" . htmlspecialchars(trim($_REQUEST['SECURITY_EDUCATION'])) . "' " ;
+$sql.= " WHERE CNUM='" . htmlspecialchars($_REQUEST['CNUM']) . "' ";
 
 $rs = db2_exec($GLOBALS['conn'], $sql);
 

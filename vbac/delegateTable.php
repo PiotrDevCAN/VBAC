@@ -10,8 +10,8 @@ class delegateTable extends DbTable {
         $sql = " INSERT INTO " . $GLOBALS['Db2Schema'] . "." . allTables::$DELEGATE;
         $sql.= " (CNUM,EMAIL_ADDRESS, DELEGATE_CNUM, DELEGATE_EMAIL ) ";
         $sql.=" VALUES ";
-        $sql.= "('" . db2_escape_string($selfCnum) . "','" . db2_escape_string($selfEmail) . "'";
-        $sql.= ",'" . db2_escape_string($delegateCnum) . "','" . db2_escape_string($delegateEmail) . "'";
+        $sql.= "('" . htmlspecialchars($selfCnum) . "','" . htmlspecialchars($selfEmail) . "'";
+        $sql.= ",'" . htmlspecialchars($delegateCnum) . "','" . htmlspecialchars($delegateEmail) . "'";
         $sql.= ")";
 
         $rs = db2_exec($GLOBALS['conn'],$sql);
@@ -26,8 +26,8 @@ class delegateTable extends DbTable {
 
     static function deleteDelegate($cnum, $delegateCnum){
         $sql = " DELETE FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$DELEGATE;
-        $sql.= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
-        $sql.= " AND DELEGATE_CNUM='" . db2_escape_string($delegateCnum) . "' ";
+        $sql.= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
+        $sql.= " AND DELEGATE_CNUM='" . htmlspecialchars($delegateCnum) . "' ";
 
         $rs = db2_exec($GLOBALS['conn'],$sql);
 
@@ -43,7 +43,7 @@ class delegateTable extends DbTable {
         $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
 
         if(!$_SESSION['isPmo'] && !$_SESSION['isCdi']){
-            $sql.= " WHERE CNUM='" . db2_escape_string($cnum) . "' ";
+            $sql.= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
         }
 
 
@@ -84,7 +84,7 @@ class delegateTable extends DbTable {
     static function delegatesFromCnum($fmCnum){
         $sql = " SELECT DELEGATE_EMAIL ";
         $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$DELEGATE ;
-        $sql.= " WHERE CNUM='" . db2_escape_string(trim($fmCnum)) . "' ";
+        $sql.= " WHERE CNUM='" . htmlspecialchars(trim($fmCnum)) . "' ";
 
         $rs = db2_exec($GLOBALS['conn'], $sql);
 
@@ -106,7 +106,7 @@ class delegateTable extends DbTable {
     static function delegatesFromEmail($fmEmail){
         $sql = " SELECT DELEGATE_EMAIL ";
         $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$DELEGATE ;
-        $sql.= " WHERE EMAIL_ADDRESS='" . db2_escape_string(trim($fmEmail)) . "' ";
+        $sql.= " WHERE EMAIL_ADDRESS='" . htmlspecialchars(trim($fmEmail)) . "' ";
 
         $rs = db2_exec($GLOBALS['conn'], $sql);
 

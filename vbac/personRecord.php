@@ -623,7 +623,7 @@ class personRecord extends DbRecord
       $countryCodes = $loader->loadIndexed('COUNTRY_NAME','COUNTRY_CODE',allTables::$STATIC_COUNTRY_CODES);
       $skillSets = $loader->loadIndexed('SKILLSET','SKILLSET_ID',allTables::$STATIC_SKILLSETS);
 
-      $userDetails = $loader->loadIndexed('CNUM','EMAIL_ADDRESS',allTables::$PERSON, " EMAIL_ADDRESS='" . db2_escape_string($_SESSION['ssoEmail']) . "' ");
+      $userDetails = $loader->loadIndexed('CNUM','EMAIL_ADDRESS',allTables::$PERSON, " EMAIL_ADDRESS='" . htmlspecialchars($_SESSION['ssoEmail']) . "' ");
       $userCnum = isset($userDetails[$_SESSION['ssoEmail']]) ? $userDetails[$_SESSION['ssoEmail']] : false;
       $allWorkstream = $workstreamTable->getallWorkstream();
       JavaScript::buildSelectArray($allWorkstream, 'workStream');
@@ -930,7 +930,7 @@ class personRecord extends DbRecord
       $countryCodes = $loader->loadIndexed('COUNTRY_NAME','COUNTRY_CODE',allTables::$STATIC_COUNTRY_CODES);
       $skillSets = $loader->loadIndexed('SKILLSET','SKILLSET_ID',allTables::$STATIC_SKILLSETS);
 
-      $userDetails = $loader->loadIndexed('CNUM','EMAIL_ADDRESS',allTables::$PERSON, " EMAIL_ADDRESS='" . db2_escape_string($_SESSION['ssoEmail']) . "' ");
+      $userDetails = $loader->loadIndexed('CNUM','EMAIL_ADDRESS',allTables::$PERSON, " EMAIL_ADDRESS='" . htmlspecialchars($_SESSION['ssoEmail']) . "' ");
       $userCnum = isset($userDetails[$_SESSION['ssoEmail']]) ? $userDetails[$_SESSION['ssoEmail']] : false;
       $allWorkstream = $workstreamTable->getallWorkstream();
       JavaScript::buildSelectArray($allWorkstream, 'workStream');
@@ -1367,7 +1367,7 @@ class personRecord extends DbRecord
     function convertCountryCodeToName(){
         if(strlen($this->COUNTRY)== 2){
             $loader = new Loader();
-            $countryName = $loader->loadIndexed('COUNTRY_NAME','COUNTRY_CODE',allTables::$STATIC_COUNTRY_CODES, " COUNTRY_CODE='" . db2_escape_string(trim($this->COUNTRY)) . "' ");
+            $countryName = $loader->loadIndexed('COUNTRY_NAME','COUNTRY_CODE',allTables::$STATIC_COUNTRY_CODES, " COUNTRY_CODE='" . htmlspecialchars(trim($this->COUNTRY)) . "' ");
             $this->COUNTRY = isset($countryName[$this->COUNTRY]) ? $countryName[$this->COUNTRY] : $this->COUNTRY;
         }
     }
@@ -1376,7 +1376,7 @@ class personRecord extends DbRecord
         $loader = new Loader();
 
         if(!empty($this->FM_CNUM)){
-            $fmEmailArray = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON," CNUM='" . db2_escape_string(trim($this->FM_CNUM)) . "' ");
+            $fmEmailArray = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON," CNUM='" . htmlspecialchars(trim($this->FM_CNUM)) . "' ");
             $fmEmail = isset($fmEmailArray[trim($this->FM_CNUM)]) ? $fmEmailArray[trim($this->FM_CNUM)] : $this->FM_CNUM;
         } else {
             $fmEmail = 'Unknown';
@@ -1422,7 +1422,7 @@ class personRecord extends DbRecord
 
         if(!empty($this->FM_CNUM)){
             $loader = new Loader();
-            $fmEmailArray = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON," CNUM='" . db2_escape_string(trim($this->FM_CNUM)) . "' ");
+            $fmEmailArray = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON," CNUM='" . htmlspecialchars(trim($this->FM_CNUM)) . "' ");
             $fmEmail = isset($fmEmailArray[trim($this->FM_CNUM)]) ? $fmEmailArray[trim($this->FM_CNUM)] : null;
             $fmIsIbmEmail = strtolower(substr($fmEmail,-7))=='ibm.com';
         }
@@ -1559,7 +1559,7 @@ class personRecord extends DbRecord
         $loader = new Loader();
 
         if(!empty($this->FM_CNUM)){
-            $fmEmailArray = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON," CNUM='" . db2_escape_string(trim($this->FM_CNUM)) . "' ");
+            $fmEmailArray = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON," CNUM='" . htmlspecialchars(trim($this->FM_CNUM)) . "' ");
             $fmEmail = isset($fmEmailArray[trim($this->FM_CNUM)]) ? $fmEmailArray[trim($this->FM_CNUM)] : $this->FM_CNUM;
         } else {
             $fmEmail = 'Unknown';

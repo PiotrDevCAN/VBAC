@@ -30,7 +30,7 @@ switch (true) {
         echo "is FM";
         $myCnum = personTable::myCnum();
 
-//         $amADelegateForRaw = $loader->load('EMAIL_ADDRESS',allTables::$DELEGATE," DELEGATE_CNUM='" . db2_escape_string($myCnum) . "' ");
+//         $amADelegateForRaw = $loader->load('EMAIL_ADDRESS',allTables::$DELEGATE," DELEGATE_CNUM='" . htmlspecialchars($myCnum) . "' ");
 //         $amADelegateFor = array_map('strtolower',$amADelegateForRaw);
 
 
@@ -38,12 +38,12 @@ switch (true) {
         $myPeople = $loader->load("CNUM",allTables::$PERSON," FM_CNUM='" . trim($myCnum) . "' ");
         $myPeopleListed = "'";
         foreach ($myPeople as $personCnum){
-            $myPeopleListed .= db2_escape_string($personCnum) . "','";
+            $myPeopleListed .= htmlspecialchars($personCnum) . "','";
         }
         $myPeopleListed .= "'";
-        $predicate .= " AND ( AR.CNUM in ('". db2_escape_string($myCnum) . "'," . $myPeopleListed . ") or lower(APPROVER_EMAIL) ='" . db2_escape_string($myEmail) . "' ";
+        $predicate .= " AND ( AR.CNUM in ('". htmlspecialchars($myCnum) . "'," . $myPeopleListed . ") or lower(APPROVER_EMAIL) ='" . htmlspecialchars($myEmail) . "' ";
         $predicate .= "       OR ";
-        $predicate .= "       D.DELEGATE_CNUM='" . db2_escape_string($myCnum) . "' ) ";
+        $predicate .= "       D.DELEGATE_CNUM='" . htmlspecialchars($myCnum) . "' ) ";
 
         break;
     case $_SESSION['isCdi']:
@@ -80,9 +80,9 @@ switch (true) {
     default:
         echo "is default";
         $myCnum = personTable::myCnum();
-        $predicate .= " AND ( AR.CNUM = '". db2_escape_string($myCnum) . "' ";
+        $predicate .= " AND ( AR.CNUM = '". htmlspecialchars($myCnum) . "' ";
         $predicate .= "       OR ";
-        $predicate .= "       D.DELEGATE_CNUM='" . db2_escape_string($myCnum) . "' ) ";
+        $predicate .= "       D.DELEGATE_CNUM='" . htmlspecialchars($myCnum) . "' ) ";
         $withButtons = false;
     break;
 }

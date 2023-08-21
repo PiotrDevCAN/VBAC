@@ -7,7 +7,7 @@ class workLocationTable extends DbTable{
 
     static function deleteLocation($id){
         $sql = " DELETE FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$STATIC_LOCATIONS;
-        $sql.= " WHERE ID='" . db2_escape_string($id) . "' ";
+        $sql.= " WHERE ID='" . htmlspecialchars($id) . "' ";
 
         $rs = db2_exec($GLOBALS['conn'],$sql);
 

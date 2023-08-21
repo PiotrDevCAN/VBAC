@@ -6,6 +6,11 @@
 
 use itdq\JwtSecureSession;
 
+function htmlspecialchars($text) {
+    exit;
+    return $text;
+}
+
 # Takes a hash of values and files in a text template
 function build_template($template, $vals) {
     $file = dirname(__FILE__) . "/templates/" . $template;

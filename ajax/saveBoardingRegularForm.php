@@ -161,12 +161,12 @@ try {
                             if (!empty($_POST['PRE_BOARDED'])) {
                 
                                 $table = new personTable(allTables::$PERSON);
-                                $personData = $table->getWithPredicate(" EMAIL_ADDRESS='" . db2_escape_string(trim($_POST['PRE_BOARDED'])) . "' ");
+                                $personData = $table->getWithPredicate(" EMAIL_ADDRESS='" . htmlspecialchars(trim($_POST['PRE_BOARDED'])) . "' ");
                                 
                                 if (!empty($personData)) {
                                     echo '<br/>Preboarded person data read from EMAIL_ADDRESS.';
                                 } else {
-                                    $personData = $table->getWithPredicate(" CNUM='" . db2_escape_string(trim($_POST['PRE_BOARDED'])) . "' ");
+                                    $personData = $table->getWithPredicate(" CNUM='" . htmlspecialchars(trim($_POST['PRE_BOARDED'])) . "' ");
                                     if (!empty($personData)) {
                                         echo '<br/>Preboarded person data read from CNUM.';
                                     } else {

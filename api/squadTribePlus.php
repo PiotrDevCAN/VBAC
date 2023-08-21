@@ -112,7 +112,7 @@ if (!is_null($additionalFields)) {
         $tableField = str_replace($personTableAliases, '', $field);
 
         if (array_key_exists($tableField, $availablePersonColumns)) {
-            $additionalSelect .= ", " . db2_escape_string("P.".$tableField);
+            $additionalSelect .= ", " . htmlspecialchars("P.".$tableField);
             continue;
         }
 
@@ -120,7 +120,7 @@ if (!is_null($additionalFields)) {
         $tableField = str_replace($agileSquadTableAliases, '', $field);
 
         if (array_key_exists($tableField, $availableAgileSquadColumns)) {
-            $additionalSelect .= ", " . db2_escape_string("AS.".$tableField);
+            $additionalSelect .= ", " . htmlspecialchars("AS.".$tableField);
             continue;
         }
 
@@ -128,7 +128,7 @@ if (!is_null($additionalFields)) {
         $tableField = str_replace($agileTribeTableAliases, '', $field);
 
         if (array_key_exists($tableField, $availableAgileTribeColumns)) {
-            $additionalSelect .= ", " . db2_escape_string("T.".$tableField);
+            $additionalSelect .= ", " . htmlspecialchars("T.".$tableField);
             continue;
         }
 
@@ -136,7 +136,7 @@ if (!is_null($additionalFields)) {
         $tableField = str_replace($skillseTableAliases, '', $field);
 
         if (array_key_exists($tableField, $skillsetRecordColumns)) {
-            $additionalSelect .= ", " . db2_escape_string("SS.".$tableField);
+            $additionalSelect .= ", " . htmlspecialchars("SS.".$tableField);
             continue;
         }
     }
@@ -159,9 +159,9 @@ $sql.= " ON P.SKILLSET_ID = SS.SKILLSET_ID ";
 $sql.= " WHERE 1=1 AND trim(P.NOTES_ID) != '' ";
 $sql.= $onlyActiveBool ? " AND " . personTable::activePersonPredicate($withProvClear, 'P') : null;
 $sql.= $onlyActiveInTimeBool ? " AND (" . personTable::activePersonPredicate($withProvClear, 'P') . " OR P.OFFBOARDED_DATE > '" . $offboardedDate->format('Y-m-d') . "')" : null;
-$sql.= !empty($emailID) ? " AND (lower(P.EMAIL_ADDRESS) = '" . db2_escape_string(strtolower($emailID)) . "' OR lower(P.KYN_EMAIL_ADDRESS) = '" . db2_escape_string(strtolower($emailID)) . "') " : null;
-$sql.= !empty($notesId) ? " AND lower(P.NOTES_ID) = '" . db2_escape_string(strtolower($notesId)) . "'  " : null;
-$sql.= !empty($cnum) ? " AND lower(P.CNUM) = '" . db2_escape_string(strtolower($cnum)) . "'  " : null;
+$sql.= !empty($emailID) ? " AND (lower(P.EMAIL_ADDRESS) = '" . htmlspecialchars(strtolower($emailID)) . "' OR lower(P.KYN_EMAIL_ADDRESS) = '" . htmlspecialchars(strtolower($emailID)) . "') " : null;
+$sql.= !empty($notesId) ? " AND lower(P.NOTES_ID) = '" . htmlspecialchars(strtolower($notesId)) . "'  " : null;
+$sql.= !empty($cnum) ? " AND lower(P.CNUM) = '" . htmlspecialchars(strtolower($cnum)) . "'  " : null;
 $sql.= " ORDER BY P.NOTES_ID ";
 
 $rs = db2_exec($GLOBALS['conn'], $sql);
