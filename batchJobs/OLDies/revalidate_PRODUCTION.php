@@ -31,7 +31,7 @@ $personTable->flagPreboarders();
 $endPhase0 = microtime(true);
 $timeMeasurements['phase_0'] = (float)($endPhase0-$startPhase0);
 
-db2_commit($GLOBALS['conn']);
+sqlsrv_commit($GLOBALS['conn']);
 
 // get number of employees with offboard status
 $startPhase1 = microtime(true);
@@ -132,7 +132,7 @@ AuditTable::audit("Revalidation completed.",AuditTable::RECORD_TYPE_REVALIDATION
 $response = $slack->slackApiPostMessage(slack::CHANNEL_ID_SM_CDI_AUDIT,$_ENV['environment'] . ":Revalidation completed.");
 error_log($response);
 
-db2_commit($GLOBALS['conn']);
+sqlsrv_commit($GLOBALS['conn']);
 
 $end = microtime(true);
 $timeMeasurements['overallTime'] = (float)($end-$start);

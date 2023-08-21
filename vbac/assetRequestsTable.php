@@ -503,7 +503,7 @@ class assetRequestsTable extends DbTable{
 
 //         $base64Encoded = base64_encode($requestData);
 
-        db2_commit($GLOBALS['conn']);
+        sqlsrv_commit($GLOBALS['conn']);
         db2_autocommit($GLOBALS['conn'],$commitState);
 
         return $requestData;
@@ -556,7 +556,7 @@ class assetRequestsTable extends DbTable{
             $requestData .= $request . "\n";
         }
 
-        db2_commit($GLOBALS['conn']);
+        sqlsrv_commit($GLOBALS['conn']);
         db2_autocommit($GLOBALS['conn'],$commitState);
 
         return $requestData;
@@ -1787,7 +1787,7 @@ class assetRequestsTable extends DbTable{
             return false;
         }
 
-        db2_commit($GLOBALS['conn']);
+        sqlsrv_commit($GLOBALS['conn']);
 
         db2_autocommit($GLOBALS['conn'],$autoCommit);
 
@@ -1809,7 +1809,7 @@ class assetRequestsTable extends DbTable{
 
         AuditTable::audit("Prepare SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
-        $rs = db2_prepare($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_prepare($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -1857,7 +1857,7 @@ class assetRequestsTable extends DbTable{
 //             return false;
 //         }
 
-//         db2_commit($GLOBALS['conn']);
+//         sqlsrv_commit($GLOBALS['conn']);
 
 //         db2_autocommit($GLOBALS['conn'],$autoCommit);
 
@@ -2120,7 +2120,7 @@ class assetRequestsTable extends DbTable{
 
         AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
-        $rs = db2_prepare($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_prepare($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs,__CLASS__, __METHOD__, $sql);
@@ -2140,7 +2140,7 @@ class assetRequestsTable extends DbTable{
         $sql.= " SET COMMENT = ? ";
         $sql.= " WHERE REQUEST_REFERENCE=? ";
 
-        $rs = db2_prepare($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_prepare($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -2160,7 +2160,7 @@ class assetRequestsTable extends DbTable{
         $sql.= " SET ORDERIT_RESPONDED = ? ";
         $sql.= " WHERE REQUEST_REFERENCE=? ";
 
-        $rs = db2_prepare($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_prepare($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -2179,7 +2179,7 @@ class assetRequestsTable extends DbTable{
 
         $sql = " SELECT COMMENT FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " WHERE REQUEST_REFERENCE=? ";
 
-        $rs = db2_prepare($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_prepare($GLOBALS['conn'], $sql);
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__,__METHOD__, $sql);
             return false;
@@ -2315,7 +2315,7 @@ class assetRequestsTable extends DbTable{
 
             AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
-            $preparedUpdateUidsStmt = db2_prepare($GLOBALS['conn'], $sql);
+            $preparedUpdateUidsStmt = sqlsrv_prepare($GLOBALS['conn'], $sql);
 
             if(!$preparedUpdateUidsStmt){
                 DbTable::displayErrorMessage($preparedUpdateUidsStmt, __CLASS__, __METHOD__, $sql);
@@ -2539,7 +2539,7 @@ class assetRequestsTable extends DbTable{
             echo $e->getTrace();
         }
 
-        db2_commit($GLOBALS['conn']);
+        sqlsrv_commit($GLOBALS['conn']);
         db2_autocommit($GLOBALS['conn'],$autocommit);
     }
 
@@ -2560,7 +2560,7 @@ class assetRequestsTable extends DbTable{
 
         AuditTable::audit("Prepare SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>prepared sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
-        $rs = db2_prepare($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_prepare($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);

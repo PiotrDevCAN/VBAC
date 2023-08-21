@@ -28,12 +28,12 @@ if($uid != 'newEntry'){
     $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $table;
     $sql .= " SET " . $valueField  . "  =  ? " ;
     $sql .= " WHERE " . $valueId . " = ? ";
-    $preparedStmt = db2_prepare($GLOBALS['conn'], $sql);
+    $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql);
     $data = array($value,$uid);
 } else {
     $sql = " INSERT INTO " . $GLOBALS['Db2Schema'] . "." . $table;
     $sql .= " ( " . $valueField  . ") values (?) " ;
-    $preparedStmt = db2_prepare($GLOBALS['conn'], $sql);
+    $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql);
     $data = array($value);
 }
 

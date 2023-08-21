@@ -96,7 +96,7 @@ switch($rootScriptName) {
             $updatePersonPESApiStatusSql.= " SET PES_API_STATUS =? ";
             $updatePersonPESApiStatusSql.= " WHERE lower(EMAIL_ADDRESS)=? ";
 
-            $preparedUpdatePersonPESApiStatusSql = db2_prepare($GLOBALS['conn'], $updatePersonPESApiStatusSql);
+            $preparedUpdatePersonPESApiStatusSql = sqlsrv_prepare($GLOBALS['conn'], $updatePersonPESApiStatusSql);
 
             if(!$preparedUpdatePersonPESApiStatusSql){
                 echo sqlsrv_errors();
@@ -136,7 +136,7 @@ switch($rootScriptName) {
                         $updatePersonSql = substr($updatePersonSql,0,-2) . " WHERE lower(EMAIL_ADDRESS)=? ";
                         $personData[] = $email;
                         
-                        $preparedUpdatePersonSql = db2_prepare($GLOBALS['conn'], $updatePersonSql);
+                        $preparedUpdatePersonSql = sqlsrv_prepare($GLOBALS['conn'], $updatePersonSql);
                         
                         if(!$preparedUpdatePersonSql){
                             echo sqlsrv_errors();
@@ -151,7 +151,7 @@ switch($rootScriptName) {
                             print_r($personData);
                             print_r($updatePersonSql);
                             DbTable::displayErrorMessage($rsPerson, __FILE__, __FILE__, $updatePersonSql);     
-                            db2_rollback($GLOBALS['conn']);
+                            sqlsrv_rollback($GLOBALS['conn']);
                         }
                     } else {
                         echo "<br/> No data for PERSON update";
@@ -175,7 +175,7 @@ switch($rootScriptName) {
                         $updatePesTrackerSql = substr($updatePesTrackerSql,0,-2) . " WHERE CNUM=( SELECT CNUM FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " WHERE lower(EMAIL_ADDRESS) = ? FETCH FIRST 1 ROWS ONLY ) ";
                         $pesTrackerData[] = $email;
                         
-                        $preparedUpdatePesTrackerSql = db2_prepare($GLOBALS['conn'], $updatePesTrackerSql);
+                        $preparedUpdatePesTrackerSql = sqlsrv_prepare($GLOBALS['conn'], $updatePesTrackerSql);
                         
                         if(!$preparedUpdatePesTrackerSql){
                             echo sqlsrv_errors();
@@ -190,7 +190,7 @@ switch($rootScriptName) {
                             print_r($pesTrackerData);
                             print_r($updatePesTrackerSql);
                             DbTable::displayErrorMessage($rsPesTracker, __FILE__, __FILE__, $updatePesTrackerSql);
-                            db2_rollback($GLOBALS['conn']);
+                            sqlsrv_rollback($GLOBALS['conn']);
                         }
                     } else {
                         echo "<br/> No data for PES Tracker update";
@@ -206,7 +206,7 @@ switch($rootScriptName) {
                     $rsPerson = sqlsrv_execute($preparedUpdatePersonPESApiStatusSql,$personPESApiStatusData);    
                     if(!$rsPerson){
                         DbTable::displayErrorMessage($rsPerson, __FILE__, __FILE__, $updatePersonPESApiStatusSql);     
-                        db2_rollback($GLOBALS['conn']);
+                        sqlsrv_rollback($GLOBALS['conn']);
                     }
                     */
                     
@@ -237,12 +237,12 @@ switch($rootScriptName) {
                 $rsPerson = sqlsrv_execute($preparedUpdatePersonPESApiStatusSql,$personPESApiStatusData);    
                 if(!$rsPerson){
                     DbTable::displayErrorMessage($rsPerson, __FILE__, __FILE__, $updatePersonPESApiStatusSql);     
-                    db2_rollback($GLOBALS['conn']);
+                    sqlsrv_rollback($GLOBALS['conn']);
                 }
             }
             */
 
-            db2_commit($GLOBALS['conn']);
+            sqlsrv_commit($GLOBALS['conn']);
 
             AuditTable::audit("PES Fields update completed:",AuditTable::RECORD_TYPE_AUDIT);
 

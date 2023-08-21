@@ -97,7 +97,7 @@ class odcAccessTable extends DbTable {
             }
         }
 
-        db2_commit($GLOBALS['conn']);  // Save what we have done.
+        sqlsrv_commit($GLOBALS['conn']);  // Save what we have done.
         db2_autocommit($GLOBALS['conn'],$autoCommit);
 
         $response = ob_get_clean();

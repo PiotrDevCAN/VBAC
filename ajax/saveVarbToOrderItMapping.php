@@ -50,7 +50,7 @@ if(!empty($_POST['comment'])){
 // }
 
 
-db2_commit($GLOBALS['conn']);
+sqlsrv_commit($GLOBALS['conn']);
 db2_autocommit($GLOBALS['conn'],$autoCommit);
 
 $messages = ob_get_clean();

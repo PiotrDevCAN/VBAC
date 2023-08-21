@@ -56,7 +56,7 @@ foreach ($_POST['status'] as $reference => $statusIndicator){
 }
 
 if($success){
-    db2_commit($GLOBALS['conn']);
+    sqlsrv_commit($GLOBALS['conn']);
 } else {
     db2_rollback($GLOBALS['conn']);
 }

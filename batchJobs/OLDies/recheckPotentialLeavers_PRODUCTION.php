@@ -84,7 +84,7 @@ AuditTable::audit("Potential Leavers re-check completed.",AuditTable::RECORD_TYP
 $response = $slack->slackApiPostMessage(slack::CHANNEL_SM_CDI_AUDIT,$_ENV['environment'] . ":Potential Leavers re-check completed.", slack::CHANNEL_SM_CDI_AUDIT);
 error_log($response);
 
-db2_commit($GLOBALS['conn']);
+sqlsrv_commit($GLOBALS['conn']);
 
 $end = microtime(true);
 $timeMeasurements['overallTime'] = (float)($end-$start);

@@ -57,7 +57,7 @@ class Loader
         }
         $queryCompleted = microtime(TRUE);
 
-        while (($row = db2_fetch_array($rs5)) !== false) {
+        while (($row = sqlsrv_fetch_array($rs5)) !== false) {
            // Trace::traceVariable($row, __METHOD__, __LINE__);
 //             $column = trim($column, '"');
             if (trim($row[0]) == null) {
@@ -107,7 +107,7 @@ class Loader
             DbTable::displayErrorMessage($rs5, __CLASS__, __METHOD__, $sql);
         }
 
-        while (($row = db2_fetch_both($rs5)) == true) {
+        while (($row = sqlsrv_fetch($rs5)) == true) {
             $array[utf8_encode(trim($row[$key]))] = utf8_encode(trim($row[$value]));
         }
         Trace::traceVariable($array, __METHOD__, __LINE__);
@@ -171,7 +171,7 @@ class Loader
             DbTable::displayErrorMessage($rs5, __CLASS__, __METHOD__, $sql);
         }
 
-        while ($row = db2_fetch_both($rs5)) {
+        while ($row = sqlsrv_fetch($rs5)) {
             $array[trim($row[$first])][trim($row[$second])] = trim(trim($row[$third]));
         }
 
@@ -214,7 +214,7 @@ class Loader
             DbTable::displayErrorMessage($rs5, __CLASS__, __METHOD__, $sql);
         }
 
-        while ($row = db2_fetch_both($rs5)) {
+        while ($row = sqlsrv_fetch($rs5)) {
             $array[trim($row[$first])][trim($row[$second])][trim($row[$third])] = trim(trim($row[$fourth]));
         }
 
@@ -261,7 +261,7 @@ class Loader
 
         $currentKey = null;
 
-        while ($row = db2_fetch_both($rs)) {
+        while ($row = sqlsrv_fetch($rs)) {
                      $array[trim($row[$keyColumn])][] = trim($row[$valuesColumn]);
         }
 

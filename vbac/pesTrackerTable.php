@@ -485,7 +485,7 @@ class pesTrackerTable extends DbTable{
 
         $this->preparedSelectSQL = $sql;
 
-        $preparedStmt = db2_prepare($GLOBALS['conn'], $sql);
+        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql);
 
          if($preparedStmt){
              $this->preparedStageUpdateStmts[strtoupper(htmlspecialchars($stage))] = $preparedStmt;
@@ -503,7 +503,7 @@ class pesTrackerTable extends DbTable{
         $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql.= " WHERE CNUM=? ";
 
-        $preparedStmt = db2_prepare($GLOBALS['conn'], $sql);
+        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql);
 
         $this->preparedGetProcessingStatusStmt = $preparedStmt ? $preparedStmt : false;
         return $this->preparedGetProcessingStatusStmt;
@@ -520,7 +520,7 @@ class pesTrackerTable extends DbTable{
 
         $this->preparedSelectSQL = $sql;
 
-        $preparedStmt = db2_prepare($GLOBALS['conn'], $sql);
+        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql);
 
         if($preparedStmt){
             $this->prepareProcessStatusUpdate = $preparedStmt;
@@ -535,7 +535,7 @@ class pesTrackerTable extends DbTable{
         }
         $sql = " INSERT INTO " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql.= " ( CNUM ) VALUES (?) ";
-        $preparedStmt = db2_prepare($GLOBALS['conn'], $sql);
+        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql);
 
         if($preparedStmt){
             $this->preparedTrackerInsert = $preparedStmt;
@@ -557,7 +557,7 @@ class pesTrackerTable extends DbTable{
         $sql.= " ,  PROCESSING_STATUS_CHANGED= current timestamp, DATE_LAST_CHASED = null ";
         $sql.= " WHERE CNUM = ? ";
 
-        $preparedStmt = db2_prepare($GLOBALS['conn'], $sql);
+        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql);
 
         if($preparedStmt){
             $this->preparedResetForRecheck = $preparedStmt;
@@ -767,7 +767,7 @@ class pesTrackerTable extends DbTable{
         $sql = " SELECT COMMENT FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql.= " WHERE CNUM=? ";
 
-        $preparedStmt = db2_prepare($GLOBALS['conn'], $sql);
+        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql);
 
         if($preparedStmt){
             $this->preparedGetPesCommentStmt = $preparedStmt;
@@ -836,7 +836,7 @@ class pesTrackerTable extends DbTable{
             return false;
         }
 
-        db2_commit($GLOBALS['conn']);
+        sqlsrv_commit($GLOBALS['conn']);
 
 //         $sql = " DELETE FROM  " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
 //         $sql.= " WHERE CNUM='" . htmlspecialchars(trim($fromCnum)) . "' ";

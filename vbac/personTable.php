@@ -111,7 +111,7 @@ class personTable extends DbTable
             return false;
         }
 
-        $topRow = db2_fetch_array($rs);
+        $topRow = sqlsrv_fetch_array($rs);
         if (isset($topRow[0])) {
             $thisCnum = substr($topRow[0], 1, 5);
             $next = $thisCnum + 1;
@@ -302,7 +302,7 @@ class personTable extends DbTable
         $sql = self::preparePersonCountStmt($preBoardersPredicate, $predicate);
 
         $data = array();
-        $preparedCountStatement = db2_prepare($GLOBALS['conn'], $sql);
+        $preparedCountStatement = sqlsrv_prepare($GLOBALS['conn'], $sql);
         $rs = sqlsrv_execute($preparedCountStatement, $data);
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -321,7 +321,7 @@ class personTable extends DbTable
         $sql = self::preparePersonCountStmt($preBoardersPredicate);
 
         $data = array();
-        $preparedCountStatement = db2_prepare($GLOBALS['conn'], $sql);
+        $preparedCountStatement = sqlsrv_prepare($GLOBALS['conn'], $sql);
         $rs = sqlsrv_execute($preparedCountStatement, $data);
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -1409,7 +1409,7 @@ class personTable extends DbTable
             $sql .= " SET NOTES_ID = ?, EMAIL_ADDRESS = ?,  REVALIDATION_STATUS = '" . personRecord::REVALIDATED_FOUND . "' , REVALIDATION_DATE_FIELD = current date ";
             $sql .= " WHERE CNUM=? ";
 
-            $this->preparedRevalidationStmt = db2_prepare($GLOBALS['conn'], $sql);
+            $this->preparedRevalidationStmt = sqlsrv_prepare($GLOBALS['conn'], $sql);
 
             if (!$this->preparedRevalidationStmt) {
                 DbTable::displayErrorMessage($this->preparedRevalidationStmt, __CLASS__, __METHOD__, $sql);
@@ -1426,7 +1426,7 @@ class personTable extends DbTable
             $sql .= " SET PROJECTED_END_DATE = current date ";
             $sql .= " WHERE CNUM=? AND PROJECTED_END_DATE is null ";
 
-            $this->preparedLeaverProjectedEndDateStmt = db2_prepare($GLOBALS['conn'], $sql);
+            $this->preparedLeaverProjectedEndDateStmt = sqlsrv_prepare($GLOBALS['conn'], $sql);
 
             if (!$this->preparedLeaverProjectedEndDateStmt) {
                 DbTable::displayErrorMessage($this->preparedLeaverProjectedEndDateStmt, __CLASS__, __METHOD__, $sql);
@@ -1443,7 +1443,7 @@ class personTable extends DbTable
             $sql .= " SET REVALIDATION_STATUS = '" . personRecord::REVALIDATED_LEAVER . "' , REVALIDATION_DATE_FIELD = current date ";
             $sql .= " WHERE CNUM=? ";
 
-            $this->preparedRevalidationLeaverStmt = db2_prepare($GLOBALS['conn'], $sql);
+            $this->preparedRevalidationLeaverStmt = sqlsrv_prepare($GLOBALS['conn'], $sql);
 
             if (!$this->preparedRevalidationLeaverStmt) {
                 DbTable::displayErrorMessage($this->preparedRevalidationStmt, __CLASS__, __METHOD__, $sql);
@@ -1461,7 +1461,7 @@ class personTable extends DbTable
             $sql .= " SET REVALIDATION_STATUS = '" . personRecord::REVALIDATED_POTENTIAL . "'  "; // Storing the date was cutting to many history records
             $sql .= " WHERE CNUM=? ";
 
-            $this->preparedRevalidationPotentialLeaverStmt = db2_prepare($GLOBALS['conn'], $sql);
+            $this->preparedRevalidationPotentialLeaverStmt = sqlsrv_prepare($GLOBALS['conn'], $sql);
 
             if (!$this->preparedRevalidationPotentialLeaverStmt) {
                 DbTable::displayErrorMessage($this->preparedRevalidationPotentialLeaverStmt, __CLASS__, __METHOD__, $sql);
@@ -1698,7 +1698,7 @@ class personTable extends DbTable
             $sql .= " SET LBG_LOCATION=? ";
             $sql .= " WHERE CNUM=?  ";
 
-            $this->preparedUpdateLbgLocationStmt = db2_prepare($GLOBALS['conn'], $sql);
+            $this->preparedUpdateLbgLocationStmt = sqlsrv_prepare($GLOBALS['conn'], $sql);
 
             if (!$this->preparedUpdateLbgLocationStmt) {
                 DbTable::displayErrorMessage($this->preparedRevalidationLeaverStmt, __CLASS__, __METHOD__, $sql);
@@ -1773,7 +1773,7 @@ class personTable extends DbTable
             $sql .= " SET SECURITY_EDUCATION=? ";
             $sql .= " WHERE CNUM=?  ";
 
-            $this->preparedUpdateSecurityEducationStmt = db2_prepare($GLOBALS['conn'], $sql);
+            $this->preparedUpdateSecurityEducationStmt = sqlsrv_prepare($GLOBALS['conn'], $sql);
 
             if (!$this->preparedUpdateSecurityEducationStmt) {
                 DbTable::displayErrorMessage($this->preparedUpdateSecurityEducationStmt, __CLASS__, __METHOD__, $sql);
@@ -2252,7 +2252,7 @@ class personTable extends DbTable
             $pesTrackerTable->savePesComment($ibmerCnum, "Email Address changed from $emailAddress[$preboarderCnum] to $emailAddress[$ibmerCnum] ");
         }
 
-        db2_commit($GLOBALS['conn']);
+        sqlsrv_commit($GLOBALS['conn']);
 
         db2_autocommit($GLOBALS['conn'], DB2_AUTOCOMMIT_ON);
     }

@@ -27,5 +27,5 @@ $timeMeasurements['phase_0'] = (float)($end-$start);
 AuditTable::audit("PES Recheck email to PES Team - completed.",AuditTable::RECORD_TYPE_DETAILS);
 $slack->sendMessageToChannel("PES Recheck email to PES Team - completed.(" . $_ENV['environment'] . ")", slack::CHANNEL_SM_CDI_AUDIT);
 
-db2_commit($GLOBALS['conn']);
+sqlsrv_commit($GLOBALS['conn']);
 

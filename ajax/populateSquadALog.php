@@ -37,7 +37,7 @@ $sql.= " ON S.TRIBE_NUMBER  = T.TRIBE_NUMBER ";
 $sql.= " WHERE " . personTable::activePersonPredicate(true,"P");
 $sql.= " AND ( P.SQUAD_NUMBER is not null  AND P.SQUAD_NUMBER > 0 ) ";
 
-$preparedStmt = db2_prepare($GLOBALS['conn'], $sql);
+$preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql);
 
 $data = array();
 $rs = sqlsrv_execute($preparedStmt, $data);

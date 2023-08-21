@@ -17,7 +17,7 @@ switch ($_REQUEST['mode']) {
             error_log(sqlsrv_errors());
         }
         
-        db2_commit($GLOBALS['conn']);
+        sqlsrv_commit($GLOBALS['conn']);
         
         $sql = "INSERT INTO " . $GLOBALS['Db2Schema'] . "." . allTables::$FEB_TRAVEL_REQUEST_TEMPLATES ;
         $sql.= " (EMAIL_ADDRESS, TITLE, TEMPLATE) VALUES ('" . htmlspecialchars($_REQUEST['email_address']) . "','" . htmlspecialchars($_REQUEST['title']) . "','" . htmlspecialchars($_REQUEST['template']) . "') ";

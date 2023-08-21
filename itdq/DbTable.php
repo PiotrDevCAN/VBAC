@@ -459,7 +459,7 @@ class DbTable
 
         if ($withUploadLogId) {
             $uploadLogTable->setStatus($this->uploadId, UploadLogRecord::$statusLOADED);
-            db2_commit($GLOBALS['conn']);
+            sqlsrv_commit($GLOBALS['conn']);
             db2_autocommit($GLOBALS['conn'], $db2CommitState);
             return $this->uploadId;
         } else {
@@ -933,7 +933,7 @@ class DbTable
             // So best prepare a new statement, which we will save in the hope of reusing
             Trace::traceVariable($sql, __METHOD__, __LINE__);
             $this->preparedInsertSQL = $sql;
-            $this->preparedInsert = db2_prepare($GLOBALS['conn'], $sql);
+            $this->preparedInsert = sqlsrv_prepare($GLOBALS['conn'], $sql);
             if (! $this->preparedInsert) {
                 echo "<BR/>" . sqlsrv_errors();
                 echo "<BR/>" . sqlsrv_errors() . "<BR/>";
@@ -1155,7 +1155,7 @@ class DbTable
         //
         // // $sql = " SELECT DECRYPT_CHAR((CHAR)?,'$this->pwd') FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName ;
         //
-        // $this->preparedSelect = db2_prepare ( $_SESSION ['conn'], $sql );
+        // $this->preparedSelect = sqlsrv_prepare ( $_SESSION ['conn'], $sql );
         // if (! $preparedStmt) {
         // echo "<BR/>" . sqlsrv_errors ();
         // echo "<BR/>" . sqlsrv_errors () . "<BR/>";
@@ -2118,7 +2118,7 @@ class DbTable
     function columnAnalysis($rs)
     {
         $columnData = null;
-        while (($rowData = db2_fetch_array($rs)) == true) {
+        while (($rowData = sqlsrv_fetch_array($rs)) == true) {
             $cleanRowData = strip_tags($rowData[0]);
             $strippedCleanRow = str_replace(array(
                 '&nbsp;',
@@ -2176,7 +2176,7 @@ class DbTable
         $obj = new \stdClass();
         $obj->data = array();
 
-        while (($row = db2_fetch_($resultSet))==true) {
+        while (($row = sqlsrv_fetch($resultSet))==true) {
             $obj->data[] = $row;
             ;
         }
