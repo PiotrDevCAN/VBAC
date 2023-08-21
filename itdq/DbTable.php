@@ -1903,7 +1903,7 @@ class DbTable
     {
         $db2Error = empty($db2Error) ? sqlsrv_errors() : $db2Error;
         $db2ErrorMsg = empty($db2ErrorMsg) ? sqlsrv_errors() : $db2ErrorMsg;
-        $rollback ? db2_rollback($GLOBALS['conn']) : null; // Roll back to last commit point.
+        $rollback ? sqlsrv_rollback$GLOBALS['conn']) : null; // Roll back to last commit point.
 
         if (isset(AllItdqTables::$DB2_ERRORS)) {
             echo "<BR/>" . $method . "<B>DB2 Error:</B><span style='color:red'>" . $db2Error . "</span><B>Message:</B><span style='color:red'>" . $db2ErrorMsg . "</span>$sql";

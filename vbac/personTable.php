@@ -2220,7 +2220,7 @@ class personTable extends DbTable
         $ibmer->setFromArray($ibmerData);
 
         if (!$this->update($ibmer)) {
-            db2_rollback($GLOBALS['conn']);
+            sqlsrv_rollback$GLOBALS['conn']);
             throw new \Exception("Failed to update IBMer record for CNUM: $ibmerCnum when linking to $preboarderCnum");
             return false;
         }
@@ -2229,7 +2229,7 @@ class personTable extends DbTable
         $preBoarderData['EMAIL_ADDRESS'] = str_replace('ibm.com', '###.com', strtolower($preBoarderData['EMAIL_ADDRESS']));
         $preBoarder->setFromArray($preBoarderData);
         if (!$this->update($preBoarder)) {
-            db2_rollback($GLOBALS['conn']);
+            sqlsrv_rollback$GLOBALS['conn']);
             throw new \Exception("Failed to update Preboarder record for CNUM: $preboarderCnum when linking to $ibmerCnum");
             return false;
         }
@@ -2240,7 +2240,7 @@ class personTable extends DbTable
         $trackerRecord->setFromArray(array('CNUM' => $ibmerCnum));
         if (!$pesTrackerTable->existsInDb($trackerRecord)) {
             if (!$pesTrackerTable->changeCnum($preboarderCnum, $ibmerCnum)) {
-                db2_rollback($GLOBALS['conn']);
+                sqlsrv_rollback$GLOBALS['conn']);
                 throw new \Exception("Failed amending PES TRACKER Table to reflect that pre-boarder($preboarderCnum has been boarded as ($ibmerCnum) ");
                 return false;
             }

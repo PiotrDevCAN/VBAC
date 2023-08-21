@@ -218,7 +218,7 @@ if (isset($argv[1])) {
             $rsPerson = sqlsrv_execute($preparedUpdatePersonPESApiStatusSql,$personPESApiStatusData);    
             if(!$rsPerson){
                 DbTable::displayErrorMessage($rsPerson, __FILE__, __FILE__, $updatePersonPESApiStatusSql);     
-                db2_rollback($GLOBALS['conn']);
+                sqlsrv_rollback$GLOBALS['conn']);
             }
         }
         */
