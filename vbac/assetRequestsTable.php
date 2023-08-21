@@ -486,7 +486,7 @@ class assetRequestsTable extends DbTable{
 
         $rs2 = sqlsrv_query($GLOBALS['conn'],$sql);
         if(!$rs2){
-            sqlsrv_rollback$GLOBALS['conn']);
+            sqlsrv_rollback($GLOBALS['conn']);
             DbTable::displayErrorMessage($rs2, __CLASS__, __METHOD__, $sql);
             return false;
         }
@@ -541,7 +541,7 @@ class assetRequestsTable extends DbTable{
 
         $rs2 = sqlsrv_query($GLOBALS['conn'],$sql);
         if(!$rs2){
-            sqlsrv_rollback$GLOBALS['conn']);
+            sqlsrv_rollback($GLOBALS['conn']);
             DbTable::displayErrorMessage($rs2, __CLASS__, __METHOD__, $sql);
             return false;
         }
@@ -577,7 +577,7 @@ class assetRequestsTable extends DbTable{
 
         $rs2 = sqlsrv_query($GLOBALS['conn'],$sql);
         if(!$rs2){
-            sqlsrv_rollback$GLOBALS['conn']);
+            sqlsrv_rollback($GLOBALS['conn']);
             DbTable::displayErrorMessage($rs2, __CLASS__, __METHOD__, $sql);
             return false;
         }
@@ -594,7 +594,7 @@ class assetRequestsTable extends DbTable{
 
         $rs2 = sqlsrv_query($GLOBALS['conn'],$sql);
         if(!$rs2){
-            sqlsrv_rollback$GLOBALS['conn']);
+            sqlsrv_rollback($GLOBALS['conn']);
             DbTable::displayErrorMessage($rs2, __CLASS__, __METHOD__, $sql);
             return false;
         }
@@ -612,7 +612,7 @@ class assetRequestsTable extends DbTable{
 
         $rs2 = sqlsrv_query($GLOBALS['conn'],$sql);
         if(!$rs2){
-            sqlsrv_rollback$GLOBALS['conn']);
+            sqlsrv_rollback($GLOBALS['conn']);
             DbTable::displayErrorMessage($rs2, __CLASS__, __METHOD__, $sql);
             return false;
         }
@@ -651,7 +651,7 @@ class assetRequestsTable extends DbTable{
 
         $rs2 = sqlsrv_query($GLOBALS['conn'],$sql);
         if(!$rs2){
-            sqlsrv_rollback$GLOBALS['conn']);
+            sqlsrv_rollback($GLOBALS['conn']);
             DbTable::displayErrorMessage($rs2, __CLASS__, __METHOD__, $sql);
             return false;
         }
@@ -671,7 +671,7 @@ class assetRequestsTable extends DbTable{
 
         $rs2 = sqlsrv_query($GLOBALS['conn'],$sql);
         if(!$rs2){
-            sqlsrv_rollback$GLOBALS['conn']);
+            sqlsrv_rollback($GLOBALS['conn']);
             DbTable::displayErrorMessage($rs2, __CLASS__, __METHOD__, $sql);
             return false;
         }
@@ -694,7 +694,7 @@ class assetRequestsTable extends DbTable{
 
         $rs2 = sqlsrv_query($GLOBALS['conn'],$sql);
         if(!$rs2){
-            sqlsrv_rollback$GLOBALS['conn']);
+            sqlsrv_rollback($GLOBALS['conn']);
             DbTable::displayErrorMessage($rs2, __CLASS__, __METHOD__, $sql);
             return false;
         }
