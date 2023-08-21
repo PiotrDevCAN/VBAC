@@ -12,7 +12,7 @@
 					$this->technology = mb_strtolower($technology);
 					break;
 				default:
-					throw new Exception(htmlentities($technology).' not yet implemented.');
+					throw new \Exception(htmlentities($technology).' not yet implemented.');
 			}
 		}
 
@@ -20,6 +20,15 @@
 		//returns boolean
 		public function ensureAuthorized()
 		{
+			
+			error_log('ensureAuthorized session variables ');
+			if(isset($_SESSION['uid'])) {
+				error_log($_SESSION['uid']);
+			}
+			if(isset($_SESSION['uid'])) {
+				error_log($_SESSION['exp']);
+			}
+
 			if(isset($_SESSION['uid']) && isset($_SESSION['exp']) && ($_SESSION['exp']-300) > time()) return true;
 
 			switch ($this->technology) {
@@ -78,65 +87,88 @@
 			$token_response = json_decode($data);
 			if($token_response)
 			{
-				if(isset($token_response->error)) throw new Exception('Error happened while authenticating. Please, try again later.');
-
+				if(isset($token_response->error)) {
+					throw new \Exception('Error happened while authenticating. Please, try again later.');
+				}
 				if ( isset( $token_response->id_token ) ) {
 					$jwt_arr = explode('.', $token_response->id_token );
 					$encoded = $jwt_arr[1];
 					$decoded = "";
 					for ($i=0; $i < ceil(strlen($encoded)/4); $i++)
 						$decoded = $decoded . base64_decode(substr($encoded,$i*4,4));
-					$userData = json_decode( $decoded, true );
+					$tokenData = json_decode( $decoded, true );
+					error_log('TOKEN OK');
 				} else {
+					error_log('WRONG TOKEN');
 					return false;
 				}
 
-				//use this to debug returned values from w3id/IBM ID service if you got to else in the condition below
-				//var_dump($userData);
-				//die();
+				$userData = $this->getUserInfo($token_response->access_token);
+				// dummy user data
+				$userData['email'] = 'John.Doe@kyndry.com';
+				$userData['given_name'] = 'John';
+				$userData['family_name'] = 'Doe';
 
-				//if using this code on w3ID
-				if(isset($userData) && !empty($userData)
-					&& isset($userData['emailAddress']) && !empty($userData['emailAddress'])
-					&& isset($userData['firstName']) && !empty($userData['firstName'])
-					&& isset($userData['lastName']) && !empty($userData['lastName'])
-					&& isset($userData['exp']) && !empty($userData['exp'])
-					&& isset($userData['uid']) && !empty($userData['uid'])
+				error_log('data from TOKEN');
+				error_log(__FILE__ . "TOKEN:" . print_r($tokenData,true));
+
+				//use this to debug returned values from w3id/IBM ID service if you got to else in the condition below
+				error_log('data from USERINFO');
+				error_log(__FILE__ . "USERINFO:" . print_r($userData,true));
+				// die();
+
+				// {
+				// 	"sub": "00uid4BxXw6I6TV4m0g3",
+				// 	"name" :"John Doe",
+				// 	"nickname":"Jimmy",
+				// 	"given_name":"John",
+				// 	"middle_name":"James",
+				// 	"family_name":"Doe",
+				// 	"profile":"https://example.com/john.doe",
+				// 	"zoneinfo":"America/Los_Angeles",
+				// 	"locale":"en-US",
+				// 	"updated_at":1311280970,
+				// 	"email":"john.doe@example.com",
+				// 	"email_verified":true,
+				// 	"address" : { "street_address":"123 Hollywood Blvd.", "locality":"Los Angeles", "region":"CA", "postal_code":"90210", "country":"US" },
+				// 	"phone_number":"+1 (425) 555-1212"
+				//   }
+
+				// set session from TOKEN data
+				if(isset($tokenData) && !empty($tokenData)
+					&& isset($tokenData['exp']) && !empty($tokenData['exp'])
+					&& isset($tokenData['sub']) && !empty($tokenData['sub'])
 					)
 				{
-					$_SESSION['ssoEmail'] = $userData['emailAddress'];
-					$_SESSION['firstName'] = $userData['firstName'];
-					$_SESSION['lastName'] = $userData['lastName'];
-					$_SESSION['exp'] = $userData['exp'];
-					$_SESSION['uid'] = $userData['uid'];
-					return true;
+					$_SESSION['exp'] = $tokenData['exp'];
+					$_SESSION['uid'] = $tokenData['sub'];
 				}
-				//if using this code on IBM ID
-				else if(isset($userData) && !empty($userData)
-					&& isset($userData['ssoEmail']) && !empty($userData['email'])
+
+				error_log('TEST SET session variables ');
+				error_log($_SESSION['uid']);
+				error_log($_SESSION['exp']);
+
+				// set session from USER data
+				if(isset($userData) && !empty($userData)
+					&& isset($userData['email']) && !empty($userData['email'])
 					&& isset($userData['given_name']) && !empty($userData['given_name'])
 					&& isset($userData['family_name']) && !empty($userData['family_name'])
-					&& isset($userData['exp']) && !empty($userData['exp'])
-					&& isset($userData['uniqueSecurityName']) && !empty($userData['uniqueSecurityName'])
 					)
 				{
 					$_SESSION['ssoEmail'] = $userData['email'];
 					$_SESSION['firstName'] = $userData['given_name'];
 					$_SESSION['lastName'] = $userData['family_name'];
-					$_SESSION['exp'] = $userData['exp'];
-					$_SESSION['uid'] = $userData['uniqueSecurityName'];
-					return true;
-				}
-				//if something in the future gets changed and the strict checking on top of this is not working any more
-				//please note, that you should always use strict matching in this function on your prod app so that you can handle changes correctly and not fill in the session with all the data
-				//so basically, if you get to the else below, adjust it, open an issue on github so that the strict matching can be adjusted and it doesnt get to the else below
-				else
-				{
-					//throw new Exception('OpenIDConnect returned values were not correct.');
+				} else {
+					//if something in the future gets changed and the strict checking on top of this is not working any more
+					//please note, that you should always use strict matching in this function on your prod app so that you can handle changes correctly and not fill in the session with all the data
+					//so basically, if you get to the else below, adjust it, open an issue on github so that the strict matching can be adjusted and it doesnt get to the else below
+					
+					//throw new \Exception('OpenIDConnect returned values were not correct.');
 					$_SESSION = $userData;
 					$_SESSION['somethingChanged'] = true;
 					return true;
 				}
+				return true;
 			}
 			return false;
 		}
@@ -183,7 +215,7 @@
 			}
 			else
 			{
-				throw new Exception('OpenIDConnect data not correct. Please check if everything is filled out in OpenIDConnect configuration.');
+				throw new \Exception('OpenIDConnect data not correct. Please check if everything is filled out in OpenIDConnect configuration.');
 			}
 		}
 
@@ -194,6 +226,7 @@
 			if(isset($config) && !empty($config)
 			    && isset($config->authorize_url) && !empty($config->authorize_url)
 			    && isset($config->token_url) && !empty($config->token_url)
+				&& isset($config->userinfo_url) && !empty($config->userinfo_url)
 			    && isset($config->introspect_url) && !empty($config->introspect_url)
 				&& isset($config->client_id) && !empty($config->client_id)
 				&& isset($config->client_secret) && !empty($config->client_secret)
@@ -206,6 +239,26 @@
 			{
 				return false;
 			}
+		}
+
+		// Returns information about the currently signed-in user.
+		private function getUserInfo($token)
+		{
+			$url = $this->config->userinfo_url;
+
+			$ch = curl_init();
+
+			curl_setopt($ch, CURLOPT_URL, $url);
+			$authorization = "Authorization: Bearer ".$token; // Prepare the authorisation token
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json' , $authorization )); // Inject the token into the header
+			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+			$result = curl_exec($ch);
+
+			curl_close($ch);
+
+			return json_decode($result, true);
 		}
 	}
 ?>
