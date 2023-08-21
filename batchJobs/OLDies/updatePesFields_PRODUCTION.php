@@ -73,7 +73,7 @@ switch($rootScriptName) {
                 // 'COMMENT'
             );
 
-            db2_autocommit($GLOBALS['conn'],DB2_AUTOCOMMIT_OFF);
+            sqlsrv_commit($GLOBALS['conn'],DB2_AUTOCOMMIT_OFF);
 
             $updatesPerformed = 0;
             $commitEvery100Updates = 100;

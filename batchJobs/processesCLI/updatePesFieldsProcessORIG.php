@@ -54,7 +54,7 @@ if (isset($argv[1])) {
         $personFields = personRecord::$personFields;
         $pesTrackerFields = personRecord::$pesTrackerFields;
     
-        db2_autocommit($GLOBALS['conn'],DB2_AUTOCOMMIT_OFF);
+        sqlsrv_commit($GLOBALS['conn'],DB2_AUTOCOMMIT_OFF);
     
         $updatesPerformed = 0;
         $commitEvery100Updates = 100;
