@@ -48,7 +48,7 @@ class pesEventTable extends DbTable{
 
         $sql.= " WHERE P.PES_STATUS IN ('" . personRecord::PES_STATUS_REQUESTED . "','" . personRecord::PES_STATUS_RECHECK_REQ . "','" . personRecord::PES_STATUS_MOVER . "') ";
 
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -63,7 +63,7 @@ class pesEventTable extends DbTable{
 		<tbody>
 		<?php
 
-        while(($row=db2_fetch_assoc($rs))==true){
+        while(($row=sqlsrv_fetch_array($rs))==true){
             ?><tr><td><?=$row['CNUM']?></td><td><?=$row['EMAIL_ADDRESS']?></td><?php
             foreach ($allEvents as $event_title) {
                 $commentTitle = str_replace(" ", "_", strtoupper($event_title)) . "_COMMENT";

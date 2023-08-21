@@ -43,7 +43,7 @@ if($startDate===false || $endDate===false){
                     $sql.= !empty($endDate) ? ",'" . htmlspecialchars($endDate->format('Y-m-d')) . "' " : ",'2099-12-31' " ;
                     $sql.= ") ";
                     
-                    $rs = db2_exec($GLOBALS['conn'], $sql);
+                    $rs = sqlsrv_query($GLOBALS['conn'], $sql);
                     
                     if(!$rs){
                         $errorMsg = db2_stmt_errormsg();
@@ -67,7 +67,7 @@ if($startDate===false || $endDate===false){
                     $sql.= "                        and END_DATE >= CURRENT DATE ";
                     $sql.= !empty($assetSerial) ? " and ASSET_SERIAL_NUMBER='" . htmlspecialchars($assetSerial) . "' " : null;
                     $sql.= !empty($cnum) ?        " and CNUM='" . htmlspecialchars($cnum) . "' " : null;
-                    $rs = db2_exec($GLOBALS['conn'], $sql);
+                    $rs = sqlsrv_query($GLOBALS['conn'], $sql);
                     
                     if(!$rs){
                         $errorMsg = db2_stmt_errormsg();
@@ -75,7 +75,7 @@ if($startDate===false || $endDate===false){
                         $httpCode = 461;
                     } else {
                         $list = array();
-                        while (($row = db2_fetch_assoc($rs))==true) {
+                        while (($row = sqlsrv_fetch_array($rs))==true) {
                             isset($row['ASSET_SERIAL_NUMBER']) ? $list[] = trim($row['ASSET_SERIAL_NUMBER']) : null; 
                             isset($row['CNUM']) ? $list[] = trim($row['CNUM']) : null;
                         }
@@ -100,7 +100,7 @@ if($startDate===false || $endDate===false){
                     $sql.= " WHERE 1=1 ";
                     $sql.= !empty($assetSerial) ? " AND ASSET_SERIAL_NUMBER='" . htmlspecialchars($assetSerial) . "' " : null;
                     $sql.= !empty($cnum) ?        " AND CNUM='" . htmlspecialchars($cnum) . "' " : null;
-                    $rs = db2_exec($GLOBALS['conn'], $sql);
+                    $rs = sqlsrv_query($GLOBALS['conn'], $sql);
                     
                     if(!$rs){
                         $errorMsg = db2_stmt_errormsg();
@@ -125,7 +125,7 @@ if($startDate===false || $endDate===false){
                     $sql.= " WHERE 1=1 ";
                     $sql.= !empty($assetSerial) ? " AND ASSET_SERIAL_NUMBER='" . htmlspecialchars($assetSerial) . "' " : null;
                     $sql.= !empty($cnum) ?        " AND CNUM='" . htmlspecialchars($cnum) . "' " : null;
-                    $rs = db2_exec($GLOBALS['conn'], $sql);
+                    $rs = sqlsrv_query($GLOBALS['conn'], $sql);
                     
                     if(!$rs){
                         $errorMsg = db2_stmt_errormsg();
@@ -150,14 +150,14 @@ if($startDate===false || $endDate===false){
                     $sql.= "   and END_DATE >= CURRENT DATE ";
                     $sql.= "   and ASSET_SERIAL_NUMBER='" . htmlspecialchars($assetSerial) . "' " ;
                     $sql.= "   and CNUM='" . htmlspecialchars($cnum) . "' " ;
-                    $rs = db2_exec($GLOBALS['conn'], $sql);
+                    $rs = sqlsrv_query($GLOBALS['conn'], $sql);
                     
                     if(!$rs){
                         $errorMsg = db2_stmt_errormsg();
                         DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
                         $httpCode = 461;
                     } else {
-                        $row = db2_fetch_assoc($rs);
+                        $row = sqlsrv_fetch_array($rs);
                         if($row['VALID']>0){
                             $permitted = 'Yes';
                         } else {

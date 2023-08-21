@@ -20,7 +20,7 @@ $sql.= " ORDER BY 1 asc ";
 
 // echo $sql;
 
-$rs = db2_exec($GLOBALS['conn'], $sql);
+$rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
 ?>
 <h2>PES Status Change Details Report</h2>
@@ -30,7 +30,7 @@ $rs = db2_exec($GLOBALS['conn'], $sql);
 <tbody>
 <?php
 
-while(($row=db2_fetch_assoc($rs))==true){
+while(($row=sqlsrv_fetch_array($rs))==true){
     $response = preg_match_all($pattern, $row['COMMENT'], $matches);
     if($response>0){
         foreach ($matches[2] as $key => $status) {

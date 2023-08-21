@@ -16,10 +16,10 @@ $sql.= " WHERE 1=1 ";
 $sql.= !empty($notesId) ? " AND lower(O.OWNER_NOTES_ID) = '" . htmlspecialchars(strtolower($notesId)) . "'; " : null;
 $sql.= !empty($cnum) ? " AND lower(O.OWNER_CNUM_ID) = '" . htmlspecialchars(strtolower($cnum)) . "'; " : null;
 
-$rs = db2_exec($GLOBALS['conn'], $sql);
+$rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
 if($rs){
-    $row = db2_fetch_assoc($rs);
+    $row = sqlsrv_fetch_array($rs);
     $found = $row['FOUND'] > 0 ? 'Yes' : 'No';
 }
 

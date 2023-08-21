@@ -12,13 +12,13 @@ class personWithSubPTable extends personTable {
         parent::__construct($table,$pwd,$log);
 
         $sql = " SELECT * FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON_SUBPLATFORM;
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
         }
 
-        while(($subPlatformRecord=db2_fetch_assoc($rs))==true){
+        while(($subPlatformRecord=sqlsrv_fetch_array($rs))==true){
             $subPlatformRecord = array_map('trim', $subPlatformRecord);
             $this->personSubPlatform[$subPlatformRecord['CNUM']][] = $subPlatformRecord['SUBPLATFORM'];
         }
@@ -45,13 +45,13 @@ class personWithSubPTable extends personTable {
         include("connect.php");
 
         $sql = " SELECT * FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON_SUBPLATFORM;
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
         }
 
-        while(($subPlatformRecord=db2_fetch_assoc($rs))==true){
+        while(($subPlatformRecord=sqlsrv_fetch_array($rs))==true){
             $subPlatformRecord = array_map('trim', $subPlatformRecord);
             $personSubPlatform[$subPlatformRecord['CNUM']][] = $subPlatformRecord['SUBPLATFORM'];
         }
@@ -63,7 +63,7 @@ class personWithSubPTable extends personTable {
         $columnCounter = $columnIndex;
         $rowCounter = $rowIndex;
 
-        while (($rawRow=db2_fetch_assoc($resultSet))==true) {
+        while (($rawRow=sqlsrv_fetch_array($resultSet))==true) {
             $rowsWritten = true;
             $row = array_map('trim', $rawRow);
             $row = static::preProcessRowForWriteToXls($row);

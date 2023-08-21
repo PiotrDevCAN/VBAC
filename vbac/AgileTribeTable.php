@@ -20,14 +20,14 @@ class AgileTribeTable extends DbTable{
         $sql.= "      UNION ";
         $sql.= "      SELECT MAX(TRIBE_NUMBER) as TRIBE_NUMBER FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE_OLD;
         $sql.= " ); ";
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         }
 
-        $row = db2_fetch_assoc($rs);
+        $row = sqlsrv_fetch_array($rs);
         return !empty($row['TRIBE_NUMBER']) ? (int)($row['TRIBE_NUMBER'])+1 : 1;
 
     }
@@ -35,14 +35,14 @@ class AgileTribeTable extends DbTable{
     function returnAsArray(){
         $sql = " SELECT * ";
         $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         }
         $data = false;
-        while(($row=db2_fetch_assoc($rs))==true){
+        while(($row=sqlsrv_fetch_array($rs))==true){
             $row = array_map('trim',$row);
             $rowWithIcons = $this->addIcons($row);
             $data[] = $rowWithIcons;

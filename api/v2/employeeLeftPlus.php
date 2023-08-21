@@ -36,7 +36,7 @@ $sql.= !empty($notesId) ? " AND lower(P.NOTES_ID) = '" . htmlspecialchars(strtol
 $sql.= !empty($cnum) ? " AND lower(P.CNUM) = '" . htmlspecialchars(strtolower($cnum)) . "'; " : null;
 $sql.= " ORDER BY P.NOTES_ID ";
 
-$rs = db2_exec($GLOBALS['conn'], $sql);
+$rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
 if(!$rs){
     DbTable::displayErrorMessage($rs, 'class', 'method', $sql);
@@ -47,7 +47,7 @@ if(!$rs){
     exit();
 }
 
-while(($row = db2_fetch_assoc($rs))==true){
+while(($row = sqlsrv_fetch_array($rs))==true){
     $rowTrimmed = array_map('trim',$row);
     $employeesArray[] = $rowTrimmed;
 }

@@ -87,7 +87,7 @@ if (isset($argv[1])) {
             $schemaUPES = 'UPES_NEWCO';
             $StatementUPES = "SET CURRENT SCHEMA='$schemaUPES';";
 
-            $rs = db2_exec($connToUPES, $StatementUPES);
+            $rs = sqlsrv_query($connToUPES, $StatementUPES);
 
             if (! $rs) {
                 echo "<br/>" . $StatementUPES    . "<br/>";
@@ -123,14 +123,14 @@ if (isset($argv[1])) {
         $countSql.= "WHERE AP.ACCOUNT_ID = ? ";
 
         $preparedCountStatement = db2_prepare($connToUPES, $countSql);
-        $rs = db2_execute($preparedCountStatement, $data);
+        $rs = sqlsrv_execute($preparedCountStatement, $data);
         if (! $rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         }
 
         $counter = 0;
-        while($row = db2_fetch_assoc($preparedCountStatement)){
+        while($row = sqlsrv_fetch_array($preparedCountStatement)){
             $counter = $row['COUNTER'];
         }
 
@@ -149,7 +149,7 @@ if (isset($argv[1])) {
 
         $preparedStatement = db2_prepare($connToUPES, $sql);
 
-        $rs = db2_execute($preparedStatement, $data);
+        $rs = sqlsrv_execute($preparedStatement, $data);
         if (! $rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
@@ -159,7 +159,7 @@ if (isset($argv[1])) {
         $noTrim = false;
 
         $count = 1;
-        while($row = db2_fetch_assoc($preparedStatement)){
+        while($row = sqlsrv_fetch_array($preparedStatement)){
             if ($noTrim === false) {
                 $row = array_map('trim',$row);
             }
@@ -291,7 +291,7 @@ if (isset($argv[1])) {
                         return;
                     }
                     
-                    $rsPerson = db2_execute($preparedUpdatePersonSql, $personData);    
+                    $rsPerson = sqlsrv_execute($preparedUpdatePersonSql, $personData);    
                     if(!$rsPerson){
                         print_r($personData);
                         print_r($updatePersonSql);
@@ -330,7 +330,7 @@ if (isset($argv[1])) {
                         return;
                     }
                     
-                    $rsPesTracker = db2_execute($preparedUpdatePesTrackerSql, $pesTrackerData);
+                    $rsPesTracker = sqlsrv_execute($preparedUpdatePesTrackerSql, $pesTrackerData);
                     if(!$rsPesTracker){
                         print_r($pesTrackerData);
                         print_r($updatePesTrackerSql);
@@ -348,7 +348,7 @@ if (isset($argv[1])) {
                 $personPESApiStatusData[] = personRecord::PES_API_STATUS_FOUND;
                 $personPESApiStatusData[] = $email;
                 
-                $rsPerson = db2_execute($preparedUpdatePersonPESApiStatusSql,$personPESApiStatusData);    
+                $rsPerson = sqlsrv_execute($preparedUpdatePersonPESApiStatusSql,$personPESApiStatusData);    
                 if(!$rsPerson){
                     DbTable::displayErrorMessage($rsPerson, __FILE__, __FILE__, $updatePersonPESApiStatusSql);     
                     db2_rollback($GLOBALS['conn']);
@@ -379,7 +379,7 @@ if (isset($argv[1])) {
             $personPESApiStatusData[] = personRecord::PES_API_STATUS_NOT_FOUND;
             $personPESApiStatusData[] = strtolower($email);
     
-            $rsPerson = db2_execute($preparedUpdatePersonPESApiStatusSql,$personPESApiStatusData);    
+            $rsPerson = sqlsrv_execute($preparedUpdatePersonPESApiStatusSql,$personPESApiStatusData);    
             if(!$rsPerson){
                 DbTable::displayErrorMessage($rsPerson, __FILE__, __FILE__, $updatePersonPESApiStatusSql);     
                 db2_rollback($GLOBALS['conn']);

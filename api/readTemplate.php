@@ -15,7 +15,7 @@ switch (true) {
         $sql = " SELECT TEMPLATE FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$FEB_TRAVEL_REQUEST_TEMPLATES;
         $sql .= " WHERE EMAIL_ADDRESS='" . htmlspecialchars(trim($_GET['email_address'])) . "' ";
         $sql .= " AND TITLE='" . htmlspecialchars(trim($_GET['title'])) . "' ";
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
         
         $response['sql'] = $sql;
         
@@ -25,7 +25,7 @@ switch (true) {
             var_dump($sql);
         }
         
-        $row = db2_fetch_assoc($rs);
+        $row = sqlsrv_fetch_array($rs);
         
         $templateArray = array();
         
@@ -63,7 +63,7 @@ switch (true) {
         $sql .= " WHERE UPPER(EMAIL_ADDRESS)='" . htmlspecialchars(strtoupper(trim($_GET['email_address']))) . "' ";
         $response['sql'] = $sql;
         
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
         
         if (! $rs) {
             echo db2_stmt_error();
@@ -71,7 +71,7 @@ switch (true) {
             var_dump($sql);
         }
         
-        while (($row = db2_fetch_assoc($rs)) == true) {
+        while (($row = sqlsrv_fetch_array($rs)) == true) {
             $response['titles'][] = $row['TITLE'];
         }
         break;

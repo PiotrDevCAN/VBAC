@@ -9,7 +9,7 @@ switch ($_REQUEST['mode']) {
         $sql = "DELETE FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$FEB_TRAVEL_REQUEST_TEMPLATES ;
         $sql.= " WHERE EMAIL_ADDRESS='". htmlspecialchars($_REQUEST['email_address']) . "' AND TITLE='" . htmlspecialchars($_REQUEST['title']) . "' ";
 
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
         
         if(!$rs){
             error_log("Sql:" . $sql);
@@ -22,7 +22,7 @@ switch ($_REQUEST['mode']) {
         $sql = "INSERT INTO " . $GLOBALS['Db2Schema'] . "." . allTables::$FEB_TRAVEL_REQUEST_TEMPLATES ;
         $sql.= " (EMAIL_ADDRESS, TITLE, TEMPLATE) VALUES ('" . htmlspecialchars($_REQUEST['email_address']) . "','" . htmlspecialchars($_REQUEST['title']) . "','" . htmlspecialchars($_REQUEST['template']) . "') ";
         
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
         
         if(!$rs){
             error_log("Sql:" . $sql);

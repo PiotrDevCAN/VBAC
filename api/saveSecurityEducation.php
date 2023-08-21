@@ -70,7 +70,7 @@ $sql.= " SET ";
 $sql.= " SECURITY_EDUCATION='" . htmlspecialchars(trim($_REQUEST['SECURITY_EDUCATION'])) . "' " ;
 $sql.= " WHERE CNUM='" . htmlspecialchars($_REQUEST['CNUM']) . "' ";
 
-$rs = db2_exec($GLOBALS['conn'], $sql);
+$rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
 if(!$rs){
     echo db2_stmt_error();

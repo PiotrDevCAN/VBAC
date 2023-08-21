@@ -20,10 +20,10 @@ $sql.= !empty($cnum)     ? " AND D.CNUM = '" . htmlspecialchars($cnum) . "'  " :
 $sql.= !empty($hostname) ? " AND lower(D.HOSTNAME) = '" . htmlspecialchars(strtolower($hostname)) . "'  " : null;
 $sql.= " GROUP BY D.STATUS ";
 
-$rs = db2_exec($GLOBALS['conn'], $sql);
+$rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
 if($rs){
-    $row = db2_fetch_assoc($rs);
+    $row = sqlsrv_fetch_array($rs);
     if(! $row){
         $row=array('STATUS'=>$status,'RECORDS'=>0);
     }

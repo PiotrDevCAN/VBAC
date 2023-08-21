@@ -49,7 +49,7 @@ foreach ($allOrderItTypes as $orderItType){
         $sql .= " ON AR.CNUM = P.CNUM ";
         $sql .= " WHERE 1=1 " . $restrictToApproverPredicate;
 
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __FILE__, __LINE__, $sql);
@@ -57,7 +57,7 @@ foreach ($allOrderItTypes as $orderItType){
         }
 
         $allApproversForType = array();
-        while (($row=db2_fetch_assoc($rs))==true) {
+        while (($row=sqlsrv_fetch_array($rs))==true) {
             $allApproversForType[] = $row['APPROVER_EMAIL'] ;
         }
 //         $allApproversForType = $loader->load('APPROVER_EMAIL',allTables::$ASSET_REQUESTS,$restrictToFmPredicate);

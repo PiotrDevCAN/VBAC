@@ -8,7 +8,7 @@ $sql.= " FROM VBAC.EMAIL_LOG ";
 $sql.= " WHERE  SUBJECT like 'Reminder%' ";
 //$sql.= " fetch first 30 rows only " ;
 
-$rs = db2_exec($GLOBALS['conn'], $sql);
+$rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
 echo "<div class='container'>";
 
@@ -16,7 +16,7 @@ $nonRecipients = false;
 
 
 
-while (($row=db2_fetch_assoc($rs))==true){
+while (($row=sqlsrv_fetch_array($rs))==true){
     ini_set('max_execution_time', 360);
     echo "<br/>";
     echo "<br/><b>To: </b>" . implode(",",unserialize($row['TO']));

@@ -20,7 +20,7 @@ class AuditTable extends DbTable {
             $sql .= " VALUES ";
             $sql .= " ( CURRENT TIMESTAMP, '" . htmlspecialchars($_SESSION['ssoEmail']) . "','" . htmlspecialchars($statement) . "','" . htmlspecialchars($type) . "' )";
 
-            $rs = db2_exec($GLOBALS['conn'],$sql);
+            $rs = sqlsrv_query($GLOBALS['conn'],$sql);
 
             if(!$rs){
                 DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -39,7 +39,7 @@ class AuditTable extends DbTable {
             $sql .= " OR " ;
             $sql .= " (TYPE='" . self::RECORD_TYPE_DETAILS . "' AND \"TIMESTAMP\" < ( CURRENT TIMESTAMP - " . htmlspecialchars($detailsLifeSpan) . " ))  ";
 
-            $rs = db2_exec($GLOBALS['conn'], $sql);
+            $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
             if(!$rs){
                 DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -73,7 +73,7 @@ class AuditTable extends DbTable {
 
         // echo $sql;
 
-        $rs = db2_exec($GLOBALS['conn'],$sql);
+        $rs = sqlsrv_query($GLOBALS['conn'],$sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -97,13 +97,13 @@ class AuditTable extends DbTable {
          $sql .= " AND TIMESTAMP >= (CURRENT TIMESTAMP - 31 days) ";
          $sql .= !empty($predicate)   ? "  $predicate " : null;
 
-         $rs = db2_exec($GLOBALS['conn'],$sql);
+         $rs = sqlsrv_query($GLOBALS['conn'],$sql);
 
          if(!$rs){
              DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
          }
 
-         $row=db2_fetch_assoc($rs);
+         $row=sqlsrv_fetch_array($rs);
 
          return $row['RECORDSFILTERED'];
 
@@ -115,13 +115,13 @@ class AuditTable extends DbTable {
          $sql .= " WHERE 1=1 ";
          $sql .= " AND TIMESTAMP >= (CURRENT TIMESTAMP - 31 days) ";
          $sql .= $type=='Revalidation' ? " AND TYPE='Revalidation' " : null;
-         $rs = db2_exec($GLOBALS['conn'],$sql);
+         $rs = sqlsrv_query($GLOBALS['conn'],$sql);
 
          if(!$rs){
              DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
          }
 
-         $row=db2_fetch_assoc($rs);
+         $row=sqlsrv_fetch_array($rs);
 
          return $row['TOTALROWS'];
      }

@@ -15,11 +15,11 @@ $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
 $sql.= " FOR SYSTEM_TIME as of '" . htmlspecialchars($_REQUEST['systemTime']) . "' ";
 $sql.= " ORDER BY CNUM ";
 
-$rs = db2_exec($GLOBALS['conn'], $sql);
+$rs = sqlsrv_query($GLOBALS['conn'], $sql);
 $data = array();
 
 if($rs){
-    while(($row = db2_fetch_assoc($rs))==true){
+    while(($row = sqlsrv_fetch_array($rs))==true){
         $data[trim($row['CNUM'])] = array_map('trim', $row);
     }
 } else {

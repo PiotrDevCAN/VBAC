@@ -40,7 +40,7 @@ $sql.= " AND ( P.SQUAD_NUMBER is not null  AND P.SQUAD_NUMBER > 0 ) ";
 $preparedStmt = db2_prepare($GLOBALS['conn'], $sql);
 
 $data = array();
-$rs = db2_execute($preparedStmt, $data);
+$rs = sqlsrv_execute($preparedStmt, $data);
 
 if(!$rs){
     DbTable::displayErrorMessage($rs, null, __FILE__, $sql);
@@ -48,7 +48,7 @@ if(!$rs){
 
 $data = false;
 
-while(($row = db2_fetch_assoc($preparedStmt))==true){
+while(($row = sqlsrv_fetch_array($preparedStmt))==true){
     $row = array_map('trim',$row);
     $cnum = $row['CNUM'];
     $row['CNUM'] = array('display'=>$row['CNUM'] . "<br/><small>" . $row['NOTES_ID'] . "</small>", 'sort'=>$row['CNUM']);

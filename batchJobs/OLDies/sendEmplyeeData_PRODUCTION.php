@@ -129,7 +129,7 @@ try {
     // $sql.= $onlyActiveInTimeBool ? " AND (" . personTable::activePersonPredicate($withProvClear, 'P') . " OR P.OFFBOARDED_DATE > '" . $offboardedDate->format('Y-m-d') . "')" : null;
     $sql.= " ORDER BY P.NOTES_ID ";
 
-    $resultSet = db2_exec($GLOBALS['conn'], $sql);
+    $resultSet = sqlsrv_query($GLOBALS['conn'], $sql);
 
     if ($resultSet) {
         DbTable::writeResultSetToXls($resultSet, $spreadsheet);

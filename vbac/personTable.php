@@ -104,7 +104,7 @@ class personTable extends DbTable
         $sql .= " order by CNUM desc ";
         $sql .= " OPTIMIZE FOR 1 ROW ";
 
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -210,7 +210,7 @@ class personTable extends DbTable
         $sql .= " on P.FM_CNUM = F.CNUM ";
         $sql .= " WHERE P.RF_FLAG = '1' ";
 
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -222,7 +222,7 @@ class personTable extends DbTable
         }
 
         $data = array();
-        while (($row = db2_fetch_assoc($rs)) == true) {
+        while (($row = sqlsrv_fetch_array($rs)) == true) {
             //$report[] = array_map('trim', $row);
             $data[] = $withButtons ? $this->addRfflagButtons(array_map('trim', $row)) : array_map('trim', $row);
         }
@@ -303,14 +303,14 @@ class personTable extends DbTable
 
         $data = array();
         $preparedCountStatement = db2_prepare($GLOBALS['conn'], $sql);
-        $rs = db2_execute($preparedCountStatement, $data);
+        $rs = sqlsrv_execute($preparedCountStatement, $data);
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         }
 
         $counter = 0;
-        while ($row = db2_fetch_assoc($preparedCountStatement)) {
+        while ($row = sqlsrv_fetch_array($preparedCountStatement)) {
             $counter = $row['COUNTER'];
         }
         return $counter;
@@ -322,14 +322,14 @@ class personTable extends DbTable
 
         $data = array();
         $preparedCountStatement = db2_prepare($GLOBALS['conn'], $sql);
-        $rs = db2_execute($preparedCountStatement, $data);
+        $rs = sqlsrv_execute($preparedCountStatement, $data);
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         }
 
         $counter = 0;
-        while ($row = db2_fetch_assoc($preparedCountStatement)) {
+        while ($row = sqlsrv_fetch_array($preparedCountStatement)) {
             $counter = $row['COUNTER'];
         }
         return $counter;
@@ -339,7 +339,7 @@ class personTable extends DbTable
     {
         $sql = self::preparePersonStmt($start, $length, $preBoardersPredicate, $predicate, $sorting);
 
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         $allData = array();
         $allData['data'] = array();
@@ -348,7 +348,7 @@ class personTable extends DbTable
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         } else {
-            while (($row = db2_fetch_assoc($rs)) == true) {
+            while (($row = sqlsrv_fetch_array($rs)) == true) {
                 // Only editable, if they're not a "pre-Boarder" who has now been boarded.
                 $preparedRow = $this->prepareFields($row);
                 $rowWithButtonsAdded = (substr($row['PES_STATUS_DETAILS'], 0, 10) == personRecord::PES_STATUS_DETAILS_BOARDED_AS) ? $preparedRow : $this->addButtons($preparedRow);
@@ -370,13 +370,13 @@ class personTable extends DbTable
         $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " WHERE " . $predicate;
 
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         } else {
-            while (($row = db2_fetch_assoc($rs)) == true) {
+            while (($row = sqlsrv_fetch_array($rs)) == true) {
                 // $cnum = trim($row['CNUM']);
                 // $preparedRow = $this->prepareFields($row);
                 // $fmCnumField = $preparedRow['FM_CNUM'];
@@ -412,13 +412,13 @@ class personTable extends DbTable
         $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " WHERE " . $activePredicate;
 
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         } else {
-            while (($row = db2_fetch_assoc($rs)) == true) {
+            while (($row = sqlsrv_fetch_array($rs)) == true) {
                 $cnum = trim($row['CNUM']);
                 $preparedRow = $this->prepareFields($row);
                 $fmCnumField = $preparedRow['FM_CNUM'];
@@ -442,13 +442,13 @@ class personTable extends DbTable
         $sql = " SELECT * FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " ORDER BY CNUM ";
 
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         } else {
-            while (($row = db2_fetch_assoc($rs)) == true) {
+            while (($row = sqlsrv_fetch_array($rs)) == true) {
                 $jsonEncodable = json_encode($row);
                 if (!$jsonEncodable) {
                     echo "<hr/><br/>Dirty Data Found in record for : " . $row['CNUM'];
@@ -782,7 +782,7 @@ class personTable extends DbTable
         $sql .= trim($status) == personRecord::PES_STATUS_INITIATED ? ", PES_REQUESTOR='" . htmlspecialchars($requestor) . "' " : null;
         $sql .= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
 
-        $result = db2_exec($GLOBALS['conn'], $sql);
+        $result = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if (!$result) {
             DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
@@ -809,7 +809,7 @@ class personTable extends DbTable
         $sql .= " SET PES_LEVEL = '" . htmlspecialchars($level) . "' ";
         $sql .= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
 
-        $result = db2_exec($GLOBALS['conn'], $sql);
+        $result = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if (!$result) {
             DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
@@ -850,7 +850,7 @@ class personTable extends DbTable
         $sql .= " SET PES_RECHECK_DATE = date('" . $dateToUseObj->format('Y-m-d') . "') + " . $pesRecheckPeriod;
         $sql .= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
 
-        $result = db2_exec($GLOBALS['conn'], $sql);
+        $result = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if (!$result) {
             DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
@@ -860,14 +860,14 @@ class personTable extends DbTable
         $sql = " SELECT PES_RECHECK_DATE FROM  " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
 
-        $res = db2_exec($GLOBALS['conn'], $sql);
+        $res = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if (!$res) {
             DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
             return false;
         }
 
-        $row = db2_fetch_assoc($res);
+        $row = sqlsrv_fetch_array($res);
 
         $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER);
         $pesTracker->savePesComment($cnum, "PES_RECHECK_DATE set to :" . $row['PES_RECHECK_DATE']);
@@ -888,7 +888,7 @@ class personTable extends DbTable
     $sql .= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
 
     try {
-    $result = db2_exec($GLOBALS['conn'], $sql);
+    $result = sqlsrv_query($GLOBALS['conn'], $sql);
     } catch (\Exception $e) {
     var_dump($e);
     }
@@ -915,7 +915,7 @@ class personTable extends DbTable
         $sql .= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
 
         try {
-            $result = db2_exec($GLOBALS['conn'], $sql);
+            $result = sqlsrv_query($GLOBALS['conn'], $sql);
         } catch (\Exception $e) {
             var_dump($e);
         }
@@ -944,7 +944,7 @@ class personTable extends DbTable
         $sql .= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
 
         try {
-            $result = db2_exec($GLOBALS['conn'], $sql);
+            $result = sqlsrv_query($GLOBALS['conn'], $sql);
         } catch (\Exception $e) {
             var_dump($e);
         }
@@ -965,7 +965,7 @@ class personTable extends DbTable
         $sql .= " SET CT_ID='" . htmlspecialchars($ctid) . "' ";
         $sql .= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
 
-        $result = db2_exec($GLOBALS['conn'], $sql);
+        $result = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if (!$result) {
             DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
@@ -982,7 +982,7 @@ class personTable extends DbTable
         $sql .= " SET FM_MANAGER_FLAG='" . htmlspecialchars($flag) . "' ";
         $sql .= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
 
-        $result = db2_exec($GLOBALS['conn'], $sql);
+        $result = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if (!$result) {
             DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
@@ -1003,7 +1003,7 @@ class personTable extends DbTable
                 $sql .= " SET " . htmlspecialchars($field) . "='" . htmlspecialchars($email) . "' ";
                 $sql .= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
 
-                $result = db2_exec($GLOBALS['conn'], $sql);
+                $result = sqlsrv_query($GLOBALS['conn'], $sql);
 
                 if (!$result) {
                     DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
@@ -1024,7 +1024,7 @@ class personTable extends DbTable
         $sql .= " SET CT_ID = null ";
         $sql .= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
 
-        $result = db2_exec($GLOBALS['conn'], $sql);
+        $result = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if (!$result) {
             DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
@@ -1042,7 +1042,7 @@ class personTable extends DbTable
         $sql .= $version == 'original' ? " SQUAD_NUMBER = null " : " OLD_SQUAD_NUMBER = null";
         $sql .= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
 
-        $result = db2_exec($GLOBALS['conn'], $sql);
+        $result = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if (!$result) {
             DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
@@ -1060,7 +1060,7 @@ class personTable extends DbTable
         $sql .= " SET CIO_ALIGNMENT = null ";
         $sql .= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
 
-        $result = db2_exec($GLOBALS['conn'], $sql);
+        $result = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if (!$result) {
             DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
@@ -1077,7 +1077,7 @@ class personTable extends DbTable
         $sql .= " SET FM_CNUM='" . htmlspecialchars($toFmCnum) . "' ";
         $sql .= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
 
-        $result = db2_exec($GLOBALS['conn'], $sql);
+        $result = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if (!$result) {
             DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
@@ -1100,14 +1100,14 @@ class personTable extends DbTable
         $sql = ' SELECT FM_MANAGER_FLAG FROM "' . $GLOBALS['Db2Schema'] . '".' . allTables::$PERSON;
         $sql .= " WHERE UPPER(EMAIL_ADDRESS) = '" . htmlspecialchars(strtoupper(trim($emailAddress))) . "' ";
 
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         }
 
-        $row = db2_fetch_assoc($rs);
+        $row = sqlsrv_fetch_array($rs);
         if (!$row) {
             return false;
         }
@@ -1134,14 +1134,14 @@ class personTable extends DbTable
         $sql = " SELECT CNUM FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE UPPER(EMAIL_ADDRESS) = '" . htmlspecialchars(strtoupper(trim($_SESSION['ssoEmail']))) . "' ";
 
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         }
 
-        $row = db2_fetch_assoc($rs);
+        $row = sqlsrv_fetch_array($rs);
         if (!$row) {
             return false;
         }
@@ -1164,14 +1164,14 @@ class personTable extends DbTable
         $sql = " SELECT FM_CNUM FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE UPPER(EMAIL_ADDRESS) = '" . htmlspecialchars(strtoupper(trim($_SESSION['ssoEmail']))) . "' ";
 
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         }
 
-        $row = db2_fetch_assoc($rs);
+        $row = sqlsrv_fetch_array($rs);
         if (!$row) {
             return false;
         }
@@ -1199,13 +1199,13 @@ class personTable extends DbTable
         $sql .= !empty($cnum) ? " CNUM = '" . htmlspecialchars(strtoupper(trim($cnum))) . "' " : null;
         $sql .= !empty($email) ? " upper(EMAIL_ADDRESS) = upper('" . htmlspecialchars(strtoupper(trim($email))) . "') " : null;
 
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         }
 
-        $row = db2_fetch_assoc($rs);
+        $row = sqlsrv_fetch_array($rs);
         if (!$row) {
             return false;
         }
@@ -1219,13 +1219,13 @@ class personTable extends DbTable
         $sql = " SELECT CNUM FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE UPPER(EMAIL_ADDRESS) = '" . htmlspecialchars(strtoupper(trim($emailAddress))) . "' ";
 
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         }
 
-        $row = db2_fetch_assoc($rs);
+        $row = sqlsrv_fetch_array($rs);
         if (!$row) {
             return false;
         }
@@ -1239,13 +1239,13 @@ class personTable extends DbTable
         $sql = " SELECT EMAIL_ADDRESS FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE CNUM = '" . htmlspecialchars(strtoupper(trim($cnum))) . "' ";
 
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         }
 
-        $row = db2_fetch_assoc($rs);
+        $row = sqlsrv_fetch_array($rs);
         if (!$row) {
             return false;
         }
@@ -1259,13 +1259,13 @@ class personTable extends DbTable
         $sql = " SELECT PES_LEVEL FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE UPPER(EMAIL_ADDRESS) = '" . htmlspecialchars(strtoupper(trim($email))) . "' ";
 
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         }
 
-        $row = db2_fetch_assoc($rs);
+        $row = sqlsrv_fetch_array($rs);
         if (!$row) {
             return false;
         }
@@ -1283,13 +1283,13 @@ class personTable extends DbTable
         $sql .= " ON P.CNUM = PT.CNUM ";
         $sql .= " WHERE P.CNUM = '" . htmlspecialchars(strtoupper(trim($cnum))) . "' ";
 
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         }
 
-        $row = db2_fetch_assoc($rs);
+        $row = sqlsrv_fetch_array($rs);
         if (!$row) {
             return array(
                 'FIRST_NAME' => '',
@@ -1306,14 +1306,14 @@ class personTable extends DbTable
         $sql = " SELECT CNUM FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE UPPER(NOTES_ID) = '" . htmlspecialchars(strtoupper(trim($notesid))) . "' ";
 
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         }
 
-        $row = db2_fetch_assoc($rs);
+        $row = sqlsrv_fetch_array($rs);
         if (!$row) {
             return false;
         }
@@ -1327,14 +1327,14 @@ class personTable extends DbTable
         $sql = " SELECT NOTES_ID FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE CNUM = '" . htmlspecialchars(strtoupper(trim($cnum))) . "' ";
 
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         }
 
-        $row = db2_fetch_assoc($rs);
+        $row = sqlsrv_fetch_array($rs);
         if (!$row) {
             return false;
         }
@@ -1362,14 +1362,14 @@ class personTable extends DbTable
         $sql .= " WHERE " . $availPreBoPredicate;
         $sql .= " ORDER BY FIRST_NAME, LAST_NAME ";
 
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         }
         $options = array();
-        while (($row = db2_fetch_assoc($rs)) == true) {
+        while (($row = sqlsrv_fetch_array($rs)) == true) {
             $option = "<option value='" . trim($row['CNUM']) . "'";
             $option .= trim($row['CNUM']) == trim($preBoarded) ? ' selected ' : null;
             if (!empty(trim($row['EMAIL_ADDRESS']))) {
@@ -1392,13 +1392,13 @@ class personTable extends DbTable
         $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE CNUM='" . htmlspecialchars(trim($cnum)) . "' ";
         $sql .= " OPTIMIZE for 1 row ";
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         }
-        $data = db2_fetch_assoc($rs);
+        $data = sqlsrv_fetch_array($rs);
         return $data;
     }
 
@@ -1476,7 +1476,7 @@ class personTable extends DbTable
         $preparedStmt = $this->prepareRevalidationStmt();
         $data = array(trim($notesId), trim($email), trim($cnum));
 
-        $rs = db2_execute($preparedStmt, $data);
+        $rs = sqlsrv_execute($preparedStmt, $data);
 
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, "prepared: revalidationStmt");
@@ -1489,7 +1489,7 @@ class personTable extends DbTable
     {
         $preparedStmt = $this->prepareRevalidationLeaverStmt();
         $data = array(trim($cnum));
-        $rs = db2_execute($preparedStmt, $data);
+        $rs = sqlsrv_execute($preparedStmt, $data);
 
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, "prepared: revalidationLeaverStmt");
@@ -1498,7 +1498,7 @@ class personTable extends DbTable
 
         $preparedStmt = $this->prepareLeaverProjectedEndDateStmt();
         $data = array(trim($cnum));
-        $rs = db2_execute($preparedStmt, $data);
+        $rs = sqlsrv_execute($preparedStmt, $data);
 
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, "prepared: leaverProjectedEndDateStmt");
@@ -1515,7 +1515,7 @@ class personTable extends DbTable
     {
         $preparedStmt = $this->prepareRevalidationPotentialLeaverStmt();
         $data = array(trim($cnum));
-        $rs = db2_execute($preparedStmt, $data);
+        $rs = sqlsrv_execute($preparedStmt, $data);
 
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, "prepared: revalidationPotentialLeaverStmt");
@@ -1533,7 +1533,7 @@ class personTable extends DbTable
         $sql .= " SET REVALIDATION_STATUS = '" . personRecord::REVALIDATED_PREBOARDER . "', REVALIDATION_DATE_FIELD = current date ";
         $sql .= " WHERE (CNUM like '%999' or CNUM like '%xxx' or CNUM like '%XXX' )  AND ( REVALIDATION_STATUS is null )";
 
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -1553,7 +1553,7 @@ class personTable extends DbTable
             PROPOSED_LEAVING_DATE = '" . htmlspecialchars($proposedLeavingDate) . "'";
             $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "'";
 
-            $rs = db2_exec($GLOBALS['conn'], $sql);
+            $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
             if (!$rs) {
                 DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -1582,7 +1582,7 @@ class personTable extends DbTable
             ), REVALIDATION_DATE_FIELD = current date, OFFBOARDED_DATE = current date ";
             $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "'";
 
-            $rs = db2_exec($GLOBALS['conn'], $sql);
+            $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
             if (!$rs) {
                 DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -1611,7 +1611,7 @@ class personTable extends DbTable
             PROPOSED_LEAVING_DATE = null ";
             $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "'";
 
-            $rs = db2_exec($GLOBALS['conn'], $sql);
+            $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
             if (!$rs) {
                 DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -1639,7 +1639,7 @@ class personTable extends DbTable
             PROPOSED_LEAVING_DATE = null ";
             $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "'";
 
-            $rs = db2_exec($GLOBALS['conn'], $sql);
+            $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
             if (!$rs) {
                 DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -1713,7 +1713,7 @@ class personTable extends DbTable
         if (!empty($cnum) && !empty($lbgLocation)) {
             $preparedStmt = $this->prepareUpdateLbgLocationStmt();
             $data = array($lbgLocation, $cnum);
-            $rs = db2_execute($preparedStmt, $data);
+            $rs = sqlsrv_execute($preparedStmt, $data);
             if (!$rs) {
                 DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared statment');
                 return false;
@@ -1729,14 +1729,14 @@ class personTable extends DbTable
         if (!empty($cnum)) {
             $sql = " SELECT LBG_LOCATION FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
 
-            $rs = db2_exec($GLOBALS['conn'], $sql);
+            $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
             if (!$rs) {
                 DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared statment');
                 return false;
             }
 
-            $locationRow = db2_fetch_assoc($rs);
+            $locationRow = sqlsrv_fetch_array($rs);
             if (!$locationRow) {
                 $locationRow = array(
                     'LBG_LOCATION' => false,
@@ -1745,14 +1745,14 @@ class personTable extends DbTable
 
             $sql = " SELECT FM_CNUM FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
 
-            $rs = db2_exec($GLOBALS['conn'], $sql);
+            $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
             if (!$rs) {
                 DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared statment');
                 return false;
             }
 
-            $fmrow = db2_fetch_assoc($rs);
+            $fmrow = sqlsrv_fetch_array($rs);
             if (!$fmrow) {
                 $fmrow = array(
                     'FM_CNUM' => false,
@@ -1788,7 +1788,7 @@ class personTable extends DbTable
         if (!empty($cnum) && !empty($securityEducation)) {
             $preparedStmt = $this->prepareUpdateSecurityEducationStmt();
             $data = array($securityEducation, $cnum);
-            $rs = db2_execute($preparedStmt, $data);
+            $rs = sqlsrv_execute($preparedStmt, $data);
             if (!$rs) {
                 DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared statment');
                 return false;
@@ -1804,14 +1804,14 @@ class personTable extends DbTable
         if (!empty($cnum)) {
             $sql = " SELECT SECURITY_EDUCATION FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
 
-            $rs = db2_exec($GLOBALS['conn'], $sql);
+            $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
             if (!$rs) {
                 DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared statment');
                 return false;
             }
 
-            $row = db2_fetch_assoc($rs);
+            $row = sqlsrv_fetch_array($rs);
             if (!$row) {
                 return personRecord::SECURITY_EDUCATION_NOT_COMPLETED;
             }
@@ -1830,7 +1830,7 @@ class personTable extends DbTable
             $sql .= " SET " . $columnName . "='" . htmlspecialchars(trim($primaryUid)) . "' ";
             $sql .= " WHERE CNUM='" . htmlspecialchars(trim($cnum)) . "' ";
 
-            $rs = db2_exec($GLOBALS['conn'], $sql);
+            $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
             if (!$rs) {
                 DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -1858,14 +1858,14 @@ class personTable extends DbTable
         //         $sql.= " WHERE 1=1 and  " . $odcActive;
         //         $sql.= " AND O.OWNER_CNUM_ID is not null "; // they have to have access
 
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         }
 
-        $row = db2_fetch_assoc($rs);
+        $row = sqlsrv_fetch_array($rs);
         if (!$row) {
             return false;
         }
@@ -1898,7 +1898,7 @@ class personTable extends DbTable
         $sql .= !empty($rfEnd) ? ", RF_END=DATE('" . htmlspecialchars($rfEnd) . "') " : null;
         $sql .= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
 
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -2171,7 +2171,7 @@ class personTable extends DbTable
 
         $this->lastUpdateSql = $sql;
 
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -2270,14 +2270,14 @@ class personTable extends DbTable
         $sql .= " and PES_RECHECK_DATE is not null ";
         $sql .= " and PES_RECHECK_DATE <= CURRENT DATE + 56 DAYS ";
 
-        $rs = db2_exec($localConnection, $sql);
+        $rs = sqlsrv_query($localConnection, $sql);
 
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
         }
 
         $allRecheckers = false;
-        while (($row = db2_fetch_assoc($rs)) == true) {
+        while (($row = sqlsrv_fetch_array($rs)) == true) {
             $trimmedRow = array_map('trim', $row);
             $allRecheckers[] = $trimmedRow;
             $this->setPesStatus($trimmedRow['CNUM'], personRecord::PES_STATUS_RECHECK_REQ);

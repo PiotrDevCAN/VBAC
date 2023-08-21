@@ -13,14 +13,14 @@ class dlpTable extends DbTable {
         $sql.= " AND HOSTNAME='" . strtoupper(htmlspecialchars($hostname)) . "' ";
         $sql.= " AND TRANSFERRED_TO_HOSTNAME is null ";
        
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
         
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         }
         
-        $row = db2_fetch_assoc($rs);
+        $row = sqlsrv_fetch_array($rs);
         
         return $row['LICENCES'] != 0;
     }
@@ -37,7 +37,7 @@ class dlpTable extends DbTable {
         $sql.= " AND HOSTNAME='" . htmlspecialchars(strtoupper(trim($fromHostname))) . "' ";
         $sql.= " AND TRANSFERRED_TO_HOSTNAME is null ";
        
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
         
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -57,7 +57,7 @@ class dlpTable extends DbTable {
         $sql.= ",'" . dlpRecord::STATUS_PENDING . "' ";
         $sql.= " ) ";
        
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
         
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -99,7 +99,7 @@ class dlpTable extends DbTable {
         $sql.= !empty($predicate) ? $predicate : null;
         $sql.= " ; ";
         
-        $rs = db2_exec($GLOBALS['conn'],$sql);
+        $rs = sqlsrv_query($GLOBALS['conn'],$sql);
         
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -111,7 +111,7 @@ class dlpTable extends DbTable {
         }
         
         $report = array();
-        while (($row=db2_fetch_assoc($rs))==true) {
+        while (($row=sqlsrv_fetch_array($rs))==true) {
             $report[] = $withButtons ? $this->addButtons(array_map('trim', $row)) : array_map('trim', $row);
         }
         
@@ -186,7 +186,7 @@ class dlpTable extends DbTable {
         $sql.= " AND HOSTNAME='" . htmlspecialchars(trim($hostname)) . "' ";
         $sql.= " AND TRANSFERRED_TO_HOSTNAME is null ";
         
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
         
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -204,7 +204,7 @@ class dlpTable extends DbTable {
         $sql.= " AND HOSTNAME='" . htmlspecialchars(trim($hostname)) . "' ";
         $sql.= empty(($transferred)) ? " AND TRANSFERRED_TO_HOSTNAME is null " : " AND TRANSFERRED_TO_HOSTNAME='" . htmlspecialchars(trim(strtoupper($transferred))) . "' ";
         
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
         
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);

@@ -25,14 +25,14 @@ class AgileSquadTable extends DbTable{
 
         $sql = " SELECT MAX(SQUAD_NUMBER) as SQUAD_NUMBER FROM " . $GLOBALS['Db2Schema'] . "." . $table ;
 
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         }
 
-        $row = db2_fetch_assoc($rs);
+        $row = sqlsrv_fetch_array($rs);
         return !empty($row['SQUAD_NUMBER']) ? (int)($row['SQUAD_NUMBER'])+1 : 1;
 
     }
@@ -45,7 +45,7 @@ class AgileSquadTable extends DbTable{
         $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName . " as S ";
         $sql.= " LEFT JOIN ". $GLOBALS['Db2Schema'] . "." . $tribeTable . " as T ";
         $sql.= " ON S.TRIBE_NUMBER = T.TRIBE_NUMBER ";
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 // echo $sql;
 // exit;
         if(!$rs){
@@ -53,7 +53,7 @@ class AgileSquadTable extends DbTable{
             return false;
         }
         $data = false;
-        while(($row=db2_fetch_assoc($rs))==true){
+        while(($row=sqlsrv_fetch_array($rs))==true){
             $row = array_map('trim',$row);
             $rowWithIcons = $this->addIcons($row);
             $data[] = $rowWithIcons;
@@ -96,14 +96,14 @@ class AgileSquadTable extends DbTable{
         $sql.= " ON S.TRIBE_NUMBER = T.TRIBE_NUMBER ";
         $sql.= " WHERE S.SQUAD_NUMBER = " . htmlspecialchars($squadNumber);
 
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         }
 
-        $row = db2_fetch_assoc($rs);
+        $row = sqlsrv_fetch_array($rs);
 
         return $row;
 
@@ -147,14 +147,14 @@ class AgileSquadTable extends DbTable{
 
         $sql = " SELECT T.*";
         $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " as T ";
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         }
         $data = false;
-        while(($row=db2_fetch_assoc($rs))==true){
+        while(($row=sqlsrv_fetch_array($rs))==true){
             $row = array_map('trim',$row);
             $data[] = $row;
         }

@@ -50,7 +50,7 @@ $sql.= isset($_REQUEST['RSA_TOKEN']) && isset($_REQUEST['CALLSIGN_ID']) ? " , " 
 $sql.= isset($_REQUEST['CALLSIGN_ID']) ? " CALLSIGN_ID = null " : null;
 $sql.= " WHERE CNUM='" . htmlspecialchars($_REQUEST['CNUM']) . "' ";
 
-$rs = db2_exec($GLOBALS['conn'], $sql);
+$rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
 if(!$rs){
     echo db2_stmt_error();

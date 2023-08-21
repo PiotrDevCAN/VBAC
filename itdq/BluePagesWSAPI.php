@@ -485,7 +485,7 @@ class BluePages {
 				$data[13] = $this->dept['NOTESID'][$key];
 				$data[14] = $this->dept['JOBRESPONSIB'][$key];
 				if ((stripos ( $data [0], '*FUN' ) === false)) { // Don't record the Functional Ids.
-					$rs = db2_execute ( $this->preparedInsert, $data );
+					$rs = sqlsrv_execute ( $this->preparedInsert, $data );
 					if (! $rs) {
 						echo "<BR>" . db2_stmt_error ();
 						echo "<BR>" . db2_stmt_errormsg () . "<BR>";
@@ -536,7 +536,7 @@ class BluePages {
 			$data[13] = $this->person['NOTESID'];
 			$data[14] = $this->person['JOBRESPONSIB'];
 			if ((stripos ( $data [0], '*FUN' ) === false)) { // Don't record the Functional Ids.
-				$rs = db2_execute ( $this->preparedInsert, $data );
+				$rs = sqlsrv_execute ( $this->preparedInsert, $data );
 				if (! $rs) {
 					echo "<BR>" . db2_stmt_error ();
 					echo "<BR>" . db2_stmt_errormsg () . "<BR>";

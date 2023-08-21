@@ -179,7 +179,7 @@ class Trace extends Log{
 		$_SESSION['classTimings'] = array(); // Allows you to make changes, by reseting the array before setting specific values later.
 		unset($_SESSION['trace']);
 
-		while($row = db2_fetch_assoc($rs)){
+		while($row = sqlsrv_fetch_array($rs)){
 			if(trim($row['TRACE_CONTROL_TYPE'])=='methodExclude' or trim($row['TRACE_CONTROL_TYPE'])=='classExclude'){
 				$anyExcludes = TRUE;
 			}

@@ -58,7 +58,7 @@ class odcAccessTable extends DbTable {
                     $secureAreaName = trim($recordData['SECURED_AREA_NAME']);
                     $sql = " DELETE FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
                     $sql.= " WHERE SECURED_AREA_NAME = '" . htmlspecialchars($secureAreaName) . "' ";
-                    $rs = db2_exec($GLOBALS['conn'], $sql);
+                    $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
 
                     if(!$rs){
@@ -155,13 +155,13 @@ class odcAccessTable extends DbTable {
         $sql.= " WHERE 1= 1 ";
         $sql.= !empty($location) ? " AND SECURED_AREA_NAME='" . htmlspecialchars($location) . "' " : null;
 
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql,null,null,null,null,DbTable::ROLLBACK_NO);
         }
 
-        $row = db2_fetch_assoc($rs);
+        $row = sqlsrv_fetch_array($rs);
 
         return $row['RECORDS'];
 
@@ -198,7 +198,7 @@ class odcAccessTable extends DbTable {
         $sql.= " and " . $vbacActivePredicate;
 
 
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -217,7 +217,7 @@ class odcAccessTable extends DbTable {
         $sql.= "on O.OWNER_CNUM_ID = P.CNUM ";
         $sql.= "WHERE P.CNUM is null ";
 
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -243,7 +243,7 @@ class odcAccessTable extends DbTable {
         $sql.= " AND TT_BAU='BAU' ";
         $sql.= " GROUP BY WORK_STREAM ";
 
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if(!$rs){
             echo db2_stmt_error();
@@ -254,7 +254,7 @@ class odcAccessTable extends DbTable {
         $totalPopulation=0;
         $platformPopulation = array();
 
-        while(($row=db2_fetch_assoc($rs))==true){
+        while(($row=sqlsrv_fetch_array($rs))==true){
             $platformPopulation[strtoupper(trim($row['WORK_STREAM']))] = $row['PLATFORM_POPULATION']+0;
             $totalPopulation += $row['PLATFORM_POPULATION'];
         }

@@ -398,7 +398,7 @@ class DbTable
                             // print_r($insertArray);
                             if (! empty($insertArray)) {
                                 $preparedInsert = $this->prepareInsert($insertArray);
-                                if (db2_execute($preparedInsert, $insertArray)) {
+                                if (sqlsrv_execute($preparedInsert, $insertArray)) {
                                     $this->inserted ++;
                                 } else {
                                     $this->failed ++;
@@ -474,7 +474,7 @@ class DbTable
     {
         Trace::traceComment(null, __METHOD__);
         $rs = db2_columns($GLOBALS['conn'], null, $GLOBALS['Db2Schema'], strtoupper($this->tableName), '%');
-        while ($row = db2_fetch_assoc($rs)) {
+        while ($row = sqlsrv_fetch_array($rs)) {
             Trace::traceVariable($row, __METHOD__, __LINE__);
             $this->columns[trim($row['COLUMN_NAME'])] = $row;
         }
@@ -485,7 +485,7 @@ class DbTable
     {
         Trace::traceComment(null, __METHOD__);
         $rs = db2_special_columns($GLOBALS['conn'], null, $GLOBALS['Db2Schema'], $this->tableName, 0);
-        while ($row = db2_fetch_assoc($rs)) {
+        while ($row = sqlsrv_fetch_array($rs)) {
             $this->special_columns[trim($row['COLUMN_NAME'])] = $row;
         }
     }
@@ -526,14 +526,14 @@ class DbTable
     {
         Trace::traceComment(null, __METHOD__);
         $rs = db2_primary_keys($GLOBALS['conn'], null, $GLOBALS['Db2Schema'], $this->tableName);
-        while ($row = db2_fetch_assoc($rs)) {
+        while ($row = sqlsrv_fetch_array($rs)) {
             // print_r($row);
             $this->primary_keys[trim($row['COLUMN_NAME'])] = $row;
         }
     }
 
     /**
-     * Runs a simple select with the Predicate param and returns the Row returned by db2_fetch_assoc
+     * Runs a simple select with the Predicate param and returns the Row returned by sqlsrv_fetch_array
      *
      * @param string $predicate
      *            Valid DB2 predicate, without the leading WHERE
@@ -547,7 +547,7 @@ class DbTable
         $sql .= " WHERE " . $predicate;
         Trace::traceVariable($sql, __METHOD__);
         $rs = $this->execute($sql);
-        $row = db2_fetch_assoc($rs);
+        $row = sqlsrv_fetch_array($rs);
         return $row;
     }
 
@@ -568,7 +568,7 @@ class DbTable
         }
         $sql .= " WHERE " . $predicate;
         Trace::traceVariable($sql, __METHOD__);
-        $rs = db2_exec($GLOBALS['conn'], $sql, array(
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql, array(
             'cursor' => DB2_SCROLLABLE
         ));
         return $rs;
@@ -591,7 +591,7 @@ class DbTable
         $sql = $select . " WHERE " . $pred . $predicate;
         Trace::traceVariable($sql, __METHOD__);
 
-        $row = db2_fetch_assoc($this->execute($sql));
+        $row = sqlsrv_fetch_array($this->execute($sql));
         if (! $row) {
             self::displayErrorMessage($row, __CLASS__, __METHOD__, $sql);
         } else {
@@ -962,7 +962,7 @@ class DbTable
         Trace::traceVariable($insertArray, __METHOD__, __LINE__);
         $preparedInsert = $this->prepareInsert($insertArray);
 
-        $rs = @db2_execute($preparedInsert, $insertArray);
+        $rs = @sqlsrv_execute($preparedInsert, $insertArray);
 
         if (! $rs) {
             $this->lastDb2StmtError = db2_stmt_error();
@@ -987,7 +987,7 @@ class DbTable
 
 
         $insert = -microtime(true);
-        $rs = @db2_execute($preparedInsert, $insertArray);
+        $rs = @sqlsrv_execute($preparedInsert, $insertArray);
         $insert += microtime(true);
         echo $withTimings ?  "Db2 Insert Time:" . sprintf('%f', $insert) . PHP_EOL : null;
 
@@ -1124,7 +1124,7 @@ class DbTable
         }
         if ($cols['SERIAL_NUMBER'] != null) {
             $this->logRecord($preparedSelect, $cols, "<B>Before image </b>");
-            $rs = db2_execute($preparedUpdate, $db2Columns);
+            $rs = sqlsrv_execute($preparedUpdate, $db2Columns);
             if (! $rs) {
                 echo "<BR/>" . db2_stmt_error();
                 echo "<BR/>" . db2_stmt_errormsg() . "<BR/>";
@@ -1267,13 +1267,13 @@ class DbTable
         $pred = $this->buildKeyPredicate($record);
         $sql = $select . " WHERE " . $pred;
         Trace::traceVariable($sql, __METHOD__);
-        $row = db2_fetch_assoc($this->execute($sql));
+        $row = sqlsrv_fetch_array($this->execute($sql));
         return $row;
     }
 
     /**
      * Uses the $predicate to build a SELECT * statement.
-     * Returns the result of db2_fetch_assoc()
+     * Returns the result of sqlsrv_fetch_array()
      *
      * @param string $predicate
      * @return array
@@ -1285,7 +1285,7 @@ class DbTable
         Trace::traceVariable($sql, __METHOD__);
         $resultSet = $this->execute($sql);
         if ($resultSet) {
-            $result = db2_fetch_assoc($resultSet);
+            $result = sqlsrv_fetch_array($resultSet);
         } else {
             return false;
         }
@@ -1613,7 +1613,7 @@ class DbTable
         if (! $rs) {
             return false;
         }
-        $row = db2_fetch_assoc($rs);
+        $row = sqlsrv_fetch_array($rs);
         Trace::traceVariable($row['RECORDS'], __METHOD__, __LINE__);
         if ($row['RECORDS'] > 0) {
             return TRUE;
@@ -1640,7 +1640,7 @@ class DbTable
             echo "<BR/>" . db2_stmt_errormsg() . "<BR/>";
             exit("Error in: " . __METHOD__ . " running: " . str_replace($this->pwd, "******", $sql));
         }
-        $row = db2_fetch_assoc($rs);
+        $row = sqlsrv_fetch_array($rs);
         Trace::traceVariable($row['RECORDS'], __METHOD__, __LINE__);
         if ($row['RECORDS'] > 0) {
             return TRUE;
@@ -1667,7 +1667,7 @@ class DbTable
             echo "<BR/>" . db2_stmt_errormsg() . "<BR/>";
             exit("Error in: " . __METHOD__ . " running: " . str_replace($this->pwd, "******", $sql));
         }
-        $row = db2_fetch_assoc($rs);
+        $row = sqlsrv_fetch_array($rs);
         Trace::traceVariable($row['RECORDS'], __METHOD__, __LINE__);
         if ($row['RECORDS'] > 0) {
             return $row['RECORDS'];
@@ -1814,7 +1814,7 @@ class DbTable
             echo "<BR/>" . db2_stmt_errormsg() . "<BR/>";
             exit("Error in: " . __METHOD__ . " running: $sql");
         }
-        $row = db2_fetch_assoc($rs);
+        $row = sqlsrv_fetch_array($rs);
         return $row['TIMESTAMP'];
     }
 
@@ -1987,7 +1987,7 @@ class DbTable
             echo "<h4>An email has been sent to: $to informing them of this problem</h4>";
         }
 
-        $rs = @db2_exec($GLOBALS['conn'], $sql);
+        $rs = @sqlsrv_query($GLOBALS['conn'], $sql);
         if (! $rs) {
             echo "<BR>Error: " . db2_stmt_error();
             echo "<BR>Msg: " . db2_stmt_errormsg() . "<BR>";

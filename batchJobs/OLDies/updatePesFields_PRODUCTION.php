@@ -146,7 +146,7 @@ switch($rootScriptName) {
                             return;
                         }
                         
-                        $rsPerson = db2_execute($preparedUpdatePersonSql, $personData);    
+                        $rsPerson = sqlsrv_execute($preparedUpdatePersonSql, $personData);    
                         if(!$rsPerson){
                             print_r($personData);
                             print_r($updatePersonSql);
@@ -185,7 +185,7 @@ switch($rootScriptName) {
                             return;
                         }
                         
-                        $rsPesTracker = db2_execute($preparedUpdatePesTrackerSql, $pesTrackerData);
+                        $rsPesTracker = sqlsrv_execute($preparedUpdatePesTrackerSql, $pesTrackerData);
                         if(!$rsPesTracker){
                             print_r($pesTrackerData);
                             print_r($updatePesTrackerSql);
@@ -203,7 +203,7 @@ switch($rootScriptName) {
                     $personPESApiStatusData[] = personRecord::PES_API_STATUS_FOUND;
                     $personPESApiStatusData[] = $email;
                     
-                    $rsPerson = db2_execute($preparedUpdatePersonPESApiStatusSql,$personPESApiStatusData);    
+                    $rsPerson = sqlsrv_execute($preparedUpdatePersonPESApiStatusSql,$personPESApiStatusData);    
                     if(!$rsPerson){
                         DbTable::displayErrorMessage($rsPerson, __FILE__, __FILE__, $updatePersonPESApiStatusSql);     
                         db2_rollback($GLOBALS['conn']);
@@ -234,7 +234,7 @@ switch($rootScriptName) {
                 $personPESApiStatusData[] = personRecord::PES_API_STATUS_NOT_FOUND;
                 $personPESApiStatusData[] = strtolower($email);
 
-                $rsPerson = db2_execute($preparedUpdatePersonPESApiStatusSql,$personPESApiStatusData);    
+                $rsPerson = sqlsrv_execute($preparedUpdatePersonPESApiStatusSql,$personPESApiStatusData);    
                 if(!$rsPerson){
                     DbTable::displayErrorMessage($rsPerson, __FILE__, __FILE__, $updatePersonPESApiStatusSql);     
                     db2_rollback($GLOBALS['conn']);

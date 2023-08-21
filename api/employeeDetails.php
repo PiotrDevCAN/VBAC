@@ -39,10 +39,10 @@ $sql.= !empty($cnum) ? " AND lower(P.CNUM) = '" . htmlspecialchars(strtolower($c
 
 error_log($sql);
 
-$rs = db2_exec($GLOBALS['conn'], $sql);
+$rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
 if($rs){
-    $row = db2_fetch_assoc($rs);
+    $row = sqlsrv_fetch_array($rs);
     $trimmedRow = array_map('trim',$row);
 }
 

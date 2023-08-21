@@ -45,7 +45,7 @@ try {
 
     set_time_limit(0);
     
-    $rs = db2_exec($GLOBALS['conn'], $sql);
+    $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
     if($rs){
         $recordsFound = personTable::writeResultSetToXls($rs, $spreadsheet);

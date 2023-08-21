@@ -148,14 +148,14 @@ class Email
         if (isset(AllItdqTables::$EMAIL_LOG)) {
             $sql = " SELECT * FROM " . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$EMAIL_LOG;
             $sql .= " WHERE RECORD_ID='" . trim($recordId) . "' ";
-            $rs = db2_exec($GLOBALS['conn'], $sql);
+            $rs = sqlsrv_query($GLOBALS['conn'], $sql);
             if (! $rs) {
                 print_r($_SESSION);
                 echo "<BR/>" . db2_stmt_error();
                 echo "<BR/>" . db2_stmt_errormsg() . "<BR/>";
                 exit("Error in: " . __METHOD__ . " running: " . htmlspecialchars($sql, ENT_QUOTES));
             } else {
-                $row = db2_fetch_assoc($rs);
+                $row = sqlsrv_fetch_array($rs);
                 self::send_mail($row['TO'], $row['CC'], $row['SUBJECT'], $row['MESSAGE'], $row['REPLYTO']);
             }
         }

@@ -18,10 +18,10 @@ $sql.= " WHERE 1=1 AND trim(P.NOTES_ID) != ''  AND " . $activePersonPredicate;
 $sql.= " AND F.NOTES_ID='" . htmlspecialchars($_REQUEST['fm_notes_id']) . "' ";
 $sql.= " ORDER BY P.NOTES_ID ";
 
-$rs = db2_exec($GLOBALS['conn'], $sql);
+$rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
 if($rs){
-    while(($row = db2_fetch_assoc($rs))==true){
+    while(($row = sqlsrv_fetch_array($rs))==true){
         $notesIds[] = trim($row['NOTES_ID']);
     }
 } else {

@@ -215,14 +215,14 @@ class pesEmail {
             error_log('Recheck:'. print_r($recheck,true));
             error_log($sql);
             
-            $rs = db2_exec($GLOBALS['conn'], $sql);
+            $rs = sqlsrv_query($GLOBALS['conn'], $sql);
             
             if(!$rs){
                 DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
                 return false;
             }
             
-            $row = db2_fetch_assoc($rs);
+            $row = sqlsrv_fetch_array($rs);
             
             $pesEmail = trim($row[$emailField]);
         }

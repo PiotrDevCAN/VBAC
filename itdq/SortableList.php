@@ -449,7 +449,7 @@ class SortableList
 
         Trace::traceVariable($this->sql2, __METHOD__, __LINE__);
 
-        $rs = db2_exec($GLOBALS['conn'], $this->sql2, array(
+        $rs = sqlsrv_query($GLOBALS['conn'], $this->sql2, array(
             'cursor' => DB2_SCROLLABLE
         ));
 
@@ -508,7 +508,7 @@ class SortableList
             echo "<div class='table-responsive'>";
 
             echo str_replace('wwwww', $width, $this->tableTag);
-            // if(db2_fetch_assoc($rs)){
+            // if(sqlsrv_fetch_array($rs)){
             echo "\n<thead>";
            // echo $this->tableTitle ? $this->tableTitle : null;
             $this->displayHeading($subTotal, $full, $editLink, $deleteLink, $rs);
@@ -607,7 +607,7 @@ class SortableList
         // $this->initialiseSubTotalArray($subTotalArray, $cols, $rs);
 
         $rowNumber = 1; // Get the first row first, as we fetched it already processing the header.
-        while ($row = db2_fetch_assoc($rs, $rowNumber)) {
+        while ($row = sqlsrv_fetch_array($rs, $rowNumber)) {
             // if($rowNumber==1 and $trackPreviousRow){
             // //initialise previous row here.
             // $this->updatePreviousRow($previousRow,$row);
@@ -689,7 +689,7 @@ class SortableList
 
         if ($this->displayTotals) {
             // Read 1st row again to get the column names for the Totals Row.
-            $row = db2_fetch_assoc($rs, 1);
+            $row = sqlsrv_fetch_array($rs, 1);
             echo "<HR/>";
             echo "<TR>";
             if ($editLink) {
@@ -1198,7 +1198,7 @@ class SortableList
             fputcsv($this->csv, $headings, ",", '"');
         }
         $rows = 0;
-        while ($row = db2_fetch_assoc($rs)) {
+        while ($row = sqlsrv_fetch_array($rs)) {
             Trace::traceVariable($row, __METHOD__);
             if ($this->displayRow($row)) {
                 foreach ($row as $column => $value) {
@@ -1779,7 +1779,7 @@ class SortableList
         $titles = '';
         $data = '';
 
-        while( ($row=db2_fetch_assoc($resultSet)) == true){
+        while( ($row=sqlsrv_fetch_array($resultSet)) == true){
             $row = $this->preProcessRowForCsv($row);
             $titles = empty($titles) ? $this->processRowForCsvTitles($row) . "\n" : $titles;
             $data .= $this->processRowForCsvData($row) . "\n";

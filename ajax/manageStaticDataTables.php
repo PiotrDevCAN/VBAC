@@ -41,7 +41,7 @@ if(!$preparedStmt){
     echo db2_stmt_error();
     echo db2_stmt_errormsg();
 } else {
-    $execute = db2_execute($preparedStmt,$data);
+    $execute = sqlsrv_execute($preparedStmt,$data);
     if(!$execute){
         echo db2_stmt_error();
         echo db2_stmt_errormsg();

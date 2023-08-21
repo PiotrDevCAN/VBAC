@@ -18,7 +18,7 @@ switch ($_REQUEST['mode']) {
                 // Save a template to the database
                 $sql = "INSERT INTO " . $GLOBALS['Db2Schema'] . "." . allTables::$FEB_TRAVEL_REQUEST_TEMPLATES ;
                 $sql.= " (EMAIL_ADDRESS, TITLE, TEMPLATE) VALUES ('" . htmlspecialchars($_REQUEST['email_address']) . "','" .  htmlspecialchars($_REQUEST['title']) . "','" . htmlspecialchars(print_r($_REQUEST['template'],true)) . "') ";
-                $rs = db2_exec($GLOBALS['conn'], $sql);
+                $rs = sqlsrv_query($GLOBALS['conn'], $sql);
                 
                 if(!$rs){
                     echo db2_stmt_error();
@@ -47,7 +47,7 @@ switch ($_REQUEST['mode']) {
                 $sql.= " WHERE EMAIL_ADDRESS='" . htmlspecialchars(trim($_GET['email_address'])) . "' ";
                 $sql.= " AND TITLE='" . htmlspecialchars(trim($_GET['title'])) . "' ";   
                 ob_start();
-                $rs = db2_exec($GLOBALS['conn'], $sql);
+                $rs = sqlsrv_query($GLOBALS['conn'], $sql);
                 
                 if(!$rs){
                     echo db2_stmt_error();
@@ -55,7 +55,7 @@ switch ($_REQUEST['mode']) {
                     var_dump($sql);
                 }
                 
-                $row = db2_fetch_assoc($rs);
+                $row = sqlsrv_fetch_array($rs);
                 
                 $templateArray = array();
                 
@@ -87,7 +87,7 @@ switch ($_REQUEST['mode']) {
                 $response['sql']= $sql;
                 
                 
-                $rs = db2_exec($GLOBALS['conn'], $sql);
+                $rs = sqlsrv_query($GLOBALS['conn'], $sql);
                 
                 if(!$rs){
                     echo db2_stmt_error();
@@ -95,7 +95,7 @@ switch ($_REQUEST['mode']) {
                     var_dump($sql);
                 }
                 
-                while(($row = db2_fetch_assoc($rs))==true){
+                while(($row = sqlsrv_fetch_array($rs))==true){
                     $response['titles'][] = $row['TITLE'];
                     var_dump($response);
                 }

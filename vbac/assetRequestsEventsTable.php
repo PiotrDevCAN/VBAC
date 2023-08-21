@@ -55,7 +55,7 @@ class assetRequestsEventsTable extends DbTable{
     function logEventForRequest($event, $requestReference){
         $preparedStmt = $this->prepareInsertStatement();
         $data = array($requestReference, $event);
-        $rs = db2_execute($preparedStmt,$data);
+        $rs = sqlsrv_execute($preparedStmt,$data);
         if(!$rs){
             DbTable::displayErrorMessage($rs,__CLASS__, __METHOD__, $sql);
             return false;
@@ -73,7 +73,7 @@ class assetRequestsEventsTable extends DbTable{
         
         $preparedStmt = db2_prepare($GLOBALS['conn'], $sql);   
         $data = array($requestReference, $event, $date);
-        $rs = db2_execute($preparedStmt,$data);
+        $rs = sqlsrv_execute($preparedStmt,$data);
         if(!$rs){
             DbTable::displayErrorMessage($rs,__CLASS__, __METHOD__, $sql);
             return false;

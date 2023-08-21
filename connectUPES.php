@@ -54,7 +54,7 @@ if( isset($_ENV['ssldsn']) )
 
         $GLOBALS['Db2SchemaUPES'] = $schemaUPES;
 
-        $rs = db2_exec($conn, $StatementUPES);
+        $rs = sqlsrv_query($conn, $StatementUPES);
 
         if (! $rs) {
             echo "<br/>" . $StatementUPES    . "<br/>";

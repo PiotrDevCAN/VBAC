@@ -69,14 +69,14 @@ class IconRolesTable extends DbTable {
 // 			$sql .= " ) ";
 // 		}
 
-// 		$rs = db2_exec ( $_SESSION ['conn'], $sql );
+// 		$rs = sqlsrv_query ( $_SESSION ['conn'], $sql );
 
 // 		if (! $rs) {
 // 			DBTable::displayErrorMessage ( $rs, __CLASS__, __METHOD__, $sql );
 // 			return false;
 // 		} else {
 // 			$allCustomerRefs = array ();
-// 			while ( $row = db2_fetch_assoc ( $rs ) ) {
+// 			while ( $row = sqlsrv_fetch_array ( $rs ) ) {
 // 				$allCustomerRefs [$row ['CUSTOMER_ID']] = $row ['CUSTOMER_REF'];
 // 			}
 // 			Trace::traceTimings ( null, __METHOD__, __LINE__ );
@@ -90,13 +90,13 @@ class IconRolesTable extends DbTable {
 // 		$sql .= " WHERE ROLE is not null ";
 // 		$sql .= empty ( $customerId ) ? null : " AND CUSTOMER_ID='" . htmlspecialchars ( trim ( $customerId ) ) . "' ";
 // 		$sql .= empty ( $country ) ? null : " AND COUNTRY = '" . htmlspecialchars ( trim ( $country ) ) . "' ";
-// 		$rs = db2_exec ( $_SESSION ['conn'], $sql );
+// 		$rs = sqlsrv_query ( $_SESSION ['conn'], $sql );
 // 		if (! $rs) {
 // 			DBTable::displayErrorMessage ( $rs, __CLASS__, __METHOD__, $sql );
 // 			return false;
 // 		} else {
 // 			$allRoles = array ();
-// 			while ( $row = db2_fetch_assoc ( $rs ) ) {
+// 			while ( $row = sqlsrv_fetch_array ( $rs ) ) {
 // 				$allRoles [$row ['ROLE']] = $row ['ROLE'];
 // 			}
 // 			Trace::traceTimings ( null, __METHOD__, __LINE__ );
@@ -125,13 +125,13 @@ class IconRolesTable extends DbTable {
 // 			$sql = substr ( $sql, 0, strlen ( $sql ) - 1 ) . ") "; // Remove that last ,
 // 		}
 // 		Trace::traceComment ( $sql, __METHOD__, __LINE__ );
-// 		$rs = db2_exec ( $_SESSION ['conn'], $sql );
+// 		$rs = sqlsrv_query ( $_SESSION ['conn'], $sql );
 // 		if (! $rs) {
 // 			DBTable::displayErrorMessage ( $rs, __CLASS__, __METHOD__, $sql );
 // 			return false;
 // 		} else {
 // 			$allAddresses = array ();
-// 			while ( $row = db2_fetch_assoc ( $rs ) ) {
+// 			while ( $row = sqlsrv_fetch_array ( $rs ) ) {
 // 				$allAddresses [$row ['PERSON_INTRANET']] = $row ['PERSON_INTRANET'];
 // 			}
 // 			Trace::traceTimings ( null, __METHOD__, __LINE__ );

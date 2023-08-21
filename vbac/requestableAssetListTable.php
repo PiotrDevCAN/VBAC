@@ -21,13 +21,13 @@ class requestableAssetListTable extends DbTable {
         $sql .= " WHERE 1=1 " . $predicate;
         $sql .= " ORDER BY ASSET_TITLE ";
 
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         } else {
-            while(($row=db2_fetch_assoc($rs))==true){
+            while(($row=sqlsrv_fetch_array($rs))==true){
                 $trimmedData = array_map('trim', $row);
                 $trimmedData['APPLICABLE_ONSHORE']              = trim($trimmedData['APPLICABLE_ONSHORE'])=='1'         ? 'Yes' : 'No';
                 $trimmedData['APPLICABLE_OFFSHORE']             = trim($trimmedData['APPLICABLE_OFFSHORE'])=='1'        ? 'Yes' : 'No';
@@ -102,7 +102,7 @@ class requestableAssetListTable extends DbTable {
         $sql .= " SET LISTING_ENTRY_REMOVED= current timestamp, LISTING_ENTRY_REMOVED_BY='" . htmlspecialchars($deletedBy) . "' ";
         $sql .= " WHERE ASSET_TITLE='" . htmlspecialchars($assetTitle) . "' ";
 
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;

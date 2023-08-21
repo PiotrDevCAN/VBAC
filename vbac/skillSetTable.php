@@ -9,7 +9,7 @@ class skillSetTable extends DbTable{
         $sql = " DELETE FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$STATIC_SKILLSETS;
         $sql.= " WHERE SKILLSET_ID='" . htmlspecialchars($id) . "' ";
 
-        $rs = db2_exec($GLOBALS['conn'],$sql);
+        $rs = sqlsrv_query($GLOBALS['conn'],$sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -21,14 +21,14 @@ class skillSetTable extends DbTable{
     function returnAsArray(){
         $sql = " SELECT * ";
         $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         }
         $data = false;
-        while(($row=db2_fetch_assoc($rs))==true){
+        while(($row=sqlsrv_fetch_array($rs))==true){
             $row = array_map('trim',$row);
             $rowWithIcons = $this->addIcons($row);
             $data[] = $rowWithIcons;

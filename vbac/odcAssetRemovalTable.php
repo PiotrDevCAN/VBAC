@@ -23,7 +23,7 @@ class odcAssetRemovalTable extends DbTable {
         $sql.= " AND O.CNUM is not null ";        
         $sql.= " GROUP BY WORK_STREAM ";
         
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
         
         if(!$rs){
             echo db2_stmt_error();
@@ -34,7 +34,7 @@ class odcAssetRemovalTable extends DbTable {
         $totalPopulation=0;
         $platformPopulation = array();
         
-        while(($row=db2_fetch_assoc($rs))==true){
+        while(($row=sqlsrv_fetch_array($rs))==true){
             $platformPopulation[strtoupper(trim($row['WORK_STREAM']))] = $row['PLATFORM_POPULATION_WITH_REMOVE']+0;
             $totalPopulation += $row['PLATFORM_POPULATION_WITH_REMOVE'];
         }
@@ -52,7 +52,7 @@ class odcAssetRemovalTable extends DbTable {
         
 
         
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
         
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);

@@ -4,11 +4,11 @@ $sql = " SELECT TEMPLATE, TITLE, EMAIL_ADDRESS FROM VBAC.FEB_TRAVEL_REQUEST_TEMP
 $sql .= " WHERE 1=1 "; 
 // $sql .= " AND EMAIL_ADDRESS='elliotre@uk.ibm.com' ";
 // $sql .= " AND TITLE='R3 OAT' ";
-$rs = db2_exec($GLOBALS['conn'], $sql);
+$rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
 echo "<pre>";
 
-while(($row = db2_fetch_assoc($rs))==true){
+while(($row = sqlsrv_fetch_array($rs))==true){
     $templateArray = array();
     
     $template = $row['TEMPLATE'];

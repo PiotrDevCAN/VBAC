@@ -45,7 +45,7 @@ $sql.= " FROM ". $GLOBALS['Db2Schema'] . "." . allTables::$PERSON ;
 $sql.= " WHERE  ";
 $sql.= $rsaTokenSupplied ? " RSA_TOKEN = '" . htmlspecialchars($_REQUEST['RSA_TOKEN']) . "'  " : null;
 $sql.= $callSignIdSupplied ? " CALLSIGN_ID = '" . htmlspecialchars($_REQUEST['CALLSIGN_ID']) . "'  " : null;
-$rs = db2_exec($GLOBALS['conn'], $sql);
+$rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
 if(!$rs){
     echo db2_stmt_error();
@@ -57,7 +57,7 @@ $hits = 0;
 $notesId = array();
 $cnum = array();
 
-while (($row = db2_fetch_assoc($rs))==true) {
+while (($row = sqlsrv_fetch_array($rs))==true) {
     $hits++;
     $row = array_map('trim', $row);
     $notesId[] = $row['NOTES_ID'];

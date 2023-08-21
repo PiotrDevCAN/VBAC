@@ -101,7 +101,7 @@ class personPortalLiteTable extends personTable
         $startOfSql = microtime(true);
         error_log("About to run SQL : $sql : " . $startOfSql);
         
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
         
         $runSql = microtime(true);
         error_log("completed SQL" . $runSql . "(" . ($runSql-$startOfSql) . ") ");
@@ -110,7 +110,7 @@ class personPortalLiteTable extends personTable
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         } else {
-            while(($row=db2_fetch_assoc($rs))==true){
+            while(($row=sqlsrv_fetch_array($rs))==true){
                 // Only editable, if they're not a "pre-Boarder" who has now been boarded.
                 $preparedRow = $this->prepareFields($row);
                 $rowWithButtonsAdded =(substr($row['PES_STATUS_DETAILS'],0,10)==personRecord::PES_STATUS_DETAILS_BOARDED_AS) ? $preparedRow : $this->addButtons($preparedRow);

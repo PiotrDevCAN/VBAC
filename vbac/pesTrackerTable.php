@@ -120,7 +120,7 @@ class pesTrackerTable extends DbTable{
 
         AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -130,7 +130,7 @@ class pesTrackerTable extends DbTable{
         switch ($returnResultsAs) {
             case self::PES_TRACKER_RETURN_RESULTS_AS_ARRAY:
                 $report = array();
-                while(($row=db2_fetch_assoc($rs))==true){
+                while(($row=sqlsrv_fetch_array($rs))==true){
                     set_time_limit(5);
                     $trimmedRow = array_map('trim', $row);
                     $report[] = $trimmedRow;
@@ -388,10 +388,10 @@ class pesTrackerTable extends DbTable{
         $preparedStmt = $this->preparedGetProcessingStatusStmt();
 
         $data = array($cnum);
-        $rs = db2_execute($preparedStmt,$data);
+        $rs = sqlsrv_execute($preparedStmt,$data);
 
         if($rs){
-            $row = db2_fetch_assoc($preparedStmt);
+            $row = sqlsrv_fetch_array($preparedStmt);
 
             var_dump(ob_get_level());
 
@@ -578,7 +578,7 @@ class pesTrackerTable extends DbTable{
             $preparedStmt = $this->prepareTrackerInsert();
             $data = array($cnum);
 
-            $rs = db2_execute($preparedStmt,$data);
+            $rs = sqlsrv_execute($preparedStmt,$data);
 
             if(!$rs){
                 DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared sql');
@@ -601,7 +601,7 @@ class pesTrackerTable extends DbTable{
         $preparedStmt = $this->prepareResetForRecheck();
         $data = array($cnum);
 
-        $rs = db2_execute($preparedStmt,$data);
+        $rs = sqlsrv_execute($preparedStmt,$data);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared sql');
@@ -621,7 +621,7 @@ class pesTrackerTable extends DbTable{
         $preparedStmt = $this->prepareStageUpdate($stage);
         $data = array($stageValue,$cnum);
 
-        $rs = db2_execute($preparedStmt,$data);
+        $rs = sqlsrv_execute($preparedStmt,$data);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared sql');
@@ -641,7 +641,7 @@ class pesTrackerTable extends DbTable{
         $preparedStmt = $this->prepareProcessStatusUpdate();
         $data = array($processStatus,$cnum);
 
-        $rs = db2_execute($preparedStmt,$data);
+        $rs = sqlsrv_execute($preparedStmt,$data);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared sql');
@@ -664,7 +664,7 @@ class pesTrackerTable extends DbTable{
         $sql.= !empty($pesPriority) ? "'" . htmlspecialchars($pesPriority) . "' " : " null, ";
         $sql.= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
 
-        $rs = db2_exec($GLOBALS['conn'],$sql);
+        $rs = sqlsrv_query($GLOBALS['conn'],$sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared sql');
@@ -691,7 +691,7 @@ class pesTrackerTable extends DbTable{
         $sql.= !empty($passportSurname) ? "'" . htmlspecialchars($passportSurname) . "'  " : " null ";
         $sql.= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
 
-        $rs = db2_exec($GLOBALS['conn'],$sql);
+        $rs = sqlsrv_query($GLOBALS['conn'],$sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared sql');
@@ -713,7 +713,7 @@ class pesTrackerTable extends DbTable{
         $sql.= " SET DATE_LAST_CHASED=DATE('" . htmlspecialchars($dateLastChased) . "') ";
         $sql.= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
 
-        $rs = db2_exec($GLOBALS['conn'],$sql);
+        $rs = sqlsrv_query($GLOBALS['conn'],$sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared sql');
@@ -749,7 +749,7 @@ class pesTrackerTable extends DbTable{
         $sql.= " SET COMMENT='" . htmlspecialchars($newComment) . "' ";
         $sql.= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
 
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -784,14 +784,14 @@ class pesTrackerTable extends DbTable{
 
         $data = array($cnum);
 
-        $rs = db2_execute($preparedStmt,$data);
+        $rs = sqlsrv_execute($preparedStmt,$data);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'Prepared Stmt');
             throw new \Exception('Unable to getPesComment for ' . $cnum);
         }
 
-        $row = db2_fetch_assoc($preparedStmt);
+        $row = sqlsrv_fetch_array($preparedStmt);
         return $row['COMMENT'];
     }
 
@@ -829,7 +829,7 @@ class pesTrackerTable extends DbTable{
         $sql.= " SET CNUM='" . htmlspecialchars(trim($toCnum)) . "' ";
         $sql.= " WHERE CNUM='" . htmlspecialchars(trim($fromCnum)) . "' ";
 
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__,__METHOD__, $sql);
@@ -841,7 +841,7 @@ class pesTrackerTable extends DbTable{
 //         $sql = " DELETE FROM  " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
 //         $sql.= " WHERE CNUM='" . htmlspecialchars(trim($fromCnum)) . "' ";
 
-//         $rs = db2_exec($GLOBALS['conn'], $sql);
+//         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
 //         if(!$rs){
 //             DbTable::displayErrorMessage($rs, __CLASS__,__METHOD__, $sql);

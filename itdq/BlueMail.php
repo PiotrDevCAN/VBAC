@@ -220,7 +220,7 @@ class BlueMail
 
         !empty($cc)  ? $data[] = serialize($cc) : null;
         !empty($bcc) ? $data[] = serialize($bcc) : null;
-        $rs = db2_execute($preparedStatement,$data);
+        $rs = sqlsrv_execute($preparedStatement,$data);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs,__CLASS__,__METHOD__,$sql);
@@ -240,7 +240,7 @@ class BlueMail
         $sql .= " SET RESPONSE = '" . htmlspecialchars($result) . "'" ;
         $sql .= " WHERE RECORD_ID= " . htmlspecialchars($recordId) . "; ";
 
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs,__CLASS__,__METHOD__,$sql);
@@ -256,7 +256,7 @@ class BlueMail
         $sql .= " SET LAST_STATUS = '" . htmlspecialchars($status) . "', STATUS_TIMESTAMP = CURRENT TIMESTAMP " ;
         $sql .= " WHERE RECORD_ID= " . htmlspecialchars($recordId) . "; ";
 
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs,__CLASS__,__METHOD__,$sql);
@@ -271,19 +271,19 @@ class BlueMail
     {
        $sql  = " DELETE FROM " . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$EMAIL_LOG;
        $sql .= ' WHERE SENT_TIMESTAMP < (CURRENT TIMESTAMP - ' . $retainPeriod . "); ";
-       db2_exec($GLOBALS['conn'], $sql);
+       sqlsrv_query($GLOBALS['conn'], $sql);
     }
 
     static function getEmailDetails($recordID){
         $sql  = " SELECT * FROM " . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$EMAIL_LOG;
         $sql .= ' WHERE RECORD_ID = ' . htmlspecialchars($recordID);
-        $rs = db2_exec($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             throw new \Exception('Unable to read record details for email ' . $recordID);
         } else {
-            $details = db2_fetch_assoc($rs);
+            $details = sqlsrv_fetch_array($rs);
             return $details;
         }
     }

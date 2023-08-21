@@ -452,7 +452,7 @@ class personRecord extends DbRecord
     static function loadKnownCnum($predicate=null){
       $sql = " SELECT CNUM FROM " . $GLOBALS['Db2Schema'] . "." .  allTables::$PERSON;
 
-      $rs = db2_exec($GLOBALS['conn'], $sql);
+      $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
       if(!$rs){
           DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -460,7 +460,7 @@ class personRecord extends DbRecord
       }
 
       $allCnums = array();
-      while(($row=db2_fetch_assoc($rs))==true){
+      while(($row=sqlsrv_fetch_array($rs))==true){
           $cnum = trim($row['CNUM']);
           $allCnums[] = $cnum;
       }
@@ -476,7 +476,7 @@ class personRecord extends DbRecord
       $sql.= " WHERE CNUM like '%XXX' ";
       $sql.= " ORDER BY 1 ";
 
-      $rs = db2_exec($GLOBALS['conn'], $sql);
+      $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
       if(!$rs){
           DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -484,7 +484,7 @@ class personRecord extends DbRecord
       }
 
       $allExternalEmails = array();
-      while(($row=db2_fetch_assoc($rs))==true){
+      while(($row=sqlsrv_fetch_array($rs))==true){
         $email = trim($row['EMAIL_ADDRESS']);
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
           $allExternalEmails[] = $email;
@@ -502,7 +502,7 @@ class personRecord extends DbRecord
       $sql.= " WHERE CNUM not like '%XXX' ";
       $sql.= " ORDER BY 1 ";
 
-      $rs = db2_exec($GLOBALS['conn'], $sql);
+      $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
       if(!$rs){
           DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -510,7 +510,7 @@ class personRecord extends DbRecord
       }
 
       $allIBMEmails = array();
-      while(($row=db2_fetch_assoc($rs))==true){
+      while(($row=sqlsrv_fetch_array($rs))==true){
         $email = trim($row['EMAIL_ADDRESS']);
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
           $allIBMEmails[] = $email;
@@ -528,7 +528,7 @@ class personRecord extends DbRecord
       $sql.= " WHERE CNUM not like '%XXX' ";
       $sql.= " ORDER BY 1 ";
 
-      $rs = db2_exec($GLOBALS['conn'], $sql);
+      $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
       if(!$rs){
           DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -536,7 +536,7 @@ class personRecord extends DbRecord
       }
 
       $allKyndrylEmails = array();
-      while(($row=db2_fetch_assoc($rs))==true){
+      while(($row=sqlsrv_fetch_array($rs))==true){
         $email = trim($row['KYN_EMAIL_ADDRESS']);
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
           $allKyndrylEmails[] = $email;
@@ -1657,15 +1657,15 @@ class personRecord extends DbRecord
 //            $sqlInsert[] = "INSERT into SESSION.EMPLOYEE_TYPE_MAPPING  ( code, description ) values ('$code','$description') ";
 //        }
 
-//         db2_exec($GLOBALS['conn'], $sqlDrop);
-//         $created = db2_exec($GLOBALS['conn'], $sqlCreate);
+//         sqlsrv_query($GLOBALS['conn'], $sqlDrop);
+//         $created = sqlsrv_query($GLOBALS['conn'], $sqlCreate);
 
 //         if(!$created){
 //             throw new \Exception('Unable to create EmployeeTypeMapping Temp Table');
 //         }
 
 //         foreach ($sqlInsert as $insertStatement){
-//             $inserted = db2_exec($GLOBALS['conn'], $insertStatement);
+//             $inserted = sqlsrv_query($GLOBALS['conn'], $insertStatement);
 //             if(!$inserted){
 //                 throw new \Exception('Unable to populate EmployeeTypeMapping Temp Table');
 //             }

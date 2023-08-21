@@ -627,7 +627,7 @@ class BluePagesSLAPHAPI {
 				$data[13] = $this->dept['NOTESID'][$key];
 				$data[14] = $this->dept['JOBRESPONSIB'][$key];
 				if ((stripos ( $data [0], '*FUN' ) === false)) { // Don't record the Functional Ids.
-					$rs = db2_execute ( $this->preparedInsert, $data );
+					$rs = sqlsrv_execute ( $this->preparedInsert, $data );
 					if (! $rs) {
 						echo "<BR>" . db2_stmt_error ();
 						echo "<BR>" . db2_stmt_errormsg () . "<BR>";
@@ -677,7 +677,7 @@ class BluePagesSLAPHAPI {
 			$data[13] = $this->person['NOTESID'];
 			$data[14] = $this->person['JOBRESPONSIB'];
 			if ((stripos ( $data [0], '*FUN' ) === false)) { // Don't record the Functional Ids.
-				$rs = db2_execute ( $this->preparedInsert, $data );
+				$rs = sqlsrv_execute ( $this->preparedInsert, $data );
 				if (! $rs) {
 					echo "<BR>" . db2_stmt_error ();
 					echo "<BR>" . db2_stmt_errormsg () . "<BR>";
@@ -737,7 +737,7 @@ class BluePagesSLAPHAPI {
         $rowCounter = 1;
         $batchOfCnums = false;
         while ($rowCounter <= $numberOfRowsToReturn) {
-            if (($row = db2_fetch_assoc($resultSet)) == false) {
+            if (($row = sqlsrv_fetch_array($resultSet)) == false) {
                 break;    /* You could also write 'break 1;' here. */
             } else {
                 $countryCode = isset(self::$countryCodeMapping[trim($row['COUNTRY'])]) ? self::$countryCodeMapping[trim($row['COUNTRY'])] : trim($row['COUNTRY']);
