@@ -80,8 +80,8 @@ if (isset($argv[1])) {
         $preparedUpdatePersonPESApiStatusSql = db2_prepare($GLOBALS['conn'], $updatePersonPESApiStatusSql);
     
         if(!$preparedUpdatePersonPESApiStatusSql){
-            echo db2_stmt_error();
-            echo db2_stmt_errormsg();
+            echo sqlsrv_errors();
+            echo sqlsrv_errors();
             // print_r($personData);
             DbTable::displayErrorMessage($preparedUpdatePersonPESApiStatusSql, __FILE__, __FILE__, $updatePersonPESApiStatusSql);
             return;
@@ -120,8 +120,8 @@ if (isset($argv[1])) {
                     $preparedUpdatePersonSql = db2_prepare($GLOBALS['conn'], $updatePersonSql);
                     
                     if(!$preparedUpdatePersonSql){
-                        echo db2_stmt_error();
-                        echo db2_stmt_errormsg();
+                        echo sqlsrv_errors();
+                        echo sqlsrv_errors();
                         print_r($personData);
                         DbTable::displayErrorMessage($preparedUpdatePersonSql, __FILE__, __FILE__, $updatePersonSql);
                         return;
@@ -159,8 +159,8 @@ if (isset($argv[1])) {
                     $preparedUpdatePesTrackerSql = db2_prepare($GLOBALS['conn'], $updatePesTrackerSql);
                     
                     if(!$preparedUpdatePesTrackerSql){
-                        echo db2_stmt_error();
-                        echo db2_stmt_errormsg();
+                        echo sqlsrv_errors();
+                        echo sqlsrv_errors();
                         print_r($pesTrackerData);
                         DbTable::displayErrorMessage($preparedUpdatePesTrackerSql, __FILE__, __FILE__, $updatePesTrackerSql);
                         return;

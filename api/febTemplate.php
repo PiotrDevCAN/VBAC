@@ -21,8 +21,8 @@ switch ($_REQUEST['mode']) {
                 $rs = sqlsrv_query($GLOBALS['conn'], $sql);
                 
                 if(!$rs){
-                    echo db2_stmt_error();
-                    echo db2_stmt_errormsg();
+                    echo sqlsrv_errors();
+                    echo sqlsrv_errors();
                     $messages = ob_get_clean();
                     $success = empty($messages);
                     $response['success'] = $success;
@@ -50,8 +50,8 @@ switch ($_REQUEST['mode']) {
                 $rs = sqlsrv_query($GLOBALS['conn'], $sql);
                 
                 if(!$rs){
-                    echo db2_stmt_error();
-                    echo db2_stmt_errormsg();
+                    echo sqlsrv_errors();
+                    echo sqlsrv_errors();
                     var_dump($sql);
                 }
                 
@@ -90,8 +90,8 @@ switch ($_REQUEST['mode']) {
                 $rs = sqlsrv_query($GLOBALS['conn'], $sql);
                 
                 if(!$rs){
-                    echo db2_stmt_error();
-                    echo db2_stmt_errormsg();
+                    echo sqlsrv_errors();
+                    echo sqlsrv_errors();
                     var_dump($sql);
                 }
                 

@@ -13,8 +13,8 @@ switch ($_REQUEST['mode']) {
         
         if(!$rs){
             error_log("Sql:" . $sql);
-            error_log(db2_stmt_error());
-            error_log(db2_stmt_errormsg());
+            error_log(sqlsrv_errors());
+            error_log(sqlsrv_errors());
         }
         
         db2_commit($GLOBALS['conn']);
@@ -26,8 +26,8 @@ switch ($_REQUEST['mode']) {
         
         if(!$rs){
             error_log("Sql:" . $sql);
-            error_log(db2_stmt_error());
-            error_log(db2_stmt_errormsg());
+            error_log(sqlsrv_errors());
+            error_log(sqlsrv_errors());
         }
         
     break;

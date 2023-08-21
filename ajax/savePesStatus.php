@@ -50,9 +50,9 @@ try {
     AuditTable::audit("Saved Person <pre>" . print_r($person,true) . "</pre>", AuditTable::RECORD_TYPE_DETAILS);
 
     if(!$updateRecordResult){
-        echo db2_stmt_error();
-        echo db2_stmt_errormsg();
-        AuditTable::audit("Db2 Error in " . __FILE__ . " Code:<b>" . db2_stmt_error() . "</b> Msg:<b>" . db2_stmt_errormsg() . "</b>", AuditTable::RECORD_TYPE_DETAILS);
+        echo sqlsrv_errors();
+        echo sqlsrv_errors();
+        AuditTable::audit("Db2 Error in " . __FILE__ . " Code:<b>" . sqlsrv_errors() . "</b> Msg:<b>" . sqlsrv_errors() . "</b>", AuditTable::RECORD_TYPE_DETAILS);
         $success = false;
     } else {
         // echo "<br/>PES Status set to : " . $_POST['psm_status'];

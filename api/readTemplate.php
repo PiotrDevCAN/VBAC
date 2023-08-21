@@ -20,8 +20,8 @@ switch (true) {
         $response['sql'] = $sql;
         
         if (! $rs) {
-            echo db2_stmt_error();
-            echo db2_stmt_errormsg();
+            echo sqlsrv_errors();
+            echo sqlsrv_errors();
             var_dump($sql);
         }
         
@@ -66,8 +66,8 @@ switch (true) {
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
         
         if (! $rs) {
-            echo db2_stmt_error();
-            echo db2_stmt_errormsg();
+            echo sqlsrv_errors();
+            echo sqlsrv_errors();
             var_dump($sql);
         }
         

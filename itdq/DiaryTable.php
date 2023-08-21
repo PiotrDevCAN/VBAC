@@ -19,8 +19,8 @@ class DiaryTable extends DbTable {
 		$rs = DB2_EXEC ( $_SESSION ['conn'], $sql );
 		if (! $rs) {
 			print_r ( $_SESSION );
-			echo "<BR/>" . db2_stmt_error ();
-			echo "<BR/>" . db2_stmt_errormsg () . "<BR/>";
+			echo "<BR/>" . sqlsrv_errors ();
+			echo "<BR/>" . sqlsrv_errors () . "<BR/>";
 			exit ( "Error in: " . __METHOD__ . " running: " . $sql );
 		}
 		return	db2_last_insert_id($_SESSION ['conn']);

@@ -63,8 +63,8 @@ if( isset($_ENV['ssldsn']) )
             print_r($_SESSION);
             echo "</pre>";
 
-            echo "<BR>" . db2_stmt_errormsg() . "<BR>";
-            echo "<BR>" . db2_stmt_error() . "<BR>";
+            echo "<BR>" . sqlsrv_errors() . "<BR>";
+            echo "<BR>" . sqlsrv_errors() . "<BR>";
             exit("Set current schema failed");
         }
         sqlsrv_commit($conn, TRUE); // This is how it was on the Wintel Box - so the code has no/few commit points.

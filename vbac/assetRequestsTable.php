@@ -2334,8 +2334,8 @@ class assetRequestsTable extends DbTable{
         $result = sqlsrv_execute($stmt,$data);
 
         if(!$result){
-            echo db2_stmt_error();
-            echo db2_stmt_errormsg();
+            echo sqlsrv_errors();
+            echo sqlsrv_errors();
             DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, 'prepared stmt');
         }
         return true;
