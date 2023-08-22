@@ -228,6 +228,7 @@ $_SESSION['isRes']  = !empty($isRes)  ? true : false;
 
 $plannedOutagesId = str_replace(" ","_",$plannedOutagesLabel);
 $odcStaff = personTable::countOdcStaff();
+// $odcStaff = '';
 ?>
 <script>
 

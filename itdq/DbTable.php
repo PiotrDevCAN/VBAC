@@ -1901,39 +1901,39 @@ class DbTable
 
     static function displayErrorMessage($rs, $class, $method, $sql, $pwd = null, $db2Error = null, $db2ErrorMsg = null, $data = null, $rollback = true)
     {
-        $db2Error = empty($db2Error) ? sqlsrv_errors() : $db2Error;
-        $db2ErrorMsg = empty($db2ErrorMsg) ? sqlsrv_errors() : $db2ErrorMsg;
-        $rollback ? sqlsrv_rollback($GLOBALS['conn']) : null; // Roll back to last commit point.
+        // $db2Error = empty($db2Error) ? sqlsrv_errors() : $db2Error;
+        // $db2ErrorMsg = empty($db2ErrorMsg) ? sqlsrv_errors() : $db2ErrorMsg;
+        // $rollback ? sqlsrv_rollback($GLOBALS['conn']) : null; // Roll back to last commit point.
 
-        if (isset(AllItdqTables::$DB2_ERRORS)) {
-            echo "<BR/>" . $method . "<B>DB2 Error:</B><span style='color:red'>" . $db2Error . "</span><B>Message:</B><span style='color:red'>" . $db2ErrorMsg . "</span>$sql";
-            $printableSql = empty($pwd) ? $sql : str_replace($pwd, "******", $sql);
-            DbTable::logDb2Error($data);
-            trigger_error("Error in: '$method' running: $printableSql code: $db2Error", E_USER_ERROR);
-            return array(
-                'Db2Error' => $db2Error,
-                'Db2ErrorMsg' => $db2ErrorMsg
-            );
-        } else {
-            echo "<BR/><B>DB2 Error:</B><span style='color:red'>" . $db2Error . "</span><B>Message:</B><span style='color:red'>" . $db2ErrorMsg . "</span>";
-            $printableSql = empty($pwd) ? $sql : str_replace($pwd, "******", $sql);
-            echo "<BR/>";
-            echo "<pre>";
-            debug_print_backtrace();
-            echo "</pre>";
-            echo "<BR/>";
-            switch (trim($db2Error)) {
-                case 220001:
-                    $pattern = "/Value for column or variable (.+) too long(.+)/i";
-                    $field = preg_split($pattern, $db2ErrorMsg);
-                    var_dump($field);
-                    break;
-                default:
-                    ;
-                    break;
-            }
-            throw new \Exception("Error in: '$method' running: $printableSql", $db2Error);
-        }
+        // if (isset(AllItdqTables::$DB2_ERRORS)) {
+        //     echo "<BR/>" . $method . "<B>DB2 Error:</B><span style='color:red'>" . $db2Error . "</span><B>Message:</B><span style='color:red'>" . $db2ErrorMsg . "</span>$sql";
+        //     $printableSql = empty($pwd) ? $sql : str_replace($pwd, "******", $sql);
+        //     DbTable::logDb2Error($data);
+        //     trigger_error("Error in: '$method' running: $printableSql code: $db2Error", E_USER_ERROR);
+        //     return array(
+        //         'Db2Error' => $db2Error,
+        //         'Db2ErrorMsg' => $db2ErrorMsg
+        //     );
+        // } else {
+        //     echo "<BR/><B>DB2 Error:</B><span style='color:red'>" . $db2Error . "</span><B>Message:</B><span style='color:red'>" . $db2ErrorMsg . "</span>";
+        //     $printableSql = empty($pwd) ? $sql : str_replace($pwd, "******", $sql);
+        //     echo "<BR/>";
+        //     echo "<pre>";
+        //     debug_print_backtrace();
+        //     echo "</pre>";
+        //     echo "<BR/>";
+        //     switch (trim($db2Error)) {
+        //         case 220001:
+        //             $pattern = "/Value for column or variable (.+) too long(.+)/i";
+        //             $field = preg_split($pattern, $db2ErrorMsg);
+        //             var_dump($field);
+        //             break;
+        //         default:
+        //             ;
+        //             break;
+        //     }
+        //     throw new \Exception("Error in: '$method' running: $printableSql", $db2Error);
+        // }
     }
 
     static function logDb2Error($data = null)
