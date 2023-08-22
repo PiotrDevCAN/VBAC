@@ -9,11 +9,6 @@ use itdq\slack;
 use vbac\personRecord;
 use vbac\pesTrackerTable;
 
-function htmlspecialchars($text) {
-    echo ' test ';
-    return $text;
-}
-
 class personTable extends DbTable
 {
 

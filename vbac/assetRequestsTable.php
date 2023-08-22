@@ -2345,7 +2345,7 @@ class assetRequestsTable extends DbTable{
         $sql  = " UPDATE ";
         $sql .= $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS;
         $sql .= " SET STATUS='" . htmlspecialchars(assetRequestRecord::STATUS_PROVISIONED) . "' ";
-        $sql .= " , ORDERIT_STATUS='" . db2_escape_String(assetRequestRecord::STATUS_ORDERIT_APPROVED)  . "' ";
+        $sql .= " , ORDERIT_STATUS='" . htmlspecialchars(assetRequestRecord::STATUS_ORDERIT_APPROVED)  . "' ";
         $sql .= " WHERE REQUEST_REFERENCE='" . htmlspecialchars($reference) . "' ";
         $sql .= " AND STATUS not in ('" . assetRequestRecord::STATUS_REJECTED . "','" . assetRequestRecord::STATUS_RETURNED ."') ";
 
