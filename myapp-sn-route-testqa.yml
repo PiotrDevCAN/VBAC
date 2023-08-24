@@ -5,9 +5,9 @@ metadata:
     app: vBAC
     type: internal-apps-001
   name: vbac-route
-  namespace: ns-vbac-gd-kps-dev-wus3
+  namespace: ns-vbac-gd-kps-testqa-wus3
 spec:
-  host: vbac-dev.zkpw3uspriv.app.kyndryl.net
+  host: vbac-testqa.zkpw3uspriv.app.kyndryl.net
   port:
     targetPort: 8080
   tls:
