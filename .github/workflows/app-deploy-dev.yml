@@ -20,8 +20,8 @@ jobs:
           token: ${{ secrets.VAULT_TOKEN }}
           tlsSkipVerify: false
           secrets: |
-            kps-gd-app-vbac/data/dev/w3us/jfrog  JFROG_USER | JFROG_USER ; 
-            kps-gd-app-vbac/data/dev/w3us/jfrog  JFROG_TOKEN | JFROG_TOKEN
+            kps-gd-app-vbac/data/dev/w3us/jfrog JFROG_USER | JFROG_USER ; 
+            kps-gd-app-vbac/data/dev/w3us/jfrog JFROG_TOKEN | JFROG_TOKEN
       - name: Checkout
         uses: actions/checkout@v3
       - name: Login to Jfrog
@@ -39,7 +39,7 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: | 
-            kyndryl.jfrog.io/uki-business-intelligence-test-docker-local/vbac:devel_${{ github.run_number }}
+            ${{ vars.JFROG_URL }}/${{ vars.JFROG_CONTAINER }}/vbac:${{ vars.SHORT_NAME }}_${{ github.run_number }}
   Deploy:
     name: Deploy
     needs:
@@ -60,11 +60,11 @@ jobs:
           token: ${{ secrets.VAULT_TOKEN }}
           tlsSkipVerify: false
           secrets: |
-            kps-gd-app-vbac/data/dev/w3us/jfrog  JFROG_USER | JFROG_USER ;
-            kps-gd-app-vbac/data/dev/w3us/jfrog  JFROG_TOKEN | JFROG_TOKEN ;
-            kps-gd-app-vbac/data/dev/w3us/openshift-sa  SERVER_URL | SERVER_URL ;
-            kps-gd-app-vbac/data/dev/w3us/openshift-sa  SA_TOKEN | SA_TOKEN ;
-            kps-gd-app-vbac/data/dev/w3us/openshift-sa  NAMESPACE | NAMESPACE ;
+            kps-gd-app-vbac/data/dev/w3us/jfrog JFROG_USER | JFROG_USER ;
+            kps-gd-app-vbac/data/dev/w3us/jfrog JFROG_TOKEN | JFROG_TOKEN ;
+            kps-gd-app-vbac/data/dev/w3us/openshift-sa SERVER_URL | SERVER_URL ;
+            kps-gd-app-vbac/data/dev/w3us/openshift-sa SA_TOKEN | SA_TOKEN ;
+            kps-gd-app-vbac/data/dev/w3us/openshift-sa NAMESPACE | NAMESPACE ;
             kps-gd-app-vbac/data/dev/w3us/sqlserver_wus3 server | DB_SERVER ;
             kps-gd-app-vbac/data/dev/w3us/sqlserver_wus3 database | DB_NAME ;
             kps-gd-app-vbac/data/dev/w3us/sqlserver_wus3 username | DB_USER_NAME ;
@@ -125,14 +125,14 @@ jobs:
         with:
           namespace: ${{ steps.import-secrets.outputs.NAMESPACE }}
           images: |
-            kyndryl.jfrog.io/uki-business-intelligence-test-docker-local/vbac:devel_${{ github.run_number }}
+            ${{ vars.JFROG_URL }}/${{ vars.JFROG_CONTAINER }}/vbac:${{ vars.SHORT_NAME }}_${{ github.run_number }}
           # Path to the manifest files to be used for deployment. 
           manifests: |
             ./env-configmap.yml
             ./env-secrets.yml
-            ./myapp-deployment.yml
+            ./myapp-deployment-dev.yml
             ./myapp-service.yml
-            ./myapp-sn-dev_route.yml
+            ./myapp-sn-route-dev.yml
           # Multiline input where each line contains the name of a docker-registry secret 
           # that has already been setup within the cluster. 
           # Each of these secret names are added under imagePullSecrets field for the workloads found in the input manifest files
