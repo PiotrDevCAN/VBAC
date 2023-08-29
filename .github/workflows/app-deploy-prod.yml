@@ -75,6 +75,18 @@ jobs:
             kps-gd-app-vbac/data/prod/w3us/SSOserver host | SSO_HOST ;
             kps-gd-app-vbac/data/prod/w3us/SSOserver client_id | SSO_CLIENT_ID ;
             kps-gd-app-vbac/data/prod/w3us/SSOserver client_secret | SSO_CLIENT_SECRET 
+      - name: Get Worker API Credentials
+        id: import-secrets-worker-api
+        uses: hashicorp/vault-action@v2
+        with:
+          url: https://vault.kyndryl.net
+          method: token
+          namespace: kyndryl/Non-CIO-Kyndryl/
+          token: ${{ secrets.VAULT_TOKEN__WORKER_API }}
+          tlsSkipVerify: false
+          secrets: |
+            kv-vbac-dev/data/azsp/apim AZURE_CLIENT_ID | CLIENT_ID ; 
+            kv-vbac-dev/data/azsp/apim AZURE_CLIENT_SECRET | CLIENT_SECRET   
       - name: Preview SSO settings
         run: |
           echo "NAMESPACE: ${{ steps.import-secrets.outputs.NAMESPACE }}"
