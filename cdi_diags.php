@@ -1,5 +1,6 @@
 <?php
 use vbac\personTable;
+use itdq\OKTAGroups;
 
 var_dump((ini_get('max_execution_time')));
 
@@ -26,9 +27,9 @@ unset($_SESSION['isUser']);
 unset($_SESSION['isPes']);
 
 $isFm   = personTable::isManager($_SESSION['ssoEmail'])                 ? ".not('.accessFm')" : null;
-$isCdi  = employee_in_group($_SESSION['cdiBg'],  $_SESSION['ssoEmail']) ? ".not('.accessCdi')" : null;
-$isPmo  = employee_in_group($_SESSION['pmoBg'],  $_SESSION['ssoEmail']) ? ".not('.accessPmo')" : null;
-$isPes  = employee_in_group($_SESSION['pesBg'],  $_SESSION['ssoEmail']) ? ".not('.accessPes')" : null;
+$isCdi  = OKTAGroups::inAGroup($_SESSION['cdiBg'],  $_SESSION['ssoEmail']) ? ".not('.accessCdi')" : null;
+$isPmo  = OKTAGroups::inAGroup($_SESSION['pmoBg'],  $_SESSION['ssoEmail']) ? ".not('.accessPmo')" : null;
+$isPes  = OKTAGroups::inAGroup($_SESSION['pesBg'],  $_SESSION['ssoEmail']) ? ".not('.accessPes')" : null;
 $isUser = ".not('.accessUser')";
 
 $_SESSION['isFm']   = !empty($isFm)   ? true : false;

@@ -50,3 +50,5 @@ spec:
             name: vbac-app-docker-secrets-smtp
         - secretRef:
             name: vbac-app-docker-secrets-sso
+        - secretRef:
+            name: vbac-app-docker-secrets-worker-api

@@ -6,6 +6,7 @@ use itdq\NavbarMenu;
 use itdq\NavbarOption;
 use vbac\personTable;
 use itdq\NavbarDivider;
+use itdq\OKTAGroups;
 
 $beginNavBar = microtime(true);
 
@@ -177,33 +178,33 @@ $elapsed = microtime(true);
 
 error_log("isFm:" . (float)($elapsed-$start));
 
-$isCdi  = employee_in_group($_SESSION['cdiBg'],  $_SESSION['ssoEmail']) ? ".not('.accessCdi')" : null;
+$isCdi  = OKTAGroups::inAGroup($_SESSION['cdiBg'],  $_SESSION['ssoEmail']) ? ".not('.accessCdi')" : null;
 
 $elapsed = microtime(true);
 error_log("CDI:" . (float)($elapsed-$start));
 
-$isPmo  = employee_in_group($_SESSION['pmoBg'],  $_SESSION['ssoEmail']) ? ".not('.accessPmo')" : null;
+$isPmo  = OKTAGroups::inAGroup($_SESSION['pmoBg'],  $_SESSION['ssoEmail']) ? ".not('.accessPmo')" : null;
 
 $elapsed = microtime(true);
 error_log("Pmo:" . (float)($elapsed-$start));
 
-$isPes  = employee_in_group($_SESSION['pesBg'],  $_SESSION['ssoEmail']) ? ".not('.accessPes')" : null;
+$isPes  = OKTAGroups::inAGroup($_SESSION['pesBg'],  $_SESSION['ssoEmail']) ? ".not('.accessPes')" : null;
 
 $elapsed = microtime(true);
 error_log("Pes:" . (float)($elapsed-$start));
 
-$isRep1  = employee_in_group($_SESSION['rfpBg'],  $_SESSION['ssoEmail']) ? ".not('.accessRepFullPerson')" : null;
+$isRep1  = OKTAGroups::inAGroup($_SESSION['rfpBg'],  $_SESSION['ssoEmail']) ? ".not('.accessRepFullPerson')" : null;
 
 $elapsed = microtime(true);
 error_log("Rep1:" . (float)($elapsed-$start));
 
-$isRes   = employee_in_group($_SESSION['rsBg'],  $_SESSION['ssoEmail'],3) ? ".not('.accessRes')" : null;
+$isRes   = OKTAGroups::inAGroup($_SESSION['rsBg'],  $_SESSION['ssoEmail'],3) ? ".not('.accessRes')" : null;
 
 $elapsed = microtime(true);
 error_log("vent:" . (float)($elapsed-$start));
 
 $isUser = ".not('.accessUser')";
-$isRequestor = employee_in_group($_SESSION['reqBg'], $_SESSION['ssoEmail']);
+$isRequestor = OKTAGroups::inAGroup($_SESSION['reqBg'], $_SESSION['ssoEmail']);
 
 $elapsed = microtime(true);
 error_log("vbac:" . (float)($elapsed-$start));

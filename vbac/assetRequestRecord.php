@@ -4,6 +4,7 @@ namespace vbac;
 use itdq\DbRecord;
 use itdq\Loader;
 use itdq\JavaScript;
+use itdq\OKTAGroups;
 
 class assetRequestRecord extends DbRecord {
 
@@ -67,7 +68,7 @@ class assetRequestRecord extends DbRecord {
         $myManagersCnum = personTable::myManagersCnum();
         $isFm   = personTable::isManager($_SESSION['ssoEmail']);
         $isPmo  = $_SESSION['isPmo'];
-        $isRequestor = employee_in_group($_SESSION['reqBg'], $_SESSION['ssoEmail']);
+        $isRequestor = OKTAGroups::inAGroup($_SESSION['reqBg'], $_SESSION['ssoEmail']);
 
         $iAmDelegateForArray = $loader->load('CNUM',allTables::$DELEGATE," AND DELEGATE_CNUM='" . htmlspecialchars($myCnum) . "' ");
         $iAmDelegateForTrimmed = array_map('trim', $iAmDelegateForArray);
