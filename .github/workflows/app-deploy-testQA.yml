@@ -85,8 +85,8 @@ jobs:
           token: ${{ secrets.VAULT_TOKEN__WORKER_API }}
           tlsSkipVerify: false
           secrets: |
-            kv-vbac-dev/data/azsp/apim AZURE_CLIENT_ID | CLIENT_ID ; 
-            kv-vbac-dev/data/azsp/apim AZURE_CLIENT_SECRET | CLIENT_SECRET   
+            kv-vbac-qa/data/azsp/apim AZURE_CLIENT_ID | CLIENT_ID ; 
+            kv-vbac-qa/data/azsp/apim AZURE_CLIENT_SECRET | CLIENT_SECRET   
       - name: Preview SSO settings
         run: |
           echo "NAMESPACE: ${{ steps.import-secrets.outputs.NAMESPACE }}"
