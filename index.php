@@ -1,3 +1,19 @@
+<?php
+use itdq\WorkerAPI;
+
+$workerAPI = new WorkerAPI();
+$workerData = json_decode($workerAPI->getworkerByEmail('piotr.tajanowicz@kyndryl.com'));
+
+echo '<pre>';
+echo 'ENVIRONMENT <br>';
+var_dump($_ENV);
+echo 'SESSION <br>';
+var_dump($_SESSION);
+echo 'WORKER DATA <br>';
+var_dump($workerData);
+echo '</pre>';
+
+?>
 <style type="text/css" class="init">
 body {
 	background: url('./public/img/vBAC2.jpg')
