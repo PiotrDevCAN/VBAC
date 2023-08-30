@@ -6,7 +6,7 @@ function do_auth($group = null)
     if(stripos($_ENV['environment'], 'dev')) {
         $_SESSION['ssoEmail'] = $_ENV['SERVER_ADMIN'];
     } else {
-        include_once "class/include.php";
+        include_once "SSO/class/include.php";
         $auth = new Auth();
         if(!$auth->ensureAuthorized()){
             die('Invalid logon attempt');

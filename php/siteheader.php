@@ -141,7 +141,7 @@ function do_auth($group = null)
             // $helper->log('This example should only be run from a Web Browser' . PHP_EOL);
             $_SESSION['ssoEmail'] = $_ENV['SERVER_ADMIN'];
         } else {
-            include_once "class/include.php";
+            include_once "SSO/class/include.php";
             $auth = new Auth();
             if(!$auth->ensureAuthorized()){
                 die('Invalid logon attempt');
