@@ -51,4 +51,4 @@ spec:
         - secretRef:
             name: vbac-app-docker-secrets-sso
         - secretRef:
-            name: vbac-app-docker-secrets-worker-api
+            name: vbac-app-docker-secrets-worker-api-90
