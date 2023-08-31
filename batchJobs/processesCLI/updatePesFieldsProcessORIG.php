@@ -11,8 +11,6 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// $GLOBALS['Db2Schema'] = 'VBAC';
-
 if (isset($argv[1])) {
 
     $token = '35310a45-62a7-4de6-b8a3-17f9c6efdd26';
@@ -80,8 +78,8 @@ if (isset($argv[1])) {
         $preparedUpdatePersonPESApiStatusSql = sqlsrv_prepare($GLOBALS['conn'], $updatePersonPESApiStatusSql);
     
         if(!$preparedUpdatePersonPESApiStatusSql){
-            echo sqlsrv_errors();
-            echo sqlsrv_errors();
+            echo print_r(sqlsrv_errors());
+            echo print_r(sqlsrv_errors());
             // print_r($personData);
             DbTable::displayErrorMessage($preparedUpdatePersonPESApiStatusSql, __FILE__, __FILE__, $updatePersonPESApiStatusSql);
             return;
@@ -120,8 +118,8 @@ if (isset($argv[1])) {
                     $preparedUpdatePersonSql = sqlsrv_prepare($GLOBALS['conn'], $updatePersonSql);
                     
                     if(!$preparedUpdatePersonSql){
-                        echo sqlsrv_errors();
-                        echo sqlsrv_errors();
+                        echo print_r(sqlsrv_errors());
+                        echo print_r(sqlsrv_errors());
                         print_r($personData);
                         DbTable::displayErrorMessage($preparedUpdatePersonSql, __FILE__, __FILE__, $updatePersonSql);
                         return;
@@ -159,8 +157,8 @@ if (isset($argv[1])) {
                     $preparedUpdatePesTrackerSql = sqlsrv_prepare($GLOBALS['conn'], $updatePesTrackerSql);
                     
                     if(!$preparedUpdatePesTrackerSql){
-                        echo sqlsrv_errors();
-                        echo sqlsrv_errors();
+                        echo print_r(sqlsrv_errors());
+                        echo print_r(sqlsrv_errors());
                         print_r($pesTrackerData);
                         DbTable::displayErrorMessage($preparedUpdatePesTrackerSql, __FILE__, __FILE__, $updatePesTrackerSql);
                         return;

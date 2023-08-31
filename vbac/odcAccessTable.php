@@ -246,8 +246,8 @@ class odcAccessTable extends DbTable {
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if(!$rs){
-            echo sqlsrv_errors();
-            echo sqlsrv_errors();
+            echo print_r(sqlsrv_errors());
+            echo print_r(sqlsrv_errors());
             DbTable::displayErrorMessage($rs, '', '', $sql);
         }
 

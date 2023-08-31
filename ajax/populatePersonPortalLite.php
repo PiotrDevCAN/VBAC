@@ -8,8 +8,6 @@ ob_start();
 
 // session_start();
 
-// $GLOBALS['Db2Schema'] = 'VBAC';
-
 // $personTable = new personPortalLiteTable(allTables::$PERSON_PORTAL_LITE);
 $personTable = new personPortalLiteTable(allTables::$PERSON);
 $preBoardersAction = isset($_REQUEST['preBoardersAction']) ? $_REQUEST['preBoardersAction'] : null;

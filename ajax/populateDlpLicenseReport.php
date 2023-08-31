@@ -11,7 +11,6 @@ set_time_limit(0);
 ob_start();
 
 $_SESSION['ssoEmail'] = $_SESSION['ssoEmail'];
-// $GLOBALS['Db2Schema'] = 'VBAC';
 
 $loader = new Loader();
 $dlpTable = new dlpTable(allTables::$DLP);

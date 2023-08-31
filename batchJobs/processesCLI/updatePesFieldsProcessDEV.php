@@ -41,9 +41,6 @@ class updatePesFieldsProcess {
     }
 }
 
-// $GLOBALS['Db2Schema'] = 'VBAC';
-// $_ENV['environment'] = 'vbac';
-
 if (isset($argv[1])) {
 
     $token = '35310a45-62a7-4de6-b8a3-17f9c6efdd26';
@@ -96,8 +93,8 @@ if (isset($argv[1])) {
                 print_r($_SESSION);
                 echo "</pre>";
 
-                echo "<BR>" . sqlsrv_errors() . "<BR>";
-                echo "<BR>" . sqlsrv_errors() . "<BR>";
+                echo "<BR>" . print_r(sqlsrv_errors()) . "<BR>";
+                echo "<BR>" . print_r(sqlsrv_errors()) . "<BR>";
                 exit("Set current schema failed");
             }
             sqlsrv_commit($connToUPES, TRUE); // This is how it was on the Wintel Box - so the code has no/few commit points.
@@ -244,8 +241,8 @@ if (isset($argv[1])) {
         $preparedUpdatePersonPESApiStatusSql = sqlsrv_prepare($GLOBALS['conn'], $updatePersonPESApiStatusSql);
     
         if(!$preparedUpdatePersonPESApiStatusSql){
-            echo sqlsrv_errors();
-            echo sqlsrv_errors();
+            echo print_r(sqlsrv_errors());
+            echo print_r(sqlsrv_errors());
             // print_r($personData);
             DbTable::displayErrorMessage($preparedUpdatePersonPESApiStatusSql, __FILE__, __FILE__, $updatePersonPESApiStatusSql);
             return;
@@ -284,8 +281,8 @@ if (isset($argv[1])) {
                     $preparedUpdatePersonSql = sqlsrv_prepare($GLOBALS['conn'], $updatePersonSql);
                     
                     if(!$preparedUpdatePersonSql){
-                        echo sqlsrv_errors();
-                        echo sqlsrv_errors();
+                        echo print_r(sqlsrv_errors());
+                        echo print_r(sqlsrv_errors());
                         print_r($personData);
                         DbTable::displayErrorMessage($preparedUpdatePersonSql, __FILE__, __FILE__, $updatePersonSql);
                         return;
@@ -323,8 +320,8 @@ if (isset($argv[1])) {
                     $preparedUpdatePesTrackerSql = sqlsrv_prepare($GLOBALS['conn'], $updatePesTrackerSql);
                     
                     if(!$preparedUpdatePesTrackerSql){
-                        echo sqlsrv_errors();
-                        echo sqlsrv_errors();
+                        echo print_r(sqlsrv_errors());
+                        echo print_r(sqlsrv_errors());
                         print_r($pesTrackerData);
                         DbTable::displayErrorMessage($preparedUpdatePesTrackerSql, __FILE__, __FILE__, $updatePesTrackerSql);
                         return;

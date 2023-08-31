@@ -46,7 +46,7 @@ if($startDate===false || $endDate===false){
                     $rs = sqlsrv_query($GLOBALS['conn'], $sql);
                     
                     if(!$rs){
-                        $errorMsg = sqlsrv_errors();
+                        $errorMsg = print_r(sqlsrv_errors());
                         DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
                         $httpCode = 460;
                     }
@@ -70,7 +70,7 @@ if($startDate===false || $endDate===false){
                     $rs = sqlsrv_query($GLOBALS['conn'], $sql);
                     
                     if(!$rs){
-                        $errorMsg = sqlsrv_errors();
+                        $errorMsg = print_r(sqlsrv_errors());
                         DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
                         $httpCode = 461;
                     } else {
@@ -103,7 +103,7 @@ if($startDate===false || $endDate===false){
                     $rs = sqlsrv_query($GLOBALS['conn'], $sql);
                     
                     if(!$rs){
-                        $errorMsg = sqlsrv_errors();
+                        $errorMsg = print_r(sqlsrv_errors());
                         DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
                         $httpCode = 461;
                     }
@@ -128,7 +128,7 @@ if($startDate===false || $endDate===false){
                     $rs = sqlsrv_query($GLOBALS['conn'], $sql);
                     
                     if(!$rs){
-                        $errorMsg = sqlsrv_errors();
+                        $errorMsg = print_r(sqlsrv_errors());
                         DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
                         $httpCode = 461;
                     }
@@ -153,7 +153,7 @@ if($startDate===false || $endDate===false){
                     $rs = sqlsrv_query($GLOBALS['conn'], $sql);
                     
                     if(!$rs){
-                        $errorMsg = sqlsrv_errors();
+                        $errorMsg = print_r(sqlsrv_errors());
                         DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
                         $httpCode = 461;
                     } else {

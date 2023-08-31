@@ -38,13 +38,13 @@ if($uid != 'newEntry'){
 }
 
 if(!$preparedStmt){
-    echo sqlsrv_errors();
-    echo sqlsrv_errors();
+    echo print_r(sqlsrv_errors());
+    echo print_r(sqlsrv_errors());
 } else {
     $execute = sqlsrv_execute($preparedStmt,$data);
     if(!$execute){
-        echo sqlsrv_errors();
-        echo sqlsrv_errors();
+        echo print_r(sqlsrv_errors());
+        echo print_r(sqlsrv_errors());
     }
 }
 

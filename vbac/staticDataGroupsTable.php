@@ -20,8 +20,8 @@ class staticDataGroupsTable extends staticDataTable {
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if(!$rs){
-            sqlsrv_errors();
-            sqlsrv_errors();
+            print_r(sqlsrv_errors());
+            print_r(sqlsrv_errors());
             return false;
         }
 

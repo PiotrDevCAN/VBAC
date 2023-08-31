@@ -15,8 +15,6 @@ error_reporting(E_ALL);
 
 $slack = new slack();
 
-// $GLOBALS['Db2Schema'] = 'VBAC';
-
 AuditTable::audit("Revalidation invoked.",AuditTable::RECORD_TYPE_REVALIDATION);
 $response = $slack->slackApiPostMessage(slack::CHANNEL_ID_SM_CDI_AUDIT,$_ENV['environment'] . ":Revalidation invoked.");
 error_log($response);

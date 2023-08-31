@@ -6,8 +6,6 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-$GLOBALS['Db2Schema'] = 'VBAC';
-
 $email = $_SESSION['ssoEmail'];
 $scriptsDirectory = '/var/www/html/batchJobs/';
 $processDirectory = 'processesCLI/'; 
