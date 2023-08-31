@@ -89,9 +89,9 @@ try {
     AuditTable::audit("Saved Person <pre>" . print_r($person,true) . "</pre>", AuditTable::RECORD_TYPE_DETAILS);
 
     if(!$updateRecordResult || !$updateRecordResult2){
-        echo print_r(sqlsrv_errors());
-        echo print_r(sqlsrv_errors());
-        AuditTable::audit("Db2 Error in " . __FILE__ . " Code:<b>" . print_r(sqlsrv_errors()) . "</b> Msg:<b>" . print_r(sqlsrv_errors()) . "</b>", AuditTable::RECORD_TYPE_DETAILS);
+        echo json_encode(sqlsrv_errors());
+        echo json_encode(sqlsrv_errors());
+        AuditTable::audit("Db2 Error in " . __FILE__ . " Code:<b>" . json_encode(sqlsrv_errors()) . "</b> Msg:<b>" . json_encode(sqlsrv_errors()) . "</b>", AuditTable::RECORD_TYPE_DETAILS);
         $success = false;
     } else {
         $comment = $pesTracker->savePesComment($_POST['plm_cnum'],"PES_LEVEL set to : " . $_POST['plm_level']);

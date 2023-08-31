@@ -14,9 +14,9 @@ try {
     $updateRecordResult = $table->saveCtid($cnum,$_POST['ctid']);
 
     if(!$updateRecordResult){
-        echo print_r(sqlsrv_errors());
-        echo print_r(sqlsrv_errors());
-        AuditTable::audit("Db2 Error in " . __FILE__ . " Code:<b>" . print_r(sqlsrv_errors()) . "</b> Msg:<b>" . print_r(sqlsrv_errors()) . "</b>", AuditTable::RECORD_TYPE_DETAILS);
+        echo json_encode(sqlsrv_errors());
+        echo json_encode(sqlsrv_errors());
+        AuditTable::audit("Db2 Error in " . __FILE__ . " Code:<b>" . json_encode(sqlsrv_errors()) . "</b> Msg:<b>" . json_encode(sqlsrv_errors()) . "</b>", AuditTable::RECORD_TYPE_DETAILS);
         $success = false;
     } else {
         echo "<br/>CTID set to : " . $_POST['ctid'] . " for " . $cnum;

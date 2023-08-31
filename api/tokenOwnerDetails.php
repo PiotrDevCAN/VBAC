@@ -48,8 +48,8 @@ $sql.= $callSignIdSupplied ? " CALLSIGN_ID = '" . htmlspecialchars($_REQUEST['CA
 $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
 if(!$rs){
-    echo print_r(sqlsrv_errors());
-    echo print_r(sqlsrv_errors());
+    echo json_encode(sqlsrv_errors());
+    echo json_encode(sqlsrv_errors());
     DbTable::displayErrorMessage($rs, '', '', $sql);
 }
 

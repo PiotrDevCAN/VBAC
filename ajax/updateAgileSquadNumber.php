@@ -11,8 +11,8 @@ $personTable = new personTable(allTables::$PERSON);
 $updateResult = $personTable->updateAgileSquadNumber($_POST['agileCnum'],$_POST['agileSquad'], $_POST['version']);
 
 if(!$updateResult){
-    echo print_r(sqlsrv_errors());
-    echo print_r(sqlsrv_errors());
+    echo json_encode(sqlsrv_errors());
+    echo json_encode(sqlsrv_errors());
 }
 
 $messages = ob_get_clean();

@@ -21,8 +21,8 @@ switch ($_REQUEST['mode']) {
                 $rs = sqlsrv_query($GLOBALS['conn'], $sql);
                 
                 if(!$rs){
-                    echo print_r(sqlsrv_errors());
-                    echo print_r(sqlsrv_errors());
+                    echo json_encode(sqlsrv_errors());
+                    echo json_encode(sqlsrv_errors());
                     $messages = ob_get_clean();
                     $success = empty($messages);
                     $response['success'] = $success;
@@ -50,8 +50,8 @@ switch ($_REQUEST['mode']) {
                 $rs = sqlsrv_query($GLOBALS['conn'], $sql);
                 
                 if(!$rs){
-                    echo print_r(sqlsrv_errors());
-                    echo print_r(sqlsrv_errors());
+                    echo json_encode(sqlsrv_errors());
+                    echo json_encode(sqlsrv_errors());
                     var_dump($sql);
                 }
                 
@@ -90,8 +90,8 @@ switch ($_REQUEST['mode']) {
                 $rs = sqlsrv_query($GLOBALS['conn'], $sql);
                 
                 if(!$rs){
-                    echo print_r(sqlsrv_errors());
-                    echo print_r(sqlsrv_errors());
+                    echo json_encode(sqlsrv_errors());
+                    echo json_encode(sqlsrv_errors());
                     var_dump($sql);
                 }
                 

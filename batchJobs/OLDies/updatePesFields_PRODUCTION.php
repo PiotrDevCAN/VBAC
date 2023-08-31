@@ -97,8 +97,8 @@ switch($rootScriptName) {
             $preparedUpdatePersonPESApiStatusSql = sqlsrv_prepare($GLOBALS['conn'], $updatePersonPESApiStatusSql);
 
             if(!$preparedUpdatePersonPESApiStatusSql){
-                echo print_r(sqlsrv_errors());
-                echo print_r(sqlsrv_errors());
+                echo json_encode(sqlsrv_errors());
+                echo json_encode(sqlsrv_errors());
                 // print_r($personData);
                 DbTable::displayErrorMessage($preparedUpdatePersonPESApiStatusSql, __FILE__, __FILE__, $updatePersonPESApiStatusSql);
                 return;
@@ -137,8 +137,8 @@ switch($rootScriptName) {
                         $preparedUpdatePersonSql = sqlsrv_prepare($GLOBALS['conn'], $updatePersonSql);
                         
                         if(!$preparedUpdatePersonSql){
-                            echo print_r(sqlsrv_errors());
-                            echo print_r(sqlsrv_errors());
+                            echo json_encode(sqlsrv_errors());
+                            echo json_encode(sqlsrv_errors());
                             print_r($personData);
                             DbTable::displayErrorMessage($preparedUpdatePersonSql, __FILE__, __FILE__, $updatePersonSql);
                             return;
@@ -176,8 +176,8 @@ switch($rootScriptName) {
                         $preparedUpdatePesTrackerSql = sqlsrv_prepare($GLOBALS['conn'], $updatePesTrackerSql);
                         
                         if(!$preparedUpdatePesTrackerSql){
-                            echo print_r(sqlsrv_errors());
-                            echo print_r(sqlsrv_errors());
+                            echo json_encode(sqlsrv_errors());
+                            echo json_encode(sqlsrv_errors());
                             print_r($pesTrackerData);
                             DbTable::displayErrorMessage($preparedUpdatePesTrackerSql, __FILE__, __FILE__, $updatePesTrackerSql);
                             return;

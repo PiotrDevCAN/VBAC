@@ -73,8 +73,8 @@ $sql.= " WHERE CNUM='" . htmlspecialchars($_REQUEST['CNUM']) . "' ";
 $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
 if(!$rs){
-    echo print_r(sqlsrv_errors());
-    echo print_r(sqlsrv_errors());
+    echo json_encode(sqlsrv_errors());
+    echo json_encode(sqlsrv_errors());
     DbTable::displayErrorMessage($rs, '', '', $sql);
 }
 

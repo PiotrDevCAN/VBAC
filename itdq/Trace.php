@@ -141,8 +141,8 @@ class Trace extends Log{
 		$rs = DB2_EXEC($GLOBALS['conn'],$sql);
 		if(!$rs)
 			{
-			echo "<BR>Error: " . print_r(sqlsrv_errors());
-			echo "<BR>Msg: " . print_r(sqlsrv_errors()) . "<BR>";
+			echo "<BR>Error: " . json_encode(sqlsrv_errors());
+			echo "<BR>Msg: " . json_encode(sqlsrv_errors()) . "<BR>";
 			exit("Error in: " . __METHOD__ .  __LINE__ . "<BR>running: $sql");
 		}
 	}
@@ -154,8 +154,8 @@ class Trace extends Log{
 		$rs = DB2_EXEC($GLOBALS['conn'],$sql);
 		if(!$rs)
 			{
-			echo "<BR>Error: " . print_r(sqlsrv_errors());
-			echo "<BR>Msg: " . print_r(sqlsrv_errors()) . "<BR>";
+			echo "<BR>Error: " . json_encode(sqlsrv_errors());
+			echo "<BR>Msg: " . json_encode(sqlsrv_errors()) . "<BR>";
 			exit("Error in: " . __METHOD__ .  __LINE__ . "<BR>running: $sql");
 		}
 	}
@@ -166,7 +166,7 @@ class Trace extends Log{
 		$rs = DB2_EXEC($GLOBALS['conn'],$sql);
 		if(!$rs)
 			{
-			echo "<BR>Error: " . print_r(sqlsrv_errors());
+			echo "<BR>Error: " . json_encode(sqlsrv_errors());
 			echo "<BR>Msg: " . print_r(sqlsrv_errors()) . "<BR>";
 			exit("Error in: " . __METHOD__ .  __LINE__ . "<BR>running: $sql");
 		}

@@ -13,8 +13,8 @@ switch ($_REQUEST['mode']) {
         
         if(!$rs){
             error_log("Sql:" . $sql);
-            error_log(print_r(sqlsrv_errors()));
-            error_log(print_r(sqlsrv_errors()));
+            error_log(json_encode(sqlsrv_errors()));
+            error_log(json_encode(sqlsrv_errors()));
         }
         
         sqlsrv_commit($GLOBALS['conn']);
@@ -26,8 +26,8 @@ switch ($_REQUEST['mode']) {
         
         if(!$rs){
             error_log("Sql:" . $sql);
-            error_log(print_r(sqlsrv_errors()));
-            error_log(print_r(sqlsrv_errors()));
+            error_log(json_encode(sqlsrv_errors()));
+            error_log(json_encode(sqlsrv_errors()));
         }
         
     break;
