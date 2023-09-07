@@ -4,6 +4,7 @@ metadata:
   name: vbac
 spec:
   replicas: 2
+  revisionHistoryLimit: 0 # Default to 10 if not specified
   selector:
     matchLabels:
       app: vbac
@@ -17,7 +18,6 @@ spec:
       securityContext: {}
       automountServiceAccountToken: false
       dnsPolicy: ClusterFirst
-      revisionHistoryLimit: 0 # Default to 10 if not specified
       containers:
       - name: vbac
         image: kyndryl.jfrog.io/uki-business-intelligence-qa-docker-local/vbac:latest
