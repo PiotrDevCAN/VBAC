@@ -21,9 +21,10 @@ class Process{
     }
 
     private function runCom(){
-        $command = 'nohup '.$this->command.' > /dev/null 2>&1 & echo $!';
+        // $command = 'nohup '.$this->command.' > /dev/null 2>&1 & echo $!';
+        $command = 'nohup '.$this->command;
         $op = null;
-        exec($command ,$op);
+        exec($command ,$op, $retval);
         $this->pid = (int)$op[0];
     }
 
@@ -55,8 +56,7 @@ class Process{
     }
 
     public function stop(){
-        // $command = 'kill '.$this->pid;
-        $command = '/var/www/htdocs/soiwapi/UMAP/perl/runSQLasSOIW '.$this->pid;
+        $command = 'kill '.$this->pid;
         exec($command);
         if ($this->status() == false) {
             return true;

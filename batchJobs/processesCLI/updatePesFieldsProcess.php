@@ -55,8 +55,8 @@ if (isset($argv[1])) {
             $connToUPES = tryConnectToUPES($conn_string);
             if (!$connToUPES) {
                 error_log("Failed attempt $attempts to connect to DB2");
-                error_log("Msg:" . db2_conn_errormsg());
-                error_log("Err:" . db2_conn_error());
+                error_log("Msg:" . json_encode(sqlsrv_errors());
+                error_log("Err:" . json_encode(sqlsrv_errors());
                 sleep(3);
             }
         }
@@ -83,8 +83,8 @@ if (isset($argv[1])) {
         } else {
             error_log(__FILE__ . __LINE__ . " Connect to DB2 Failed");
             error_log(__FILE__ . __LINE__ . $conn_string);
-            error_log(__FILE__ . __LINE__ . db2_conn_errormsg());
-            error_log(__FILE__ . __LINE__ . db2_conn_error());
+            error_log(__FILE__ . __LINE__ . json_encode(sqlsrv_errors());
+            error_log(__FILE__ . __LINE__ . json_encode(sqlsrv_errors());
             throw new Exception('Failed to connect to DB2');
         }
 
@@ -101,8 +101,8 @@ if (isset($argv[1])) {
         $countSql.= "ON AP.PES_LEVEL = PL.PES_LEVEL_REF AND AP.ACCOUNT_ID = PL.ACCOUNT_ID ";
         $countSql.= "WHERE AP.ACCOUNT_ID = ? ";
 
-        $preparedCountStatement = sqlsrv_prepare($connToUPES, $countSql);
-        $rs = sqlsrv_execute($preparedCountStatement, $data);
+        $preparedCountStatement = sqlsrv_prepare($connToUPES, $countSql, $data);
+        $rs = sqlsrv_execute($preparedCountStatement);
         if (! $rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
@@ -126,9 +126,9 @@ if (isset($argv[1])) {
         $sql.= "FOR FETCH ONLY WITH UR ";
         $sql.= "FETCH FIRST " . $counter ." ROWS ONLY";
 
-        $preparedStatement = sqlsrv_prepare($connToUPES, $sql);
+        $preparedStatement = sqlsrv_prepare($connToUPES, $sql, $data);
 
-        $rs = sqlsrv_execute($preparedStatement, $data);
+        $rs = sqlsrv_execute($preparedStatement);
         if (! $rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;

@@ -138,7 +138,7 @@ class Trace extends Log{
 			$sql .= " VALUES ('$db2Entry','$userid','$class','$method','$page'";
 			$sql .= empty($elapsed) ? ") " : ",'$elapsed') ";
 		}
-		$rs = DB2_EXEC($GLOBALS['conn'],$sql);
+		$rs = sqlsrv_query($GLOBALS['conn'],$sql);
 		if(!$rs)
 			{
 			echo "<BR>Error: " . json_encode(sqlsrv_errors());
@@ -151,7 +151,7 @@ class Trace extends Log{
 		$sql = "DELETE FROM " . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$TRACE . " WHERE LASTUPDATED < (CURRENT TIMESTAMP - $keepDays DAYS) ";
 
 		Trace::traceVariable($keepDays);
-		$rs = DB2_EXEC($GLOBALS['conn'],$sql);
+		$rs = sqlsrv_query($GLOBALS['conn'],$sql);
 		if(!$rs)
 			{
 			echo "<BR>Error: " . json_encode(sqlsrv_errors());
@@ -163,7 +163,7 @@ class Trace extends Log{
 	static function setTraceControls(){
 
 		$sql = "SELECT * FROM " . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$TRACE_CONTROL ;
-		$rs = DB2_EXEC($GLOBALS['conn'],$sql);
+		$rs = sqlsrv_query($GLOBALS['conn'],$sql);
 		if(!$rs)
 			{
 			echo "<BR>Error: " . json_encode(sqlsrv_errors());

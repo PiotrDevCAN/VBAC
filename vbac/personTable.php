@@ -46,7 +46,7 @@ class personTable extends DbTable
     const PERSON_DETAILS_ACTIVE_ODC = 'Details Active Odc';
     const PERSON_DETAILS_INACTIVE = 'Details Inactive';
     const PERSON_BAU = 'Bau';
-    const ORGANISATION_SELECT = 'CASE WHEN AS.ORGANISATION is null THEN AT.ORGANISATION ELSE AS.ORGANISATION END AS ORGANISATION';
+    const ORGANISATION_SELECT = 'CASE WHEN AS1.ORGANISATION is null THEN AT.ORGANISATION ELSE AS1.ORGANISATION END AS ORGANISATION';
 
     private static $revalStatusChangeEmail = 'Functional Manager,'
         . '<br/>You have been identified from VBAC as being the functional manager of :  &&leaversNotesid&&'
@@ -249,18 +249,18 @@ class personTable extends DbTable
         AT.TRIBE_NAME,
         AT.TRIBE_LEADER,
         AT.ITERATION_MGR,
-        AS.SQUAD_NUMBER,
-        AS.SQUAD_NAME, 
-        AS.SHIFT,
-        AS.SQUAD_LEADER,";
+        AS1.SQUAD_NUMBER,
+        AS1.SQUAD_NAME, 
+        AS1.SHIFT,
+        AS1.SQUAD_LEADER,";
         $sql .= self::ORGANISATION_SELECT;
         $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PES_TRACKER . " as PT ";
         $sql .= " ON P.CNUM = PT.CNUM ";
-        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " as AS ";
-        $sql .= " ON P.SQUAD_NUMBER = AS.SQUAD_NUMBER ";
+        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " as AS1 ";
+        $sql .= " ON P.SQUAD_NUMBER = AS1.SQUAD_NUMBER ";
         $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " as AT ";
-        $sql .= " ON AS.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
+        $sql .= " ON AS1.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
         $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$STATIC_SKILLSETS . " as SS ";
         $sql .= " ON P.SKILLSET_ID = SS.SKILLSET_ID ";
         $sql .= " WHERE " . $preBoardersPredicate;
@@ -280,10 +280,10 @@ class personTable extends DbTable
         $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PES_TRACKER . " as PT ";
         $sql .= " ON PT.CNUM = P.CNUM ";
-        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " as AS ";
-        $sql .= " ON AS.SQUAD_NUMBER = P.SQUAD_NUMBER ";
+        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " as AS1 ";
+        $sql .= " ON AS1.SQUAD_NUMBER = P.SQUAD_NUMBER ";
         $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " as AT ";
-        $sql .= " ON AS.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
+        $sql .= " ON AS1.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
         $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$STATIC_SKILLSETS . " as SS ";
         $sql .= " ON P.SKILLSET_ID = SS.SKILLSET_ID ";
         $sql .= " WHERE " . $preBoardersPredicate;
@@ -297,8 +297,8 @@ class personTable extends DbTable
         $sql = self::preparePersonCountStmt($preBoardersPredicate, $predicate);
 
         $data = array();
-        $preparedCountStatement = sqlsrv_prepare($GLOBALS['conn'], $sql);
-        $rs = sqlsrv_execute($preparedCountStatement, $data);
+        $preparedCountStatement = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
+        $rs = sqlsrv_execute($preparedCountStatement);
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
@@ -316,8 +316,8 @@ class personTable extends DbTable
         $sql = self::preparePersonCountStmt($preBoardersPredicate);
 
         $data = array();
-        $preparedCountStatement = sqlsrv_prepare($GLOBALS['conn'], $sql);
-        $rs = sqlsrv_execute($preparedCountStatement, $data);
+        $preparedCountStatement = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
+        $rs = sqlsrv_execute($preparedCountStatement);
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
