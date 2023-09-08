@@ -260,7 +260,7 @@ if (isset($argv[1])) {
                     $updatePersonSql = substr($updatePersonSql,0,-2) . " WHERE lower(EMAIL_ADDRESS)=? ";
                     $personData[] = $email;
                     
-                    $preparedUpdatePersonSql = sqlsrv_prepare($GLOBALS['conn'], $updatePersonSql);
+                    $preparedUpdatePersonSql = sqlsrv_prepare($GLOBALS['conn'], $updatePersonSql, $personData);
                     
                     if(!$preparedUpdatePersonSql){
                         echo json_encode(sqlsrv_errors());
@@ -270,7 +270,7 @@ if (isset($argv[1])) {
                         return;
                     }
                     
-                    $rsPerson = sqlsrv_execute($preparedUpdatePersonSql, $personData);    
+                    $rsPerson = sqlsrv_execute($preparedUpdatePersonSql);    
                     if(!$rsPerson){
                         print_r($personData);
                         print_r($updatePersonSql);
@@ -299,7 +299,7 @@ if (isset($argv[1])) {
                     $updatePesTrackerSql = substr($updatePesTrackerSql,0,-2) . " WHERE CNUM=( SELECT CNUM FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " WHERE lower(EMAIL_ADDRESS) = ? FETCH FIRST 1 ROWS ONLY ) ";
                     $pesTrackerData[] = $email;
                     
-                    $preparedUpdatePesTrackerSql = sqlsrv_prepare($GLOBALS['conn'], $updatePesTrackerSql);
+                    $preparedUpdatePesTrackerSql = sqlsrv_prepare($GLOBALS['conn'], $updatePesTrackerSql, $pesTrackerData);
                     
                     if(!$preparedUpdatePesTrackerSql){
                         echo json_encode(sqlsrv_errors());
@@ -309,7 +309,7 @@ if (isset($argv[1])) {
                         return;
                     }
                     
-                    $rsPesTracker = sqlsrv_execute($preparedUpdatePesTrackerSql, $pesTrackerData);
+                    $rsPesTracker = sqlsrv_execute($preparedUpdatePesTrackerSql);
                     if(!$rsPesTracker){
                         print_r($pesTrackerData);
                         print_r($updatePesTrackerSql);

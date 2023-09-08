@@ -1397,14 +1397,14 @@ class personTable extends DbTable
         return $data;
     }
 
-    private function prepareRevalidationStmt()
+    private function prepareRevalidationStmt($data)
     {
         if (empty($this->preparedRevalidationStmt)) {
             $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
             $sql .= " SET NOTES_ID = ?, EMAIL_ADDRESS = ?,  REVALIDATION_STATUS = '" . personRecord::REVALIDATED_FOUND . "' , REVALIDATION_DATE_FIELD = current date ";
             $sql .= " WHERE CNUM=? ";
 
-            $this->preparedRevalidationStmt = sqlsrv_prepare($GLOBALS['conn'], $sql);
+            $this->preparedRevalidationStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
 
             if (!$this->preparedRevalidationStmt) {
                 DbTable::displayErrorMessage($this->preparedRevalidationStmt, __CLASS__, __METHOD__, $sql);
@@ -1414,14 +1414,14 @@ class personTable extends DbTable
         return $this->preparedRevalidationStmt;
     }
 
-    private function prepareLeaverProjectedEndDateStmt()
+    private function prepareLeaverProjectedEndDateStmt($data)
     {
         if (empty($this->preparedLeaverProjectedEndDateStmt)) {
             $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
             $sql .= " SET PROJECTED_END_DATE = current date ";
             $sql .= " WHERE CNUM=? AND PROJECTED_END_DATE is null ";
 
-            $this->preparedLeaverProjectedEndDateStmt = sqlsrv_prepare($GLOBALS['conn'], $sql);
+            $this->preparedLeaverProjectedEndDateStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
 
             if (!$this->preparedLeaverProjectedEndDateStmt) {
                 DbTable::displayErrorMessage($this->preparedLeaverProjectedEndDateStmt, __CLASS__, __METHOD__, $sql);
@@ -1431,14 +1431,14 @@ class personTable extends DbTable
         return $this->preparedLeaverProjectedEndDateStmt;
     }
 
-    private function prepareRevalidationLeaverStmt()
+    private function prepareRevalidationLeaverStmt($data)
     {
         if (empty($this->preparedRevalidationLeaverStmt)) {
             $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
             $sql .= " SET REVALIDATION_STATUS = '" . personRecord::REVALIDATED_LEAVER . "' , REVALIDATION_DATE_FIELD = current date ";
             $sql .= " WHERE CNUM=? ";
 
-            $this->preparedRevalidationLeaverStmt = sqlsrv_prepare($GLOBALS['conn'], $sql);
+            $this->preparedRevalidationLeaverStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
 
             if (!$this->preparedRevalidationLeaverStmt) {
                 DbTable::displayErrorMessage($this->preparedRevalidationStmt, __CLASS__, __METHOD__, $sql);
@@ -1448,7 +1448,7 @@ class personTable extends DbTable
         return $this->preparedRevalidationLeaverStmt;
     }
 
-    private function prepareRevalidationPotentialLeaverStmt()
+    private function prepareRevalidationPotentialLeaverStmt($data)
     {
         if (empty($this->preparedRevalidationPotentialLeaverStmt)) {
             $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
@@ -1456,7 +1456,7 @@ class personTable extends DbTable
             $sql .= " SET REVALIDATION_STATUS = '" . personRecord::REVALIDATED_POTENTIAL . "'  "; // Storing the date was cutting to many history records
             $sql .= " WHERE CNUM=? ";
 
-            $this->preparedRevalidationPotentialLeaverStmt = sqlsrv_prepare($GLOBALS['conn'], $sql);
+            $this->preparedRevalidationPotentialLeaverStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
 
             if (!$this->preparedRevalidationPotentialLeaverStmt) {
                 DbTable::displayErrorMessage($this->preparedRevalidationPotentialLeaverStmt, __CLASS__, __METHOD__, $sql);
@@ -1468,10 +1468,10 @@ class personTable extends DbTable
 
     public function confirmRevalidation($notesId, $email, $cnum)
     {
-        $preparedStmt = $this->prepareRevalidationStmt();
         $data = array(trim($notesId), trim($email), trim($cnum));
+        $preparedStmt = $this->prepareRevalidationStmt($data);
 
-        $rs = sqlsrv_execute($preparedStmt, $data);
+        $rs = sqlsrv_execute($preparedStmt);
 
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, "prepared: revalidationStmt");
@@ -1482,18 +1482,18 @@ class personTable extends DbTable
 
     public function flagLeaver($cnum)
     {
-        $preparedStmt = $this->prepareRevalidationLeaverStmt();
         $data = array(trim($cnum));
-        $rs = sqlsrv_execute($preparedStmt, $data);
+        $preparedStmt = $this->prepareRevalidationLeaverStmt($data);
+        $rs = sqlsrv_execute($preparedStmt);
 
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, "prepared: revalidationLeaverStmt");
             return false;
         }
 
-        $preparedStmt = $this->prepareLeaverProjectedEndDateStmt();
         $data = array(trim($cnum));
-        $rs = sqlsrv_execute($preparedStmt, $data);
+        $preparedStmt = $this->prepareLeaverProjectedEndDateStmt($data);
+        $rs = sqlsrv_execute($preparedStmt);
 
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, "prepared: leaverProjectedEndDateStmt");
@@ -1508,9 +1508,9 @@ class personTable extends DbTable
 
     public function flagPotentialLeaver($cnum)
     {
-        $preparedStmt = $this->prepareRevalidationPotentialLeaverStmt();
         $data = array(trim($cnum));
-        $rs = sqlsrv_execute($preparedStmt, $data);
+        $preparedStmt = $this->prepareRevalidationPotentialLeaverStmt($data);
+        $rs = sqlsrv_execute($preparedStmt);
 
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, "prepared: revalidationPotentialLeaverStmt");
@@ -1686,14 +1686,14 @@ class personTable extends DbTable
         // ('FM_CNUM','CNUM');
     }
 
-    private function prepareUpdateLbgLocationStmt()
+    private function prepareUpdateLbgLocationStmt($data)
     {
         if (empty($this->preparedUpdateLbgLocationStmt)) {
             $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
             $sql .= " SET LBG_LOCATION=? ";
             $sql .= " WHERE CNUM=?  ";
 
-            $this->preparedUpdateLbgLocationStmt = sqlsrv_prepare($GLOBALS['conn'], $sql);
+            $this->preparedUpdateLbgLocationStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
 
             if (!$this->preparedUpdateLbgLocationStmt) {
                 DbTable::displayErrorMessage($this->preparedRevalidationLeaverStmt, __CLASS__, __METHOD__, $sql);
@@ -1706,9 +1706,9 @@ class personTable extends DbTable
     public function updateLbgLocationForCnum($lbgLocation, $cnum)
     {
         if (!empty($cnum) && !empty($lbgLocation)) {
-            $preparedStmt = $this->prepareUpdateLbgLocationStmt();
             $data = array($lbgLocation, $cnum);
-            $rs = sqlsrv_execute($preparedStmt, $data);
+            $preparedStmt = $this->prepareUpdateLbgLocationStmt($data);
+            $rs = sqlsrv_execute($preparedStmt);
             if (!$rs) {
                 DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared statment');
                 return false;
@@ -1761,14 +1761,14 @@ class personTable extends DbTable
         return false;
     }
 
-    private function prepareUpdateSecurityEducationStmt()
+    private function prepareUpdateSecurityEducationStmt($data)
     {
         if (empty($this->preparedUpdateSecurityEducationStmt)) {
             $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
             $sql .= " SET SECURITY_EDUCATION=? ";
             $sql .= " WHERE CNUM=?  ";
 
-            $this->preparedUpdateSecurityEducationStmt = sqlsrv_prepare($GLOBALS['conn'], $sql);
+            $this->preparedUpdateSecurityEducationStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
 
             if (!$this->preparedUpdateSecurityEducationStmt) {
                 DbTable::displayErrorMessage($this->preparedUpdateSecurityEducationStmt, __CLASS__, __METHOD__, $sql);
@@ -1781,9 +1781,9 @@ class personTable extends DbTable
     public function updateSecurityEducationForCnum($securityEducation, $cnum)
     {
         if (!empty($cnum) && !empty($securityEducation)) {
-            $preparedStmt = $this->prepareUpdateSecurityEducationStmt();
             $data = array($securityEducation, $cnum);
-            $rs = sqlsrv_execute($preparedStmt, $data);
+            $preparedStmt = $this->prepareUpdateSecurityEducationStmt($data);
+            $rs = sqlsrv_execute($preparedStmt);
             if (!$rs) {
                 DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared statment');
                 return false;

@@ -210,8 +210,6 @@ class BlueMail
         $sql.= !empty($bcc) ? " ,? " : null ;
         $sql.= " ); ";
 
-        $preparedStatement = sqlsrv_prepare($GLOBALS['conn'], $sql);
-
         $table = new EmailLogTable(AllItdqTables::$EMAIL_LOG);
         $subject = $table->truncateValueToFitColumn($subject, 'SUBJECT');
         $message = $table->truncateValueToFitColumn($message, 'MESSAGE');
@@ -221,7 +219,8 @@ class BlueMail
 
         !empty($cc)  ? $data[] = serialize($cc) : null;
         !empty($bcc) ? $data[] = serialize($bcc) : null;
-        $rs = sqlsrv_execute($preparedStatement,$data);
+        $preparedStatement = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
+        $rs = sqlsrv_execute($preparedStatement);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs,__CLASS__,__METHOD__,$sql);

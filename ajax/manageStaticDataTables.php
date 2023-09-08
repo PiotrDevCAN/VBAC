@@ -28,20 +28,20 @@ if($uid != 'newEntry'){
     $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $table;
     $sql .= " SET " . $valueField  . "  =  ? " ;
     $sql .= " WHERE " . $valueId . " = ? ";
-    $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql);
     $data = array($value,$uid);
+    $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
 } else {
     $sql = " INSERT INTO " . $GLOBALS['Db2Schema'] . "." . $table;
     $sql .= " ( " . $valueField  . ") values (?) " ;
-    $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql);
     $data = array($value);
+    $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
 }
 
 if(!$preparedStmt){
     echo json_encode(sqlsrv_errors());
     echo json_encode(sqlsrv_errors());
 } else {
-    $execute = sqlsrv_execute($preparedStmt,$data);
+    $execute = sqlsrv_execute($preparedStmt);
     if(!$execute){
         echo json_encode(sqlsrv_errors());
         echo json_encode(sqlsrv_errors());

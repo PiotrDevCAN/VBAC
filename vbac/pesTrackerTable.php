@@ -385,11 +385,10 @@ class pesTrackerTable extends DbTable{
     }
 
     function getProcessingStatusCell($cnum){
-        $preparedStmt = $this->preparedGetProcessingStatusStmt();
-
         $data = array($cnum);
-        $rs = sqlsrv_execute($preparedStmt,$data);
-
+        $preparedStmt = $this->preparedGetProcessingStatusStmt($data);
+        
+        $rs = sqlsrv_execute($preparedStmt);
         if($rs){
             $row = sqlsrv_fetch_array($preparedStmt);
 
@@ -475,7 +474,7 @@ class pesTrackerTable extends DbTable{
         return $cell;
     }
 
-    function prepareStageUpdate($stage){
+    function prepareStageUpdate($stage, $data){
         if(isset($this->preparedStageUpdateStmts[strtoupper(htmlspecialchars($stage))] )) {
             return $this->preparedStageUpdateStmts[strtoupper(htmlspecialchars($stage))];
         }
@@ -485,7 +484,7 @@ class pesTrackerTable extends DbTable{
 
         $this->preparedSelectSQL = $sql;
 
-        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql);
+        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
 
          if($preparedStmt){
              $this->preparedStageUpdateStmts[strtoupper(htmlspecialchars($stage))] = $preparedStmt;
@@ -510,7 +509,7 @@ class pesTrackerTable extends DbTable{
     }
 
 
-    function prepareProcessStatusUpdate(){
+    function prepareProcessStatusUpdate($data){
         if(isset($this->preparedProcessStatusUpdate )) {
             return $this->prepareProcessStatusUpdate;
         }
@@ -520,7 +519,7 @@ class pesTrackerTable extends DbTable{
 
         $this->preparedSelectSQL = $sql;
 
-        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql);
+        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
 
         if($preparedStmt){
             $this->prepareProcessStatusUpdate = $preparedStmt;
@@ -529,13 +528,14 @@ class pesTrackerTable extends DbTable{
         return $preparedStmt;
     }
 
-    function prepareTrackerInsert(){
+    function prepareTrackerInsert($data){
         if(isset($this->preparedTrackerInsert )) {
             return $this->preparedTrackerInsert;
         }
         $sql = " INSERT INTO " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql.= " ( CNUM ) VALUES (?) ";
-        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql);
+        
+        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
 
         if($preparedStmt){
             $this->preparedTrackerInsert = $preparedStmt;
@@ -546,7 +546,7 @@ class pesTrackerTable extends DbTable{
 
     }
 
-    function prepareResetForRecheck(){
+    function prepareResetForRecheck($data){
         if(isset($this->preparedResetForRecheck)) {
             return $this->preparedResetForRecheck;
         }
@@ -557,7 +557,7 @@ class pesTrackerTable extends DbTable{
         $sql.= " ,  PROCESSING_STATUS_CHANGED= current timestamp, DATE_LAST_CHASED = null ";
         $sql.= " WHERE CNUM = ? ";
 
-        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql);
+        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
 
         if($preparedStmt){
             $this->preparedResetForRecheck = $preparedStmt;
@@ -575,10 +575,10 @@ class pesTrackerTable extends DbTable{
 
         if (!$this->existsInDb($trackerRecord)) {
 
-            $preparedStmt = $this->prepareTrackerInsert();
             $data = array($cnum);
+            $preparedStmt = $this->prepareTrackerInsert($data);
 
-            $rs = sqlsrv_execute($preparedStmt,$data);
+            $rs = sqlsrv_execute($preparedStmt);
 
             if(!$rs){
                 DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared sql');
@@ -598,10 +598,10 @@ class pesTrackerTable extends DbTable{
         $trackerRecord = new pesTrackerRecord();
         $trackerRecord->setFromArray(array('CNUM'=>$cnum));
 
-        $preparedStmt = $this->prepareResetForRecheck();
         $data = array($cnum);
-
-        $rs = sqlsrv_execute($preparedStmt,$data);
+        $preparedStmt = $this->prepareResetForRecheck($data);
+        
+        $rs = sqlsrv_execute($preparedStmt);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared sql');
@@ -618,10 +618,10 @@ class pesTrackerTable extends DbTable{
         if (!$this->existsInDb($trackerRecord)) {
             $this->createNewTrackerRecord($cnum);
         }
-        $preparedStmt = $this->prepareStageUpdate($stage);
         $data = array($stageValue,$cnum);
+        $preparedStmt = $this->prepareStageUpdate($stage, $data);
 
-        $rs = sqlsrv_execute($preparedStmt,$data);
+        $rs = sqlsrv_execute($preparedStmt);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared sql');
@@ -638,10 +638,10 @@ class pesTrackerTable extends DbTable{
         if (!$this->existsInDb($trackerRecord)) {
             $this->createNewTrackerRecord($cnum);
         }
-        $preparedStmt = $this->prepareProcessStatusUpdate();
         $data = array($processStatus,$cnum);
-
-        $rs = sqlsrv_execute($preparedStmt,$data);
+        $preparedStmt = $this->prepareProcessStatusUpdate($data);
+        
+        $rs = sqlsrv_execute($preparedStmt);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared sql');
@@ -759,7 +759,7 @@ class pesTrackerTable extends DbTable{
         return $newComment;
     }
 
-    function prepareGetPesCommentStmt(){
+    function prepareGetPesCommentStmt($data){
         if(!empty($this->preparedGetPesCommentStmt)){
             return $this->preparedGetPesCommentStmt;
         }
@@ -767,7 +767,7 @@ class pesTrackerTable extends DbTable{
         $sql = " SELECT COMMENT FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql.= " WHERE CNUM=? ";
 
-        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql);
+        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
 
         if($preparedStmt){
             $this->preparedGetPesCommentStmt = $preparedStmt;
@@ -780,11 +780,10 @@ class pesTrackerTable extends DbTable{
     }
 
     function getPesComment($cnum){
-        $preparedStmt = $this->prepareGetPesCommentStmt();
-
         $data = array($cnum);
+        $preparedStmt = $this->prepareGetPesCommentStmt($data);
 
-        $rs = sqlsrv_execute($preparedStmt,$data);
+        $rs = sqlsrv_execute($preparedStmt);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'Prepared Stmt');

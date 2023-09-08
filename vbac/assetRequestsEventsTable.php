@@ -28,7 +28,7 @@ class assetRequestsEventsTable extends DbTable{
 
     private $preparedInsertEventStatement;
 
-    private function prepareInsertStatement(){
+    private function prepareInsertStatement($data){
         if(!empty($this->preparedInsertEventStatement)){
             return $this->preparedInsertEventStatement;
         }
@@ -53,9 +53,9 @@ class assetRequestsEventsTable extends DbTable{
     }
 
     function logEventForRequest($event, $requestReference){
-        $preparedStmt = $this->prepareInsertStatement();
         $data = array($requestReference, $event);
-        $rs = sqlsrv_execute($preparedStmt,$data);
+        $preparedStmt = $this->prepareInsertStatement($data);
+        $rs = sqlsrv_execute($preparedStmt);
         if(!$rs){
             DbTable::displayErrorMessage($rs,__CLASS__, __METHOD__, $sql);
             return false;
@@ -63,7 +63,7 @@ class assetRequestsEventsTable extends DbTable{
         return true;
     }
     
-    static function logEventForRequestWithDate($event, $requestReference,$date){
+    static function logEventForRequestWithDate($event, $requestReference, $date){
         $initator = empty($_SESSION['ssoEmail']) ? 'Unknown' : $_SESSION['ssoEmail'];
         
         $sql = " INSERT INTO " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS_EVENTS ;
@@ -71,9 +71,9 @@ class assetRequestsEventsTable extends DbTable{
         $sql.= " values ";
         $sql.= "( ?, ?, ?, '$initator') ";
         
-        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql);   
         $data = array($requestReference, $event, $date);
-        $rs = sqlsrv_execute($preparedStmt,$data);
+        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);   
+        $rs = sqlsrv_execute($preparedStmt);
         if(!$rs){
             DbTable::displayErrorMessage($rs,__CLASS__, __METHOD__, $sql);
             return false;
