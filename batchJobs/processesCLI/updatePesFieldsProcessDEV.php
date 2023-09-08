@@ -73,8 +73,8 @@ if (isset($argv[1])) {
             $connToUPES = tryConnectToUPES($conn_string);
             if (!$connToUPES) {
                 error_log("Failed attempt $attempts to connect to DB2");
-                error_log("Msg:" . db2_conn_errormsg());
-                error_log("Err:" . db2_conn_error());
+                error_log("Msg:" . json_encode(sqlsrv_errors());
+                error_log("Err:" . json_encode(sqlsrv_errors());
                 sleep(3);
             }
         }
@@ -101,8 +101,8 @@ if (isset($argv[1])) {
         } else {
             error_log(__FILE__ . __LINE__ . " Connect to DB2 Failed");
             error_log(__FILE__ . __LINE__ . $conn_string);
-            error_log(__FILE__ . __LINE__ . db2_conn_errormsg());
-            error_log(__FILE__ . __LINE__ . db2_conn_error());
+            error_log(__FILE__ . __LINE__ . json_encode(sqlsrv_errors());
+            error_log(__FILE__ . __LINE__ . json_encode(sqlsrv_errors());
             throw new Exception('Failed to connect to DB2');
         }
 

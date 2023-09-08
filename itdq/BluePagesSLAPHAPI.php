@@ -645,7 +645,7 @@ class BluePagesSLAPHAPI {
 			if($this->online){
 				echo "<H2>Saved Department of $this->size ($actual) People for : " . $this->CNUM . "</H2>";
 			}
-			$rs = DB2_EXEC ( $_SESSION ['conn'], " COMMIT" );
+			$rs = sqlsrv_query( $_SESSION ['conn'], " COMMIT" );
 			if (! $rs) {
 				print_r ( $_SESSION );
 				echo "<BR>" . sqlsrv_errors ();
@@ -691,7 +691,7 @@ class BluePagesSLAPHAPI {
 			if($this->online){
 				echo "<H2>Saved Details for : " . $this->CNUM . " " . $this->person  ['NAME'] . "</H2>";
 			}
-//			$rs = DB2_EXEC ( $_SESSION ['conn'], " COMMIT" );
+//			$rs = sqlsrv_query( $_SESSION ['conn'], " COMMIT" );
 //			if (! $rs) {
 //				print_r ( $_SESSION );
 //				echo "<BR>" . sqlsrv_errors ();

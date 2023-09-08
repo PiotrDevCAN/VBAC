@@ -14,7 +14,10 @@ include "splClassLoader.php";
 
 session_start();
 $token = $_ENV['api_token'];
+
 $GLOBALS['Db2Schema'] = strtoupper($_ENV['environment']);
+$GLOBALS['Db2Schema'] = str_replace('_LOCAL', '_DEV', $GLOBALS['Db2Schema']);
+
 $_SESSION['ssoEmail'] = empty($_SESSION['ssoEmail']) ? 'API Invocation' : $_SESSION['ssoEmail'];
 include "connect.php";
 // personRecord::employeeTypeMappingToDb2();

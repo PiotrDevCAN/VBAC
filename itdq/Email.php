@@ -84,7 +84,7 @@ class Email
             $sql .= " (TO,CC,SUBJECT,MESSAGE,REPLYTO,ENABLED, CREATOR ) ";
             $sql .= " VALUES ";
             $sql .= "('" . htmlspecialchars($to) . "','" . htmlspecialchars($cc) . "','" . htmlspecialchars($subject) . "','" . $safeMessage . "','" . htmlspecialchars($replyto) . "','" . htmlspecialchars($ena) . "','" . htmlspecialchars($_SESSION['ltcuser']['mail']) . "') ";
-            $rs = DB2_EXEC($GLOBALS['conn'], $sql);
+            $rs = sqlsrv_query($GLOBALS['conn'], $sql);
             if (! $rs) {
                 print_r($_SESSION);
                 echo "<BR/>" . json_encode(sqlsrv_errors());
@@ -106,7 +106,7 @@ class Email
             $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$EMAIL_LOG;
             $sql .= " SET RESULT='" . htmlspecialchars($res) . "' ";
             $sql .= " WHERE RECORD_ID='" . trim($recordId) . "' ";
-            $rs = DB2_EXEC($GLOBALS['conn'], $sql);
+            $rs = sqlsrv_query($GLOBALS['conn'], $sql);
             if (! $rs) {
                 print_r($_SESSION);
                 echo "<BR/>" . json_encode(sqlsrv_errors());
@@ -133,7 +133,7 @@ class Email
             }
             $sql = 'DELETE FROM ' . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$EMAIL_LOG;
             $sql .= " WHERE CREATED < (CURRENT TIMESTAMP - $keepEmailsFor );";
-            $rs = DB2_EXEC($GLOBALS['conn'], $sql);
+            $rs = sqlsrv_query($GLOBALS['conn'], $sql);
             if (! $rs) {
                 print_r($_SESSION);
                 echo "<BR/>" . json_encode(sqlsrv_errors());

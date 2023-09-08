@@ -14,12 +14,14 @@ class AgileTribeTable extends DbTable{
 
     static function nextAvailableTribeNumber($version=null) {
 
+        // THIS HAS BEEN CHANGED
         $table = $version=='Original' ? allTables::$AGILE_TRIBE : allTables::$AGILE_TRIBE_OLD;
-        $sql = " SELECT MAX(TRIBE_NUMBER) AS TRIBE_NUMBER FROM ( ";
-        $sql.= "      SELECT MAX(TRIBE_NUMBER) as TRIBE_NUMBER FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE;
-        $sql.= "      UNION ";
-        $sql.= "      SELECT MAX(TRIBE_NUMBER) as TRIBE_NUMBER FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE_OLD;
-        $sql.= " ); ";
+        // $sql = " SELECT MAX(TRIBE_NUMBER) AS TRIBE_NUMBER FROM ( ";
+        // $sql.= "      SELECT MAX(TRIBE_NUMBER) as TRIBE_NUMBER FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE;
+        // $sql.= "      UNION ";
+        // $sql.= "      SELECT MAX(TRIBE_NUMBER) as TRIBE_NUMBER FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE_OLD;
+        // $sql.= " ) ";
+        $sql = " SELECT MAX(TRIBE_NUMBER) AS TRIBE_NUMBER FROM ". $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE;
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if(!$rs){

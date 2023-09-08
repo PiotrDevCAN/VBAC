@@ -37,10 +37,10 @@ $sql.= " ON S.TRIBE_NUMBER  = T.TRIBE_NUMBER ";
 $sql.= " WHERE " . personTable::activePersonPredicate(true,"P");
 $sql.= " AND ( P.SQUAD_NUMBER is not null  AND P.SQUAD_NUMBER > 0 ) ";
 
-$preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql);
-
 $data = array();
-$rs = sqlsrv_execute($preparedStmt, $data);
+$preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
+
+$rs = sqlsrv_execute($preparedStmt);
 
 if(!$rs){
     DbTable::displayErrorMessage($rs, null, __FILE__, $sql);

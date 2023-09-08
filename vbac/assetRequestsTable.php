@@ -564,7 +564,7 @@ class assetRequestsTable extends DbTable{
 
 
     function countRequestsForNonPmoExport(){
-        $sql = " SELECT count(*) as tickets ";
+        $sql = " SELECT count(*) as TICKETS ";
         $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
         $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql .= " ON AR.CNUM = P.CNUM ";
@@ -589,7 +589,7 @@ class assetRequestsTable extends DbTable{
 
     function countRequestsAll(){
 
-        $sql = " SELECT count(*) as tickets ";
+        $sql = " SELECT count(*) as TICKETS ";
         $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
 
         $rs2 = sqlsrv_query($GLOBALS['conn'],$sql);
@@ -606,7 +606,7 @@ class assetRequestsTable extends DbTable{
 
     function countRequestsAwaitingIam(){
 
-        $sql = " SELECT count(*) as tickets ";
+        $sql = " SELECT count(*) as TICKETS ";
         $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
         $sql .= " WHERE STATUS='" . assetRequestRecord::STATUS_AWAITING_IAM . "' ";
 
@@ -632,7 +632,7 @@ class assetRequestsTable extends DbTable{
             $nonBau = (strtolower(trim($bauRequest))!='true');
         }
 
-        $sql = " SELECT count(*) as tickets ";
+        $sql = " SELECT count(*) as TICKETS ";
         $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
         $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql .= " ON AR.CNUM = P.CNUM ";
@@ -663,7 +663,7 @@ class assetRequestsTable extends DbTable{
 
     function countRequestsExported(){
 
-        $sql = " SELECT count(*) as tickets ";
+        $sql = " SELECT count(*) as TICKETS ";
         $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
 
         $sql .= " WHERE 1=1 ";
@@ -683,7 +683,7 @@ class assetRequestsTable extends DbTable{
 
     function countRequestsRaised($bau=true){
 
-        $sql = " SELECT count(*) as tickets ";
+        $sql = " SELECT count(*) as TICKETS ";
         $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
         $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql .= " ON AR.CNUM = P.CNUM ";
