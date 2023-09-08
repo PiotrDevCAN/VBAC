@@ -14,7 +14,7 @@ AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_REQUE
 $assetRequestTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
 $personTable = new personTable(allTables::$PERSON);
 
-$autoCommit = db2_autocommit($GLOBALS['conn'],DB2_AUTOCOMMIT_OFF);
+// $autoCommit = db2_autocommit($GLOBALS['conn'],DB2_AUTOCOMMIT_OFF);
 
 $success = false;
 
@@ -61,7 +61,7 @@ if($success){
     sqlsrv_rollback($GLOBALS['conn']);
 }
 
-db2_autocommit($GLOBALS['conn'],$autoCommit);
+// db2_autocommit($GLOBALS['conn'],$autoCommit);
 
 $messages = ob_get_clean();
 ob_start();

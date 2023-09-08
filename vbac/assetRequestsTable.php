@@ -407,7 +407,7 @@ class assetRequestsTable extends DbTable{
 
         $nextVarb = $this->getNextVarb();
 
-        $commitState  = db2_autocommit($GLOBALS['conn'],DB2_AUTOCOMMIT_OFF);
+        // $commitState  = db2_autocommit($GLOBALS['conn'],DB2_AUTOCOMMIT_OFF);
 
         // Get the Ref's for this export - so we can timestamp the export.
 
@@ -504,13 +504,13 @@ class assetRequestsTable extends DbTable{
 //         $base64Encoded = base64_encode($requestData);
 
         sqlsrv_commit($GLOBALS['conn']);
-        db2_autocommit($GLOBALS['conn'],$commitState);
+        // db2_autocommit($GLOBALS['conn'],$commitState);
 
         return $requestData;
     }
 
     function getRequestsForNonPmo(){
-        $commitState  = db2_autocommit($GLOBALS['conn'],DB2_AUTOCOMMIT_OFF);
+        // $commitState  = db2_autocommit($GLOBALS['conn'],DB2_AUTOCOMMIT_OFF);
 
         $sql = " SELECT 'User Created' as ORDERIT_VARB_REF, ORDERIT_NUMBER, REQUEST_REFERENCE, ";
         $sql .= " P.CT_ID as CT_ID, ";
@@ -557,7 +557,7 @@ class assetRequestsTable extends DbTable{
         }
 
         sqlsrv_commit($GLOBALS['conn']);
-        db2_autocommit($GLOBALS['conn'],$commitState);
+        // db2_autocommit($GLOBALS['conn'],$commitState);
 
         return $requestData;
     }
@@ -1742,7 +1742,7 @@ class assetRequestsTable extends DbTable{
 
         $requestList = "'" . implode("','", $request) . "'";
 
-        $autoCommit = db2_autocommit($GLOBALS['conn'],DB2_AUTOCOMMIT_OFF);
+        // $autoCommit = db2_autocommit($GLOBALS['conn'],DB2_AUTOCOMMIT_OFF);
 
         $sql  = " UPDATE ";
         $sql .= $GLOBALS['Db2Schema'] . "." . $this->tableName ;
@@ -1789,7 +1789,7 @@ class assetRequestsTable extends DbTable{
 
         sqlsrv_commit($GLOBALS['conn']);
 
-        db2_autocommit($GLOBALS['conn'],$autoCommit);
+        // db2_autocommit($GLOBALS['conn'],$autoCommit);
 
         return true;
     }
@@ -2491,7 +2491,7 @@ class assetRequestsTable extends DbTable{
 
         $assetRequestEventsTable = new assetRequestsEventsTable(allTables::$ASSET_REQUESTS_EVENTS);
 
-        $autocommit = db2_autocommit($GLOBALS['conn'],DB2_AUTOCOMMIT_OFF);
+        // $autocommit = db2_autocommit($GLOBALS['conn'],DB2_AUTOCOMMIT_OFF);
 
         $listOfAssetRefs = implode("','", $assetReferences);
 
@@ -2538,7 +2538,7 @@ class assetRequestsTable extends DbTable{
         }
 
         sqlsrv_commit($GLOBALS['conn']);
-        db2_autocommit($GLOBALS['conn'],$autocommit);
+        // db2_autocommit($GLOBALS['conn'],$autocommit);
     }
 
     function prepareDevarb($data){

@@ -29,7 +29,7 @@ class odcAccessTable extends DbTable {
         $columnHeaders = array();
         $recordData = array();
         $failedRecords = 0;
-        $autoCommit = db2_autocommit($GLOBALS['conn'],DB2_AUTOCOMMIT_OFF);
+        // $autoCommit = db2_autocommit($GLOBALS['conn'],DB2_AUTOCOMMIT_OFF);
         for ($row = 1; $row <= $highestRow; $row++){
             set_time_limit(10);
             $time = -microtime(true);
@@ -98,7 +98,7 @@ class odcAccessTable extends DbTable {
         }
 
         sqlsrv_commit($GLOBALS['conn']);  // Save what we have done.
-        db2_autocommit($GLOBALS['conn'],$autoCommit);
+        // db2_autocommit($GLOBALS['conn'],$autoCommit);
 
         $response = ob_get_clean();
         ob_start();
