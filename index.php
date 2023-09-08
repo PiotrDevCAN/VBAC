@@ -2,7 +2,7 @@
 use itdq\WorkerAPI;
 
 $workerAPI = new WorkerAPI();
-$workerData = json_decode($workerAPI->getworkerByEmail('piotr.tajanowicz@kyndryl.com'));
+$workerData = json_decode($workerAPI->getworkerByEmail($_SESSION['ssoEmail']);
 
 // echo '<pre>';
 // echo 'ENVIRONMENT <br>';
