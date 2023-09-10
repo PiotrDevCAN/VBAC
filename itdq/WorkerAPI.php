@@ -8,7 +8,6 @@ include_once "WorkerAPI/class/include.php";
 /*
  *  Handles Worker API.
  */
-
 class WorkerAPI {
 	
 	private $token = null;
@@ -20,12 +19,11 @@ class WorkerAPI {
 		$auth->ensureAuthorized();
 
 		$this->hostname = trim($_ENV['worker_api_host']);
-
-		// echo $_SESSION['worker_token'];
 		$this->token = $_SESSION['worker_token'];
 	}
 
-	private function createCurl($type = "GET"){
+	private function createCurl($type = "GET")
+	{
 		// create a new cURL resource
 		$ch = curl_init();
 		$authorization = "Authorization: Bearer ".$this->token; // Prepare the authorisation token
@@ -41,7 +39,8 @@ class WorkerAPI {
 		return $ch;
 	}
 
-	private function processURL($url, $type = 'GET'){
+	private function processURL($url, $type = 'GET')
+	{
 		$url = $this->hostname . $url;
 		$ch = $this->createCurl($type);
 		// echo "<BR>Processing";
@@ -80,7 +79,7 @@ class WorkerAPI {
 				}
 			}
 		}
-		return $ret;
+		return $result;
 	}
 
 	// Individual Worker Profile Data

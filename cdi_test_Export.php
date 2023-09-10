@@ -28,8 +28,8 @@ if(empty($base64EncodedData)){
     echo "No requests found to export";
     exit('No requests');
 }
-$sendResponse = BlueMail::send_mail(array('piotr.tajanowicz@ocean.ibm.com'), 'orderit export', 'Find attached CSV',
-    'piotr.tajanowicz@ocean.ibm.com',array(),array(),true,array(array('filename'=>'test.txt','content_type'=>'text/plain','data'=>$base64EncodedData)));
+$sendResponse = BlueMail::send_mail(array('piotr.tajanowicz@kyndryl.com'), 'orderit export', 'Find attached CSV',
+    'piotr.tajanowicz@kyndryl.com',array(),array(),true,array(array('filename'=>'test.txt','content_type'=>'text/plain','data'=>$base64EncodedData)));
 
 // array('filename'=>'export.csv','content_type'=>'text/csv','data'=>$base64EncodedData));
 

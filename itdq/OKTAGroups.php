@@ -1,166 +1,252 @@
 <?php
 namespace itdq;
 
+use WorkerApi\Auth;
+
+include_once "WorkerAPI/class/include.php";
+
 /*
  *  Handles OKTA Groups.
  */
 class OKTAGroups {
 
-	public static function defineGroup($groupName,$description, $life=1){
-		$nextyear = time() + ((365*24*60*60) * $life);
-		$yyyy = date("Y",$nextyear);
-		$mm   = date("m",$nextyear);
-		$dd   = date("d",$nextyear);
-		$url = array();
-		$url['Define_Group'] = "https://bluepages.ibm.com/tools/groups/protect/groups.wss?task=GoNew&selectOn=" . urlencode($groupName) . "&gDesc=" . urlencode($description) . "&mode=members&vAcc=Owner/Admins&Y=$yyyy&M=$mm&D=$dd&API=1";
-		self::processURL($url);
+	private $token = null;
+	private $hostname = null;
+
+	public function __construct()
+	{
+		$auth = new Auth();
+		$auth->ensureAuthorized();
+
+		$this->hostname = trim($_ENV['sso_host']);
+		$this->token = trim($_ENV['sso_api_token']);
 	}
 
-	public static function deleteMember($groupName,$memberEmail){
-		$memberUID = self::getUID($memberEmail);
-		$url = array();
-		$url['Delete_Member'] = "https://bluepages.ibm.com/tools/groups/protect/groups.wss?Delete=Delete+Checked&gName=" . urlencode($groupName) . "&task=DelMem&mebox=" . urlencode($memberUID) . "&API=1";
-		self::processURL($url);
-	}
-
-	public static function addMember($groupName,$memberEmail){
-		$memberUID = self::getUID($memberEmail);
-		$url = array();
-		$url['Add_Member'] = "https://bluepages.ibm.com/tools/groups/protect/groups.wss?gName=" . urlencode($groupName) . "&task=Members&mebox=" . urlencode($memberUID) . "&Select=Add+Members&API=1";
-		self::processURL($url);
-	}
-
-	public static function addAdministrator($groupName,$memberEmail){
-		$memberUID = self::getUID($memberEmail);
-		$url = array();
-		$url['Add_Administrator'] = "https://bluepages.ibm.com/tools/groups/protect/groups.wss?gName=" . urlencode($groupName) . "&task=Administrators&mebox=" . urlencode($memberUID) . "&Submit=Add+Administrators&API=1 ";
-		self::processURL($url);
-	}
-
-	public static function listMembers($groupName){
-	    $url = "https://bluepages.ibm.com/tools/groups/groupsxml.wss?task=listMembers&group=" . urlencode($groupName) . "&depth=1";
-	    $myXMLData =  self::getBgResponseXML($url);
-
-	    $xml=simplexml_load_string($myXMLData);
-
-        return get_object_vars($xml)['member'];
-
-	    // $simple = "<para><note>simple note</note></para>";
-// 	    $p = xml_parser_create();
-// 	    xml_parse_into_struct($p, $xml, $vals, $index);
-// 	    print_r($vals);
-	}
-
-	public static function inAGroup($groupName, $ssoEmail, $depth=1){
-
-		return true;
-
-	    // https://bluepages.ibm.com/tools/groups/groupsxml.wss?task=inAGroup&email=MEMBER_EMAIL_ADDRESS&group=GROUP_NAME[&depth=DEPTH]
-	    $url = "https://bluepages.ibm.com/tools/groups/groupsxml.wss?task=inAGroup&email=" . urlencode($ssoEmail) . "&group=" . urlencode($groupName) . "&depth=" . urlencode($depth);
-	    $myXMLData =  self::getBgResponseXML($url);
-	    $xml=simplexml_load_string($myXMLData);
-	    return get_object_vars($xml)['msg']=='Success';
-
-	}
-
-	public static function getUID($email){
-	    $details = BluePages::getDetailsFromIntranetId($email);
-	    return $details['CNUM'];
-	}
-
-	private static function createCurl($agent='ITDQ'){
-			// create a new cURL resource
+	private function createCurl($type = "GET")
+	{
+		// create a new cURL resource
 		$ch = curl_init();
-//		curl_setopt($ch, CURLOPT_HEADER,         1);
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-//		curl_setopt($ch, CURLOPT_TIMEOUT,        240);
-//		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 240);
-//		curl_setopt($ch, CURLOPT_USERAGENT,      $agent);
-//		curl_setopt($ch, CURLOPT_CAINFO,        '/cecert/cacert.pem');
-//		curl_setopt($ch, CURLOPT_CAINFO,        '/usr/local/zendsvr6/share/curl/cacert.pem');
-//		curl_setopt($ch, CURLOPT_HTTPAUTH,        CURLAUTH_BASIC);
-		curl_setopt($ch, CURLOPT_HEADER,        FALSE);
-// 		$userpwd = $_SERVER['PHP_AUTH_USER'] . ':' . $_SERVER['PHP_AUTH_PW'];
-// 		$ret = curl_setopt($ch, CURLOPT_USERPWD,        $userpwd);
+		$authorization = "Authorization: SSWS ".$this->token; // Prepare the authorisation token
+		$headers = [
+			'Content-Type: application/json',
+			'Accept: application/json, text/json, application/xml, text/xml',
+			$authorization,
+		];
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $type);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		
 		return $ch;
 	}
 
-	private static function processURL($url){
-		$ch = self::createCurl();
-		foreach($url as $function => $BGurl){
-			echo "<BR>Processing $function.";
-			echo "URL:" . $BGurl;
-			$ret = curl_setopt($ch, CURLOPT_URL, $BGurl);
+	private function processURL($url, $type = 'GET')
+	{
+		$url = $this->hostname . $url;
+		$ch = $this->createCurl($type);
+		// echo "<BR>Processing";
+		// echo " URL:" . $url;
+		$ret = curl_setopt($ch, CURLOPT_URL, $url);
+		$ret = curl_exec($ch);
 
-			var_dump($ret);
+		$info = curl_getinfo($ch);
+		
+		// var_dump($ret);
+		// echo '<pre>';
+		// var_dump($ret);
+		// echo '</pre>';
+		// var_dump($info);
+		// exit;
 
-			$ret = curl_exec($ch);
+		$result = json_decode($ret, true);
 
-			var_dump($ret);
+		// var_dump($ret);
+		// echo '<pre>';
+		// var_dump($result);
+		// echo '</pre>';
+		// var_dump($info);
+		// exit;
 
-			if (empty($ret)) {
-				//     some kind of an error happened
-   		 		die(curl_error($ch));
-   		 		curl_close($ch); // close cURL handler
+		if (empty($ret)) {
+			// some kind of an error happened
+			// die(curl_error($ch));
+			curl_close($ch); // close cURL handler
+		} else {
+			$info = curl_getinfo($ch);
+			if (empty($info['http_code'])) {
+				// die("No HTTP code was returned");
+			} else if ($info['http_code'] == 500) {
+				echo $result['message'];
 			} else {
-   				$info = curl_getinfo($ch);
-   			 	if (empty($info['http_code'])) {
-   		     	    die("No HTTP code was returned");
-   		 		} else {
-   		 			// So Bluegroups has processed our URL - What was the result.
-   		 			$bgapiRC  = substr($ret,0,1);
-   		 			if($bgapiRC!=0){
-   		 				// Bluegroups has NOT returned a ZERO - so there was a problem
-   		 				echo "<H3>Error processing Bluegroup URL </H3>";
-   		 				echo "<H2>Please take a screen print of this page and send to the ITDQ Team ASAP.</H2>";
-   		 				echo "<BR>URL<BR>";
-   		 				print_r($url);
-   		 				echo "<BR>Info<BR>";
-   		  				print_r($info);
-   		  				echo "<BR>";
-   		  				exit ("<B>Unsuccessful RC: $ret</B>");
-   		 			} else {
-   		 				echo " Successful RC: $ret";
-   		 				sleep(1); // Give BG a chance to process the request.
-   		 			}
-   		 		}
+				// So Bluegroups has processed our URL - What was the result.
+				$bgapiRC  = substr($ret,0,1);
+				if($bgapiRC!=0){
+					// Bluegroups has NOT returned a ZERO - so there was a problem
+					echo "<H3>Error processing Bluegroup URL </H3>";
+					echo "<H2>Please take a screen print of this page and send to the ITDQ Team ASAP.</H2>";
+					echo "<BR>URL<BR>";
+					print_r($url);
+					echo "<BR>Info<BR>";
+					print_r($info);
+					echo "<BR>";
+					exit ("<B>Unsuccessful RC: $ret</B>");
+				} else {
+					// echo " Successful RC: $ret";
+					sleep(1); // Give BG a chance to process the request.
+				}
 			}
 		}
+		return $result;
 	}
 
-	private static function getBgResponseXML($url){
-	    $ch = self::createCurl();
+	/*
+	* Group operations
+	*/
 
-	    curl_setopt($ch, CURLOPT_URL, $url);
+	public function addGroup($groupName, $description)
+	{
+		$profile = [
+			"name" => $groupName,
+			"description" => $description
+		];
+		$url = "/api/v1/groups";
+		return $this->processURL($url, 'POST', $profile);
+	}
 
-        $ret = curl_exec($ch);
-        if (empty($ret)) {
-            //     some kind of an error happened
-            die(curl_error($ch));
-            curl_close($ch); // close cURL handler
-        } else {
-            $info = curl_getinfo($ch);
-            if (empty($info['http_code'])) {
-                die("No HTTP code was returned");
-            } else {
-                // So Bluegroups has processed our URL - What was the result.
-                $bgapiRC  = substr($ret,0,1);
-                if($bgapiRC!=0){
-                    // Bluegroups has NOT returned a ZERO - so there was a problem
-                    echo "<H3>Error processing Bluegroup URL </H3>";
-                    echo "<H2>Please take a screen print of this page and send to the ITDQ Team ASAP.</H2>";
-                    echo "<BR>URL<BR>";
-                    print_r($url);
-                    echo "<BR>Info<BR>";
-                    print_r($info);
-                    echo "<BR>";
-                    exit ("<B>Unsuccessful RC: $ret</B>");
-                } else {
-                    return $ret;
-                }
-	        }
-	    }
+	public function getGroup($groupId)
+	{
+		$url = "/api/v1/groups/$groupId";
+		return $this->processURL($url, 'GET');
+	}
+
+	public function listGroups()
+	{
+		$url = "/api/v1/groups";
+		return $this->processURL($url, 'GET');
+	}
+
+	public function getGroupByName($groupName)
+	{
+		$groupName = urlencode($groupName);
+		$url = "/api/v1/groups?q=$groupName&limit=10";
+		return $this->processURL($url, 'GET');
+	}
+
+	public function updateGroup($groupId, $groupName, $description)
+	{
+		$profile = [
+			"name" => $groupName,
+			"description" => $description
+		];
+		$url = "/api/v1/groups/$groupId";
+		return $this->processURL($url, 'PUT', $profile);
+	}
+
+	public function removeGroup($groupId)
+	{
+		$url = "/api/v1/groups/$groupId";
+		return $this->processURL($url, 'DELETE');
+	}
+
+	/*
+	* Group member operations
+	*/
+
+	public function listMembers($groupId)
+	{
+		$url = "/api/v1/groups/$groupId/users";
+		return $this->processURL($url, 'GET');
+	}
+
+	public function addMember($groupId, $userId)
+	{
+		$url = "/api/v1/groups/$groupId/users/$userId";
+		return $this->processURL($url, 'PUT');
+	}
+	
+	public function removeMember($groupId, $userId)
+	{
+		$url = "/api/v1/groups/$groupId/users/$userId";
+		return $this->processURL($url, 'DELETE');
+	}
+
+	/*
+	* Group role operations
+	*/
+
+	public function createGroupRole()
+	{
+		$url = "/api/v1/groups/rules";
+		return $this->processURL($url, 'POST');		
+	}
+
+	public function updateGroupRole($ruleId)
+	{
+		$url = "/api/v1/groups/rules/$ruleId";
+		return $this->processURL($url, 'PUT');
+	}
+
+	public function listGroupRules()
+	{
+		$url = "/api/v1/groups/rules";
+		return $this->processURL($url, 'GET');
+	}
+
+	public function getGroupRule($ruleId)
+	{
+		$url = "/api/v1/groups/rules/$ruleId";
+		return $this->processURL($url, 'GET');
+	}
+
+	public function removeGroupRule($ruleId)
+	{
+		$url = "/api/v1/groups/rules/$ruleId";
+		return $this->processURL($url, 'DELETE');
+	}
+
+	public function activateGroupRole($ruleId)
+	{
+		$url = "/api/v1/groups/rules/$ruleId/lifecycle/activate";
+		return $this->processURL($url, 'POST');
+	}
+
+	public function deactivateGroupRole($ruleId)
+	{
+		$url = "/api/v1/groups/rules/$ruleId/lifecycle/deactivate";
+		return $this->processURL($url, 'POST');
+	}
+
+	/*
+	* Auxiliary operations
+ 	*/
+
+	public function inAGroup($groupName, $ssoEmail)
+	{
+		$found = false;
+
+		$groupId = $this->getGroupId($groupName);
+		$groupMembers = $this->listMembers($groupId);
+		
+		foreach($groupMembers as $key => $row) {
+			$email = $row['profile']['email'];
+			if (strtolower(trim($email)) == strtolower(trim($ssoEmail))) {
+				$found = true;
+			}
+		}
+		echo $groupName.' '.$ssoEmail;
+		var_dump($found);
+		return $found;
+	}
+
+	public function getGroupId($groupName)
+	{
+		$groupData = $this->getGroupByName($groupName);
+		$groupId = 	$groupData[0]['id'];
+		return $groupId;
+	}
+
+	public function getUserID($email)
+	{
+	
 	}
 }
 ?>

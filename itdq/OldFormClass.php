@@ -772,7 +772,7 @@ class OldFormClass {
 	    echo "<script>
 	           var config = {
 	               //API Key [REQUIRED]
-	               key: 'esoft;piotr.tajanowicz@ocean.ibm.com',
+	               key: 'esoft;piotr.tajanowicz@kyndryl.com',
 	               faces: {
 	                   //The handler for clicking a person in the drop-down.
 	                   onclick: function(person) {

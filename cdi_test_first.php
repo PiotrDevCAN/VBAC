@@ -25,14 +25,14 @@ $candidateData = array(
     // "PackageId" => "111",
     "PackageName" => "Package 1",
     "PackageId" => "28000000000001",
-    "BGCResponseEmailIds" => "piotr.tajanowicz@ocean.ibm.com",
+    "BGCResponseEmailIds" => "piotr.tajanowicz@kyndryl.com",
     "EmployeeId" => "123456",
     "APIReferenceCode" => "123456",
-    "RequesterId" => "piotr.tajanowicz@ocean.ibm.com",
+    "RequesterId" => "piotr.tajanowicz@kyndryl.com",
     "FirstName" => "TEST",
     "MiddleName" => "C",
     "LastName" => "CANDIDATE",
-    "Email" => "piotr.tajanowicz@ocean.ibm.com",
+    "Email" => "piotr.tajanowicz@kyndryl.com",
     "Phone" => "(425)+533-7745"
 );
 // $resopnse = $api->addCandidate($candidateData);

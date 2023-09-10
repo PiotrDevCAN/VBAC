@@ -23,6 +23,7 @@ $navBarSearch = false;
 $pageDetails = explode("/", $_SERVER['PHP_SELF']);
 $page = isset($pageDetails[2]) ? $pageDetails[2] : $pageDetails[1];
 
+$OKTAGroups = new OKTAGroups();
 $navbar = new Navbar($navBarImage, $navBarBrand,$navBarSearch);
 
 $cdiAdmin       = new NavbarMenu("CDI Admin");
@@ -178,33 +179,33 @@ $elapsed = microtime(true);
 
 error_log("isFm:" . (float)($elapsed-$start));
 
-$isCdi  = OKTAGroups::inAGroup($_SESSION['cdiBg'],  $_SESSION['ssoEmail']) ? ".not('.accessCdi')" : null;
+$isCdi  = $OKTAGroups->inAGroup($_SESSION['cdiBgAz'],  $_SESSION['ssoEmail']) ? ".not('.accessCdi')" : null;
 
 $elapsed = microtime(true);
 error_log("CDI:" . (float)($elapsed-$start));
 
-$isPmo  = OKTAGroups::inAGroup($_SESSION['pmoBg'],  $_SESSION['ssoEmail']) ? ".not('.accessPmo')" : null;
+$isPmo  = $OKTAGroups->inAGroup($_SESSION['pmoBgAz'],  $_SESSION['ssoEmail']) ? ".not('.accessPmo')" : null;
 
 $elapsed = microtime(true);
 error_log("Pmo:" . (float)($elapsed-$start));
 
-$isPes  = OKTAGroups::inAGroup($_SESSION['pesBg'],  $_SESSION['ssoEmail']) ? ".not('.accessPes')" : null;
+$isPes  = $OKTAGroups->inAGroup($_SESSION['pesBgAz'],  $_SESSION['ssoEmail']) ? ".not('.accessPes')" : null;
 
 $elapsed = microtime(true);
 error_log("Pes:" . (float)($elapsed-$start));
 
-$isRep1  = OKTAGroups::inAGroup($_SESSION['rfpBg'],  $_SESSION['ssoEmail']) ? ".not('.accessRepFullPerson')" : null;
+$isRep1  = $OKTAGroups->inAGroup($_SESSION['rfpBgAz'],  $_SESSION['ssoEmail']) ? ".not('.accessRepFullPerson')" : null;
 
 $elapsed = microtime(true);
 error_log("Rep1:" . (float)($elapsed-$start));
 
-$isRes   = OKTAGroups::inAGroup($_SESSION['rsBg'],  $_SESSION['ssoEmail'],3) ? ".not('.accessRes')" : null;
+$isRes   = $OKTAGroups->inAGroup($_SESSION['rsBgAz'],  $_SESSION['ssoEmail'],3) ? ".not('.accessRes')" : null;
 
 $elapsed = microtime(true);
 error_log("vent:" . (float)($elapsed-$start));
 
 $isUser = ".not('.accessUser')";
-$isRequestor = OKTAGroups::inAGroup($_SESSION['reqBg'], $_SESSION['ssoEmail']);
+$isRequestor = $OKTAGroups->inAGroup($_SESSION['reqBgAz'], $_SESSION['ssoEmail']);
 
 $elapsed = microtime(true);
 error_log("vbac:" . (float)($elapsed-$start));
