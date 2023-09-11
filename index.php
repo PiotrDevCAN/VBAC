@@ -19,7 +19,7 @@ echo 'Emails status: '.trim($_ENV['email']);
 <style type="text/css" class="init">
 body {
 	background: url('./public/img/vBAC2.jpg')
-		no-repeat center center fixed;
+	no-repeat center center fixed;
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
 	-o-background-size: cover;
