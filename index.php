@@ -14,6 +14,7 @@ $workerData = json_decode($workerAPI->getworkerByEmail($_SESSION['ssoEmail']));
 // echo '</pre>';
 
 
+
 echo 'Emails status: '.trim($_ENV['email']);
 
 ?>
