@@ -13,6 +13,8 @@ $workerData = json_decode($workerAPI->getworkerByEmail($_SESSION['ssoEmail']));
 // var_dump($workerData);
 // echo '</pre>';
 
+echo 'Emails status: '.trim($_ENV['email']);
+
 ?>
 <style type="text/css" class="init">
 body {
