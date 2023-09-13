@@ -14,7 +14,7 @@ $cnum    = !empty($_GET['cnum']) ? $_GET['cnum'] : null;
 $row = false;
 $trimmedRow = false;
 
-$sql = " SELECT P.*, M.EMAIL_ADDRESS as FM_EMAIL, M.NOTES_ID as FM_NOTES_ID,  trim(P.FIRST_NAME) CONCAT ' ' CONCAT trim(P.LAST_NAME) as FULL_NAME  ";
+$sql = " SELECT P.*, M.EMAIL_ADDRESS as FM_EMAIL, M.NOTES_ID as FM_NOTES_ID,  CONCAT(trim(P.FIRST_NAME), ' ', trim(P.LAST_NAME)) as FULL_NAME  ";
 $sql.= " , CASE WHEN T.DESCRIPTION is not null then T.DESCRIPTION else P.EMPLOYEE_TYPE end as EMPLOYEE_TYPE ";
 $sql.= " , SQ.SQUAD_NAME, SQ.SQUAD_LEADER, SQP.EMAIL_ADDRESS as SQUAD_LEADER_EMAIL ";
 $sql.= " , TR.TRIBE_NAME, TR.TRIBE_LEADER, TRP.EMAIL_ADDRESS as TRIBE_LEADER_EMAIL, TR.ORGANISATION ";
