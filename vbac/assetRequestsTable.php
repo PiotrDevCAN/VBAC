@@ -1536,7 +1536,8 @@ class assetRequestsTable extends DbTable{
 //         array_map('trim',$allStatus);
 //         $ctbOnly =  array(false,true);
 
-        $age = array('Recent'=>' AR.REQUESTED > DATEADD (month, - 3, CURRENT_TIMESTAMP), '>3 Months'=>' ( AR.REQUESTED <= DATEADD (month, - 3, CURRENT_TIMESTAMP) )');
+        // $age = array('Recent'=>' AR.REQUESTED > CURRENT_TIMESTAMP - 3 MONTHS', '>3 Months'=>' ( AR.REQUESTED <= CURRENT_TIMESTAMP - 3 MONTHS )');
+        $age = array('Recent'=>' AR.REQUESTED > DATEADD (month, - 3, CURRENT_TIMESTAMP)', '>3 Months'=>' ( AR.REQUESTED <= DATEADD (month, - 3, CURRENT_TIMESTAMP) )');
 
         $sheet = 1;
 

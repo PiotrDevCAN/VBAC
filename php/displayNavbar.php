@@ -180,32 +180,50 @@ $elapsed = microtime(true);
 error_log("isFm:" . (float)($elapsed-$start));
 
 $isCdi  = $OKTAGroups->inAGroup($_SESSION['cdiBgAz'],  $_SESSION['ssoEmail']) ? ".not('.accessCdi')" : null;
+$elapsed = microtime(true);
+echo ("isFm:" . (float)($elapsed-$start));
+echo '</br>';
 
 $elapsed = microtime(true);
 error_log("CDI:" . (float)($elapsed-$start));
 
 $isPmo  = $OKTAGroups->inAGroup($_SESSION['pmoBgAz'],  $_SESSION['ssoEmail']) ? ".not('.accessPmo')" : null;
+$elapsed = microtime(true);
+echo ("isPmo:" . (float)($elapsed-$start));
+echo '</br>';
 
 $elapsed = microtime(true);
 error_log("Pmo:" . (float)($elapsed-$start));
 
 $isPes  = $OKTAGroups->inAGroup($_SESSION['pesBgAz'],  $_SESSION['ssoEmail']) ? ".not('.accessPes')" : null;
+$elapsed = microtime(true);
+echo ("isPes:" . (float)($elapsed-$start));
+echo '</br>';
 
 $elapsed = microtime(true);
 error_log("Pes:" . (float)($elapsed-$start));
 
 $isRep1  = $OKTAGroups->inAGroup($_SESSION['rfpBgAz'],  $_SESSION['ssoEmail']) ? ".not('.accessRepFullPerson')" : null;
+$elapsed = microtime(true);
+echo ("isRep1:" . (float)($elapsed-$start));
+echo '</br>';
 
 $elapsed = microtime(true);
 error_log("Rep1:" . (float)($elapsed-$start));
 
 $isRes   = $OKTAGroups->inAGroup($_SESSION['rsBgAz'],  $_SESSION['ssoEmail'],3) ? ".not('.accessRes')" : null;
+$elapsed = microtime(true);
+echo ("isRes:" . (float)($elapsed-$start));
+echo '</br>';
 
 $elapsed = microtime(true);
 error_log("vent:" . (float)($elapsed-$start));
 
 $isUser = ".not('.accessUser')";
 $isRequestor = $OKTAGroups->inAGroup($_SESSION['reqBgAz'], $_SESSION['ssoEmail']);
+$elapsed = microtime(true);
+echo ("isRequestor:" . (float)($elapsed-$start));
+echo '</br>';
 
 $elapsed = microtime(true);
 error_log("vbac:" . (float)($elapsed-$start));

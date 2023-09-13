@@ -153,7 +153,7 @@ class AgileSquadTable extends DbTable{
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         }
-        $data = false;
+        $data = array();
         while(($row=sqlsrv_fetch_array($rs))==true){
             $row = array_map('trim',$row);
             $data[] = $row;

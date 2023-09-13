@@ -144,19 +144,20 @@ class JavaScript {
 		<?=$arrayName?>[0]= new Array();
 		<?php
 		$i=1;
-		foreach($data as $competency => $pools){
-			$poolString =  $arrayName . "[" . $i++ . "] = [";
-			foreach ($pools as $poolName ){
-				$poolString .=  ',"' . $poolName . '"';
+		if (count($data) >0) {
+			foreach($data as $competency => $pools){
+				$poolString =  $arrayName . "[" . $i++ . "] = [";
+				foreach ($pools as $poolName ){
+					$poolString .=  ',"' . $poolName . '"';
+				}
+				$poolString .= ']; ';
+				echo str_replace("[,","[",$poolString);
 			}
-			$poolString .= ']; ';
-			echo str_replace("[,","[",$poolString);
+
+			foreach($data as $competency => $pools){
+				echo $arrayName?>[0].push('<?=$competency?>'); <?php
+			}
 		}
-
-		foreach($data as $competency => $pools){
-		    echo $arrayName?>[0].push('<?=$competency?>'); <?php
-	    }
-
 		?>
 		</script>
 		<?php

@@ -76,7 +76,7 @@ class personPortalReport extends DbTable
         $searchPredicate = '';
         $columnWithAlias = $this->prepareColumn($column);
         if ($columnWithAlias !== false) {
-            $searchPredicate .= " REGEXP_LIKE(" . $columnWithAlias . ", '" . $searchValue . "', 'i')";
+            $searchPredicate .= " " . $columnWithAlias . " LIKE '%$searchValue%'";
         }
         return $searchPredicate;
     }

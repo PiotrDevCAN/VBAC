@@ -224,9 +224,16 @@ class OKTAGroups {
 	{
 		$found = false;
 
-		$groupId = $this->getGroupId($groupName);
-		$groupMembers = $this->listMembers($groupId);
+		if (!isset($_SESSION[$groupName.'Members'])) {
+			
+			$groupId = $this->getGroupId($groupName);
+			$groupMembers = $this->listMembers($groupId);
 		
+			$_SESSION[$groupName.'Members'] = $groupMembers;
+		} else {
+			$groupMembers = $_SESSION[$groupName.'Members'];
+		}
+
 		foreach($groupMembers as $key => $row) {
 			$email = $row['profile']['email'];
 			if (strtolower(trim($email)) == strtolower(trim($ssoEmail))) {
