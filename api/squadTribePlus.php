@@ -142,14 +142,14 @@ if (!is_null($additionalFields)) {
     }
 }
 
-$sql = " SELECT DISTINCT P.NOTES_ID, P.EMAIL_ADDRESS, P.KYN_EMAIL_ADDRESS, P.FIRST_NAME, P.LAST_NAME, CONCAT(CONCAT(TRIM(P.FIRST_NAME), ' '), TRIM(P.LAST_NAME)) AS FULL_NAME, AS.SQUAD_NUMBER, T.TRIBE_NUMBER, ";
+$sql = " SELECT DISTINCT P.NOTES_ID, P.EMAIL_ADDRESS, P.KYN_EMAIL_ADDRESS, P.FIRST_NAME, P.LAST_NAME, CONCAT(CONCAT(TRIM(P.FIRST_NAME), ' '), TRIM(P.LAST_NAME)) AS FULL_NAME, AS1.SQUAD_NUMBER, T.TRIBE_NUMBER, ";
 $sql.=" CASE WHEN " . personTable::activePersonPredicate($withProvClear, 'P') . " THEN 'active' ELSE 'inactive' END AS INT_STATUS ";
 $sql.= $additionalSelect;
 $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
-$sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS ";
-$sql.= " ON P.SQUAD_NUMBER = AS.SQUAD_NUMBER ";
+$sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS1 ";
+$sql.= " ON P.SQUAD_NUMBER = AS1.SQUAD_NUMBER ";
 $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " AS T ";
-$sql.= " ON AS.TRIBE_NUMBER = T.TRIBE_NUMBER ";
+$sql.= " ON AS1.TRIBE_NUMBER = T.TRIBE_NUMBER ";
 $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS F ";
 $sql.= " ON P.FM_CNUM = F.CNUM ";
 $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS U ";

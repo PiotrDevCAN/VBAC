@@ -103,9 +103,8 @@ class assetRequestsTable extends DbTable{
         $amADelegateFor = array_map('strtolower',$amADelegateForRaw);
 
         $sql  = " SELECT distinct";
-//        $sql .= " concat('000000',AR.REQUEST_REFERNCE) as car,";
         $sql .= " AR.REQUEST_REFERENCE as reference, ";
-        $sql .= " P.CT_ID as CT_ID, P.EMAIL_ADDRESS as REQUESTEE_EMAIL, P.NOTES_ID as REQUESTEE_NOTES, AR.ASSET_TITLE as ASSET, STATUS, ";
+        $sql .= " P.CT_ID as CT_ID, P.EMAIL_ADDRESS as REQUESTEE_EMAIL, P.NOTES_ID as REQUESTEE_NOTES, AR.ASSET_TITLE AS AS1SET, STATUS, ";
         $sql .= " BUSINESS_JUSTIFICATION as JUSTIFICATION, REQUESTOR_EMAIL as REQUESTOR_EMAIL, REQUESTED as REQUESTED_DATE,  ";
         $sql .= " APPROVER_EMAIL, APPROVED as APPROVED_DATE, ";
         $sql .= " F.EMAIL_ADDRESS as FM_EMAIL, F.NOTES_ID as FM_NOTES, P.FM_CNUM,";
@@ -1699,7 +1698,7 @@ class assetRequestsTable extends DbTable{
 
     function getAssetRequestsForVarb($varb,$ref){
 
-        $sql = " SELECT REQUEST_REFERENCE as REFERENCE, P.NOTES_ID as PERSON, AR.ASSET_TITLE as ASSET, AR.CNUM, PRIMARY_UID, ORDERIT_NUMBER, COMMENT ";
+        $sql = " SELECT REQUEST_REFERENCE as REFERENCE, P.NOTES_ID as PERSON, AR.ASSET_TITLE AS AS1SET, AR.CNUM, PRIMARY_UID, ORDERIT_NUMBER, COMMENT ";
         $sql .= " ,ASSET_PRIMARY_UID_TITLE, ASSET_SECONDARY_UID_TITLE ";
         $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName . " as AR ";
         $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
@@ -1866,7 +1865,7 @@ class assetRequestsTable extends DbTable{
 
 
     function getAssetRequestsForOrderIt($orderIt,$varb,$ref){
-        $sql = " SELECT REQUEST_REFERENCE as REFERENCE, P.NOTES_ID as PERSON, AR.ASSET_TITLE as ASSET,AR.STATUS as STATUS,  AR.ORDERIT_STATUS";
+        $sql = " SELECT REQUEST_REFERENCE as REFERENCE, P.NOTES_ID as PERSON, AR.ASSET_TITLE AS AS1SET,AR.STATUS as STATUS,  AR.ORDERIT_STATUS";
         $sql .=", '' as ACTION, COMMENT as COMMENT, ORDERIT_NUMBER, ORDERIT_VARB_REF, ASSET_PRIMARY_UID_TITLE, P.CT_ID, PRIMARY_UID, AR.ORDERIT_RESPONDED  ";
         $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName . " as AR ";
         $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";

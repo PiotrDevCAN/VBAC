@@ -115,10 +115,10 @@ try {
     $sql.=" CASE WHEN " . personTable::activePersonPredicate($withProvClear, 'P') . " THEN 'active' ELSE 'inactive' END AS INT_STATUS ";
     $sql.= $additionalSelect;
     $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
-    $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD .  " AS AS ";
-    $sql.= " ON P.SQUAD_NUMBER = AS.SQUAD_NUMBER ";
+    $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD .  " AS AS1 ";
+    $sql.= " ON P.SQUAD_NUMBER = AS1.SQUAD_NUMBER ";
     $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE .  " AS AT ";
-    $sql.= " ON AS.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
+    $sql.= " ON AS1.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
     $sql.= " LEFT JOIN " .  $GLOBALS['Db2Schema'] . "." . allTables::$STATIC_SKILLSETS . " as SS ";
     $sql.= " ON P.SKILLSET_ID = SS.SKILLSET_ID ";
     $sql.= " WHERE 1=1 AND trim(P.KYN_EMAIL_ADDRESS) != '' ";

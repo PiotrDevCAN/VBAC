@@ -43,7 +43,7 @@ class personPortalLiteTable extends personTable
         P.KYN_EMAIL_ADDRESS, 
         P.NOTES_ID, 
         P.LBG_EMAIL, 
-        CASE WHEN EM.DESCRIPTION IS NOT NULL THEN EM.DESCRIPTION ELSE INITCAP(P.EMPLOYEE_TYPE) END AS EMPLOYEE_TYPE,
+        CASE WHEN EM.DESCRIPTION IS NOT NULL THEN EM.DESCRIPTION ELSE dbo.INITCAP(P.EMPLOYEE_TYPE) END AS EMPLOYEE_TYPE,
         CASE WHEN F.KYN_EMAIL_ADDRESS IS NOT NULL THEN F.KYN_EMAIL_ADDRESS ELSE F.CNUM END as FM_CNUM,
         P.FM_CNUM as FCNUM,
         P.FM_MANAGER_FLAG, 
@@ -76,8 +76,8 @@ class personPortalLiteTable extends personTable
         P.PMO_STATUS,
         PT.PROCESSING_STATUS ,
         PT.PROCESSING_STATUS_CHANGED, 
-        AS.SQUAD_NAME,
-        AS.SQUAD_LEADER, 
+        AS1.SQUAD_NAME,
+        AS1.SQUAD_LEADER, 
         AT.TRIBE_NUMBER,
         AT.TRIBE_NAME,
         AT.TRIBE_LEADER,
@@ -86,10 +86,10 @@ class personPortalLiteTable extends personTable
         $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
         $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PES_TRACKER . " AS PT ";
         $sql.= " ON P.CNUM = PT.CNUM ";
-        $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS ";
-        $sql.= " ON P.SQUAD_NUMBER = AS.SQUAD_NUMBER ";
+        $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS1 ";
+        $sql.= " ON P.SQUAD_NUMBER = AS1.SQUAD_NUMBER ";
         $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " AS AT ";
-        $sql.= " ON AS.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
+        $sql.= " ON AS1.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
         $sql.= " LEFT JOIN " .  $GLOBALS['Db2Schema'] . "." . allTables::$STATIC_SKILLSETS . " as SS ";
         $sql.= " ON P.SKILLSET_ID = SS.SKILLSET_ID ";
         $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS F ";

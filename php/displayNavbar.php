@@ -210,12 +210,12 @@ $isRequestor = $OKTAGroups->inAGroup($_SESSION['reqBgAz'], $_SESSION['ssoEmail']
 $elapsed = microtime(true);
 error_log("vbac:" . (float)($elapsed-$start));
 
-$isCdi   = stripos($_ENV['environment'], 'dev') ? ".not('.accessCdi')" : $isCdi;
-$isFm    = stripos($_ENV['environment'], 'dev') ? ".not('.accessFm')"  : $isFm;
-$isPmo   = stripos($_ENV['environment'], 'dev') ? ".not('.accessPmo')" : $isPmo;
-$isPes   = stripos($_ENV['environment'], 'dev') ? ".not('.accessPes')" : $isPes;
-$isRep1  = stripos($_ENV['environment'], 'dev') ? ".not('.accessRepFullPerson')" : $isRep1;
-$isRes   = stripos($_ENV['environment'], 'dev') ? ".not('.accessRes')" : $isRes;
+$isCdi   = (stripos($_ENV['environment'], 'dev') || stripos($_ENV['environment'], 'local')) ? ".not('.accessCdi')" : $isCdi;
+$isFm    = (stripos($_ENV['environment'], 'dev') || stripos($_ENV['environment'], 'local')) ? ".not('.accessFm')"  : $isFm;
+$isPmo   = (stripos($_ENV['environment'], 'dev') || stripos($_ENV['environment'], 'local')) ? ".not('.accessPmo')" : $isPmo;
+$isPes   = (stripos($_ENV['environment'], 'dev') || stripos($_ENV['environment'], 'local')) ? ".not('.accessPes')" : $isPes;
+$isRep1  = (stripos($_ENV['environment'], 'dev') || stripos($_ENV['environment'], 'local')) ? ".not('.accessRepFullPerson')" : $isRep1;
+$isRes   = (stripos($_ENV['environment'], 'dev') || stripos($_ENV['environment'], 'local')) ? ".not('.accessRes')" : $isRes;
 
 $isFm = $isPmo ? null : $isFm; // If they are PMO it don't matter if they are FM
 $isFm = $isCdi ? null : $isFm; // If they are CDI it don't matter if they are FM

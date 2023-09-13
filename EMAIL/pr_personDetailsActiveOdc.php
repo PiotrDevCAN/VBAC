@@ -34,12 +34,12 @@ $now = new DateTime();
 
 try {
 
-    $joins = " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS ";
-    $joins.= " ON P.SQUAD_NUMBER = AS.SQUAD_NUMBER ";
+    $joins = " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS1 ";
+    $joins.= " ON P.SQUAD_NUMBER = AS1.SQUAD_NUMBER ";
     $joins.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " AS AT ";
-    $joins.= " ON AS.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
+    $joins.= " ON AS1.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
     
-    $sql = " Select P.*, O.*, AS.SQUAD_LEADER, AS.SQUAD_NAME, AT.TRIBE_NUMBER, AT.TRIBE_NAME, AT.TRIBE_LEADER, AT.ORGANISATION, AT.ITERATION_MGR   ";
+    $sql = " Select P.*, O.*, AS1.SQUAD_LEADER, AS1.SQUAD_NAME, AT.TRIBE_NUMBER, AT.TRIBE_NAME, AT.TRIBE_LEADER, AT.ORGANISATION, AT.ITERATION_MGR   ";
     $sql.= personTable::odcStaffSql($joins);
 
     set_time_limit(60);

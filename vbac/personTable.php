@@ -257,7 +257,7 @@ class personTable extends DbTable
         $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PES_TRACKER . " as PT ";
         $sql .= " ON P.CNUM = PT.CNUM ";
-        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " as AS1 ";
+        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS1 ";
         $sql .= " ON P.SQUAD_NUMBER = AS1.SQUAD_NUMBER ";
         $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " as AT ";
         $sql .= " ON AS1.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
@@ -281,7 +281,7 @@ class personTable extends DbTable
         $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PES_TRACKER . " as PT ";
         $sql .= " ON PT.CNUM = P.CNUM ";
-        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " as AS1 ";
+        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS1 ";
         $sql .= " ON AS1.SQUAD_NUMBER = P.SQUAD_NUMBER ";
         $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " as AT ";
         $sql .= " ON AS1.TRIBE_NUMBER = AT.TRIBE_NUMBER ";

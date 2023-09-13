@@ -47,12 +47,12 @@ if (isset($argv[1])) {
             $personTable = new assetRequestsTable(allTables::$PERSON);
             $activePredicate = '';
 
-            $sql = " SELECT P.*, AS.SQUAD_LEADER, AS.SQUAD_NAME, AT.TRIBE_NUMBER, AT.TRIBE_NAME, AT.TRIBE_LEADER, " . personTable::ORGANISATION_SELECT . ", AT.ITERATION_MGR";
+            $sql = " SELECT P.*, AS1.SQUAD_LEADER, AS1.SQUAD_NAME, AT.TRIBE_NUMBER, AT.TRIBE_NAME, AT.TRIBE_LEADER, " . personTable::ORGANISATION_SELECT . ", AT.ITERATION_MGR";
             $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
-            $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS ";
-            $sql.= " ON P.SQUAD_NUMBER = AS.SQUAD_NUMBER ";
+            $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS1 ";
+            $sql.= " ON P.SQUAD_NUMBER = AS1.SQUAD_NUMBER ";
             $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " AS AT ";
-            $sql.= " ON AS.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
+            $sql.= " ON AS1.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
             $sql.= " WHERE P.PES_STATUS_DETAILS is null or P.PES_STATUS_DETAILS not like '" . personRecord::PES_STATUS_DETAILS_BOARDED_AS . "%' ";  // dont show boarded pre-boarders
         
             break;
@@ -63,12 +63,12 @@ if (isset($argv[1])) {
             $personTable = new personTable(allTables::$PERSON);
             $activePredicate = personTable::activePersonPredicate();
 
-            $sql = " SELECT P.*, AS.SQUAD_LEADER, AS.SQUAD_NAME, AT.TRIBE_NUMBER, AT.TRIBE_NAME, AT.TRIBE_LEADER, " . personTable::ORGANISATION_SELECT . ", AT.ITERATION_MGR";
+            $sql = " SELECT P.*, AS1.SQUAD_LEADER, AS1.SQUAD_NAME, AT.TRIBE_NUMBER, AT.TRIBE_NAME, AT.TRIBE_LEADER, " . personTable::ORGANISATION_SELECT . ", AT.ITERATION_MGR";
             $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
-            $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS ";
-            $sql.= " ON P.SQUAD_NUMBER = AS.SQUAD_NUMBER ";
+            $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS1 ";
+            $sql.= " ON P.SQUAD_NUMBER = AS1.SQUAD_NUMBER ";
             $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " AS AT ";
-            $sql.= " ON AS.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
+            $sql.= " ON AS1.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
             $sql.= " WHERE 1=1 AND " . $activePredicate;
         
             break;
@@ -83,12 +83,12 @@ if (isset($argv[1])) {
             $personTable = null;
             $activePredicate = '';
             
-            $joins = " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS ";
-            $joins.= " ON P.SQUAD_NUMBER = AS.SQUAD_NUMBER ";
+            $joins = " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS1 ";
+            $joins.= " ON P.SQUAD_NUMBER = AS1.SQUAD_NUMBER ";
             $joins.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " AS AT ";
-            $joins.= " ON AS.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
+            $joins.= " ON AS1.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
             
-            $sql = " SELECT P.*, O.*, AS.SQUAD_LEADER, AS.SQUAD_NAME, AT.TRIBE_NUMBER, AT.TRIBE_NAME, AT.TRIBE_LEADER, " . personTable::ORGANISATION_SELECT . ", AT.ITERATION_MGR ";
+            $sql = " SELECT P.*, O.*, AS1.SQUAD_LEADER, AS1.SQUAD_NAME, AT.TRIBE_NUMBER, AT.TRIBE_NAME, AT.TRIBE_LEADER, " . personTable::ORGANISATION_SELECT . ", AT.ITERATION_MGR ";
             $sql.= personTable::odcStaffSql($joins);
 
             break;
@@ -99,12 +99,12 @@ if (isset($argv[1])) {
             $personTable = null;
             $activePredicate = personTable::activePersonPredicate();
 
-            $sql = " SELECT P.*, AS.SQUAD_LEADER, AS.SQUAD_NAME, AT.TRIBE_NUMBER, AT.TRIBE_NAME, AT.TRIBE_LEADER, " . personTable::ORGANISATION_SELECT . ", AT.ITERATION_MGR";
+            $sql = " SELECT P.*, AS1.SQUAD_LEADER, AS1.SQUAD_NAME, AT.TRIBE_NUMBER, AT.TRIBE_NAME, AT.TRIBE_LEADER, " . personTable::ORGANISATION_SELECT . ", AT.ITERATION_MGR";
             $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
-            $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS ";
-            $sql.= " ON P.SQUAD_NUMBER = AS.SQUAD_NUMBER ";
+            $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS1 ";
+            $sql.= " ON P.SQUAD_NUMBER = AS1.SQUAD_NUMBER ";
             $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " AS AT ";
-            $sql.= " ON AS.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
+            $sql.= " ON AS1.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
             $sql.= " WHERE P.CNUM NOT IN ( ";
             $sql.= "  SELECT CNUM " ;
             $sql.= "  FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
@@ -124,12 +124,12 @@ if (isset($argv[1])) {
             $personTable = new personTable(allTables::$PERSON);
             $activePredicate = personTable::activePersonPredicate();
 
-            $sql = " SELECT P.*, AS.SQUAD_LEADER, AS.SQUAD_NAME, AT.TRIBE_NUMBER, AT.TRIBE_NAME, AT.TRIBE_LEADER, " . personTable::ORGANISATION_SELECT . ", AT.ITERATION_MGR";
+            $sql = " SELECT P.*, AS1.SQUAD_LEADER, AS1.SQUAD_NAME, AT.TRIBE_NUMBER, AT.TRIBE_NAME, AT.TRIBE_LEADER, " . personTable::ORGANISATION_SELECT . ", AT.ITERATION_MGR";
             $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
-            $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS ";
-            $sql.= " ON P.SQUAD_NUMBER = AS.SQUAD_NUMBER ";
+            $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS1 ";
+            $sql.= " ON P.SQUAD_NUMBER = AS1.SQUAD_NUMBER ";
             $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " AS AT ";
-            $sql.= " ON AS.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
+            $sql.= " ON AS1.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
             $sql.= " WHERE 1=1 AND " . $activePredicate;
             $sql.= " AND P.LOB     in ('GTS','Cloud','Security') ";
             $sql.= " AND P.TT_BAU  in ('BAU') ";
