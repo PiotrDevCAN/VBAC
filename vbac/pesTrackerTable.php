@@ -61,7 +61,7 @@ class pesTrackerTable extends DbTable{
                 break;
             case self::PES_TRACKER_RECORDS_NOT_ACTIVE :
                 $pesStatusPredicate = " P.PES_STATUS not in ('" . personRecord::PES_STATUS_REQUESTED . "','" . personRecord::PES_STATUS_INITIATED. "','" . personRecord::PES_STATUS_RECHECK_PROGRESSING. "','" . "','" . personRecord::PES_STATUS_RESTART. "','" . personRecord::PES_STATUS_PROVISIONAL. "','" . personRecord::PES_STATUS_RECHECK_REQ . "','" . personRecord::PES_STATUS_MOVER . "')  ";
-                $pesStatusPredicate.= " AND ( PT.PROCESSING_STATUS_CHANGED > CURRENT_TIMESTAMP - 31 days  OR P.PES_DATE_RESPONDED > CURRENT_TIMESTAMP - 31 DAYS ) AND PT.CNUM is not null ";
+                $pesStatusPredicate.= " AND ( PT.PROCESSING_STATUS_CHANGED > DATEADD (day, - 31, CURRENT_TIMESTAMP) OR P.PES_DATE_RESPONDED > DATEADD (day, - 31, CURRENT_TIMESTAMP) ) AND PT.CNUM is not null ";
                 break;
             case self::PES_TRACKER_RECORDS_ALL :
                 $pesStatusPredicate = " PT.CNUM is not null ";

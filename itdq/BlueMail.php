@@ -269,7 +269,7 @@ class BlueMail
     static function clearLog($retainPeriod = ' 3 months')
     {
        $sql  = " DELETE FROM " . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$EMAIL_LOG;
-       $sql .= ' WHERE SENT_TIMESTAMP < (CURRENT_TIMESTAMP - ' . $retainPeriod . "); ";
+       $sql .= " WHERE SENT_TIMESTAMP < DATEADD (month, 3, CURRENT_TIMESTAMP); ";
        sqlsrv_query($GLOBALS['conn'], $sql);
     }
 

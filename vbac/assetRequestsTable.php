@@ -1536,7 +1536,7 @@ class assetRequestsTable extends DbTable{
 //         array_map('trim',$allStatus);
 //         $ctbOnly =  array(false,true);
 
-        $age = array('Recent'=>' AR.REQUESTED > CURRENT_TIMESTAMP - 3 MONTHS','>3 Months'=>' ( AR.REQUESTED <= CURRENT_TIMESTAMP - 3 MONTHS )');
+        $age = array('Recent'=>' AR.REQUESTED > DATEADD (month, - 3, CURRENT_TIMESTAMP), '>3 Months'=>' ( AR.REQUESTED <= DATEADD (month, - 3, CURRENT_TIMESTAMP) )');
 
         $sheet = 1;
 
@@ -1561,10 +1561,6 @@ class assetRequestsTable extends DbTable{
         $sql .= " WHERE 1=1 ";
         $sql .= " AND (AR.REQUEST_RETURN = 'No' or AR.REQUEST_RETURN is null ) ";
         $sql .= " AND " . $agePredicate;
-//         $sql .= "      ( AR.REQUESTED > CURRENT_TIMESTAMP - 6 MONTHS )";
-//         $sql .= "      OR ";
-//         $sql .= "      ( AR.APPROVED > CURRENT_TIMESTAMP - 6 MONTHS )";
-//        $sql .= "    ) ";
         $sql .= " ORDER BY AR.REQUESTED desc ";
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 

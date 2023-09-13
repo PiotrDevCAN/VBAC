@@ -64,7 +64,7 @@ class AuditTable extends DbTable {
         $sql.= $orderBy;
         $sql.= " ) AS rownum,A.* FROM " . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$AUDIT . " AS A ";
         $sql .= " WHERE 1=1 ";
-        $sql .= " AND TIMESTAMP >= (CURRENT_TIMESTAMP - 31 days) ";
+        $sql .= " AND TIMESTAMP >= DATEADD(day, -31, CURRENT_TIMESTAMP) ";
         $sql .= !empty($predicate)   ? "  $predicate " : null;
         $sql .= " ) as tmp ";
         $sql .= " WHERE ROWNUM >= $fromRecord AND ROWNUM < " .  $end ;
@@ -94,7 +94,7 @@ class AuditTable extends DbTable {
      static function recordsFiltered($predicate){
          $sql = " SELECT count(*) as recordsFiltered FROM " . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$AUDIT . " AS A ";
          $sql .= " WHERE 1=1 ";
-         $sql .= " AND TIMESTAMP >= (CURRENT_TIMESTAMP - 31 days) ";
+         $sql .= " AND TIMESTAMP >= DATEADD (day, -31, CURRENT_TIMESTAMP) ";
          $sql .= !empty($predicate)   ? "  $predicate " : null;
 
          $rs = sqlsrv_query($GLOBALS['conn'],$sql);
@@ -113,7 +113,7 @@ class AuditTable extends DbTable {
      static function totalRows($type=null){
          $sql = " SELECT count(*) as totalRows FROM " . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$AUDIT . " AS A ";
          $sql .= " WHERE 1=1 ";
-         $sql .= " AND TIMESTAMP >= (CURRENT_TIMESTAMP - 31 days) ";
+         $sql .= " AND TIMESTAMP >= DATEADD (day, -31, CURRENT_TIMESTAMP) ";
          $sql .= $type=='Revalidation' ? " AND TYPE='Revalidation' " : null;
          $rs = sqlsrv_query($GLOBALS['conn'],$sql);
 
