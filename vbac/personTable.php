@@ -265,11 +265,11 @@ class personTable extends DbTable
         $sql .= " ON P.SKILLSET_ID = SS.SKILLSET_ID ";
         $sql .= " WHERE " . $preBoardersPredicate;
         $sql .= !empty($predicate) ? " $predicate " : null;
-        $sql .= !empty($sorting) ? " $sorting " : null;
+        // $sql .= !empty($sorting) ? " $sorting " : null;
+        $sql .= !empty($sorting) ? " $sorting " : " ORDER BY 1 ";
 
         if ($length != '-1') {
             // $sql .= " LIMIT " . $length . ' OFFSET ' . $start;
-            $sql .= ' ORDER BY 1';
             $sql .= ' OFFSET ' . $start . ' ROWS FETCH FIRST ' . $length . ' ROWS ONLY';
         }
 

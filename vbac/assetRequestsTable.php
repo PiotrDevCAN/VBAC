@@ -1536,7 +1536,7 @@ class assetRequestsTable extends DbTable{
 //         array_map('trim',$allStatus);
 //         $ctbOnly =  array(false,true);
 
-        $age = array('Recent'=>' AR.REQUESTED > CURRENT TIMESTAMP - 3 MONTHS','>3 Months'=>' ( AR.REQUESTED <= CURRENT TIMESTAMP - 3 MONTHS )');
+        $age = array('Recent'=>' AR.REQUESTED > CURRENT_TIMESTAMP - 3 MONTHS','>3 Months'=>' ( AR.REQUESTED <= CURRENT_TIMESTAMP - 3 MONTHS )');
 
         $sheet = 1;
 
@@ -1561,9 +1561,9 @@ class assetRequestsTable extends DbTable{
         $sql .= " WHERE 1=1 ";
         $sql .= " AND (AR.REQUEST_RETURN = 'No' or AR.REQUEST_RETURN is null ) ";
         $sql .= " AND " . $agePredicate;
-//         $sql .= "      ( AR.REQUESTED > CURRENT TIMESTAMP - 6 MONTHS )";
+//         $sql .= "      ( AR.REQUESTED > CURRENT_TIMESTAMP - 6 MONTHS )";
 //         $sql .= "      OR ";
-//         $sql .= "      ( AR.APPROVED > CURRENT TIMESTAMP - 6 MONTHS )";
+//         $sql .= "      ( AR.APPROVED > CURRENT_TIMESTAMP - 6 MONTHS )";
 //        $sql .= "    ) ";
         $sql .= " ORDER BY AR.REQUESTED desc ";
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
@@ -2264,8 +2264,8 @@ class assetRequestsTable extends DbTable{
         $sql .= " SET STATUS='" . htmlspecialchars($status) . "' ";
         $sql .= !empty($orderItStatus) ? " ,ORDERIT_STATUS='" . htmlspecialchars($orderItStatus) . "' " : null ;
         $sql .= !empty($newComment) ? ", COMMENT='" . htmlspecialchars(substr($newComment,0,500)) . "' " : null;
-        $sql .= trim($status)==assetRequestRecord::STATUS_AWAITING_IAM ? ", APPROVER_EMAIL='" . $_SESSION['ssoEmail'] . "' , APPROVED = current timestamp " : null;
-        $sql .= $isPmo != true  && trim($status)==assetRequestRecord::STATUS_APPROVED ? ", APPROVER_EMAIL='" . $_SESSION['ssoEmail'] . "' , APPROVED = current timestamp " : null;
+        $sql .= trim($status)==assetRequestRecord::STATUS_AWAITING_IAM ? ", APPROVER_EMAIL='" . $_SESSION['ssoEmail'] . "' , APPROVED = CURRENT_TIMESTAMP " : null;
+        $sql .= $isPmo != true  && trim($status)==assetRequestRecord::STATUS_APPROVED ? ", APPROVER_EMAIL='" . $_SESSION['ssoEmail'] . "' , APPROVED = CURRENT_TIMESTAMP " : null;
         $sql .= trim($status)==assetRequestRecord::STATUS_RETURNED ? ", DATE_RETURNED = DATE('" . htmlspecialchars($dateReturned). "') " : null;
         $sql .= " WHERE REQUEST_REFERENCE='" . htmlspecialchars($reference) . "' ";
         $sql .= trim($status)==assetRequestRecord::STATUS_REJECTED ? " OR PRE_REQ_REQUEST='" . htmlspecialchars($reference) . "' " : null;

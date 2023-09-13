@@ -61,7 +61,7 @@ class pesTrackerTable extends DbTable{
                 break;
             case self::PES_TRACKER_RECORDS_NOT_ACTIVE :
                 $pesStatusPredicate = " P.PES_STATUS not in ('" . personRecord::PES_STATUS_REQUESTED . "','" . personRecord::PES_STATUS_INITIATED. "','" . personRecord::PES_STATUS_RECHECK_PROGRESSING. "','" . "','" . personRecord::PES_STATUS_RESTART. "','" . personRecord::PES_STATUS_PROVISIONAL. "','" . personRecord::PES_STATUS_RECHECK_REQ . "','" . personRecord::PES_STATUS_MOVER . "')  ";
-                $pesStatusPredicate.= " AND ( PT.PROCESSING_STATUS_CHANGED > current timestamp - 31 days  OR P.PES_DATE_RESPONDED > current timestamp - 31 DAYS ) AND PT.CNUM is not null ";
+                $pesStatusPredicate.= " AND ( PT.PROCESSING_STATUS_CHANGED > CURRENT_TIMESTAMP - 31 days  OR P.PES_DATE_RESPONDED > CURRENT_TIMESTAMP - 31 DAYS ) AND PT.CNUM is not null ";
                 break;
             case self::PES_TRACKER_RECORDS_ALL :
                 $pesStatusPredicate = " PT.CNUM is not null ";
@@ -514,7 +514,7 @@ class pesTrackerTable extends DbTable{
             return $this->prepareProcessStatusUpdate;
         }
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql.= " SET PROCESSING_STATUS =?, PROCESSING_STATUS_CHANGED = current timestamp ";
+        $sql.= " SET PROCESSING_STATUS =?, PROCESSING_STATUS_CHANGED = CURRENT_TIMESTAMP ";
         $sql.= " WHERE CNUM=? ";
 
         $this->preparedSelectSQL = $sql;
@@ -554,7 +554,7 @@ class pesTrackerTable extends DbTable{
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql.= " SET CONSENT = null, RIGHT_TO_WORK = null, PROOF_OF_ID = null, PROOF_OF_RESIDENCY= null, CREDIT_CHECK= null,FINANCIAL_SANCTIONS= null ";
         $sql.= " , CRIMINAL_RECORDS_CHECK= null, PROOF_OF_ACTIVITY= null, PROCESSING_STATUS = 'PES' ";
-        $sql.= " ,  PROCESSING_STATUS_CHANGED= current timestamp, DATE_LAST_CHASED = null ";
+        $sql.= " ,  PROCESSING_STATUS_CHANGED= CURRENT_TIMESTAMP, DATE_LAST_CHASED = null ";
         $sql.= " WHERE CNUM = ? ";
 
         $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);

@@ -38,7 +38,7 @@ class assetRequestsEventsTable extends DbTable{
         $sql = " INSERT INTO " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS_EVENTS ;
         $sql.= " ( REQUEST_REFERENCE, EVENT, OCCURED, INITIATED_BY ) ";
         $sql.= " values ";
-        $sql.= "( ?, ?, current timestamp, '$initator') ";
+        $sql.= "( ?, ?, CURRENT_TIMESTAMP, '$initator') ";
 
         $rs = sqlsrv_prepare($GLOBALS['conn'], $sql);
 

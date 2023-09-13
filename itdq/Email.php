@@ -132,7 +132,7 @@ class Email
                 $keepEmailsFor = " 7 DAYS ";
             }
             $sql = 'DELETE FROM ' . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$EMAIL_LOG;
-            $sql .= " WHERE CREATED < (CURRENT TIMESTAMP - $keepEmailsFor );";
+            $sql .= " WHERE CREATED < (CURRENT_TIMESTAMP - $keepEmailsFor );";
             $rs = sqlsrv_query($GLOBALS['conn'], $sql);
             if (! $rs) {
                 print_r($_SESSION);

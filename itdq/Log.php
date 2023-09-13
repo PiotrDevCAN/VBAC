@@ -39,7 +39,7 @@ static function logEntry($entry,$pwd=null){
 }
 
 	static function deleteLogRecords($keepDays=1){
-		$sql = "DELETE FROM " . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$LOG . " WHERE LASTUPDATED < (CURRENT TIMESTAMP - $keepDays DAYS) ";
+		$sql = "DELETE FROM " . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$LOG . " WHERE LASTUPDATED < (CURRENT_TIMESTAMP - $keepDays DAYS) ";
 		$rs = sqlsrv_query($GLOBALS['conn'],$sql);
 		if(!$rs)
 			{
