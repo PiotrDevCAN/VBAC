@@ -268,7 +268,8 @@ class personTable extends DbTable
         $sql .= !empty($sorting) ? " $sorting " : null;
 
         if ($length != '-1') {
-            $sql .= " LIMIT " . $length . ' OFFSET ' . $start;
+            // $sql .= " LIMIT " . $length . ' OFFSET ' . $start;
+            $sql .= ' OFFSET ' . $start . ' ROWS FETCH FIRST ' . $length . ' ROWS ONLY';
         }
 
         return $sql;
