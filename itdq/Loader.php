@@ -110,6 +110,10 @@ class Loader
         while (($row = sqlsrv_fetch($rs5)) == true) {
             $array[utf8_encode(trim($row[$key]))] = utf8_encode(trim($row[$value]));
         }
+        
+        echo $sql;
+        exit;
+        
         Trace::traceVariable($array, __METHOD__, __LINE__);
         return $array;
     }
