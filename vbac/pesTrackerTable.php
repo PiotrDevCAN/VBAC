@@ -68,7 +68,6 @@ class pesTrackerTable extends DbTable{
                 break;
             default:
                 $pesStatusPredicate = 'pass a parm muppet not ' . $records;
-
                 break;
         }
 

@@ -10,6 +10,26 @@ $elapsed = microtime(true);
 echo ("WorkerAPI call took:" . (float)($elapsed-$start));
 echo '</br>';
 
+$port = 6380;
+// ssl=True,
+// abortConnect=False
+
+// $redis = new Redis();
+// //Connecting to Redis
+// try {
+// 	$redis->connect($hostname, 6380);
+// 	$redis->auth($password);
+// } catch(RedisException $ex) {
+//     $m = $ex->getMessage();
+//     echo "ERROR ($m)\n";
+// }
+
+// if ($redis->ping()) {
+// 	echo "PONG";
+// } else {
+// 	echo "failed";
+// }
+
 // echo '<pre>';
 // echo 'ENVIRONMENT <br>';
 // var_dump($_ENV);
