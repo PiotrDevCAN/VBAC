@@ -222,21 +222,20 @@ class OKTAGroups {
 
 	public function inAGroup($groupName, $ssoEmail)
 	{
-		return true;
-		
 		$found = false;
 
-		if (!isset($_SESSION[$groupName.'Members'])) {
+		$redis = $GLOBALS['redis'];
+		$redisKey = md5($groupName.'_members');
+		$result = $redis ->get($redisKey);
+		if (!$result){
 			
 			$groupId = $this->getGroupId($groupName);
-			$groupMembers = $this->listMembers($groupId);
-		
-			$_SESSION[$groupName.'Members'] = $groupMembers;
-		} else {
-			$groupMembers = $_SESSION[$groupName.'Members'];
+			$result = $this->listMembers($groupId);
+			
+			$redis->set($redisKey, $result);
 		}
 
-		foreach($groupMembers as $key => $row) {
+		foreach($result as $key => $row) {
 			$email = $row['profile']['email'];
 			if (strtolower(trim($email)) == strtolower(trim($ssoEmail))) {
 				$found = true;
@@ -247,8 +246,17 @@ class OKTAGroups {
 
 	public function getGroupId($groupName)
 	{
-		$groupData = $this->getGroupByName($groupName);
-		$groupId = 	$groupData[0]['id'];
+		$redis = $GLOBALS['redis'];
+		$redisKey = md5($groupName.'_key');
+		$result = $redis ->get($redisKey);
+		if (!$result){
+			
+			$result = $this->getGroupByName($groupName);
+			
+			$redis->set($redisKey, $result);
+		}
+
+		$groupId = 	$result[0]['id'];
 		return $groupId;
 	}
 

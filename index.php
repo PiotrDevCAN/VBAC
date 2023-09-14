@@ -10,15 +10,19 @@ $elapsed = microtime(true);
 echo ("WorkerAPI call took:" . (float)($elapsed-$start));
 echo '</br>';
 
-$port = 6380;
-// ssl=True,
-// abortConnect=False
+// // $hostname = 'redis-kpes-prod.redis.cache.windows.net';
+// $hostname = 'tls://redis-kpes-dev.redis.cache.windows.net';
+// // $password = 'gKUIJwCEHUoBOfpZf6b8w7RUcqXtFPMB2AzCaJrbmVs=';
+// $password = 'cpzLpdVMLpgY3bkp5LxpeC2NwxZ0VmRNgAzCaLfYkjw=';
+// $port = 6380;
 
 // $redis = new Redis();
 // //Connecting to Redis
 // try {
-// 	$redis->connect($hostname, 6380);
+// 	$redis->pconnect($hostname, 6380);
 // 	$redis->auth($password);
+
+// 	echo 'SEEEEEETTTTTTTTTTTTTTTTTTT-------------';
 // } catch(RedisException $ex) {
 //     $m = $ex->getMessage();
 //     echo "ERROR ($m)\n";
