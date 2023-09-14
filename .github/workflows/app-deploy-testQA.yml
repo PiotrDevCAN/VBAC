@@ -149,7 +149,7 @@ jobs:
         # uses: Azure/k8s-create-secret@v4.0
         with:
           namespace: ${{ steps.import-secrets.outputs.NAMESPACE }}
-          secret-name: vbac-app-docker-secrets-worker-redis
+          secret-name: vbac-app-docker-secrets-redis
           secret-type: 'generic'
           arguments: --from-literal=redis_host=${{ vars.REDIS_URL }} --from-literal=redis_port=${{ steps.import-secrets.outputs.REDIS_PORT }} --from-literal=redis_password=${{ steps.import-secrets.outputs.REDIS_PW }}          
       - name: Deploy application
