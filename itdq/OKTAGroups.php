@@ -226,17 +226,16 @@ class OKTAGroups {
 
 		$redis = $GLOBALS['redis'];
 		$redisKey = md5($groupName.'_members');
-		$result = $redis ->get($redisKey);
+		$result = json_decode($redis->get($redisKey));
 		if (!$result){
 			
 			$groupId = $this->getGroupId($groupName);
 			$result = $this->listMembers($groupId);
 			
-			$redis->set($redisKey, $result);
+			$redis->set($redisKey, json_encode($result));
 		}
-
 		foreach($result as $key => $row) {
-			$email = $row['profile']['email'];
+			$email = $row->profile->email;
 			if (strtolower(trim($email)) == strtolower(trim($ssoEmail))) {
 				$found = true;
 			}
@@ -248,15 +247,17 @@ class OKTAGroups {
 	{
 		$redis = $GLOBALS['redis'];
 		$redisKey = md5($groupName.'_key');
-		$result = $redis ->get($redisKey);
+		$result = json_decode($redis->get($redisKey));
 		if (!$result){
 			
 			$result = $this->getGroupByName($groupName);
 			
-			$redis->set($redisKey, $result);
+			$redis->set($redisKey, json_encode($result));
 		}
-
-		$groupId = 	$result[0]['id'];
+		$groupId = false;
+		foreach($result as $key => $row) {
+			$groupId = 	$row->id;
+		}
 		return $groupId;
 	}
 

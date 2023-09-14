@@ -14,12 +14,6 @@ class Redis {
 	private $port = null;
 	private $password = null;
 	
-	// // $hostname = 'redis-kpes-prod.redis.cache.windows.net';
-	// $hostname = 'tls://redis-kpes-dev.redis.cache.windows.net';
-	// // $password = 'gKUIJwCEHUoBOfpZf6b8w7RUcqXtFPMB2AzCaJrbmVs=';
-	// $password = 'cpzLpdVMLpgY3bkp5LxpeC2NwxZ0VmRNgAzCaLfYkjw=';
-	// $port = 6380;
-
 	public function __construct()
 	{
 		// $auth = new Auth();
