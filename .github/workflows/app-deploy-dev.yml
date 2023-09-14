@@ -76,8 +76,8 @@ jobs:
             kps-gd-app-vbac/data/dev/w3us/SSOserver client_id | SSO_CLIENT_ID ;
             kps-gd-app-vbac/data/dev/w3us/SSOserver client_secret | SSO_CLIENT_SECRET ;
             kps-gd-app-vbac/data/dev/w3us/SSOserver client_api_token | SSO_API_TOKEN ;
-            kps-gd-app-vbac/data/dev/w3us/Redis PORT | REDIS_PORT ;
-            kps-gd-app-vbac/data/dev/w3us/Redis PASSWORD | REDIS_PW
+            kps-gd-app-kpes/data/dev/w3us/Redis PORT | REDIS_PORT ;
+            kps-gd-app-kpes/data/dev/w3us/Redis PASSWORD | REDIS_PW
       - name: Get Worker API Credentials
         id: import-secrets-worker-api
         uses: hashicorp/vault-action@v2
