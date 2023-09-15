@@ -65,7 +65,7 @@ class JavaScript {
 	 * @param array $data			4 Dimensional Array
 	 * @param string $arrayName		Name of the array when addressed by Javascript.
 	 */
-	static function buildSelectArrayFour($data, $arrayName ){
+	static function buildSelectArrayFour($data, $arrayName){
 
 		echo '<script type="text/javascript" charset="utf-8">';
 		echo "var $arrayName = new Array();";
@@ -104,7 +104,7 @@ class JavaScript {
 	 * @param array $data			3 Dimensional Array
 	 * @param string $arrayName		Name of the array when addressed by Javascript.
 	 */
-	static function buildSelectArrayThree($data, $arrayName ){
+	static function buildSelectArrayThree($data, $arrayName){
 
 		echo '<script type="text/javascript" charset="utf-8">';
 		echo "var $arrayName = new Array();";
@@ -129,6 +129,25 @@ class JavaScript {
 			echo str_replace("[,","[",$dropdownString);
 		}
 		echo "</script>";
+	}
+
+	/**
+	 * Creates an array, called $arrayName for use by Javascript.
+	 *
+	 * @param array $data			Array
+	 * @param string $arrayName		Name of the array when addressed by Javascript.
+	 */
+	static function buildArray($data, $arrayName){
+	    echo '<script type="text/javascript" charset="utf-8">';
+	    echo "var $arrayName = new Array();";
+	    echo $arrayName . '[0]=""; ';
+	    $i=1;
+	    foreach($data as $index => $value){
+	        $poolString =  $arrayName . "[" . $i++ . "] = ['" . $value . "'];";
+	        echo str_replace("[,","[",$poolString);
+	    }
+	    echo "</script>";
+	    echo "";
 	}
 
 	/**
@@ -163,25 +182,6 @@ class JavaScript {
 		<?php
 	}
 	
-	/**
-	 * Creates an array, called $arrayName for use by Javascript.
-	 *
-	 * @param array $data			Array
-	 * @param string $arrayName		Name of the array when addressed by Javascript.
-	 */
-	static function buildArray($data, $arrayName ){
-	    echo '<script type="text/javascript" charset="utf-8">';
-	    echo "var $arrayName = new Array();";
-	    echo $arrayName . '[0]=""; ';
-	    $i=1;
-	    foreach($data as $index => $value){
-	        $poolString =  $arrayName . "[" . $i++ . "] = ['" . $value . "'];";
-	        echo str_replace("[,","[",$poolString);
-	    }
-	    echo "</script>";
-	    echo "";
-	}
-
 	static function buildSelectArrayFromLoadIndexed($data, $arrayName){
 
 		echo '<script type="text/javascript" charset="utf-8">';
