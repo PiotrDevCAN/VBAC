@@ -29,7 +29,7 @@ class dlpTable extends DbTable {
         $sql = " UPDATE ";
         $sql.=  $GLOBALS['Db2Schema'] . "." . allTables::$DLP;
         $sql.= "  SET TRANSFERRED_TO_HOSTNAME='" . strtoupper(htmlspecialchars($toHostname)) . "' ";
-        $sql.= " ,TRANSFERRED_DATE = CURRENT DATE ";
+        $sql.= " ,TRANSFERRED_DATE = CURRENT_TIMESTAMP ";
         $sql.= " ,TRANSFERRED_EMAIL='" . htmlspecialchars($_SESSION['ssoEmail']) . "' ";
         $sql.= " ,STATUS='" . dlpRecord::STATUS_TRANSFERRED . "' ";
         $sql.= " WHERE ";
@@ -53,7 +53,7 @@ class dlpTable extends DbTable {
         $sql.= "( CNUM, HOSTNAME, APPROVER_EMAIL, CREATION_DATE, EXCEPTION_CODE, STATUS ) ";
         $sql.= " values ";
         $sql.= " ('" . htmlspecialchars($cnum) . "','" . strtoupper(htmlspecialchars($hostname)) . "'";
-        $sql.= ",'" . htmlspecialchars($approvingEmail) . "', CURRENT DATE, '266'";
+        $sql.= ",'" . htmlspecialchars($approvingEmail) . "', CURRENT_TIMESTAMP, '266'";
         $sql.= ",'" . dlpRecord::STATUS_PENDING . "' ";
         $sql.= " ) ";
        
@@ -72,7 +72,8 @@ class dlpTable extends DbTable {
         $sql.= ", case when P.notes_id is not null then P.notes_id else A.CNUM end as Licensee ";
         $sql.= ", D.HOSTNAME ";
         $sql.= ", case when A.notes_id is not null then A.notes_id else D.approver_email end as approver ";
-        $sql.= ", case when D.approved_date is not null then varchar_format(D.APPROVED_DATE,'YYYY-MM-DD') else D.status end as approved ";
+        // $sql.= ", case when D.approved_date is not null then varchar_format(D.APPROVED_DATE,'YYYY-MM-DD') else D.status end as approved ";
+        $sql.= ", case when D.approved_date is not null then D.APPROVED_DATE else D.status end as approved ";
         $sql.= ", case when F.notes_id is not null then F.NOTES_ID else 'Unknown to vbac' end as FM ";
         $sql.= ", D.CREATION_DATE as CREATED ";
         $sql.= ", D.EXCEPTION_CODE as CODE";
@@ -179,7 +180,7 @@ class dlpTable extends DbTable {
         $sql.= " STATUS='";
         $sql.= $approveReject==dlpRecord::STATUS_APPROVED ? dlpRecord::STATUS_APPROVED : dlpRecord::STATUS_REJECTED;
         $sql.= " ' ";
-        $sql.= ", APPROVED_DATE = Current date ";
+        $sql.= ", APPROVED_DATE = CAST( CURRENT_TIMESTAMP AS Date ) ";
         $sql.= ", APPROVER_EMAIL='" . $_SESSION['ssoEmail'] . "' ";
         $sql.= " WHERE ";
         $sql.= " CNUM='" . htmlspecialchars(trim($cnum)) . "' ";

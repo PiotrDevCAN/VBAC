@@ -1403,7 +1403,7 @@ class personTable extends DbTable
     {
         if (empty($this->preparedRevalidationStmt)) {
             $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-            $sql .= " SET NOTES_ID = ?, EMAIL_ADDRESS = ?,  REVALIDATION_STATUS = '" . personRecord::REVALIDATED_FOUND . "' , REVALIDATION_DATE_FIELD = current date ";
+            $sql .= " SET NOTES_ID = ?, EMAIL_ADDRESS = ?,  REVALIDATION_STATUS = '" . personRecord::REVALIDATED_FOUND . "' , REVALIDATION_DATE_FIELD = CAST( CURRENT_TIMESTAMP AS Date ) ";
             $sql .= " WHERE CNUM=? ";
 
             $this->preparedRevalidationStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
@@ -1420,7 +1420,7 @@ class personTable extends DbTable
     {
         if (empty($this->preparedLeaverProjectedEndDateStmt)) {
             $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-            $sql .= " SET PROJECTED_END_DATE = current date ";
+            $sql .= " SET PROJECTED_END_DATE = CAST( CURRENT_TIMESTAMP AS Date ) ";
             $sql .= " WHERE CNUM=? AND PROJECTED_END_DATE is null ";
 
             $this->preparedLeaverProjectedEndDateStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
@@ -1437,7 +1437,7 @@ class personTable extends DbTable
     {
         if (empty($this->preparedRevalidationLeaverStmt)) {
             $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-            $sql .= " SET REVALIDATION_STATUS = '" . personRecord::REVALIDATED_LEAVER . "' , REVALIDATION_DATE_FIELD = current date ";
+            $sql .= " SET REVALIDATION_STATUS = '" . personRecord::REVALIDATED_LEAVER . "' , REVALIDATION_DATE_FIELD = CAST( CURRENT_TIMESTAMP AS Date ) ";
             $sql .= " WHERE CNUM=? ";
 
             $this->preparedRevalidationLeaverStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
@@ -1454,7 +1454,7 @@ class personTable extends DbTable
     {
         if (empty($this->preparedRevalidationPotentialLeaverStmt)) {
             $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-//            $sql .= " SET REVALIDATION_STATUS = '" . personRecord::REVALIDATED_POTENTIAL . "' , REVALIDATION_DATE_FIELD = current date ";
+//            $sql .= " SET REVALIDATION_STATUS = '" . personRecord::REVALIDATED_POTENTIAL . "' , REVALIDATION_DATE_FIELD = CAST( CURRENT_TIMESTAMP AS Date ) ";
             $sql .= " SET REVALIDATION_STATUS = '" . personRecord::REVALIDATED_POTENTIAL . "'  "; // Storing the date was cutting to many history records
             $sql .= " WHERE CNUM=? ";
 
@@ -1527,7 +1527,7 @@ class personTable extends DbTable
     public function flagPreboarders()
     {
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql .= " SET REVALIDATION_STATUS = '" . personRecord::REVALIDATED_PREBOARDER . "', REVALIDATION_DATE_FIELD = current date ";
+        $sql .= " SET REVALIDATION_STATUS = '" . personRecord::REVALIDATED_PREBOARDER . "', REVALIDATION_DATE_FIELD = CAST( CURRENT_TIMESTAMP AS Date ) ";
         $sql .= " WHERE (CNUM like '%999' or CNUM like '%xxx' or CNUM like '%XXX' )  AND ( REVALIDATION_STATUS is null )";
 
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
@@ -1546,7 +1546,7 @@ class personTable extends DbTable
             $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
             $sql .= " SET
             REVALIDATION_STATUS = CONCAT(TRIM('" . personRecord::REVALIDATED_OFFBOARDING . "'),':', TRIM(REVALIDATION_STATUS)),
-            REVALIDATION_DATE_FIELD = current date,
+            REVALIDATION_DATE_FIELD = CAST( CURRENT_TIMESTAMP AS Date ),
             PROPOSED_LEAVING_DATE = '" . htmlspecialchars($proposedLeavingDate) . "'";
             $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "'";
 
@@ -1568,7 +1568,7 @@ class personTable extends DbTable
     {
         if (!empty($cnum)) {
             $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-            // $sql .= " SET REVALIDATION_STATUS = CONCAT(TRIM('" . personRecord::REVALIDATED_OFFBOARDED . "'), ':', TRIM(SUBSTR(REVALIDATION_STATUS,13))), REVALIDATION_DATE_FIELD = current date, OFFBOARDED_DATE = current date ";
+            // $sql .= " SET REVALIDATION_STATUS = CONCAT(TRIM('" . personRecord::REVALIDATED_OFFBOARDED . "'), ':', TRIM(SUBSTR(REVALIDATION_STATUS,13))), REVALIDATION_DATE_FIELD = CAST( CURRENT_TIMESTAMP AS Date ), OFFBOARDED_DATE = CAST( CURRENT_TIMESTAMP AS Date ) ";
             $sql .= " SET REVALIDATION_STATUS = CONCAT(
                 TRIM('" . personRecord::REVALIDATED_OFFBOARDED . "'), ':',
                 CASE
@@ -1576,7 +1576,7 @@ class personTable extends DbTable
                     WHEN REVALIDATION_STATUS LIKE '" . personRecord::REVALIDATED_OFFBOARDED . "%' THEN TRIM(SUBSTR(REVALIDATION_STATUS,12))
                     ELSE TRIM(REVALIDATION_STATUS)
                 END
-            ), REVALIDATION_DATE_FIELD = current date, OFFBOARDED_DATE = current date ";
+            ), REVALIDATION_DATE_FIELD = CAST( CURRENT_TIMESTAMP AS Date ), OFFBOARDED_DATE = CAST( CURRENT_TIMESTAMP AS Date ) ";
             $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "'";
 
             $rs = sqlsrv_query($GLOBALS['conn'], $sql);
@@ -1597,13 +1597,13 @@ class personTable extends DbTable
     {
         if (!empty($cnum)) {
             $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-            // $sql .= " SET REVALIDATION_STATUS = TRIM(SUBSTR(REVALIDATION_STATUS,13)), REVALIDATION_DATE_FIELD = current date, OFFBOARDED_DATE = null  ";
+            // $sql .= " SET REVALIDATION_STATUS = TRIM(SUBSTR(REVALIDATION_STATUS,13)), REVALIDATION_DATE_FIELD = CAST( CURRENT_TIMESTAMP AS Date ), OFFBOARDED_DATE = null  ";
             $sql .= " SET REVALIDATION_STATUS = CASE
                 WHEN REVALIDATION_STATUS LIKE '" . personRecord::REVALIDATED_OFFBOARDING . "%' THEN TRIM(SUBSTR(REVALIDATION_STATUS,13))
                 WHEN REVALIDATION_STATUS LIKE '" . personRecord::REVALIDATED_OFFBOARDED . "%' THEN TRIM(SUBSTR(REVALIDATION_STATUS,12))
                 ELSE TRIM(REVALIDATION_STATUS)
             END,
-            REVALIDATION_DATE_FIELD = current date,
+            REVALIDATION_DATE_FIELD = CAST( CURRENT_TIMESTAMP AS Date ),
             OFFBOARDED_DATE = null,
             PROPOSED_LEAVING_DATE = null ";
             $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "'";
@@ -1625,13 +1625,13 @@ class personTable extends DbTable
     {
         if (!empty($cnum)) {
             $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-            // $sql .= " SET REVALIDATION_STATUS = TRIM(SUBSTR(REVALIDATION_STATUS,12)), REVALIDATION_DATE_FIELD = current date, OFFBOARDED_DATE = null  ";
+            // $sql .= " SET REVALIDATION_STATUS = TRIM(SUBSTR(REVALIDATION_STATUS,12)), REVALIDATION_DATE_FIELD = CAST( CURRENT_TIMESTAMP AS Date ), OFFBOARDED_DATE = null  ";
             $sql .= " SET REVALIDATION_STATUS = CASE
                 WHEN REVALIDATION_STATUS LIKE '" . personRecord::REVALIDATED_OFFBOARDING . "%' THEN TRIM(SUBSTR(REVALIDATION_STATUS,13))
                 WHEN REVALIDATION_STATUS LIKE '" . personRecord::REVALIDATED_OFFBOARDED . "%' THEN TRIM(SUBSTR(REVALIDATION_STATUS,12))
                 ELSE TRIM(REVALIDATION_STATUS)
             END,
-            REVALIDATION_DATE_FIELD = current date,
+            REVALIDATION_DATE_FIELD = CAST( CURRENT_TIMESTAMP AS Date ),
             OFFBOARDED_DATE = null,
             PROPOSED_LEAVING_DATE = null ";
             $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "'";
@@ -2264,7 +2264,7 @@ class personTable extends DbTable
         $sql .= " WHERE 1=1 ";
         $sql .= " AND PES_STATUS not in (" . self::$excludeFromRecheckNotification . ") ";
         $sql .= " and PES_RECHECK_DATE is not null ";
-        $sql .= " and PES_RECHECK_DATE <= CURRENT DATE + 56 DAYS ";
+        $sql .= " and PES_RECHECK_DATE <= DATEADD(day, 56, CURRENT_TIMESTAMP) ";
 
         $rs = sqlsrv_query($localConnection, $sql);
 

@@ -469,7 +469,7 @@ class assetRequestsTable extends DbTable{
         $sql .= " case when BUSINESS_JUSTIFICATION is null then 'N/A' else BUSINESS_JUSTIFICATION end as JUSTIFICATION, ";
         $sql .= " STATUS,  USER_LOCATION, REQUESTOR_EMAIL, date(REQUESTED) as REQUESTED,  APPROVER_EMAIL, DATE(APPROVED) as APPROVED,";
         $sql .= " F.EMAIL_ADDRESS as FM_EMAIL, ";
-        $sql .= " current date as EXPORTED ";
+        $sql .= " CAST( CURRENT_TIMESTAMP AS Date ) as EXPORTED ";
         $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
         $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql .= " ON AR.CNUM = P.CNUM ";
@@ -522,7 +522,7 @@ class assetRequestsTable extends DbTable{
         $sql .= " case when BUSINESS_JUSTIFICATION is null then 'N/A' else BUSINESS_JUSTIFICATION end as JUSTIFICATION, ";
         $sql .= " STATUS,  USER_LOCATION, REQUESTOR_EMAIL, date(REQUESTED) as REQUESTED,  APPROVER_EMAIL, DATE(APPROVED) as APPROVED,";
         $sql .= " F.EMAIL_ADDRESS as FM_EMAIL, ";
-        $sql .= " current date as EXPORTED ";
+        $sql .= " CAST( CURRENT_TIMESTAMP AS Date ) as EXPORTED ";
         $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
         $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql .= " ON AR.CNUM = P.CNUM ";

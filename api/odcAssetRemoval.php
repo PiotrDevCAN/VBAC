@@ -4,7 +4,6 @@ use itdq\DbTable;
 
 ob_start();
 
-
 if($_REQUEST['token']!= $token){
     return;
 }
@@ -58,13 +57,13 @@ if($startDate===false || $endDate===false){
             switch (TRUE) {
                 case !empty($assetSerial):
                 case !empty($cnum):
-                    $sql = " SELECT CURRENT DATE as TODAY "; // means the next statement can begin with an ,
+                    $sql = " SELECT CAST( CURRENT_TIMESTAMP AS Date ) as TODAY "; // means the next statement can begin with an ,
                     $sql.= empty($assetSerial) ? " ,ASSET_SERIAL_NUMBER ": null; // if they didn't provide an asset serial, that's what they want back
                     $sql.= empty($cnum) ?        " ,CNUM ": null; // if they didn't provide a cnum, that's what they want back.
                     $sql.= " FROM ". $GLOBALS['Db2Schema']  . "." . allTables::$ODC_ASSET_REMOVAL ;
                     $sql.= " WHERE 1=1 ";
-                    $sql.= "                        and START_DATE <= CURRENT DATE ";
-                    $sql.= "                        and END_DATE >= CURRENT DATE ";
+                    $sql.= " and START_DATE <= CURRENT_TIMESTAMP ";
+                    $sql.= " and END_DATE >= CURRENT_TIMESTAMP ";
                     $sql.= !empty($assetSerial) ? " and ASSET_SERIAL_NUMBER='" . htmlspecialchars($assetSerial) . "' " : null;
                     $sql.= !empty($cnum) ?        " and CNUM='" . htmlspecialchars($cnum) . "' " : null;
                     $rs = sqlsrv_query($GLOBALS['conn'], $sql);
@@ -146,10 +145,10 @@ if($startDate===false || $endDate===false){
                 default :
                     $sql = " SELECT count(*) as VALID FROM  " . $GLOBALS['Db2Schema']  . "." . allTables::$ODC_ASSET_REMOVAL ;
                     $sql.= " WHERE 1=1 ";
-                    $sql.= "   and START_DATE <= CURRENT DATE ";
-                    $sql.= "   and END_DATE >= CURRENT DATE ";
-                    $sql.= "   and ASSET_SERIAL_NUMBER='" . htmlspecialchars($assetSerial) . "' " ;
-                    $sql.= "   and CNUM='" . htmlspecialchars($cnum) . "' " ;
+                    $sql.= " and START_DATE <= CURRENT_TIMESTAMP ";
+                    $sql.= " and END_DATE >= CURRENT_TIMESTAMP ";
+                    $sql.= " and ASSET_SERIAL_NUMBER='" . htmlspecialchars($assetSerial) . "' " ;
+                    $sql.= " and CNUM='" . htmlspecialchars($cnum) . "' " ;
                     $rs = sqlsrv_query($GLOBALS['conn'], $sql);
                     
                     if(!$rs){
@@ -167,10 +166,8 @@ if($startDate===false || $endDate===false){
                     
                     break;
             }
+
             break;
-            
-            
-            
         default:
             $errorMsg = 'No Command specified';
             $httpCode = 401;
@@ -180,7 +177,6 @@ if($startDate===false || $endDate===false){
 }
 
 $errorMsg.= ob_get_clean();
-
 
 $response = array('success'=>empty($errorMsg),'errorMsg'=>$errorMsg);
 
