@@ -14,9 +14,7 @@ echo "<div class='container'>";
 
 $nonRecipients = false;
 
-
-
-while (($row=sqlsrv_fetch_array($rs))==true){
+while ($row = sqlsrv_fetch_array($rs)){
     ini_set('max_execution_time', 360);
     echo "<br/>";
     echo "<br/><b>To: </b>" . implode(",",unserialize($row['TO']));

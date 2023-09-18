@@ -56,7 +56,7 @@ class delegateTable extends DbTable {
 
         $data = array();
 
-        while (($row=sqlsrv_fetch_array($rs))==true) {
+        while (($row = sqlsrv_fetch_array($rs))==true) {
             $display['MANAGER'] = $row['EMAIL_ADDRESS'];
             $display['DELEGATE'] = $row['DELEGATE_EMAIL'];
 
@@ -95,7 +95,7 @@ class delegateTable extends DbTable {
 
         $ccAddresses = array();
 
-        while(($row=sqlsrv_fetch_array($rs)==true)){
+        while(($row = sqlsrv_fetch_array($rs)==true)){
             $ccAddresses[] = trim($row['DELEGATE_EMAIL']);
         }
 
@@ -117,7 +117,7 @@ class delegateTable extends DbTable {
 
         $ccAddresses = array();
 
-        while(($row=sqlsrv_fetch_array($rs))==true){
+        while(($row = sqlsrv_fetch_array($rs))==true){
             $ccAddresses[] = trim($row['DELEGATE_EMAIL']);
         }
 
@@ -138,7 +138,7 @@ class delegateTable extends DbTable {
 
         $allDelegates = array();
 
-        while(($row=sqlsrv_fetch_array($rs))==true){
+        while(($row = sqlsrv_fetch_array($rs))==true){
 
             $allDelegates[$row['CNUM']][] = $row['DELEGATE_EMAIL'];
             // = isset($allDelegates[$row['CNUM']]) ? array_merge($allDelegates[$row['CNUM']],array($row['DELEGATE_EMAIL'])) : $row['DELEGATE_EMAIL'] ;

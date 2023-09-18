@@ -18,7 +18,7 @@ $sql.= " ORDER BY P.NOTES_ID ";
 $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
 if($rs){
-    while(($row = sqlsrv_fetch_array($rs))==true){
+    while ($row = sqlsrv_fetch_array($rs)){
         $notesIds[] = trim($row['NOTES_ID']);
     }
 } else {

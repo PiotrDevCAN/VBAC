@@ -74,7 +74,7 @@ if($startDate===false || $endDate===false){
                         $httpCode = 461;
                     } else {
                         $list = array();
-                        while (($row = sqlsrv_fetch_array($rs))==true) {
+                        while ($row = sqlsrv_fetch_array($rs)){
                             isset($row['ASSET_SERIAL_NUMBER']) ? $list[] = trim($row['ASSET_SERIAL_NUMBER']) : null; 
                             isset($row['CNUM']) ? $list[] = trim($row['CNUM']) : null;
                         }

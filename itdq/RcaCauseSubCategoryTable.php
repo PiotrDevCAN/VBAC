@@ -27,7 +27,7 @@ class RcaCauseSubCategoryTable extends DbTableTable
         }
 
         $xmlString = "<rcaCategories>";
-        while (($row = sqlsrv_fetch_array($rs)) == true) {
+        while ($row = sqlsrv_fetch_array($rs)){
             $xmlString .= "<rcaSubCategory>";
             foreach ($row as $key => $value) {
                 $xmlString .= "<" . trim($key) . ">" . urlencode(trim($value)) . "</" . trim($key) . ">";

@@ -13,7 +13,7 @@ class staticDataWorkstreamTable extends staticDataTable {
 
         $allWorkstream = null;
         if($rs){
-            while (($row=sqlsrv_fetch_array($rs))==true) {
+            while (($row = sqlsrv_fetch_array($rs))==true) {
                 $allWorkstream[trim($row['ACCOUNT_ORGANISATION'])][] = trim($row['WORKSTREAM']);
             }
         } else {

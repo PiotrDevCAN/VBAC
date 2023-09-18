@@ -8,7 +8,7 @@ use vbac\personRecord;
 $sql = " SELECT CNUM, FIRST_NAME FROM " . $GLOBALS['Db2Schema'] . ".PERSON WHERE FIRST_NAME is null and trim(REVALIDATION_STATUS) = '" . personRecord::REVALIDATED_FOUND . "' ";
 $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 $firstNames = array();
-while(($row=sqlsrv_fetch_array($rs))==true){
+while ($row = sqlsrv_fetch_array($rs)){
     $firstNames[trim($row['CNUM'])] = trim($row['FIRST_NAME']);
 }
 

@@ -8,7 +8,7 @@ $details = array();
 $sql = " Select distinct cnum, first_name, last_name, employee_type from vbac.person ";
 $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
-while (($row=sqlsrv_fetch_array($rs))==true ){
+while ($row = sqlsrv_fetch_array($rs)){
     $people[$row['CNUM']] = $row ;
     $allCnums[] = $row['CNUM'];
 }

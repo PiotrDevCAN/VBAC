@@ -129,7 +129,7 @@ class pesTrackerTable extends DbTable{
         switch ($returnResultsAs) {
             case self::PES_TRACKER_RETURN_RESULTS_AS_ARRAY:
                 $report = array();
-                while(($row=sqlsrv_fetch_array($rs))==true){
+                while(($row = sqlsrv_fetch_array($rs))==true){
                     set_time_limit(5);
                     $trimmedRow = array_map('trim', $row);
                     $report[] = $trimmedRow;

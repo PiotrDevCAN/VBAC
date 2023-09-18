@@ -112,7 +112,7 @@ class dlpTable extends DbTable {
         }
         
         $report = array();
-        while (($row=sqlsrv_fetch_array($rs))==true) {
+        while (($row = sqlsrv_fetch_array($rs))==true) {
             $report[] = $withButtons ? $this->addButtons(array_map('trim', $row)) : array_map('trim', $row);
         }
         

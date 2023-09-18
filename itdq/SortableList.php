@@ -1784,7 +1784,7 @@ class SortableList
         $titles = '';
         $data = '';
 
-        while( ($row=sqlsrv_fetch_array($resultSet)) == true){
+        while ($row = sqlsrv_fetch_array($resultSet)){
             $row = $this->preProcessRowForCsv($row);
             $titles = empty($titles) ? $this->processRowForCsvTitles($row) . "\n" : $titles;
             $data .= $this->processRowForCsvData($row) . "\n";

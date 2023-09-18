@@ -19,7 +19,7 @@ $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 $data = array();
 
 if($rs){
-    while(($row = sqlsrv_fetch_array($rs))==true){
+    while ($row = sqlsrv_fetch_array($rs)){
         $data[trim($row['CNUM'])] = array_map('trim', $row);
     }
 } else {

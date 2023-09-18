@@ -95,7 +95,7 @@ switch ($_REQUEST['mode']) {
                     var_dump($sql);
                 }
                 
-                while(($row = sqlsrv_fetch_array($rs))==true){
+                while ($row = sqlsrv_fetch_array($rs)){
                     $response['titles'][] = $row['TITLE'];
                     var_dump($response);
                 }

@@ -171,7 +171,7 @@ class personRecord extends DbRecord
       'RTB' => 'aurora.central.pmo@kyndryl.com'
     );
 
-    public static $vbacNoReplyId = 'vbacNoReply@kyndryl.com';
+    public static $vbacNoReplyId = 'UKI.Business.Intelligence@kyndryl.com';
 
     public static $pmoTaskId = array('aurora.central.pmo@kyndryl.com');
     public static $orderITCtbTaskId = array('jeemohan@in.ibm.com');
@@ -460,7 +460,7 @@ class personRecord extends DbRecord
       }
 
       $allCnums = array();
-      while(($row=sqlsrv_fetch_array($rs))==true){
+      while(($row = sqlsrv_fetch_array($rs))==true){
           $cnum = trim($row['CNUM']);
           $allCnums[] = $cnum;
       }
@@ -484,7 +484,7 @@ class personRecord extends DbRecord
       }
 
       $allExternalEmails = array();
-      while(($row=sqlsrv_fetch_array($rs))==true){
+      while(($row = sqlsrv_fetch_array($rs))==true){
         $email = trim($row['EMAIL_ADDRESS']);
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
           $allExternalEmails[] = $email;
@@ -510,7 +510,7 @@ class personRecord extends DbRecord
       }
 
       $allIBMEmails = array();
-      while(($row=sqlsrv_fetch_array($rs))==true){
+      while(($row = sqlsrv_fetch_array($rs))==true){
         $email = trim($row['EMAIL_ADDRESS']);
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
           $allIBMEmails[] = $email;
@@ -536,7 +536,7 @@ class personRecord extends DbRecord
       }
 
       $allKyndrylEmails = array();
-      while(($row=sqlsrv_fetch_array($rs))==true){
+      while(($row = sqlsrv_fetch_array($rs))==true){
         $email = trim($row['KYN_EMAIL_ADDRESS']);
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
           $allKyndrylEmails[] = $email;

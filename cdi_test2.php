@@ -8,7 +8,7 @@ $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
 echo "<pre>";
 
-while(($row = sqlsrv_fetch_array($rs))==true){
+while ($row = sqlsrv_fetch_array($rs)){
     $templateArray = array();
     
     $template = $row['TEMPLATE'];

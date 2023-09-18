@@ -27,7 +27,7 @@ class requestableAssetListTable extends DbTable {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         } else {
-            while(($row=sqlsrv_fetch_array($rs))==true){
+            while(($row = sqlsrv_fetch_array($rs))==true){
                 $trimmedData = array_map('trim', $row);
                 $trimmedData['APPLICABLE_ONSHORE']              = trim($trimmedData['APPLICABLE_ONSHORE'])=='1'         ? 'Yes' : 'No';
                 $trimmedData['APPLICABLE_OFFSHORE']             = trim($trimmedData['APPLICABLE_OFFSHORE'])=='1'        ? 'Yes' : 'No';

@@ -142,7 +142,7 @@ class assetRequestsTable extends DbTable{
 
         $data = array();
 
-        while(($preTrimmed=sqlsrv_fetch_array($rs))==true){
+        while ($preTrimmed = sqlsrv_fetch_array($rs)){
 
             $row = array_map('trim', $preTrimmed);
 
@@ -431,7 +431,7 @@ class assetRequestsTable extends DbTable{
             return false;
         }
 
-        while (($row=sqlsrv_fetch_array($rs))==true) {
+        while ($row = sqlsrv_fetch_array($rs)){
             $this->assetRequestEventsTable->logEventForRequest(assetRequestsEventsTable::EVENT_EXPORTED, $row['REQUEST_REFERENCE']);
         }
 
@@ -490,7 +490,7 @@ class assetRequestsTable extends DbTable{
             return false;
         }
 
-        while(($row=sqlsrv_fetch_array($rs2))==true){
+        while ($row = sqlsrv_fetch_array($rs)){
             $trimmedData = array_map('trim', $row);
             $data[] = '"' . implode('","',$trimmedData) . '" ';
         }
@@ -545,7 +545,7 @@ class assetRequestsTable extends DbTable{
             return false;
         }
 
-        while(($row=sqlsrv_fetch_array($rs2))==true){
+        while ($row = sqlsrv_fetch_array($rs2)){
             $trimmedData = array_map('trim', $row);
             $data[] = '"' . implode('","',$trimmedData) . '" ';
         }
@@ -581,7 +581,7 @@ class assetRequestsTable extends DbTable{
             return false;
         }
 
-        $row=sqlsrv_fetch_array($rs2);
+        $row = sqlsrv_fetch_array($rs2);
 
         return $row['TICKETS'];
     }
@@ -598,7 +598,7 @@ class assetRequestsTable extends DbTable{
             return false;
         }
 
-        $row=sqlsrv_fetch_array($rs2);
+        $row = sqlsrv_fetch_array($rs2);
 
         return $row['TICKETS'];
     }
@@ -616,7 +616,7 @@ class assetRequestsTable extends DbTable{
             return false;
         }
 
-        $row=sqlsrv_fetch_array($rs2);
+        $row = sqlsrv_fetch_array($rs2);
 
         return $row['TICKETS'];
     }
@@ -655,7 +655,7 @@ class assetRequestsTable extends DbTable{
             return false;
         }
 
-        $row=sqlsrv_fetch_array($rs2);
+        $row = sqlsrv_fetch_array($rs2);
 
         return $row['TICKETS'];
     }
@@ -675,7 +675,7 @@ class assetRequestsTable extends DbTable{
             return false;
         }
 
-        $row=sqlsrv_fetch_array($rs2);
+        $row = sqlsrv_fetch_array($rs2);
 
         return $row['TICKETS'];
     }
@@ -698,7 +698,7 @@ class assetRequestsTable extends DbTable{
             return false;
         }
 
-        $row=sqlsrv_fetch_array($rs2);
+        $row = sqlsrv_fetch_array($rs2);
 
         return $row['TICKETS'];
     }
@@ -1282,7 +1282,7 @@ class assetRequestsTable extends DbTable{
         }
 
         $data = array();
-        while(($row=sqlsrv_fetch_array($rs))==true){
+        while(($row = sqlsrv_fetch_array($rs))==true){
             $data[]=$row['ORDERIT_VARB_REF'];
         }
         return $data;
@@ -1302,7 +1302,7 @@ class assetRequestsTable extends DbTable{
         }
 
         $data = array();
-        while(($row=sqlsrv_fetch_array($rs))==true){
+        while(($row = sqlsrv_fetch_array($rs))==true){
             $data[]=$row['REQUEST_REFERENCE'];
         }
         return $data;
@@ -1322,7 +1322,7 @@ class assetRequestsTable extends DbTable{
         }
 
         $data = array();
-        while(($row=sqlsrv_fetch_array($rs))==true){
+        while(($row = sqlsrv_fetch_array($rs))==true){
             $data[]=$row['ORDERIT_VARB_REF'];
         }
         return $data;
@@ -1342,7 +1342,7 @@ class assetRequestsTable extends DbTable{
         }
 
         $data = array();
-        while(($row=sqlsrv_fetch_array($rs))==true){
+        while(($row = sqlsrv_fetch_array($rs))==true){
             $data[]=$row['REQUEST_REFERENCE'];
         }
         return $data;
@@ -1717,7 +1717,7 @@ class assetRequestsTable extends DbTable{
         }
 
         $data = array();
-        while(($row=sqlsrv_fetch_array($rs))==true){
+        while(($row = sqlsrv_fetch_array($rs))==true){
             $row['INCLUDED'] = "<input type='checkbox' name='request[]' value='" . $row['REFERENCE'] . "'  />";
             $row['ORDERIT_NUMBER'] = "<input type='text' name='orderit[" . $row['REFERENCE'] . "]' value='" . $row['ORDERIT_NUMBER'] . "'  min='999999' max='9999999' class='form-control'  /> " ;
 
@@ -1886,7 +1886,7 @@ class assetRequestsTable extends DbTable{
         }
 
         $data = array();
-        while(($row=sqlsrv_fetch_array($rs))==true){
+        while(($row = sqlsrv_fetch_array($rs))==true){
 
             $status = trim($row['ORDERIT_STATUS']);
             switch ($status) {
@@ -2510,7 +2510,7 @@ class assetRequestsTable extends DbTable{
                 return false;
             }
 
-            while (($row=sqlsrv_fetch_array($rs1))==true) {
+            while (($row = sqlsrv_fetch_array($rs1))==true) {
                 $sql = " update " . $GLOBALS['Db2Schema'] . "." . $this->tableName ;
                 $sql .= " SET PRE_REQ_REQUEST='" . htmlspecialchars(trim($row['PRE_REQ'])) . "' ";
                 $sql .= " WHERE REQUEST_REFERENCE='" . htmlspecialchars(trim($row['REQUEST_REFERENCE']))  . "' " ;
@@ -2636,7 +2636,7 @@ class assetRequestsTable extends DbTable{
          }
          $assetTitles=array();
 
-         while (($row=sqlsrv_fetch_array($rs))==true) {
+         while (($row = sqlsrv_fetch_array($rs))==true) {
              $assetTitles[trim($row['ASSET_TITLE'])] = trim($row['ASSET_TITLE']);
          }
 

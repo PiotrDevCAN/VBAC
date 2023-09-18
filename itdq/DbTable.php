@@ -594,7 +594,7 @@ class DbTable
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
         }
-        while(($row = sqlsrv_fetch_array($rs))==true){
+        while ($row = sqlsrv_fetch_array($rs)){
             // print_r($row);
             $this->primary_keys[trim($row['COLUMN_NAME'])] = $row;
         }
@@ -2176,7 +2176,7 @@ class DbTable
     function columnAnalysis($rs)
     {
         $columnData = null;
-        while (($rowData = sqlsrv_fetch_array($rs)) == true) {
+        while ($rowData = sqlsrv_fetch_array($rs)){
             $cleanRowData = strip_tags($rowData[0]);
             $strippedCleanRow = str_replace(array(
                 '&nbsp;',
@@ -2234,7 +2234,7 @@ class DbTable
         $obj = new \stdClass();
         $obj->data = array();
 
-        while (($row = sqlsrv_fetch_array($resultSet))==true) {
+        while ($row = sqlsrv_fetch_array($resultSet)){
             $obj->data[] = $row;
         }
         return json_encode($obj);

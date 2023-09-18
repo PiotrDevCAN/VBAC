@@ -57,7 +57,7 @@ $hits = 0;
 $notesId = array();
 $cnum = array();
 
-while (($row = sqlsrv_fetch_array($rs))==true) {
+while ($row = sqlsrv_fetch_array($rs)){
     $hits++;
     $row = array_map('trim', $row);
     $notesId[] = $row['NOTES_ID'];

@@ -254,7 +254,7 @@ class odcAccessTable extends DbTable {
         $totalPopulation=0;
         $platformPopulation = array();
 
-        while(($row=sqlsrv_fetch_array($rs))==true){
+        while(($row = sqlsrv_fetch_array($rs))==true){
             $platformPopulation[strtoupper(trim($row['WORK_STREAM']))] = $row['PLATFORM_POPULATION']+0;
             $totalPopulation += $row['PLATFORM_POPULATION'];
         }

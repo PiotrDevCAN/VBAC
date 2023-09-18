@@ -28,7 +28,7 @@ class skillSetTable extends DbTable{
             return false;
         }
         $data = false;
-        while(($row=sqlsrv_fetch_array($rs))==true){
+        while(($row = sqlsrv_fetch_array($rs))==true){
             $row = array_map('trim',$row);
             $rowWithIcons = $this->addIcons($row);
             $data[] = $rowWithIcons;

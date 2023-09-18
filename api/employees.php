@@ -39,7 +39,7 @@ $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 $employees = array();
 
 if($rs){
-    while(($row = sqlsrv_fetch_array($rs))==true){
+    while ($row = sqlsrv_fetch_array($rs)){
         $employees[] = trim($row['NOTES_ID']);
     }
 } else {

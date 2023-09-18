@@ -9,11 +9,11 @@ data:
   environment: vbac
   devemailid: piotr.tajanowicz@kyndryl.com
   jwt_token: "dGhpcyBpcyBhIHN0cmluZyB0aGF0IHdpbGwgYmUgdXNlZCB0byBzZWN1cmUgdmJhYydzIHNlc3Npb25zLiBUaGUgbW9yZSBjaGFyYWN0ZXJzIEkga2V5IGludG8gdGhpcyB0aGUgbW9yZSBzZWN1cmUgaXQgaXMg"
-  noreplyemailid: vbac@noreply.ibm.com
-  noreplykyndrylemailid: vbacNoReply@kyndryl.com
+  noreplyemailid: UKI.Business.Intelligence@kyndryl.com
+  noreplykyndrylemailid: UKI.Business.Intelligence@kyndryl.com
   upes_audit: https://hooks.slack.com/services/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
   suppressPesEmails: "1"
   upes_api_token: 35310a45-62a7-4de6-b8a3-17f9c6efdd26
   upes_url: https://kpes-dev.zkpw3uspriv.app.kyndryl.net
   kpes_url: https://kpes-dev.zkpw3uspriv.app.kyndryl.net
-
+  api_token: soEkCfj8zGNDLZ8yXH2YJjpehd8ijzlS
