@@ -137,7 +137,7 @@ class BlueMail
                     $mail->Username = $_ENV['smtp-user-name'];             
                     $mail->Password = $_ENV['smtp-user-pw']; 
 
-                    $replyto = 'UKI.Business.Intelligence@kyndryl.com';
+                    $replyto = $_ENV['noreplyemailid'];
 
                     $mail->setFrom($replyto);
                     $mail->isHTML(true);

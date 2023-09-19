@@ -594,7 +594,7 @@ class DbTable
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
         }
-        while ($row = sqlsrv_fetch_array($rs)){
+        while($row = sqlsrv_fetch_array($rs)){
             // print_r($row);
             $this->primary_keys[trim($row['COLUMN_NAME'])] = $row;
         }
@@ -1995,7 +1995,7 @@ class DbTable
         $userid = isset($_SESSION['ssoEmail']) ? $_SESSION['ssoEmail'] : 'userNotDefined';
         $elapsed = isset($_SESSION['tracePageOpenTime']) ? microtime(true) - $_SESSION['tracePageOpenTime'] : null;
 
-        $sql = " INSERT INTO " . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$DB2_ERRORS . " ( USERID, PAGE, DB2_ERROR, DB2_MESSAGE, BACKTRACE, REQUEST ) ";
+        $sql = " INSERT INTO " . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$DB2_ERRORS . " ( USERID, PAGE, DB2_ERROR, DB2_MESSAGE, BACKTRACE, REQUEST, TIMESTAMP ) ";
 
         ob_start();
         echo "<pre>";
@@ -2029,14 +2029,15 @@ class DbTable
         // $db2StmtErrorMsg = strlen(htmlspecialchars($db2StmtErrorMsg)) > 50 ? substr(htmlspecialchars($db2StmtErrorMsg), 0, 50) : htmlspecialchars($db2StmtErrorMsg);
         $db2StmtErrorMsg = $table->truncateValueToFitColumn($db2StmtErrorMsg, 'DB2_MESSAGE');
 
-        $sql .= " VALUES (?, ?, ?, ?, ? ,?)";
+        $sql .= " VALUES (?, ?, ?, ?, ? ,?, ?)";
         $params = array(
             $userid,
             $_SERVER['PHP_SELF'],
             $db2StmtError,
             $db2StmtErrorMsg,
             $backtrace,
-            $request
+            $request,
+            time()
         );
 
         if (isset($_SESSION['phoneHome']) && class_exists('Email')) {
@@ -2176,7 +2177,7 @@ class DbTable
     function columnAnalysis($rs)
     {
         $columnData = null;
-        while ($rowData = sqlsrv_fetch_array($rs)){
+        while($rowData = sqlsrv_fetch_array($rs)){
             $cleanRowData = strip_tags($rowData[0]);
             $strippedCleanRow = str_replace(array(
                 '&nbsp;',

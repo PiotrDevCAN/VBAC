@@ -38,7 +38,7 @@ function myErrorHandler($code, $message, $file, $line) {
     $mailError->Username = $_ENV['smtp-user-name'];             
     $mailError->Password = $_ENV['smtp-user-pw']; 
 
-    $replyto = 'UKI.Business.Intelligence@kyndryl.com';
+    $replyto = $_ENV['noreplyemailid'];
     $mailError->setFrom($replyto);
     $mailError->isHTML(true);
     // $mailError->Subject = "**" . $_ENV['environment'] . "**" . 'Error has occurred while running PHP script';
