@@ -737,7 +737,7 @@ class BluePagesSLAPHAPI {
         $rowCounter = 1;
         $batchOfCnums = false;
         while ($rowCounter <= $numberOfRowsToReturn) {
-            if (($row = sqlsrv_fetch_array($resultSet)) == false) {
+            if (($row = sqlsrv_fetch_array($resultSet, SQLSRV_FETCH_ASSOC)) == false) {
                 break;    /* You could also write 'break 1;' here. */
             } else {
                 $countryCode = isset(self::$countryCodeMapping[trim($row['COUNTRY'])]) ? self::$countryCodeMapping[trim($row['COUNTRY'])] : trim($row['COUNTRY']);

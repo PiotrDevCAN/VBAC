@@ -106,7 +106,7 @@ class personTable extends DbTable
             return false;
         }
 
-        $topRow = sqlsrv_fetch_array($rs);
+        $topRow = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
         if (isset($topRow[0])) {
             $thisCnum = substr($topRow[0], 1, 5);
             $next = $thisCnum + 1;
@@ -217,7 +217,7 @@ class personTable extends DbTable
         }
 
         $data = array();
-        while (($row = sqlsrv_fetch_array($rs)) == true) {
+        while (($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)) == true) {
             //$report[] = array_map('trim', $row);
             $data[] = $withButtons ? $this->addRfflagButtons(array_map('trim', $row)) : array_map('trim', $row);
         }
@@ -307,7 +307,7 @@ class personTable extends DbTable
         }
 
         $counter = 0;
-        while ($row = sqlsrv_fetch_array($preparedCountStatement)) {
+        while ($row = sqlsrv_fetch_array($preparedCountStatement, SQLSRV_FETCH_ASSOC)) {
             $counter = $row['COUNTER'];
         }
         return $counter;
@@ -326,7 +326,7 @@ class personTable extends DbTable
         }
 
         $counter = 0;
-        while ($row = sqlsrv_fetch_array($preparedCountStatement)) {
+        while ($row = sqlsrv_fetch_array($preparedCountStatement, SQLSRV_FETCH_ASSOC)) {
             $counter = $row['COUNTER'];
         }
         return $counter;
@@ -345,7 +345,7 @@ class personTable extends DbTable
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         } else {
-            while (($row = sqlsrv_fetch_array($rs)) == true) {
+            while (($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)) == true) {
                 // Only editable, if they're not a "pre-Boarder" who has now been boarded.
                 $preparedRow = $this->prepareFields($row);
                 $rowWithButtonsAdded = (substr($row['PES_STATUS_DETAILS'], 0, 10) == personRecord::PES_STATUS_DETAILS_BOARDED_AS) ? $preparedRow : $this->addButtons($preparedRow);
@@ -373,7 +373,7 @@ class personTable extends DbTable
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         } else {
-            while (($row = sqlsrv_fetch_array($rs)) == true) {
+            while (($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)) == true) {
                 // $cnum = trim($row['CNUM']);
                 // $preparedRow = $this->prepareFields($row);
                 // $fmCnumField = $preparedRow['FM_CNUM'];
@@ -415,7 +415,7 @@ class personTable extends DbTable
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         } else {
-            while (($row = sqlsrv_fetch_array($rs)) == true) {
+            while (($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)) == true) {
                 $cnum = trim($row['CNUM']);
                 $preparedRow = $this->prepareFields($row);
                 $fmCnumField = $preparedRow['FM_CNUM'];
@@ -445,7 +445,7 @@ class personTable extends DbTable
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         } else {
-            while (($row = sqlsrv_fetch_array($rs)) == true) {
+            while (($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)) == true) {
                 $jsonEncodable = json_encode($row);
                 if (!$jsonEncodable) {
                     echo "<hr/><br/>Dirty Data Found in record for : " . $row['CNUM'];
@@ -864,7 +864,7 @@ class personTable extends DbTable
             return false;
         }
 
-        $row = sqlsrv_fetch_array($res);
+        $row = sqlsrv_fetch_array($res, SQLSRV_FETCH_ASSOC);
 
         $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER);
         $pesTracker->savePesComment($cnum, "PES_RECHECK_DATE set to :" . $row['PES_RECHECK_DATE']);
@@ -1104,7 +1104,7 @@ class personTable extends DbTable
             return false;
         }
 
-        $row = sqlsrv_fetch_array($rs);
+        $row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
         if (!$row) {
             return false;
         }
@@ -1138,7 +1138,7 @@ class personTable extends DbTable
             return false;
         }
 
-        $row = sqlsrv_fetch_array($rs);
+        $row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
         if (!$row) {
             return false;
         }
@@ -1168,7 +1168,7 @@ class personTable extends DbTable
             return false;
         }
 
-        $row = sqlsrv_fetch_array($rs);
+        $row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
         if (!$row) {
             return false;
         }
@@ -1202,7 +1202,7 @@ class personTable extends DbTable
             return false;
         }
 
-        $row = sqlsrv_fetch_array($rs);
+        $row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
         if (!$row) {
             return false;
         }
@@ -1222,7 +1222,7 @@ class personTable extends DbTable
             return false;
         }
 
-        $row = sqlsrv_fetch_array($rs);
+        $row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
         if (!$row) {
             return false;
         }
@@ -1242,7 +1242,7 @@ class personTable extends DbTable
             return false;
         }
 
-        $row = sqlsrv_fetch_array($rs);
+        $row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
         if (!$row) {
             return false;
         }
@@ -1262,7 +1262,7 @@ class personTable extends DbTable
             return false;
         }
 
-        $row = sqlsrv_fetch_array($rs);
+        $row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
         if (!$row) {
             return false;
         }
@@ -1286,7 +1286,7 @@ class personTable extends DbTable
             return false;
         }
 
-        $row = sqlsrv_fetch_array($rs);
+        $row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
         if (!$row) {
             return array(
                 'FIRST_NAME' => '',
@@ -1310,7 +1310,7 @@ class personTable extends DbTable
             return false;
         }
 
-        $row = sqlsrv_fetch_array($rs);
+        $row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
         if (!$row) {
             return false;
         }
@@ -1331,7 +1331,7 @@ class personTable extends DbTable
             return false;
         }
 
-        $row = sqlsrv_fetch_array($rs);
+        $row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
         if (!$row) {
             return false;
         }
@@ -1366,7 +1366,7 @@ class personTable extends DbTable
             return false;
         }
         $options = array();
-        while (($row = sqlsrv_fetch_array($rs)) == true) {
+        while (($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)) == true) {
             $option = "<option value='" . trim($row['CNUM']) . "'";
             $option .= trim($row['CNUM']) == trim($preBoarded) ? ' selected ' : null;
             if (!empty(trim($row['EMAIL_ADDRESS']))) {
@@ -1395,7 +1395,7 @@ class personTable extends DbTable
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         }
-        $data = sqlsrv_fetch_array($rs);
+        $data = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
         return $data;
     }
 
@@ -1733,7 +1733,7 @@ class personTable extends DbTable
                 return false;
             }
 
-            $locationRow = sqlsrv_fetch_array($rs);
+            $locationRow = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
             if (!$locationRow) {
                 $locationRow = array(
                     'LBG_LOCATION' => false,
@@ -1749,7 +1749,7 @@ class personTable extends DbTable
                 return false;
             }
 
-            $fmrow = sqlsrv_fetch_array($rs);
+            $fmrow = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
             if (!$fmrow) {
                 $fmrow = array(
                     'FM_CNUM' => false,
@@ -1808,7 +1808,7 @@ class personTable extends DbTable
                 return false;
             }
 
-            $row = sqlsrv_fetch_array($rs);
+            $row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
             if (!$row) {
                 return personRecord::SECURITY_EDUCATION_NOT_COMPLETED;
             }
@@ -1862,7 +1862,7 @@ class personTable extends DbTable
             return false;
         }
 
-        $row = sqlsrv_fetch_array($rs);
+        $row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
         if (!$row) {
             return false;
         }
@@ -2273,7 +2273,7 @@ class personTable extends DbTable
         }
 
         $allRecheckers = false;
-        while (($row = sqlsrv_fetch_array($rs)) == true) {
+        while (($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)) == true) {
             $trimmedRow = array_map('trim', $row);
             $allRecheckers[] = $trimmedRow;
             $this->setPesStatus($trimmedRow['CNUM'], personRecord::PES_STATUS_RECHECK_REQ);

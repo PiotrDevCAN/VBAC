@@ -19,10 +19,15 @@ if( isset($_ENV['db-server'])
     && isset($_ENV['db-user-pw'])
 ) {
     
-    $serverName = $_ENV['db-server'];
-    $dbName = $_ENV['db-name'];
-    $userName = $_ENV['db-user-name'];
-    $password = $_ENV['db-user-pw'];
+    // $serverName = $_ENV['db-server'];
+    // $dbName = $_ENV['db-name'];
+    // $userName = $_ENV['db-user-name'];
+    // $password = $_ENV['db-user-pw'];
+
+    $serverName = 'srv-kpes-sql-prod-wus3-001.database.windows.net';
+    $dbName = 'VBAC';
+    $userName = 'kpesprd_db_admin';
+    $password = 'Ur90C{xKV+#-{7v';
     
     $conn=false;
     $attempts = 0;

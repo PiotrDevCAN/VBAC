@@ -55,7 +55,7 @@ switch ($_REQUEST['mode']) {
                     var_dump($sql);
                 }
                 
-                $row = sqlsrv_fetch_array($rs);
+                $row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
                 
                 $templateArray = array();
                 
@@ -95,7 +95,7 @@ switch ($_REQUEST['mode']) {
                     var_dump($sql);
                 }
                 
-                while ($row = sqlsrv_fetch_array($rs)){
+                while ($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)){
                     $response['titles'][] = $row['TITLE'];
                     var_dump($response);
                 }

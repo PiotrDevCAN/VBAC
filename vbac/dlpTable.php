@@ -20,7 +20,7 @@ class dlpTable extends DbTable {
             return false;
         }
         
-        $row = sqlsrv_fetch_array($rs);
+        $row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
         
         return $row['LICENCES'] != 0;
     }
@@ -100,7 +100,7 @@ class dlpTable extends DbTable {
         $sql.= !empty($predicate) ? $predicate : null;
         $sql.= " ; ";
         
-        $rs = sqlsrv_query($GLOBALS['conn'],$sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
         
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -112,7 +112,7 @@ class dlpTable extends DbTable {
         }
         
         $report = array();
-        while (($row = sqlsrv_fetch_array($rs))==true) {
+        while (($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC))==true) {
             $report[] = $withButtons ? $this->addButtons(array_map('trim', $row)) : array_map('trim', $row);
         }
         

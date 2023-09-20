@@ -12,7 +12,7 @@ trait xls{
         $columnCounter = $columnIndex;
         $rowCounter = $rowIndex;
 
-        while ($rawRow = sqlsrv_fetch_array($resultSet)){
+        while ($rawRow = sqlsrv_fetch_array($resultSet, SQLSRV_FETCH_ASSOC)){
             $rowsWritten = true;
             $row = array_map('trim', $rawRow);
             $row = static::preProcessRowForWriteToXls($row);

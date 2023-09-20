@@ -29,7 +29,7 @@ static function logEntry($entry,$pwd=null){
 	} else {
 		$sql .= " VALUES ('$db2Entry','$userid') ";
 	}
-	$rs = sqlsrv_query($GLOBALS['conn'],$sql);
+	$rs = sqlsrv_query($GLOBALS['conn'], $sql);
 	if(!$rs)
 		{
 		echo "<BR>Error: " . json_encode(sqlsrv_errors());
@@ -40,7 +40,7 @@ static function logEntry($entry,$pwd=null){
 
 	static function deleteLogRecords($keepDays=1){
 		$sql = "DELETE FROM " . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$LOG . " WHERE LASTUPDATED < DATEADD (day, $keepDays, CURRENT_TIMESTAMP) ";
-		$rs = sqlsrv_query($GLOBALS['conn'],$sql);
+		$rs = sqlsrv_query($GLOBALS['conn'], $sql);
 		if(!$rs)
 			{
 			echo "<BR>Error: " . json_encode(sqlsrv_errors());

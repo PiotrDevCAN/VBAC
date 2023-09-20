@@ -32,7 +32,7 @@ class AgileSquadTable extends DbTable{
             return false;
         }
 
-        $row = sqlsrv_fetch_array($rs);
+        $row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
         return !empty($row['SQUAD_NUMBER']) ? (int)($row['SQUAD_NUMBER'])+1 : 1;
 
     }
@@ -53,7 +53,7 @@ class AgileSquadTable extends DbTable{
             return false;
         }
         $data = false;
-        while ($row = sqlsrv_fetch_array($rs)){
+        while ($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)){
             $row = array_map('trim',$row);
             $rowWithIcons = $this->addIcons($row);
             $data[] = $rowWithIcons;
@@ -103,7 +103,7 @@ class AgileSquadTable extends DbTable{
             return false;
         }
 
-        $row = sqlsrv_fetch_array($rs);
+        $row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
 
         return $row;
 
@@ -154,7 +154,7 @@ class AgileSquadTable extends DbTable{
             return false;
         }
         $data = array();
-        while ($row = sqlsrv_fetch_array($rs)){
+        while ($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)){
             $row = array_map('trim',$row);
             $data[] = $row;
         }

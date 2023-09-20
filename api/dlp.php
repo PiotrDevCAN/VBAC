@@ -23,7 +23,7 @@ $sql.= " GROUP BY D.STATUS ";
 $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
 if($rs){
-    $row = sqlsrv_fetch_array($rs);
+    $row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
     if(! $row){
         $row=array('STATUS'=>$status,'RECORDS'=>0);
     }

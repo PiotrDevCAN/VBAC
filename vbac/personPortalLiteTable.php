@@ -110,7 +110,7 @@ class personPortalLiteTable extends personTable
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         } else {
-            while(($row = sqlsrv_fetch_array($rs))==true){
+            while(($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC))==true){
                 // Only editable, if they're not a "pre-Boarder" who has now been boarded.
                 $preparedRow = $this->prepareFields($row);
                 $rowWithButtonsAdded =(substr($row['PES_STATUS_DETAILS'],0,10)==personRecord::PES_STATUS_DETAILS_BOARDED_AS) ? $preparedRow : $this->addButtons($preparedRow);

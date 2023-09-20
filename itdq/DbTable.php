@@ -515,7 +515,7 @@ class DbTable
         Trace::traceComment(null, __METHOD__);
         
         // $rs = db2_columns($GLOBALS['conn'], null, $GLOBALS['Db2Schema'], strtoupper($this->tableName), '%');
-        // while ($row = sqlsrv_fetch_array($rs)) {
+        // while ($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)) {
         //     Trace::traceVariable($row, __METHOD__, __LINE__);
         //     $this->columns[trim($row['Name'])] = $row;
         // }
@@ -539,7 +539,7 @@ class DbTable
     {
         // Trace::traceComment(null, __METHOD__);
         // $rs = db2_special_columns($GLOBALS['conn'], null, $GLOBALS['Db2Schema'], $this->tableName, 0);
-        // while ($row = sqlsrv_fetch_array($rs)) {
+        // while ($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)) {
         //     $this->special_columns[trim($row['Name'])] = $row;
         // }
     }
@@ -584,7 +584,7 @@ class DbTable
     {
         Trace::traceComment(null, __METHOD__);
         // $rs = db2_primary_keys($GLOBALS['conn'], null, $GLOBALS['Db2Schema'], $this->tableName);
-        // while ($row = sqlsrv_fetch_array($rs)) {
+        // while ($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)) {
         //     // print_r($row);
         //     $this->primary_keys[trim($row['Name'])] = $row;
         // }
@@ -594,7 +594,7 @@ class DbTable
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
         }
-        while($row = sqlsrv_fetch_array($rs)){
+        while($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)){
             // print_r($row);
             $this->primary_keys[trim($row['COLUMN_NAME'])] = $row;
         }
@@ -615,7 +615,7 @@ class DbTable
         $sql .= " WHERE " . $predicate;
         Trace::traceVariable($sql, __METHOD__);
         $rs = $this->execute($sql);
-        $row = sqlsrv_fetch_array($rs);
+        $row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
         return $row;
     }
 
@@ -1330,7 +1330,7 @@ class DbTable
         Trace::traceVariable($sql, __METHOD__);
         $resultSet = $this->execute($sql);
         if ($resultSet) {
-            $result = sqlsrv_fetch_array($resultSet);
+            $result = sqlsrv_fetch_array($resultSet, SQLSRV_FETCH_ASSOC);
         } else {
             return false;
         }
@@ -1659,7 +1659,7 @@ class DbTable
         if (! $rs) {
             return false;
         }
-        $row = sqlsrv_fetch_array($rs);
+        $row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
         Trace::traceVariable($row['RECORDS'], __METHOD__, __LINE__);
         if ($row['RECORDS'] > 0) {
             return TRUE;
@@ -1686,7 +1686,7 @@ class DbTable
             echo "<BR/>" . json_encode(sqlsrv_errors()) . "<BR/>";
             exit("Error in: " . __METHOD__ . " running: " . str_replace($this->pwd, "******", $sql));
         }
-        $row = sqlsrv_fetch_array($rs);
+        $row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
         Trace::traceVariable($row['RECORDS'], __METHOD__, __LINE__);
         if ($row['RECORDS'] > 0) {
             return TRUE;
@@ -1713,7 +1713,7 @@ class DbTable
             echo "<BR/>" . json_encode(sqlsrv_errors()) . "<BR/>";
             exit("Error in: " . __METHOD__ . " running: " . str_replace($this->pwd, "******", $sql));
         }
-        $row = sqlsrv_fetch_array($rs);
+        $row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
         Trace::traceVariable($row['RECORDS'], __METHOD__, __LINE__);
         if ($row['RECORDS'] > 0) {
             return $row['RECORDS'];
@@ -1759,7 +1759,7 @@ class DbTable
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
         }
-        $row = sqlsrv_fetch_array($rs);
+        $row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
         return $row['ID'];
     }
 
@@ -1867,7 +1867,7 @@ class DbTable
             echo "<BR/>" . json_encode(sqlsrv_errors()) . "<BR/>";
             exit("Error in: " . __METHOD__ . " running: $sql");
         }
-        $row = sqlsrv_fetch_array($rs);
+        $row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
         return $row['TIMESTAMP'];
     }
 
@@ -2177,7 +2177,7 @@ class DbTable
     function columnAnalysis($rs)
     {
         $columnData = null;
-        while($rowData = sqlsrv_fetch_array($rs)){
+        while($rowData = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)){
             $cleanRowData = strip_tags($rowData[0]);
             $strippedCleanRow = str_replace(array(
                 '&nbsp;',
@@ -2235,7 +2235,7 @@ class DbTable
         $obj = new \stdClass();
         $obj->data = array();
 
-        while ($row = sqlsrv_fetch_array($resultSet)){
+        while ($row = sqlsrv_fetch_array($resultSet, SQLSRV_FETCH_ASSOC)){
             $obj->data[] = $row;
         }
         return json_encode($obj);

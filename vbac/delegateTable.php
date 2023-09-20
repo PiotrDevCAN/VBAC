@@ -14,7 +14,7 @@ class delegateTable extends DbTable {
         $sql.= ",'" . htmlspecialchars($delegateCnum) . "','" . htmlspecialchars($delegateEmail) . "'";
         $sql.= ")";
 
-        $rs = sqlsrv_query($GLOBALS['conn'],$sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -29,7 +29,7 @@ class delegateTable extends DbTable {
         $sql.= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
         $sql.= " AND DELEGATE_CNUM='" . htmlspecialchars($delegateCnum) . "' ";
 
-        $rs = sqlsrv_query($GLOBALS['conn'],$sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -56,7 +56,7 @@ class delegateTable extends DbTable {
 
         $data = array();
 
-        while (($row = sqlsrv_fetch_array($rs))==true) {
+        while (($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC))==true) {
             $display['MANAGER'] = $row['EMAIL_ADDRESS'];
             $display['DELEGATE'] = $row['DELEGATE_EMAIL'];
 
@@ -95,7 +95,7 @@ class delegateTable extends DbTable {
 
         $ccAddresses = array();
 
-        while(($row = sqlsrv_fetch_array($rs)==true)){
+        while(($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)==true)){
             $ccAddresses[] = trim($row['DELEGATE_EMAIL']);
         }
 
@@ -117,7 +117,7 @@ class delegateTable extends DbTable {
 
         $ccAddresses = array();
 
-        while(($row = sqlsrv_fetch_array($rs))==true){
+        while(($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC))==true){
             $ccAddresses[] = trim($row['DELEGATE_EMAIL']);
         }
 
@@ -138,7 +138,7 @@ class delegateTable extends DbTable {
 
         $allDelegates = array();
 
-        while(($row = sqlsrv_fetch_array($rs))==true){
+        while(($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC))==true){
 
             $allDelegates[$row['CNUM']][] = $row['DELEGATE_EMAIL'];
             // = isset($allDelegates[$row['CNUM']]) ? array_merge($allDelegates[$row['CNUM']],array($row['DELEGATE_EMAIL'])) : $row['DELEGATE_EMAIL'] ;

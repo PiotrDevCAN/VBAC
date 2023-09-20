@@ -8,7 +8,6 @@ use vbac\assetRequestRecord;
 set_time_limit(0);
 ob_start();
 
-
 $_SESSION['ssoEmail'] = $_SESSION['ssoEmail'];
 
 $loader = new Loader();
@@ -27,7 +26,7 @@ $withButtons = true;
 $predicate = null;
 switch (true) {
     case $_SESSION['isFm']:
-        echo "is FM";
+        // echo "is FM";
         $myCnum = personTable::myCnum();
 
 //         $amADelegateForRaw = $loader->load('EMAIL_ADDRESS',allTables::$DELEGATE," DELEGATE_CNUM='" . htmlspecialchars($myCnum) . "' ");
@@ -47,9 +46,9 @@ switch (true) {
 
         break;
     case $_SESSION['isCdi']:
-        echo "is CDI";
+        // echo "is CDI";
     case $_SESSION['isPmo']:
-        echo "is PMO";
+        // echo "is PMO";
         $assetRequestTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
 
         switch ($show) {
@@ -78,7 +77,7 @@ switch (true) {
         }
         break;
     default:
-        echo "is default";
+        // echo "is default";
         $myCnum = personTable::myCnum();
         $predicate .= " AND ( AR.CNUM = '". htmlspecialchars($myCnum) . "' ";
         $predicate .= "       OR ";

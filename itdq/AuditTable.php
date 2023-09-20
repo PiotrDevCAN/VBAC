@@ -20,7 +20,7 @@ class AuditTable extends DbTable {
             $sql .= " VALUES ";
             $sql .= " ( CURRENT_TIMESTAMP, '" . htmlspecialchars($_SESSION['ssoEmail']) . "','" . htmlspecialchars($statement) . "','" . htmlspecialchars($type) . "' )";
 
-            $rs = sqlsrv_query($GLOBALS['conn'],$sql);
+            $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
             if(!$rs){
                 DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -73,7 +73,7 @@ class AuditTable extends DbTable {
 
         // echo $sql;
 
-        $rs = sqlsrv_query($GLOBALS['conn'],$sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -82,7 +82,7 @@ class AuditTable extends DbTable {
         $data = array();
         $data['rows'] = array();
 
-        while ($row = sqlsrv_fetch_array($rs)){
+        while ($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)){
             $trimmedRow = array_map('trim', $row);
             $data['rows'][] = $trimmedRow;
         }
@@ -97,13 +97,13 @@ class AuditTable extends DbTable {
          $sql .= " AND TIMESTAMP >= DATEADD (day, -31, CURRENT_TIMESTAMP) ";
          $sql .= !empty($predicate)   ? "  $predicate " : null;
 
-         $rs = sqlsrv_query($GLOBALS['conn'],$sql);
+         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
          if(!$rs){
              DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
          }
 
-         $row = sqlsrv_fetch_array($rs);
+         $row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
 
          return $row['RECORDSFILTERED'];
 
@@ -115,13 +115,13 @@ class AuditTable extends DbTable {
          $sql .= " WHERE 1=1 ";
          $sql .= " AND TIMESTAMP >= DATEADD (day, -31, CURRENT_TIMESTAMP) ";
          $sql .= $type=='Revalidation' ? " AND TYPE='Revalidation' " : null;
-         $rs = sqlsrv_query($GLOBALS['conn'],$sql);
+         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
          if(!$rs){
              DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
          }
 
-         $row = sqlsrv_fetch_array($rs);
+         $row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
 
          return $row['TOTALROWS'];
      }

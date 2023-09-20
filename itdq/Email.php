@@ -155,7 +155,7 @@ class Email
                 echo "<BR/>" . json_encode(sqlsrv_errors()) . "<BR/>";
                 exit("Error in: " . __METHOD__ . " running: " . htmlspecialchars($sql, ENT_QUOTES));
             } else {
-                $row = sqlsrv_fetch_array($rs);
+                $row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
                 self::send_mail($row['TO'], $row['CC'], $row['SUBJECT'], $row['MESSAGE'], $row['REPLYTO']);
             }
         }

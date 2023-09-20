@@ -47,7 +47,7 @@ if(!$rs){
     exit();
 }
 
-while ($row = sqlsrv_fetch_array($rs)){
+while ($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)){
     $rowTrimmed = array_map('trim',$row);
     $employeesArray[] = $rowTrimmed;
 }

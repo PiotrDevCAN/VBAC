@@ -129,7 +129,7 @@ class pesTrackerTable extends DbTable{
         switch ($returnResultsAs) {
             case self::PES_TRACKER_RETURN_RESULTS_AS_ARRAY:
                 $report = array();
-                while(($row = sqlsrv_fetch_array($rs))==true){
+                while(($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC))==true){
                     set_time_limit(5);
                     $trimmedRow = array_map('trim', $row);
                     $report[] = $trimmedRow;
@@ -389,7 +389,7 @@ class pesTrackerTable extends DbTable{
         
         $rs = sqlsrv_execute($preparedStmt);
         if($rs){
-            $row = sqlsrv_fetch_array($preparedStmt);
+            $row = sqlsrv_fetch_array($preparedStmt, SQLSRV_FETCH_ASSOC);
 
             var_dump(ob_get_level());
 
@@ -663,7 +663,7 @@ class pesTrackerTable extends DbTable{
         $sql.= !empty($pesPriority) ? "'" . htmlspecialchars($pesPriority) . "' " : " null, ";
         $sql.= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
 
-        $rs = sqlsrv_query($GLOBALS['conn'],$sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared sql');
@@ -690,7 +690,7 @@ class pesTrackerTable extends DbTable{
         $sql.= !empty($passportSurname) ? "'" . htmlspecialchars($passportSurname) . "'  " : " null ";
         $sql.= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
 
-        $rs = sqlsrv_query($GLOBALS['conn'],$sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared sql');
@@ -712,7 +712,7 @@ class pesTrackerTable extends DbTable{
         $sql.= " SET DATE_LAST_CHASED=DATE('" . htmlspecialchars($dateLastChased) . "') ";
         $sql.= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
 
-        $rs = sqlsrv_query($GLOBALS['conn'],$sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared sql');
@@ -789,7 +789,7 @@ class pesTrackerTable extends DbTable{
             throw new \Exception('Unable to getPesComment for ' . $cnum);
         }
 
-        $row = sqlsrv_fetch_array($preparedStmt);
+        $row = sqlsrv_fetch_array($preparedStmt, SQLSRV_FETCH_ASSOC);
         return $row['COMMENT'];
     }
 

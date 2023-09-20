@@ -282,7 +282,7 @@ class BlueMail
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             throw new \Exception('Unable to read record details for email ' . $recordID);
         } else {
-            $details = sqlsrv_fetch_array($rs);
+            $details = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
             return $details;
         }
     }

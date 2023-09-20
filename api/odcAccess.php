@@ -19,7 +19,7 @@ $sql.= !empty($cnum) ? " AND lower(O.OWNER_CNUM_ID) = '" . htmlspecialchars(strt
 $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
 if($rs){
-    $row = sqlsrv_fetch_array($rs);
+    $row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
     $found = $row['FOUND'] > 0 ? 'Yes' : 'No';
 }
 

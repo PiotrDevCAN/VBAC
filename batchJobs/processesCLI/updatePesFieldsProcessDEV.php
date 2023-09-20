@@ -127,7 +127,7 @@ if (isset($argv[1])) {
         }
 
         $counter = 0;
-        while($row = sqlsrv_fetch_array($preparedCountStatement)){
+        while($row = sqlsrv_fetch_array($preparedCountStatement, SQLSRV_FETCH_ASSOC)){
             $counter = $row['COUNTER'];
         }
 
@@ -156,7 +156,7 @@ if (isset($argv[1])) {
         $noTrim = false;
 
         $count = 1;
-        while($row = sqlsrv_fetch_array($preparedStatement)){
+        while($row = sqlsrv_fetch_array($preparedStatement, SQLSRV_FETCH_ASSOC)){
             if ($noTrim === false) {
                 $row = array_map('trim',$row);
             }

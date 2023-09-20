@@ -63,7 +63,7 @@ class pesEventTable extends DbTable{
 		<tbody>
 		<?php
 
-        while(($row = sqlsrv_fetch_array($rs))==true){
+        while(($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC))==true){
             ?><tr><td><?=$row['CNUM']?></td><td><?=$row['EMAIL_ADDRESS']?></td><?php
             foreach ($allEvents as $event_title) {
                 $commentTitle = str_replace(" ", "_", strtoupper($event_title)) . "_COMMENT";

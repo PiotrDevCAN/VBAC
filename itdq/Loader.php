@@ -259,7 +259,7 @@ class Loader
 
         $currentKey = null;
 
-        while ($row = sqlsrv_fetch_array($rs)) {
+        while ($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)) {
             $array[trim($row[$keyColumn])][] = trim($row[$valuesColumn]);
         }
 

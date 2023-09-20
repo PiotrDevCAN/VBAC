@@ -74,7 +74,7 @@ if($startDate===false || $endDate===false){
                         $httpCode = 461;
                     } else {
                         $list = array();
-                        while ($row = sqlsrv_fetch_array($rs)){
+                        while ($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)){
                             isset($row['ASSET_SERIAL_NUMBER']) ? $list[] = trim($row['ASSET_SERIAL_NUMBER']) : null; 
                             isset($row['CNUM']) ? $list[] = trim($row['CNUM']) : null;
                         }
@@ -156,7 +156,7 @@ if($startDate===false || $endDate===false){
                         DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
                         $httpCode = 461;
                     } else {
-                        $row = sqlsrv_fetch_array($rs);
+                        $row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
                         if($row['VALID']>0){
                             $permitted = 'Yes';
                         } else {

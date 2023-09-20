@@ -9,7 +9,7 @@ class workLocationTable extends DbTable{
         $sql = " DELETE FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$STATIC_LOCATIONS;
         $sql.= " WHERE ID='" . htmlspecialchars($id) . "' ";
 
-        $rs = sqlsrv_query($GLOBALS['conn'],$sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -28,7 +28,7 @@ class workLocationTable extends DbTable{
             return false;
         }
         $data = false;
-        while(($row = sqlsrv_fetch_array($rs))==true){
+        while(($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC))==true){
             $row = array_map('trim',$row);
             $rowWithIcons = $this->addIcons($row);
             $data[] = $rowWithIcons;

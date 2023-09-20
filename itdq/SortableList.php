@@ -510,7 +510,7 @@ class SortableList
             echo "<div class='table-responsive'>";
 
             echo str_replace('wwwww', $width, $this->tableTag);
-            // if(sqlsrv_fetch_array($rs)){
+            // if(sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)){
             echo "\n<thead>";
            // echo $this->tableTitle ? $this->tableTitle : null;
             $this->displayHeading($subTotal, $full, $editLink, $deleteLink, $rs);
@@ -609,7 +609,7 @@ class SortableList
         // $this->initialiseSubTotalArray($subTotalArray, $cols, $rs);
 
         $rowNumber = 1; // Get the first row first, as we fetched it already processing the header.
-        while ($row = sqlsrv_fetch_array($rs, $rowNumber)) {
+        while ($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC, $rowNumber)) {
             // if($rowNumber==1 and $trackPreviousRow){
             // //initialise previous row here.
             // $this->updatePreviousRow($previousRow,$row);
@@ -622,7 +622,6 @@ class SortableList
             }
             $rowNumber = null; // In future, just get the next row.
             if ($this->displayRow($row)) {
-
                 if ($subTotal) {
                     $needToDisplaySubtotal = $this->checkForColumnChange($previousRow, $row);
                     if (! empty($subTotalArray) and $needToDisplaySubtotal) {
@@ -691,7 +690,7 @@ class SortableList
 
         if ($this->displayTotals) {
             // Read 1st row again to get the column names for the Totals Row.
-            $row = sqlsrv_fetch_array($rs, 1);
+            $row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC, 1);
             echo "<HR/>";
             echo "<TR>";
             if ($editLink) {
@@ -1200,7 +1199,7 @@ class SortableList
             fputcsv($this->csv, $headings, ",", '"');
         }
         $rows = 0;
-        while ($row = sqlsrv_fetch_array($rs)) {
+        while ($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)) {
             Trace::traceVariable($row, __METHOD__);
             if ($this->displayRow($row)) {
                 foreach ($row as $column => $value) {
@@ -1784,7 +1783,7 @@ class SortableList
         $titles = '';
         $data = '';
 
-        while ($row = sqlsrv_fetch_array($resultSet)){
+        while ($row = sqlsrv_fetch_array($resultSet, SQLSRV_FETCH_ASSOC)){
             $row = $this->preProcessRowForCsv($row);
             $titles = empty($titles) ? $this->processRowForCsvTitles($row) . "\n" : $titles;
             $data .= $this->processRowForCsvData($row) . "\n";

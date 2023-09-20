@@ -222,7 +222,7 @@ class pesEmail {
                 return false;
             }
             
-            $row = sqlsrv_fetch_array($rs);
+            $row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
             
             $pesEmail = trim($row[$emailField]);
         }

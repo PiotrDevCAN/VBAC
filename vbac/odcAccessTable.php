@@ -161,7 +161,7 @@ class odcAccessTable extends DbTable {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql,null,null,null,null,DbTable::ROLLBACK_NO);
         }
 
-        $row = sqlsrv_fetch_array($rs);
+        $row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
 
         return $row['RECORDS'];
 
@@ -254,7 +254,7 @@ class odcAccessTable extends DbTable {
         $totalPopulation=0;
         $platformPopulation = array();
 
-        while(($row = sqlsrv_fetch_array($rs))==true){
+        while(($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC))==true){
             $platformPopulation[strtoupper(trim($row['WORK_STREAM']))] = $row['PLATFORM_POPULATION']+0;
             $totalPopulation += $row['PLATFORM_POPULATION'];
         }

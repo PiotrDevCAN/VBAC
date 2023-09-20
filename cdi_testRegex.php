@@ -47,7 +47,7 @@ $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 <tbody>
 <?php
 
-while($row = sqlsrv_fetch_array($rs)){
+while($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)){
     $response = preg_match_all($pattern, $row['COMMENT'], $matches);
     if($response>0){
         foreach ($matches[2] as $key => $status) {

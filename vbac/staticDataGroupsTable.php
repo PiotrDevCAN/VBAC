@@ -30,7 +30,7 @@ class staticDataGroupsTable extends staticDataTable {
         $row[] = "<button type='button' class='btn btn-default btn-xs newEntry' aria-label='Left Align' data-value='' data-uid='newEntry' ><span class='glyphicon glyphicon-plus ' aria-hidden='true'></span></button><span style='font-style:italic'>new_entry</span>";
         $row[] = null;
         $row[] = null;
-        while (($record=sqlsrv_fetch_array($rs))==true){
+        while (($record=sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC))==true){
             $allData[] = $row;
             $row = array();
             $groupName  = "<button type='button' class='btn btn-default btn-xs editRecord' aria-label='Left Align' ";

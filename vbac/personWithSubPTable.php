@@ -18,7 +18,7 @@ class personWithSubPTable extends personTable {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
         }
 
-        while(($subPlatformRecord=sqlsrv_fetch_array($rs))==true){
+        while(($subPlatformRecord=sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC))==true){
             $subPlatformRecord = array_map('trim', $subPlatformRecord);
             $this->personSubPlatform[$subPlatformRecord['CNUM']][] = $subPlatformRecord['SUBPLATFORM'];
         }
@@ -51,7 +51,7 @@ class personWithSubPTable extends personTable {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
         }
 
-        while(($subPlatformRecord=sqlsrv_fetch_array($rs))==true){
+        while(($subPlatformRecord=sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC))==true){
             $subPlatformRecord = array_map('trim', $subPlatformRecord);
             $personSubPlatform[$subPlatformRecord['CNUM']][] = $subPlatformRecord['SUBPLATFORM'];
         }
@@ -63,7 +63,7 @@ class personWithSubPTable extends personTable {
         $columnCounter = $columnIndex;
         $rowCounter = $rowIndex;
 
-        while (($rawRow=sqlsrv_fetch_array($resultSet))==true) {
+        while (($rawRow=sqlsrv_fetch_array($resultSet, SQLSRV_FETCH_ASSOC))==true) {
             $rowsWritten = true;
             $row = array_map('trim', $rawRow);
             $row = static::preProcessRowForWriteToXls($row);

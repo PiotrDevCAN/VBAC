@@ -29,7 +29,7 @@ class AgileTribeTable extends DbTable{
             return false;
         }
 
-        $row = sqlsrv_fetch_array($rs);
+        $row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
         return !empty($row['TRIBE_NUMBER']) ? (int)($row['TRIBE_NUMBER'])+1 : 1;
 
     }
@@ -44,7 +44,7 @@ class AgileTribeTable extends DbTable{
             return false;
         }
         $data = false;
-        while ($row = sqlsrv_fetch_array($rs)){
+        while ($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)){
             $row = array_map('trim',$row);
             $rowWithIcons = $this->addIcons($row);
             $data[] = $rowWithIcons;

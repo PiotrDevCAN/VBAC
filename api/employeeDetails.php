@@ -42,7 +42,7 @@ error_log($sql);
 $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
 if($rs){
-    $row = sqlsrv_fetch_array($rs);
+    $row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
     $trimmedRow = array_map('trim',$row);
 }
 

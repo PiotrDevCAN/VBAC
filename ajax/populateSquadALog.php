@@ -48,7 +48,7 @@ if(!$rs){
 
 $data = false;
 
-while ($row = sqlsrv_fetch_array($preparedStmt)){
+while ($row = sqlsrv_fetch_array($preparedStmt, SQLSRV_FETCH_ASSOC)){
     $row = array_map('trim',$row);
     $cnum = $row['CNUM'];
     $row['CNUM'] = array('display'=>$row['CNUM'] . "<br/><small>" . $row['NOTES_ID'] . "</small>", 'sort'=>$row['CNUM']);

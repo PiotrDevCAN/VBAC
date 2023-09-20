@@ -57,7 +57,7 @@ foreach ($allOrderItTypes as $orderItType){
         }
 
         $allApproversForType = array();
-        while($row = sqlsrv_fetch_array($rs)){
+        while($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)){
             $allApproversForType[] = $row['APPROVER_EMAIL'] ;
         }
 //         $allApproversForType = $loader->load('APPROVER_EMAIL',allTables::$ASSET_REQUESTS,$restrictToFmPredicate);

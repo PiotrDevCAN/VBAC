@@ -19,7 +19,7 @@ class EmailLogTable  extends DbTable {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         } else {
-            while ($row = sqlsrv_fetch_array($rs)){
+            while ($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)){
                 $record=null;
                 $record[0]= $row['RECORD_ID'];
                 $record[1]= "<b>Subject</b>" . $row['SUBJECT'] . "<br/><b>To:</b>";
