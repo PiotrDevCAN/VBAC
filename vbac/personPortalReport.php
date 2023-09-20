@@ -118,7 +118,7 @@ class personPortalReport extends DbTable
         // AGILE_SQUAD
         $agileSquadRecord = new AgileSquadRecord();
         $agileSquadColumns = $agileSquadRecord->getColumns();
-        $agileSquadTableAliases = array('AS.');
+        $agileSquadTableAliases = array('AS1.');
 
         $this->agileSquadColumns = $agileSquadColumns;
         $this->agileSquadTableAliases = $agileSquadTableAliases;

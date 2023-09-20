@@ -61,7 +61,7 @@ if (!is_null($additionalFields)) {
 
     $agileSquadRecord = new AgileSquadRecord();
     $availableAgileSquadColumns = $agileSquadRecord->getColumns();
-    $agileSquadTableAliases = array('AS.');
+    $agileSquadTableAliases = array('AS1.');
 
     $agileTribeRecord = new AgileTribeRecord();
     $availableAgileTribeColumns = $agileTribeRecord->getColumns();
@@ -96,7 +96,7 @@ if (!is_null($additionalFields)) {
         $tableField = str_replace($agileSquadTableAliases, '', $field);
 
         if (array_key_exists($tableField, $availableAgileSquadColumns)) {
-            $additionalSelect .= ", " . htmlspecialchars("AS.".$tableField);
+            $additionalSelect .= ", " . htmlspecialchars("AS1.".$tableField);
             continue;
         }
 
