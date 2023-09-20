@@ -102,36 +102,32 @@ class assetRequestsTable extends DbTable{
         $amADelegateForRaw = $loader->load('EMAIL_ADDRESS',allTables::$DELEGATE," DELEGATE_CNUM='" . htmlspecialchars($myCnum) . "' ");
         $amADelegateFor = array_map('strtolower',$amADelegateForRaw);
 
-        // $sql  = " SELECT distinct";
-        // $sql .= " AR.REQUEST_REFERENCE as reference, ";
-        // $sql .= " P.CT_ID as CT_ID, P.EMAIL_ADDRESS as REQUESTEE_EMAIL, P.NOTES_ID as REQUESTEE_NOTES, AR.ASSET_TITLE AS AS1SET, STATUS, ";
-        // $sql .= " BUSINESS_JUSTIFICATION as JUSTIFICATION, REQUESTOR_EMAIL as REQUESTOR_EMAIL, REQUESTED as REQUESTED_DATE,  ";
-        // $sql .= " APPROVER_EMAIL, APPROVED as APPROVED_DATE, ";
-        // $sql .= " F.EMAIL_ADDRESS as FM_EMAIL, F.NOTES_ID as FM_NOTES, P.FM_CNUM,";
-        // $sql .= " USER_LOCATION as LOCATION, ";
-        // $sql .= " PRIMARY_UID, SECONDARY_UID, DATE_ISSUED_TO_IBM, DATE_ISSUED_TO_USER, DATE_RETURNED,   ";
-        // $sql .= " ORDERIT_VARB_REF, ORDERIT_NUMBER, ORDERIT_STATUS, ";
-        // $sql .= " RAL.ORDER_IT_TYPE as ORDERIT_TYPE ";
-        // $sql .= " ,RAL.ASSET_PRIMARY_UID_TITLE ";
-        // $sql .= " ,RAL.ASSET_SECONDARY_UID_TITLE ";
-        // $sql .= " , COMMENT ";
-        // $sql .= " , REQUEST_RETURN ";
-        // $sql .= " , USER_CREATED ";
-        // $sql .= " , P.CTB_RTB,P.TT_BAU,P.LOB, P.WORK_STREAM ";
-        // $sql .= " , PRE_REQ_REQUEST ";
-        // $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
-        // $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
-        // $sql .= " ON AR.CNUM = P.CNUM ";
-        // $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as F ";
-        // $sql .= " ON P.FM_CNUM = F.CNUM ";
-        // $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$REQUESTABLE_ASSET_LIST . " as RAL ";
-        // $sql .= " ON TRIM(RAL.ASSET_TITLE) = TRIM(AR.ASSET_TITLE) ";
-        // $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$DELEGATE . " as D "; // needed for the predicate.
-        // $sql .= " ON F.CNUM = D.CNUM ";
-        // $sql .= " WHERE 1=1 ";
-
-        $sql  = " SELECT AR.*";
+        $sql  = " SELECT distinct";
+        $sql .= " AR.REQUEST_REFERENCE as REFERENCE, ";
+        $sql .= " P.CT_ID as CT_ID, P.EMAIL_ADDRESS as REQUESTEE_EMAIL, P.NOTES_ID as REQUESTEE_NOTES, AR.ASSET_TITLE AS ASSET, STATUS, ";
+        $sql .= " BUSINESS_JUSTIFICATION as JUSTIFICATION, REQUESTOR_EMAIL as REQUESTOR_EMAIL, REQUESTED as REQUESTED_DATE,  ";
+        $sql .= " APPROVER_EMAIL, APPROVED as APPROVED_DATE, ";
+        $sql .= " F.EMAIL_ADDRESS as FM_EMAIL, F.NOTES_ID as FM_NOTES, P.FM_CNUM,";
+        $sql .= " USER_LOCATION as LOCATION, ";
+        $sql .= " PRIMARY_UID, SECONDARY_UID, DATE_ISSUED_TO_IBM, DATE_ISSUED_TO_USER, DATE_RETURNED,   ";
+        $sql .= " ORDERIT_VARB_REF, ORDERIT_NUMBER, ORDERIT_STATUS, ";
+        $sql .= " RAL.ORDER_IT_TYPE as ORDERIT_TYPE ";
+        $sql .= " ,RAL.ASSET_PRIMARY_UID_TITLE ";
+        $sql .= " ,RAL.ASSET_SECONDARY_UID_TITLE ";
+        $sql .= " , COMMENT ";
+        $sql .= " , REQUEST_RETURN ";
+        $sql .= " , USER_CREATED ";
+        $sql .= " , P.CTB_RTB,P.TT_BAU,P.LOB, P.WORK_STREAM ";
+        $sql .= " , PRE_REQ_REQUEST ";
         $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
+        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
+        $sql .= " ON AR.CNUM = P.CNUM ";
+        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as F ";
+        $sql .= " ON P.FM_CNUM = F.CNUM ";
+        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$REQUESTABLE_ASSET_LIST . " as RAL ";
+        $sql .= " ON TRIM(RAL.ASSET_TITLE) = TRIM(AR.ASSET_TITLE) ";
+        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$DELEGATE . " as D "; // needed for the predicate.
+        $sql .= " ON F.CNUM = D.CNUM ";
         $sql .= " WHERE 1=1 ";
         $sql .=  $predicate;
 
@@ -146,9 +142,6 @@ class assetRequestsTable extends DbTable{
         $data = array();
 
         while ($preTrimmed = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)){
-
-            var_dump($preTrimmed);
-            exit;
 
             $row = array_map('trim', $preTrimmed);
 
@@ -1701,7 +1694,7 @@ class assetRequestsTable extends DbTable{
 
     function getAssetRequestsForVarb($varb,$ref){
 
-        $sql = " SELECT REQUEST_REFERENCE as REFERENCE, P.NOTES_ID as PERSON, AR.ASSET_TITLE AS AS1SET, AR.CNUM, PRIMARY_UID, ORDERIT_NUMBER, COMMENT ";
+        $sql = " SELECT REQUEST_REFERENCE as REFERENCE, P.NOTES_ID as PERSON, AR.ASSET_TITLE AS ASSET, AR.CNUM, PRIMARY_UID, ORDERIT_NUMBER, COMMENT ";
         $sql .= " ,ASSET_PRIMARY_UID_TITLE, ASSET_SECONDARY_UID_TITLE ";
         $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName . " as AR ";
         $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
@@ -1868,7 +1861,7 @@ class assetRequestsTable extends DbTable{
 
 
     function getAssetRequestsForOrderIt($orderIt,$varb,$ref){
-        $sql = " SELECT REQUEST_REFERENCE as REFERENCE, P.NOTES_ID as PERSON, AR.ASSET_TITLE AS AS1SET,AR.STATUS as STATUS,  AR.ORDERIT_STATUS";
+        $sql = " SELECT REQUEST_REFERENCE as REFERENCE, P.NOTES_ID as PERSON, AR.ASSET_TITLE AS ASSET,AR.STATUS as STATUS,  AR.ORDERIT_STATUS";
         $sql .=", '' as ACTION, COMMENT as COMMENT, ORDERIT_NUMBER, ORDERIT_VARB_REF, ASSET_PRIMARY_UID_TITLE, P.CT_ID, PRIMARY_UID, AR.ORDERIT_RESPONDED  ";
         $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName . " as AR ";
         $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
