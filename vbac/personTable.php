@@ -472,6 +472,11 @@ class personTable extends DbTable
         $this->allKyndrylEmailIdByCnum = empty($this->allKyndrylEmailIdByCnum) ? $this->loader->loadIndexed('KYN_EMAIL_ADDRESS', 'CNUM', allTables::$PERSON) : $this->allKyndrylEmailIdByCnum;
         $this->employeeTypeMapping = empty($this->employeeTypeMapping) ? $this->loader->loadIndexed('DESCRIPTION', 'CODE', allTables::$EMPLOYEE_TYPE_MAPPING) : $this->employeeTypeMapping;
 
+        foreach($row as $key => $value) {
+            if ($value instanceof \DateTime) {
+                $row[$key] = $value['date'];
+            }
+        }
         $preparedRow = array_map('trim', $row);
         $fmNotesid = isset($this->allKyndrylEmailIdByCnum[trim($row['FM_CNUM'])]) ? $this->allKyndrylEmailIdByCnum[trim($row['FM_CNUM'])] : trim($row['FM_CNUM']);
         $preparedRow['fmCnum'] = $row['FM_CNUM'];

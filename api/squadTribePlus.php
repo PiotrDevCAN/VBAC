@@ -168,7 +168,7 @@ $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
 if($rs){
     while ($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)){
-        $employees[] = array_map('trim',$row);
+        $employees[] = array_map('trim', $row);
     }
 } else {
     ob_clean();

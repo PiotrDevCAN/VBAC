@@ -48,7 +48,7 @@ if(!$rs){
 }
 
 while ($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)){
-    $rowTrimmed = array_map('trim',$row);
+    $rowTrimmed = array_map('trim', $row);
     $employeesArray[] = $rowTrimmed;
 }
 $employees = count($employeesArray)==1 ? $employeesArray[0] : $employeesArray;

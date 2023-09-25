@@ -158,7 +158,7 @@ if (isset($argv[1])) {
         $count = 1;
         while($row = sqlsrv_fetch_array($preparedStatement, SQLSRV_FETCH_ASSOC)){
             if ($noTrim === false) {
-                $row = array_map('trim',$row);
+                $row = array_map('trim', $row);
             }
 
 

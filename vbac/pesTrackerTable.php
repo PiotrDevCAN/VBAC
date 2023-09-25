@@ -131,6 +131,11 @@ class pesTrackerTable extends DbTable{
                 $report = array();
                 while(($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC))==true){
                     set_time_limit(5);
+                    foreach($row as $key => $value) {
+                        if ($value instanceof \DateTime) {
+                            $row[$key] = $value->format('Y-m-d H:i:s');
+                        }
+                    }
                     $trimmedRow = array_map('trim', $row);
                     $report[] = $trimmedRow;
                   }
@@ -187,7 +192,7 @@ class pesTrackerTable extends DbTable{
             set_time_limit(60);
             $today = new \DateTime();
 
-            $date = DateTime::createFromFormat('Y-m-d', $row['PES_DATE_REQUESTED']);
+            $date = DateTime::createFromFormat('Y-m-d H:i:s', $row['PES_DATE_REQUESTED']);
             $age  = !empty($row['PES_DATE_REQUESTED']) ?  $date->diff($today)->format('%R%a days') : null ;
 
             $cnum = $row['CNUM'];
@@ -230,7 +235,7 @@ class pesTrackerTable extends DbTable{
             <button class='btn btn-info btn-xs  btnProcessStatusChange accessPes accessCdi' data-processstatus='Unknown' data-toggle="tooltip"  title="Unknown"><span class="glyphicon glyphicon-erase" ></span></button>
             </span>
             <?php
-            $dateLastChased = !empty($row['DATE_LAST_CHASED']) ? DateTime::createFromFormat('Y-m-d', $row['DATE_LAST_CHASED']) : null;
+            $dateLastChased = !empty($row['DATE_LAST_CHASED']) ? DateTime::createFromFormat('Y-m-d H:i:s', $row['DATE_LAST_CHASED']) : null;
             $dateLastChasedFormatted = !empty($row['DATE_LAST_CHASED']) ? $dateLastChased->format('d M Y') : null;
             $dateLastChasedWithLevel = !empty($row['DATE_LAST_CHASED']) ? $dateLastChasedFormatted . $this->extractLastChasedLevelFromComment($row['COMMENT']) : $dateLastChasedFormatted;
             $alertClass = !empty($row['DATE_LAST_CHASED']) ? self::getAlertClassForPesChasedDate($row['DATE_LAST_CHASED']) : 'alert-info';
@@ -430,7 +435,7 @@ class pesTrackerTable extends DbTable{
 
     static function getAlertClassForPesChasedDate($pesChasedDate){
         $today = new \DateTime();
-        $date = DateTime::createFromFormat('Y-m-d', $pesChasedDate);
+        $date = DateTime::createFromFormat('Y-m-d H:i:s', $pesChasedDate);
         $age  = $date->diff($today)->d;
 
         switch (true) {
