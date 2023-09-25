@@ -474,7 +474,7 @@ class personTable extends DbTable
 
         foreach($row as $key => $value) {
             if ($value instanceof \DateTime) {
-                $row[$key] = $value['date'];
+                $row[$key] = $value->format('Y-m-d H:i:s');
             }
         }
         $preparedRow = array_map('trim', $row);
