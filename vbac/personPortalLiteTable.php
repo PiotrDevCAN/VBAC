@@ -126,6 +126,11 @@ class personPortalLiteTable extends personTable
     
     function prepareFields($row){
         unset($row['FCNUM']);
+        foreach($row as $key => $value) {
+            if ($value instanceof \DateTime) {
+                $row[$key] = $value->format('Y-m-d H:i:s');
+            }
+        }
         $preparedRow = array_map('trim', $row);   
         $preparedRow['fmCnum'] = $row['FM_CNUM'];
         $preparedRow['OLD_SQUAD_NUMBER'] = 'none';
