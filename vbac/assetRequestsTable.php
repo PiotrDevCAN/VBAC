@@ -143,6 +143,11 @@ class assetRequestsTable extends DbTable{
 
         while ($preTrimmed = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)){
 
+            foreach($preTrimmed as $key => $value) {
+                if ($value instanceof \DateTime) {
+                    $preTrimmed[$key] = $value->format('Y-m-d H:i:s');
+                }
+            }
             $row = array_map('trim', $preTrimmed);
 
             $userRaised = strtoupper($row['USER_CREATED'])=='YES';
@@ -401,7 +406,6 @@ class assetRequestsTable extends DbTable{
 
 
     function getRequestsForOrderIt($orderItType, $first=false, $predicate = null ){
-
 
         $nextVarb = $this->getNextVarb();
 
