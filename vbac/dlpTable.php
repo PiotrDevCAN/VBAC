@@ -68,31 +68,31 @@ class dlpTable extends DbTable {
     }
     
     function getForPortal($predicate=null, $withButtons=true, $resultSetOnly = false){
-        $sql = "select distinct D.cnum ";
-        $sql.= ", case when P.notes_id is not null then P.notes_id else A.CNUM end as Licensee ";
+        $sql = "select distinct D.CNUM ";
+        $sql.= ", case when P.NOTES_ID is not null then P.NOTES_ID else A.CNUM end as LICENSEE ";
         $sql.= ", D.HOSTNAME ";
-        $sql.= ", case when A.notes_id is not null then A.notes_id else D.approver_email end as approver ";
-        // $sql.= ", case when D.approved_date is not null then varchar_format(D.APPROVED_DATE,'YYYY-MM-DD') else D.status end as approved ";
-        $sql.= ", case when D.approved_date is not null then D.APPROVED_DATE else D.status end as approved ";
-        $sql.= ", case when F.notes_id is not null then F.NOTES_ID else 'Unknown to vbac' end as FM ";
+        $sql.= ", case when A.NOTES_ID is not null then A.NOTES_ID else D.APPROVER_EMAIL end as APPROVER ";
+        // $sql.= ", case when D.APPROVED_DATE is not null then varchar_format(D.APPROVED_DATE,'YYYY-MM-DD') else D.STATUS end as APPROVED ";
+        $sql.= ", case when D.APPROVED_DATE is not null then D.APPROVED_DATE else D.STATUS end as APPROVED ";
+        $sql.= ", case when F.NOTES_ID is not null then F.NOTES_ID else 'Unknown to vbac' end as FM ";
         $sql.= ", D.CREATION_DATE as CREATED ";
         $sql.= ", D.EXCEPTION_CODE as CODE";
-        $sql.= ", T.hostname as OLD_HOSTNAME ";
+        $sql.= ", T.HOSTNAME as OLD_HOSTNAME ";
         $sql.= ", T.TRANSFERRED_DATE as TRANSFERRED ";
         $sql.= ", T.TRANSFERRED_TO_HOSTNAME ";
         $sql.= ", case when N.NOTES_ID is not null then N.NOTES_ID else T.TRANSFERRED_EMAIL end  as TRANSFERRER ";
         $sql.= ", D.STATUS ";
         $sql.= " from ". $GLOBALS['Db2Schema'] . "." . allTables::$DLP . " as D ";
         $sql.= " left join ". $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
-        $sql.= " on D.cnum = P.cnum ";
+        $sql.= " on D.CNUM = P.CNUM ";
         $sql.= " left join ". $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as F ";
         $sql.= " on P.FM_CNUM = F.CNUM ";
         $sql.= " left join ". $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as A ";
-        $sql.= " on lower(approver_email) = lower(a.email_address) ";
+        $sql.= " on lower(APPROVER_EMAIL) = lower(a.EMAIL_ADDRESS) ";
         $sql.= " left join ". $GLOBALS['Db2Schema'] . "." . allTables::$DLP . "  as T ";
-        $sql.= " on D.hostname = T.TRANSFERRED_TO_HOSTNAME ";
+        $sql.= " on D.TRANSFERRED_TO_HOSTNAME = T.TRANSFERRED_TO_HOSTNAME ";
         $sql.= " left join ". $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as N ";
-        $sql.= " on T.transferred_email = N.EMAIL_ADDRESS ";
+        $sql.= " on T.TRANSFERRED_EMAIL = N.EMAIL_ADDRESS ";
         $sql.= " left join ". $GLOBALS['Db2Schema'] . "." . allTables::$DELEGATE . " as G ";
         $sql.= " on F.CNUM = G.CNUM  ";
         
@@ -113,7 +113,13 @@ class dlpTable extends DbTable {
         
         $report = array();
         while (($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC))==true) {
-            $report[] = $withButtons ? $this->addButtons(array_map('trim', $row)) : array_map('trim', $row);
+            foreach($row as $key => $value) {
+                if ($value instanceof \DateTime) {
+                    $row[$key] = $value->format('Y-m-d H:i:s');
+                }
+            }
+            $row = array_map('trim', $row);
+            $report[] = $withButtons ? $this->addButtons($row) : $row;
         }
         
         return array('data'=>$report,'sql'=>$sql);
