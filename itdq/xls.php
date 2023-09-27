@@ -14,6 +14,11 @@ trait xls{
 
         while ($rawRow = sqlsrv_fetch_array($resultSet, SQLSRV_FETCH_ASSOC)){
             $rowsWritten = true;
+            foreach($rawRow as $key => $value) {
+                if ($value instanceof \DateTime) {
+                    $rawRow[$key] = $value->format('Y-m-d H:i:s');
+                }
+            }
             $row = array_map('trim', $rawRow);
             $row = static::preProcessRowForWriteToXls($row);
             if($headerRow && $withColumnHeadings){

@@ -1670,8 +1670,6 @@ class assetRequestsTable extends DbTable{
         return true;
     }
 
-
-
     function getCnumAndAssetForReference($reference){
 
         $sql = " SELECT CNUM, ASSET_TITLE ";

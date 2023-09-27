@@ -19,9 +19,11 @@ class FormClass
 
     protected $notEditable;
 
-    public $mode;
+    protected $fcFormName;
 
-    private $fcFormName;
+    protected $pwd;
+
+    public $mode;
 
     /**
      * Only just learned the benefit of Static variables, so have defined some here for MODE - but they are not used throughout the code
