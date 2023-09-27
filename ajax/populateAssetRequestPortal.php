@@ -32,7 +32,6 @@ switch (true) {
 //         $amADelegateForRaw = $loader->load('EMAIL_ADDRESS',allTables::$DELEGATE," DELEGATE_CNUM='" . htmlspecialchars($myCnum) . "' ");
 //         $amADelegateFor = array_map('strtolower',$amADelegateForRaw);
 
-
         $myEmail = trim(strtolower($_SESSION['ssoEmail']));
         $myPeople = $loader->load("CNUM",allTables::$PERSON," FM_CNUM='" . trim($myCnum) . "' ");
         $myPeopleListed = "'";

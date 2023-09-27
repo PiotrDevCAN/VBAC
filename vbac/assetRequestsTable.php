@@ -105,27 +105,28 @@ class assetRequestsTable extends DbTable{
         $sql  = " SELECT distinct";
         $sql .= " AR.REQUEST_REFERENCE as REFERENCE, ";
         $sql .= " P.CT_ID as CT_ID, P.EMAIL_ADDRESS as REQUESTEE_EMAIL, P.NOTES_ID as REQUESTEE_NOTES, AR.ASSET_TITLE AS ASSET, STATUS, ";
-        $sql .= " BUSINESS_JUSTIFICATION as JUSTIFICATION, REQUESTOR_EMAIL as REQUESTOR_EMAIL, REQUESTED as REQUESTED_DATE,  ";
+        $sql .= " BUSINESS_JUSTIFICATION as JUSTIFICATION, REQUESTOR_EMAIL as REQUESTOR_EMAIL, REQUESTED as REQUESTED_DATE, ";
         $sql .= " APPROVER_EMAIL, APPROVED as APPROVED_DATE, ";
-        $sql .= " F.EMAIL_ADDRESS as FM_EMAIL, F.NOTES_ID as FM_NOTES, P.FM_CNUM,";
+        $sql .= " F.EMAIL_ADDRESS as FM_EMAIL, F.NOTES_ID as FM_NOTES, P.FM_CNUM, ";
         $sql .= " USER_LOCATION as LOCATION, ";
-        $sql .= " PRIMARY_UID, SECONDARY_UID, DATE_ISSUED_TO_IBM, DATE_ISSUED_TO_USER, DATE_RETURNED,   ";
+        $sql .= " PRIMARY_UID, SECONDARY_UID, DATE_ISSUED_TO_IBM, DATE_ISSUED_TO_USER, DATE_RETURNED, ";
         $sql .= " ORDERIT_VARB_REF, ORDERIT_NUMBER, ORDERIT_STATUS, ";
-        $sql .= " RAL.ORDER_IT_TYPE as ORDERIT_TYPE ";
-        $sql .= " ,RAL.ASSET_PRIMARY_UID_TITLE ";
-        $sql .= " ,RAL.ASSET_SECONDARY_UID_TITLE ";
-        $sql .= " , COMMENT ";
-        $sql .= " , REQUEST_RETURN ";
-        $sql .= " , USER_CREATED ";
-        $sql .= " , P.CTB_RTB,P.TT_BAU,P.LOB, P.WORK_STREAM ";
-        $sql .= " , PRE_REQ_REQUEST ";
+        $sql .= " RAL.ORDER_IT_TYPE as ORDERIT_TYPE, ";
+        $sql .= " RAL.ASSET_PRIMARY_UID_TITLE, ";
+        $sql .= " RAL.ASSET_SECONDARY_UID_TITLE, ";
+        $sql .= " COMMENT, ";
+        $sql .= " REQUEST_RETURN, ";
+        $sql .= " USER_CREATED, ";
+        $sql .= " P.CTB_RTB, P.TT_BAU, P.LOB, P.WORK_STREAM, ";
+        $sql .= " PRE_REQ_REQUEST ";
         $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
         $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql .= " ON AR.CNUM = P.CNUM ";
         $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as F ";
         $sql .= " ON P.FM_CNUM = F.CNUM ";
         $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$REQUESTABLE_ASSET_LIST . " as RAL ";
-        $sql .= " ON TRIM(RAL.ASSET_TITLE) = TRIM(AR.ASSET_TITLE) ";
+        // $sql .= " ON TRIM(RAL.ASSET_TITLE) = TRIM(AR.ASSET_TITLE) ";
+        $sql .= " ON RAL.ASSET_TITLE = AR.ASSET_TITLE ";
         $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$DELEGATE . " as D "; // needed for the predicate.
         $sql .= " ON F.CNUM = D.CNUM ";
         $sql .= " WHERE 1=1 ";
@@ -348,7 +349,7 @@ class assetRequestsTable extends DbTable{
             $justificationButton .= "data-reference='" .trim($reference) . "' ";
             $justificationButton .= "data-requestee='" .trim($row['PERSON']) . "' ";
             $justificationButton .= "data-asset='"     .trim($row['ASSET']) . "' ";
-            $justificationButton .= "data-status='"     .trim($status) . "' ";
+            $justificationButton .= "data-status='"    .trim($status) . "' ";
 
 //             $justificationButton .= "data-justification='" .trim($justification) . "' ";
 //             $justificationButton .= "data-comment='" .trim($row['COMMENT']) . "' ";
@@ -640,8 +641,8 @@ class assetRequestsTable extends DbTable{
         $sql .= " ON AR.CNUM = P.CNUM ";
         $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as F ";
         $sql .= " ON F.CNUM = P.FM_CNUM ";
-        $sql .= "  LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$REQUESTABLE_ASSET_LIST . " AS RAL ";
-        $sql .= "  ON RAL.ASSET_TITLE = AR.ASSET_TITLE ";
+        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$REQUESTABLE_ASSET_LIST . " AS RAL ";
+        $sql .= " ON RAL.ASSET_TITLE = AR.ASSET_TITLE ";
 
         $sql .= " WHERE 1=1 ";
         $sql .= $bau ? " AND P.TT_BAU='BAU' " : null;
@@ -734,9 +735,6 @@ class assetRequestsTable extends DbTable{
         $predicate .= " )";
         return $predicate;
     }
-
-
-
 
     function countApprovedForOrderItType($orderItType = 0, $predicate = null){
         $sql  = " SELECT COUNT(*) as REQUESTS ";
@@ -1484,7 +1482,7 @@ class assetRequestsTable extends DbTable{
                     $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema']. "." . allTables::$PERSON . " as FM ";
                     $sql.= " ON P.FM_CNUM = FM.CNUM ";
                     $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema']. "." . allTables::$ORDER_IT_VARB_TRACKER . " as V ";
-                    $sql.= " ON right(trim(AR.ORDERIT_VARB_REF),5) = right(concat('000000',V.VARB),5) ";
+                    $sql.= " ON right(TRIM(AR.ORDERIT_VARB_REF),5) = right(concat('000000',V.VARB),5) ";
                     $sql.= " WHERE 1=1 ";
                     $sql.= " AND AR.ORDERIT_STATUS in ('" . assetRequestRecord::STATUS_ORDERIT_RAISED . "') ";
                     $sql.= " AND (AR.REQUEST_RETURN = 'No' or AR.REQUEST_RETURN is null ) ";
@@ -1622,7 +1620,7 @@ class assetRequestsTable extends DbTable{
                     $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema']. "." . allTables::$PERSON . " as P ";
                     $sql.= " ON P.CNUM = AR.CNUM ";
                     $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema']. "." . allTables::$ORDER_IT_VARB_TRACKER . " as V ";
-                    $sql.= " ON right(trim(AR.ORDERIT_VARB_REF),5) = right(concat('000000',V.VARB),5) ";
+                    $sql.= " ON right(TRIM(AR.ORDERIT_VARB_REF),5) = right(concat('000000',V.VARB),5) ";
                     $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema']. "." . allTables::$ASSET_REQUESTS_EVENTS_SUMMARY . " as ES ";
                     $sql.= " ON AR.REQUEST_REFERENCE = ES.REF ";
 
