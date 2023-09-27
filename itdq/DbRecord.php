@@ -25,6 +25,8 @@ class DbRecord extends FormClass {
 	protected $ignoreProperties;
 	protected $autoTruncate;
 	protected $keyColumns = array ();
+	protected $headerTitles;
+
 	protected static $uniqueKeyCounter = 0;
 
 	private static $removeAble = array ("&", " /", " ", "_EC2" );

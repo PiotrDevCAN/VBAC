@@ -1135,6 +1135,7 @@ class personTable extends DbTable
 
         $sql = " SELECT CNUM FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE UPPER(EMAIL_ADDRESS) = '" . htmlspecialchars(strtoupper(trim($_SESSION['ssoEmail']))) . "' ";
+        $sql .= " OR UPPER(KYN_EMAIL_ADDRESS) = '" . htmlspecialchars(strtoupper(trim($_SESSION['ssoEmail']))) . "' ";
 
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
