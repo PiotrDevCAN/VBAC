@@ -191,10 +191,10 @@ class odcAccessTable extends DbTable {
         $sql.= "from " . $GLOBALS['Db2Schema'] . "." . allTables::$ODC_ACCESS_LIVE . " as O ";
         $sql.= "left join " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql.= "on O.OWNER_CNUM_ID = P.CNUM ";
-        $sql.= ") ";
-        $sql.= "WHERE 1=1 ";
+        $sql.= ") as Subquery";
+        $sql.= " WHERE 1=1 ";
         $sql.= " and ( PUNE_MATCHED like 'Pune Mismatch%' ";
-        $sql.= "       or BANGALORE_MATCHED like 'Bangalore Mismatch%' ) as Subquery";
+        $sql.= "       or BANGALORE_MATCHED like 'Bangalore Mismatch%' ) ";
         $sql.= " and " . $vbacActivePredicate;
 
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
