@@ -3,6 +3,7 @@
 /.project
 /vendor/
 /cfg/
+/extracts/
 .htaccess
 dev_env.list
 dev.tar.gz

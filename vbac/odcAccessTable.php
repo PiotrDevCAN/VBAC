@@ -174,14 +174,14 @@ class odcAccessTable extends DbTable {
         // records found in ODC_ACCESS as having access to a Secured Area that doesn't match with their LBG_LOCATION in VBAC PERSON table.
         $sql = "select * ";
         $sql.= "from ( ";
-        $sql.= "SELECT trim(P.NOTES_ID),trim(P.LBG_LOCATION),trim(O.SECURED_AREA_NAME)";
+        $sql.= "SELECT trim(P.NOTES_ID) as NOTES_ID, trim(P.LBG_LOCATION) as LBG_LOCATION, trim(O.SECURED_AREA_NAME) as SECURED_AREA_NAME";
         $sql.= ",case when O.SECURED_AREA_NAME like 'PUNE%' and P.LBG_LOCATION like '%Pune' then 'Pune Match' else ";
         $sql.= "    case when O.SECURED_AREA_NAME like 'PUNE%' then 'Pune Mismatch - ODC Access not reflected in VBAC' else ";
         $sql.= "        case when P.LBG_LOCATION like '%Pune'  then 'Pune Mismatch - VBAC LBG_LOCATION not reflected in ODC Access' else '' ";
         $sql.= "        end ";
         $sql.= "    end ";
         $sql.= "end as PUNE_MATCHED ";
-        $sql.= ",case when O.SECURED_AREA_NAME like 'BANGALORE%' and P.LBG_LOCATION like '%Bangalore' then 'Bangalore Matched' ELSE ";
+        $sql.= ",case when O.SECURED_AREA_NAME like 'BANGALORE%' and P.LBG_LOCATION like '%Bangalore' then 'Bangalore Matched' else ";
         $sql.= "    case when O.SECURED_AREA_NAME like 'BANGALORE%'  then 'Bangalore Mismatch - ODC Access not reflected in VBAC' else ";
         $sql.= "        case when P.LBG_LOCATION like '%Bangalore'   then 'Bangalore Mismatch - VBAC LBG_LOCATION not reflected in ODC Access' else '' ";
         $sql.= "        end ";
@@ -194,9 +194,8 @@ class odcAccessTable extends DbTable {
         $sql.= ") ";
         $sql.= "WHERE 1=1 ";
         $sql.= " and ( PUNE_MATCHED like 'Pune Mismatch%' ";
-        $sql.= "       or BANGALORE_MATCHED like 'Bangalore Mismatch%' ) ";
+        $sql.= "       or BANGALORE_MATCHED like 'Bangalore Mismatch%' ) as Subquery";
         $sql.= " and " . $vbacActivePredicate;
-
 
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
