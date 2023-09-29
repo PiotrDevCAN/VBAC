@@ -1,10 +1,10 @@
 // Config object to be passed to Msal on creation
 const msalConfig = {
     auth: {
-        clientId: "ffa9e035-e345-4ff2-aad3-e84696202171",
-        secret: '0808Q~V661a2TBuMMaDVyy6wyczWyLmbTO2t.aDN',
-        authority: "https://login.microsoftonline.com/f260df36-bc43-424c-8f44-c85226657b01",
-        redirectUri: "http://localhost:8082/cdi_test_typeahead.php"
+        clientId: "",
+        secret: '',
+        authority: "",
+        redirectUri: ""
     },
     cache: {
         cacheLocation: "sessionStorage", // This configures where your cache will be stored
