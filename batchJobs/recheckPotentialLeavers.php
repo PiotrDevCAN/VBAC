@@ -17,7 +17,9 @@ try {
     $process = new Process($cmd);
     $pid = $process->getPid();
     echo "Recheck Potential Leavers Script has succeed to be executed: " . $scriptsDirectory . $processDirectory . $processFile;
+    error_log("Recheck Potential Leavers Script has succeed to be executed: " . $scriptsDirectory . $processDirectory . $processFile);
 } catch (Exception $exception) {
     echo $exception->getMessage();
     echo "Recheck Potential Leavers Script has failed to be executed: " . $scriptsDirectory . $processDirectory . $processFile;
+    error_log("Recheck Potential Leavers Script has failed to be executed: " . $scriptsDirectory . $processDirectory . $processFile);
 }

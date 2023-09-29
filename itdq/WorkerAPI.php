@@ -88,7 +88,7 @@ class WorkerAPI {
 	// Worker Profile By Worker Id : GET /workers/wid/{wid}
 	public function getworkerByWId($wid)
 	{
-		$url = "/workers/wid" . urlencode($wid);
+		$url = "/workers/wid/" . urlencode($wid);
 		return $this->processURL($url);
 	}
 
@@ -109,7 +109,7 @@ class WorkerAPI {
 	// Worker Profile By Dynamic Id : GET /workers/dynamicid/{Dynamic_id}
 	public function getworkerByDynamicId($dynamicId)
 	{
-		$url = "/workers/dynamicid" . urlencode($dynamicId);
+		$url = "/workers/dynamicid/" . urlencode($dynamicId);
 		return $this->processURL($url);
 	}
 
@@ -133,28 +133,55 @@ class WorkerAPI {
 	}
 
 	// Worker Profile By Attribute Search : GET /workers/search/
+	/*
+		attr	String	attribute from Basic Worker data model	id should match one
+		val	String	Any value or an array	Array format ["val1","val2"]
+		method	String	eq, in, ne, startsWith	equals, in (used for arrays), not equals, starting with
+		includeManager	boolean	false / true	Optional parameter, default value is false. Include manager objects within employees' record.
+		pageSize	int	number of returned employees	Optional parameter, default value is 100. The value should be between 1 and 999.
+	*/
 	public function getworkerByAttributeSearch($search)
 	{
-		$url = "/workers/search";
+		$url = "/workers/search?" . urlencode($search);
 		return $this->processURL($url);
 	}
 
 	// Worker Profile By Multi Attribute Search : POST /workers/search/
+	/*
+		includeManager	boolean	false / true	Optional parameter, default value is false. Include manager objects within employees' record.
+		pageSize	int	number of returned employees	Optional parameter, default value is 100. The value should be between 1 and 999.
+	*/
 	public function getworkerByMultiAttributeSearch($search)
 	{
 		$url = "/workers/search";
 		return $this->processURL($url, 'POST');
 	}
 
-	public function typeaheadSearch()
+	// Get list of workers by their (partial) name or email address. Only active employees are returned.
+	/*
+		keyword	String	partial employee name / email address	length should be at least 2 characters
+		pageSize (optional)	int	number of returned employees	Default value: 20
+		attributes (optional)	String	additional fields requested within response	Available attributes: isActive, firstName, lastName, businessTitle, displayName, mobilePhone, workPhone, costCenter, division, workLoc, usageLocation, countryName, workplaceIndicator, employeeType, orgCode, matrixManagerEmail, isManager, faxNumber
+		nextPageToken (optional)	String	token for accessing next page	Response contains nextPageToken attribute if the query returns more employees than the pageSize parameter. If this parameter is provided, then the next page of results will be returned by the endpoint.
+	*/
+	public function typeaheadSearch($keyword, $pageSize = null, $attributes = null, $nextPageToken = null)
 	{
-		$url = "/workers/typeahead";
+		$attributes = "isActive,firstName,lastName,businessTitle,displayName,mobilePhone,workPhone,costCenter,division,workLoc,usageLocation,countryName,workplaceIndicator,employeeType,orgCode,matrixManagerEmail,isManager,faxNumber";
+		$url = "/workers/typeahead?keyword=" . urlencode($keyword) . "&attributes=" . urlencode($attributes);		
 		return $this->processURL($url);
 	}
 
-	public function typeaheadSearchPost()
+	// Get list of workers by their (partial) name or email address. Within the request body filter criterias can be included, this way the typeahead search will be performed only on the filtered group of employees. Examples may include searching employees within specific country (usageLocation), or costCenter, etc.. By default only active employees are returned.
+	/*
+		keyword	String	partial employee name / email address	length should be at least 2 characters
+		pageSize (optional)	int	number of returned employees	Default value: 20
+		attributes (optional)	String	additional fields requested within response	Available attributes: isActive, firstName, lastName, businessTitle, displayName, mobilePhone, workPhone, costCenter, division, workLoc, usageLocation, countryName, workplaceIndicator, employeeType, orgCode, matrixManagerEmail, isManager, faxNumber
+		nextPageToken (optional)	String	token for accessing next page	Response contains nextPageToken attribute if the query returns more employees than the pageSize parameter. If this parameter is provided, then the next page of results will be returned by the endpoint.
+	*/
+	public function typeaheadSearchWithFilter($keyword, $pageSize = null, $attributes = null, $nextPageToken = null)
 	{
 		$url = "/workers/typeahead";
+		// $data = 
 		return $this->processURL($url, 'POST');
 	}
 	

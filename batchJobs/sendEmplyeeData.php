@@ -18,8 +18,9 @@ try {
     $process = new Process($cmd);
     $pid = $process->getPid();
     echo "Employee Data Extract Script has succeed to be executed: ".$email.PHP_EOL;
-    echo $cmd;
+    error_log("Employee Data Extract Script has succeed to be executed: ".$email.PHP_EOL);
 } catch (Exception $exception) {
     echo $exception->getMessage();
-    echo "Employee Data Extract Script has succeed to be executed: ".$email.PHP_EOL;
+    echo "Employee Data Extract Script has failed to be executed: ".$email.PHP_EOL;
+    error_log("Employee Data Extract Script has failed to be executed: ".$email.PHP_EOL);
 }

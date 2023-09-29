@@ -22,7 +22,9 @@ try {
     $process = new Process($cmd);
     $pid = $process->getPid();
     echo "Aurora Person Table Extract Script has succeed to be executed: ".$email;
+    error_log("Aurora Person Table Extract Script has succeed to be executed: ".$email);
 } catch (Exception $exception) {
     echo $exception->getMessage();
     echo "Aurora Person Table Extract Script has failed to be executed: ".$email;
+    error_log("Aurora Person Table Extract Script has failed to be executed: ".$email);
 }

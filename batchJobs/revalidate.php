@@ -17,7 +17,9 @@ try {
     $process = new Process($cmd);
     $pid = $process->getPid();
     echo "Revalidation Script has succeed to be executed: " . $scriptsDirectory . $processDirectory . $processFile;
+    error_log("Revalidation Script has succeed to be executed: " . $scriptsDirectory . $processDirectory . $processFile);
 } catch (Exception $exception) {
     echo $exception->getMessage();
     echo "Revalidation Script has failed to be executed: " . $scriptsDirectory . $processDirectory . $processFile;
+    error_log("Revalidation Script has failed to be executed: " . $scriptsDirectory . $processDirectory . $processFile);
 }

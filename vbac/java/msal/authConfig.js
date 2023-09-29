@@ -1,0 +1,59 @@
+// Config object to be passed to Msal on creation
+const msalConfig = {
+    auth: {
+        clientId: "ffa9e035-e345-4ff2-aad3-e84696202171",
+        secret: '0808Q~V661a2TBuMMaDVyy6wyczWyLmbTO2t.aDN',
+        authority: "https://login.microsoftonline.com/f260df36-bc43-424c-8f44-c85226657b01",
+        redirectUri: "http://localhost:8082/cdi_test_typeahead.php"
+    },
+    cache: {
+        cacheLocation: "sessionStorage", // This configures where your cache will be stored
+        storeAuthStateInCookie: false, // Set this to "true" if you are having issues on IE11 or Edge
+    },
+    system: {
+        allowNativeBroker: false, // Disables WAM Broker
+        loggerOptions: {
+            loggerCallback: (level, message, containsPii) => {
+                if (containsPii) {
+                    return;
+                }
+                switch (level) {
+                    case msal.LogLevel.Error:
+                        console.error(message);
+                        return;
+                    case msal.LogLevel.Info:
+                        console.info(message);
+                        return;
+                    case msal.LogLevel.Verbose:
+                        console.debug(message);
+                        return;
+                    case msal.LogLevel.Warning:
+                        console.warn(message);
+                        return;
+                }
+            }
+        }
+    }
+};
+
+// Add here scopes for id token to be used at MS Identity Platform endpoints.
+const loginRequest = {
+    scopes: ["User.Read"]
+};
+
+// Add here the endpoints for MS Graph API services you would like to use.
+const graphConfig = {
+    graphMeEndpoint: "https://graph.microsoft.com/v1.0/me",
+    graphMailEndpoint: "https://graph.microsoft.com/v1.0/me/messages"
+};
+
+// Add here scopes for access token to be used at MS Graph API endpoints.
+const tokenRequest = {
+    scopes: ["Mail.Read"],
+    forceRefresh: false // Set this to "true" to skip a cached token and go to the server to get a new token
+};
+
+const silentRequest = {
+    // scopes: ["openid", "profile", "User.Read", "Mail.Read"]
+    scopes: ["api://51d4cf5d-b248-4e4f-b6dd-5897e73e247f/.default"]
+};

@@ -4,6 +4,7 @@
 /vendor/
 /cfg/
 /extracts/
+/node_modules/
 .htaccess
 dev_env.list
 dev.tar.gz
