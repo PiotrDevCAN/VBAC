@@ -31,7 +31,7 @@
 
 <script type="text/javascript" src="https://alcdn.msauth.net/browser/2.35.0/js/msal-browser.js" crossorigin=""></script>
 <script type="text/javascript" src="vbac/java/msal/authConfig.js"></script>
-<script type="text/javascript" src="vbac/java/msal/auth.js"></script>
+<script type="text/javascript" src="vbac/java/msal/authDefault.js"></script>
 
 <style type="text/css">
 
