@@ -16,13 +16,12 @@ class Redis {
 	
 	public function __construct()
 	{
-		// $auth = new Auth();
-		// $auth->ensureAuthorized();
-
 		$this->hostname = 'tls://'.trim($_ENV['redis_host']);
 		$this->port = $_ENV['redis_port'];
 		$this->password = $_ENV['redis_password'];
 
+		define('REDIS_EXPIRE', 120);
+		
 		$redis = new \Redis();
 		//Connecting to Redis
 		try {

@@ -11,7 +11,7 @@ let checkOceanEmailAddress = await cacheBustImport('./modules/functions/checkOce
 let checkKyndrylEmailAddress = await cacheBustImport('./modules/functions/checkKyndrylEmailAddress.js');
 let inArrayCaseInsensitive = await cacheBustImport('./modules/functions/inArrayCaseInsensitive.js');
 
-let fetchBluepagesDetailsForCnum = await cacheBustImport('./modules/functions/fetchBluepagesDetailsForCnum.js');
+let fetchWorkerAPIDetailsForCnum = await cacheBustImport('./modules/functions/fetchWorkerAPIDetailsForCnum.js');
 let initialiseOnboardPersonFormSelect2 = await cacheBustImport('./modules/functions/initialiseOnboardPersonFormSelect2.js');
 let initialiseOnboardNonIBMPersonFormSelect2 = await cacheBustImport('./modules/functions/initialiseOnboardNonIBMPersonFormSelect2.js');
 let initialiseStartEndDate = await cacheBustImport('./modules/functions/initialiseStartEndDate.js');
@@ -143,7 +143,7 @@ class onBoarding {
             } else {
                 $("#saveBoarding").attr("disabled", false);
                 $("#person_name").css("background-color", "LightGreen");
-                fetchBluepagesDetailsForCnum(suggestion.cnum);
+                fetchWorkerAPIDetailsForCnum(suggestion.cnum);
             }
 
             $("#personDetails").show();
@@ -260,7 +260,7 @@ class onBoarding {
         $(document).on("keyup change", "#person_serial", function (e) {
             var cnum = $(this).val();
             if (cnum.length == 9) {
-                fetchBluepagesDetailsForCnum(cnum);
+                fetchWorkerAPIDetailsForCnum(cnum);
             }
         });
     }

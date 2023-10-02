@@ -1,5 +1,6 @@
 <?php
 use itdq\JwtSecureSession;
+use itdq\Redis;
 
 function do_auth($group = null)
 {    
@@ -66,3 +67,4 @@ session_start();
 error_log(__FILE__ . "session:" . session_id());
 do_auth();
 include "connect.php";
+$redisClient = new Redis();
