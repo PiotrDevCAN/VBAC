@@ -14,9 +14,11 @@ function fetchWorkerAPIDetailsForCnum(cnum) {
                 success: function (data) {
                     var personDetailsObj = data.data.results;
                     var attributes = personDetailsObj[0];
+                    var regex = /[.]/;
                     for (let name in attributes) {
                         // console.log(name + ' ' + attributes[name]);
-                        
+                        var value = attributes[name];
+
                         // http://localhost:8082/api/workerAPI.php?ibmperson/(uid=128673866).search/byjson?
                         /*
                         preferredidentity
@@ -54,7 +56,6 @@ function fetchWorkerAPIDetailsForCnum(cnum) {
                         // "matrixManagerEmail": "Nicola.Reynolds@kyndryl.com",
                         // "managerEmail": "Nicola.Reynolds@kyndryl.com",
 
-                        var regex = /[.]/;
                         switch (name) {
                             case "businessTitle":
                                 var bio = document.getElementById("person_bio");
