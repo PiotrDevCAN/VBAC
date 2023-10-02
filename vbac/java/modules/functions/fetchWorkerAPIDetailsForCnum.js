@@ -70,8 +70,8 @@ function fetchWorkerAPIDetailsForCnum(cnum) {
                                 }
                                 break;
                             case "firstName":
-                                var i = 0;
-                                var firstName = value[i];
+                                var fname = document.getElementById("person_first_name"); 
+                                var firstName = value;
                                 while (regex.test(firstName) && i < value.length) {
                                     var firstNameNext = value[++i];
                                     if (typeof firstNameNext !== "undefined") {
@@ -85,14 +85,13 @@ function fetchWorkerAPIDetailsForCnum(cnum) {
                                 }
 
                                 var capitalizedName = toTitleCase(firstName);
-                                var fname = document.getElementById("person_first_name");
                                 if (typeof fname !== "undefined") {
                                     fname.value = capitalizedName;
                                 }
                                 break;
                             case "lastName":
                                 var lname = document.getElementById("person_last_name");
-                                var lastName = value[0];
+                                var lastName = value;
                                 if (typeof lname !== "undefined") {
                                     lname.value = lastName;
                                 }
