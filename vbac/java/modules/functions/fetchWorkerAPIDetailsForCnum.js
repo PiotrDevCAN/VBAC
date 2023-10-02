@@ -29,7 +29,11 @@ function fetchWorkerAPIDetailsForCnum(cnum) {
                 dataType: "json",
                 success: function (data) {
                     var personDetailsObj = data.result;
-                    var attributes = personDetailsObj[0];
+
+console.log(personDetailsObj);
+return;
+
+                    var attributes = personDetailsObj;
                     var a = 0;
                     for (a = 0; a < attributes.length; a++) {
                         var object = attributes[a];
