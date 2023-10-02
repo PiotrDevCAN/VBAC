@@ -470,7 +470,7 @@ class assetRequestsTable extends DbTable{
         $sql .= " ASSET_TITLE, ";
         $sql .= " CASE when P.EMAIL_ADDRESS is null then P.NOTES_ID else P.EMAIL_ADDRESS end as IDENTITY, ";
         $sql .= " case when BUSINESS_JUSTIFICATION is null then 'N/A' else BUSINESS_JUSTIFICATION end as JUSTIFICATION, ";
-        $sql .= " STATUS,  USER_LOCATION, REQUESTOR_EMAIL, date(REQUESTED) as REQUESTED,  APPROVER_EMAIL, DATE(APPROVED) as APPROVED,";
+        $sql .= " STATUS,  USER_LOCATION, REQUESTOR_EMAIL, REQUESTED,  APPROVER_EMAIL, APPROVED,";
         $sql .= " F.EMAIL_ADDRESS as FM_EMAIL, ";
         $sql .= " CAST( CURRENT_TIMESTAMP AS Date ) as EXPORTED ";
         $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
@@ -521,7 +521,7 @@ class assetRequestsTable extends DbTable{
         $sql .= " ASSET_TITLE, ";
         $sql .= " CASE when P.EMAIL_ADDRESS is null then P.NOTES_ID else P.EMAIL_ADDRESS end as IDENTITY, ";
         $sql .= " case when BUSINESS_JUSTIFICATION is null then 'N/A' else BUSINESS_JUSTIFICATION end as JUSTIFICATION, ";
-        $sql .= " STATUS,  USER_LOCATION, REQUESTOR_EMAIL, date(REQUESTED) as REQUESTED,  APPROVER_EMAIL, DATE(APPROVED) as APPROVED,";
+        $sql .= " STATUS,  USER_LOCATION, REQUESTOR_EMAIL, REQUESTED,  APPROVER_EMAIL, APPROVED,";
         $sql .= " F.EMAIL_ADDRESS as FM_EMAIL, ";
         $sql .= " CAST( CURRENT_TIMESTAMP AS Date ) as EXPORTED ";
         $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR";
@@ -2255,7 +2255,7 @@ class assetRequestsTable extends DbTable{
         $sql .= !empty($newComment) ? ", COMMENT='" . htmlspecialchars(substr($newComment,0,500)) . "' " : null;
         $sql .= trim($status)==assetRequestRecord::STATUS_AWAITING_IAM ? ", APPROVER_EMAIL='" . $_SESSION['ssoEmail'] . "' , APPROVED = CURRENT_TIMESTAMP " : null;
         $sql .= $isPmo != true  && trim($status)==assetRequestRecord::STATUS_APPROVED ? ", APPROVER_EMAIL='" . $_SESSION['ssoEmail'] . "' , APPROVED = CURRENT_TIMESTAMP " : null;
-        $sql .= trim($status)==assetRequestRecord::STATUS_RETURNED ? ", DATE_RETURNED = DATE('" . htmlspecialchars($dateReturned). "') " : null;
+        $sql .= trim($status)==assetRequestRecord::STATUS_RETURNED ? ", DATE_RETURNED = '" . htmlspecialchars($dateReturned). "' " : null;
         $sql .= " WHERE REQUEST_REFERENCE='" . htmlspecialchars($reference) . "' ";
         $sql .= trim($status)==assetRequestRecord::STATUS_REJECTED ? " OR PRE_REQ_REQUEST='" . htmlspecialchars($reference) . "' " : null;
 

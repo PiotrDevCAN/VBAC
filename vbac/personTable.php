@@ -65,7 +65,8 @@ class personTable extends DbTable
     const ACCT_ACCESS_SPRH = 'SPRH';
     const ACCT_ACCESS_SRH = 'SRH';
 
-    private static $pesRecheckPeriods = array(self::PES_LEVEL_ONE => '1 Year', self::PES_LEVEL_TWO => '3 Years'); // must be Db2 date period
+    // private static $pesRecheckPeriods = array(self::PES_LEVEL_ONE => '1 Year', self::PES_LEVEL_TWO => '3 Years'); // must be Db2 date period
+    private static $pesRecheckPeriods = array(self::PES_LEVEL_ONE => '1', self::PES_LEVEL_TWO => '3'); // must be Db2 date period
 
     private static $excludeFromRecheckNotification = "'" . personRecord::PES_STATUS_RECHECK_REQ . "'"
     . ",'" . personRecord::PES_STATUS_RECHECK_PROGRESSING . "'"
@@ -780,7 +781,7 @@ class personTable extends DbTable
                 break;
         }
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql .= " SET $dateField = date('" . $dateToUseObj->format('Y-m-d') . "'), PES_STATUS='" . htmlspecialchars($status) . "' ";
+        $sql .= " SET $dateField = '" . $dateToUseObj->format('Y-m-d') . "', PES_STATUS='" . htmlspecialchars($status) . "' ";
         $sql .= trim($status) == personRecord::PES_STATUS_INITIATED ? ", PES_REQUESTOR='" . htmlspecialchars($requestor) . "' " : null;
         $sql .= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
 
@@ -849,7 +850,7 @@ class personTable extends DbTable
         }
 
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql .= " SET PES_RECHECK_DATE = date('" . $dateToUseObj->format('Y-m-d') . "') + " . $pesRecheckPeriod;
+        $sql .= " SET PES_RECHECK_DATE = DATEADD(year, " . $pesRecheckPeriod . ", '" . $dateToUseObj->format('Y-m-d') . "') ";
         $sql .= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
 
         $result = sqlsrv_query($GLOBALS['conn'], $sql);
