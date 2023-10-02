@@ -665,7 +665,11 @@ class DbTable
             self::displayErrorMessage($row, __CLASS__, __METHOD__, $sql);
         } else {
             foreach ($row as $key => $value) {
-                $row[$key] = trim($value);
+                if ($value instanceof \DateTime) {
+                    $row[$key] = $value->format('Y-m-d H:i:s');
+                } else {
+                    $row[$key] = trim($value);
+                }
             }
         }
         return $row;
