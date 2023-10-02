@@ -3,24 +3,8 @@
  */
 
 let toTitleCase = await cacheBustImport('./modules/functions/toTitleCase.js');
-let convertOceanToKyndryl = await cacheBustImport('./modules/functions/convertOceanToKyndryl.js');
-
-// http://localhost:8082/api/workerAPI.php?ibmperson/(uid=128673866).search/byjson?
-/*
-preferredidentity
-&jobresponsibilities
-&notesemail
-&uid
-&givenname
-&sn
-&ismanager
-&employeetype
-&co
-&ibmloc
-*/
 
 function fetchWorkerAPIDetailsForCnum(cnum) {
-    alert('trigger fetchWorkerAPIDetailsForCnum');
     if (typeof cnum !== "undefined") {
         if (cnum.length == 9) {
             $.ajax({
@@ -28,44 +12,63 @@ function fetchWorkerAPIDetailsForCnum(cnum) {
                 type: "GET",
                 dataType: "json",
                 success: function (data) {
-                    var personDetailsObj = data.result;
+                    var personDetailsObj = data.data.results;
+                    var attributes = personDetailsObj[0];
+                    for (let name in attributes) {
+                        // console.log(name + ' ' + attributes[name]);
+                        
+                        // http://localhost:8082/api/workerAPI.php?ibmperson/(uid=128673866).search/byjson?
+                        /*
+                        preferredidentity
+                        &jobresponsibilities
+                        &notesemail
+                        &uid
+                        &givenname
+                        &sn
+                        &ismanager
+                        &employeetype
+                        &co
+                        &ibmloc
+                        */
 
-console.log(personDetailsObj);
-return;
+                        // "isActive": true,
+                        // "workerID": 5072493,
+                        // "cnum": "128673866",
+                        // "email": "Neil.Islam@kyndryl.com",
+                        // "firstName": "Neil",
+                        // "lastName": "Islam",
+                        // "displayName": "Neil Islam",
+                        // "businessTitle": "Senior Lead, Data Science",
+                        // "usageLocation": "GB",
+                        // "countryName": "United Kingdom",
+                        // "mobilePhone": null,
+                        // "workPhone": "",
+                        // "faxNumber": "kyn-cio-iam-azad-FnF-R0",
+                        // "employeeType": "H",
+                        // "division": "02",
+                        // "orgCode": "PU",
+                        // "isManager": true,
+                        // "workLoc": "NHB",
+                        // "workplaceIndicator": "H",
+                        // "costCenter": "3620250856",
+                        // "matrixManagerEmail": "Nicola.Reynolds@kyndryl.com",
+                        // "managerEmail": "Nicola.Reynolds@kyndryl.com",
 
-                    var attributes = personDetailsObj;
-                    var a = 0;
-                    for (a = 0; a < attributes.length; a++) {
-                        var object = attributes[a];
-                        var value = object.value;
-                        var name = object.name;
                         var regex = /[.]/;
-                        console.log(name);
                         switch (name) {
-                            case "preferredidentity":
-                                var intranet = document.getElementById("person_intranet");
-                                var kyndrylIntranet = document.getElementById("person_kyn_intranet");
-                                if (typeof intranet !== "undefined") {
-                                    intranet.value = value;
-                                    if (typeof kyndrylIntranet !== "undefined") {
-                                        var kynValue = convertOceanToKyndryl(value.toString());
-                                        kyndrylIntranet.value = kynValue;
-                                    }
-                                }
-                                break;
-                            case "jobresponsibilities":
+                            case "businessTitle":
                                 var bio = document.getElementById("person_bio");
                                 if (typeof bio !== "undefined") {
                                     bio.value = value;
                                 }
                                 break;
-                            case "uid":
+                            case "cnum":
                                 var uid = document.getElementById("person_uid");
                                 if (typeof uid !== "undefined") {
                                     uid.value = value;
                                 }
                                 break;
-                            case "givenname":
+                            case "firstName":
                                 var i = 0;
                                 var firstName = value[i];
                                 while (regex.test(firstName) && i < value.length) {
@@ -86,37 +89,36 @@ return;
                                     fname.value = capitalizedName;
                                 }
                                 break;
-                            case "sn":
+                            case "lastName":
                                 var lname = document.getElementById("person_last_name");
                                 var lastName = value[0];
                                 if (typeof lname !== "undefined") {
                                     lname.value = lastName;
                                 }
                                 break;
-                            case "ismanager":
+                            case "isManager":
                                 var isMgr = document.getElementById("person_is_mgr");
                                 if (typeof isMgr !== "undefined") {
-                                    if (value == "Y" || value == "Yes") {
+                                    if (value == "Y" || value == "Yes" || value == true) {
                                         isMgr.value = "Yes";
                                     } else {
                                         isMgr.value = "No";
                                     }
                                 }
-                                // isMgr.value = value ;};
                                 break;
-                            case "employeetype":
+                            case "employeeType":
                                 var employeeeType = document.getElementById("person_employee_type");
                                 if (typeof employeeeType !== "undefined") {
                                     employeeeType.value = value;
                                 }
                                 break;
-                            case "co":
+                            case "countryName":
                                 var country = document.getElementById("person_country");
                                 if (typeof country !== "undefined") {
                                     country.value = value;
                                 }
                                 break;
-                            case "ibmloc":
+                            case "workLoc":
                                 var location = document.getElementById("person_ibm_location");
                                 if (typeof location !== "undefined") {
                                     location.value = value;

@@ -121,14 +121,15 @@ class onBoardingWithCFirst {
         var $this = this;
         $(".typeahead").bind("typeahead:select", function (ev, suggestion) {
             $(".tt-menu").hide();
+            
+            var newCnum = suggestion.cnum;
+            
             $("#person_notesid").val(suggestion.notesEmail);
-            $("#person_serial").val(suggestion.cnum).attr("disabled", "disabled");
+            $("#person_serial").val(newCnum).attr("disabled", "disabled");
             $("#person_bio").val(suggestion.role);
             $("#person_intranet").val(suggestion.mail);
             var kynValue = convertOceanToKyndryl(suggestion.mail);
             $("#person_kyn_intranet").val(kynValue);
-
-            var newCnum = suggestion.cnum;
 
             // let knownCnum = await knownCNUMs.getCNUMs();
             var allreadyExists = $.inArray(newCnum, knownCnum) >= 0;
@@ -141,7 +142,7 @@ class onBoardingWithCFirst {
             } else {
                 $("#saveBoarding").attr("disabled", false);
                 $("#person_name").css("background-color", "LightGreen");
-                fetchWorkerAPIDetailsForCnum(suggestion.cnum);
+                fetchWorkerAPIDetailsForCnum(newCnum);
             }
 
             $("#personDetails").show();

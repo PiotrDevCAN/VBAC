@@ -50,14 +50,16 @@ class regularOnboardEntry {
     var $this = this;
     $(".typeahead").bind("typeahead:select", async function (ev, suggestion) {
       $(".tt-menu").hide();
+
+      var newCnum = suggestion.cnum;
+
       $("#person_notesid").val(suggestion.notesEmail);
-      $("#person_serial").val(suggestion.cnum).attr("disabled", "disabled");
+      $("#person_serial").val(newCnum).attr("disabled", "disabled");
       $("#person_bio").val(suggestion.role);
       $("#person_intranet").val(suggestion.mail);
       var kynValue = convertOceanToKyndryl(suggestion.mail);
       $("#person_kyn_intranet").val(kynValue);
 
-      var newCnum = suggestion.cnum;
       var trimmedCnum = newCnum.trim();
       if (trimmedCnum !== "") {
         var knownCnum = await knownCNUMs.getCNUMs();
@@ -72,7 +74,7 @@ class regularOnboardEntry {
         } else {
           $("#" + regularOnboardEntry.saveButtonId).attr("disabled", false);
           $("#person_name").css("background-color", "LightGreen");
-          fetchWorkerAPIDetailsForCnum(suggestion.cnum);
+          fetchWorkerAPIDetailsForCnum(newCnum);
         }
       } else {
         // no need to check
