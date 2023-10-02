@@ -226,7 +226,7 @@ class BlueMail
             DbTable::displayErrorMessage($rs,__CLASS__,__METHOD__,$sql);
             $emailRecordId = false;
         } else {
-            sqlsrv_commit($GLOBALS['conn']);
+            // sqlsrv_commit($GLOBALS['conn']);
             $emailRecordId = db2_last_insert_id($GLOBALS['conn']);
             self::clearLog();
         }
@@ -246,7 +246,7 @@ class BlueMail
             DbTable::displayErrorMessage($rs,__CLASS__,__METHOD__,$sql);
             return false;
         }
-        sqlsrv_commit($GLOBALS['conn']);
+        // sqlsrv_commit($GLOBALS['conn']);
         return true;
     }
 
@@ -262,7 +262,7 @@ class BlueMail
             DbTable::displayErrorMessage($rs,__CLASS__,__METHOD__,$sql);
             return false;
         }
-        sqlsrv_commit($GLOBALS['conn']);
+        // sqlsrv_commit($GLOBALS['conn']);
         return true;
     }
 

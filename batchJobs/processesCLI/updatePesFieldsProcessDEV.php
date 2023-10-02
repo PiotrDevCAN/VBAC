@@ -97,7 +97,7 @@ if (isset($argv[1])) {
                 echo "<BR>" . json_encode(sqlsrv_errors()) . "<BR>";
                 exit("Set current schema failed");
             }
-            sqlsrv_commit($connToUPES, TRUE); // This is how it was on the Wintel Box - so the code has no/few commit points.
+            // sqlsrv_commit($connToUPES, DB2_AUTOCOMMIT_ON); // This is how it was on the Wintel Box - so the code has no/few commit points.
         } else {
             error_log(__FILE__ . __LINE__ . " Connect to DB2 Failed");
             error_log(__FILE__ . __LINE__ . $conn_string);
@@ -215,7 +215,9 @@ if (isset($argv[1])) {
         $personFields = personRecord::$personFields;
         $pesTrackerFields = personRecord::$pesTrackerFields;
     
-        // sqlsrv_commit($GLOBALS['conn'],DB2_AUTOCOMMIT_OFF);
+        if (sqlsrv_begin_transaction($GLOBALS['conn']) === false) {
+            die( print_r( sqlsrv_errors(), true ));
+        }
     
         $updatesPerformed = 0;
         $commitEvery100Updates = 100;

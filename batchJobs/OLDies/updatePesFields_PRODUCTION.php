@@ -71,7 +71,9 @@ switch($rootScriptName) {
                 // 'COMMENT'
             );
 
-            // sqlsrv_commit($GLOBALS['conn'],DB2_AUTOCOMMIT_OFF);
+            if (sqlsrv_begin_transaction($GLOBALS['conn']) === false) {
+                die( print_r( sqlsrv_errors(), true ));
+            }
 
             $updatesPerformed = 0;
             $commitEvery100Updates = 100;

@@ -67,7 +67,7 @@ if( isset($_ENV['ssldsn']) )
             echo "<BR>" . json_encode(sqlsrv_errors()) . "<BR>";
             exit("Set current schema failed");
         }
-        sqlsrv_commit($conn, TRUE); // This is how it was on the Wintel Box - so the code has no/few commit points.
+        // sqlsrv_commit($conn, DB2_AUTOCOMMIT_ON); // This is how it was on the Wintel Box - so the code has no/few commit points.
     }
     else
     {

@@ -828,6 +828,11 @@ class pesTrackerTable extends DbTable{
 
 
     function changeCnum($fromCnum, $toCnum){
+
+        if (sqlsrv_begin_transaction($GLOBALS['conn']) === false) {
+            die( print_r( sqlsrv_errors(), true ));
+        }
+
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql.= " SET CNUM='" . htmlspecialchars(trim($toCnum)) . "' ";
         $sql.= " WHERE CNUM='" . htmlspecialchars(trim($fromCnum)) . "' ";

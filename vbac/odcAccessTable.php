@@ -29,7 +29,11 @@ class odcAccessTable extends DbTable {
         $columnHeaders = array();
         $recordData = array();
         $failedRecords = 0;
-        // $autoCommit = db2_autocommit($GLOBALS['conn'],DB2_AUTOCOMMIT_OFF);
+        
+        if (sqlsrv_begin_transaction($GLOBALS['conn']) === false) {
+            die( print_r( sqlsrv_errors(), true ));
+        }
+        
         for ($row = 1; $row <= $highestRow; $row++){
             set_time_limit(10);
             $time = -microtime(true);
@@ -52,7 +56,6 @@ class odcAccessTable extends DbTable {
                 $prepareArrary += microtime(true);
                 echo $withTimings ? "Row: $row Cnum " . $recordData['OWNER_CNUM_ID'] . " Prepare Array:" . sprintf('%f', $prepareArrary) . PHP_EOL : null;
 
-
                 if($row==2){
                     // delete the previous data for this Secured Area.
                     $secureAreaName = trim($recordData['SECURED_AREA_NAME']);
@@ -60,12 +63,10 @@ class odcAccessTable extends DbTable {
                     $sql.= " WHERE SECURED_AREA_NAME = '" . htmlspecialchars($secureAreaName) . "' ";
                     $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
-
                     if(!$rs){
                         DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
                     }
                 }
-
 
                 if(!empty($recordData['OWNER_CNUM_ID'] )){
                     // avoid trying to save empty rows.
@@ -91,14 +92,10 @@ class odcAccessTable extends DbTable {
                     $time += microtime(true);
                     echo  $withTimings ?  "Row: $row Cnum " . $recordData['OWNER_CNUM_ID'] . " Total Time:" . sprintf('%f', $time) . PHP_EOL : null;
                 }
-
-
-
             }
         }
 
         sqlsrv_commit($GLOBALS['conn']);  // Save what we have done.
-        // db2_autocommit($GLOBALS['conn'],$autoCommit);
 
         $response = ob_get_clean();
         ob_start();

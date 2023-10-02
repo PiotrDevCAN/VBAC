@@ -58,8 +58,6 @@ foreach ($allPeopleToCheck as $cnum){
     $personTable->flagPotentialLeaver($cnum);
 }
 
-
 // pesEmail::notifyPesTeamOfLeavers($allPeopleToCheck); Mar 2021 - Carra doesn't want this email anymore.
 AuditTable::audit("Check for Leavers completed.",AuditTable::RECORD_TYPE_REVALIDATION);
 $response = $slack->slackApiPostMessage(slack::CHANNEL_SM_CDI_AUDIT,$_ENV['environment'] . ":Check for Leavers completed. ");
-sqlsrv_commit($GLOBALS['conn']);

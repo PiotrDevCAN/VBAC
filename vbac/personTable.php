@@ -2185,7 +2185,9 @@ class personTable extends DbTable
 
     public function linkPreBoarderToIbmer($preboarderCnum, $ibmerCnum)
     {
-        // db2_autocommit($GLOBALS['conn'], DB2_AUTOCOMMIT_OFF);
+        if (sqlsrv_begin_transaction($GLOBALS['conn']) === false) {
+            die( print_r( sqlsrv_errors(), true ));
+        }
 
         $preBoarder = new personRecord();
         $preBoarder->setFromArray(array('CNUM' => $preboarderCnum));
@@ -2255,8 +2257,6 @@ class personTable extends DbTable
         }
 
         sqlsrv_commit($GLOBALS['conn']);
-
-        // db2_autocommit($GLOBALS['conn'], DB2_AUTOCOMMIT_ON);
     }
 
     public function notifyRecheckDateApproaching()

@@ -8,11 +8,12 @@ use itdq\AuditTable;
 ob_start();
 AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_REQUEST,true) . "</b>",AuditTable::RECORD_TYPE_DETAILS);
 
-// $autoCommit = db2_autocommit($GLOBALS['conn'],DB2_AUTOCOMMIT_OFF);
+if (sqlsrv_begin_transaction($GLOBALS['conn']) === false) {
+    die( print_r( sqlsrv_errors(), true ));
+}
 
 $personTable = new personTable(allTables::$PERSON);
 $assetRequestTable = new assetRequestsTable(allTables::$ASSET_REQUESTS);
-
 
 foreach ($_POST['orderit'] as $requestReference => $orderIt){
     if(!empty(trim($orderIt))){
@@ -28,10 +29,6 @@ if(!empty($_POST['comment'])){
         $assetRequestTable->updateCommentForOrderItStatus($requestReference, $comment);
     }
 }
-
-
-
-
 
 // if(!empty($_POST['primaryUid'])){
 //     foreach ($_POST['primaryUid'] as $reference => $primaryUid){
@@ -49,9 +46,7 @@ if(!empty($_POST['comment'])){
 //     }
 // }
 
-
 sqlsrv_commit($GLOBALS['conn']);
-// db2_autocommit($GLOBALS['conn'],$autoCommit);
 
 $messages = ob_get_clean();
 ob_start();

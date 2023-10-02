@@ -6,6 +6,10 @@ ob_start();
 
 switch ($_REQUEST['mode']) {
     case 'write':
+        if (sqlsrv_begin_transaction($GLOBALS['conn']) === false) {
+            die( print_r( sqlsrv_errors(), true ));
+        }
+        
         $sql = "DELETE FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$FEB_TRAVEL_REQUEST_TEMPLATES ;
         $sql.= " WHERE EMAIL_ADDRESS='". htmlspecialchars($_REQUEST['email_address']) . "' AND TITLE='" . htmlspecialchars($_REQUEST['title']) . "' ";
 
