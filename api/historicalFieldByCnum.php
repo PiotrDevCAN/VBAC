@@ -20,6 +20,11 @@ $data = array();
 
 if($rs){
     while ($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)){
+        foreach($row as $key => $value) {
+            if ($value instanceof \DateTime) {
+                $row[$key] = $value->format('Y-m-d H:i:s');
+            }
+        }
         $data[trim($row['CNUM'])] = array_map('trim', $row);
     }
 } else {

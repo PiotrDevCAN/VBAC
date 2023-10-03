@@ -27,6 +27,11 @@ if($rs){
     if(! $row){
         $row=array('STATUS'=>$status,'RECORDS'=>0);
     }
+    foreach($row as $key => $value) {
+        if ($value instanceof \DateTime) {
+            $row[$key] = $value->format('Y-m-d H:i:s');
+        }
+    }
     $row = array_map('trim', $row);
     ob_clean();
     echo json_encode($row);
