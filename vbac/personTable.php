@@ -475,7 +475,13 @@ class personTable extends DbTable
 
         foreach($row as $key => $value) {
             if ($value instanceof \DateTime) {
-                $row[$key] = $value->format('Y-m-d H:i:s');
+                switch($key) {
+                    case 'PROCESSING_STATUS_CHANGED':
+                        $row[$key] = $value->format('Y-m-d H:i:s');
+                        break;
+                    default:
+                        $row[$key] = $value->format('Y-m-d');
+                }
             }
         }
         $preparedRow = array_map('trim', $row);
@@ -508,7 +514,7 @@ class personTable extends DbTable
         $potentialForOffboarding = substr(trim($row['REVALIDATION_STATUS']), 0, 11) == personRecord::REVALIDATED_OFFBOARDING ? false : $potentialForOffboarding;
         $potentialForOffboarding = trim($row['REVALIDATION_STATUS']) == personRecord::REVALIDATED_PREBOARDER ? true : $potentialForOffboarding;
 
-        $offboardingHint = $projectedEndDateObj <= $this->thirtyDaysHence ? '&nbsp;End date within 60 days' : null; // Thirty day rule. (MOdified 4th July
+        $offboardingHint = $projectedEndDateObj <= $this->thirtyDaysHence ? '&nbsp;End date within 60 days' : null; // Thirty day rule. (Modified 4th July)
         $offboardingHint = $row['REVALIDATION_STATUS'] == personRecord::REVALIDATED_LEAVER ? '&nbsp;Flagged as Leaver' : $offboardingHint; // flagged as a leaver.
         $offboardingHint = $row['REVALIDATION_STATUS'] == personRecord::REVALIDATED_PREBOARDER ? '&nbsp;Is a preboarder' : $offboardingHint; // flagged as a preboarder.
 
