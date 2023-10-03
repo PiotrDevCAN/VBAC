@@ -666,7 +666,8 @@ class DbTable
         } else {
             foreach ($row as $key => $value) {
                 if ($value instanceof \DateTime) {
-                    $row[$key] = $value->format('Y-m-d H:i:s');
+                    // $row[$key] = $value->format('Y-m-d H:i:s');
+                    $row[$key] = $value->format('Y-m-d');
                 } else {
                     $row[$key] = trim($value);
                 }
