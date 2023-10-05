@@ -12,15 +12,15 @@ $allStatus = personRecord::$pesStatus;
 asort($allStatus);
 
 $loader = new Loader();
-$allPersons = $loader->loadIndexed('EMAIL_ADDRESS', 'CNUM', allTables::$PERSON, " PES_STATUS = '".personRecord::PES_STATUS_NOT_REQUESTED."'");
+$allPersons = $loader->loadIndexed('EMAIL_ADDRESS', 'CNUM', allTables::$PERSON, " PES_STATUS = '".personRecord::PES_STATUS_NOT_REQUESTED."' OR PES_STATUS = '".personRecord::PES_STATUS_INITIATED."'");
 
 ?>
 <div class="container">
 <div class='row'>
 <div class='col-sm-6'>
 <h1 id='portalTitle'>Manual Status Override</h1>
-<p>Not Requested colleagues shown only!</p>
-<p>New PES Status options limited to PES Progressing only!</p>
+<p><b>Not Requested</b> and <b>Initiated</b> colleagues shown only!</p>
+<p>New PES Status options limited to <b>PES Progressing</b> only!</p>
 </div>
 </div>
 

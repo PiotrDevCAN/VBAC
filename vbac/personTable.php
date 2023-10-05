@@ -361,7 +361,7 @@ class personTable extends DbTable
 
     public function returnManualUpdateArray()
     {
-        $predicate = " PES_STATUS in ('" . personRecord::PES_STATUS_NOT_REQUESTED . "')";
+        $predicate = " PES_STATUS in ('" . personRecord::PES_STATUS_NOT_REQUESTED . "', '" . personRecord::PES_STATUS_INITIATED . "')";
         $data = array();
 
         $sql = " SELECT CNUM, FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, NOTES_ID, PES_STATUS ";
@@ -375,19 +375,6 @@ class personTable extends DbTable
             return false;
         } else {
             while (($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)) == true) {
-                // $cnum = trim($row['CNUM']);
-                // $preparedRow = $this->prepareFields($row);
-                // $fmCnumField = $preparedRow['FM_CNUM'];
-                // $transferButton = "<button type='button' class='btn btn-default btn-xs btnTransfer' aria-label='Left Align' ";
-                // $transferButton.= "data-cnum='" .$cnum . "' ";
-                // $transferButton.= "data-notesid='" .trim($row['NOTES_ID']) . "' ";
-                // $transferButton.= "data-fromCnum ='" .trim($row['FM_CNUM']) . "' ";
-                // $transferButton.= "data-fromNotesid ='" .$preparedRow['FM_CNUM'] . "' ";
-                // $transferButton.= " > ";
-                // $transferButton.= "<span class='glyphicon glyphicon-transfer ' aria-hidden='true'></span>";
-                // $transferButton.= " </button> ";
-                // $preparedRow['FM_CNUM'] = $transferButton . $fmCnumField;
-                // $data[] = $preparedRow;
                 $data[] = $row;
             }
         }

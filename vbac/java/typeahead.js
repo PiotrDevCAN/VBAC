@@ -9,18 +9,6 @@ $(document).ready(function () {
 			url: '/ajax/getEmployeesList.php?query=%QUERY',
 			wildcard: '%QUERY',
 			filter: function (data) {
-				// var dataObject = $.map(data.data, function (obj) {
-				// 	var mail = typeof (obj.email) == 'undefined' ? 'unknown' : obj.email;
-				// 	return {
-				// 		value: obj.displayName,
-				// 		role: obj.businessTitle,
-				// 		preferredIdentity: obj.displayName,
-				// 		cnum: obj.cnum,
-				// 		notesEmail: 'No longer available',
-				// 		mail: mail
-				// 	};
-				// });
-				// console.log(dataObject);
 				var dataObject = $.map(data.data, function (obj) {
 					obj.value = obj.displayName;
 					obj.role = obj.businessTitle;
@@ -29,8 +17,8 @@ $(document).ready(function () {
 					obj.notesEmail = 'No longer available';
 					obj.mail = obj.email;
 					return obj;
-				});				
-				console.log(dataObject);
+				});
+				// console.log(dataObject);
 				return dataObject;
 			},
 		}
