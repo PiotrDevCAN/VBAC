@@ -3,9 +3,7 @@ use vbac\personRecord;
 use vbac\personTable;
 use vbac\allTables;
 use itdq\AuditTable;
-use itdq\AuditRecord;
-use itdq\BluePagesSLAPHAPI;
-
+use itdq\WorkerAPI;
 use vbac\cFIRST\APICaller;
 use vbac\cFIRST\AddCandidateRequestRecord;
 use vbac\cFIRST\AddCandidateRequestTable;
@@ -186,34 +184,9 @@ try {
                     // skip CNUM
                     $invalidPersonCnum = false;
                 } else {
-                    // check if employee has ibm record - IBM CNUM
-                    $data = BluePagesSLAPHAPI::getOceanDetailsFromCNUM($cnum);
-                    if (empty($data)) {
-                        // check if employee has ocean record
-                        $data = BluePagesSLAPHAPI::getIBMDetailsFromCNUM($cnum);
-                        if (empty($data)) {
-                            // CNUM not indetified as IBM nor Kyndryl
-                        } else {
-                            if (array_key_exists('additional', $data)) {
-                                $additionalData = $data['additional'];
-                                $namesArr = explode(';', $additionalData);
-                                $IBMCnum = $namesArr[0];
-                                $IBMMail = $namesArr[1];
-                                // echo ' <b>CNUM is from OCEAN</b> ';
-                                // echo $IBMCnum;
-                                // echo $IBMMail;
-                            } else {
-                                // CNUM does not have IBM details
-                                $IBMCnum = '';
-                                $IBMMail = '';
-                            }
-                        }
-                    } else {
-                        // echo ' <b>CNUM is from IBM</b> ';
-                        // echo $data['uid'];
-                        // echo $data['mail'];
-                    }
-                    if (!empty($data)) {
+                    $workerAPI = new WorkerAPI();
+                    $data = $workerAPI->getworkerByCNUM($cnum);
+                    if (array_key_exists('error_code', $data)) {
                         //valid ocean
                         $invalidPersonCnum = false;
                     } else {
