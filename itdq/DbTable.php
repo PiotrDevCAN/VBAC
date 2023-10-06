@@ -1073,7 +1073,6 @@ class DbTable
             self::displayErrorMessage($rs, __CLASS__, __METHOD__, $this->preparedInsertSQL, $this->pwd, $this->lastDb2StmtError, $this->lastDb2StmtErrorMsg, $insertArray, $rollbackIfError);
             return false;
         } else {
-            // $this->lastId = db2_last_insert_id($GLOBALS['conn']);
             $this->lastId = $this->lastId();
             return true;
         }
@@ -1738,7 +1737,7 @@ class DbTable
     }
 
     /**
-     * returns the result of db2_last_insert_id
+     * returns the result of TOP (1)
      *
      * Allows you to pick up the insert_id on newly inserted records where the Identity column is set to GENERATE ALWAYS
      */

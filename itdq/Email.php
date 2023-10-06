@@ -91,7 +91,10 @@ class Email
                 echo "<BR/>" . json_encode(sqlsrv_errors()) . "<BR/>";
                 exit("Error in: " . __METHOD__ . " running: " . htmlspecialchars($sql, ENT_QUOTES));
             }
-            $recordId = db2_last_insert_id($GLOBALS['conn']);
+
+            $emailLogTable = new EmailLogTable(AllItdqTables::$EMAIL_LOG);
+            $recordId = $emailLogTable->lastId();
+
             if (($recordId % 100) == 0) {
                 self::clearLog();
             }

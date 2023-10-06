@@ -1,5 +1,6 @@
 <?php
 namespace itdq;
+
 use itdq\AllItdqTables;
 use itdq\DbTable;
 
@@ -23,8 +24,10 @@ class DiaryTable extends DbTable {
 			echo "<BR/>" . sqlsrv_errors () . "<BR/>";
 			exit ( "Error in: " . __METHOD__ . " running: " . $sql );
 		}
-		return	db2_last_insert_id($_SESSION ['conn']);
 
+		$diaryTable = new DiaryTable(AllItdqTables::$DIARY);
+
+		return $diaryTable->lastId();
 	}
 }
 

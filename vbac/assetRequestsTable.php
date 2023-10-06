@@ -370,7 +370,7 @@ class assetRequestsTable extends DbTable{
             return false;
         }
 
-        $varbRef = db2_last_insert_id($_SESSION ['conn']);
+        $varbRef = $this->lastId();
 
         $nextVarb = 'vARB' . substr('000000' . $varbRef ,-5);
         $this->currentVarb = $nextVarb;
