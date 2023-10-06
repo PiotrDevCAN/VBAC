@@ -604,7 +604,7 @@ class BluePagesSLAPHAPI {
 		if (isset ( $this->dept )) {
 		//	$sql = " INSERT INTO " . $_SESSION ['prefix'] . "." . $this->table . " ( NAME, SERIAL, COUNTRY_CODE, LOCATION, MGR_SERIAL, MGR_CTRY_CODE, REG_OR_SUBCO, INTERNET, EMPTYPE, HRACTIVE, HREMPLOYEETYPE, DEPT, HRFAMILYNAME, NOTESID, JOBRESPONSIB) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)  ";
 
-		//	$preparedInsert = sqlsrv_prepare( $_SESSION ['conn'], $sql );
+		//	$preparedInsert = sqlsrv_prepare( $GLOBALS['conn'], $sql );
 			$actual = 0;
 			foreach ( $this->dept ['NAME'] as $key => $value ) {
 				$data [0] = substr ( $value, 0, 50 ); // Name from BP
@@ -645,7 +645,7 @@ class BluePagesSLAPHAPI {
 			if($this->online){
 				echo "<H2>Saved Department of $this->size ($actual) People for : " . $this->CNUM . "</H2>";
 			}
-			$rs = sqlsrv_query( $_SESSION ['conn'], " COMMIT" );
+			$rs = sqlsrv_query( $GLOBALS['conn'], " COMMIT" );
 			if (! $rs) {
 				print_r ( $_SESSION );
 				echo "<BR>" . sqlsrv_errors ();
@@ -691,7 +691,7 @@ class BluePagesSLAPHAPI {
 			if($this->online){
 				echo "<H2>Saved Details for : " . $this->CNUM . " " . $this->person  ['NAME'] . "</H2>";
 			}
-//			$rs = sqlsrv_query( $_SESSION ['conn'], " COMMIT" );
+//			$rs = sqlsrv_query( $GLOBALS['conn'], " COMMIT" );
 //			if (! $rs) {
 //				print_r ( $_SESSION );
 //				echo "<BR>" . sqlsrv_errors ();

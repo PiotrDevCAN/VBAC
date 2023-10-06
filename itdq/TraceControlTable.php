@@ -16,11 +16,11 @@ class TraceControlTable extends DbTable {
 	 */
 	static function deleteTraceControl($traceControlType, $traceControlValue){
 		$sql = "Delete from " . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$TRACE_CONTROL . " WHERE TRACE_CONTROL_TYPE = '$traceControlType' and TRACE_CONTROL_VALUE = '$traceControlValue' ";
-		$rs = sqlsrv_query( $_SESSION ['conn'], $sql );
+		$rs = sqlsrv_query( $GLOBALS['conn'], $sql );
 		if (! $rs) {
 			print_r ( $_SESSION );
-			echo "<BR/>" . sqlsrv_errors ();
-			echo "<BR/>" . sqlsrv_errors () . "<BR/>";
+			echo "<BR>" . json_encode(sqlsrv_errors());
+			echo "<BR>" . json_encode(sqlsrv_errors()) . "<BR>";
 			exit ( "Error in: " . __METHOD__ . " running: " . $sql );
 		}
 	}
@@ -35,11 +35,11 @@ class TraceControlTable extends DbTable {
 		self::deleteTraceControl($traceControlType, $traceControlValue);
 		$sql = "INSERT INTO " . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$TRACE_CONTROL . " ( TRACE_CONTROL_TYPE, TRACE_CONTROL_VALUE) ";
 		$sql .= " Values ('$traceControlType','$traceControlValue') ";
-		$rs = sqlsrv_query( $_SESSION ['conn'], $sql );
+		$rs = sqlsrv_query( $GLOBALS['conn'], $sql );
 		if (! $rs) {
 			print_r ( $_SESSION );
-			echo "<BR/>" . sqlsrv_errors ();
-			echo "<BR/>" . sqlsrv_errors () . "<BR/>";
+			echo "<BR>" . json_encode(sqlsrv_errors());
+			echo "<BR>" . json_encode(sqlsrv_errors()) . "<BR>";
 			exit ( "Error in: " . __METHOD__ . " running: " . $sql );
 		}
 	}
