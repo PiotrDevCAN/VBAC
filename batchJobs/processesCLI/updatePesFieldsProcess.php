@@ -93,25 +93,25 @@ if (isset($argv[1])) {
             $accountId 
         );
 
-        $countSql = " SELECT COUNT(*) AS COUNTER ";
-        $countSql.= "FROM " . $schemaUPES . ".ACCOUNT_PERSON AS AP "; 
-        $countSql.= "LEFT JOIN " . $schemaUPES . ".PERSON AS P ";
-        $countSql.= "ON AP.UPES_REF = P.UPES_REF ";
-        $countSql.= "LEFT JOIN " . $schemaUPES . ".PES_LEVELS AS PL ";
-        $countSql.= "ON AP.PES_LEVEL = PL.PES_LEVEL_REF AND AP.ACCOUNT_ID = PL.ACCOUNT_ID ";
-        $countSql.= "WHERE AP.ACCOUNT_ID = ? ";
+        // $countSql = " SELECT COUNT(*) AS COUNTER ";
+        // $countSql.= "FROM " . $schemaUPES . ".ACCOUNT_PERSON AS AP "; 
+        // $countSql.= "LEFT JOIN " . $schemaUPES . ".PERSON AS P ";
+        // $countSql.= "ON AP.UPES_REF = P.UPES_REF ";
+        // $countSql.= "LEFT JOIN " . $schemaUPES . ".PES_LEVELS AS PL ";
+        // $countSql.= "ON AP.PES_LEVEL = PL.PES_LEVEL_REF AND AP.ACCOUNT_ID = PL.ACCOUNT_ID ";
+        // $countSql.= "WHERE AP.ACCOUNT_ID = ? ";
 
-        $preparedCountStatement = sqlsrv_prepare($connToUPES, $countSql, $data);
-        $rs = sqlsrv_execute($preparedCountStatement);
-        if (! $rs) {
-            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
-            return false;
-        }
+        // $preparedCountStatement = sqlsrv_prepare($connToUPES, $countSql, $data);
+        // $rs = sqlsrv_execute($preparedCountStatement);
+        // if (! $rs) {
+        //     DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+        //     return false;
+        // }
 
-        $counter = 0;
-        while($row = sqlsrv_fetch_array($preparedCountStatement, SQLSRV_FETCH_ASSOC)){
-            $counter = $row['COUNTER'];
-        }
+        // $counter = 0;
+        // while($row = sqlsrv_fetch_array($preparedCountStatement, SQLSRV_FETCH_ASSOC)){
+        //     $counter = $row['COUNTER'];
+        // }
 
         $sql = " SELECT AP.ACCOUNT_ID, P.CNUM, P.EMAIL_ADDRESS, PROCESSING_STATUS, PROCESSING_STATUS_CHANGED ";
         $sql.= ", PES_DATE_REQUESTED, PES_REQUESTOR, PES_DATE_RESPONDED, PES_STATUS_DETAILS, PES_STATUS";
@@ -122,9 +122,9 @@ if (isset($argv[1])) {
         $sql.= "LEFT JOIN " . $schemaUPES . ".PES_LEVELS AS PL ";
         $sql.= "ON AP.PES_LEVEL = PL.PES_LEVEL_REF AND AP.ACCOUNT_ID = PL.ACCOUNT_ID ";
         $sql.= "WHERE AP.ACCOUNT_ID = ? ";
-        $sql.= "OPTIMIZE FOR " . $counter . " ROWS ";
-        $sql.= "FOR FETCH ONLY WITH UR ";
-        $sql.= "FETCH FIRST " . $counter ." ROWS ONLY";
+        // $sql.= "OPTIMIZE FOR " . $counter . " ROWS ";
+        // $sql.= "FOR FETCH ONLY WITH UR ";
+        // $sql.= "FETCH FIRST " . $counter ." ROWS ONLY";
 
         $preparedStatement = sqlsrv_prepare($connToUPES, $sql, $data);
 

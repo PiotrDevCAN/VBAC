@@ -97,8 +97,7 @@ class personTable extends DbTable
     {
         $sql = " SELECT CNUM FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE CNUM LIKE '%XXX' or CNUM LIKE '%xxx' or CNUM LIKE '%999' ";
-        $sql .= " order by CNUM desc ";
-        $sql .= " OPTIMIZE FOR 1 ROW ";
+        $sql .= " ORDER BY CNUM desc ";
 
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
@@ -1386,7 +1385,6 @@ class personTable extends DbTable
         $sql .= " , PES_LEVEL, PES_CLEARED_DATE, PES_RECHECK_DATE, PROPOSED_LEAVING_DATE  ";
         $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE CNUM = '" . htmlspecialchars(trim($cnum)) . "' ";
-        $sql .= " OPTIMIZE for 1 row ";
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if (!$rs) {
