@@ -59,11 +59,6 @@ $cnum = array();
 
 while ($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)){
     $hits++;
-    foreach($row as $key => $value) {
-        if ($value instanceof \DateTime) {
-            $row[$key] = $value->format('Y-m-d H:i:s');
-        }
-    }
     $row = array_map('trim', $row);
     $notesId[] = $row['NOTES_ID'];
     $cnum[] = (string)$row['CNUM'];

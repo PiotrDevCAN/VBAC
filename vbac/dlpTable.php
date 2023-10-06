@@ -113,11 +113,6 @@ class dlpTable extends DbTable {
         
         $report = array();
         while (($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC))==true) {
-            foreach($row as $key => $value) {
-                if ($value instanceof \DateTime) {
-                    $row[$key] = $value->format('Y-m-d H:i:s');
-                }
-            }
             $row = array_map('trim', $row);
             $report[] = $withButtons ? $this->addButtons($row) : $row;
         }

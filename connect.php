@@ -4,7 +4,12 @@ if(!function_exists("tryConnect")){
     function tryConnect($serverName, $dbName, $userName, $password){
         error_log("Attempting Pconnect to Azure SQL from Pod:" . $_ENV['HOSTNAME'] . ":" . $serverName . $userName . $password);
         $preConnect = microtime(true);    
-        $connectionInfo = array( "Database"=>$dbName, "UID"=>$userName, "PWD"=>$password);
+        $connectionInfo = array(
+            "Database" => $dbName, 
+            "UID" => $userName, 
+            "PWD" => $password,
+            "ReturnDatesAsStrings" => true
+        );
         $connection = sqlsrv_connect( $serverName, $connectionInfo);
         $postConnect = microtime(true);
         // error_log("Db2 Pconnect took:" . (float)($postConnect-$preConnect));
@@ -63,7 +68,7 @@ if( isset($_ENV['db-server'])
         //     }
         //     exit("Set current schema failed");
         // }
-        // sqlsrv_commit($conn, TRUE); // This is how it was on the Wintel Box - so the code has no/few commit points.
+        // sqlsrv_commit($conn, DB2_AUTOCOMMIT_ON); // This is how it was on the Wintel Box - so the code has no/few commit points.
     } else {
         error_log(__FILE__ . __LINE__ . " Connect to Azure SQL Failed");
         // error_log(__FILE__ . __LINE__ . $conn_string);

@@ -143,7 +143,6 @@ if (isset($argv[1])) {
                 $row = array_map('trim', $row);
             }
 
-
             $APIData = new upesApiData();
             $APIData->ACCOUNT_ID = $row['ACCOUNT_ID'];
             $APIData->CNUM = $row['CNUM'];

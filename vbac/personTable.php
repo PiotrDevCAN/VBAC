@@ -192,7 +192,7 @@ class personTable extends DbTable
     public function getForRfFlagReport($resultSetOnly = false, $withButtons = true)
     {
         $sql = "select P.cnum ";
-        $sql .= " ,P.NOTES_ID ";
+        $sql .= ",P.NOTES_ID ";
         $sql .= ", P.LOB ";
         $sql .= ", P.CTB_RTB ";
         $sql .= ", case when F.notes_id is not null then F.NOTES_ID else P.FM_CNUM end as FM ";
@@ -460,17 +460,6 @@ class personTable extends DbTable
         $this->allKyndrylEmailIdByCnum = empty($this->allKyndrylEmailIdByCnum) ? $this->loader->loadIndexed('KYN_EMAIL_ADDRESS', 'CNUM', allTables::$PERSON) : $this->allKyndrylEmailIdByCnum;
         $this->employeeTypeMapping = empty($this->employeeTypeMapping) ? $this->loader->loadIndexed('DESCRIPTION', 'CODE', allTables::$EMPLOYEE_TYPE_MAPPING) : $this->employeeTypeMapping;
 
-        foreach($row as $key => $value) {
-            if ($value instanceof \DateTime) {
-                switch($key) {
-                    case 'PROCESSING_STATUS_CHANGED':
-                        $row[$key] = $value->format('Y-m-d H:i:s');
-                        break;
-                    default:
-                        $row[$key] = $value->format('Y-m-d');
-                }
-            }
-        }
         $preparedRow = array_map('trim', $row);
         $fmNotesid = isset($this->allKyndrylEmailIdByCnum[trim($row['FM_CNUM'])]) ? $this->allKyndrylEmailIdByCnum[trim($row['FM_CNUM'])] : trim($row['FM_CNUM']);
         $preparedRow['fmCnum'] = $row['FM_CNUM'];
@@ -774,11 +763,20 @@ class personTable extends DbTable
                 break;
         }
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql .= " SET $dateField = '" . $dateToUseObj->format('Y-m-d') . "', PES_STATUS='" . htmlspecialchars($status) . "' ";
-        $sql .= trim($status) == personRecord::PES_STATUS_INITIATED ? ", PES_REQUESTOR='" . htmlspecialchars($requestor) . "' " : null;
-        $sql .= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
+        $sql .= " SET $dateField = ? ";
+        $sql .= " ,PES_STATUS = ? ";
+        $sql .= " ,PES_REQUESTOR = ? ";
+        $sql .= " WHERE CNUM = ? ";
 
-        $result = sqlsrv_query($GLOBALS['conn'], $sql);
+        $requestor = trim($status) == personRecord::PES_STATUS_INITIATED ? htmlspecialchars($requestor) : null;
+
+        $data = array(
+            $dateToUseObj->format('Y-m-d'),
+            htmlspecialchars($status),
+            $requestor,
+            htmlspecialchars($cnum)
+        );
+        $result = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
         if (!$result) {
             DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
@@ -803,7 +801,7 @@ class personTable extends DbTable
 
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET PES_LEVEL = '" . htmlspecialchars($level) . "' ";
-        $sql .= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
+        $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
 
         $result = sqlsrv_query($GLOBALS['conn'], $sql);
 
@@ -826,7 +824,7 @@ class personTable extends DbTable
         if (!$recheckImmediately) {
 
             $loader = new Loader();
-            $predicate = " CNUM='" . htmlspecialchars(trim($cnum)) . "' ";
+            $predicate = " CNUM = '" . htmlspecialchars(trim($cnum)) . "' ";
 
             $pesLevels = $loader->loadIndexed('PES_LEVEL', 'CNUM', allTables::$PERSON, $predicate);
             $pesLevel = isset($pesLevels[trim($cnum)]) ? $pesLevels[trim($cnum)] : self::PES_LEVEL_DEFAULT;
@@ -844,7 +842,7 @@ class personTable extends DbTable
 
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET PES_RECHECK_DATE = DATEADD(year, " . $pesRecheckPeriod . ", '" . $dateToUseObj->format('Y-m-d') . "') ";
-        $sql .= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
+        $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
 
         $result = sqlsrv_query($GLOBALS['conn'], $sql);
 
@@ -854,7 +852,7 @@ class personTable extends DbTable
         }
 
         $sql = " SELECT PES_RECHECK_DATE FROM  " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql .= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
+        $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
 
         $res = sqlsrv_query($GLOBALS['conn'], $sql);
 
@@ -881,7 +879,7 @@ class personTable extends DbTable
 
     $sql  = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
     $sql .= " SET PES_STATUS='" . htmlspecialchars($status)  . "' ";
-    $sql .= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
+    $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
 
     try {
     $result = sqlsrv_query($GLOBALS['conn'], $sql);
@@ -907,8 +905,8 @@ class personTable extends DbTable
         }
 
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql .= " SET PMO_STATUS='" . htmlspecialchars($status) . "' ";
-        $sql .= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
+        $sql .= " SET PMO_STATUS = '" . htmlspecialchars($status) . "' ";
+        $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
 
         try {
             $result = sqlsrv_query($GLOBALS['conn'], $sql);
@@ -937,7 +935,7 @@ class personTable extends DbTable
 
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET FIRST_NAME ='" . htmlspecialchars($firstName) . "' ";
-        $sql .= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
+        $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
 
         try {
             $result = sqlsrv_query($GLOBALS['conn'], $sql);
@@ -958,8 +956,8 @@ class personTable extends DbTable
     public function saveCtid($cnum, $ctid)
     {
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql .= " SET CT_ID='" . htmlspecialchars($ctid) . "' ";
-        $sql .= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
+        $sql .= " SET CT_ID = '" . htmlspecialchars($ctid) . "' ";
+        $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
 
         $result = sqlsrv_query($GLOBALS['conn'], $sql);
 
@@ -975,8 +973,8 @@ class personTable extends DbTable
     public function setFmFlag($cnum, $flag)
     {
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql .= " SET FM_MANAGER_FLAG='" . htmlspecialchars($flag) . "' ";
-        $sql .= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
+        $sql .= " SET FM_MANAGER_FLAG = '" . htmlspecialchars($flag) . "' ";
+        $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
 
         $result = sqlsrv_query($GLOBALS['conn'], $sql);
 
@@ -996,8 +994,8 @@ class personTable extends DbTable
             case 'IBM_EMAIL_ADDRESS':
             case 'KYN_EMAIL_ADDRESS':
                 $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-                $sql .= " SET " . htmlspecialchars($field) . "='" . htmlspecialchars($email) . "' ";
-                $sql .= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
+                $sql .= " SET " . htmlspecialchars($field) . " = '" . htmlspecialchars($email) . "' ";
+                $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
 
                 $result = sqlsrv_query($GLOBALS['conn'], $sql);
 
@@ -1018,7 +1016,7 @@ class personTable extends DbTable
     {
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET CT_ID = null ";
-        $sql .= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
+        $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
 
         $result = sqlsrv_query($GLOBALS['conn'], $sql);
 
@@ -1036,7 +1034,7 @@ class personTable extends DbTable
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET ";
         $sql .= $version == 'original' ? " SQUAD_NUMBER = null " : " OLD_SQUAD_NUMBER = null";
-        $sql .= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
+        $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
 
         $result = sqlsrv_query($GLOBALS['conn'], $sql);
 
@@ -1054,7 +1052,7 @@ class personTable extends DbTable
     {
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET CIO_ALIGNMENT = null ";
-        $sql .= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
+        $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
 
         $result = sqlsrv_query($GLOBALS['conn'], $sql);
 
@@ -1070,8 +1068,8 @@ class personTable extends DbTable
     public function transferIndividual($cnum, $toFmCnum)
     {
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql .= " SET FM_CNUM='" . htmlspecialchars($toFmCnum) . "' ";
-        $sql .= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
+        $sql .= " SET FM_CNUM = '" . htmlspecialchars($toFmCnum) . "' ";
+        $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
 
         $result = sqlsrv_query($GLOBALS['conn'], $sql);
 
@@ -1387,7 +1385,7 @@ class personTable extends DbTable
         $sql .= " , START_DATE, PROJECTED_END_DATE, CIO_ALIGNMENT, SKILLSET_ID ";
         $sql .= " , PES_LEVEL, PES_CLEARED_DATE, PES_RECHECK_DATE, PROPOSED_LEAVING_DATE  ";
         $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
-        $sql .= " WHERE CNUM='" . htmlspecialchars(trim($cnum)) . "' ";
+        $sql .= " WHERE CNUM = '" . htmlspecialchars(trim($cnum)) . "' ";
         $sql .= " OPTIMIZE for 1 row ";
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
@@ -1652,12 +1650,12 @@ class personTable extends DbTable
     public function notifyFmOfRevalStatusChange($employeeCnum, $revalidationStatus)
     {
         $this->loader = new Loader();
-        $empsFm = $this->loader->loadIndexed('FM_CNUM', 'CNUM', allTables::$PERSON, " CNUM='" . htmlspecialchars($employeeCnum) . "' ");
-        $empsNotesid = $this->loader->loadIndexed('NOTES_ID', 'CNUM', allTables::$PERSON, " CNUM='" . htmlspecialchars($employeeCnum) . "' ");
+        $empsFm = $this->loader->loadIndexed('FM_CNUM', 'CNUM', allTables::$PERSON, " CNUM = '" . htmlspecialchars($employeeCnum) . "' ");
+        $empsNotesid = $this->loader->loadIndexed('NOTES_ID', 'CNUM', allTables::$PERSON, " CNUM = '" . htmlspecialchars($employeeCnum) . "' ");
         $fmCnum = !empty($empsFm[$employeeCnum]) ? $empsFm[$employeeCnum] : false;
 
         if ($fmCnum) {
-            $fmsEmail = $this->loader->loadIndexed('EMAIL_ADDRESS', 'CNUM', allTables::$PERSON, " CNUM='" . htmlspecialchars($fmCnum) . "' ");
+            $fmsEmail = $this->loader->loadIndexed('EMAIL_ADDRESS', 'CNUM', allTables::$PERSON, " CNUM = '" . htmlspecialchars($fmCnum) . "' ");
             $fmsEmailAddress = !empty($fmsEmail[$fmCnum]) ? $fmsEmail[$fmCnum] : false;
             if (!$fmsEmailAddress) {
                 throw new \Exception("Unable to find email address for Functional Manager for $employeeCnum");
@@ -1724,7 +1722,7 @@ class personTable extends DbTable
     public static function getLbgLocationForCnum($cnum)
     {
         if (!empty($cnum)) {
-            $sql = " SELECT LBG_LOCATION FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
+            $sql = " SELECT LBG_LOCATION FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
 
             $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
@@ -1740,7 +1738,7 @@ class personTable extends DbTable
                 );
             }
 
-            $sql = " SELECT FM_CNUM FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
+            $sql = " SELECT FM_CNUM FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
 
             $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
@@ -1799,7 +1797,7 @@ class personTable extends DbTable
     public static function getSecurityEducationForCnum($cnum)
     {
         if (!empty($cnum)) {
-            $sql = " SELECT SECURITY_EDUCATION FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
+            $sql = " SELECT SECURITY_EDUCATION FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
 
             $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
@@ -1825,7 +1823,7 @@ class personTable extends DbTable
         if (!empty($this->columns[$columnName])) {
             $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
             $sql .= " SET " . $columnName . "='" . htmlspecialchars(trim($primaryUid)) . "' ";
-            $sql .= " WHERE CNUM='" . htmlspecialchars(trim($cnum)) . "' ";
+            $sql .= " WHERE CNUM = '" . htmlspecialchars(trim($cnum)) . "' ";
 
             $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
@@ -1893,7 +1891,7 @@ class personTable extends DbTable
         $sql .= " SET RF_FLAG='" . htmlspecialchars($rfFlag) . "' ";
         $sql .= !empty($rfStart) ? ", RF_START=DATE('" . htmlspecialchars($rfStart) . "') " : null;
         $sql .= !empty($rfEnd) ? ", RF_END=DATE('" . htmlspecialchars($rfEnd) . "') " : null;
-        $sql .= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
+        $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
 
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
@@ -2164,7 +2162,7 @@ class personTable extends DbTable
         $sql .= " SET ";
         $sql .= $version == 'original' ? " SQUAD_NUMBER=" : " OLD_SQUAD_NUMBER=";
         $sql .= htmlspecialchars($agileNumber);
-        $sql .= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
+        $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
 
         $this->lastUpdateSql = $sql;
 

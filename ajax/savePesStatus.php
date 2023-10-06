@@ -1,10 +1,10 @@
 <?php
+use itdq\AuditTable;
+use vbac\allTables;
 use vbac\personRecord;
 use vbac\personTable;
 use vbac\pesEmail;
 use vbac\pesTrackerTable;
-use vbac\allTables;
-use itdq\AuditTable;
 use vbac\pesTrackerRecord;
 
 ob_start();
@@ -95,7 +95,7 @@ try {
             break;
         }
 
-        AuditTable::audit("PES Status Email: " . $notificationStatus ,AuditTable::RECORD_TYPE_DETAILS);
+        AuditTable::audit("PES Status Email: " . $notificationStatus, AuditTable::RECORD_TYPE_DETAILS);
 
         $success = true;
 

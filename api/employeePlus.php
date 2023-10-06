@@ -110,11 +110,6 @@ $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
 if($rs){
     while ($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)){
-        foreach($row as $key => $value) {
-            if ($value instanceof \DateTime) {
-                $row[$key] = $value->format('Y-m-d H:i:s');
-            }
-        }
         $employees[] = array_map('trim', $row);
     }
 } else {
