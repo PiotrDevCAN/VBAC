@@ -186,17 +186,13 @@ try {
                 } else {
                     $workerAPI = new WorkerAPI();
                     $data = $workerAPI->getworkerByCNUM($cnum);
-                    if (array_key_exists('error_code', $data)) {
+                    if (array_key_exists('count', $data) && $data['count'] > 0) {
                         //valid ocean
                         $invalidPersonCnum = false;
                     } else {
                         // invalid ocean
                         $invalidPersonCnum = true;
-                    }
 
-                    // $invalidPersonCnum = true;
-                    
-                    if (empty($data)) {
                         $messages = 'Employee data not found in the BluePages.';
                         echo $messages;
                     }
