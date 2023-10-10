@@ -91,13 +91,13 @@ class Loader
         $sql = $this->buildIxSQL($value, $key, $table);
         if ($predicate != null) {
             if ($this->notNull) {
-                $sql .= " and $predicate ";
+                $sql .= " AND $predicate ";
             } else {
                 $sql .= " WHERE $predicate ";
             }
         }
 
-        $sql .= " order by 1 $order ";
+        $sql .= " ORDER BY 1 $order ";
         Trace::traceVariable($sql, __METHOD__, __LINE__);
 
         $rs5 = sqlsrv_query($GLOBALS['conn'], $sql);
@@ -114,7 +114,7 @@ class Loader
 
     function buildIxSQL($value, $key, $table)
     {
-        $sql = "select distinct $value,$key ";
+        $sql = "select distinct $value, $key ";
         $sql .= " from " . $GLOBALS['Db2Schema'] . ".$table ";
         if ($this->notNull) {
             $sql .= " where $value is not null and $key is not null";

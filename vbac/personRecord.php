@@ -397,7 +397,7 @@ class personRecord extends DbRecord
 
     const PES_STATUS_DETAILS_BOARDED_AS = 'Boarded as';
 
-    const EMP_RESOURCE_REG = 'Resource Details - Kyndryl employees use Ocean IDs';
+    const EMP_RESOURCE_REG = 'Resource Details - Kyndryl employees use Kyndryl IDs';
     const EMP_RESOURCE_EXT = 'Resource Details - Use external email addresses';
 
 //     function htmlHeaderCells(){
@@ -618,9 +618,9 @@ class personRecord extends DbRecord
        * Functional Mgr can board to ANY Functional Mgr Ant Stark 16th Jan 2018
        */
 
-      $fmPredicate = " UPPER(LEFT(FM_MANAGER_FLAG,1))='Y' AND $activePredicate ";
-      $allManagers = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON, $fmPredicate);
-      $countryCodes = $loader->loadIndexed('COUNTRY_NAME','COUNTRY_CODE',allTables::$STATIC_COUNTRY_CODES);
+      $fmPredicate = " FM_MANAGER_FLAG='Yes' AND $activePredicate ";
+      $allManagers = personTable::optionsForManagers($fmPredicate);
+      // $countryCodes = $loader->loadIndexed('COUNTRY_NAME','COUNTRY_CODE',allTables::$STATIC_COUNTRY_CODES);
       $skillSets = $loader->loadIndexed('SKILLSET','SKILLSET_ID',allTables::$STATIC_SKILLSETS);
 
       $userDetails = $loader->loadIndexed('CNUM','EMAIL_ADDRESS',allTables::$PERSON, " EMAIL_ADDRESS='" . htmlspecialchars($_SESSION['ssoEmail']) . "' ");
@@ -720,7 +720,7 @@ class personRecord extends DbRecord
             <option value=''>Link to Pre-Boarded</option>
             <?php
               foreach ($availableFromPreBoarding as $option){
-              echo $option;
+                echo $option;
               };
             ?>
             </select>
@@ -757,12 +757,15 @@ class personRecord extends DbRecord
               data-placeholder='Select functional manager' >
             <option value=''>Select Functional Mgr</option>
             <?php
-              foreach ($allManagers as $mgrCnum => $mgrNotesid){
-                echo"<option value='" . $mgrCnum . "' ";
-                echo (($userCnum==$mgrCnum) && empty($this->FM_CNUM)) ? " selected " : null;        // The person using the tool is a Manager - and this is their entry.
-                echo $mgrCnum==$this->FM_CNUM ? " selected " : null;                                // This is the entry for the person already declared to be the Func Mgr
-                echo ">" . $mgrNotesid . "</option>";
+              foreach ($allManagers as $option){
+                echo $option;
               };
+              // foreach ($allManagers as $mgrCnum => $mgrNotesid){
+              //   echo"<option value='" . $mgrCnum . "' ";
+              //   echo (($userCnum==$mgrCnum) && empty($this->FM_CNUM)) ? " selected " : null;        // The person using the tool is a Manager - and this is their entry.
+              //   echo $mgrCnum==$this->FM_CNUM ? " selected " : null;                                // This is the entry for the person already declared to be the Func Mgr
+              //   echo ">" . $mgrNotesid . "</option>";
+              // };
             ?>
             </select>
             </div>
@@ -925,8 +928,8 @@ class personRecord extends DbRecord
       * Functional Mgr can board to ANY Functional Mgr Ant Stark 16th Jan 2018
       */
 
-      $fmPredicate = " UPPER(LEFT(FM_MANAGER_FLAG,1))='Y' AND $activePredicate ";
-      $allManagers = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON, $fmPredicate);
+      $fmPredicate = " FM_MANAGER_FLAG='Yes' AND $activePredicate ";
+      $allManagers = personTable::optionsForManagers($fmPredicate);
       $countryCodes = $loader->loadIndexed('COUNTRY_NAME','COUNTRY_CODE',allTables::$STATIC_COUNTRY_CODES);
       $skillSets = $loader->loadIndexed('SKILLSET','SKILLSET_ID',allTables::$STATIC_SKILLSETS);
 
@@ -1069,12 +1072,15 @@ class personRecord extends DbRecord
           data-placeholder='Select functional manager' >
           <option value=''>Select Functional Mgr</option>
           <?php
-            foreach ($allManagers as $mgrCnum => $mgrNotesid){
-            echo"<option value='" . $mgrCnum . "' ";
-            echo (($userCnum==$mgrCnum) && empty($this->FM_CNUM)) ? " selected " : null;        // The person using the tool is a Manager - and this is their entry.
-            echo $mgrCnum==$this->FM_CNUM ? " selected " : null;                                // This is the entry for the person already declared to be the Func Mgr
-            echo ">" . $mgrNotesid . "</option>";
+            foreach ($allManagers as $option){
+              echo $option;
             };
+            // foreach ($allManagers as $mgrCnum => $mgrNotesid){
+            //   echo"<option value='" . $mgrCnum . "' ";
+            //   echo (($userCnum==$mgrCnum) && empty($this->FM_CNUM)) ? " selected " : null;        // The person using the tool is a Manager - and this is their entry.
+            //   echo $mgrCnum==$this->FM_CNUM ? " selected " : null;                                // This is the entry for the person already declared to be the Func Mgr
+            //   echo ">" . $mgrNotesid . "</option>";
+            // };
           ?>
           </select>
           </div>
@@ -1228,7 +1234,7 @@ class personRecord extends DbRecord
       $notEditable = $mode==FormClass::$modeEDIT ? ' disabled ' : null;
 
       $availableForLinking = " PRE_BOARDED is null and CNUM not like '%XXX' ";
-      $allNonLinkedIbmers = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON, $availableForLinking);
+      $allNonLinkedKyndrylEmployees = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON, $availableForLinking);
       ?>
       <form id='linkingForm'  class="form-horizontal" onsubmit="return false;">
         <div class="panel panel-default">
@@ -1241,11 +1247,14 @@ class personRecord extends DbRecord
                 <select class='form-control select select2' 
                   id='ibmer_preboarded'
                   name='ibmer_preboarded'
-                  data-placeholder='Select IBMer:' >
+                  data-placeholder='Select Kyndryl employee:' >
                 <option value=''>Reg to Link</option>
                 <?php
-                  foreach ($allNonLinkedIbmers as $cnum => $notesId){
-                      ?><option value='<?=$cnum?>'><?=$notesId . "(" . $cnum . ")" ?></option><?php
+                  foreach ($allNonLinkedKyndrylEmployees as $cnum => $emailAddress){
+                      if (empty($emailAddress)) {
+                        $emailAddress = 'Unknown email address';
+                      }
+                      ?><option value='<?=$cnum?>'><?="(" . $cnum . ") " . $emailAddress?></option><?php
                   };
                   ?>
                 </select>

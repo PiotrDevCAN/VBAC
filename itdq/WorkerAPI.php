@@ -214,4 +214,16 @@ class WorkerAPI {
 		$url = "/tools/download_worker_file_delta";
 		return $this->processURL($url);
 	}
+
+	public function getIntranetIdFromNotesId($notesId = '')
+	{
+		$employeeData = explode('/', $notesId);
+		$data = $this->typeaheadSearch($employeeData[0]);
+		if (array_key_exists('count', $data) && $data['count'] > 0) {
+			$intranetId = $data['results'][0]['email'];
+		} else {
+			$intranetId = ' not found ';
+		}
+		return $intranetId;
+	}
 }

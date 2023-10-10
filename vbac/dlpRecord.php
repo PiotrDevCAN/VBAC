@@ -80,7 +80,7 @@ class dlpRecord extends DbRecord
                 			  id='licencee'
                               name='licencee'
                               required
-                              data-toggle="tooltip" title="Only PES Cleared IBMers & Vendors will appear in this list. If you feel someone is missing, please ensure they have a FULL Boarded record in the system."
+                              data-toggle="tooltip" title="Only PES Cleared Kyndryl employees & Vendors will appear in this list. If you feel someone is missing, please ensure they have a FULL Boarded record in the system."
                       >
                       <option value=''></option>
                 <?php                

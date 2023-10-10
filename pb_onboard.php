@@ -4,6 +4,8 @@ use vbac\personRecord;
 set_time_limit(0);
 
 //Trace::pageOpening($_SERVER['PHP_SELF']);
+
+$person = new personRecord();
 ?>
 
 <div class='container'>
@@ -28,14 +30,12 @@ set_time_limit(0);
       <div role="tabpanel" class="tab-pane fade in" id="regularTab">
         <?php
         $mode = personRecord::$modeDEFINE;
-        $person = new personRecord();
         $person->displayRegularBoardingForm($mode);
         ?>
       </div>
       <div role="tabpanel" class="tab-pane fade" id="vendorTab">
         <?php
         $mode = personRecord::$modeDEFINE;
-        $person = new personRecord();
         $person->displayVendorBoardingForm($mode);
         ?>
       </div>

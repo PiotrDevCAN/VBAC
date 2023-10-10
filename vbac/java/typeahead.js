@@ -33,7 +33,7 @@ $(document).ready(function () {
 		templates: {
 			empty: [
 				'<div class="empty-messagexx">',
-				'unable to find any IBMers that match the current query',
+				'unable to find any Kyndryl employees that match the current query',
 				'</div>'
 			].join('\n'),
 			suggestion: Handlebars.compile('<div> <img src="./public/img/no-img.jpg" alt="Profile" height="42" width="42"> <strong>{{value}}</strong><br/><small>{{preferredIdentity}}<br/>{{role}}</small></div>')
@@ -73,7 +73,7 @@ $(document).ready(function () {
 		templates: {
 			empty: [
 				'<div class="empty-messagexx">',
-				'unable to find any IBMers that match the current query',
+				'unable to find any Kyndryl employees that match the current query',
 				'</div>'
 			].join('\n'),
 			suggestion: Handlebars.compile('<div> <img src="./public/img/no-img.jpg" alt="Profile" height="42" width="42"> <strong>{{value}}</strong><br/><small>{{preferredIdentity}}<br/>{{role}}</small></div>')

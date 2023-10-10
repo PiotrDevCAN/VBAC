@@ -113,7 +113,7 @@ class onBoarding {
             var currentHeading = $("#employeeResourceHeading").text();
             var newHeading =
                 currentHeading == "Resource Details - Use external email addresses"
-                    ? "Resource Details - Kyndryl employees use Ocean IDs"
+                    ? "Resource Details - Kyndryl employees use Kyndryl IDs"
                     : "Resource Details - Use external email addresses";
             $("#employeeResourceHeading").text(newHeading);
         });
@@ -234,7 +234,7 @@ class onBoarding {
                         $('#messageModal').modal('show');
                         return false;
                         // } else if (ibmEmailAddress) {
-                        //     $('#messageModalBody').html("<p>IBMers should NOT BE Pre-Boarded. Please board as an IBMer</p>");
+                        //     $('#messageModalBody').html("<p>Kyndryl employees should NOT BE Pre-Boarded. Please board as an IBMer</p>");
                         //     $('#messageModal').modal('show');
                     } else if (oceanEmailAddress) {
                         $('#messageModalBody').html("<p>Ocean IDs should NOT BE Pre-Boarded. Please board as a regular employee</p>");

@@ -59,7 +59,7 @@ class editPersonWithCFirstBox extends box {
                             $("#notAnIbmer").show();
                             $("#existingIbmer").hide();
                         } else {
-                            var newHeading = "Resource Details - Kyndryl employees use Ocean IDs";
+                            var newHeading = "Resource Details - Kyndryl employees use Kyndryl IDs";
                             $("#notAnIbmer").hide();
                             $("#existingIbmer").show();
                         }

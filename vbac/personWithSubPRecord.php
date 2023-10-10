@@ -81,7 +81,7 @@ class personWithSubPRecord extends personRecord
 
     protected $person_bio;
 
-    const EMP_RESOURCE_REG = 'Resource Details - Kyndryl employees use Ocean IDs';
+    const EMP_RESOURCE_REG = 'Resource Details - Kyndryl employees use Kyndryl IDs';
     const EMP_RESOURCE_EXT = 'Resource Details - Use external email addresses';
 
     function displayBoardingForm($mode){
@@ -95,9 +95,9 @@ class personWithSubPRecord extends personRecord
          */
 
        // $isFM = personTable::isManager($_SESSION['ssoEmail']);
-       // $fmPredicate = $isFM ? " UPPER(EMAIL_ADDRESS)='" . htmlspecialchars(trim(strtoupper($_SESSION['ssoEmail']))) . "'  AND UPPER(LEFT(FM_MANAGER_FLAG,1))='Y'  " : " UPPER(LEFT(FM_MANAGER_FLAG,1))='Y' "; // FM Can only board people to themselves.
+       // $fmPredicate = $isFM ? " UPPER(EMAIL_ADDRESS)='" . htmlspecialchars(trim(strtoupper($_SESSION['ssoEmail']))) . "' AND FM_MANAGER_FLAG='Yes' " : " FM_MANAGER_FLAG='Yes' "; // FM Can only board people to themselves.
        // $fmPredicate = $mode==FormClass::$modeEDIT ? "( " . $fmPredicate . " ) OR ( CNUM='" . htmlspecialchars($this->FM_CNUM) . "' ) " : $fmPredicate;
-        $fmPredicate = " UPPER(LEFT(FM_MANAGER_FLAG,1))='Y' AND $activePredicate ";
+        $fmPredicate = " FM_MANAGER_FLAG='Yes' AND $activePredicate ";
         $allManagers =  $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON, $fmPredicate);
         $countryCodes = $loader->loadIndexed('COUNTRY_NAME','COUNTRY_CODE',allTables::$STATIC_COUNTRY_CODES);
 
@@ -450,7 +450,7 @@ class personWithSubPRecord extends personRecord
         $notEditable = $mode==FormClass::$modeEDIT ? ' disabled ' : null;
 
         $availableForLinking = " PRE_BOARDED is null and CNUM not like '%XXX' ";
-        $allNonLinkedIbmers = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON, $availableForLinking);
+        $allNonLinkedKyndrylEmployees = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON, $availableForLinking);
 
         ?>
         <form id='linkingForm'  class="form-horizontal" onsubmit="return false;">
@@ -462,14 +462,14 @@ class personWithSubPRecord extends personRecord
 				<div class='form-group' id='ibmerForLinking'>
 	           		<div class="col-sm-6" id='ibmerSelect'>
                 	<select class='form-control select select2' id='ibmer_preboarded'
-                        name='ibmer_preboarded'
-                        data-placeholder='Select IBMer:' >
-                	<option value=''>Reg to Link</option>
-                	<?php
-                    foreach ($allNonLinkedIbmers as $cnum => $notesId){
-                        ?><option value='<?=$cnum?>'><?=$notesId . "(" . $cnum . ")" ?></option><?php
-                    };
-                    ?>
+                    name='ibmer_preboarded'
+                    data-placeholder='Select Kyndryl employee:' >
+                    <option value=''>Reg to Link</option>
+                    <?php
+                      foreach ($allNonLinkedKyndrylEmployees as $cnum => $notesId){
+                          ?><option value='<?=$cnum?>'><?=$notesId . "(" . $cnum . ")" ?></option><?php
+                      };
+                      ?>
                		</select>
 					</div>
 				</div>
@@ -477,16 +477,16 @@ class personWithSubPRecord extends personRecord
 			<div class='form-group' id='linkToPreBoardedFormgroupDiv'>
 	        	<div class="col-sm-6" id='linkToPreBoarded'>
                 <select class='form-control select select2' id='person_preboarded'
-                        name='person_preboarded'
-                        <?=$preBoardersAvailable?>
-                        <?=$notEditable?>
-                        data-placeholder='Was pre-boarded as:' >
-                <option value=''>Link to Pre-Boarded</option>
-                <?php
-                    foreach ($availableFromPreBoarding as $option){
-                        echo $option;
-                    };
-                ?>
+                  name='person_preboarded'
+                  <?=$preBoardersAvailable?>
+                  <?=$notEditable?>
+                  data-placeholder='Was pre-boarded as:' >
+                  <option value=''>Link to Pre-Boarded</option>
+                  <?php
+                      foreach ($availableFromPreBoarding as $option){
+                          echo $option;
+                      };
+                  ?>
                 </select>
 				</div>
 			</div>

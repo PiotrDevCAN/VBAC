@@ -1339,7 +1339,6 @@ class personTable extends DbTable
 
     public static function optionsForPreBoarded($preBoarded = null)
     {
-
         if (empty($preBoarded)) {
             $availPreBoPredicate = " ( CNUM LIKE '%xxx' or CNUM LIKE '%XXX' or CNUM LIKE '%999' ) ";
             $availPreBoPredicate .= " AND ( trim(REVALIDATION_STATUS) like '%" . personRecord::REVALIDATED_PREBOARDER . "' or trim(REVALIDATION_STATUS) like '%" . personRecord::REVALIDATED_VENDOR . "') ";
@@ -1357,7 +1356,6 @@ class personTable extends DbTable
         $sql .= " ORDER BY FIRST_NAME, LAST_NAME ";
 
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
-
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
@@ -1366,6 +1364,31 @@ class personTable extends DbTable
         while (($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)) == true) {
             $option = "<option value='" . trim($row['CNUM']) . "'";
             $option .= trim($row['CNUM']) == trim($preBoarded) ? ' selected ' : null;
+            if (!empty(trim($row['EMAIL_ADDRESS']))) {
+                $option .= " >" . trim($row['FIRST_NAME']) . " " . trim($row['LAST_NAME']) . " (" . trim($row['EMAIL_ADDRESS']) . ") ";
+            } else {
+                $option .= " >" . trim($row['FIRST_NAME']) . " " . trim($row['LAST_NAME']);
+            }
+            $option .= "</option>";
+            $options[] = $option;
+        }
+        return $options;
+    }
+
+    public static function optionsForManagers($predicate = null)
+    {
+        $sql = " SELECT distinct FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, CNUM  FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
+        $sql .= " WHERE " . $predicate;
+        $sql .= " ORDER BY FIRST_NAME, LAST_NAME ";
+
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
+        if (!$rs) {
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+        $options = array();
+        while (($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)) == true) {
+            $option = "<option value='" . trim($row['CNUM']) . "'";
             if (!empty(trim($row['EMAIL_ADDRESS']))) {
                 $option .= " >" . trim($row['FIRST_NAME']) . " " . trim($row['LAST_NAME']) . " (" . trim($row['EMAIL_ADDRESS']) . ") ";
             } else {

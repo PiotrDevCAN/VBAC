@@ -14,7 +14,7 @@ function displayBoardingForm($mode){
          * Functional Mgr can board to ANY Functional Mgr Ant Stark 16th Jan 2018
          */
 
-        $fmPredicate = " UPPER(LEFT(FM_MANAGER_FLAG,1))='Y' AND $activePredicate ";
+        $fmPredicate = " FM_MANAGER_FLAG='Yes' AND $activePredicate ";
         $allManagers = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON, $fmPredicate);
         $countryCodes = $loader->loadIndexed('COUNTRY_NAME','COUNTRY_CODE',allTables::$STATIC_COUNTRY_CODES);
         $skillSets = $loader->loadIndexed('SKILLSET','SKILLSET_ID',allTables::$STATIC_SKILLSETS);
