@@ -1375,9 +1375,9 @@ class personTable extends DbTable
         return $options;
     }
 
-    public static function optionsForManagers($predicate = null)
+    public static function optionsForManagers($predicate = null, $userCnum = null)
     {
-        $sql = " SELECT distinct FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, CNUM  FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
+        $sql = " SELECT distinct FIRST_NAME, LAST_NAME, KYN_EMAIL_ADDRESS, CNUM  FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE " . $predicate;
         $sql .= " ORDER BY FIRST_NAME, LAST_NAME ";
 
@@ -1389,8 +1389,9 @@ class personTable extends DbTable
         $options = array();
         while (($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)) == true) {
             $option = "<option value='" . trim($row['CNUM']) . "'";
-            if (!empty(trim($row['EMAIL_ADDRESS']))) {
-                $option .= " >" . trim($row['FIRST_NAME']) . " " . trim($row['LAST_NAME']) . " (" . trim($row['EMAIL_ADDRESS']) . ") ";
+            $option .= trim($row['CNUM']) == trim($userCnum) ? ' selected ' : null;
+            if (!empty(trim($row['KYN_EMAIL_ADDRESS']))) {
+                $option .= " >" . trim($row['FIRST_NAME']) . " " . trim($row['LAST_NAME']) . " (" . trim($row['KYN_EMAIL_ADDRESS']) . ") ";
             } else {
                 $option .= " >" . trim($row['FIRST_NAME']) . " " . trim($row['LAST_NAME']);
             }

@@ -617,14 +617,14 @@ class personRecord extends DbRecord
       /*
        * Functional Mgr can board to ANY Functional Mgr Ant Stark 16th Jan 2018
        */
+      $userDetails = $loader->loadIndexed('CNUM','EMAIL_ADDRESS',allTables::$PERSON, " EMAIL_ADDRESS='" . htmlspecialchars($_SESSION['ssoEmail']) . "' ");
+      $userCnum = isset($userDetails[$_SESSION['ssoEmail']]) ? $userDetails[$_SESSION['ssoEmail']] : false;
 
       $fmPredicate = " FM_MANAGER_FLAG='Yes' AND $activePredicate ";
-      $allManagers = personTable::optionsForManagers($fmPredicate);
+      $allManagers = personTable::optionsForManagers($fmPredicate, $userCnum);
       // $countryCodes = $loader->loadIndexed('COUNTRY_NAME','COUNTRY_CODE',allTables::$STATIC_COUNTRY_CODES);
       $skillSets = $loader->loadIndexed('SKILLSET','SKILLSET_ID',allTables::$STATIC_SKILLSETS);
 
-      $userDetails = $loader->loadIndexed('CNUM','EMAIL_ADDRESS',allTables::$PERSON, " EMAIL_ADDRESS='" . htmlspecialchars($_SESSION['ssoEmail']) . "' ");
-      $userCnum = isset($userDetails[$_SESSION['ssoEmail']]) ? $userDetails[$_SESSION['ssoEmail']] : false;
       $allWorkstream = $workstreamTable->getallWorkstream();
       JavaScript::buildSelectArray($allWorkstream, 'workStream');
 
@@ -760,12 +760,6 @@ class personRecord extends DbRecord
               foreach ($allManagers as $option){
                 echo $option;
               };
-              // foreach ($allManagers as $mgrCnum => $mgrNotesid){
-              //   echo"<option value='" . $mgrCnum . "' ";
-              //   echo (($userCnum==$mgrCnum) && empty($this->FM_CNUM)) ? " selected " : null;        // The person using the tool is a Manager - and this is their entry.
-              //   echo $mgrCnum==$this->FM_CNUM ? " selected " : null;                                // This is the entry for the person already declared to be the Func Mgr
-              //   echo ">" . $mgrNotesid . "</option>";
-              // };
             ?>
             </select>
             </div>
@@ -927,14 +921,14 @@ class personRecord extends DbRecord
       /*
       * Functional Mgr can board to ANY Functional Mgr Ant Stark 16th Jan 2018
       */
+      $userDetails = $loader->loadIndexed('CNUM','EMAIL_ADDRESS',allTables::$PERSON, " EMAIL_ADDRESS='" . htmlspecialchars($_SESSION['ssoEmail']) . "' ");
+      $userCnum = isset($userDetails[$_SESSION['ssoEmail']]) ? $userDetails[$_SESSION['ssoEmail']] : false;
 
       $fmPredicate = " FM_MANAGER_FLAG='Yes' AND $activePredicate ";
-      $allManagers = personTable::optionsForManagers($fmPredicate);
+      $allManagers = personTable::optionsForManagers($fmPredicate, $userCnum);
       $countryCodes = $loader->loadIndexed('COUNTRY_NAME','COUNTRY_CODE',allTables::$STATIC_COUNTRY_CODES);
       $skillSets = $loader->loadIndexed('SKILLSET','SKILLSET_ID',allTables::$STATIC_SKILLSETS);
 
-      $userDetails = $loader->loadIndexed('CNUM','EMAIL_ADDRESS',allTables::$PERSON, " EMAIL_ADDRESS='" . htmlspecialchars($_SESSION['ssoEmail']) . "' ");
-      $userCnum = isset($userDetails[$_SESSION['ssoEmail']]) ? $userDetails[$_SESSION['ssoEmail']] : false;
       $allWorkstream = $workstreamTable->getallWorkstream();
       JavaScript::buildSelectArray($allWorkstream, 'workStream');
 
@@ -1075,12 +1069,6 @@ class personRecord extends DbRecord
             foreach ($allManagers as $option){
               echo $option;
             };
-            // foreach ($allManagers as $mgrCnum => $mgrNotesid){
-            //   echo"<option value='" . $mgrCnum . "' ";
-            //   echo (($userCnum==$mgrCnum) && empty($this->FM_CNUM)) ? " selected " : null;        // The person using the tool is a Manager - and this is their entry.
-            //   echo $mgrCnum==$this->FM_CNUM ? " selected " : null;                                // This is the entry for the person already declared to be the Func Mgr
-            //   echo ">" . $mgrNotesid . "</option>";
-            // };
           ?>
           </select>
           </div>
