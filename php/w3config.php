@@ -19,7 +19,7 @@ $site = array(
     'bread_crumbs' => TRUE,
 
     // url to send feedback too. See meta tags below as well
-    'feedback_uri' => 'mailto:piotr.tajanowicz@kyndryl.com',
+    'feedback_uri' => 'mailto:Piotr.Tajanowicz@kyndryl.com',
 
     // base location of css, js, and images
     'assets' => '/ui',
@@ -70,7 +70,7 @@ $site = array(
 
     'email' => false,
     'emailId' => 'DoNotReply_vbac@uk.ibm.com',
-    'devEmailId' => 'piotr.tajanowicz@kyndryl.com',
+    'devEmailId' => 'Piotr.Tajanowicz@kyndryl.com',
 
     'AuditLife' => '13 months',
     'AuditDetailsLife' => '6 months',
@@ -103,7 +103,7 @@ $meta = array(
     // feedback email received through the central Intranet Feedback
     // Form (w3.ibm.com/feedback) to the correct handler, without human
     // intervention.
-    'feedback' => 'piotr.tajanowicz@kyndryl.com',
+    'feedback' => 'Piotr.Tajanowicz@kyndryl.com',
 
     // security class for this web site
     'security' => 'IBM internal use only',

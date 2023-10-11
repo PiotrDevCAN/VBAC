@@ -21,16 +21,16 @@ $message = '<table width="100%" border="0"   cellpadding="0">
     </tr>
 </table>';
 
-// $response = itdq\BlueMail::send_mail(array('piotr.tajanowicz@kyndryl.com'), 'Resendable 4',$message, 'rob_dev@uk.ibm.com');
+// $response = itdq\BlueMail::send_mail(array('Piotr.Tajanowicz@kyndryl.com'), 'Resendable 4',$message, 'rob_dev@uk.ibm.com');
 // echo "<pre>";
 // var_dump($response);
 
-// $to      = 'piotr.tajanowicz@kyndryl.com';
+// $to      = 'Piotr.Tajanowicz@kyndryl.com';
 // $subject = 'Test from Docker';
 // // $message = 'Testing 1 2 3';
 // $headers = array(
-//     'From' => 'piotr.tajanowicz@kyndryl.com',
-//     'Reply-To' => 'piotr.tajanowicz@kyndryl.com',
+//     'From' => 'Piotr.Tajanowicz@kyndryl.com',
+//     'Reply-To' => 'Piotr.Tajanowicz@kyndryl.com',
 //     'X-Mailer' => 'PHP/' . phpversion()
 // );
 
@@ -48,8 +48,8 @@ echo "<div class='container'>";
 // $mail->Port       = 25;
 
 
-// $mail->setFrom('piotr.tajanowicz@kyndryl.com', 'Piotr Tajanowicz');
-// $mail->addAddress('piotr.tajanowicz@kyndryl.com', 'Another Piotr');
+// $mail->setFrom('Piotr.Tajanowicz@kyndryl.com', 'Piotr Tajanowicz');
+// $mail->addAddress('Piotr.Tajanowicz@kyndryl.com', 'Another Piotr');
 // $mail->isHTML(true);
 
 // $mail->Subject  = 'First HTML Message';
@@ -67,7 +67,7 @@ echo "<div class='container'>";
 //     echo 'Message has been sent.';
 // }
 
-$to[] = 'piotr.tajanowicz@kyndryl.com';
+$to[] = 'Piotr.Tajanowicz@kyndryl.com';
 $to[] = 'Piotr.Tajanowicz@kyndryl.com';
 // $response = BlueMail::send_mail($to, 'Testing new SendMail', '<h1>Some text</h1><p>Well this is, that was header</p>', 'vbac@noReply.co.uk');
 $response = BlueMail::send_mail($to, 'Test', '<h1>Testing 1 2 3</h1>', 'vbac@noReply.co.uk');

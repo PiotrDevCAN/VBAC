@@ -24,14 +24,14 @@ $candidateData = array(
     // "PackageId" => "111",
     "PackageName" => "Package 1",
     "PackageId" => "28000000000001",
-    "BGCResponseEmailIds" => "piotr.tajanowicz@kyndryl.com",
+    "BGCResponseEmailIds" => "Piotr.Tajanowicz@kyndryl.com",
     "EmployeeId" => "123456",
     "APIReferenceCode" => "123456",
-    "RequesterId" => "piotr.tajanowicz@kyndryl.com",
+    "RequesterId" => "Piotr.Tajanowicz@kyndryl.com",
     "FirstName" => "TEST",
     "MiddleName" => "C",
     "LastName" => "CANDIDATE",
-    "Email" => "piotr.tajanowicz@kyndryl.com",
+    "Email" => "Piotr.Tajanowicz@kyndryl.com",
     "Phone" => "(425)+533-7745"
 );
 $resopnse = $api->addCandidate($candidateData);

@@ -104,7 +104,7 @@ class BlueMail
                     if (filter_var($_SESSION['ssoEmail'], FILTER_VALIDATE_EMAIL)) {
                         $localEmail = $_SESSION['ssoEmail'];
                     } else {
-                        $localEmail = ! empty($_ENV['devemailid']) ? $_ENV['devemailid'] : 'piotr.tajanowicz@kyndryl.com';
+                        $localEmail = ! empty($_ENV['devemailid']) ? $_ENV['devemailid'] : 'Piotr.Tajanowicz@kyndryl.com';
                     }
 
                     $recipient = $_ENV['email'] == 'user' ? $localEmail : $_ENV['devemailid'];

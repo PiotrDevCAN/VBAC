@@ -619,9 +619,17 @@ class personRecord extends DbRecord
        */
       $userDetails = $loader->loadIndexed('CNUM','EMAIL_ADDRESS',allTables::$PERSON, " EMAIL_ADDRESS='" . htmlspecialchars($_SESSION['ssoEmail']) . "' ");
       $userCnum = isset($userDetails[$_SESSION['ssoEmail']]) ? $userDetails[$_SESSION['ssoEmail']] : false;
-
       $fmPredicate = " FM_MANAGER_FLAG='Yes' AND $activePredicate ";
-      $allManagers = personTable::optionsForManagers($fmPredicate, $userCnum);
+      $selectedManagerId = $mode==FormClass::$modeEDIT ? $this->FM_CNUM : $userCnum;
+      $hasActivePESStatus = $loader->loadIndexed('PES_STATUS','EMAIL_ADDRESS',allTables::$PERSON, " CNUM='" . $selectedManagerId . "' AND $activePredicate ");
+      if (empty($hasActivePESStatus)) {
+        $FmCnumNotActive = true;
+        $inActiveFMCnum = $this->FM_CNUM;
+      } else {
+        $FmCnumNotActive = false;
+        $inActiveFMCnum = null;
+      }
+      $allManagers = personTable::optionsForManagers($fmPredicate, $selectedManagerId, $inActiveFMCnum);
       // $countryCodes = $loader->loadIndexed('COUNTRY_NAME','COUNTRY_CODE',allTables::$STATIC_COUNTRY_CODES);
       $skillSets = $loader->loadIndexed('SKILLSET','SKILLSET_ID',allTables::$STATIC_SKILLSETS);
 
@@ -748,22 +756,33 @@ class personRecord extends DbRecord
           <h3 class="panel-title">Functional Manager Details</h3>
           </div>
           <div class="panel-body" id='fmPanelBody' >
-          <div class="form-group">
-            <div class="col-sm-6">
-            <select class='form-control select select2' 
-              id='person_FM_CNUM'
-              name='FM_CNUM'
-              required='required'
-              data-placeholder='Select functional manager' >
-            <option value=''>Select Functional Mgr</option>
-            <?php
-              foreach ($allManagers as $option){
-                echo $option;
-              };
-            ?>
-            </select>
+            <div class="form-group">
+              <div class="col-sm-6">
+              <select class='form-control select select2' 
+                id='person_FM_CNUM'
+                name='FM_CNUM'
+                required='required'
+                data-placeholder='Select functional manager' >
+              <option value=''>Select Functional Mgr</option>
+              <?php
+                foreach ($allManagers as $option){
+                  echo $option;
+                };
+              ?>
+              </select>
+              </div>
+              <?php
+              if ($FmCnumNotActive == true && $mode==FormClass::$modeEDIT && !empty($this->FM_CNUM)) {
+              ?>
+              <div class='col-sm-6'>
+                <div class="alert alert-danger">
+                  <b>Warning:</b> Assigned FM Manager is NOT active employee! 
+                </div>
+              </div>
+              <?php
+              }
+              ?>
             </div>
-          </div>
           </div>
           <div class="panel-body bg-danger" id='personFmPanelBodyCheckMsg' <?=$hideDivMgrChange?> >
           <input type='hidden' id='person_original_fm' value='<?=$this->FM_CNUM ?>' />
@@ -923,9 +942,17 @@ class personRecord extends DbRecord
       */
       $userDetails = $loader->loadIndexed('CNUM','EMAIL_ADDRESS',allTables::$PERSON, " EMAIL_ADDRESS='" . htmlspecialchars($_SESSION['ssoEmail']) . "' ");
       $userCnum = isset($userDetails[$_SESSION['ssoEmail']]) ? $userDetails[$_SESSION['ssoEmail']] : false;
-
       $fmPredicate = " FM_MANAGER_FLAG='Yes' AND $activePredicate ";
-      $allManagers = personTable::optionsForManagers($fmPredicate, $userCnum);
+      $selectedManagerId = $mode==FormClass::$modeEDIT ? $this->FM_CNUM : $userCnum;
+      $hasActivePESStatus = $loader->loadIndexed('PES_STATUS','EMAIL_ADDRESS',allTables::$PERSON, " CNUM='" . $selectedManagerId . "' AND $activePredicate ");
+      if (empty($hasActivePESStatus)) {
+        $FmCnumNotActive = true;
+        $inActiveFMCnum = $this->FM_CNUM;
+      } else {
+        $FmCnumNotActive = false;
+        $inActiveFMCnum = null;
+      }
+      $allManagers = personTable::optionsForManagers($fmPredicate, $selectedManagerId, $inActiveFMCnum);
       $countryCodes = $loader->loadIndexed('COUNTRY_NAME','COUNTRY_CODE',allTables::$STATIC_COUNTRY_CODES);
       $skillSets = $loader->loadIndexed('SKILLSET','SKILLSET_ID',allTables::$STATIC_SKILLSETS);
 
@@ -1057,23 +1084,34 @@ class personRecord extends DbRecord
           <h3 class="panel-title">Functional Manager Details</h3>
         </div>
         <div class="panel-body" id='fmPanelBody' >
-          <div class="form-group">
-          <div class="col-sm-6">
-          <select class='form-control select select2' 
-          id='resource_FM_CNUM'
-          name='FM_CNUM'
-          required='required'
-          data-placeholder='Select functional manager' >
-          <option value=''>Select Functional Mgr</option>
-          <?php
-            foreach ($allManagers as $option){
-              echo $option;
-            };
-          ?>
-          </select>
+            <div class="form-group">
+              <div class="col-sm-6">
+              <select class='form-control select select2' 
+                id='person_FM_CNUM'
+                name='FM_CNUM'
+                required='required'
+                data-placeholder='Select functional manager' >
+              <option value=''>Select Functional Mgr</option>
+              <?php
+                foreach ($allManagers as $option){
+                  echo $option;
+                };
+              ?>
+              </select>
+              </div>
+              <?php
+              if ($FmCnumNotActive == true && $mode==FormClass::$modeEDIT && !empty($this->FM_CNUM)) {
+              ?>
+              <div class='col-sm-6'>
+                <div class="alert alert-danger">
+                  <b>Warning:</b> Assigned FM Manager is NOT active employee! 
+                </div>
+              </div>
+              <?php
+              }
+              ?>
+            </div>
           </div>
-          </div>
-        </div>
         <div class="panel-body bg-danger" id='resourceFmPanelBodyCheckMsg' <?=$hideDivMgrChange?> >
           <input type='hidden' id='resource_original_fm' value='<?=$this->FM_CNUM ?>' />
           <p>Before submitting this change please ensure that all HR/Workday, Bluepages and Department Code (GUDA) updates have been completed as necessary. If moving to a new role please ensure the assignment reference number, JRSS and Squad/Tribe alignment are also correct.</p>
@@ -1608,9 +1646,9 @@ class personRecord extends DbRecord
              * Next few lines - use for Testing. Comment out for Live.
              *
              */
-//             $to  = array('piotr.tajanowicz@ocean.ibm.com');
+//             $to  = array('Piotr.Tajanowicz@ocean.ibm.com');
 //             $cc  = array('jayhunter@uk.ibm.com');
-//             $bcc = array('piotr.tajanowicz@ocean.ibm.com','antstark@uk.ibm.com');
+//             $bcc = array('Piotr.Tajanowicz@ocean.ibm.com','antstark@uk.ibm.com');
             /*
              *
              * Lines above - use for testing. Comment out for Live.

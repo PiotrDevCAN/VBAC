@@ -23,7 +23,7 @@ class Email
         }
         if ($_SESSION['email']) {
             ?>
-            <div id='<?php echo "email" . $rand;?>' style='display:block;' /><H3><?php echo $rand ?> If this message remains visible or you see a further message : 'Fatal Error: Maximum execution time.....' please contact <a href='maito:piotr.tajanowicz@kyndryl.com'>ITDQ Application Support</a> urgently and inform them.</H3></div>
+            <div id='<?php echo "email" . $rand;?>' style='display:block;' /><H3><?php echo $rand ?> If this message remains visible or you see a further message : 'Fatal Error: Maximum execution time.....' please contact <a href='maito:Piotr.Tajanowicz@kyndryl.com'>ITDQ Application Support</a> urgently and inform them.</H3></div>
            <?php
             $result = mail($to, $subject, $message, $headers);
             if (! $result) {

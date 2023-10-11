@@ -16,13 +16,12 @@ class personTable extends DbTable
     private $preparedRevalidationLeaverStmt;
     private $preparedRevalidationPotentialLeaverStmt;
     private $preparedLeaverProjectedEndDateStmt;
-    private $preparedUpdateBluepagesFields;
     private $preparedUpdateLbgLocationStmt;
     private $preparedUpdateSecurityEducationStmt;
 
     public $employeeTypeMapping;
 
-    private $allNotesIdByCnum;
+    private $allOceanEmailIdByCnum;
     private $allKyndrylEmailIdByCnum;
     private $loader;
 
@@ -85,10 +84,14 @@ class personTable extends DbTable
         $this->slack = new slack();
 
         $this->allDelegates = delegateTable::allDelegates();
+        
+        $this->loader = new Loader();
+        $this->allOceanEmailIdByCnum = empty($this->allOceanEmailIdByCnum) ? $this->loader->loadIndexed('EMAIL_ADDRESS', 'CNUM', allTables::$PERSON) : $this->allOceanEmailIdByCnum;
+        $this->allKyndrylEmailIdByCnum = empty($this->allKyndrylEmailIdByCnum) ? $this->loader->loadIndexed('KYN_EMAIL_ADDRESS', 'CNUM', allTables::$PERSON) : $this->allKyndrylEmailIdByCnum;
+        $this->employeeTypeMapping = empty($this->employeeTypeMapping) ? $this->loader->loadIndexed('DESCRIPTION', 'CODE', allTables::$EMPLOYEE_TYPE_MAPPING) : $this->employeeTypeMapping;
 
         $this->thirtyDaysHence = new \DateTime();
         $this->thirtyDaysHence->add(new \DateInterval('P60D')); // Modified 4th July 2017
-
 
         parent::__construct($table, $pwd, $log);
     }
@@ -455,14 +458,20 @@ class personTable extends DbTable
 
     public function prepareFields($row)
     {
-        $this->loader = empty($this->loader) ? new Loader() : $this->loader;
-        $this->allKyndrylEmailIdByCnum = empty($this->allKyndrylEmailIdByCnum) ? $this->loader->loadIndexed('KYN_EMAIL_ADDRESS', 'CNUM', allTables::$PERSON) : $this->allKyndrylEmailIdByCnum;
-        $this->employeeTypeMapping = empty($this->employeeTypeMapping) ? $this->loader->loadIndexed('DESCRIPTION', 'CODE', allTables::$EMPLOYEE_TYPE_MAPPING) : $this->employeeTypeMapping;
-
         $preparedRow = array_map('trim', $row);
-        $fmNotesid = isset($this->allKyndrylEmailIdByCnum[trim($row['FM_CNUM'])]) ? $this->allKyndrylEmailIdByCnum[trim($row['FM_CNUM'])] : trim($row['FM_CNUM']);
+        if (isset($this->allOceanEmailIdByCnum[trim($row['FM_CNUM'])])) {
+            $fmsEmailAddress =  $this->allOceanEmailIdByCnum[trim($row['FM_CNUM'])];
+        } elseif (isset($this->allKyndrylEmailIdByCnum[trim($row['FM_CNUM'])])) {
+            $fmsEmailAddress = $this->allKyndrylEmailIdByCnum[trim($row['FM_CNUM'])];
+        } else {
+            if (!empty($row['FM_CNUM'])) {
+                $fmsEmailAddress = "<span style='color: red;'>Not found in vBAC - " . trim($row['FM_CNUM']) . "</span>";
+            } else {
+                $fmsEmailAddress = '';
+            }
+        }
         $preparedRow['fmCnum'] = $row['FM_CNUM'];
-        $preparedRow['FM_CNUM'] = $fmNotesid;
+        $preparedRow['FM_CNUM'] = $fmsEmailAddress;
 
         if (isset($preparedRow['EMPLOYEE_TYPE'])) {
             $preparedRow['EMPLOYEE_TYPE'] = isset($this->employeeTypeMapping[strtoupper($preparedRow['EMPLOYEE_TYPE'])]) ? $this->employeeTypeMapping[strtoupper($preparedRow['EMPLOYEE_TYPE'])] : $preparedRow['EMPLOYEE_TYPE'];
@@ -684,18 +693,21 @@ class personTable extends DbTable
         $functionalMgr = $row['FM_CNUM'];
         $btnColor = isset($this->allDelegates[$row['fmCnum']]) ? 'btn-success' : 'btn-secondary';
 
-        $row['FM_CNUM'] = "<button ";
-        $row['FM_CNUM'] .= " type='button' class='btn $btnColor  btn-xs ' aria-label='Left Align' ";
-
-        if (isset($this->allDelegates[$row['fmCnum']])) {
-            $delegates = implode(",", $this->allDelegates[$row['fmCnum']]);
-            $row['FM_CNUM'] .= " data-placement='bottom' data-toggle='popover' title='' data-content='$delegates' data-original-title='Delegates' ";
+        if (!empty($row['fmCnum'])) {
+            $row['FM_CNUM'] = "<button ";
+            $row['FM_CNUM'] .= " type='button' class='btn $btnColor btn-xs' aria-label='Left Align' ";
+            if (isset($this->allDelegates[$row['fmCnum']])) {
+                $delegates = implode(",", $this->allDelegates[$row['fmCnum']]);
+                $row['FM_CNUM'] .= " data-placement='bottom' data-toggle='popover' title='' data-content='$delegates' data-original-title='Delegates' ";
+            } else {
+                $row['FM_CNUM'] .= " data-placement='bottom' data-toggle='popover' title='' data-content='Has not defined a delegate' data-original-title='Delegates' ";
+            }
+            $row['FM_CNUM'] .= " > ";
+            $row['FM_CNUM'] .= "<i class='fas fa-user-friends'></i>";
+            $row['FM_CNUM'] .= " </button>";
         } else {
-            $row['FM_CNUM'] .= " data-placement='bottom' data-toggle='popover' title='' data-content='Has not defined a delegate' data-original-title='Delegates' ";
+            $row['FM_CNUM'] = "";
         }
-        $row['FM_CNUM'] .= " > ";
-        $row['FM_CNUM'] .= "<i class='fas fa-user-friends'></i>";
-        $row['FM_CNUM'] .= " </button>";
         $row['FM_CNUM'] .= $functionalMgr;
 
         $row['SQUAD_NAME'] = $this->getAgileSquadWithButtons($row, true);
@@ -1375,10 +1387,13 @@ class personTable extends DbTable
         return $options;
     }
 
-    public static function optionsForManagers($predicate = null, $userCnum = null)
+    public static function optionsForManagers($predicate = null, $userCnum = null, $additionalCnum = null)
     {
         $sql = " SELECT distinct FIRST_NAME, LAST_NAME, KYN_EMAIL_ADDRESS, CNUM  FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE " . $predicate;
+        if (!empty($additionalCnum)) {
+            $sql .= " OR CNUM = '" . $additionalCnum . "'";
+        }
         $sql .= " ORDER BY FIRST_NAME, LAST_NAME ";
 
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
@@ -1671,7 +1686,6 @@ class personTable extends DbTable
 
     public function notifyFmOfRevalStatusChange($employeeCnum, $revalidationStatus)
     {
-        $this->loader = new Loader();
         $empsFm = $this->loader->loadIndexed('FM_CNUM', 'CNUM', allTables::$PERSON, " CNUM = '" . htmlspecialchars($employeeCnum) . "' ");
         $empsNotesid = $this->loader->loadIndexed('NOTES_ID', 'CNUM', allTables::$PERSON, " CNUM = '" . htmlspecialchars($employeeCnum) . "' ");
         $fmCnum = !empty($empsFm[$employeeCnum]) ? $empsFm[$employeeCnum] : false;
