@@ -13,8 +13,8 @@ use itdq\DbTable;
  */
 class DiaryTable extends DbTable {
 
-	static function insertEntry( $entry) {
-		$sql = "INSERT INTO " . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$DIARY . " ( ENTRY, INTRANET_ID) ";
+	static function insertEntry( $entry ) {
+		$sql = "INSERT INTO " . $GLOBALS['Db2Schema'] . "." . AllItdqTables::$DIARY . " ( ENTRY, CREATOR ) ";
 		$sql .= " Values ('" . htmlspecialchars(trim($entry)) . "','" . htmlspecialchars($_SESSION['ssoEmail']) . "' ) ";
 
 		$rs = sqlsrv_query( $GLOBALS['conn'], $sql );

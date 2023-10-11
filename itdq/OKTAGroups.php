@@ -231,6 +231,7 @@ class OKTAGroups {
 			$groupId = $this->getGroupId($groupName);
 			$result = $this->listMembers($groupId);
 			$redis->set($redisKey, json_encode($result));
+			$redis->expire($redisKey, REDIS_EXPIRE);
 		}
 		foreach($result as $key => $row) {
 			$email = $row['profile']['email'];
@@ -249,6 +250,7 @@ class OKTAGroups {
 		if (!$result){
 			$result = $this->getGroupByName($groupName);
 			$redis->set($redisKey, json_encode($result));
+			$redis->expire($redisKey, REDIS_EXPIRE);
 		}
 		$groupId = false;
 		foreach($result as $key => $row) {
