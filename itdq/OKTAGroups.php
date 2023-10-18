@@ -222,17 +222,22 @@ class OKTAGroups {
 
 	public function inAGroup($groupName, $ssoEmail)
 	{
-		$found = false;
-
 		$redis = $GLOBALS['redis'];
 		$redisKey = md5($groupName.'_members');
-		$result = json_decode($redis->get($redisKey), true);
-		if (!$result){
+		if (!$redis->get($redisKey)) {
+			$source = 'SQL Server';
+
 			$groupId = $this->getGroupId($groupName);
 			$result = $this->listMembers($groupId);
+
 			$redis->set($redisKey, json_encode($result));
 			$redis->expire($redisKey, REDIS_EXPIRE);
+		} else {
+			$source = 'Redis Server';
+			$result = json_decode($redis->get($redisKey), true);
 		}
+
+		$found = false;
 		foreach($result as $key => $row) {
 			$email = $row['profile']['email'];
 			if (strtolower(trim($email)) == strtolower(trim($ssoEmail))) {
@@ -246,12 +251,18 @@ class OKTAGroups {
 	{
 		$redis = $GLOBALS['redis'];
 		$redisKey = md5($groupName.'_key');
-		$result = json_decode($redis->get($redisKey), true);
-		if (!$result){
+		if (!$redis->get($redisKey)) {
+			$source = 'SQL Server';
+
 			$result = $this->getGroupByName($groupName);
+
 			$redis->set($redisKey, json_encode($result));
 			$redis->expire($redisKey, REDIS_EXPIRE);
+		} else {
+			$source = 'Redis Server';
+			$result = json_decode($redis->get($redisKey), true);
 		}
+
 		$groupId = false;
 		foreach($result as $key => $row) {
 			$groupId = 	$row['id'];
