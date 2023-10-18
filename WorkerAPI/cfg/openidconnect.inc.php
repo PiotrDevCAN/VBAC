@@ -17,11 +17,4 @@ $config_openidconnect->introspect_url = $_ENV['worker_api_authority'].'/introspe
 
 error_log('Authorising to:' . $config_openidconnect->authorize_url . " as (" . $config_openidconnect->client_id . ") ");
 
-/*
- * Application Instance of Config
- *
- */
-
-$config_openidconnect->redirect_url = "https://" . $_SERVER['HTTP_HOST'] . "/auth/index.php";
-
 ?>

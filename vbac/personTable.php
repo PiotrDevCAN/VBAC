@@ -11,14 +11,6 @@ use vbac\pesTrackerTable;
 
 class personTable extends DbTable
 {
-
-    private $preparedRevalidationStmt;
-    private $preparedRevalidationLeaverStmt;
-    private $preparedRevalidationPotentialLeaverStmt;
-    private $preparedLeaverProjectedEndDateStmt;
-    private $preparedUpdateLbgLocationStmt;
-    private $preparedUpdateSecurityEducationStmt;
-
     public $employeeTypeMapping;
 
     private $allOceanEmailIdByCnum;
@@ -1436,71 +1428,67 @@ class personTable extends DbTable
 
     private function prepareRevalidationStmt($data)
     {
-        if (empty($this->preparedRevalidationStmt)) {
-            $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-            $sql .= " SET NOTES_ID = ?, EMAIL_ADDRESS = ?,  REVALIDATION_STATUS = '" . personRecord::REVALIDATED_FOUND . "' , REVALIDATION_DATE_FIELD = CAST( CURRENT_TIMESTAMP AS Date ) ";
-            $sql .= " WHERE CNUM=? ";
+        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
+        $sql .= " SET NOTES_ID = ?, EMAIL_ADDRESS = ?,  REVALIDATION_STATUS = '" . personRecord::REVALIDATED_FOUND . "' , REVALIDATION_DATE_FIELD = CAST( CURRENT_TIMESTAMP AS Date ) ";
+        $sql .= " WHERE CNUM=? ";
 
-            $this->preparedRevalidationStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
+        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
 
-            if (!$this->preparedRevalidationStmt) {
-                DbTable::displayErrorMessage($this->preparedRevalidationStmt, __CLASS__, __METHOD__, $sql);
-                return false;
-            }
+        if (!$preparedStmt) {
+            DbTable::displayErrorMessage($preparedStmt, __CLASS__, __METHOD__, $sql);
+            return false;
         }
-        return $this->preparedRevalidationStmt;
+        
+        return $preparedStmt;
     }
 
     private function prepareLeaverProjectedEndDateStmt($data)
     {
-        if (empty($this->preparedLeaverProjectedEndDateStmt)) {
-            $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-            $sql .= " SET PROJECTED_END_DATE = CAST( CURRENT_TIMESTAMP AS Date ) ";
-            $sql .= " WHERE CNUM=? AND PROJECTED_END_DATE is null ";
+        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
+        $sql .= " SET PROJECTED_END_DATE = CAST( CURRENT_TIMESTAMP AS Date ) ";
+        $sql .= " WHERE CNUM=? AND PROJECTED_END_DATE is null ";
 
-            $this->preparedLeaverProjectedEndDateStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
+        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
 
-            if (!$this->preparedLeaverProjectedEndDateStmt) {
-                DbTable::displayErrorMessage($this->preparedLeaverProjectedEndDateStmt, __CLASS__, __METHOD__, $sql);
-                return false;
-            }
+        if (!$preparedStmt) {
+            DbTable::displayErrorMessage($preparedStmt, __CLASS__, __METHOD__, $sql);
+            return false;
         }
-        return $this->preparedLeaverProjectedEndDateStmt;
+        
+        return $preparedStmt;
     }
 
     private function prepareRevalidationLeaverStmt($data)
     {
-        if (empty($this->preparedRevalidationLeaverStmt)) {
-            $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-            $sql .= " SET REVALIDATION_STATUS = '" . personRecord::REVALIDATED_LEAVER . "' , REVALIDATION_DATE_FIELD = CAST( CURRENT_TIMESTAMP AS Date ) ";
-            $sql .= " WHERE CNUM=? ";
+        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
+        $sql .= " SET REVALIDATION_STATUS = '" . personRecord::REVALIDATED_LEAVER . "' , REVALIDATION_DATE_FIELD = CAST( CURRENT_TIMESTAMP AS Date ) ";
+        $sql .= " WHERE CNUM=? ";
 
-            $this->preparedRevalidationLeaverStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
+        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
 
-            if (!$this->preparedRevalidationLeaverStmt) {
-                DbTable::displayErrorMessage($this->preparedRevalidationStmt, __CLASS__, __METHOD__, $sql);
-                return false;
-            }
+        if (!$preparedStmt) {
+            DbTable::displayErrorMessage($preparedStmt, __CLASS__, __METHOD__, $sql);
+            return false;
         }
-        return $this->preparedRevalidationLeaverStmt;
+
+        return $preparedStmt;
     }
 
     private function prepareRevalidationPotentialLeaverStmt($data)
     {
-        if (empty($this->preparedRevalidationPotentialLeaverStmt)) {
-            $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
+        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
 //            $sql .= " SET REVALIDATION_STATUS = '" . personRecord::REVALIDATED_POTENTIAL . "' , REVALIDATION_DATE_FIELD = CAST( CURRENT_TIMESTAMP AS Date ) ";
-            $sql .= " SET REVALIDATION_STATUS = '" . personRecord::REVALIDATED_POTENTIAL . "'  "; // Storing the date was cutting to many history records
-            $sql .= " WHERE CNUM=? ";
+        $sql .= " SET REVALIDATION_STATUS = '" . personRecord::REVALIDATED_POTENTIAL . "'  "; // Storing the date was cutting to many history records
+        $sql .= " WHERE CNUM=? ";
 
-            $this->preparedRevalidationPotentialLeaverStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
+        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
 
-            if (!$this->preparedRevalidationPotentialLeaverStmt) {
-                DbTable::displayErrorMessage($this->preparedRevalidationPotentialLeaverStmt, __CLASS__, __METHOD__, $sql);
-                return false;
-            }
+        if (!$preparedStmt) {
+            DbTable::displayErrorMessage($preparedStmt, __CLASS__, __METHOD__, $sql);
+            return false;
         }
-        return $this->preparedRevalidationPotentialLeaverStmt;
+        
+        return $preparedStmt;
     }
 
     public function confirmRevalidation($notesId, $email, $cnum)
@@ -1539,7 +1527,6 @@ class personTable extends DbTable
 
         AuditTable::audit("Flaging leaver: $cnum ", AuditTable::RECORD_TYPE_REVALIDATION);
         $this->slack->slackApiPostMessage(slack::CHANNEL_SM_CDI_AUDIT, $_ENV['environment'] . " Flaging leaver : $cnum ");
-
         return true;
     }
 
@@ -1724,19 +1711,18 @@ class personTable extends DbTable
 
     private function prepareUpdateLbgLocationStmt($data)
     {
-        if (empty($this->preparedUpdateLbgLocationStmt)) {
-            $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-            $sql .= " SET LBG_LOCATION=? ";
-            $sql .= " WHERE CNUM=?  ";
+        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
+        $sql .= " SET LBG_LOCATION=? ";
+        $sql .= " WHERE CNUM=?  ";
 
-            $this->preparedUpdateLbgLocationStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
+        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
 
-            if (!$this->preparedUpdateLbgLocationStmt) {
-                DbTable::displayErrorMessage($this->preparedRevalidationLeaverStmt, __CLASS__, __METHOD__, $sql);
-                return false;
-            }
+        if (!$preparedStmt) {
+            DbTable::displayErrorMessage($preparedStmt, __CLASS__, __METHOD__, $sql);
+            return false;
         }
-        return $this->preparedUpdateLbgLocationStmt;
+    
+        return $preparedStmt;
     }
 
     public function updateLbgLocationForCnum($lbgLocation, $cnum)
@@ -1799,19 +1785,18 @@ class personTable extends DbTable
 
     private function prepareUpdateSecurityEducationStmt($data)
     {
-        if (empty($this->preparedUpdateSecurityEducationStmt)) {
-            $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-            $sql .= " SET SECURITY_EDUCATION=? ";
-            $sql .= " WHERE CNUM=?  ";
+        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
+        $sql .= " SET SECURITY_EDUCATION=? ";
+        $sql .= " WHERE CNUM=?  ";
 
-            $this->preparedUpdateSecurityEducationStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
+        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
 
-            if (!$this->preparedUpdateSecurityEducationStmt) {
-                DbTable::displayErrorMessage($this->preparedUpdateSecurityEducationStmt, __CLASS__, __METHOD__, $sql);
-                return false;
-            }
+        if (!$preparedStmt) {
+            DbTable::displayErrorMessage($preparedStmt, __CLASS__, __METHOD__, $sql);
+            return false;
         }
-        return $this->preparedUpdateSecurityEducationStmt;
+        
+        return $preparedStmt;
     }
 
     public function updateSecurityEducationForCnum($securityEducation, $cnum)
@@ -2289,9 +2274,7 @@ class personTable extends DbTable
 
     public function notifyRecheckDateApproaching()
     {
-        $localConnection = $GLOBALS['conn']; // So we can keep reading this RS whilst making updates to the TRACKER TABLE.
         $pesTrackerTable = new pesTrackerTable(allTables::$PES_TRACKER);
-        include "connect.php"; // get new connection on $GLOBALS['conn'];
 
         $sql = " SELECT CNUM, NOTES_ID, PES_STATUS, REVALIDATION_STATUS, PES_RECHECK_DATE ";
         $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
@@ -2300,7 +2283,7 @@ class personTable extends DbTable
         $sql .= " and PES_RECHECK_DATE is not null ";
         $sql .= " and PES_RECHECK_DATE <= DATEADD(day, 56, CURRENT_TIMESTAMP) ";
 
-        $rs = sqlsrv_query($localConnection, $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);

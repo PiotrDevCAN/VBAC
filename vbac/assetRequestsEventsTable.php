@@ -26,13 +26,7 @@ class assetRequestsEventsTable extends DbTable{
     const LOG_TYPE_EVENT = 'event';
     const LOG_TYPE_STATUS = 'status';
 
-    private $preparedInsertEventStatement;
-
     private function prepareInsertStatement($data){
-        if(!empty($this->preparedInsertEventStatement)){
-            return $this->preparedInsertEventStatement;
-        }
-
         $initator = empty($_SESSION['ssoEmail']) ? 'Unknown' : $_SESSION['ssoEmail'];
 
         $sql = " INSERT INTO " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS_EVENTS ;
@@ -40,16 +34,14 @@ class assetRequestsEventsTable extends DbTable{
         $sql.= " values ";
         $sql.= "( ?, ?, CURRENT_TIMESTAMP, '$initator') ";
 
-        $rs = sqlsrv_prepare($GLOBALS['conn'], $sql);
+        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql);
 
-        if(!$rs){
-            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+        if(!$preparedStmt){
+            DbTable::displayErrorMessage($preparedStmt, __CLASS__, __METHOD__, $sql);
             return false;
         }
 
-        $this->preparedInsertEventStatement = $rs;
-        return $this->preparedInsertEventStatement;
-
+        return $preparedStmt;
     }
 
     function logEventForRequest($event, $requestReference){

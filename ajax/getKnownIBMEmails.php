@@ -11,7 +11,7 @@ $key = 'getKnownIBMEMails';
 $redisKey = md5($key.'_key_'.$_ENV['environment']);
 if (!$redis->get($redisKey)) {
     $source = 'SQL Server';
-        
+
     $predicate=null;
 
     $loader = new Loader();

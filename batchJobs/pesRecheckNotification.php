@@ -1,11 +1,8 @@
 <?php
-use itdq\Loader;
-use vbac\personRecord;
-use itdq\BluePages;
+
 use vbac\personTable;
 use vbac\allTables;
 use itdq\AuditTable;
-use itdq\DbTable;
 use itdq\slack;
 
 $slack = new slack();

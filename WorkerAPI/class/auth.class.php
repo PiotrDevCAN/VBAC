@@ -159,7 +159,6 @@ class Auth {
 			&& isset($config->client_id) && !empty($config->client_id)
 			&& isset($config->client_secret) && !empty($config->client_secret)
 			&& isset($config->token_scope) && !empty($config->token_scope)
-			&& isset($config->redirect_url) && !empty($config->redirect_url)
 			)
 		{
 			return true;

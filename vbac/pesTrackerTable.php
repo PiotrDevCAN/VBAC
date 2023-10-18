@@ -16,13 +16,6 @@ class pesTrackerTable extends DbTable{
 
     public $lastSql;
 
-    protected $preparedStageUpdateStmts;
-    protected $preparedTrackerInsert;
-    protected $preparedResetForRecheck;
-    protected $preparedGetPesCommentStmt;
-    protected $preparedProcessStatusUpdate;
-    protected $preparedGetProcessingStatusStmt;
-
     const PES_TRACKER_RECORDS_ACTIVE     = 'Active';
     const PES_TRACKER_RECORDS_ACTIVE_PLUS  = 'Active Plus';
     const PES_TRACKER_RECORDS_NOT_ACTIVE = 'Not Active';
@@ -385,7 +378,7 @@ class pesTrackerTable extends DbTable{
 
     function getProcessingStatusCell($cnum){
         $data = array($cnum);
-        $preparedStmt = $this->preparedGetProcessingStatusStmt($data);
+        $preparedStmt = $this->prepareGetProcessingStatusStmt($data);
         
         $rs = sqlsrv_execute($preparedStmt);
         if($rs){
@@ -407,8 +400,6 @@ class pesTrackerTable extends DbTable{
         }
         return false;
     }
-
-
 
     static function getAlertClassForPesStage($pesStageValue=null){
         switch ($pesStageValue) {
@@ -474,99 +465,50 @@ class pesTrackerTable extends DbTable{
     }
 
     function prepareStageUpdate($stage, $data){
-        if(isset($this->preparedStageUpdateStmts[strtoupper(htmlspecialchars($stage))] )) {
-            return $this->preparedStageUpdateStmts[strtoupper(htmlspecialchars($stage))];
-        }
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql.= " SET " . strtoupper(htmlspecialchars($stage)) . " =? ";
-        $sql.= " WHERE CNUM=? ";
-
-        $this->preparedSelectSQL = $sql;
+        $sql.= " SET " . strtoupper(htmlspecialchars($stage)) . " = ? ";
+        $sql.= " WHERE CNUM = ? ";
 
         $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
-
-         if($preparedStmt){
-             $this->preparedStageUpdateStmts[strtoupper(htmlspecialchars($stage))] = $preparedStmt;
-         }
-
-         return $preparedStmt;
+        return $preparedStmt;
     }
 
     function prepareGetProcessingStatusStmt(){
-        if(isset($this->preparedGetProcessingStatusStmt)){
-            return $this->preparedGetProcessingStatusStmt;
-        }
-
         $sql = " SELECT PROCESSING_STATUS, PROCESSING_STATUS_CHANGED ";
         $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql.= " WHERE CNUM=? ";
+        $sql.= " WHERE CNUM = ? ";
 
         $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql);
-
-        $this->preparedGetProcessingStatusStmt = $preparedStmt ? $preparedStmt : false;
-        return $this->preparedGetProcessingStatusStmt;
+        return $preparedStmt;
     }
 
-
     function prepareProcessStatusUpdate($data){
-        if(isset($this->preparedProcessStatusUpdate )) {
-            return $this->prepareProcessStatusUpdate;
-        }
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql.= " SET PROCESSING_STATUS =?, PROCESSING_STATUS_CHANGED = CURRENT_TIMESTAMP ";
-        $sql.= " WHERE CNUM=? ";
-
-        $this->preparedSelectSQL = $sql;
+        $sql.= " WHERE CNUM = ? ";
 
         $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
-
-        if($preparedStmt){
-            $this->prepareProcessStatusUpdate = $preparedStmt;
-        }
-
         return $preparedStmt;
     }
 
     function prepareTrackerInsert($data){
-        if(isset($this->preparedTrackerInsert )) {
-            return $this->preparedTrackerInsert;
-        }
         $sql = " INSERT INTO " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql.= " ( CNUM ) VALUES (?) ";
         
         $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
-
-        if($preparedStmt){
-            $this->preparedTrackerInsert = $preparedStmt;
-            return $preparedStmt;
-        }
-
-        return false;
-
+        return $preparedStmt;
     }
 
     function prepareResetForRecheck($data){
-        if(isset($this->preparedResetForRecheck)) {
-            return $this->preparedResetForRecheck;
-        }
-
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql.= " SET CONSENT = null, RIGHT_TO_WORK = null, PROOF_OF_ID = null, PROOF_OF_RESIDENCY= null, CREDIT_CHECK= null,FINANCIAL_SANCTIONS= null ";
-        $sql.= " , CRIMINAL_RECORDS_CHECK= null, PROOF_OF_ACTIVITY= null, PROCESSING_STATUS = 'PES' ";
-        $sql.= " ,  PROCESSING_STATUS_CHANGED= CURRENT_TIMESTAMP, DATE_LAST_CHASED = null ";
+        $sql.= " SET CONSENT = null, RIGHT_TO_WORK = null, PROOF_OF_ID = null, PROOF_OF_RESIDENCY = null, CREDIT_CHECK = null, FINANCIAL_SANCTIONS = null ";
+        $sql.= " , CRIMINAL_RECORDS_CHECK = null, PROOF_OF_ACTIVITY = null, PROCESSING_STATUS = 'PES' ";
+        $sql.= " , PROCESSING_STATUS_CHANGED = CURRENT_TIMESTAMP, DATE_LAST_CHASED = null ";
         $sql.= " WHERE CNUM = ? ";
 
         $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
-
-        if($preparedStmt){
-            $this->preparedResetForRecheck = $preparedStmt;
-            return $preparedStmt;
-        }
-
-        return false;
-
+        return $preparedStmt;
     }
-
 
     function createNewTrackerRecord($cnum){
         $trackerRecord = new pesTrackerRecord();
@@ -588,7 +530,6 @@ class pesTrackerTable extends DbTable{
 
         }
         return false;
-
     }
 
     function resetForRecheck($cnum){
@@ -605,10 +546,8 @@ class pesTrackerTable extends DbTable{
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared sql');
             throw new \Exception('Unable to reset for recheck Tracker record for ' . $cnum);
-       }
+        }
     }
-
-
 
     function setPesStageValue($cnum,$stage,$stageValue){
         $trackerRecord = new pesTrackerRecord();
@@ -617,7 +556,7 @@ class pesTrackerTable extends DbTable{
         if (!$this->existsInDb($trackerRecord)) {
             $this->createNewTrackerRecord($cnum);
         }
-        $data = array($stageValue,$cnum);
+        $data = array($stageValue, $cnum);
         $preparedStmt = $this->prepareStageUpdate($stage, $data);
 
         $rs = sqlsrv_execute($preparedStmt);
@@ -627,7 +566,7 @@ class pesTrackerTable extends DbTable{
             throw new \Exception("Failed to update PES Stage: $stage to $stageValue for $cnum");
         }
 
-       return true;
+        return true;
     }
 
     function setPesProcessStatus($cnum,$processStatus){
@@ -759,23 +698,11 @@ class pesTrackerTable extends DbTable{
     }
 
     function prepareGetPesCommentStmt($data){
-        if(!empty($this->preparedGetPesCommentStmt)){
-            return $this->preparedGetPesCommentStmt;
-        }
-
         $sql = " SELECT COMMENT FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql.= " WHERE CNUM=? ";
 
         $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
-
-        if($preparedStmt){
-            $this->preparedGetPesCommentStmt = $preparedStmt;
-            return $preparedStmt;
-        }
-
-        throw new \Exception('Unable to prepare GetPesComment');
-        return false;
-
+        return $preparedStmt;
     }
 
     function getPesComment($cnum){
