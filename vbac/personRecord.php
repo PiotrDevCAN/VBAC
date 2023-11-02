@@ -1087,7 +1087,7 @@ class personRecord extends DbRecord
             <div class="form-group">
               <div class="col-sm-6">
               <select class='form-control select select2' 
-                id='person_FM_CNUM'
+                id='resource_FM_CNUM'
                 name='FM_CNUM'
                 required='required'
                 data-placeholder='Select functional manager' >
