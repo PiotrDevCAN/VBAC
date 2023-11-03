@@ -69,18 +69,18 @@ class dlpTable extends DbTable {
     
     function getForPortal($predicate=null, $withButtons=true, $resultSetOnly = false){
         $sql = "select distinct D.CNUM ";
-        $sql.= ", case when P.NOTES_ID is not null then P.NOTES_ID else A.CNUM end as LICENSEE ";
+        $sql.= ", case when P.EMAIL_ADDRESS is not null then P.EMAIL_ADDRESS else A.CNUM end as LICENSEE ";
         $sql.= ", D.HOSTNAME ";
-        $sql.= ", case when A.NOTES_ID is not null then A.NOTES_ID else D.APPROVER_EMAIL end as APPROVER ";
+        $sql.= ", case when A.EMAIL_ADDRESS is not null then A.EMAIL_ADDRESS else D.APPROVER_EMAIL end as APPROVER ";
         // $sql.= ", case when D.APPROVED_DATE is not null then varchar_format(D.APPROVED_DATE,'YYYY-MM-DD') else D.STATUS end as APPROVED ";
         $sql.= ", case when D.APPROVED_DATE is not null then D.APPROVED_DATE else D.STATUS end as APPROVED ";
-        $sql.= ", case when F.NOTES_ID is not null then F.NOTES_ID else 'Unknown to vbac' end as FM ";
+        $sql.= ", case when F.EMAIL_ADDRESS is not null then F.EMAIL_ADDRESS else 'Unknown to vbac' end as FM ";
         $sql.= ", D.CREATION_DATE as CREATED ";
         $sql.= ", D.EXCEPTION_CODE as CODE";
         $sql.= ", T.HOSTNAME as OLD_HOSTNAME ";
         $sql.= ", T.TRANSFERRED_DATE as TRANSFERRED ";
         $sql.= ", T.TRANSFERRED_TO_HOSTNAME ";
-        $sql.= ", case when N.NOTES_ID is not null then N.NOTES_ID else T.TRANSFERRED_EMAIL end  as TRANSFERRER ";
+        $sql.= ", case when N.EMAIL_ADDRESS is not null then N.EMAIL_ADDRESS else T.TRANSFERRED_EMAIL end  as TRANSFERRER ";
         $sql.= ", D.STATUS ";
         $sql.= " from ". $GLOBALS['Db2Schema'] . "." . allTables::$DLP . " as D ";
         $sql.= " left join ". $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";

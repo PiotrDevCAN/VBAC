@@ -9,9 +9,9 @@ use vbac\personRecord;
 
 $loader = new Loader();
 $predicate = " 1=1 " . assetRequestRecord::ableToOwnAssets();
-$myManagersCnum = personTable::myManagersCnum();
+// $myManagersCnum = personTable::myManagersCnum();
 
-$selectableNotesId = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON,$predicate);
+// $selectableNotesId = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON,$predicate);
 $selectableEmailAddress = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON,$predicate);
 $selectableRevalidationStatus = $loader->loadIndexed('REVALIDATION_STATUS','CNUM',allTables::$PERSON,$predicate);   
 
@@ -21,10 +21,10 @@ $currentLicences = $loader->loadIndexed('HOSTNAME','CNUM', allTables::$DLP," STA
 $options = array();
 
 
-foreach ($selectableNotesId as $cnum => $notesId){
+foreach ($selectableEmailAddress as $cnum => $emailAddress){
     $isOffboarding = substr($selectableRevalidationStatus[$cnum],0,11)==personRecord::REVALIDATED_OFFBOARDING;
-    $dataOffboarding = " data-revalidationstatus" . "='" . $selectableRevalidationStatus[$cnum] . "' ";
-    $displayedName = !empty(trim($notesId)) ?  trim($notesId) : $selectableEmailAddress[$cnum];
+    // $dataOffboarding = " data-revalidationstatus" . "='" . $selectableRevalidationStatus[$cnum] . "' ";
+    $displayedName = !empty(trim($emailAddress)) ?  trim($emailAddress) : $selectableEmailAddress[$cnum];
     $hostname = isset($currentLicences[trim($cnum)]) ? " (" .  $currentLicences[trim($cnum)] . ")" : " (no licence)";
     if(!$isOffboarding){
         $options[]= (object) array('id'=> trim($cnum),'text'=> $displayedName . $hostname);
