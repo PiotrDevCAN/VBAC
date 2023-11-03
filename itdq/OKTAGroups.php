@@ -1,10 +1,6 @@
 <?php
 namespace itdq;
 
-use WorkerApi\Auth;
-
-include_once "WorkerAPI/class/include.php";
-
 /*
  *  Handles OKTA Groups.
  */
@@ -13,21 +9,26 @@ class OKTAGroups {
 	private $token = null;
 	private $hostname = null;
 
+	private $url = null;
+
+	private $redis = null;
+
 	public function __construct()
 	{
-		$auth = new Auth();
-		$auth->ensureAuthorized();
+		$oAuthPrefix = '/oauth2/v1';
+		$envHostName = trim($_ENV['sso_host']);
 
-		// $this->hostname = trim($_ENV['sso_host']);
-		$this->hostname = 'https://connect.kyndryl.net';
+		$this->hostname = str_replace($oAuthPrefix, '', $envHostName);
 		$this->token = trim($_ENV['sso_api_token']);
+		
+		$this->redis = $GLOBALS['redis'];
 	}
 
 	private function createCurl($type = "GET")
 	{
 		// create a new cURL resource
 		$ch = curl_init();
-		$authorization = "Authorization: SSWS ".$this->token; // Prepare the authorisation token
+		$authorization = "Authorization: SSWS ".$this->token; // Prepare the authorization token
 		$headers = [
 			'Content-Type: application/json',
 			'Accept: application/json, text/json, application/xml, text/xml',
@@ -50,22 +51,8 @@ class OKTAGroups {
 		$ret = curl_exec($ch);
 
 		$info = curl_getinfo($ch);
-		
-		// var_dump($ret);
-		// echo '<pre>';
-		// var_dump($ret);
-		// echo '</pre>';
-		// var_dump($info);
-		// exit;
 
 		$result = json_decode($ret, true);
-
-		// var_dump($ret);
-		// echo '<pre>';
-		// var_dump($result);
-		// echo '</pre>';
-		// var_dump($info);
-		// exit;
 
 		if (empty($ret)) {
 			// some kind of an error happened
@@ -125,10 +112,10 @@ class OKTAGroups {
 		return $this->processURL($url, 'GET');
 	}
 
-	public function getGroupByName($groupName)
+	public function getGroupByName($groupName, $limit = 10)
 	{
 		$groupName = urlencode($groupName);
-		$url = "/api/v1/groups?q=$groupName&limit=10";
+		$url = "/api/v1/groups?q=$groupName&limit=$limit";
 		return $this->processURL($url, 'GET');
 	}
 
@@ -155,6 +142,7 @@ class OKTAGroups {
 	public function listMembers($groupId)
 	{
 		$url = "/api/v1/groups/$groupId/users";
+		$this->url = $url;
 		return $this->processURL($url, 'GET');
 	}
 
@@ -220,28 +208,83 @@ class OKTAGroups {
 	* Auxiliary operations
  	*/
 
-	public function inAGroup($groupName, $ssoEmail)
+	public function getGroupMembersKey($groupName)
 	{
-		$redis = $GLOBALS['redis'];
-		$redisKey = md5($groupName.'_members');
-		if (!$redis->get($redisKey)) {
+		$key = $groupName.'_getGroupMembers';
+		$redisKey = md5($key.'_key_'.$_ENV['environment']);
+		return $redisKey;
+	}
+
+	public function getGroupMembers($groupName)
+	{
+		$redisKey = $this->getGroupMembersKey($groupName);
+		$cacheValue = $this->redis->get($redisKey);
+		if (!$cacheValue) {
 			$source = 'SQL Server';
 
 			$groupId = $this->getGroupId($groupName);
 			$result = $this->listMembers($groupId);
 
-			$redis->set($redisKey, json_encode($result));
-			$redis->expire($redisKey, REDIS_EXPIRE);
+			if (array_key_exists('errorCode', $result)) {
+
+				$debug = array(
+					'hostname' => $this->hostname,
+					'url' => $this->url,
+					'token' => $this->token,
+					'groupId' => $groupId,
+					'groupName' => $groupName,
+					'result' => $result,
+					'source' => $source
+				);
+	
+				trigger_error("Failing Okta API call ".json_encode($debug), E_USER_WARNING);
+				
+				$result = array();
+			} else {
+				$this->redis->set($redisKey, json_encode($result));
+				$this->redis->expire($redisKey, REDIS_EXPIRE);
+			}
 		} else {
 			$source = 'Redis Server';
-			$result = json_decode($redis->get($redisKey), true);
+			$result = json_decode($cacheValue, true);
 		}
+		$data = array('users'=>$result, 'source'=>$source);
+		return $data;
+	}
 
+	public function clearGroupMembersCache($groupName)
+	{
+		$redisKey = $this->getGroupMembersKey($groupName);
+		$this->redis->del($redisKey);
+	}
+
+	public function inAGroup($groupName, $ssoEmail)
+	{
+		$membersData = $this->getGroupMembers($groupName);
+		list('users' => $users, 'source' => $source) = $membersData;
+		
 		$found = false;
-		foreach($result as $key => $row) {
-			$email = $row['profile']['email'];
-			if (strtolower(trim($email)) == strtolower(trim($ssoEmail))) {
-				$found = true;
+		foreach($users as $key => $row) {
+			if (is_array($row)) {
+				if (array_key_exists('profile', $row)) {
+					$profile = $row['profile'];
+					if (is_array($profile)) {
+						if (array_key_exists('email', $profile)) {
+							$email = $profile['email'];
+							if (strtolower(trim($email)) == strtolower(trim($ssoEmail))) {
+								$found = true;
+							}
+						} else {
+							// trigger_error("Failing PROFILE missing EMAIL data ".json_encode($profile), E_USER_WARNING);
+						}
+					} else {
+						// trigger_error("Failing PROFILE because it is a string (".serialize($profile).")", E_USER_WARNING);
+					}
+				} else {
+					// trigger_error("Failing ROW missing PROFILE data ".json_encode($row), E_USER_WARNING);
+				}
+			} else {			
+				// trigger_error("Failing ROW because it is a string (".serialize($row).")", E_USER_WARNING);
 			}
 		}
 		return $found;
@@ -249,30 +292,47 @@ class OKTAGroups {
 
 	public function getGroupId($groupName)
 	{
-		$redis = $GLOBALS['redis'];
-		$redisKey = md5($groupName.'_key');
-		if (!$redis->get($redisKey)) {
+		$key = $groupName.'_getGroupId';
+		$redisKey = md5($key.'_key_'.$_ENV['environment']);
+		if (!$this->redis->get($redisKey)) {
 			$source = 'SQL Server';
 
 			$result = $this->getGroupByName($groupName);
 
-			$redis->set($redisKey, json_encode($result));
-			$redis->expire($redisKey, REDIS_EXPIRE);
+			$this->redis->set($redisKey, json_encode($result));
+			$this->redis->expire($redisKey, REDIS_EXPIRE);
 		} else {
 			$source = 'Redis Server';
-			$result = json_decode($redis->get($redisKey), true);
+			$result = json_decode($this->redis->get($redisKey), true);
 		}
 
 		$groupId = false;
 		foreach($result as $key => $row) {
-			$groupId = 	$row['id'];
+			if ($row['profile']['name'] == $groupName) {
+				$groupId = 	$row['id'];
+			}
 		}
 		return $groupId;
 	}
 
-	public function getUserID($email)
+	public function getGroupName($groupId)
 	{
-	
+		$key = $groupId.'_getGroupName';
+		$redisKey = md5($key.'_key_'.$_ENV['environment']);
+		if (!$this->redis->get($redisKey)) {
+			$source = 'SQL Server';
+
+			$result = $this->getGroup($groupId);
+
+			$this->redis->set($redisKey, json_encode($result));
+			$this->redis->expire($redisKey, REDIS_EXPIRE);
+		} else {
+			$source = 'Redis Server';
+			$result = json_decode($this->redis->get($redisKey), true);
+		}
+
+		$groupName = $result['profile']['name'];
+		return $groupName;
 	}
 }
 ?>

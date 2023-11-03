@@ -48,6 +48,9 @@ include ('splClassLoader.php');
 include ('includes/startsWith.php');
 include ('includes/endsWith.php');
 
+// global var and config file
+include_once ('../php/w3config.php');
+
 require_once("../php/errorHandlers.php");
 
 set_error_handler('myErrorHandler');
@@ -58,13 +61,14 @@ $GLOBALS['Db2Schema'] = str_replace('_LOCAL', '', $GLOBALS['Db2Schema']);
 
 $sessionConfig = (new \ByJG\Session\SessionConfig($_SERVER['SERVER_NAME']))
 ->withTimeoutMinutes(120)
-->withSecret($_ENV['jwt_token']);
+->withSecret($_ENV['jwt_token'])
+->replaceSessionHandler();
 
 $handler = new JwtSecureSession($sessionConfig);
-session_set_save_handler($handler, true);
+// session_set_save_handler($handler, true);
 
-session_start();
+// session_start();
 error_log(__FILE__ . "session:" . session_id());
-do_auth();
+// do_auth();
 include "connect.php";
 $redisClient = new Redis();

@@ -20,6 +20,8 @@ class AllItdqTables
 
     public static $TRACE            = 'TRACE';
     public static $TRACE_CONTROL    = 'TRACE_CONTROL';
+
+    public static $LOG              = 'LOG';
 }
 
 ?>

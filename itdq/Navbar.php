@@ -14,6 +14,10 @@ class Navbar
 
     protected $menuItems;
 
+    public static $ACCESS_CDI = 'accessCdi';
+    public static $ACCESS_PMO = 'accessPmo';
+    public static $ACCESS_BASED_BTN= 'accessBasedBtn';
+
     function __construct($image,$brand,$search=false){
         $this->navbarImage = $image;
         $this->navbarBrand = $brand;
@@ -63,7 +67,7 @@ class Navbar
             
             return $mod_time;
         }
-
+        
         // $hash = `git log -1 --pretty=%h`;
         $hashMain = date("d F Y", get_page_mod_time());
         $hash = sha1($hashMain);

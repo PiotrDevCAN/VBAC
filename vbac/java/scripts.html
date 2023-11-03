@@ -38,6 +38,9 @@ $isOffBoarding = strpos($file, 'pb_offboard.php') !== false;
 
 $isOnBoardingWithcFirst = strpos($file, 'cdi_test_first_form.php') !== false;
 
+// CDI Admin
+$isOktaUserManage = strpos($file, 'pi_manageGroups.php') !== false;
+
 // admin section
 $isPMOFull = strpos($file, 'pa_pmo.php') !== false;
 $isPMOArchive = strpos($file, 'pa_pmo_archive.php') !== false;
@@ -83,6 +86,11 @@ switch (true) {
         ?>
             <script type="module" src="vbac/java/boarding/offBoarding.js?<?=$hash;?>"></script>
         <?php
+        break;
+        case $isOktaUserManage:
+        ?>
+    <script type="module" src="vbac/java/cdi/OKTAUserList.js?<?=$hash;?>"></script>
+    <?php
         break;
     case $isPMOFull:
         ?>

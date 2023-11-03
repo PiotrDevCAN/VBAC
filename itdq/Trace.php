@@ -167,7 +167,7 @@ class Trace extends Log{
 		if(!$rs)
 			{
 			echo "<BR>Error: " . json_encode(sqlsrv_errors());
-			echo "<BR>Msg: " . print_r(sqlsrv_errors()) . "<BR>";
+			echo "<BR>Msg: " . json_encode(sqlsrv_errors()) . "<BR>";
 			exit("Error in: " . __METHOD__ .  __LINE__ . "<BR>running: $sql");
 		}
 		$anyExcludes = FALSE;

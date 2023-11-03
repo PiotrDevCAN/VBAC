@@ -7,6 +7,12 @@
 $_SESSION['SITE_NAME'] = 'rest';
 $_SESSION['country'] = 'E4'; // Used in Connect.php
 
+if(!isset($_ENV['environment'])){
+    echo "<pre>";
+    var_dump($_ENV);
+    die('environment not set');
+}
+
 $site = array(
 
     // if not empty will override the site title from menuconf.php
@@ -64,8 +70,8 @@ $site = array(
     'pesBgAz' => 'the vBAC tool - production-vbac_pes',
     'reqBgAz' => 'the vBAC tool - production-vbac_requestor',
     'rfpBgAz' => 'the vBAC tool - production-vbac_Reports_Full_Person',
-
     'userBg' => null,
+
     'nullBg' => null,
 
     'email' => false,
@@ -78,10 +84,17 @@ $site = array(
     'SITE_NAME' => $_ENV['environment'],
     'iconDirectory' => 'ICON'
 
+); // Sets the start date for the Date Pickr
 
-
-) // Sets the start date for the Date Pickr
-;
+$site['allGroups'] = array(
+    'CDI' => $site['cdiBgAz'],
+    'resource_strategy' => $site['rsBgAz'],
+    'functional_managers' => $site['fmBgAz'],
+    'pmo' => $site['pmoBgAz'],
+    'pes' => $site['pesBgAz'],
+    'requestor' => $site['reqBgAz'],
+    'reports_full_person' => $site['rfpBgAz']
+);
 
 // # These settings are used for the meta tags on each page. These are
 // # all mandatory for Intranet sites. A full description of meta tags
@@ -162,6 +175,9 @@ $w3php = array(
 );
 
 foreach ($site as $key => $value) {
-    $GLOBALS['site'][$key] = trim($value);
-    $_SESSION[$key] = trim($value);
+    if (!is_array($value)) {
+        $value = trim($value);
+    }
+    $GLOBALS['site'][$key] = $value;
+    $_SESSION[$key] = $value;
 }
