@@ -21,10 +21,10 @@ class delegateRecord extends DbRecord
     function displayForm(){
         $loader = new Loader();
         $predicate = "  trim(REVALIDATION_STATUS) in ('". personRecord::REVALIDATED_FOUND . "','" . personRecord::REVALIDATED_VENDOR . "','" . personRecord::REVALIDATED_POTENTIAL . "') or REVALIDATION_STATUS is null ";
-        $selectableNotesId = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON,$predicate);
+        // $selectableNotesId = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON,$predicate);
         $selectableEmailAddress = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON,$predicate);
         
-        $allNotesId = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON);
+        // $allNotesId = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON);
         $allEmailAddress = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON);
         ?>
 
@@ -44,8 +44,8 @@ class delegateRecord extends DbRecord
                       >
                     <option value=''></option>
                     <?php
-                    foreach ($selectableNotesId as $cnum => $notesId){
-                            $displayedName = !empty(trim($notesId)) ?  trim($notesId) : $allEmailAddress[$cnum];
+                    foreach ($selectableEmailAddress as $cnum => $emailAddress){
+                            $displayedName = !empty(trim($emailAddress)) ?  trim($emailAddress) : $allEmailAddress[$cnum];
                             //$selected = !$isFm && trim($cnum)==trim($myCnum) ? ' selected ' : null    // If they don't select the user - we don't fire the CT ID & Education prompts.
                             $selected = null;
                             if (!empty(trim($displayedName))) {
