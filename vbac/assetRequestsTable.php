@@ -246,7 +246,8 @@ class assetRequestsTable extends DbTable{
                 break;
             }
 
-            $row['PERSON'] = $row['REQUESTEE_NOTES'] . "<br/><small>" . $row['REQUESTEE_EMAIL'] . "</small>";
+            // $row['PERSON'] = $row['REQUESTEE_NOTES'] . "<br/><small>" . $row['REQUESTEE_EMAIL'] . "</small>";
+            $row['PERSON'] = $row['REQUESTEE_EMAIL'];
 
             if(strtolower(trim($row['FM_EMAIL'])) == (strtolower(trim($row['APPROVER_EMAIL'])))){
                $indicatorIfApproverIsFm = "<span class='bg-success'>&nbsp;";
@@ -1959,14 +1960,10 @@ class assetRequestsTable extends DbTable{
             $comment = $row['COMMENT'];
             $reference = trim($row['REFERENCE']);
 
-
             $row['COMMENT'] = '<div class="form-check"><textarea class="form-check-input" style="min-width: 100%" name=\'comment['. $row['REFERENCE'] . "]'  id=\'comment[". $row['REFERENCE'] . "]\'" . " ></textarea><br/>$comment</div>";
-
 
             $row['REFERENCE'] = "<small>" . trim($row['ORDERIT_NUMBER']) . ":" . $reference . "<br/>" . $row['ORDERIT_VARB_REF'] . "</small>";
             $row['PERSON'] = "<small>" . $row['PERSON'] . "</small>";
-
-
 
             if(trim($row['ASSET'])=='LBG Email' && empty(trim($row['PRIMARY_UID'])) && !empty(trim($row['CT_ID']))){
                 $primaryUid = trim($row['CT_ID']) . "@lloydsbanking.com";
@@ -1984,7 +1981,6 @@ class assetRequestsTable extends DbTable{
             $row['ORDERIT_RESPONDED'] = "<div class='form-check'><input class='form-check' name='orderit_responded[" . $reference . "]' id='orderit_responded[". $reference ."]' value='$orderItRespondedDisplay' type='date' size='10' maxlength='10' placeholder='OrderIt Resp.' data-toggle='tooltip' title='LBG Responded'>";
             $row['ORDERIT_RESPONDED'].= "</div>";
 
-
             unset($row['ORDERIT_NUMBER']);
             unset($row['ORDERIT_VARB_REF']);
             unset($row['ORDERIT_STATUS']);
@@ -1995,8 +1991,6 @@ class assetRequestsTable extends DbTable{
 
         return $data;
     }
-
-
 
     function setRequestsOrderItStatus($reference, $orderItStatus, $comment=null){
 

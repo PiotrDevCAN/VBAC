@@ -176,13 +176,13 @@ class pesTrackerTable extends DbTable{
 		<tbody>
 		<?php
 
+        $today = new \DateTime();
         foreach ($allRows as $row){
             set_time_limit(60);
-            $today = new \DateTime();
-
-            $date = DateTime::createFromFormat('Y-m-d H:i:s', $row['PES_DATE_REQUESTED']);
+            
+            // $date = DateTime::createFromFormat('Y-m-d H:i:s', $row['PES_DATE_REQUESTED']);
+            $date = DateTime::createFromFormat('Y-m-d', $row['PES_DATE_REQUESTED']);
             $age  = !empty($row['PES_DATE_REQUESTED']) ?  $date->diff($today)->format('%R%a days') : null ;
-
             $cnum = $row['CNUM'];
             $firstName = trim($row['FIRST_NAME']);
             $lastName = trim($row['LAST_NAME']);
@@ -223,7 +223,8 @@ class pesTrackerTable extends DbTable{
             <button class='btn btn-info btn-xs  btnProcessStatusChange accessPes accessCdi' data-processstatus='Unknown' data-toggle="tooltip"  title="Unknown"><span class="glyphicon glyphicon-erase" ></span></button>
             </span>
             <?php
-            $dateLastChased = !empty($row['DATE_LAST_CHASED']) ? DateTime::createFromFormat('Y-m-d H:i:s', $row['DATE_LAST_CHASED']) : null;
+            // $dateLastChased = !empty($row['DATE_LAST_CHASED']) ? DateTime::createFromFormat('Y-m-d H:i:s', $row['DATE_LAST_CHASED']) : null;
+            $dateLastChased = !empty($row['DATE_LAST_CHASED']) ? DateTime::createFromFormat('Y-m-d', $row['DATE_LAST_CHASED']) : null;
             $dateLastChasedFormatted = !empty($row['DATE_LAST_CHASED']) ? $dateLastChased->format('d M Y') : null;
             $dateLastChasedWithLevel = !empty($row['DATE_LAST_CHASED']) ? $dateLastChasedFormatted . $this->extractLastChasedLevelFromComment($row['COMMENT']) : $dateLastChasedFormatted;
             $alertClass = !empty($row['DATE_LAST_CHASED']) ? self::getAlertClassForPesChasedDate($row['DATE_LAST_CHASED']) : 'alert-info';
@@ -421,7 +422,7 @@ class pesTrackerTable extends DbTable{
 
     static function getAlertClassForPesChasedDate($pesChasedDate){
         $today = new \DateTime();
-        $date = DateTime::createFromFormat('Y-m-d H:i:s', $pesChasedDate);
+        $date = DateTime::createFromFormat('Y-m-d', $pesChasedDate);
         $age  = $date->diff($today)->d;
 
         switch (true) {
@@ -437,8 +438,6 @@ class pesTrackerTable extends DbTable{
         }
         return $alertClass;
     }
-
-
 
     static function getButtonsForPesStage($value, $alertClass, $stage, $cnum){
         ?>
@@ -527,7 +526,6 @@ class pesTrackerTable extends DbTable{
             }
 
             return;
-
         }
         return false;
     }
@@ -612,8 +610,6 @@ class pesTrackerTable extends DbTable{
         return true;
     }
 
-
-
     function setPesPassportNames($cnum,$passportFirstname=null,$passportSurname=null){
         $trackerRecord = new pesTrackerRecord();
         $trackerRecord->setFromArray(array('CNUM'=>$cnum));
@@ -673,7 +669,6 @@ class pesTrackerTable extends DbTable{
         $now = new \DateTime();
 
         $newComment = trim($comment) . "<br/><small>" . $_SESSION['ssoEmail'] . ":" . $now->format('Y-m-d H:i:s') . "</small><br/>" . $existingComment;
-
 
         $commentFieldSize = (int)$this->getColumnLength('COMMENT');
 
@@ -748,7 +743,6 @@ class pesTrackerTable extends DbTable{
         return true;
     }
 
-
     function changeCnum($fromCnum, $toCnum){
 
         if (sqlsrv_begin_transaction($GLOBALS['conn']) === false) {
@@ -786,5 +780,4 @@ class pesTrackerTable extends DbTable{
 
         return true;
      }
-
 }
