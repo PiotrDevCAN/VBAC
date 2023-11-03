@@ -4,9 +4,9 @@ use itdq\PlannedOutages;
 use itdq\Navbar;
 use itdq\NavbarMenu;
 use itdq\NavbarOption;
-use vbac\personTable;
 use itdq\NavbarDivider;
 use itdq\OKTAGroups;
+use vbac\personTable;
 
 $beginNavBar = microtime(true);
 
@@ -38,6 +38,7 @@ $employeeData	= new NavbarOption('Email Employee Data','batchJobs/sendEmplyeeDat
 $link           = new NavbarOption('Link Reg to PreB','pi_linkIbmerToPreboarder.php','accessCdi');
 $workLocation   = new NavbarOption('Work Location','pi_manageLocation.php','accessCdi');
 $skillSet       = new NavbarOption('Skillset','pi_manageSkillset.php','accessCdi');
+$manageGroups    = new NavbarOption('Manage Okta Groups', 'pi_manageGroups.php' ,'accessCdi');
 $cdiAdmin->addOption($trace);
 $cdiAdmin->addOption($traceControl);
 $cdiAdmin->addOption($traceDelete);
@@ -51,6 +52,8 @@ $cdiAdmin->addOption( new NavbarDivider('accessCdi'));
 $cdiAdmin->addOption($link);
 $cdiAdmin->addOption($workLocation);
 $cdiAdmin->addOption($skillSet);
+$cdiAdmin->addOption( new NavbarDivider('accessCdi'));
+$cdiAdmin->addOption($manageGroups);
 
 $adminMenu      = new NavbarMenu('vBac Admin');
 $pmo            = new NavbarOption('Person Portal', 'pa_pmo.php','accessCdi accessPmo accessFm accessUser');
