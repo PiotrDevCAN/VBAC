@@ -46,10 +46,10 @@ class dlpRecord extends DbRecord
         $predicate = " 1=1 " . assetRequestRecord::ableToOwnAssets();
         $myManagersCnum = personTable::myManagersCnum();
         
-        $selectableNotesId = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON,$predicate);
+        // $selectableNotesId = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON,$predicate);
         $selectableEmailAddress = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON,$predicate);
 
-        $allNotesId = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON);
+        // $allNotesId = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON);
         $allEmailAddress = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON);
 
         $selectableRevalidationStatus = $loader->loadIndexed('REVALIDATION_STATUS','CNUM',allTables::$PERSON,$predicate);   
@@ -58,7 +58,8 @@ class dlpRecord extends DbRecord
         JavaScript::buildObjectFromLoadIndexedPair($currentLicences,'licences');
         
         $approvingMgrPredicate = " upper(FM_MANAGER_FLAG) like 'Y%' ";
-        $approvingMgrs = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON,$approvingMgrPredicate);
+        // $approvingMgrsNotesId = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON,$approvingMgrPredicate);
+        $approvingMgrsEmailAddress = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON,$approvingMgrPredicate);
         
         $cnumFm = $loader->loadIndexed('FM_CNUM','CNUM', allTables::$PERSON,$predicate);
         JavaScript::buildObjectFromLoadIndexedPair($cnumFm,'cnumfm');
@@ -77,18 +78,18 @@ class dlpRecord extends DbRecord
         		<div class='col-sm-4'>
 				<label for='licencee'>Licence Holder</label>
                 <select class='form-control select select2 '
-                			  id='licencee'
-                              name='licencee'
-                              required
-                              data-toggle="tooltip" title="Only PES Cleared Kyndryl employees & Vendors will appear in this list. If you feel someone is missing, please ensure they have a FULL Boarded record in the system."
-                      >
-                      <option value=''></option>
+                    id='licencee'
+                    name='licencee'
+                    required
+                    data-toggle="tooltip" title="Only PES Cleared Kyndryl employees & Vendors will appear in this list. If you feel someone is missing, please ensure they have a FULL Boarded record in the system."
+                    >
+                    <option value=''></option>
                 <?php                
-                foreach ($selectableNotesId as $cnum => $notesId){
+                foreach ($selectableEmailAddress as $cnum => $emailAddress){
                     $isOffboarding = substr($selectableRevalidationStatus[$cnum],0,11)==personRecord::REVALIDATED_OFFBOARDING;
-                    $dataOffboarding = " data-revalidationstatus" . "='" . $selectableRevalidationStatus[$cnum] . "' ";
-                    $displayedName = !empty(trim($notesId)) ?  trim($notesId) : $allEmailAddress[$cnum];
-                    $hostname = isset($currentLicences[trim($cnum)]) ? " (" .  $currentLicences[trim($cnum)] . ")" : " (no licence)";
+                    // $dataOffboarding = " data-revalidationstatus" . "='" . $selectableRevalidationStatus[$cnum] . "' ";
+                    $displayedName = !empty(trim($emailAddress)) ?  trim($emailAddress) : $allEmailAddress[$cnum];
+                    // $hostname = isset($currentLicences[trim($cnum)]) ? " (" .  $currentLicences[trim($cnum)] . ")" : " (no licence)";
                     if(!$isOffboarding){
                         if (!empty(trim($displayedName))) {
                             $disabled = false;
@@ -127,8 +128,8 @@ class dlpRecord extends DbRecord
                     <?php
                     $isFm = $_SESSION['isFm'];
                     $myCnum = personTable::myCnum();
-                    foreach ($approvingMgrs as $cnum => $notesId){
-                        $displayedName = !empty(trim($notesId)) ?  trim($notesId) : $allEmailAddress[$cnum];
+                    foreach ($approvingMgrsEmailAddress as $cnum => $emailAddress){
+                        $displayedName = !empty(trim($emailAddress)) ?  trim($emailAddress) : $allEmailAddress[$cnum];
                         if (!empty(trim($displayedName))) {
                             $selected = null;
                             $disabled = null;

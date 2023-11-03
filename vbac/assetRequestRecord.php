@@ -91,16 +91,19 @@ class assetRequestRecord extends DbRecord {
 
         $predicate .= self::ableToOwnAssets();
 
-        $selectableNotesId = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON,$predicate);
+        // $selectableNotesId = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON,$predicate);
         $selectableEmailAddress = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON,$predicate);
+        // $selectableKynEmailAddress = $loader->loadIndexed('KYN_EMAIL_ADDRESS','CNUM',allTables::$PERSON,$predicate);
         
-        $allNotesId = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON);
+        // $allNotesId = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON);
         $allEmailAddress = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON);
+        // $allKynEmailAddress = $loader->loadIndexed('KYN_EMAIL_ADDRESS','CNUM',allTables::$PERSON);
 
         $selectableRevalidationStatus = $loader->loadIndexed('REVALIDATION_STATUS','CNUM',allTables::$PERSON,$predicate);
 
         $approvingMgrPredicate = " upper(FM_MANAGER_FLAG) like 'Y%' ";
-        $approvingMgrs = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON,$approvingMgrPredicate)
+        // $approvingMgrsNotesId = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON,$approvingMgrPredicate);
+        $approvingMgrsEmailAddress = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON,$approvingMgrPredicate);
 
         ?>
         <form id='assetRequestForm'  class="form-horizontal"
@@ -122,11 +125,11 @@ class assetRequestRecord extends DbRecord {
                 >
                     <option value=''></option>
                     <?php
-                    foreach ($selectableNotesId as $cnum => $notesId){
-                        $isOffboarding = substr($selectableRevalidationStatus[$cnum],0,11)==personRecord::REVALIDATED_OFFBOARDING;
+                    foreach ($selectableEmailAddress as $cnum => $emailId){
+                        // $isOffboarding = substr($selectableRevalidationStatus[$cnum],0,11)==personRecord::REVALIDATED_OFFBOARDING;
                         $dataOffboarding = " data-revalidationstatus" . "='" . $selectableRevalidationStatus[$cnum] . "' ";
                         // $dataOffboarding.= $isOffboarding ? "='true' " : "='false'";
-                        $displayedName = !empty(trim($notesId)) ?  trim($notesId) : $allEmailAddress[$cnum];
+                        $displayedName = !empty(trim($emailId)) ? trim($emailId) : $allEmailAddress[$cnum];
                         //$selected = !$isFm && trim($cnum)==trim($myCnum) ? ' selected ' : null    // If they don't select the user - we don't fire the CT ID & Education prompts.
                         $selected = null;
                         if (!empty(trim($displayedName))) {
@@ -185,43 +188,43 @@ class assetRequestRecord extends DbRecord {
         		<div class='col-sm-4'>
         		<label for='approvingManager'>Approving Manager</label>
                 <select class='form-control select select2 '
-                			  id='approvingManager'
-                              name='approvingManager'
-                              required
-                      >
-                    <option value=''>
-                    </option>
-                    <?php
-                    foreach ($approvingMgrs as $cnum => $notesId){
-                            $displayedName = !empty(trim($notesId)) ?  trim($notesId) : $allEmailAddress[$cnum];
-                            if (!empty(trim($displayedName))) {
-                                $selected = null;
-                                $disabled = null;
-                                if(!$isFm && (trim($cnum)== trim($myManagersCnum))){
-                                    /*
-                                     * The user is NOT a manager, and this entry is their Mgr
-                                     *
-                                     * Stops users who are managers having the drop down default to THEIR mgr, when it should default to them.
-                                     * JS code will remove the entry in this list, if they pick themselves as the Requestee.
-                                     *
-                                     */
-                                    $selected = " selected ";
-                                } elseif ($isFm && (trim($cnum)==trim($myCnum))){
-                                    /*
-                                     * They ARE an FM and this is their entry, so select it by default.
-                                     * If the requestee becomes themselves, we'll remove the entry from the dropdown.
-                                     */
-                                    $selected = " selected ";
-                                }
-                            } else {
-                                $selected = null;
-                                // $disabled = " disabled ";
-                                $disabled = null;
-                                $displayedName = 'Missing Email Address or Notes Id for '.$cnum;
-                            }
-                            ?><option value='<?=trim($cnum);?>'<?=$selected?><?=$disabled?>><?=$displayedName?></option><?php
-                        };
-                        ?>
+                    id='approvingManager'
+                    name='approvingManager'
+                    required
+                >
+                <option value=''>
+                </option>
+                <?php
+                foreach ($approvingMgrsEmailAddress as $cnum => $emailAddress){
+                    $displayedName = !empty(trim($emailAddress)) ?  trim($emailAddress) : $allEmailAddress[$cnum];
+                    if (!empty(trim($displayedName))) {
+                        $selected = null;
+                        $disabled = null;
+                        if(!$isFm && (trim($cnum)== trim($myManagersCnum))){
+                            /*
+                                * The user is NOT a manager, and this entry is their Mgr
+                                *
+                                * Stops users who are managers having the drop down default to THEIR mgr, when it should default to them.
+                                * JS code will remove the entry in this list, if they pick themselves as the Requestee.
+                                *
+                                */
+                            $selected = " selected ";
+                        } elseif ($isFm && (trim($cnum)==trim($myCnum))){
+                            /*
+                                * They ARE an FM and this is their entry, so select it by default.
+                                * If the requestee becomes themselves, we'll remove the entry from the dropdown.
+                                */
+                            $selected = " selected ";
+                        }
+                    } else {
+                        $selected = null;
+                        // $disabled = " disabled ";
+                        $disabled = null;
+                        $displayedName = 'Missing Email Address or Notes Id for '.$cnum;
+                    }
+                    ?><option value='<?=trim($cnum);?>'<?=$selected?><?=$disabled?>><?=$displayedName?></option><?php
+                };
+                ?>
             	</select>
             	</div>
             	<div class='col-sm-4' >
