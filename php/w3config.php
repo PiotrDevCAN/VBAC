@@ -88,10 +88,10 @@ $site = array(
 
 $site['allGroups'] = array(
     'CDI' => $site['cdiBgAz'],
-    'resource_strategy' => $site['rsBgAz'],
-    'functional_managers' => $site['fmBgAz'],
-    'pmo' => $site['pmoBgAz'],
     'pes' => $site['pesBgAz'],
+    'pmo' => $site['pmoBgAz'],
+    'functional_managers' => $site['fmBgAz'],
+    'resource_strategy' => $site['rsBgAz'],
     'requestor' => $site['reqBgAz'],
     'reports_full_person' => $site['rfpBgAz']
 );

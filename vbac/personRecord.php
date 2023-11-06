@@ -909,15 +909,70 @@ class personRecord extends DbRecord
           </div>
           </div>
         </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+          <h3 class="panel-title">vBAC Access Details</h3>
+          </div>
+          <div class="panel-body">
+          <div class='form-group' >
+            <div class='col-sm-6'>
+            <?php
+            $i = 0;
+            $allGroups = $GLOBALS['site']['allGroups'];
+            foreach ($allGroups as $key => $group){
+              if ($i < 4) {
+                $groupName = str_replace('_', ' ', $key);
+                if (strlen($groupName) == 3) {
+                    $groupName = strtoupper($groupName);
+                } else {
+                    $groupName = ucwords($groupName);
+                }
+                ?>
+                <div class="form-check">
+                  <input type="checkbox" class="form-check-input" id="role_<?=$key;?>" name="OktaRoles[]" value="<?=$group;?>">
+                  <label class="form-check-label" for="role_<?=$key;?>"><?=$groupName;?></label>
+                </div>
+                <?php
+                $i++;
+              }
+            }
+            ?>
+            </div>
+            <div class='col-sm-6'>
+            <?php
+            $i = 0;
+            foreach ($allGroups as $key => $group){
+              if ($i > 3) {
+                $groupName = str_replace('_', ' ', $key);
+                if (strlen($groupName) == 3) {
+                    $groupName = strtoupper($groupName);
+                } else {
+                    $groupName = ucwords($groupName);
+                }
+                ?>
+                <div class="form-check">
+                  <input type="checkbox" class="form-check-input" id="role_<?=$key;?>" name="OktaRoles[]" value="<?=$group;?>">
+                  <label class="form-check-label" for="role_<?=$key;?>"><?=$groupName;?></label>
+                </div>
+                <?php
+              }
+              $i++;
+            }
+            ?>
+            </div>
+          </div>
+          </div>
+        </div>
         <?php
 
-        include_once 'includes/formMessageArea.html';
+        // include_once 'includes/formMessageArea.html';
 
         $allButtons = null;
         $submitButton = $mode==FormClass::$modeEDIT ?  $this->formButton('submit','Submit','updateRegularBoarding',null,'Update','btn btn-primary') :  $this->formButton('submit','Submit','saveRegularBoarding','disabled','Save','btn btn-primary');
         $pesButton    = $mode==FormClass::$modeEDIT ?  null :  $this->formButton('button','initiateRegularPes','initiateRegularPes','disabled','Initiate PES','btn btn-primary btnPesInitiate');
-          $allButtons[] = $submitButton;
-          $allButtons[] = $pesButton;
+        $allButtons[] = $submitButton;
+        $allButtons[] = $pesButton;
         $this->formBlueButtons($allButtons);
         $this->formHiddenInput('requestor',$_SESSION['ssoEmail'],'requestor');
         ?>
@@ -1237,9 +1292,22 @@ class personRecord extends DbRecord
             </div>
           </div>
         </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+          <h3 class="panel-title">vBAC Access Details</h3>
+          </div>
+          <div class="panel-body">
+          <div class='form-group' >
+            <div class='col-sm-12'>
+              <p>Section available for Kyndryl regular or contractors employees</p>
+            </div>
+          </div>
+          </div>
+        </div>
         <?php
         
-        include_once 'includes/formMessageArea.html';
+        // include_once 'includes/formMessageArea.html';
 
         $allButtons = null;
         $submitButton = $mode==FormClass::$modeEDIT ?  $this->formButton('submit','Submit','updateVendorBoarding',null,'Update','btn btn-primary') :  $this->formButton('submit','Submit','saveVendorBoarding','disabled','Save','btn btn-primary');

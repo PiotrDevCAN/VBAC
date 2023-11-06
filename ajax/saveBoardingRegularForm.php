@@ -3,6 +3,8 @@ use vbac\personRecord;
 use vbac\personTable;
 use vbac\allTables;
 use itdq\AuditTable;
+use itdq\OKTAGroups;
+use itdq\OKTAUsers;
 use itdq\WorkerAPI;
 
 ob_start();
@@ -115,6 +117,18 @@ try {
         
             $timeToWarnPmo = $person->checkIfTimeToWarnPmo();
             $timeToWarnPmo ? $person->sendOffboardingWarning() : null;
+
+            if (isset($_POST['OktaRoles'])) {
+                $OKTAGroups = new OKTAGroups();
+                $OKTAUsers = new OKTAUsers();
+                foreach($_POST['OktaRoles'] as $key => $groupName) {
+                    // add on-boarded employee to OKTA groups
+                    $groupId = $OKTAGroups->getGroupId($groupName);
+                    $userId = $OKTAUsers->getUserID($_POST['EMAIL_ADDRESS']);
+                    $result = $OKTAGroups->addMember($groupId, $userId);
+                    $OKTAGroups->clearGroupMembersCache($groupName);
+                }
+            }
 
             if ($saveRecordResult) {
                 $saveRecordResult = true;

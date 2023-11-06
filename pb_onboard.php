@@ -39,6 +39,9 @@ $person = new personRecord();
         $person->displayVendorBoardingForm($mode);
         ?>
       </div>
+      <?php
+      include_once 'includes/formMessageArea.html';
+      ?>
     </div>
   </div>
 </div>
