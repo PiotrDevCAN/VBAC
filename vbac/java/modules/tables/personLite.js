@@ -83,19 +83,19 @@ class personLite {
           title: "EMAIL_ADDRESS",
           data: "EMAIL_ADDRESS",
           defaultContent: "<i>unknown</i>",
-          visible: false,
+          visible: true,
         }, //04
         {
           title: "KYN_EMAIL_ADDRESS",
           data: "KYN_EMAIL_ADDRESS",
           defaultContent: "<i>unknown</i>",
-          visible: false,
+          visible: true,
         }, //05
         {
           title: "NOTES_ID",
           data: "NOTES_ID",
           defaultContent: "<i>unknown</i>",
-          visible: true,
+          visible: false,
         }, //06
         {
           title: "LBG_EMAIL",
