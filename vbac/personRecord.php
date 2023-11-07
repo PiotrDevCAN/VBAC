@@ -916,8 +916,12 @@ class personRecord extends DbRecord
           </div>
           <div class="panel-body">
           <div class='form-group' >
+            <div class='col-sm-12'>
+              <p>Section available for employees who have the CDI role granted already.</p>
+            </div>
             <div class='col-sm-6'>
             <?php
+            $disabled = $_SESSION['isCdi'] ? null : 'disabled';
             $i = 0;
             $allGroups = $GLOBALS['site']['allGroups'];
             foreach ($allGroups as $key => $group){
@@ -930,8 +934,8 @@ class personRecord extends DbRecord
                 }
                 ?>
                 <div class="form-check">
-                  <input type="checkbox" class="form-check-input" id="role_<?=$key;?>" name="OktaRoles[]" value="<?=$group;?>">
-                  <label class="form-check-label" for="role_<?=$key;?>"><?=$groupName;?></label>
+                  <input type="checkbox" class="form-check-input" id="role_<?=$key;?>" name="OktaRoles[]" value="<?=$group;?>" <?=$disabled;?>>
+                  <label class="form-check-label" for="role_<?=$key;?>"><?=$groupName;?><?=$disabled;?></label>
                 </div>
                 <?php
                 $i++;
@@ -952,7 +956,7 @@ class personRecord extends DbRecord
                 }
                 ?>
                 <div class="form-check">
-                  <input type="checkbox" class="form-check-input" id="role_<?=$key;?>" name="OktaRoles[]" value="<?=$group;?>">
+                  <input type="checkbox" class="form-check-input" id="role_<?=$key;?>" name="OktaRoles[]" value="<?=$group;?>" <?=$disabled;?>>
                   <label class="form-check-label" for="role_<?=$key;?>"><?=$groupName;?></label>
                 </div>
                 <?php

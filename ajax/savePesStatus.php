@@ -17,7 +17,13 @@ try {
     $personTable->setPesStatus($_POST['psm_cnum'],$_POST['psm_status'],$_SESSION['ssoEmail'],$_POST['PES_DATE_RESPONDED']);
 
     $person = new personRecord();
-    $person->setFromArray(array('CNUM'=>$_POST['psm_cnum'],'PES_STATUS_DETAILS'=>$_POST['psm_detail'],'PES_DATE_RESPONDED'=>$_POST['PES_DATE_RESPONDED']));
+    $person->setFromArray(
+        array(
+            'CNUM'=>$_POST['psm_cnum'],
+            'PES_STATUS_DETAILS'=>$_POST['psm_detail'],
+            'PES_DATE_RESPONDED'=>$_POST['PES_DATE_RESPONDED']
+        )
+    );
     $updateRecordResult = $personTable->update($person,false,false);
 
     $personData = $personTable->getRecord($person);

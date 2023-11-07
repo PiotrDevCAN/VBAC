@@ -1947,7 +1947,7 @@ class personTable extends DbTable
         $openseat = trim($row['OPEN_SEAT_NUMBER']);
         $status = trim($row['PES_STATUS']);
         $currentValue = $status;
-        $processingStatus = trim($row['PROCESSING_STATUS']); 
+        $processingStatus = array_key_exists('PROCESSING_STATUS', $row) ? trim($row['PROCESSING_STATUS']) : null;
 
         $boarder = stripos(trim($row['PES_STATUS_DETAILS']), personRecord::PES_STATUS_DETAILS_BOARDED_AS) !== false;
         $passportFirst = array_key_exists('PASSPORT_FIRST_NAME', $row) ? $row['PASSPORT_FIRST_NAME'] : null;
