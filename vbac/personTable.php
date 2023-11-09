@@ -102,8 +102,8 @@ class personTable extends DbTable
         }
 
         $topRow = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
-        if (isset($topRow[0])) {
-            $thisCnum = substr($topRow[0], 1, 5);
+        if (isset($topRow['CNUM'])) {
+            $thisCnum = substr($topRow['CNUM'], 1, 5);
             $next = $thisCnum + 1;
             $nextVirtualCnum = 'V' . substr('000000' . $next, -5) . 'XXX';
         } else {
