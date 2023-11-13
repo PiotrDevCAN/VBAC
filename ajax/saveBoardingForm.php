@@ -118,7 +118,11 @@ try {
                 } else {
                     $workerAPI = new WorkerAPI();
                     $data = $workerAPI->getworkerByCNUM($cnum);
-                    if (array_key_exists('count', $data) && $data['count'] > 0) {
+                    if (
+                        is_array($data)
+                        && array_key_exists('count', $data)
+                        && $data['count'] > 0
+                    ) {
                         //valid ocean
                         $invalidPersonCnum = false;
                     } else {

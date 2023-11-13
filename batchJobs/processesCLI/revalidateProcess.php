@@ -80,7 +80,11 @@ $startPhase5 = microtime(true);
 $workerAPI = new WorkerAPI();
 foreach ($allNonLeavers as $key => $CNUM) {
     $data = $workerAPI->getworkerByCNUM($CNUM);
-    if (array_key_exists('count', $data) && $data['count'] > 0) {
+    if (
+        is_array($data) 
+        && array_key_exists('count', $data) 
+        && $data['count'] > 0
+    ) {
         $employeeData = $data['results'][0];
         $notesid = 'No longer available';
         $mail = $employeeData['email'];

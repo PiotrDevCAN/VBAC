@@ -36,17 +36,16 @@ $startPhase2 = microtime(true);
 $workerAPI = new WorkerAPI();
 foreach ($allEntriesToUpdate as $key => $CNUM) {
     $data = $workerAPI->getworkerByCNUM($CNUM);
-    if (is_array($data)) {
-        if (array_key_exists('count', $data) && $data['count'] > 0) {
-            $employeeData = $data['results'][0];
-            $serial = $employeeData['cnum'];
-            $workerId = $employeeData['workerID'];
-            $personTable->setWorkerId($serial, $workerId);
-            unset($allEntriesToUpdate[$serial]);
-        }
-    } else {
-        $notFoundCNUMs .= $CNUM;
-        $notFoundCNUMs .= ',';
+    if (
+        is_array($data)
+        && array_key_exists('count', $data)
+        && $data['count'] > 0
+    ) {
+        $employeeData = $data['results'][0];
+        $serial = $employeeData['cnum'];
+        $workerId = $employeeData['workerID'];
+        $personTable->setWorkerId($serial, $workerId);
+        unset($allEntriesToUpdate[$serial]);
     }
 }
 $endPhase2 = microtime(true);

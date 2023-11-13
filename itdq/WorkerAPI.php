@@ -219,7 +219,11 @@ class WorkerAPI {
 	{
 		$employeeData = explode('/', $notesId);
 		$data = $this->typeaheadSearch($employeeData[0]);
-		if (array_key_exists('count', $data) && $data['count'] > 0) {
+		if (
+			is_array($data)
+			&& array_key_exists('count', $data)
+			&& $data['count'] > 0
+		) {
 			$intranetId = $data['results'][0]['email'];
 		} else {
 			$intranetId = ' not found ';
