@@ -10,7 +10,8 @@ use vbac\pesTrackerRecord;
 ob_start();
 AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_POST,true) . "</b>",AuditTable::RECORD_TYPE_DETAILS);
 
-$formattedEmailField= null;
+$formattedEmailField = null;
+$formattedPesStatusField = null;
 
 try {
     $personTable= new personTable(allTables::$PERSON);

@@ -47,9 +47,9 @@ foreach ($allPotentialLeavers as $key => $CNUM) {
     if (array_key_exists('count', $data) && $data['count'] > 0) {
         $employeeData = $data['results'][0];
         $notesid = 'No longer available';
-        $mail = $employeeData->email;
-        $serial = $employeeData->cnum;
-        $personTable->confirmRevalidation($notesid,$mail,$serial);
+        $mail = $employeeData['email'];
+        $serial = $employeeData['cnum'];
+        $personTable->confirmRevalidation($notesid, $mail, $serial);
         unset($allPotentialLeavers[$serial]);
     }
 }

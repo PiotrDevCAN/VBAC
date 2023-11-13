@@ -968,6 +968,35 @@ class personTable extends DbTable
         return true;
     }
 
+    public function setWorkerId($cnum = null, $workerId = null)
+    {
+        if (!$cnum) {
+            throw new \Exception('No CNUM provided in ' . __METHOD__);
+        }
+        if (!$workerId) {
+            throw new \Exception('No WORKER_ID provided in ' . __METHOD__);
+        }
+
+        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
+        $sql .= " SET WORKER_ID ='" . htmlspecialchars($workerId) . "' ";
+        $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
+
+        try {
+            $result = sqlsrv_query($GLOBALS['conn'], $sql);
+        } catch (\Exception $e) {
+            var_dump($e);
+        }
+
+        if (!$result) {
+            DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+
+        AuditTable::audit("WORKER_ID for cnum: $cnum set to : $workerId by " . $_SESSION['ssoEmail'], AuditTable::RECORD_TYPE_AUDIT);
+
+        return true;
+    }
+
     public function saveCtid($cnum, $ctid)
     {
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
