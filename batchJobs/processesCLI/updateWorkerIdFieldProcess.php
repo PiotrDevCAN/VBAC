@@ -29,17 +29,24 @@ $allEntriesToUpdateCounterStart = count($allEntriesToUpdate);
 $endPhase1 = microtime(true);
 $timeMeasurements['phase_1'] = (float)($endPhase1-$startPhase1);
 
+$notFoundCNUMs = '';
+
 // check if employee has a record in BluePages
 $startPhase2 = microtime(true);
 $workerAPI = new WorkerAPI();
 foreach ($allEntriesToUpdate as $key => $CNUM) {
     $data = $workerAPI->getworkerByCNUM($CNUM);
-    if (array_key_exists('count', $data) && $data['count'] > 0) {
-        $employeeData = $data['results'][0];
-        $serial = $employeeData['cnum'];
-        $workerId = $employeeData['workerID'];
-        $personTable->setWorkerId($serial, $workerId);
-        unset($allEntriesToUpdate[$serial]);
+    if (is_array($data)) {
+        if (array_key_exists('count', $data) && $data['count'] > 0) {
+            $employeeData = $data['results'][0];
+            $serial = $employeeData['cnum'];
+            $workerId = $employeeData['workerID'];
+            $personTable->setWorkerId($serial, $workerId);
+            unset($allEntriesToUpdate[$serial]);
+        }
+    } else {
+        $notFoundCNUMs .= $CNUM;
+        $notFoundCNUMs .= ',';
     }
 }
 $endPhase2 = microtime(true);
@@ -68,7 +75,7 @@ $message .= '<HR>';
 
 $message .= '<BR/>Time of obtaining a number of employees: ' . $timeMeasurements['phase_1'];
 $message .= '<BR/>Time of updating: ' . $timeMeasurements['phase_2'];
-$message .= '<BR/>Overall time: ' . $timeMeasurements['overallTime'];
+$message .= '<BR/>Overall time: ' . $timeMeasurements['overallTime'] . ' ' . $notFoundCNUMs;
 
 $message .= '<HR>';
 
