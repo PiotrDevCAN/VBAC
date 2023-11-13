@@ -47,13 +47,15 @@ class personWithSubPRecord {
         url: "ajax/populatePersonWithSubPDatatable.php",
         data: { preBoardersAction: preBoardersAction },
         type: "GET",
+        beforeSend: function (jqXHR, settings) {
+          $.each(xhrPool, function (idx, jqXHR) {
+            console.log('abort jqXHR');
+            jqXHR.abort();  // basically, cancel any existing request, so this one is the only one running
+            xhrPool.splice(idx, 1);
+          });
+          xhrPool.push(jqXHR);
+        }
       },
-      //	        CNUM         0
-      //	        Email        4
-      //	        Notes ID     5
-      //	        fm_cnum		 8
-      //	        PES status   25
-
       columns: [
         {
           title: "CNUM",

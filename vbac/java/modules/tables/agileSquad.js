@@ -39,6 +39,14 @@ class agileSquad {
           d.version = version;
         },
         type: "POST",
+        beforeSend: function (jqXHR, settings) {
+          $.each(xhrPool, function (idx, jqXHR) {
+            console.log('abort jqXHR');
+            jqXHR.abort();  // basically, cancel any existing request, so this one is the only one running
+            xhrPool.splice(idx, 1);
+          });
+          xhrPool.push(jqXHR);
+        }
       },
       columns: [
         { data: "SQUAD_NUMBER", render: { _: "display", sort: "sort" } },

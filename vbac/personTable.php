@@ -382,6 +382,7 @@ class personTable extends DbTable
 
         $sql = " SELECT 
             CNUM, 
+            WORKER_ID,
             FIRST_NAME, 
             LAST_NAME, 
             EMAIL_ADDRESS, 
@@ -2363,6 +2364,7 @@ class personTable extends DbTable
     {
         $personPortalColumns = array(
             'CNUM',
+            'WORKER_ID',
             'OPEN_SEAT_NUMBER',
             'FIRST_NAME',
             'LAST_NAME',

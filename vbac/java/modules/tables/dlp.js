@@ -32,7 +32,18 @@ class dlp {
       ajax: {
         url: "ajax/populateDlpLicenseReport.php",
         type: "POST",
-        data: { showType: showType, withButtons: withButtons },
+        data: {
+          showType: showType,
+          withButtons: withButtons
+        },
+        beforeSend: function (jqXHR, settings) {
+          $.each(xhrPool, function (idx, jqXHR) {
+            console.log('abort jqXHR');
+            jqXHR.abort();  // basically, cancel any existing request, so this one is the only one running
+            xhrPool.splice(idx, 1);
+          });
+          xhrPool.push(jqXHR);
+        }
       },
       columns: [
         { data: "CNUM", defaultContent: "" },

@@ -124,6 +124,16 @@ function fetchWorkerAPIDetailsForCnum(cnum) {
                                     location.value = value;
                                 }
                                 break;
+                            case "workerID":
+                                var workerId = document.getElementById("person_workerid");
+                                if (typeof workerId !== "undefined") {
+                                    workerId.value = value;
+                                }
+                                var workerId = document.getElementById("person_worker_id");
+                                if (typeof workerId !== "undefined") {
+                                    workerId.value = value;
+                                }
+                                break;
                             default:
                             // console.log(name + ":" + value);
                         }

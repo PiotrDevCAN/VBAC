@@ -11,12 +11,12 @@ use vbac\personRecord;
 <div id='personFinderDatabaseDiv' class='portalDiv'>
 <table id='personFinderTable' class='table table-striped table-bordered compact' cellspacing='0' width='100%' style='display: none;'>
 <thead>
-<tr><th>CNUM</th><th>FIRST_NAME</th><th>LAST_NAME</th><th>EMAIL_ADDRESS</th><th>KYNDRYL_EMAIL_ADDRESS</th><th>NOTES_ID</th><th>FM_CNUM</th></tr>
+<tr><th>CNUM</th><th>WORKER_ID</th><th>FIRST_NAME</th><th>LAST_NAME</th><th>EMAIL_ADDRESS</th><th>KYNDRYL_EMAIL_ADDRESS</th><th>NOTES_ID</th><th>FM_CNUM</th></tr>
 </thead>
 <tbody>
 </tbody>
 <tfoot>
-<tr><th>CNUM</th><th>FIRST_NAME</th><th>LAST_NAME</th><th>EMAIL_ADDRESS</th><th>KYNDRYL_EMAIL_ADDRESS</th><th>NOTES_ID</th><th>FM_CNUM</th></tr>
+<tr><th>CNUM</th><th>WORKER_ID</th><th>FIRST_NAME</th><th>LAST_NAME</th><th>EMAIL_ADDRESS</th><th>KYNDRYL_EMAIL_ADDRESS</th><th>NOTES_ID</th><th>FM_CNUM</th></tr>
 </tfoot>
 </table>
 </div>

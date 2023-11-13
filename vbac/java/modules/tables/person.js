@@ -70,11 +70,8 @@ class person {
           return json.data;
         },
         beforeSend: function (jqXHR, settings) {
-          // console.log('before send');
-          // console.log($('.dataTables_processing'));
-          // console.log($('#personTable_processing').is(":visible"));
-
           $.each(xhrPool, function (idx, jqXHR) {
+            console.log('abort jqXHR');
             jqXHR.abort();  // basically, cancel any existing request, so this one is the only one running
             xhrPool.splice(idx, 1);
           });
@@ -88,283 +85,288 @@ class person {
           defaultContent: ""
         }, //00
         {
+          title: "WORKER_ID",
+          data: "WORKER_ID",
+          defaultContent: ""
+        }, //01
+        {
           title: "OPEN_SEAT_NUMBER",
           data: "OPEN_SEAT_NUMBER",
           defaultContent: "",
-        }, //01
+        }, //02
         {
           title: "FIRST_NAME",
           data: "FIRST_NAME",
           defaultContent: "<i>unknown</i>",
-        }, //02
+        }, //03
         {
           title: "LAST_NAME",
           data: "LAST_NAME",
           defaultContent: "<i>unknown</i>",
-        }, //03
+        }, //04
         {
           title: "EMAIL_ADDRESS",
           data: "EMAIL_ADDRESS",
           defaultContent: "<i>unknown</i>",
-        }, //04
+        }, //05
         {
           title: "KYN_EMAIL_ADDRESS",
           data: "KYN_EMAIL_ADDRESS",
           defaultContent: "<i>unknown</i>",
-        }, //05
+        }, //06
         {
           title: "NOTES_ID",
           data: "NOTES_ID",
           defaultContent: "<i>unknown</i>",
-        }, //06
+        }, //07
         {
           title: "LBG_EMAIL",
           data: "LBG_EMAIL",
           defaultContent: "<i>unknown</i>",
-        }, //07
+        }, //08
         {
           title: "EMPLOYEE_TYPE",
           data: "EMPLOYEE_TYPE",
           defaultContent: ""
-        }, //08
+        }, //09
         {
           title: "FM_CNUM",
           data: "FM_CNUM",
           defaultContent: ""
-        }, //09
+        }, //10
         {
           title: "FM_MANAGER_FLAG",
           data: "FM_MANAGER_FLAG",
           defaultContent: "",
-        }, //10
+        }, //11
         {
           title: "CTB_RTB",
           data: "CTB_RTB",
           defaultContent: ""
-        }, //11
+        }, //12
         {
           title: "LOB",
           data: "LOB",
           defaultContent: ""
-        }, //12
+        }, //13
         {
           title: "SKILLSET",
           data: "SKILLSET",
           defaultContent: ""
-        }, //13
+        }, //14
         {
           title: "ROLE_TECHNOLOGY",
           data: "ROLE_TECHNOLOGY",
           defaultContent: "",
-        }, //14
+        }, //15
         {
           title: "START_DATE",
           data: "START_DATE",
           defaultContent: ""
-        }, //15
+        }, //16
         {
           title: "PROJECTED_END_DATE",
           data: "PROJECTED_END_DATE",
           defaultContent: "",
-        }, //16
+        }, //17
         {
           title: "COUNTRY",
           data: "COUNTRY",
           defaultContent: ""
-        }, //17
+        }, //18
         {
           title: "BASE_LOCATION",
           data: "IBM_BASE_LOCATION",
           defaultContent: "",
-        }, //18
+        }, //19
         {
           title: "LBG_LOCATION",
           data: "LBG_LOCATION",
           defaultContent: ""
-        }, //19
+        }, //20
         {
           title: "OFFBOARDED_DATE",
           data: "OFFBOARDED_DATE",
           defaultContent: "",
-        }, //20
+        }, //21
         {
           title: "PES_DATE_REQUESTED",
           data: "PES_DATE_REQUESTED",
           defaultContent: "",
-        }, //21
+        }, //22
         {
           title: "PES_REQUESTOR",
           data: "PES_REQUESTOR",
           defaultContent: ""
-        }, //22
+        }, //23
         {
           title: "PES_DATE_RESPONDED",
           data: "PES_DATE_RESPONDED",
           defaultContent: "",
-        }, //23
+        }, //24
         {
           title: "PES_STATUS_DETAILS",
           data: "PES_STATUS_DETAILS",
           defaultContent: "",
-        }, //24
+        }, //25
         {
           title: "PES_STATUS",
           data: "PES_STATUS",
           defaultContent: "",
           render: { _: "display", sort: "sort" },
-        }, //25
+        }, //26
         {
           title: "REVALIDATION_DATE_FIELD",
           data: "REVALIDATION_DATE_FIELD",
           defaultContent: "",
-        }, //26
+        }, //27
         {
           title: "REVALIDATION_STATUS",
           data: "REVALIDATION_STATUS",
           defaultContent: "",
-        }, //27
+        }, //28
         {
           title: "PROPOSED_LEAVING_DATE",
           data: "PROPOSED_LEAVING_DATE",
           defaultContent: "",
-        }, //28
+        }, //29
         {
           title: "CBN_DATE_FIELD",
           data: "CBN_DATE_FIELD",
           defaultContent: "",
-        }, //29
+        }, //30
         {
           title: "CBN_STATUS",
           data: "CBN_STATUS",
           defaultContent: ""
-        }, //30
+        }, //31
         {
           title: "CT_ID_REQUIRED",
           data: "CT_ID_REQUIRED",
           defaultContent: "",
-        }, //31
+        }, //32
         {
           title: "CT_ID",
           data: "CT_ID",
           defaultContent: ""
-        }, //32
+        }, //33
         {
           title: "CIO_ALIGNMENT",
           data: "CIO_ALIGNMENT",
           defaultContent: ""
-        }, //33
+        }, //34
         {
           title: "PRE_BOARDED",
           data: "PRE_BOARDED",
           defaultContent: ""
-        }, //34
+        }, //35
         {
           title: "SECURITY_EDUCATION",
           data: "SECURITY_EDUCATION",
           defaultContent: "",
-        }, //35
+        }, //36
         {
           title: "PMO_STATUS",
           data: "PMO_STATUS",
           defaultContent: ""
-        }, //36
+        }, //37
         {
           title: "PES_DATE_EVIDENCE",
           data: "PES_DATE_EVIDENCE",
           defaultContent: "",
-        }, //37
+        }, //38
         {
           title: "RSA_TOKEN",
           data: "RSA_TOKEN",
           defaultContent: ""
-        }, //38
+        }, //39
         {
           title: "CALLSIGN_ID",
           data: "CALLSIGN_ID",
           defaultContent: ""
-        }, //39
+        }, //40
         {
           title: "PROCESSING_STATUS",
           data: "PROCESSING_STATUS",
           defaultContent: "",
-        }, //40
+        }, //41
         {
           title: "PROCESSING_STATUS_CHANGED",
           data: "PROCESSING_STATUS_CHANGED",
           defaultContent: "",
-        }, //41
+        }, //42
         {
           title: "PES_LEVEL",
           data: "PES_LEVEL",
           defaultContent: "",
           render: { _: "display", sort: "sort" },
-        }, //42
+        }, //43
         {
           title: "PES_RECHECK_DATE",
           data: "PES_RECHECK_DATE",
           defaultContent: "",
-        }, //43
+        }, //44
         {
           title: "PES_CLEARED_DATE",
           data: "PES_CLEARED_DATE",
           defaultContent: "",
-        }, //44	
+        }, //45	
         {
           title: "SQUAD_NUMBER",
           data: "SQUAD_NUMBER",
           defaultContent: "",
-        }, //45
+        }, //46
         {
           title: "SQUAD_NAME",
           data: "SQUAD_NAME",
           render: { _: "display", sort: "sort" },
-        }, //46
+        }, //47
         {
           title: "SQUAD_LEADER",
           data: "SQUAD_LEADER",
           defaultContent: "",
-        }, //47
+        }, //48
         {
           title: "TRIBE_NUMBER",
           data: "TRIBE_NUMBER",
           defaultContent: "",
-        }, //48
+        }, //49
         {
           title: "TRIBE_NAME",
           data: "TRIBE_NAME",
           defaultContent: "",
-        }, //49
+        }, //50
         {
           title: "TRIBE_LEADER",
           data: "TRIBE_LEADER",
           defaultContent: "",
-        }, //50
+        }, //51
         {
           title: "ORGANISATION",
           data: "ORGANISATION",
           defaultContent: "",
-        }, //51
+        }, //52
         {
           title: "ITERATION_MGR",
           data: "ITERATION_MGR",
           defaultContent: "",
-        }, //52
+        }, //53
         {
           title: "HAS_DELEGATES",
           data: "HAS_DELEGATES",
           defaultContent: "",
-        }, //53
+        }, //54
       ],
       columnDefs: [
         {
           visible: false,
           targets: [
-            1, 6, 7, 8, 9, 10,
-            11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+            2, 7, 8, 9, 10,
+            12, 13, 14, 15, 16, 17, 18, 19, 20,
             21, 22, 23, 24, 26, 27, 28, 29, 30,
             31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
             41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 
-            51, 52, 53
+            51, 52, 53, 54
           ],
         },
       ],

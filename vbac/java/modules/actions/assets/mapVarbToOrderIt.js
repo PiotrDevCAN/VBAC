@@ -7,7 +7,7 @@
 let action = await cacheBustImport('./modules/actions/action.js');
 
 class mapVarbToOrderIt extends action {
-    
+
     varbRequestTable;
 
     constructor(parent) {
@@ -94,6 +94,14 @@ class mapVarbToOrderIt extends action {
                     var varbObject = { varb: varb, ref: ref };
                     return varbObject;
                 },
+                beforeSend: function (jqXHR, settings) {
+                    $.each(xhrPool, function (idx, jqXHR) {
+                        console.log('abort jqXHR');
+                        jqXHR.abort();  // basically, cancel any existing request, so this one is the only one running
+                        xhrPool.splice(idx, 1);
+                    });
+                    xhrPool.push(jqXHR);
+                }
             },
             columns: [
                 { data: "INCLUDED", defaultContent: "", width: "5%" },

@@ -21,6 +21,7 @@ $searchValue = isset($_REQUEST['search']) && isset($_REQUEST['search']['value'])
 
 $columnsFromQuery = array(
     'CNUM',
+    'WORKER_ID',
     'OPEN_SEAT_NUMBER',
     'FIRST_NAME',
     'LAST_NAME',

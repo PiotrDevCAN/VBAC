@@ -36,6 +36,7 @@ class personPortalLiteTable extends personTable
         
         $sql = " SELECT 
         P.CNUM, 
+        P.WORKER_ID, 
         P.OPEN_SEAT_NUMBER, 
         P.FIRST_NAME, 
         P.LAST_NAME, 
@@ -135,6 +136,7 @@ class personPortalLiteTable extends personTable
     function headerRowForFullDatatable(){
         $personPortalColumns = array(
             'CNUM', 
+            'WORKER_ID',
             'OPEN_SEAT_NUMBER', 
             'FIRST_NAME', 
             'LAST_NAME', 

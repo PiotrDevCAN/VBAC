@@ -53,11 +53,25 @@ class personLite {
         data: {
           preBoardersAction: preBoardersAction
         },
+        beforeSend: function (jqXHR, settings) {
+          $.each(xhrPool, function (idx, jqXHR) {
+            console.log('abort jqXHR');
+            jqXHR.abort();  // basically, cancel any existing request, so this one is the only one running
+            xhrPool.splice(idx, 1);
+          });
+          xhrPool.push(jqXHR);
+        }
       },
       columns: [
         {
           title: "CNUM",
           data: "CNUM",
+          defaultContent: "",
+          visible: true,
+        }, //00
+        {
+          title: "WORKER_ID",
+          data: "WORKER_ID",
           defaultContent: "",
           visible: true,
         }, //00

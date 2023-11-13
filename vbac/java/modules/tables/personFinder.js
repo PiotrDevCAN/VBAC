@@ -31,9 +31,18 @@ class personFinder {
       ajax: {
         url: "ajax/populatePersonFinderDatatable.php",
         type: "GET",
+        beforeSend: function (jqXHR, settings) {
+          $.each(xhrPool, function (idx, jqXHR) {
+            console.log('abort jqXHR');
+            jqXHR.abort();  // basically, cancel any existing request, so this one is the only one running
+            xhrPool.splice(idx, 1);
+          });
+          xhrPool.push(jqXHR);
+        }
       },
       columns: [
         { data: "CNUM", defaultContent: "" },
+        { data: "WORKER_ID", defaultContent: "" },
         { data: "FIRST_NAME", defaultContent: "<i>unknown</i>" },
         { data: "LAST_NAME", defaultContent: "<i>unknown</i>" },
         { data: "EMAIL_ADDRESS", defaultContent: "<i>unknown</i>" },
