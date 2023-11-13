@@ -21,24 +21,26 @@ $(document).ready(function () {
 				// console.log(dataObject);
 				return dataObject;
 			},
-		}
+			rateLimitBy: 'throttle',
+			rateLimitWait: 300, 
+		},
 	});
 
-	$('.typeahead').typeahead(null, {
-		name: 'workerAPI',
-		display: 'value',
-		displayKey: 'value',
-		limit: 3,
-		source: workerAPI,
-		templates: {
-			empty: [
-				'<div class="empty-messagexx">',
-				'unable to find any Kyndryl employees that match the current query',
-				'</div>'
-			].join('\n'),
-			suggestion: Handlebars.compile('<div> <img src="./public/img/no-img.jpg" alt="Profile" height="42" width="42"> <strong>{{value}}</strong><br/><small>{{preferredIdentity}}<br/>{{role}}</small></div>')
-		}
-	});
+$('.typeahead').typeahead(null, {
+	name: 'workerAPI',
+	display: 'value',
+	displayKey: 'value',
+	limit: 3,
+	source: workerAPI,
+	templates: {
+		empty: [
+			'<div class="empty-messagexx">',
+			'unable to find any Kyndryl employees that match the current query',
+			'</div>'
+		].join('\n'),
+		suggestion: Handlebars.compile('<div> <img src="./public/img/no-img.jpg" alt="Profile" height="42" width="42"> <strong>{{value}}</strong><br/><small>{{preferredIdentity}}<br/>{{role}}</small></div>')
+	}
+});
 
 	/*
 	var notesId = new Bloodhound({

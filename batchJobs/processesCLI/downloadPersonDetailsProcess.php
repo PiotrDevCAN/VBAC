@@ -166,6 +166,7 @@ if (isset($argv[1])) {
     $sheet = 1;
 
     set_time_limit(0);
+    ini_set('memory_limit','6144M');
 
     $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
