@@ -49,7 +49,7 @@ try {
                         // invalid ocean
                         $invalidPersonCnum = true;
 
-                        $messages = 'Employee data not found in the BluePages.';
+                        $messages = 'Employee data not found in the Worker API.';
                         echo $messages;
                     }
                 }

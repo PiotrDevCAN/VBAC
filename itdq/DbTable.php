@@ -523,7 +523,6 @@ class DbTable
 
         $sql = "SELECT * FROM ".$GLOBALS['Db2Schema'].'.'.strtoupper($this->tableName);
         $stmt = sqlsrv_prepare( $GLOBALS['conn'], $sql );
-        error_log('my test '.$sql);
         foreach( sqlsrv_field_metadata( $stmt ) as $row ) {
             foreach( $row as $name => $value) {
                 if($name == 'Name') {
@@ -592,7 +591,6 @@ class DbTable
         // }
 
         $sql = "SELECT TABLE_NAME, COLUMN_NAME, CONSTRAINT_NAME AS PK_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE TABLE_NAME = '" . $this->tableName ."'";        
-        error_log('my test 2 '.$sql);
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);        
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);

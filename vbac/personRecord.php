@@ -78,6 +78,9 @@ class personRecord extends DbRecord
     protected $PROPOSED_LEAVING_DATE;
     protected $person_bio;
 
+    protected $WORKER_ID;
+    protected $CFIRST_ID;
+
     // Fields to be edited in the DataTables Reports. Need to know their position in the array $row;
     // const FIELD_CNUM = 0;
     // const FIELD_NOTES_ID = 5;
@@ -699,12 +702,26 @@ class personRecord extends DbRecord
           </div>
 
           <div class='form-group'>
+            <div class='col-sm-6'>
+            <input class='form-control' id='person_workerid' name='person_workerid'
+              value='<?=$this->WORKER_ID?>'  type='text'
+              disabled='disabled' placeholder="Worker Id" <?=$notEditable?>>
+            </div>
+            <div class='col-sm-6'>
+            <input class='form-control' id='person_cfirstid' name='CFIRST_ID' 
+              value='<?=$this->CFIRST_ID?>' type='text' 
+              placeholder="cFIRST Id" <?=$notEditable?>>
+            </div>
+          </div>
+
+          <div class='form-group'>
             <div class='col-sm-6' <?=$hideDivFromEdit?>>
             <input id='person_bio'                   name='person_bio'             value=''                              type='text'   required disabled='disabled' class='form-control' placeholder="Bio">
             <input id='person_first_name'            name='FIRST_NAME'             value='<?=$this->FIRST_NAME?>'        type='hidden' <?=$notEditable?>>
             <input id='person_last_name'             name='LAST_NAME'              value='<?=$this->LAST_NAME?>'         type='hidden' <?=$notEditable?>>
             <input id='person_ibm_location'          name='IBM_BASE_LOCATION'      value='<?=$this->IBM_BASE_LOCATION?>' type='hidden' >
             <input id='person_uid'                   name='person_uid'             value=''                              type='hidden' required>
+            <input id='person_worker_id'             name='WORKER_ID'              value=''                              type='hidden' required>
             <input id='person_is_mgr'                name='FM_MANAGER_FLAG'        value='<?=$fmManagerFlag?>'           type='hidden' >
             <input id='person_employee_type'         name='EMPLOYEE_TYPE'          value='<?=$employeeType?>'		         type='hidden' >
             <input id='person_country'               name='COUNTRY'                value='<?=$this->COUNTRY?>'           type='hidden' >
@@ -1092,6 +1109,8 @@ class personRecord extends DbRecord
           </div>
           </div>
           <input id='resource_uid'                name='person_uid'          value='<?=$this->CNUM?>'   				    type='hidden' >
+          <input id='resource_worker_id'          name='person_worker_id'    value='<?=$this->WORKER_ID?>'   			  type='hidden' >
+          <input id='resource_cfirst_id'          name='person_cfirst_id'    value='<?=$this->CFIRST_ID?>'   				type='hidden' >
           <input id='resource_is_mgr'	            name='FM_MANAGER_FLAG'     value='<?=$fmManagerFlag?>'            type='hidden' >
           <input id='resource_ibm_location'       name='IBM_BASE_LOCATION'   value='<?=$this->IBM_BASE_LOCATION?>'	type='hidden' >
           <input id='resource_pes_status'         name='PES_STATUS'          value='<?=$pesStatus?>'                type='hidden' >
