@@ -10,6 +10,8 @@ RUN chown -R 1001:0 /run
 RUN chown -R 1001:0 /etc/httpd/run
 RUN chmod -R 777 /run
 RUN chmod -R 777 /etc/httpd/run
+RUN chmod -R 777 /var/www/html/ct_id_uploads
+RUN chmod -R 777 /var/www/html/odc_uploads
 RUN composer install --no-interaction
 USER root 
 ADD ./patch2.sh /patch2.sh
