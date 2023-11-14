@@ -41,15 +41,20 @@ foreach ($allEntriesToUpdate as $key => $CNUM) {
         && array_key_exists('count', $data)
         && $data['count'] > 0
     ) {
+        error_log('Employee FOUND' . $key.' == '.$CNUM);
         $employeeData = $data['results'][0];
-        $serial = $employeeData['cnum'];
         $workerId = $employeeData['workerID'];
-        $personTable->setWorkerId($serial, $workerId);
-        unset($allEntriesToUpdate[$serial]);
+    } else {
+        error_log('Employee NOT found' . $key.' == '.$CNUM);
+        $workerId = 'not found';
     }
+    $personTable->setWorkerId($CNUM, $workerId);
+    unset($allEntriesToUpdate[$CNUM]);
 }
 $endPhase2 = microtime(true);
 $timeMeasurements['phase_2'] = (float)($endPhase2-$startPhase2);
+
+$allEntriesToUpdateCounterEnd = count($allEntriesToUpdate);
 
 $end = microtime(true);
 $timeMeasurements['overallTime'] = (float)($end-$start);

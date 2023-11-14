@@ -2426,4 +2426,93 @@ class personTable extends DbTable
         $headerRow .= "</tr>";
         return $headerRow;
     }
+
+    function copyCTIDXlsxToDb2($fileName, $withTimings = false){
+        $elapsed = -microtime(true);
+        ob_start();
+
+        $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($fileName);
+        $reader->setReadDataOnly(true);
+        $objPHPExcel  = $reader->load($fileName);
+
+        //  Get worksheet dimensions
+        $sheet = $objPHPExcel->getSheet(0);
+        $highestRow = $sheet->getHighestRow();
+        $highestColumn = $sheet->getHighestColumn();
+
+        //  Loop through each row of the worksheet in turn
+        $firstRow = false;
+        $columnHeaders = array();
+        $recordData = array();
+        $failedRecords = 0;
+        
+        if (sqlsrv_begin_transaction($GLOBALS['conn']) === false) {
+            die( print_r( sqlsrv_errors(), true ));
+        }
+        
+        for ($row = 1; $row <= $highestRow; $row++){
+            set_time_limit(10);
+            $time = -microtime(true);
+            //  Read a row of data into an array
+            $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row, NULL, TRUE, FALSE);
+
+            //  Insert row data array into your database of choice here
+            if(!$firstRow){
+                foreach ($rowData[0] as $key => $value){
+                    $columnHeaders[$key] = DbTable::toColumnName(strtoupper($value));
+                }
+                $firstRow = true;
+            } else {
+                $prepareArrary = -microtime(true);
+                foreach ($rowData[0] as $key => $value) {
+                    $recordData[$columnHeaders[$key]] = trim($value);
+                }
+                $prepareArrary += microtime(true);
+                echo $withTimings ? "Row: $row Cnum " . $recordData['CNUM'] . " CT ID " . $recordData['NEW_CT_ID'] . " Prepare Array:" . sprintf('%f', $prepareArrary) . PHP_EOL : null;
+
+                if(!empty($recordData['NEW_CT_ID'] )){
+                    // avoid trying to save empty rows.
+                    // save the row to DB2
+                    echo  $withTimings ? "Row: $row Cnum " . $recordData['CNUM'] . " CT ID " . $recordData['NEW_CT_ID'] . PHP_EOL : null;
+
+                    try {
+                        $insert = -microtime(true);
+                        $inserted = $this->saveCtid($recordData['CNUM'], $recordData['NEW_CT_ID']);
+                        $inserted ? null : $failedRecords++;
+                        $insert += microtime(true);
+                        echo  $withTimings ?  "Row: $row Cnum " . $recordData['CNUM'] . " CT ID " . $recordData['NEW_CT_ID'] . " Insert Row:" . sprintf('%f', $insert) . PHP_EOL : null ;
+
+                    } catch (Exception $e) {
+                        echo $e->getMessage();
+                        echo $e->getCode();
+                        echo $e->getTrace();
+                        die('here');
+                    }
+                    $time += microtime(true);
+                    echo  $withTimings ?  "Row: $row Cnum " . $recordData['CNUM'] . " CT ID " . $recordData['NEW_CT_ID'] . " Total Time:" . sprintf('%f', $time) . PHP_EOL : null;
+                }
+            }
+        }
+
+        sqlsrv_commit($GLOBALS['conn']);  // Save what we have done.
+
+        $response = ob_get_clean();
+        ob_start();
+        $errors = !empty($response);
+
+        $elapsed += microtime(true);
+        $dataRecords = $row-2;
+
+        echo $errors ? "<span style='color:red'><h2 >Errors writing to DB2 occured</h2><br/>" . $dataRecords . " Records Read from xlsx<br/>$failedRecords failed to insert into DB<br/>Error Details Follow:<br/></span>" : "<span  style='color:green'><h3> Well that appears to have gone well !!</h3><br/>" . $dataRecords . " Records Read from xlsx<br/>$failedRecords failed to insert into DB</span>";
+        echo "<span style='color:blue'>";
+        echo "<br/>Load Run time : ". sprintf('%f Seconds', $elapsed);
+        $mSecPerRow = $elapsed / $row;
+        echo "<br/>Seconds/Record : " . sprintf('%f', $mSecPerRow) ;
+        $rowPerMsec = $row / $elapsed;
+        echo "<br/>Records/Second : " . sprintf('%f', $rowPerMsec) ;
+        echo "</span>";
+        echo "<hr/>";
+
+        echo $response;
+    }
 }

@@ -72,6 +72,7 @@ $pesTracker     = new NavbarOption('PES Tracker', 'pc_pesTracker.php','accessCdi
 $pesStatusChange= new NavbarOption('PES Status Changes', 'pr_pesStatusChangeReport.php','accessCdi accessPes');
 $pesStatusUpdate= new NavbarOption('PES Status Manual Update', 'pa_statusUpdate.php','accessCdi accessPes');
 $odcDataUpload  = new NavbarOption('ODC Access Upload', 'pc_odcAccessUpload.php','accessCdi accessPmo');
+$CTIDDataUpdate= new NavbarOption('CT ID Update', 'pc_CTIDUpdate.php','accessCdi accessPmo');
 // $email          = new NavbarOption('Email Log', 'pi_emailLog.php','accessCdi');
 $tribes         = new NavbarOption('Tribes','pa_agileTribes.php','accessCdi accessPmo ');
 $squads         = new NavbarOption('Squad(Current)','pa_agileSquads.php','accessCdi accessPmo ');
@@ -100,6 +101,8 @@ $adminMenu->addOption($pesStatusChange);
 $adminMenu->addOption($pesStatusUpdate);
 $adminMenu->addOption( new NavbarDivider('accessPmo accessCdi'));
 $adminMenu->addOption($odcDataUpload);
+$adminMenu->addOption( new NavbarDivider('accessPmo accessCdi'));
+$adminMenu->addOption($CTIDDataUpdate);
 $adminMenu->addOption( new NavbarDivider('accessPmo accessCdi'));
 $adminMenu->addOption($tribes);
 $adminMenu->addOption($squads);

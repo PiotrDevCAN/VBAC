@@ -6,7 +6,6 @@ use itdq\DbTable;
 
 class odcAssetRemovalTable extends DbTable {
     
-    
     function odcPopulationWithRemoveByPlatform(){
         
         $personTable = new personTable(allTables::$PERSON);        
@@ -41,16 +40,13 @@ class odcAssetRemovalTable extends DbTable {
         
         return array('TotalPopulationWithRemove'=>$totalPopulation,'PlatformPopulationsWithRemove'=>$platformPopulation,'sql'=>$sql);
     } 
-    
-    
+
     function rightToRemove(){
         $sql = "SELECT P.NOTES_ID, P.FIRST_NAME, P.LAST_NAME, O.CNUM, O.ASSET_SERIAL_NUMBER, O.START_DATE, O.END_DATE, P.WORK_STREAM ";
         $sql.= "from " . $GLOBALS['Db2Schema'] . "." . $this->tableName . " as O ";
         $sql.= "left join " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql.= "on O.CNUM = P.CNUM ";
         $sql.= " ORDER BY NOTES_ID ";
-        
-
         
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
         
@@ -60,8 +56,5 @@ class odcAssetRemovalTable extends DbTable {
         
         return $rs;
     }
-        
-    
-    
 }
     

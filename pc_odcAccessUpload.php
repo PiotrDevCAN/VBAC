@@ -8,7 +8,6 @@ ob_start();
 ?>
 
 <style>
-
 #drop-area {
   border: 2px dashed #ccc;
   border-radius: 20px;
@@ -40,20 +39,14 @@ p {
 #fileElem {
   display: none;
 }
-
-
-
 </style>
-
-
-
-
 
 <div class='container'>
 <div class='row'>
 <div class='col-sm-offset-2 col-sm-8'>
 <h2>ODC Access Data Upload</h2>
 
+<p>The upload process requires two OWNER_CNUM_ID and SECURED_AREA_NAME columns to be provided in an Excel spreadsheet.</p>
 
 <div id="drop-area">
   <form class="my-form">
@@ -62,123 +55,83 @@ p {
     <label class="button" for="fileElem">or Select File here</label>
   </form>
 </div>
-
-
-
 </div>
 </div>
 </div>
-
-
-
-
 <script>
 
-let dropArea = document.getElementById('drop-area')
-;['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+let dropArea = document.getElementById('drop-area');
+['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
   dropArea.addEventListener(eventName, preventDefaults, false)
 })
 
 function preventDefaults (e) {
   e.preventDefault()
   e.stopPropagation()
+};
+['dragenter', 'dragover'].forEach(eventName => {
+	  dropArea.addEventListener(eventName, highlight, false)
+});
+['dragleave', 'drop'].forEach(eventName => {
+	  dropArea.addEventListener(eventName, unhighlight, false)
+})
+
+function highlight(e) {
+	dropArea.classList.add('highlight')
 }
 
+function unhighlight(e) {
+	dropArea.classList.remove('highlight')
+}
 
-;['dragenter', 'dragover'].forEach(eventName => {
-	  dropArea.addEventListener(eventName, highlight, false)
+dropArea.addEventListener('drop', handleDrop, false)
+
+function handleDrop(e) {
+	let dt = e.dataTransfer
+	let files = dt.files
+
+	handleFiles(files)
+}
+
+function handleFiles(files) {
+	([...files]).forEach(uploadFile)
+}
+
+function uploadFile(file) {
+	var url = 'ajax/upload_odc.php';
+	var xhr = new XMLHttpRequest();
+	var formData = new FormData();
+
+	xhr.open('POST', url, true);
+
+	xhr.addEventListener('readystatechange', function(e) {
+		if (xhr.readyState == 4 && xhr.status == 200) {
+			// Done. Inform the user
+			var responseText = xhr.responseText;
+			responseText += "<br/>Upload to DB2 starting.<br/>This can take several minutes (load runs at circa 4 Rows/Sec)<br/>";
+			responseText += "<i class='fa fa-spinner fa-spin' style='font-size:24px'></i>";
+			$('#drop-area').html(responseText);
+			var filename = file.name;
+			console.log(filename);			  
+			$.ajax({
+				url: "ajax/copyOdcAccessXlsxIntoDb2.php",
+				type: 'POST',
+				data: {filename: filename},
+				success: function(result){
+					console.log(result);
+					$('#drop-area').html(result);
+				}
+			});
+				
+		} else if (xhr.readyState == 4 && xhr.status != 200) {
+			// Error. Inform the user
+			var responseText = xhr.responseText;
+			responseText += "<br/>Error has occured, inform support";
+			$('#drop-area').html(responseText);
+		}
 	})
 
-	;['dragleave', 'drop'].forEach(eventName => {
-	  dropArea.addEventListener(eventName, unhighlight, false)
-	})
-
-	function highlight(e) {
-	  dropArea.classList.add('highlight')
-	}
-
-	function unhighlight(e) {
-	  dropArea.classList.remove('highlight')
-	}
-
-
-
-	dropArea.addEventListener('drop', handleDrop, false)
-
-	function handleDrop(e) {
-	  let dt = e.dataTransfer
-	  let files = dt.files
-
-	  handleFiles(files)
-	}
-
-
-	function handleFiles(files) {
-		  ([...files]).forEach(uploadFile)
-		}
-
-
-// 	function uploadFile(file) {
-// 		  let url = 'upload.php'
-// 		  let formData = new FormData()
-
-// 		  formData.append('file', file)
-
-// 		  fetch(url, {
-// 		    method: 'POST',
-// 		    body: formData
-// 		  })
-// 		  .then(() => { /* Done. Inform the user */ })
-// 		  .catch(() => { /* Error. Inform the user */ })
-// 		}
-
-
-
-	function uploadFile(file) {
-		  var url = 'ajax/upload.php'
-		  var xhr = new XMLHttpRequest()
-		  var formData = new FormData()
-		  xhr.open('POST', url, true)
-
-		  xhr.addEventListener('readystatechange', function(e) {
-		    if (xhr.readyState == 4 && xhr.status == 200) {
-		      // Done. Inform the user
-		      var responseText = xhr.responseText;
-		      responseText += "<br/>Upload to DB2 starting.<br/>This can take several minutes (load runs at circa 4 Rows/Sec)<br/>";
-		      responseText += "<i class='fa fa-spinner fa-spin' style='font-size:24px'></i>";
-			  $('#drop-area').html(responseText);
-			  var filename = file.name;
-     		  console.log(filename);			  
-			  $.ajax({
-			    	url: "ajax/copyOdcAccessXlsxIntoDb2.php",
-			    	type: 'POST',
-			    	data: {filename: filename},
-			    	success: function(result){
-				    	console.log(result);
-				    	 $('#drop-area').html(result);
-
-			    	}
-			    });
-			      
-		    }
-		    else if (xhr.readyState == 4 && xhr.status != 200) {
-		      // Error. Inform the user
-		      var responseText = xhr.responseText;
-			  responseText += "<br/>Error has occured, inform support";
-			  $('#drop-area').html(responseText);
-		    }
-		  })
-
-		  formData.append('file', file)
-		  xhr.send(formData)
-		}
-
-	
-			
-	
-
-
-
-
-
+	formData.append('file', file)
+	xhr.send(formData)
+}
 </script>

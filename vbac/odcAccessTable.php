@@ -3,12 +3,10 @@ namespace vbac;
 
 use itdq\DbTable;
 
-
 class odcAccessTable extends DbTable {
 
     private $xlsDateFormat = 'd-M-Y';
     private $db2DateFormat = 'm-d-Y';
-
 
     function copyXlsxToDb2($fileName, $withTimings = false){
         $elapsed = -microtime(true);
@@ -118,12 +116,7 @@ class odcAccessTable extends DbTable {
         echo "<hr/>";
 
         echo $response;
-
-
-
-
     }
-
 
     function convertDate(array $recordData)
     {
@@ -145,7 +138,6 @@ class odcAccessTable extends DbTable {
         return $adjustedData;
     }
 
-
     function numberOfRecordsForLocation($location=null){
         $sql = " SELECT COUNT(*) as RECORDS ";
         $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
@@ -161,7 +153,6 @@ class odcAccessTable extends DbTable {
         $row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
 
         return $row['RECORDS'];
-
     }
 
     function locationMismatch(){
@@ -203,7 +194,6 @@ class odcAccessTable extends DbTable {
         return $rs;
     }
 
-
     function odcAccessMissingFromVbac(){
         // records found in ODC_ACCESS as having access to a Secured Area but CNUM not found in  VBAC PERSON table.
 
@@ -222,13 +212,10 @@ class odcAccessTable extends DbTable {
         return $rs;
     }
 
-
-
     function odcPopulationByPlatform(){
         $personTable = new personTable(allTables::$PERSON);
 
         $activePredicate = $personTable->activePersonPredicate();
-
 
         $sql = " SELECT upper(trim(WORK_STREAM)) AS WORK_STREAM, COUNT( distinct O.OWNER_CNUM_ID) as Platform_Population ";
         $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
@@ -256,8 +243,5 @@ class odcAccessTable extends DbTable {
         }
 
         return array('TotalPopulation'=>$totalPopulation,'PlatformPopulations'=>$platformPopulation,'sql'=>$sql);
-
-
     }
-
 }
