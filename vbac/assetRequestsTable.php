@@ -9,7 +9,6 @@ use itdq\AuditTable;
 use itdq\BlueMail;
 use itdq\DbRecord;
 
-
 class assetRequestsTable extends DbTable{
 
     const RETURN_WITH_BUTTONS = true;
@@ -705,14 +704,14 @@ class assetRequestsTable extends DbTable{
     function predicateForPmoExportableRequest() {
         $predicate  = " AND  ( ";
         $predicate .= " STATUS IN('" . assetRequestRecord::STATUS_APPROVED . "') AND ORDERIT_NUMBER is NULL AND USER_CREATED='" . assetRequestRecord::CREATED_PMO . "' ";
-        $predicate .= " AND ORDERIT_VARB_REF is null ";
-        $predicate .= " AND (ORDER_IT_TYPE = '1' or P.CT_ID is not null)";
-        $predicate .= " and ( pre_req_Request is null or pre_req_request  in (  select AR2.pre_req_request
-						  	from " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR2
-						  	left join " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " as AR3
-						  	on AR2.PRE_REQ_REQUEST = AR3.REQUEST_REFERENCE
-						    where AR3.ORDERIT_STATUS in ('" . assetRequestRecord::STATUS_ORDERIT_APPROVED . "','" . assetRequestRecord::STATUS_PROVISIONED . "')
-							) )";
+        $predicate .= " AND ORDERIT_VARB_REF IS NULL ";
+        $predicate .= " AND (ORDER_IT_TYPE = '1' OR P.CT_ID IS not NULL)";
+        $predicate .= " AND ( PRE_REQ_REQUEST IS NULL OR PRE_REQ_REQUEST IN ( SELECT AR2.PRE_REQ_REQUEST
+            FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " AS AR2
+            LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " AS AR3
+            ON AR2.PRE_REQ_REQUEST = AR3.REQUEST_REFERENCE
+            WHERE AR3.ORDERIT_STATUS in ('" . assetRequestRecord::STATUS_ORDERIT_APPROVED . "','" . assetRequestRecord::STATUS_PROVISIONED . "')
+            ) )";
         $predicate .= " )";
         return $predicate;
     }
@@ -868,9 +867,6 @@ class assetRequestsTable extends DbTable{
                     </div>
                   </div>
 				<input type='hidden' id='editJustificationStatus' name='editJustificationStatus' />
-
-
-
                 </form>
           </div>
           <div class='modal-footer'>
@@ -976,8 +972,6 @@ class assetRequestsTable extends DbTable{
                 $form->formBlueButtons($allButtons);
                 $form->formHiddenInput('user',$_SESSION['ssoEmail'],'user');
             ?>
-
-
              <button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
              </div>
              </form>
@@ -986,7 +980,6 @@ class assetRequestsTable extends DbTable{
       </div>
     <?php
     }
-
 
     function exportResultsModal(){
         ?>
@@ -1090,9 +1083,6 @@ class assetRequestsTable extends DbTable{
     <?php
     }
 
-
-
-
     function mapVarbToOrderItModal(){
         ?>
        <!-- Modal -->
@@ -1188,7 +1178,6 @@ class assetRequestsTable extends DbTable{
     	<?php
     }
 
-
     function amendOrderItModal(){
         ?>
         <!-- Modal -->
@@ -1249,11 +1238,10 @@ class assetRequestsTable extends DbTable{
         <?php
     }
 
-
     function getUnmappedVarb(){
         $sql = " SELECT distinct ORDERIT_VARB_REF ";
         $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql .= " WHERE ORDERIT_VARB_REF is not null and ORDERIT_NUMBER is null and STATUS in ('". assetRequestRecord::STATUS_EXPORTED . "','". assetRequestRecord::STATUS_RAISED_ORDERIT . "') ";
+        $sql .= " WHERE ORDERIT_VARB_REF IS NOT NULL AND ORDERIT_NUMBER IS NULL AND STATUS IN ('". assetRequestRecord::STATUS_EXPORTED . "','". assetRequestRecord::STATUS_RAISED_ORDERIT . "') ";
         $sql .= " ORDER BY ORDERIT_VARB_REF asc ";
 
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
@@ -1273,7 +1261,7 @@ class assetRequestsTable extends DbTable{
     function getUnmappedref(){
         $sql = " SELECT distinct REQUEST_REFERENCE ";
         $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql .= " WHERE ORDERIT_VARB_REF is not null and ORDERIT_NUMBER is null and STATUS in ('". assetRequestRecord::STATUS_EXPORTED . "','". assetRequestRecord::STATUS_RAISED_ORDERIT . "') ";
+        $sql .= " WHERE ORDERIT_VARB_REF IS NOT NULL AND ORDERIT_NUMBER IS NULL AND STATUS IN ('". assetRequestRecord::STATUS_EXPORTED . "','". assetRequestRecord::STATUS_RAISED_ORDERIT . "') ";
         $sql .= " ORDER BY REQUEST_REFERENCE asc ";
 
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
@@ -1293,8 +1281,8 @@ class assetRequestsTable extends DbTable{
     function getMappedVarb(){
         $sql = " SELECT distinct ORDERIT_VARB_REF ";
         $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql .= " WHERE ORDERIT_VARB_REF is not null and ORDERIT_NUMBER is not null ";
-        $sql .= " ORDER BY ORDERIT_VARB_REF asc ";
+        $sql .= " WHERE ORDERIT_VARB_REF IS NOT NULL AND ORDERIT_NUMBER IS NOT NULL ";
+        $sql .= " ORDER BY ORDERIT_VARB_REF ASC ";
 
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
@@ -1438,7 +1426,6 @@ class assetRequestsTable extends DbTable{
     	<?php
     }
 
-
     function getTracker(Spreadsheet $spreadsheet,$fullExtract = false){
         $recordsFound = false;
         $loader = new Loader();
@@ -1538,9 +1525,6 @@ class assetRequestsTable extends DbTable{
         $sql .= " ON lower(A.EMAIL_ADDRESS) = lower(AR.APPROVER_EMAIL) ";
         $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema']. "." . allTables::$EMPLOYEE_TYPE_MAPPING . " as EM ";
         $sql .= " ON upper(P.EMPLOYEE_TYPE) = upper(EM.CODE) ";
-
-
-
         $sql .= " WHERE 1=1 ";
         $sql .= " AND (AR.REQUEST_RETURN = 'No' or AR.REQUEST_RETURN is null ) ";
         $sql .= " AND " . $agePredicate;
@@ -1579,7 +1563,6 @@ class assetRequestsTable extends DbTable{
 
         return true;
     }
-
 
     function getVarbTracker(Spreadsheet $spreadsheet,$fullExtract = false){
         $recordsFound = false;
@@ -1646,8 +1629,6 @@ class assetRequestsTable extends DbTable{
 //                 }
 //            }
         }
-
-
         return true;
     }
 
@@ -1668,10 +1649,7 @@ class assetRequestsTable extends DbTable{
 
         $row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
         return array('cnum'=>$row['CNUM'],'assetTitle'=>$row['ASSET_TITLE']);
-
     }
-
-
 
     function getAssetRequestsForVarb($varb,$ref){
 
@@ -1830,7 +1808,6 @@ class assetRequestsTable extends DbTable{
 //         sqlsrv_commit($GLOBALS['conn']);
         return true;
     }
-
 
     function getAssetRequestsForOrderIt($orderIt,$varb,$ref){
         $sql = " SELECT REQUEST_REFERENCE as REFERENCE, P.NOTES_ID as PERSON, AR.ASSET_TITLE AS ASSET,AR.STATUS as STATUS,  AR.ORDERIT_STATUS";
@@ -2148,7 +2125,6 @@ class assetRequestsTable extends DbTable{
         foreach ($asset as $actualAsset){
         }
 
-
         $emailAddress = personTable::getEmailFromCnum($actualCnum);
 
         $message = "vBAC Requests for : $actualAsset ($reference) -  has been set to $orderItStatus status in LBG.<br/>";
@@ -2406,7 +2382,6 @@ class assetRequestsTable extends DbTable{
         <tfoot>
         </tfoot>
         </table>
-
         </div>
         <?php
     }
@@ -2414,7 +2389,6 @@ class assetRequestsTable extends DbTable{
     function getLastSql(){
         return $this->lastSql;
     }
-
 
     function notifyApprovingMgr(array $approvingMgr){
         $notifyApprovingMgr = "Requests have been created in vBAC that require your approval.<br/>You can access the tool here  <a href='https://" . $_SERVER['HTTP_HOST'] . "/pa_assetPortal.php'  target='_blank' >vBAC Asset Portal</a>";
@@ -2453,7 +2427,7 @@ class assetRequestsTable extends DbTable{
             }
 
             while (($row = sqlsrv_fetch_array($rs1))==true) {
-                $sql = " update " . $GLOBALS['Db2Schema'] . "." . $this->tableName ;
+                $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName ;
                 $sql .= " SET PRE_REQ_REQUEST='" . htmlspecialchars(trim($row['PRE_REQ'])) . "' ";
                 $sql .= " WHERE REQUEST_REFERENCE='" . htmlspecialchars(trim($row['REQUEST_REFERENCE']))  . "' " ;
 
@@ -2495,9 +2469,7 @@ class assetRequestsTable extends DbTable{
         }
 
         return $preparedStmt;
-
     }
-
 
     function deVarb($requestRef = null){
         if(empty($requestRef)){
@@ -2553,8 +2525,8 @@ class assetRequestsTable extends DbTable{
 
 
      function getOpenRequestsForCnum($cnum){
-         $sql = " select distinct Asset_title ";
-         $sql.= " from " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
+         $sql = " select distinct ASSET_TITLE ";
+         $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
          $sql.= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
          $sql.= " AND ORDERIT_STATUS in ('" . assetRequestRecord::STATUS_ORDERIT_YET . "','" . assetRequestRecord::STATUS_ORDERIT_RAISED . "') ";
          $sql.= " AND ASSET_TITLE NOT LIKE 'Other%' ";

@@ -150,7 +150,7 @@ if (isset($argv[1])) {
             $APIData->PROCESSING_STATUS = $row['PROCESSING_STATUS'];
             $APIData->PROCESSING_STATUS_CHANGED = $row['PROCESSING_STATUS_CHANGED'];
             $APIData->PES_DATE_REQUESTED = $row['PES_DATE_REQUESTED']; 
-            $APIData->PES_REQUESTOR = $row['PES_DATE_REQUESTED'];
+            $APIData->PES_REQUESTOR = $row['PES_REQUESTOR'];
             $APIData->PES_DATE_RESPONDED = $row['PES_DATE_RESPONDED']; 
             $APIData->PES_STATUS_DETAILS = $row['PES_STATUS_DETAILS']; 
             $APIData->PES_STATUS = $row['PES_STATUS'];
