@@ -19,7 +19,7 @@ AuditTable::audit("Revalidation invoked.",AuditTable::RECORD_TYPE_REVALIDATION);
 // $response = $slack->slackApiPostMessage(slack::CHANNEL_ID_SM_CDI_AUDIT,$_ENV['environment'] . ":Revalidation invoked.");
 
 set_time_limit(0);
-ini_set('memory_limit','6144M');
+ini_set('memory_limit','2048M');
 
 $personTable = new personTable(allTables::$PERSON);
 

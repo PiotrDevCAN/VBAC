@@ -13,7 +13,7 @@ use vbac\personTable;
 use vbac\staticDataSkillsetsRecord;
 
 set_time_limit(0);
-ini_set('memory_limit','6144M');
+ini_set('memory_limit','2048M');
 
 $_ENV['email'] = 'on';
 

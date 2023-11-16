@@ -7,7 +7,7 @@ use vbac\allTables;
 use vbac\assetRequestsTable;
 use vbac\personTable;
 
-ini_set('memory_limit', '512M');
+ini_set('memory_limit', '2048M');
 
 // require_once __DIR__ . '/../../src/Bootstrap.php';
 $helper = new Sample();

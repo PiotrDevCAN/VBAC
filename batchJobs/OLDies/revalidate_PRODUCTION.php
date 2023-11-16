@@ -16,7 +16,7 @@ $response = $slack->slackApiPostMessage(slack::CHANNEL_ID_SM_CDI_AUDIT,$_ENV['en
 error_log($response);
 
 set_time_limit(0);
-ini_set('memory_limit','6144M');
+ini_set('memory_limit','2048M');
 
 $personTable = new personTable(allTables::$PERSON);
 

@@ -11,7 +11,7 @@ AuditTable::audit("PES Recheck email to PES Team - invoked.",AuditTable::RECORD_
 $slack->sendMessageToChannel("PES Recheck email to PES Team - invoked.(" . $_ENV['environment'] . ")", slack::CHANNEL_SM_CDI_AUDIT);
 
 set_time_limit(0);
-ini_set('memory_limit','6144M');
+ini_set('memory_limit','2048M');
 
 $timeMeasurements = array();
 $start = microtime(true);

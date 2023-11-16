@@ -10,7 +10,7 @@ var_dump((ini_get('max_execution_time')));
 
 var_dump((ini_get('memory_limit')));
 
-ini_set('memory_limit','256M'); 
+ini_set('memory_limit','2048M'); 
 
 var_dump((ini_get('memory_limit')));
 
@@ -52,8 +52,7 @@ $_SESSION['isPes']  = !empty($isPes)  ? true : false;
 <?=print_r($GLOBALS)?>
 </pre>
 
-<?php ini_set('MEMORY_LIMIT','512M'); ?>
-
+<?php ini_set('MEMORY_LIMIT','2048M'); ?>
 
 <h3>phpInfo</h3>
 <pre>

@@ -15,7 +15,7 @@ AuditTable::audit("Check for Leavers invoked.",AuditTable::RECORD_TYPE_REVALIDAT
 $response = $slack->slackApiPostMessage(slack::CHANNEL_SM_CDI_AUDIT,$_ENV['environment'] . ":Check for Leavers invoked.");
 
 set_time_limit(0);
-ini_set('memory_limit','6144M');
+ini_set('memory_limit','2048M');
 
 $personTable = new personTable(allTables::$PERSON);
 $loader = new Loader();

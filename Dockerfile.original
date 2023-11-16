@@ -41,5 +41,5 @@ ENV LC_ALL en_US.UTF-8
 RUN sed -i '$ a auto_prepend_file="php/siteheader.php"' /usr/local/etc/php/conf.d/docker-php-ext-ibm_db2.ini
 RUN sed -i '$ a auto_append_file="php/sitefooter.php"' /usr/local/etc/php/conf.d/docker-php-ext-ibm_db2.ini
 
-RUN sed -i '$ a memory_limit=512M' /usr/local/etc/php/conf.d/docker-php-ext-ibm_db2.ini
+RUN sed -i '$ a memory_limit=2048M' /usr/local/etc/php/conf.d/docker-php-ext-ibm_db2.ini
 

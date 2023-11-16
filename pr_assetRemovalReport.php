@@ -32,7 +32,7 @@ $odcAssetRemovalTable = new odcAssetRemovalTable(allTables::$ODC_ASSET_REMOVAL);
 
 try {
     set_time_limit(0);
-    ini_set('memory_limit', '512M');
+    ini_set('memory_limit', '2048M');
     
     $rs = $odcAssetRemovalTable->rightToRemove();
     
