@@ -4,7 +4,6 @@ namespace vbac;
 use itdq\DbRecord;
 use itdq\Loader;
 
-
 /**
  *
  * @author gb001399

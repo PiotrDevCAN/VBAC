@@ -1,25 +1,9 @@
 <?php
 
-use itdq\Process;
+use vbac\batchJob;
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-$scriptsDirectory = '/var/www/html/batchJobs/';
-$processDirectory = 'processesCLI/'; 
+$processName = 'Recheck Potential Leavers Script';
 $processFile = 'recheckPotentialLeaversProcess.php';
-try {
-    $cmd = 'php ';
-    $cmd .= '-d auto_prepend_file=' . $scriptsDirectory . 'php/siteheader.php ';
-    $cmd .= '-d auto_append_file=' . $scriptsDirectory . 'php/sitefooter.php ';
-    $cmd .= '-f ' . $scriptsDirectory . $processDirectory. $processFile;
-    $process = new Process($cmd);
-    $pid = $process->getPid();
-    echo "Recheck Potential Leavers Script has succeed to be executed: " . $scriptsDirectory . $processDirectory . $processFile;
-    error_log("Recheck Potential Leavers Script has succeed to be executed: " . $scriptsDirectory . $processDirectory . $processFile);
-} catch (Exception $exception) {
-    echo $exception->getMessage();
-    echo "Recheck Potential Leavers Script has failed to be executed: " . $scriptsDirectory . $processDirectory . $processFile;
-    error_log("Recheck Potential Leavers Script has failed to be executed: " . $scriptsDirectory . $processDirectory . $processFile);
-}
+
+$job = new batchJob($processName, $processFile);
+$job->run();

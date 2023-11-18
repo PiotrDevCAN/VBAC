@@ -1,11 +1,9 @@
 <?php
 
+use vbac\personDataDownloader;
 use vbac\personTable;
-
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 
 $type = personTable::PERSON_DETAILS_FULL;
 
-require "batchJobs/personDataDownloader.php";
+$downloader = new personDataDownloader($type);
+$downloader->getFile();
