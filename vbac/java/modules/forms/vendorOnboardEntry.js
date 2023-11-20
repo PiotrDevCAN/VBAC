@@ -166,32 +166,18 @@ class vendorOnboardEntry {
         case 'preboarder':
           switch (type) {
             case 'ibmer':
-              $("#" + vendorOnboardEntry.resourceEmailInputId)
-                .attr("disabled", false)
-                .attr("required", true)
-                .attr("placeholder", "Email Address")
-                .css("background-color", "white");
-              break;
             default:
               $("#" + vendorOnboardEntry.resourceEmailInputId)
-                .attr("disabled", false)
-                .attr("required", true)
-                .attr("placeholder", "Email Address")
-                .css("background-color", "white");
+                .val("").trigger("change");
               break;
           }
-          $("#" + vendorOnboardEntry.saveButtonId).attr("disabled", true);
           $("#resource_open_seat").val("");
           break;
         case 'vendor':
           switch (type) {
             case 'other':
               $("#" + vendorOnboardEntry.resourceEmailInputId)
-                .val("")
-                .attr("disabled", false)
-                .attr("required", true)
-                .attr("placeholder", "Email Address")
-                .css("background-color", "white");
+                .val("").trigger("change");
               break;
             default:
               $("#" + vendorOnboardEntry.resourceEmailInputId)
@@ -202,7 +188,6 @@ class vendorOnboardEntry {
                 .css("background-color", "#eeeeee");
               break;
           }
-          $("#" + vendorOnboardEntry.saveButtonId).attr("disabled", false);
           var Type = type[0].toUpperCase() + type.slice(1).toLowerCase();
           $("#resource_open_seat").val(Type);
           break;

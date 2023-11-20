@@ -5,8 +5,6 @@
 let convertOceanToKyndryl = await cacheBustImport('./modules/functions/convertOceanToKyndryl.js');
 let inArrayCaseInsensitive = await cacheBustImport('./modules/functions/inArrayCaseInsensitive.js');
 
-// let fetchWorkerAPIDetailsForCnum = await cacheBustImport('./modules/functions/fetchWorkerAPIDetailsForCnum.js');
-
 let initialiseStartEndDate = await cacheBustImport('./modules/functions/initialiseStartEndDate_Regular.js');
 let initialiseOtherDates = await cacheBustImport('./modules/functions/initialiseOtherDates_Regular.js');
 let initialiseFormSelect2 = await cacheBustImport('./modules/functions/initialiseFormSelect2_Regular.js');
@@ -36,7 +34,6 @@ class regularOnboardEntry {
     this.initiatePesButton = $("#" + regularOnboardEntry.initiatePesButtonId);
 
     this.listenForName();
-    // this.listenForSerial();
     this.listenForLinkToPreBoarded();
 
     this.listenForSaveBoarding();
@@ -179,18 +176,6 @@ class regularOnboardEntry {
       }
     });
   }
-
-  /*
-  listenForSerial() {
-    var $this = this;
-    $(document).on("keyup change", "#person_serial", function (e) {
-      var cnum = $(this).val();
-      if (cnum.length == 9) {
-        // fetchWorkerAPIDetailsForCnum(cnum);
-      }
-    });
-  }
-  */
 
   listenForLinkToPreBoarded() {
     $(document).on("select2:select", "#person_preboarded", function (e) {
