@@ -1,12 +1,11 @@
 <?php
 
-use itdq\BlueMail;
 use PhpOffice\PhpSpreadsheet\Helper\Sample;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use itdq\BlueMail;
 use itdq\DbTable;
 use vbac\allTables;
-use vbac\assetRequestsTable;
 use vbac\personRecord;
 use vbac\personTable;
 
@@ -28,47 +27,51 @@ if (isset($argv[1])) {
 
     error_log("Execution parameters: ".$toEmailParam." ".$trackerType);
 
+    $activePredicate = '';
+    $excludePredicate = '';
+
+    $sql = '';
+
     switch ($trackerType) {
         case 'details':
             $type = personTable::PERSON_DETAILS;
             $filePrefix = 'personExtract';
             
-            $personTable = new assetRequestsTable(allTables::$PERSON);
-            $activePredicate = '';
-
-            $sql = " SELECT * ";
+            $sql.= " SELECT * ";
             $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
-        
+            
             break;
         case 'details_full':
             $type = personTable::PERSON_DETAILS_FULL;
             $filePrefix = 'personExtractFull';
 
-            $personTable = new assetRequestsTable(allTables::$PERSON);
-            $activePredicate = '';
+            $excludePredicate = personTable::excludeBoardedPreboardersPredicate('P');
 
-            $sql = " SELECT P.*, AS1.SQUAD_LEADER, AS1.SQUAD_NAME, AT.TRIBE_NUMBER, AT.TRIBE_NAME, AT.TRIBE_LEADER, " . personTable::ORGANISATION_SELECT . ", AT.ITERATION_MGR";
+            $sql.= " SELECT " . personTable::DEFAULT_SELECT_FIELDS .', ' . personTable::ORGANISATION_SELECT;
             $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
             $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS1 ";
             $sql.= " ON P.SQUAD_NUMBER = AS1.SQUAD_NUMBER ";
             $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " AS AT ";
             $sql.= " ON AS1.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
-            $sql.= " WHERE P.PES_STATUS_DETAILS is null or P.PES_STATUS_DETAILS not like '" . personRecord::PES_STATUS_DETAILS_BOARDED_AS . "%' ";  // dont show boarded pre-boarders
+            $sql.= " LEFT JOIN " .  $GLOBALS['Db2Schema'] . "." . allTables::$STATIC_SKILLSETS . " as SS ";
+            $sql.= " ON P.SKILLSET_ID = SS.SKILLSET_ID ";
+            $sql.= " WHERE 1=1 AND " . $excludePredicate;
         
             break;
         case 'details_active':
             $type = personTable::PERSON_DETAILS_ACTIVE;
             $filePrefix = 'personExtractActive';
             
-            $personTable = new personTable(allTables::$PERSON);
             $activePredicate = personTable::activePersonPredicate();
 
-            $sql = " SELECT P.*, AS1.SQUAD_LEADER, AS1.SQUAD_NAME, AT.TRIBE_NUMBER, AT.TRIBE_NAME, AT.TRIBE_LEADER, " . personTable::ORGANISATION_SELECT . ", AT.ITERATION_MGR";
+            $sql.= " SELECT " . personTable::DEFAULT_SELECT_FIELDS .', ' . personTable::ORGANISATION_SELECT;
             $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
             $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS1 ";
             $sql.= " ON P.SQUAD_NUMBER = AS1.SQUAD_NUMBER ";
             $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " AS AT ";
             $sql.= " ON AS1.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
+            $sql.= " LEFT JOIN " .  $GLOBALS['Db2Schema'] . "." . allTables::$STATIC_SKILLSETS . " as SS ";
+            $sql.= " ON P.SKILLSET_ID = SS.SKILLSET_ID ";
             $sql.= " WHERE 1=1 AND " . $activePredicate;
         
             break;
@@ -80,15 +83,15 @@ if (isset($argv[1])) {
             $subject = 'Person Table(ODC)';
             $description = 'Aurora Person Table Extract(ODC) generated from vBAC';
 
-            $personTable = null;
-            $activePredicate = '';
-            
             $joins = " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS1 ";
             $joins.= " ON P.SQUAD_NUMBER = AS1.SQUAD_NUMBER ";
             $joins.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " AS AT ";
             $joins.= " ON AS1.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
+            $joins.= " LEFT JOIN " .  $GLOBALS['Db2Schema'] . "." . allTables::$STATIC_SKILLSETS . " as SS ";
+            $joins.= " ON P.SKILLSET_ID = SS.SKILLSET_ID ";
             
-            $sql = " SELECT P.*, O.*, AS1.SQUAD_LEADER, AS1.SQUAD_NAME, AT.TRIBE_NUMBER, AT.TRIBE_NAME, AT.TRIBE_LEADER, " . personTable::ORGANISATION_SELECT . ", AT.ITERATION_MGR ";
+            $sql.= " SELECT " . personTable::DEFAULT_SELECT_FIELDS .', ' . personTable::ORGANISATION_SELECT;
+            $sql.= ", O.* ";
             $sql.= personTable::odcStaffSql($joins);
 
             break;
@@ -96,21 +99,23 @@ if (isset($argv[1])) {
             $type = personTable::PERSON_DETAILS_INACTIVE;
             $filePrefix = 'personExtractInactive';
 
-            $personTable = null;
             $activePredicate = personTable::activePersonPredicate();
+            $excludePredicate = personTable::excludeBoardedPreboardersPredicate();
 
-            $sql = " SELECT P.*, AS1.SQUAD_LEADER, AS1.SQUAD_NAME, AT.TRIBE_NUMBER, AT.TRIBE_NAME, AT.TRIBE_LEADER, " . personTable::ORGANISATION_SELECT . ", AT.ITERATION_MGR";
+            $sql.= " SELECT " . personTable::DEFAULT_SELECT_FIELDS .', ' . personTable::ORGANISATION_SELECT;
             $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
             $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS1 ";
             $sql.= " ON P.SQUAD_NUMBER = AS1.SQUAD_NUMBER ";
             $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " AS AT ";
             $sql.= " ON AS1.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
+            $sql.= " LEFT JOIN " .  $GLOBALS['Db2Schema'] . "." . allTables::$STATIC_SKILLSETS . " as SS ";
+            $sql.= " ON P.SKILLSET_ID = SS.SKILLSET_ID ";
             $sql.= " WHERE P.CNUM NOT IN ( ";
             $sql.= "  SELECT CNUM " ;
             $sql.= "  FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
             $sql.= "  WHERE 1=1 AND $activePredicate ";
             $sql.= "  ) ";
-            $sql.= " AND (PES_STATUS_DETAILS is null or PES_STATUS_DETAILS not like '" . personRecord::PES_STATUS_DETAILS_BOARDED_AS . "%' )"; // dont show boarded pre-boarders
+            $sql.= " AND $excludePredicate";
 
             break;
         case 'bau':
@@ -121,15 +126,16 @@ if (isset($argv[1])) {
             $subject = 'BAU Report';
             $description = 'BAU report from Person Table Extract generated from vBAC';
 
-            $personTable = new personTable(allTables::$PERSON);
             $activePredicate = personTable::activePersonPredicate();
 
-            $sql = " SELECT P.*, AS1.SQUAD_LEADER, AS1.SQUAD_NAME, AT.TRIBE_NUMBER, AT.TRIBE_NAME, AT.TRIBE_LEADER, " . personTable::ORGANISATION_SELECT . ", AT.ITERATION_MGR";
+            $sql.= " SELECT " . personTable::DEFAULT_SELECT_FIELDS .', ' . personTable::ORGANISATION_SELECT;
             $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
             $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS1 ";
             $sql.= " ON P.SQUAD_NUMBER = AS1.SQUAD_NUMBER ";
             $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " AS AT ";
             $sql.= " ON AS1.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
+            $sql.= " LEFT JOIN " .  $GLOBALS['Db2Schema'] . "." . allTables::$STATIC_SKILLSETS . " as SS ";
+            $sql.= " ON P.SKILLSET_ID = SS.SKILLSET_ID ";
             $sql.= " WHERE 1=1 AND " . $activePredicate;
             $sql.= " AND P.LOB     in ('GTS','Cloud','Security') ";
             $sql.= " AND P.TT_BAU  in ('BAU') ";

@@ -44,10 +44,21 @@ $spreadsheet->getProperties()->setCreator('vBAC')
 
 $now = new DateTime();
 
-$plus = "NOTES_ID,ROLE_ON_THE_ACCOUNT,EMAIL_ADDRESS,COUNTRY,START_DATE,PROJECTED_END_DATE,SQUAD_NUMBER,SQUAD_NAME,KYN_EMAIL_ADDRESS,CNUM,OFFBOARDED_DATE,ORGANISATION";
-
 $withProvClear = null;
-$additionalFields = !empty($plus) ? explode(",", $plus) : null;
+$additionalFields = array(
+    "NOTES_ID",
+    "ROLE_ON_THE_ACCOUNT", 
+    "EMAIL_ADDRESS", 
+    "COUNTRY", 
+    "START_DATE", 
+    "PROJECTED_END_DATE", 
+    "SQUAD_NUMBER",
+    "SQUAD_NAME",
+    "KYN_EMAIL_ADDRESS",
+    "CNUM",
+    "OFFBOARDED_DATE",
+    "ORGANISATION"
+);
 $additionalSelect = null;
 
 $onlyActiveBool = false;

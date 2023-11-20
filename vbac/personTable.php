@@ -37,7 +37,9 @@ class personTable extends DbTable
     const PERSON_DETAILS_ACTIVE_ODC = 'Details Active Odc';
     const PERSON_DETAILS_INACTIVE = 'Details Inactive';
     const PERSON_BAU = 'Bau';
-    const ORGANISATION_SELECT = 'CASE WHEN AS1.ORGANISATION is null THEN AT.ORGANISATION ELSE AS1.ORGANISATION END AS ORGANISATION';
+    
+    const ORGANISATION_SELECT = ' CASE WHEN AS1.ORGANISATION IS NULL THEN AT.ORGANISATION ELSE AS1.ORGANISATION END AS ORGANISATION ';
+    const DEFAULT_SELECT_FIELDS = " P.*, AS1.SQUAD_LEADER, AS1.SQUAD_NAME, AT.TRIBE_LEADER, AT.TRIBE_NUMBER, AT.TRIBE_NAME, AT.ITERATION_MGR, SS.SKILLSET ";
 
     private static $revalStatusChangeEmail = 'Functional Manager,'
         . '<br/>You have been identified from VBAC as being the functional manager of :  &&leaversNotesid&&'
@@ -161,6 +163,18 @@ class personTable extends DbTable
         $inactivePredicate .= "PES_STATUS not in (" . self::$excludeFromRecheckNotification . ") ";
         $inactivePredicate .= " ) ) ";
         return $inactivePredicate;
+    }
+
+    public static function excludeBoardedPreboardersPredicate($tableAbbrv = null)
+    {
+        $predicate = "(";
+        $predicate .= !empty($tableAbbrv) ? $tableAbbrv . "." : null;
+        $predicate .= "PES_STATUS_DETAILS is null ";
+        $predicate .= " OR ";
+        $predicate .= !empty($tableAbbrv) ? $tableAbbrv . "." : null;
+        $predicate .= "PES_STATUS_DETAILS NOT LIKE '" . personRecord::PES_STATUS_DETAILS_BOARDED_AS . "%' "; // dont show boarded pre-boarders
+        $predicate .= " ) ";
+        return $predicate;
     }
 
     public static function archivedPersonPredicate($includeProvisionalClearance = true, $tableAbbrv = null)

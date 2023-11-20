@@ -26,7 +26,7 @@ $_ENV['email'] = 'on';
 
 $noreplemailid = $_ENV['noreplykyndrylemailid'];
 $emailAddress = array(
-    // 'philip.bibby@kyndryl.com',
+    'philip.bibby@kyndryl.com',
     $_ENV['automationemailid']
 );
 
@@ -43,88 +43,14 @@ $spreadsheet->getProperties()->setCreator('vBAC')
     // Add some data
 
 $now = new DateTime();
-
-$plus = "NOTES_ID,ROLE_ON_THE_ACCOUNT,EMAIL_ADDRESS,COUNTRY,START_DATE,PROJECTED_END_DATE,SQUAD_NUMBER,SQUAD_NAME,KYN_EMAIL_ADDRESS,CNUM,OFFBOARDED_DATE,ORGANISATION";
-
 $withProvClear = null;
-$additionalFields = !empty($plus) ? explode(",", $plus) : null;
-$additionalSelect = null;
-
-$onlyActiveBool = false;
-$onlyActiveInTimeBool = false;
-
-if (!is_null($additionalFields)) {
-
-    $personRecord = new personRecord();
-    $availablePersonColumns = $personRecord->getColumns();
-    $personTableAliases = array('P.', 'F.', 'U.');
-
-    $agileSquadRecord = new AgileSquadRecord();
-    $availableAgileSquadColumns = $agileSquadRecord->getColumns();
-    $agileSquadTableAliases = array('AS1.');
-
-    $agileTribeRecord = new AgileTribeRecord();
-    $availableAgileTribeColumns = $agileTribeRecord->getColumns();
-    $agileTribeTableAliases = array('AT.');
-
-    $skillsetRecord = new staticDataSkillsetsRecord();
-    $skillsetRecordColumns = $skillsetRecord->getColumns();
-    $skillseTableAliases = array('SS.');
-
-    foreach ($additionalFields as $field) {
-
-        // an additional mapping
-        switch($field) {
-            case 'ORGANISATION':
-                $fieldExpression = personTable::ORGANISATION_SELECT;
-                $additionalSelect .= ", " . htmlspecialchars($fieldExpression);
-                continue 2;
-                break;
-            default:
-                break;
-        }
-
-        // validate field against PERSON table
-        $tableField = str_replace($personTableAliases, '', $field);
-
-        if (array_key_exists($tableField, $availablePersonColumns)) {
-            $additionalSelect .= ", " . htmlspecialchars("P.".$tableField);
-            continue;
-        }
-        
-        // validate field against AGILE_SQUAD table
-        $tableField = str_replace($agileSquadTableAliases, '', $field);
-
-        if (array_key_exists($tableField, $availableAgileSquadColumns)) {
-            $additionalSelect .= ", " . htmlspecialchars("AS1.".$tableField);
-            continue;
-        }
-
-        // validate field against AGILE_TRIBE table
-        $tableField = str_replace($agileTribeTableAliases, '', $field);
-
-        if (array_key_exists($tableField, $availableAgileTribeColumns)) {
-            $additionalSelect .= ", " . htmlspecialchars("AT.".$tableField);
-            continue;
-        }
-
-        // validate field against STATIC_SKILLSET table
-        $tableField = str_replace($skillseTableAliases, '', $field);
-
-        if (array_key_exists($tableField, $skillsetRecordColumns)) {
-            $additionalSelect .= ", " . htmlspecialchars("SS.".$tableField);
-            continue;
-        }
-    }
-}
 
 try {
     
     // ob_clean();
 
-    $sql = " SELECT DISTINCT P.NOTES_ID, P.KYN_EMAIL_ADDRESS, ";
+    $sql = " SELECT *, ";
     $sql.=" CASE WHEN " . personTable::activePersonPredicate($withProvClear, 'P') . " THEN 'active' ELSE 'inactive' END AS INT_STATUS ";
-    $sql.= $additionalSelect;
     $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
     $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD .  " AS AS1 ";
     $sql.= " ON P.SQUAD_NUMBER = AS1.SQUAD_NUMBER ";
@@ -133,9 +59,6 @@ try {
     $sql.= " LEFT JOIN " .  $GLOBALS['Db2Schema'] . "." . allTables::$STATIC_SKILLSETS . " as SS ";
     $sql.= " ON P.SKILLSET_ID = SS.SKILLSET_ID ";
     $sql.= " WHERE 1=1 AND trim(P.KYN_EMAIL_ADDRESS) != '' ";
-    // $sql.= " WHERE 1=1 AND trim(NOTES_ID) != '' ";
-    // $sql.= $onlyActiveBool ? " AND " . personTable::activePersonPredicate($withProvClear, 'P') : null;
-    // $sql.= $onlyActiveInTimeBool ? " AND (" . personTable::activePersonPredicate($withProvClear, 'P') . " OR P.OFFBOARDED_DATE > '" . $offboardedDate->format('Y-m-d') . "')" : null;
     $sql.= " ORDER BY P.NOTES_ID ";
 
     $resultSet = sqlsrv_query($GLOBALS['conn'], $sql);
