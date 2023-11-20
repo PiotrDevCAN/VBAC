@@ -5,7 +5,7 @@
 let convertOceanToKyndryl = await cacheBustImport('./modules/functions/convertOceanToKyndryl.js');
 let inArrayCaseInsensitive = await cacheBustImport('./modules/functions/inArrayCaseInsensitive.js');
 
-let fetchWorkerAPIDetailsForCnum = await cacheBustImport('./modules/functions/fetchWorkerAPIDetailsForCnum.js');
+// let fetchWorkerAPIDetailsForCnum = await cacheBustImport('./modules/functions/fetchWorkerAPIDetailsForCnum.js');
 
 let initialiseStartEndDate = await cacheBustImport('./modules/functions/initialiseStartEndDate_Regular.js');
 let initialiseOtherDates = await cacheBustImport('./modules/functions/initialiseOtherDates_Regular.js');
@@ -13,7 +13,10 @@ let initialiseFormSelect2 = await cacheBustImport('./modules/functions/initialis
 
 let saveRegularBoarding = await cacheBustImport('./modules/functions/saveRegularBoarding.js');
 
+let toTitleCase = await cacheBustImport('./modules/functions/toTitleCase.js');
+
 let knownCNUMs = await cacheBustImport('./modules/dataSources/knownCNUMs.js');
+let knownKyndrylEmails = await cacheBustImport('./modules/dataSources/knownKyndrylEmails.js');
 
 class regularOnboardEntry {
 
@@ -33,7 +36,7 @@ class regularOnboardEntry {
     this.initiatePesButton = $("#" + regularOnboardEntry.initiatePesButtonId);
 
     this.listenForName();
-    this.listenForSerial();
+    // this.listenForSerial();
     this.listenForLinkToPreBoarded();
 
     this.listenForSaveBoarding();
@@ -52,20 +55,42 @@ class regularOnboardEntry {
       $(".tt-menu").hide();
 
       var newCnum = suggestion.cnum;
+      if (typeof (newCnum) == 'undefined') {
+        newCnum = 'No longer available';
+      }
+
+      var workerId = suggestion.workerID;
+      if (typeof (newCnum) == 'undefined') {
+        workerId = '';
+      }
 
       $("#person_notesid").val(suggestion.notesEmail);
-      $("#person_serial").val(newCnum).attr("disabled", "disabled");
+      $("#person_serial").val(newCnum)
+        .attr("disabled", "disabled");
+      $("#person_workerid").val(workerId);
       $("#person_bio").val(suggestion.role);
       $("#person_intranet").val(suggestion.mail);
       var kynValue = convertOceanToKyndryl(suggestion.mail);
       $("#person_kyn_intranet").val(kynValue);
 
+      let knownCnum = await knownCNUMs.getCNUMs();
+      let knownKyndrylEmail = await knownKyndrylEmails.getEmails();
+
       var trimmedCnum = newCnum.trim();
-      if (trimmedCnum !== "") {
-        var knownCnum = await knownCNUMs.getCNUMs();
-        // var allreadyExists = $.inArray(newCnum, knownCnum) >= 0;
-        var allreadyExists = inArrayCaseInsensitive(newCnum, knownCnum) >= 0;
-        if (allreadyExists) {
+      var trimmedKynValue = kynValue.trim();
+      if (trimmedCnum !== "" || trimmedKynValue != "") {
+        // either value available
+
+        var allreadyExistsCNUM = false;
+        if (trimmedCnum !== "") {
+          var allreadyExistsCNUM = inArrayCaseInsensitive(trimmedCnum, knownCnum) >= 0;
+        }
+        var allreadyKyndrylExists = false;
+        if (trimmedKynValue !== "") {
+          var allreadyKyndrylExists = inArrayCaseInsensitive(trimmedKynValue, knownKyndrylEmail) >= 0;
+        }
+
+        if (allreadyExistsCNUM || allreadyKyndrylExists) {
           // comes back with Position in array(true) or false is it's NOT in the array.
           $("#" + regularOnboardEntry.saveButtonId).attr("disabled", true);
           $("#person_name").css("background-color", "LightPink");
@@ -74,27 +99,98 @@ class regularOnboardEntry {
         } else {
           $("#" + regularOnboardEntry.saveButtonId).attr("disabled", false);
           $("#person_name").css("background-color", "LightGreen");
-          fetchWorkerAPIDetailsForCnum(newCnum);
+
+          var regex = /[.]/;
+          var bio = document.getElementById("person_bio");
+          if (typeof bio !== "undefined") {
+            bio.value = suggestion.businessTitle;
+          }
+
+          var uid = document.getElementById("person_uid");
+          if (typeof uid !== "undefined") {
+            uid.value = newCnum;
+          }
+
+          var fname = document.getElementById("person_first_name");
+          var firstName = suggestion.firstName;
+          while (regex.test(firstName) && i < suggestion.firstName.length) {
+            var firstNameNext = suggestion.firstName[++i];
+            if (typeof firstNameNext !== "undefined") {
+              firstName = firstNameNext;
+            }
+          }
+
+          // get rid off dot from end of name
+          if (firstName[firstName.length - 1] === ".") {
+            firstName = firstName.slice(0, -1);
+          }
+
+          var capitalizedName = toTitleCase(firstName);
+          if (typeof fname !== "undefined") {
+            fname.value = capitalizedName;
+          }
+
+          var lname = document.getElementById("person_last_name");
+          var lastName = suggestion.lastName;
+          if (typeof lname !== "undefined") {
+            lname.value = lastName;
+          }
+
+          var isMgr = document.getElementById("person_is_mgr");
+          if (typeof isMgr !== "undefined") {
+            var isManager = suggestion.isManager;
+            if (isManager == "Y" || isManager == "Yes" || isManager == true) {
+              isMgr.value = "Yes";
+            } else {
+              isMgr.value = "No";
+            }
+          }
+
+          var employeeeType = document.getElementById("person_employee_type");
+          if (typeof employeeeType !== "undefined") {
+            employeeeType.value = suggestion.employeeType;
+          }
+
+          var country = document.getElementById("person_country");
+          if (typeof country !== "undefined") {
+            country.value = suggestion.countryName;
+          }
+
+          var location = document.getElementById("person_ibm_location");
+          if (typeof location !== "undefined") {
+            location.value = suggestion.workLoc;
+          }
+
+          var workeridObj = document.getElementById("person_workerid");
+          if (typeof workeridObj !== "undefined") {
+            workeridObj.value = workerId;
+          }
+          var worker_idObj = document.getElementById("person_worker_id");
+          if (typeof worker_idObj !== "undefined") {
+            worker_idObj.value = workerId;
+          }
         }
       } else {
         // no need to check
         $("#" + regularOnboardEntry.saveButtonId).attr("disabled", true);
         $("#person_name").css("background-color", "LightPink");
-        $('#messageModalBody').html("<p>Invalid person data read from BluePages</p>");
+        $('#messageModalBody').html("<p>Invalid person data read from Worker API</p>");
         $('#messageModal').modal('show');
       }
     });
   }
 
+  /*
   listenForSerial() {
     var $this = this;
     $(document).on("keyup change", "#person_serial", function (e) {
       var cnum = $(this).val();
       if (cnum.length == 9) {
-        fetchWorkerAPIDetailsForCnum(cnum);
+        // fetchWorkerAPIDetailsForCnum(cnum);
       }
     });
   }
+  */
 
   listenForLinkToPreBoarded() {
     $(document).on("select2:select", "#person_preboarded", function (e) {
