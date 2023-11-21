@@ -14,6 +14,7 @@ let saveRegularBoarding = await cacheBustImport('./modules/functions/saveRegular
 let toTitleCase = await cacheBustImport('./modules/functions/toTitleCase.js');
 
 let knownCNUMs = await cacheBustImport('./modules/dataSources/knownCNUMs.js');
+let knownWorkerIDs = await cacheBustImport('./modules/dataSources/knownWorkerIDs.js');
 let knownKyndrylEmails = await cacheBustImport('./modules/dataSources/knownKyndrylEmails.js');
 
 class regularOnboardEntry {
@@ -22,6 +23,8 @@ class regularOnboardEntry {
   static saveButtonId = 'saveRegularBoarding';
   static resetButtonId = 'resetRegularBoarding';
   static initiatePesButtonId = 'initiateRegularPes';
+
+  static noLongerAvailable = 'No longer available';
 
   saveButton;
   initiatePesButton;
@@ -52,13 +55,17 @@ class regularOnboardEntry {
       $(".tt-menu").hide();
 
       var newCnum = suggestion.cnum;
+      var newCnumRAW = suggestion.cnum;
       if (typeof (newCnum) == 'undefined') {
-        newCnum = 'No longer available';
+        newCnum = regularOnboardEntry.noLongerAvailable;
+        newCnumRAW = '';
       }
 
       var workerId = suggestion.workerID;
+      var workerIdRAW = suggestion.workerID;
       if (typeof (newCnum) == 'undefined') {
         workerId = '';
+        workerIdRAW = 0;
       }
 
       $("#person_notesid").val(suggestion.notesEmail);
@@ -71,23 +78,31 @@ class regularOnboardEntry {
       $("#person_kyn_intranet").val(kynValue);
 
       let knownCnum = await knownCNUMs.getCNUMs();
+      let knownWorkerIds = await knownWorkerIDs.getWorkerIDs();
       let knownKyndrylEmail = await knownKyndrylEmails.getEmails();
 
-      var trimmedCnum = newCnum.trim();
+      var trimmedCnum = newCnumRAW.trim();
+      var trimmedWorkerId = workerIdRAW;
       var trimmedKynValue = kynValue.trim();
-      if (trimmedCnum !== "" || trimmedKynValue != "") {
+      if (trimmedCnum !== "" || trimmedWorkerId != 0 || trimmedKynValue != "") {
         // either value available
 
         var allreadyExistsCNUM = false;
         if (trimmedCnum !== "") {
           var allreadyExistsCNUM = inArrayCaseInsensitive(trimmedCnum, knownCnum) >= 0;
         }
+        
+        var allreadyExistsWorkerID = false;
+        if (trimmedWorkerId !== 0) {
+          var allreadyExistsWorkerID = $.inArray(trimmedWorkerId, knownWorkerIds) >= 0;
+        }
+
         var allreadyKyndrylExists = false;
         if (trimmedKynValue !== "") {
           var allreadyKyndrylExists = inArrayCaseInsensitive(trimmedKynValue, knownKyndrylEmail) >= 0;
         }
 
-        if (allreadyExistsCNUM || allreadyKyndrylExists) {
+        if (allreadyExistsCNUM || allreadyExistsWorkerID || allreadyKyndrylExists) {
           // comes back with Position in array(true) or false is it's NOT in the array.
           $("#" + regularOnboardEntry.saveButtonId).attr("disabled", true);
           $("#person_name").css("background-color", "LightPink");

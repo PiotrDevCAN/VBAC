@@ -165,7 +165,7 @@ class personRecord extends DbRecord
     // public static $pesTaskId = array('LBGVETPR@uk.ibm.com'); // Only first entry will be used as the "contact" in the PES status emails.
     // Only first entry will be used as the "contact" in the PES status emails.
     public static $pesTaskId = array(
-      'Kyndryl' => 'Kyndryl.Lloyds.PES@ibm.com', 
+      'Kyndryl' => 'Aurora.Central.Pmo@kyndryl.com',
       'IBM' => 'LBGVETPR@uk.ibm.com'
     );
 

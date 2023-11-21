@@ -3,7 +3,7 @@
  */
 
 let validateEmail = await cacheBustImport('./modules/functions/validateEmail.js');
-let checkIbmEmailAddress = await cacheBustImport('./modules/functions/checkIbmEmailAddress.js');
+// let checkIbmEmailAddress = await cacheBustImport('./modules/functions/checkIbmEmailAddress.js');
 let checkOceanEmailAddress = await cacheBustImport('./modules/functions/checkOceanEmailAddress.js');
 let checkKyndrylEmailAddress = await cacheBustImport('./modules/functions/checkKyndrylEmailAddress.js');
 let inArrayCaseInsensitive = await cacheBustImport('./modules/functions/inArrayCaseInsensitive.js');
@@ -16,7 +16,7 @@ let saveVendorBoarding = await cacheBustImport('./modules/functions/saveVendorBo
 
 let knownExternalEmails = await cacheBustImport('./modules/dataSources/knownExternalEmails.js');
 let knownIBMEmails = await cacheBustImport('./modules/dataSources/knownIBMEmails.js');
-let knownKyndrylEmails = await cacheBustImport('./modules/dataSources/knownKyndrylEmails.js');
+// let knownKyndrylEmails = await cacheBustImport('./modules/dataSources/knownKyndrylEmails.js');
 
 class vendorOnboardEntry {
 
@@ -63,13 +63,13 @@ class vendorOnboardEntry {
 
           let knownExternalEmail = await knownExternalEmails.getEmails();
           let knownIBMEmail = await knownIBMEmails.getEmails();
-          let knownKyndrylEmail = await knownKyndrylEmails.getEmails();
+          // let knownKyndrylEmail = await knownKyndrylEmails.getEmails();
 
           var allreadyExternalExists = inArrayCaseInsensitive(trimmedEmail, knownExternalEmail) >= 0;
           var allreadyIBMExists = inArrayCaseInsensitive(trimmedEmail, knownIBMEmail) >= 0;
-          var allreadyKyndrylExists = inArrayCaseInsensitive(trimmedEmail, knownKyndrylEmail) >= 0;
+          // var allreadyKyndrylExists = inArrayCaseInsensitive(trimmedEmail, knownKyndrylEmail) >= 0;
 
-          var ibmEmailAddress = checkIbmEmailAddress(trimmedEmail);
+          // var ibmEmailAddress = checkIbmEmailAddress(trimmedEmail);
           var oceanEmailAddress = checkOceanEmailAddress(trimmedEmail);
           var kyndrylEmailAddress = checkKyndrylEmailAddress(trimmedEmail);
 
@@ -116,13 +116,13 @@ class vendorOnboardEntry {
 
           let knownExternalEmail = await knownExternalEmails.getEmails();
           let knownIBMEmail = await knownIBMEmails.getEmails();
-          let knownKyndrylEmail = await knownKyndrylEmails.getEmails();
+          // let knownKyndrylEmail = await knownKyndrylEmails.getEmails();
 
           var allreadyExternalExists = inArrayCaseInsensitive(trimmedEmail, knownExternalEmail) >= 0;
           var allreadyIBMExists = inArrayCaseInsensitive(trimmedEmail, knownIBMEmail) >= 0;
-          var allreadyKyndrylExists = inArrayCaseInsensitive(trimmedEmail, knownKyndrylEmail) >= 0;
+          // var allreadyKyndrylExists = inArrayCaseInsensitive(trimmedEmail, knownKyndrylEmail) >= 0;
 
-          var ibmEmailAddress = checkIbmEmailAddress(trimmedEmail);
+          // var ibmEmailAddress = checkIbmEmailAddress(trimmedEmail);
           var oceanEmailAddress = checkOceanEmailAddress(trimmedEmail);
           var kyndrylEmailAddress = checkKyndrylEmailAddress(trimmedEmail);
 

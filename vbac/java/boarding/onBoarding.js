@@ -13,6 +13,7 @@ let VendorOnboardEntry = await cacheBustImport('./modules/forms/vendorOnboardEnt
 let FormMessageArea = await cacheBustImport('./modules/helpers/formMessageArea.js');
 
 let knownCNUMs = await cacheBustImport('./modules/dataSources/knownCNUMs.js');
+let knownWorkerIDs = await cacheBustImport('./modules/dataSources/knownWorkerIDs.js');
 let knownExternalEmails = await cacheBustImport('./modules/dataSources/knownExternalEmails.js');
 let knownIBMEmails = await cacheBustImport('./modules/dataSources/knownIBMEmails.js');
 let knownKyndrylEmails = await cacheBustImport('./modules/dataSources/knownKyndrylEmails.js');
@@ -29,11 +30,18 @@ class onBoarding {
         FormMessageArea.showMessageArea();
 
         let knownCNUMsPromise = knownCNUMs.getCNUMs();
+        let knownWorkerIDsPromise = knownWorkerIDs.getWorkerIDs();
         let knownExternalEmailsPromise = knownExternalEmails.getEmails();
         let knownIBMEmailsPromise = knownIBMEmails.getEmails();
         let knownKyndrylEmailsPromise = knownKyndrylEmails.getEmails();
 
-        const promises = [knownCNUMsPromise, knownExternalEmailsPromise, knownIBMEmailsPromise, knownKyndrylEmailsPromise];
+        const promises = [
+            knownCNUMsPromise, 
+            knownWorkerIDsPromise,
+            knownExternalEmailsPromise, 
+            knownIBMEmailsPromise, 
+            knownKyndrylEmailsPromise
+        ];
         Promise.allSettled(promises)
             .then((results) => {
                 results.forEach((result) => console.log(result.status));
