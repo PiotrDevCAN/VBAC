@@ -40,6 +40,7 @@ $isOnBoardingWithcFirst = strpos($file, 'cdi_test_first_form.php') !== false;
 
 // CDI Admin
 $isOktaUserManage = strpos($file, 'pi_manageGroups.php') !== false;
+$workerAPIlookup = strpos($file, 'pi_workerAPIlookup.php') !== false;
 
 // admin section
 $isPMOFull = strpos($file, 'pa_pmo.php') !== false;
@@ -87,9 +88,14 @@ switch (true) {
             <script type="module" src="vbac/java/boarding/offBoarding.js?<?=$hash;?>"></script>
         <?php
         break;
-        case $isOktaUserManage:
+    case $isOktaUserManage:
         ?>
-    <script type="module" src="vbac/java/cdi/OKTAUserList.js?<?=$hash;?>"></script>
+            <script type="module" src="vbac/java/cdi/OKTAUserList.js?<?=$hash;?>"></script>
+    <?php
+        break;
+    case $workerAPIlookup:
+        ?>
+            <script type="module" src="vbac/java/admin/workerAPI.js?<?=$hash;?>"></script>
     <?php
         break;
     case $isPMOFull:
