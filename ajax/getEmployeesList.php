@@ -11,7 +11,7 @@ if(!empty($_GET['query'])){
     $search = $_GET['query'];
 
     $redis = $GLOBALS['redis'];
-    $key = 'getEmploeesList_'.$search;
+    $key = 'getEmployeesList_'.$search;
     $redisKey = md5($key.'_key_'.$_ENV['environment']);
     if (!$redis->get($redisKey)) {
         $source = 'SQL Server';
