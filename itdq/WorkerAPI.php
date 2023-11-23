@@ -166,7 +166,7 @@ class WorkerAPI {
 	*/
 	public function typeaheadSearch($keyword, $pageSize = null, $attributes = null, $nextPageToken = null)
 	{
-		$attributes = "isActive,firstName,lastName,businessTitle,displayName,mobilePhone,workPhone,costCenter,division,workLoc,usageLocation,countryName,workplaceIndicator,employeeType,orgCode,matrixManagerEmail,isManager,faxNumber";
+		$attributes = "isActive, firstName, lastName, businessTitle, displayName, mobilePhone, workPhone, costCenter, division, workLoc, usageLocation, countryName, workplaceIndicator, employeeType, orgCode, matrixManagerEmail, isManager, faxNumber";
 		$url = "/workers/typeahead?keyword=" . urlencode($keyword) . "&attributes=" . urlencode($attributes);		
 		return $this->processURL($url);
 	}

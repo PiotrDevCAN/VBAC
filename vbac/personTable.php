@@ -93,7 +93,7 @@ class personTable extends DbTable
     public static function getNextVirtualCnum()
     {
         $sql = " SELECT CNUM FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
-        $sql .= " WHERE CNUM LIKE '%XXX' or CNUM LIKE '%xxx' or CNUM LIKE '%999' ";
+        $sql .= " WHERE CNUM LIKE '%XXX' OR CNUM LIKE '%xxx' OR CNUM LIKE '%999' ";
         $sql .= " ORDER BY CNUM desc ";
 
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
@@ -983,7 +983,7 @@ class personTable extends DbTable
         return true;
     }
 
-    public function setWorkerId($cnum = null, $workerId = null)
+    public function setWorkerIdByCNUM($cnum = null, $workerId = null)
     {
         if (!$cnum) {
             throw new \Exception('No CNUM provided in ' . __METHOD__);
@@ -992,12 +992,14 @@ class personTable extends DbTable
             throw new \Exception('No WORKER_ID provided in ' . __METHOD__);
         }
 
+        $data = array(trim($workerId), trim($cnum));
+
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql .= " SET WORKER_ID ='" . htmlspecialchars($workerId) . "' ";
-        $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
+        $sql .= " SET WORKER_ID=? ";
+        $sql .= " WHERE CNUM=?  ";
 
         try {
-            $result = sqlsrv_query($GLOBALS['conn'], $sql);
+            $result = sqlsrv_query($GLOBALS['conn'], $sql, $data);
         } catch (\Exception $e) {
             var_dump($e);
         }
@@ -1012,11 +1014,75 @@ class personTable extends DbTable
         return true;
     }
 
+    public function setWorkerIdByEmail($email = null, $workerId = null)
+    {
+        if (!$email) {
+            throw new \Exception('No Email Address provided in ' . __METHOD__);
+        }
+        if (!$workerId) {
+            throw new \Exception('No WORKER_ID provided in ' . __METHOD__);
+        }
+
+        $data = array(trim($workerId), trim($email));
+
+        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
+        $sql .= " SET WORKER_ID=? ";
+        $sql .= " WHERE EMAIL_ADDRESS=? ";
+
+        try {
+            $result = sqlsrv_query($GLOBALS['conn'], $sql, $data);
+        } catch (\Exception $e) {
+            var_dump($e);
+        }
+
+        if (!$result) {
+            DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+
+        AuditTable::audit("WORKER_ID for email address: $email set to : $workerId by " . $_SESSION['ssoEmail'], AuditTable::RECORD_TYPE_AUDIT);
+
+        return true;
+    }
+
+    public function setWorkerIdByKynEmail($email = null, $workerId = null)
+    {
+        if (!$email) {
+            throw new \Exception('No Kyn Email Address provided in ' . __METHOD__);
+        }
+        if (!$workerId) {
+            throw new \Exception('No WORKER_ID provided in ' . __METHOD__);
+        }
+
+        $data = array(trim($workerId), trim($email));
+
+        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
+        $sql .= " SET WORKER_ID=? ";
+        $sql .= " WHERE KYN_EMAIL_ADDRESS=? ";
+
+        try {
+            $result = sqlsrv_query($GLOBALS['conn'], $sql, $data);
+        } catch (\Exception $e) {
+            var_dump($e);
+        }
+
+        if (!$result) {
+            DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+
+        AuditTable::audit("WORKER_ID for kyndryl email address: $email set to : $workerId by " . $_SESSION['ssoEmail'], AuditTable::RECORD_TYPE_AUDIT);
+
+        return true;
+    }
+
     public function saveCtid($cnum, $ctid)
     {
+        $data = array(trim($ctid), trim($cnum));
+
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql .= " SET CT_ID = '" . htmlspecialchars($ctid) . "' ";
-        $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
+        $sql .= " SET CT_ID=? ";
+        $sql .= " WHERE CNUM=? ";
 
         $result = sqlsrv_query($GLOBALS['conn'], $sql);
 
@@ -1031,11 +1097,13 @@ class personTable extends DbTable
 
     public function setFmFlag($cnum, $flag)
     {
-        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql .= " SET FM_MANAGER_FLAG = '" . htmlspecialchars($flag) . "' ";
-        $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
+        $data = array(trim($flag), trim($cnum));
 
-        $result = sqlsrv_query($GLOBALS['conn'], $sql);
+        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
+        $sql .= " SET FM_MANAGER_FLAG=? ";
+        $sql .= " WHERE CNUM=? ";
+
+        $result = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
         if (!$result) {
             DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
@@ -1073,11 +1141,13 @@ class personTable extends DbTable
 
     public function clearCtid($cnum)
     {
+        $data = array(trim($cnum));
+
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET CT_ID = null ";
-        $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
+        $sql .= " WHERE CNUM=? ";
 
-        $result = sqlsrv_query($GLOBALS['conn'], $sql);
+        $result = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
         if (!$result) {
             DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
@@ -1090,12 +1160,14 @@ class personTable extends DbTable
 
     public function clearSquadNumber($cnum, $version = 'original')
     {
+        $data = array(trim($cnum));
+
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET ";
         $sql .= $version == 'original' ? " SQUAD_NUMBER = null " : " OLD_SQUAD_NUMBER = null";
-        $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
+        $sql .= " WHERE CNUM=? ";
 
-        $result = sqlsrv_query($GLOBALS['conn'], $sql);
+        $result = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
         if (!$result) {
             DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
@@ -1109,11 +1181,13 @@ class personTable extends DbTable
 
     public function clearCioAlignment($cnum)
     {
+        $data = array(trim($cnum));
+
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET CIO_ALIGNMENT = null ";
-        $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
+        $sql .= " WHERE CNUM=? ";
 
-        $result = sqlsrv_query($GLOBALS['conn'], $sql);
+        $result = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
         if (!$result) {
             DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
@@ -1126,11 +1200,13 @@ class personTable extends DbTable
 
     public function transferIndividual($cnum, $toFmCnum)
     {
-        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql .= " SET FM_CNUM = '" . htmlspecialchars($toFmCnum) . "' ";
-        $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
+        $data = array(trim($toFmCnum), trim($cnum));
 
-        $result = sqlsrv_query($GLOBALS['conn'], $sql);
+        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
+        $sql .= " SET FM_CNUM=? ";
+        $sql .= " WHERE CNUM=? ";
+
+        $result = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
         if (!$result) {
             DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
@@ -1331,7 +1407,7 @@ class personTable extends DbTable
     public static function getNamesFromCnum($cnum)
     {
         $sql = " SELECT case when PT.PASSPORT_FIRST_NAME is null then P.FIRST_NAME else PT.PASSPORT_FIRST_NAME end as FIRST_NAME ";
-        $sql .= ",       case when PT.PASSPORT_SURNAME is null then P.LAST_NAME else PT.PASSPORT_SURNAME end as LAST_NAME  ";
+        $sql .= ", case when PT.PASSPORT_SURNAME is null then P.LAST_NAME else PT.PASSPORT_SURNAME end as LAST_NAME  ";
         $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
         $sql .= " left join " . $GLOBALS['Db2Schema'] . "." . allTables::$PES_TRACKER . " as PT ";
         $sql .= " ON P.CNUM = PT.CNUM ";
@@ -1800,7 +1876,8 @@ class personTable extends DbTable
     public static function getLbgLocationForCnum($cnum)
     {
         if (!empty($cnum)) {
-            $sql = " SELECT LBG_LOCATION FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
+            $sql = " SELECT LBG_LOCATION FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
+            $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
 
             $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
@@ -1816,7 +1893,8 @@ class personTable extends DbTable
                 );
             }
 
-            $sql = " SELECT FM_CNUM FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
+            $sql = " SELECT FM_CNUM FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
+            $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
 
             $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
@@ -1874,9 +1952,8 @@ class personTable extends DbTable
     public static function getSecurityEducationForCnum($cnum)
     {
         if (!empty($cnum)) {
-            $sql = " SELECT SECURITY_EDUCATION FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
-
-            $rs = sqlsrv_query($GLOBALS['conn'], $sql);
+            $sql = " SELECT SECURITY_EDUCATION FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
+            $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
 
             if (!$rs) {
                 DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared statment');
