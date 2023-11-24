@@ -7,8 +7,7 @@
 		"byjg/jwt-session" : "~2.0",
 		"sebbmeyer/php-microsoft-teams-connector": "^0.2.2",
 		"tcdent/php-restclient": "0.1.8.2",
-		"cocur/background-process": "^0.7.0",
-		"twig/twig": "^3.0"
+		"cocur/background-process": "^0.7.0"
 	},
 	"repositories" : [{
 			"type" : "composer",
