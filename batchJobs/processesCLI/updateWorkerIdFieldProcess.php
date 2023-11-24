@@ -3,7 +3,6 @@
 use itdq\Loader;
 use itdq\WorkerAPI;
 use itdq\BlueMail;
-use vbac\personRecord;
 use vbac\personTable;
 use vbac\allTables;
 

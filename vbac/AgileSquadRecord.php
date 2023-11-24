@@ -85,7 +85,7 @@ class AgileSquadRecord extends DbRecord {
         <div class="form-group " >
             <label for='SQUAD_LEADER' class='col-sm-2 control-label ceta-label-left' data-toggle='tooltip' data-placement='top' title='Squad Leader'>Squad Leader</label>
         	<div class='col-md-4'>
-				<input id='SQUAD_LEADER' name='SQUAD_LEADER' class='form-control typeaheadNotesId' value='<?=!empty($this->SQUAD_LEADER) ? $this->SQUAD_LEADER :null ; ?>' placeholder="Squad Leader"/>
+				<input id='SQUAD_LEADER' name='SQUAD_LEADER' class='form-control typeaheadEmailId' value='<?=!empty($this->SQUAD_LEADER) ? $this->SQUAD_LEADER :null ; ?>' placeholder="Squad Leader"/>
             </div>
         </div>
    		<div class='form-group'>

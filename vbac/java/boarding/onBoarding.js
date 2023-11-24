@@ -36,10 +36,10 @@ class onBoarding {
         let knownKyndrylEmailsPromise = knownKyndrylEmails.getEmails();
 
         const promises = [
-            knownCNUMsPromise, 
+            knownCNUMsPromise,
             knownWorkerIDsPromise,
-            knownExternalEmailsPromise, 
-            knownIBMEmailsPromise, 
+            knownExternalEmailsPromise,
+            knownIBMEmailsPromise,
             knownKyndrylEmailsPromise
         ];
         Promise.allSettled(promises)

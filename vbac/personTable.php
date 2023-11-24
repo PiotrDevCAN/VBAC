@@ -199,7 +199,7 @@ class personTable extends DbTable
 
     public function getForRfFlagReport($resultSetOnly = false, $withButtons = true)
     {
-        $sql = "select P.cnum ";
+        $sql = "select P.CNUM ";
         $sql .= ",P.NOTES_ID ";
         $sql .= ", P.LOB ";
         $sql .= ", P.CTB_RTB ";

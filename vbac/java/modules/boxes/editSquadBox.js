@@ -14,7 +14,6 @@ class editSquadBox extends box {
         super(parent);
         this.listenForEditSquad();
         this.listenForSubmitSquadForm();
-        this.listenForLeader();
 
         console.log('--- Function --- editSquadBox.constructor');
     }
@@ -26,17 +25,17 @@ class editSquadBox extends box {
                 .val($(this).data("squadnumber"))
                 .trigger("change")
                 .attr("disabled", true);
-            $("#SQUAD_TYPE").val($(this).data("squadtype"));
-            $("#TRIBE_NUMBER").val("").trigger("change");
             if ($(this).data("organisation") == "Managed Services") {
                 $("#radioTribeOrganisationManaged").prop("checked", true);
             } else {
                 $("#radioTribeOrganisationProject").prop("checked", true);
             }
+            $("#SQUAD_TYPE").val($(this).data("squadtype"));
+            $("#SQUAD_NAME").val($(this).data("squadname"));
+            $("#TRIBE_NUMBER").val("").trigger("change");
             $this.parent.initialiseTribeNumber($(this).data("tribenumber"));
             $("#SHIFT").val($(this).data("shift")).trigger("change");
-            $("#SQUAD_LEADER").val($(this).data("squadleader"));
-            $("#SQUAD_NAME").val($(this).data("squadname"));
+            $("#SQUAD_LEADER").typeahead('val', $(this).data("squadleader"));
             $("#mode").val("edit");
         });
     }
@@ -76,17 +75,10 @@ class editSquadBox extends box {
                     $("#SQUAD_NAME").val("");
                     $("#TRIBE_NUMBER").val("").trigger("change").attr("disabled", false);
                     $("#SHIFT").val("").trigger("change").attr("disabled", false);
-                    $("#SQUAD_LEADER").val("");
+                    $("#SQUAD_LEADER").typeahead('val', '');
                     $this.tableObj.table.ajax.reload();
                 }
             });
-        });
-    }
-
-    listenForLeader() {
-        $(".typeahead").bind("typeahead:select", function (ev, suggestion) {
-            $(".tt-menu").hide();
-            $("#TRIBE_LEADER").val(suggestion.notesEmail);
         });
     }
 }

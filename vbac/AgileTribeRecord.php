@@ -50,14 +50,14 @@ class AgileTribeRecord extends DbRecord {
         <div class="form-group " >
             <label for='TRIBE_LEADER' class='col-sm-2 control-label ceta-label-left' data-toggle='tooltip' data-placement='top' title='Tribe Leader'>Tribe Leader</label>
         	<div class='col-md-4'>
-				<input id='TRIBE_LEADER' name='TRIBE_LEADER' class='form-control typeaheadNotesId' value='<?=!empty($this->TRIBE_LEADER) ? $this->TRIBE_LEADER :null ; ?>' placeholder="Tribe Leader"/>
+				<input id='TRIBE_LEADER' name='TRIBE_LEADER' class='form-control typeaheadEmailId' value='<?=!empty($this->TRIBE_LEADER) ? $this->TRIBE_LEADER :null ; ?>' placeholder="Tribe Leader"/>
             </div>
         </div>
         
         <div class="form-group required " >
             <label for='ITERATION_MGR' class='col-sm-2 control-label ceta-label-left' data-toggle='tooltip' data-placement='top' title='Iteration Manager'>Iteration Manager</label>
         	<div class='col-md-4'>
-				<input id='ITERATION_MGR' name='ITERATION_MGR' class='form-control typeaheadNotesId' value='<?=!empty($this->ITERATION_MGR) ? $this->ITERATION_MGR :null ; ?>' placeholder="Iteration Manager"/>
+				<input id='ITERATION_MGR' name='ITERATION_MGR' class='form-control typeaheadEmailId' value='<?=!empty($this->ITERATION_MGR) ? $this->ITERATION_MGR :null ; ?>' placeholder="Iteration Manager"/>
             </div>
         </div>
         

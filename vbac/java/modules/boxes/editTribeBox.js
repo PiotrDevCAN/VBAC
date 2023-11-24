@@ -14,29 +14,25 @@ class editTribeBox extends box {
         super(parent);
         this.listenForEditTribe();
         this.listenForSubmitTribeForm();
-        this.listenForLeader();
 
         console.log('--- Function --- editTribeBox.constructor');
     }
 
     listenForEditTribe() {
+        var $this = this;
         $(document).on("click", ".btnEditTribe", function () {
             $("#TRIBE_NUMBER")
                 .val($(this).data("tribenumber"))
                 .trigger("change")
                 .attr("disabled", true);
-            $("#TRIBE_NAME").val($(this).data("tribename"));
-            $("#TRIBE_LEADER").val($(this).data("tribeleader"));
-            $("#ITERATION_MGR").val($(this).data("iterationmgr"));
-
-            console.log($(this));
-            console.log($(this).data("organisation"));
-
             if ($(this).data("organisation") == "Managed Services") {
                 $("#radioTribeOrganisationManaged").prop("checked", true);
             } else {
                 $("#radioTribeOrganisationProject").prop("checked", true);
             }
+            $("#TRIBE_NAME").val($(this).data("tribename"));
+            $("#TRIBE_LEADER").typeahead('val', $(this).data("tribeleader"));
+            $("#ITERATION_MGR").typeahead('val', $(this).data("iterationmgr"));
             $("#mode").val("edit");
         });
     }
@@ -82,19 +78,12 @@ class editTribeBox extends box {
                         .trigger("change")
                         .attr("disabled", false);
                     $("#TRIBE_NAME").val("");
-                    $("#TRIBE_LEADER").val("");
-                    $("#ITERATION_MGR").val("");
+                    $("#TRIBE_LEADER").typeahead('val', '');
+                    $("#ITERATION_MGR").typeahead('val', '');
                     $("#radioTribeOrganisationManaged").prop("checked", true);
                     $this.tableObj.table.ajax.reload();
                 }
             });
-        });
-    }
-
-    listenForLeader() {
-        $(".typeahead").bind("typeahead:select", function (ev, suggestion) {
-            $(".tt-menu").hide();
-            $("#TRIBE_LEADER").val(suggestion.notesEmail);
         });
     }
 }
