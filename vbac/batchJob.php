@@ -2,7 +2,7 @@
 namespace vbac;
 
 use Exception;
-use itdq\Process;
+use Cocur\BackgroundProcess\BackgroundProcess;
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -14,8 +14,8 @@ class batchJob
     const PROCESS_DIR = 'processesCLI/';
     
     private $email;
-    private $processName;   // Employee Plus Data Extract Script
-    private $processFile;   // sendEmployeePlusData.php
+    private $processName;
+    private $processFile;
     private $cmd;
 
     function __construct($processName = '', $processFile = '', $additionalParams = null) {
@@ -33,8 +33,12 @@ class batchJob
 
     function run() {
         try {
-            $process = new Process($this->cmd);
-            $pid = $process->getPid();
+            // $cmd = 'nohup '.$this->cmd.' > /dev/null 2>&1 & echo $!';
+            $cmd = 'nohup '.$this->cmd.' > nohup.out & > /dev/null';
+
+            $process = new BackgroundProcess($cmd);
+            $process->run();
+
             echo $this->processName." has succeed to be executed: ".$this->email.PHP_EOL;
             error_log($this->processName." has succeed to be executed: ".$this->email.PHP_EOL);
         } catch (Exception $exception) {
