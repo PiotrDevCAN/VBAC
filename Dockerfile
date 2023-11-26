@@ -1,5 +1,5 @@
-# FROM registry.access.redhat.com/ubi8/php-74
-FROM registry.access.redhat.com/ubi8/php-80
+FROM registry.access.redhat.com/ubi8/php-74
+# FROM registry.access.redhat.com/ubi8/php-80
 USER root
 ADD . /var/www/html/
 ADD ./patch1.sh /patch1.sh
