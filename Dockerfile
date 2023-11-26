@@ -1,4 +1,5 @@
-FROM registry.access.redhat.com/ubi8/php-74
+# FROM registry.access.redhat.com/ubi8/php-74
+FROM registry.access.redhat.com/ubi8/php-80
 USER root
 ADD . /var/www/html/
 ADD ./patch1.sh /patch1.sh
@@ -12,6 +13,7 @@ RUN chmod -R 777 /run
 RUN chmod -R 777 /etc/httpd/run
 RUN chmod -R 777 /var/www/html/ct_id_uploads
 RUN chmod -R 777 /var/www/html/odc_uploads
+RUN chmod -R 777 /var/www/html/nohup.out
 RUN composer install --no-interaction
 USER root 
 ADD ./patch2.sh /patch2.sh
