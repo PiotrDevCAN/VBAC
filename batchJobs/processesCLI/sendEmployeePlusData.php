@@ -147,7 +147,7 @@ try {
     // $sql.= " WHERE 1=1 AND trim(NOTES_ID) != '' ";
     // $sql.= $onlyActiveBool ? " AND " . personTable::activePersonPredicate($withProvClear, 'P') : null;
     // $sql.= $onlyActiveInTimeBool ? " AND (" . personTable::activePersonPredicate($withProvClear, 'P') . " OR P.OFFBOARDED_DATE > '" . $offboardedDate->format('Y-m-d') . "')" : null;
-    $sql.= " ORDER BY P.NOTES_ID ";
+    $sql.= " ORDER BY P.KYN_EMAIL_ADDRESS ";
 
     $resultSet = sqlsrv_query($GLOBALS['conn'], $sql);
 

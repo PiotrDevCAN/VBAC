@@ -49,7 +49,29 @@ try {
     
     // ob_clean();
 
-    $sql = " SELECT *, ";
+    $sql = " SELECT ";
+    $sql.=" P.*, ";
+    
+    // $sql.=" AS1.*, ";
+    $sql.=" AS1.SQUAD_NUMBER, ";
+    $sql.=" AS1.SQUAD_TYPE, ";
+    $sql.=" AS1.TRIBE_NUMBER, ";
+    $sql.=" AS1.SHIFT, ";
+    $sql.=" AS1.SQUAD_LEADER, ";
+    $sql.=" AS1.SQUAD_NAME, ";
+    // $sql.=" AS1.ORGANISATION AS SQUAD_ORGANISATION, ";
+
+    // $sql.=" AT.*, ";
+    // $sql.=" AT.TRIBE_NUMBER, ";
+    $sql.=" AT.TRIBE_NAME, ";
+    $sql.=" AT.TRIBE_LEADER, ";
+    // $sql.=" AT.ORGANISATION AS TRIBE_ORGANISATION, ";
+    $sql.=" AT.ITERATION_MGR, ";
+
+    $sql.=personTable::ORGANISATION_SELECT.", ";
+
+    $sql.=" SS.*, ";
+    
     $sql.=" CASE WHEN " . personTable::activePersonPredicate($withProvClear, 'P') . " THEN 'active' ELSE 'inactive' END AS INT_STATUS ";
     $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
     $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD .  " AS AS1 ";
@@ -59,7 +81,7 @@ try {
     $sql.= " LEFT JOIN " .  $GLOBALS['Db2Schema'] . "." . allTables::$STATIC_SKILLSETS . " as SS ";
     $sql.= " ON P.SKILLSET_ID = SS.SKILLSET_ID ";
     $sql.= " WHERE 1=1 AND trim(P.KYN_EMAIL_ADDRESS) != '' ";
-    $sql.= " ORDER BY P.NOTES_ID ";
+    $sql.= " ORDER BY P.KYN_EMAIL_ADDRESS ";
 
     $resultSet = sqlsrv_query($GLOBALS['conn'], $sql);
 
