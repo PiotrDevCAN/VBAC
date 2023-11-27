@@ -59,32 +59,9 @@ $withProvClear = !empty($_GET['withProvClear']) ? $_GET['withProvClear'] : null;
 
 if (isset($_REQUEST['plus'])) {
     strtoupper($_REQUEST['plus']);
-
-    $translatedPlus = str_replace(
-        array(
-            'JRSS',
-            'FLL_CNUM',
-            'FLL_NOTES_ID',
-            'FLL_EMAIL',
-            'SLL_CNUM',
-            'SLL_NOTES_ID',
-            'SLL_EMAIL'
-        ),
-        array(
-            // 'P.ROLE_ON_THE_ACCOUNT',
-            'SS.SKILLSET',
-            'F.CNUM as FLL_CNUM',
-            'F.NOTES_ID as FLL_NOTES_ID',
-            'F.EMAIL_ADDRESS AS FLL_EMAIL',
-            'U.CNUM as SLL_CNUM',
-            'U.NOTES_ID as SLL_NOTES_ID',
-            'U.EMAIL_ADDRESS AS SLL_EMAIL'
-        ),
-        $_REQUEST['plus']
-    );    
 }
 
-$additionalFields = !empty($_REQUEST['plus']) ? explode(",",$translatedPlus) : null;
+$additionalFields = !empty($_REQUEST['plus']) ? explode(",", $_REQUEST['plus']) : null;
 $additionalSelect = null;
 $employees = array();
 
@@ -100,13 +77,74 @@ if (!is_null($additionalFields)) {
 
     $agileTribeRecord = new AgileTribeRecord();
     $availableAgileTribeColumns = $agileTribeRecord->getColumns();
-    $agileTribeTableAliases = array('T.');
+    $agileTribeTableAliases = array('AT.');
 
     $skillsetRecord = new staticDataSkillsetsRecord();
     $skillsetRecordColumns = $skillsetRecord->getColumns();
     $skillseTableAliases = array('SS.');
 
     foreach ($additionalFields as $field) {
+
+        // an additional mapping
+        switch($field) {
+            case 'ORGANISATION':
+                $fieldExpression = personTable::ORGANISATION_SELECT;
+                $additionalSelect .= ", " . htmlspecialchars($fieldExpression);
+                continue 2;
+                break;
+            case 'FM':
+                $fieldExpression = personTable::FLM_SELECT;
+                $additionalSelect .= ", " . htmlspecialchars($fieldExpression);
+                continue 2;
+                break;
+            case 'SM':
+                $fieldExpression = personTable::SLM_SELECT;
+                $additionalSelect .= ", " . htmlspecialchars($fieldExpression);
+                continue 2;
+                break;
+            case 'JRSS':
+                $additionalSelect .= ", SS.SKILLSET AS JRSS";
+                continue 2;
+                break;
+            case 'FLL_CNUM':
+                $additionalSelect .= ", F.CNUM as FLL_CNUM";
+                continue 2;
+                break;
+            case 'FLL_NOTES_ID':
+                $additionalSelect .= ", F.NOTES_ID as FLL_NOTES_ID";
+                continue 2;
+                break;
+            case 'FLL_EMAIL':
+                $additionalSelect .= ", F.KYN_EMAIL_ADDRESS AS FLL_EMAIL";
+                continue 2;
+                break;
+            case 'FLM_EMAIL_ADDRESS':
+                $additionalSelect .= ", F.KYN_EMAIL_ADDRESS AS FLM_EMAIL_ADDRESS";
+                continue 2;
+                break;
+            case 'SLL_CNUM':
+                $additionalSelect .= ", U.CNUM as SLL_CNUM";
+                continue 2;
+                break;
+            case 'SLL_NOTES_ID':
+                $additionalSelect .= ", U.NOTES_ID as SLL_NOTES_ID";
+                continue 2;
+                break;
+            case 'SLL_EMAIL':
+                $additionalSelect .= ", U.KYN_EMAIL_ADDRESS AS SLL_EMAIL";
+                continue 2;
+                break;
+            case 'SLM_EMAIL_ADDRESS':
+                $additionalSelect .= ", U.KYN_EMAIL_ADDRESS AS SLM_EMAIL_ADDRESS";
+                continue 2;
+                break;
+            case 'ITERATION_MGR':
+                $additionalSelect .= ", AT.ITERATION_MGR AS ITERATION_MGR";
+                continue 2;
+                break;
+            default:
+                break;
+        }
 
         // validate field against PERSON table
         $tableField = str_replace($personTableAliases, '', $field);
@@ -128,7 +166,7 @@ if (!is_null($additionalFields)) {
         $tableField = str_replace($agileTribeTableAliases, '', $field);
 
         if (array_key_exists($tableField, $availableAgileTribeColumns)) {
-            $additionalSelect .= ", " . htmlspecialchars("T.".$tableField);
+            $additionalSelect .= ", " . htmlspecialchars("AT.".$tableField);
             continue;
         }
 
@@ -142,27 +180,27 @@ if (!is_null($additionalFields)) {
     }
 }
 
-$sql = " SELECT DISTINCT P.NOTES_ID, P.EMAIL_ADDRESS, P.KYN_EMAIL_ADDRESS, P.FIRST_NAME, P.LAST_NAME, CONCAT(TRIM(P.FIRST_NAME), ' ', TRIM(P.LAST_NAME)) AS FULL_NAME, AS1.SQUAD_NUMBER, T.TRIBE_NUMBER, ";
+$sql = " SELECT DISTINCT P.NOTES_ID, P.EMAIL_ADDRESS, P.KYN_EMAIL_ADDRESS, P.FIRST_NAME, P.LAST_NAME, CONCAT(TRIM(P.FIRST_NAME), ' ', TRIM(P.LAST_NAME)) AS FULL_NAME, AS1.SQUAD_NUMBER, AT.TRIBE_NUMBER, ";
 $sql.=" CASE WHEN " . personTable::activePersonPredicate($withProvClear, 'P') . " THEN 'active' ELSE 'inactive' END AS INT_STATUS ";
 $sql.= $additionalSelect;
 $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
+$sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS F "; // lookup firstline
+$sql.= " ON P.FM_CNUM = F.CNUM ";
+$sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS U "; // lookup upline ( second line )
+$sql.= " ON F.FM_CNUM = U.CNUM ";
 $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS1 ";
 $sql.= " ON P.SQUAD_NUMBER = AS1.SQUAD_NUMBER ";
-$sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " AS T ";
-$sql.= " ON AS1.TRIBE_NUMBER = T.TRIBE_NUMBER ";
-$sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS F ";
-$sql.= " ON P.FM_CNUM = F.CNUM ";
-$sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS U ";
-$sql.= " ON F.FM_CNUM = U.CNUM ";
+$sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " AS AT ";
+$sql.= " ON AS1.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
 $sql.= " LEFT JOIN " .  $GLOBALS['Db2Schema'] . "." . allTables::$STATIC_SKILLSETS . " as SS ";
 $sql.= " ON P.SKILLSET_ID = SS.SKILLSET_ID ";
-$sql.= " WHERE 1=1 AND trim(P.NOTES_ID) != '' ";
+$sql.= " WHERE 1=1 AND trim(P.KYN_EMAIL_ADDRESS) != '' ";
 $sql.= $onlyActiveBool ? " AND " . personTable::activePersonPredicate($withProvClear, 'P') : null;
 $sql.= $onlyActiveInTimeBool ? " AND (" . personTable::activePersonPredicate($withProvClear, 'P') . " OR P.OFFBOARDED_DATE > '" . $offboardedDate->format('Y-m-d') . "')" : null;
 $sql.= !empty($emailID) ? " AND (lower(P.EMAIL_ADDRESS) = '" . htmlspecialchars(strtolower($emailID)) . "' OR lower(P.KYN_EMAIL_ADDRESS) = '" . htmlspecialchars(strtolower($emailID)) . "') " : null;
 $sql.= !empty($notesId) ? " AND lower(P.NOTES_ID) = '" . htmlspecialchars(strtolower($notesId)) . "'  " : null;
 $sql.= !empty($cnum) ? " AND lower(P.CNUM) = '" . htmlspecialchars(strtolower($cnum)) . "'  " : null;
-$sql.= " ORDER BY P.NOTES_ID ";
+$sql.= " ORDER BY P.KYN_EMAIL_ADDRESS ";
 
 $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
