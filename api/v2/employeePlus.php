@@ -23,9 +23,9 @@ $additionalSelect = null;
 $employeesArray = array();
 
 foreach ($additionalFields as $field) {
+    $field = trim($field);
     $additionalSelect .= ", " . htmlspecialchars($field);
 }
-
 
 $sql = " SELECT P.NOTES_ID " . $additionalSelect;
 $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";

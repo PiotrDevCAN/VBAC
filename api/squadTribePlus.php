@@ -85,6 +85,8 @@ if (!is_null($additionalFields)) {
 
     foreach ($additionalFields as $field) {
 
+        $field = trim($field);
+
         // an additional mapping
         switch($field) {
             case 'ORGANISATION':

@@ -73,6 +73,8 @@ if (!is_null($additionalFields)) {
 
     foreach ($additionalFields as $field) {
 
+        $field = trim($field);
+
         // validate field against PERSON table
         $tableField = str_replace($personTableAliases, '', $field);
 
