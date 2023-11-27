@@ -52,6 +52,10 @@ try {
     $sql = " SELECT ";
     $sql.=" P.*, ";
     
+    // $sql.=" F.*, ";
+
+    // $sql.=" U.*, ";
+
     // $sql.=" AS1.*, ";
     $sql.=" AS1.SQUAD_NUMBER, ";
     $sql.=" AS1.SQUAD_TYPE, ";
@@ -69,11 +73,17 @@ try {
     $sql.=" AT.ITERATION_MGR, ";
 
     $sql.=personTable::ORGANISATION_SELECT.", ";
-
+    $sql.=personTable::FLM_SELECT.", ";
+    $sql.=personTable::SLM_SELECT.", ";
+    
     $sql.=" SS.*, ";
     
     $sql.=" CASE WHEN " . personTable::activePersonPredicate($withProvClear, 'P') . " THEN 'active' ELSE 'inactive' END AS INT_STATUS ";
     $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
+    $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS F "; // lookup firstline
+    $sql.= " ON P.FM_CNUM = F.CNUM ";
+    $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS U "; // lookup upline ( second line )
+    $sql.= " ON F.FM_CNUM = U.CNUM ";
     $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD .  " AS AS1 ";
     $sql.= " ON P.SQUAD_NUMBER = AS1.SQUAD_NUMBER ";
     $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE .  " AS AT ";

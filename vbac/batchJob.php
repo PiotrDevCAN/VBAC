@@ -41,10 +41,12 @@ class batchJob
 
             sleep(5);
             if ($process->isRunning()) {
-                echo 'running';
+                echo 'Process is running ';
             } else {
-                echo 'stopped';
+                echo 'Process has been stopped ';
             }
+
+            echo "( ".$this->cmd." )";
 
             echo $this->processName." has succeed to be executed: ".$this->email.PHP_EOL;
             error_log($this->processName." has succeed to be executed: ".$this->email.PHP_EOL);

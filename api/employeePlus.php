@@ -1,9 +1,11 @@
 <?php
 
-use vbac\allTables;
-use vbac\personTable;
 use itdq\DbTable;
+use vbac\allTables;
+use vbac\AgileSquadRecord;
+use vbac\AgileTribeRecord;
 use vbac\personRecord;
+use vbac\personTable;
 use vbac\staticDataSkillsetsRecord;
 
 ob_start();
@@ -65,8 +67,16 @@ $employees = array();
 if (!is_null($additionalFields)) {
 
     $personRecord = new personRecord();
-    $availableColumns = $personRecord->getColumns();
-    $personTableAliases = array('P.');
+    $availablePersonColumns = $personRecord->getColumns();
+    $personTableAliases = array('P.', 'F.', 'U.');
+
+    $agileSquadRecord = new AgileSquadRecord();
+    $availableAgileSquadColumns = $agileSquadRecord->getColumns();
+    $agileSquadTableAliases = array('AS1.');
+
+    $agileTribeRecord = new AgileTribeRecord();
+    $availableAgileTribeColumns = $agileTribeRecord->getColumns();
+    $agileTribeTableAliases = array('AT.');
 
     $skillsetRecord = new staticDataSkillsetsRecord();
     $skillsetRecordColumns = $skillsetRecord->getColumns();
@@ -74,11 +84,48 @@ if (!is_null($additionalFields)) {
 
     foreach ($additionalFields as $field) {
 
+        // an additional mapping
+        switch($field) {
+            case 'ORGANISATION':
+                $fieldExpression = personTable::ORGANISATION_SELECT;
+                $additionalSelect .= ", " . htmlspecialchars($fieldExpression);
+                continue 2;
+                break;
+            case 'FM':
+                $fieldExpression = personTable::FLM_SELECT;
+                $additionalSelect .= ", " . htmlspecialchars($fieldExpression);
+                continue 2;
+                break;
+            case 'SM':
+                $fieldExpression = personTable::SLM_SELECT;
+                $additionalSelect .= ", " . htmlspecialchars($fieldExpression);
+                continue 2;
+                break;
+            default:
+                break;
+        }
+
         // validate field against PERSON table
         $tableField = str_replace($personTableAliases, '', $field);
 
-        if (array_key_exists($tableField, $availableColumns)) {
+        if (array_key_exists($tableField, $availablePersonColumns)) {
             $additionalSelect .= ", " . htmlspecialchars("P.".$tableField);
+            continue;
+        }
+        
+        // validate field against AGILE_SQUAD table
+        $tableField = str_replace($agileSquadTableAliases, '', $field);
+
+        if (array_key_exists($tableField, $availableAgileSquadColumns)) {
+            $additionalSelect .= ", " . htmlspecialchars("AS1.".$tableField);
+            continue;
+        }
+
+        // validate field against AGILE_TRIBE table
+        $tableField = str_replace($agileTribeTableAliases, '', $field);
+
+        if (array_key_exists($tableField, $availableAgileTribeColumns)) {
+            $additionalSelect .= ", " . htmlspecialchars("AT.".$tableField);
             continue;
         }
 
@@ -92,19 +139,28 @@ if (!is_null($additionalFields)) {
     }
 }
 
-$sql = " SELECT DISTINCT P.NOTES_ID, ";
+$sql = " SELECT DISTINCT P.NOTES_ID, P.KYN_EMAIL_ADDRESS, ";
 $sql.=" CASE WHEN " . personTable::activePersonPredicate($withProvClear, 'P') . " THEN 'active' ELSE 'inactive' END AS INT_STATUS ";
 $sql.= $additionalSelect;
 $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
+$sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS F "; // lookup firstline
+$sql.= " ON P.FM_CNUM = F.CNUM ";
+$sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS U "; // lookup upline ( second line )
+$sql.= " ON F.FM_CNUM = U.CNUM ";
+$sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD .  " AS AS1 ";
+$sql.= " ON P.SQUAD_NUMBER = AS1.SQUAD_NUMBER ";
+$sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE .  " AS AT ";
+$sql.= " ON AS1.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
 $sql.= " LEFT JOIN " .  $GLOBALS['Db2Schema'] . "." . allTables::$STATIC_SKILLSETS . " as SS ";
 $sql.= " ON P.SKILLSET_ID = SS.SKILLSET_ID ";
-$sql.= " WHERE 1=1 AND trim(NOTES_ID) != '' ";
+$sql.= " WHERE 1=1 AND trim(P.KYN_EMAIL_ADDRESS) != '' ";
+// $sql.= " WHERE 1=1 AND trim(NOTES_ID) != '' ";
 $sql.= $onlyActiveBool ? " AND " . personTable::activePersonPredicate($withProvClear, 'P') : null;
 $sql.= $onlyActiveInTimeBool ? " AND (" . personTable::activePersonPredicate($withProvClear, 'P') . " OR P.OFFBOARDED_DATE > '" . $offboardedDate->format('Y-m-d') . "')" : null;
 $sql.= !empty($emailID) ? " AND (lower(P.EMAIL_ADDRESS) = '" . htmlspecialchars(strtolower($emailID)) . "' OR lower(P.KYN_EMAIL_ADDRESS) = '" . htmlspecialchars(strtolower($emailID)) . "') " : null;
 $sql.= !empty($notesId) ? " AND lower(P.NOTES_ID) = '" . htmlspecialchars(strtolower($notesId)) . "'; " : null;
 $sql.= !empty($cnum) ? " AND lower(P.CNUM) = '" . htmlspecialchars(strtolower($cnum)) . "'; " : null;
-$sql.= " ORDER BY P.NOTES_ID ";
+$sql.= " ORDER BY P.KYN_EMAIL_ADDRESS ";
 
 $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
