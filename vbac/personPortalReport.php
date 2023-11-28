@@ -180,7 +180,7 @@ class personPortalReport extends DbTable
                 break;
             // Linked Portal
             case personTable::PORTAL_PRE_BOARDER_WITH_LINKED:
-                $preBoardersPredicate .= " AND ( PES_STATUS_DETAILS like '" . personRecord::PES_STATUS_DETAILS_BOARDED_AS . "%' or PRE_BOARDED is not null)";
+                $preBoardersPredicate .= " AND ( P.PES_STATUS_DETAILS like '" . personRecord::PES_STATUS_DETAILS_BOARDED_AS . "%' or P.PRE_BOARDED is not null)";
                 $preBoardersPredicate .= " AND " . personTable::notArchivedPersonPredicate(true, 'P');
                 break;
             // Person Portal - Lite
