@@ -46,19 +46,8 @@ if (isset($argv[1])) {
             $filePrefix = 'personExtractFull';
 
             $excludePredicate = personTable::excludeBoardedPreboardersPredicate('P');
-
             $sql.= " SELECT " . personTable::DEFAULT_SELECT_FIELDS .', ' . personTable::ORGANISATION_SELECT;
-            $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
-            $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS F "; // lookup firstline
-            $sql.= " ON P.FM_CNUM = F.CNUM ";
-            $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS U "; // lookup upline ( second line )
-            $sql.= " ON F.FM_CNUM = U.CNUM ";
-            $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS1 ";
-            $sql.= " ON P.SQUAD_NUMBER = AS1.SQUAD_NUMBER ";
-            $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " AS AT ";
-            $sql.= " ON AS1.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
-            $sql.= " LEFT JOIN " .  $GLOBALS['Db2Schema'] . "." . allTables::$STATIC_SKILLSETS . " as SS ";
-            $sql.= " ON P.SKILLSET_ID = SS.SKILLSET_ID ";
+            $sql.= personTable::getTablesForQuery();
             $sql.= " WHERE 1=1 AND " . $excludePredicate;
         
             break;
@@ -66,20 +55,9 @@ if (isset($argv[1])) {
             $type = personTable::PERSON_DETAILS_ACTIVE;
             $filePrefix = 'personExtractActive';
             
-            $activePredicate = personTable::activePersonPredicate();
-
+            $activePredicate = personTable::activePersonPredicate(true, 'P');
             $sql.= " SELECT " . personTable::DEFAULT_SELECT_FIELDS .', ' . personTable::ORGANISATION_SELECT;
-            $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
-            $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS F "; // lookup firstline
-            $sql.= " ON P.FM_CNUM = F.CNUM ";
-            $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS U "; // lookup upline ( second line )
-            $sql.= " ON F.FM_CNUM = U.CNUM ";
-            $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS1 ";
-            $sql.= " ON P.SQUAD_NUMBER = AS1.SQUAD_NUMBER ";
-            $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " AS AT ";
-            $sql.= " ON AS1.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
-            $sql.= " LEFT JOIN " .  $GLOBALS['Db2Schema'] . "." . allTables::$STATIC_SKILLSETS . " as SS ";
-            $sql.= " ON P.SKILLSET_ID = SS.SKILLSET_ID ";
+            $sql.= personTable::getTablesForQuery();
             $sql.= " WHERE 1=1 AND " . $activePredicate;
         
             break;
@@ -95,7 +73,7 @@ if (isset($argv[1])) {
             $joins.= " ON P.SQUAD_NUMBER = AS1.SQUAD_NUMBER ";
             $joins.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " AS AT ";
             $joins.= " ON AS1.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
-            $joins.= " LEFT JOIN " .  $GLOBALS['Db2Schema'] . "." . allTables::$STATIC_SKILLSETS . " as SS ";
+            $joins.= " LEFT JOIN " .  $GLOBALS['Db2Schema'] . "." . allTables::$STATIC_SKILLSETS . " AS SS ";
             $joins.= " ON P.SKILLSET_ID = SS.SKILLSET_ID ";
             
             $sql.= " SELECT " . personTable::DEFAULT_SELECT_FIELDS .', ' . personTable::ORGANISATION_SELECT;
@@ -107,21 +85,11 @@ if (isset($argv[1])) {
             $type = personTable::PERSON_DETAILS_INACTIVE;
             $filePrefix = 'personExtractInactive';
 
-            $activePredicate = personTable::activePersonPredicate();
-            $excludePredicate = personTable::excludeBoardedPreboardersPredicate();
+            $activePredicate = personTable::activePersonPredicate(true, 'P');
+            $excludePredicate = personTable::excludeBoardedPreboardersPredicate('P');
 
             $sql.= " SELECT " . personTable::DEFAULT_SELECT_FIELDS .', ' . personTable::ORGANISATION_SELECT;
-            $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
-            $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS F "; // lookup firstline
-            $sql.= " ON P.FM_CNUM = F.CNUM ";
-            $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS U "; // lookup upline ( second line )
-            $sql.= " ON F.FM_CNUM = U.CNUM ";
-            $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS1 ";
-            $sql.= " ON P.SQUAD_NUMBER = AS1.SQUAD_NUMBER ";
-            $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " AS AT ";
-            $sql.= " ON AS1.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
-            $sql.= " LEFT JOIN " .  $GLOBALS['Db2Schema'] . "." . allTables::$STATIC_SKILLSETS . " as SS ";
-            $sql.= " ON P.SKILLSET_ID = SS.SKILLSET_ID ";
+            $sql.= personTable::getTablesForQuery();
             $sql.= " WHERE P.CNUM NOT IN ( ";
             $sql.= "  SELECT CNUM " ;
             $sql.= "  FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
@@ -138,20 +106,9 @@ if (isset($argv[1])) {
             $subject = 'BAU Report';
             $description = 'BAU report from Person Table Extract generated from vBAC';
 
-            $activePredicate = personTable::activePersonPredicate();
-
+            $activePredicate = personTable::activePersonPredicate(true, 'P');
             $sql.= " SELECT " . personTable::DEFAULT_SELECT_FIELDS .', ' . personTable::ORGANISATION_SELECT;
-            $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
-            $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS F "; // lookup firstline
-            $sql.= " ON P.FM_CNUM = F.CNUM ";
-            $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS U "; // lookup upline ( second line )
-            $sql.= " ON F.FM_CNUM = U.CNUM ";
-            $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS1 ";
-            $sql.= " ON P.SQUAD_NUMBER = AS1.SQUAD_NUMBER ";
-            $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " AS AT ";
-            $sql.= " ON AS1.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
-            $sql.= " LEFT JOIN " .  $GLOBALS['Db2Schema'] . "." . allTables::$STATIC_SKILLSETS . " as SS ";
-            $sql.= " ON P.SKILLSET_ID = SS.SKILLSET_ID ";
+            $sql.= personTable::getTablesForQuery();
             $sql.= " WHERE 1=1 AND " . $activePredicate;
             $sql.= " AND P.LOB     in ('GTS','Cloud','Security') ";
             $sql.= " AND P.TT_BAU  in ('BAU') ";

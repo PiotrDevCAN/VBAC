@@ -31,7 +31,7 @@ $onlyActiveIn12MonthsStr = !empty($_GET['onlyactive12mths']) ? $_GET['onlyactive
 $onlyActiveIn12MonthsBool = $onlyActiveIn12MonthsStr=='true';
 
 if ($onlyActiveIn6MonthsBool || $onlyActiveIn12MonthsBool) {
-
+    
     // override the onlyactive parameter
     $onlyActiveBool = false;
     
@@ -61,7 +61,10 @@ if (isset($_REQUEST['plus'])) {
 }
 
 $additionalFields = !empty($_REQUEST['plus']) ? explode(",", $_REQUEST['plus']) : null;
-$additionalSelect = null;
+// default fields
+$additionalSelect = " P.NOTES_ID, P.EMAIL_ADDRESS, P.KYN_EMAIL_ADDRESS, P.FIRST_NAME, P.LAST_NAME ";
+$additionalSelect .= ", " . personTable::FULLNAME_SELECT;
+$additionalSelect .= ", " . personTable::getStatusSelect($withProvClear, 'P');
 $employees = array();
 
 if (!is_null($additionalFields)) {
@@ -103,6 +106,51 @@ if (!is_null($additionalFields)) {
                 $additionalSelect .= ", " . htmlspecialchars($fieldExpression);
                 continue 2;
                 break;
+            case 'EMPLOYEE_TYPE':
+                $fieldExpression = personTable::EMPLOYEE_TYPE_SELECT;
+                $additionalSelect .= ", " . htmlspecialchars($fieldExpression);
+                continue 2;
+                break;
+            case 'JRSS':
+                $additionalSelect .= ", SS.SKILLSET AS JRSS";
+                continue 2;
+                break;
+            case 'FLL_CNUM':
+                $additionalSelect .= ", F.CNUM as FLL_CNUM";
+                continue 2;
+                break;
+            case 'FLL_NOTES_ID':
+                $additionalSelect .= ", F.NOTES_ID as FLL_NOTES_ID";
+                continue 2;
+                break;
+            case 'FLL_EMAIL':
+                $additionalSelect .= ", F.KYN_EMAIL_ADDRESS AS FLL_EMAIL";
+                continue 2;
+                break;
+            case 'FLM_EMAIL_ADDRESS':
+                $additionalSelect .= ", F.KYN_EMAIL_ADDRESS AS FLM_EMAIL_ADDRESS";
+                continue 2;
+                break;
+            case 'SLL_CNUM':
+                $additionalSelect .= ", U.CNUM as SLL_CNUM";
+                continue 2;
+                break;
+            case 'SLL_NOTES_ID':
+                $additionalSelect .= ", U.NOTES_ID as SLL_NOTES_ID";
+                continue 2;
+                break;
+            case 'SLL_EMAIL':
+                $additionalSelect .= ", U.KYN_EMAIL_ADDRESS AS SLL_EMAIL";
+                continue 2;
+                break;
+            case 'SLM_EMAIL_ADDRESS':
+                $additionalSelect .= ", U.KYN_EMAIL_ADDRESS AS SLM_EMAIL_ADDRESS";
+                continue 2;
+                break;
+            case 'ITERATION_MGR':
+                $additionalSelect .= ", AT.ITERATION_MGR AS ITERATION_MGR";
+                continue 2;
+                break;
             default:
                 break;
         }
@@ -114,7 +162,7 @@ if (!is_null($additionalFields)) {
             $additionalSelect .= ", " . htmlspecialchars("P.".$tableField);
             continue;
         }
-        
+
         // validate field against AGILE_SQUAD table
         $tableField = str_replace($agileSquadTableAliases, '', $field);
 
@@ -141,27 +189,15 @@ if (!is_null($additionalFields)) {
     }
 }
 
-$sql = " SELECT DISTINCT P.NOTES_ID, P.KYN_EMAIL_ADDRESS, ";
-$sql.=" CASE WHEN " . personTable::activePersonPredicate($withProvClear, 'P') . " THEN 'active' ELSE 'inactive' END AS INT_STATUS ";
+$sql = " SELECT DISTINCT ";
 $sql.= $additionalSelect;
-$sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
-$sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS F "; // lookup firstline
-$sql.= " ON P.FM_CNUM = F.CNUM ";
-$sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS U "; // lookup upline ( second line )
-$sql.= " ON F.FM_CNUM = U.CNUM ";
-$sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD .  " AS AS1 ";
-$sql.= " ON P.SQUAD_NUMBER = AS1.SQUAD_NUMBER ";
-$sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE .  " AS AT ";
-$sql.= " ON AS1.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
-$sql.= " LEFT JOIN " .  $GLOBALS['Db2Schema'] . "." . allTables::$STATIC_SKILLSETS . " as SS ";
-$sql.= " ON P.SKILLSET_ID = SS.SKILLSET_ID ";
+$sql.= personTable::getTablesForQuery();
 $sql.= " WHERE 1=1 AND trim(P.KYN_EMAIL_ADDRESS) != '' ";
-// $sql.= " WHERE 1=1 AND trim(NOTES_ID) != '' ";
 $sql.= $onlyActiveBool ? " AND " . personTable::activePersonPredicate($withProvClear, 'P') : null;
 $sql.= $onlyActiveInTimeBool ? " AND (" . personTable::activePersonPredicate($withProvClear, 'P') . " OR P.OFFBOARDED_DATE > '" . $offboardedDate->format('Y-m-d') . "')" : null;
 $sql.= !empty($emailID) ? " AND (lower(P.EMAIL_ADDRESS) = '" . htmlspecialchars(strtolower($emailID)) . "' OR lower(P.KYN_EMAIL_ADDRESS) = '" . htmlspecialchars(strtolower($emailID)) . "') " : null;
-$sql.= !empty($notesId) ? " AND lower(P.NOTES_ID) = '" . htmlspecialchars(strtolower($notesId)) . "'; " : null;
-$sql.= !empty($cnum) ? " AND lower(P.CNUM) = '" . htmlspecialchars(strtolower($cnum)) . "'; " : null;
+$sql.= !empty($notesId) ? " AND lower(P.NOTES_ID) = '" . htmlspecialchars(strtolower($notesId)) . "'  " : null;
+$sql.= !empty($cnum) ? " AND lower(P.CNUM) = '" . htmlspecialchars(strtolower($cnum)) . "'  " : null;
 $sql.= " ORDER BY P.KYN_EMAIL_ADDRESS ";
 
 $rs = sqlsrv_query($GLOBALS['conn'], $sql);
@@ -176,6 +212,7 @@ if($rs){
     DbTable::displayErrorMessage($rs, 'class', 'method', $sql);
     $errorMessage = ob_get_clean();
     echo json_encode($errorMessage);
+    exit();
 }
 
 $employees = count($employees)==1 ? $employees[0] : $employees;

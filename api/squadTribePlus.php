@@ -1,11 +1,11 @@
 <?php
 
-use vbac\allTables;
-use vbac\personTable;
 use itdq\DbTable;
+use vbac\allTables;
 use vbac\AgileSquadRecord;
 use vbac\AgileTribeRecord;
 use vbac\personRecord;
+use vbac\personTable;
 use vbac\staticDataSkillsetsRecord;
 
 ob_start();
@@ -47,7 +47,6 @@ if ($onlyActiveIn6MonthsBool || $onlyActiveIn12MonthsBool) {
     }
     // $today = new \DateTime();
     $offboardedDate = new \DateTime();
-    $months = 6;
     $xMonths = new \DateInterval('P'.$months.'M');
     $offboardedDate = $offboardedDate->sub($xMonths);
     $days = $offboardedDate->format("d");
@@ -62,7 +61,11 @@ if (isset($_REQUEST['plus'])) {
 }
 
 $additionalFields = !empty($_REQUEST['plus']) ? explode(",", $_REQUEST['plus']) : null;
-$additionalSelect = null;
+// default fields
+$additionalSelect = " P.NOTES_ID, P.EMAIL_ADDRESS, P.KYN_EMAIL_ADDRESS, P.FIRST_NAME, P.LAST_NAME ";
+$additionalSelect .= ", " . personTable::FULLNAME_SELECT;
+$additionalSelect .= ", AS1.SQUAD_NUMBER, AS1.SQUAD_NAME, AT.TRIBE_NUMBER, AT.TRIBE_NAME, ";
+$additionalSelect .= personTable::getStatusSelect($withProvClear, 'P');
 $employees = array();
 
 if (!is_null($additionalFields)) {
@@ -101,6 +104,11 @@ if (!is_null($additionalFields)) {
                 break;
             case 'SM':
                 $fieldExpression = personTable::SLM_SELECT;
+                $additionalSelect .= ", " . htmlspecialchars($fieldExpression);
+                continue 2;
+                break;
+            case 'EMPLOYEE_TYPE':
+                $fieldExpression = personTable::EMPLOYEE_TYPE_SELECT;
                 $additionalSelect .= ", " . htmlspecialchars($fieldExpression);
                 continue 2;
                 break;
@@ -182,20 +190,9 @@ if (!is_null($additionalFields)) {
     }
 }
 
-$sql = " SELECT DISTINCT P.NOTES_ID, P.EMAIL_ADDRESS, P.KYN_EMAIL_ADDRESS, P.FIRST_NAME, P.LAST_NAME, CONCAT(TRIM(P.FIRST_NAME), ' ', TRIM(P.LAST_NAME)) AS FULL_NAME, AS1.SQUAD_NUMBER, AT.TRIBE_NUMBER, ";
-$sql.=" CASE WHEN " . personTable::activePersonPredicate($withProvClear, 'P') . " THEN 'active' ELSE 'inactive' END AS INT_STATUS ";
+$sql = " SELECT DISTINCT ";
 $sql.= $additionalSelect;
-$sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
-$sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS F "; // lookup firstline
-$sql.= " ON P.FM_CNUM = F.CNUM ";
-$sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS U "; // lookup upline ( second line )
-$sql.= " ON F.FM_CNUM = U.CNUM ";
-$sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS1 ";
-$sql.= " ON P.SQUAD_NUMBER = AS1.SQUAD_NUMBER ";
-$sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " AS AT ";
-$sql.= " ON AS1.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
-$sql.= " LEFT JOIN " .  $GLOBALS['Db2Schema'] . "." . allTables::$STATIC_SKILLSETS . " as SS ";
-$sql.= " ON P.SKILLSET_ID = SS.SKILLSET_ID ";
+$sql.= personTable::getTablesForQuery();
 $sql.= " WHERE 1=1 AND trim(P.KYN_EMAIL_ADDRESS) != '' ";
 $sql.= $onlyActiveBool ? " AND " . personTable::activePersonPredicate($withProvClear, 'P') : null;
 $sql.= $onlyActiveInTimeBool ? " AND (" . personTable::activePersonPredicate($withProvClear, 'P') . " OR P.OFFBOARDED_DATE > '" . $offboardedDate->format('Y-m-d') . "')" : null;
@@ -221,6 +218,6 @@ if($rs){
 
 $employees = count($employees)==1 ? $employees[0] : $employees;
 
-//ob_clean();
+ob_clean();
 header('Content-Type: application/json');
 echo json_encode($employees);

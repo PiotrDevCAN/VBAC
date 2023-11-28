@@ -4,6 +4,8 @@
 /vendor/
 /cfg/
 /extracts/
+/ct_id_uploads/
+/templates/
 /node_modules/
 .htaccess
 dev_env.list

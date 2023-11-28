@@ -176,12 +176,12 @@ class personPortalReport extends DbTable
                 )";
                 $preBoardersPredicate .= " OR (P.CNUM NOT LIKE '%xxx' AND P.CNUM NOT LIKE '%XXX' AND P.CNUM NOT LIKE '%999')";
                 $preBoardersPredicate .= ")";
-                $preBoardersPredicate .= " AND " . personTable::notArchivedPersonPredicate();
+                $preBoardersPredicate .= " AND " . personTable::notArchivedPersonPredicate(true, 'P');
                 break;
             // Linked Portal
             case personTable::PORTAL_PRE_BOARDER_WITH_LINKED:
                 $preBoardersPredicate .= " AND ( PES_STATUS_DETAILS like '" . personRecord::PES_STATUS_DETAILS_BOARDED_AS . "%' or PRE_BOARDED is not null)";
-                $preBoardersPredicate .= " AND " . personTable::notArchivedPersonPredicate();
+                $preBoardersPredicate .= " AND " . personTable::notArchivedPersonPredicate(true, 'P');
                 break;
             // Person Portal - Lite
             case personTable::PORTAL_ONLY_ACTIVE:
@@ -196,17 +196,18 @@ class personPortalReport extends DbTable
                 )";
                 $preBoardersPredicate .= " OR (P.CNUM NOT LIKE '%xxx' AND P.CNUM NOT LIKE '%XXX' AND P.CNUM NOT LIKE '%999')";
                 $preBoardersPredicate .= ")";
-                $preBoardersPredicate .= " AND " . personTable::activePersonPredicate();
+                $preBoardersPredicate .= " AND " . personTable::activePersonPredicate(true, 'P');
                 break;
             // Person Portal - Archive
             case personTable::PORTAL_ONLY_ARCHIVED:
-                $preBoardersPredicate .= " AND " . personTable::archivedPersonPredicate();
+                $preBoardersPredicate .= " AND " . personTable::archivedPersonPredicate(true, 'P');
                 break;
             default:
                 break;
         }
         return $preBoardersPredicate;
     }
+
     public function buildGlobalSearchPredicate($searchValue = null, $columnsFromQuery = array())
     {
         $predicate = "";

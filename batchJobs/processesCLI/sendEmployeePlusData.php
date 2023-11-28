@@ -46,20 +46,27 @@ $now = new DateTime();
 
 $withProvClear = null;
 $additionalFields = array(
-    "ROLE_ON_THE_ACCOUNT", 
-    "EMAIL_ADDRESS", 
+    "ROLE_ON_THE_ACCOUNT",
     "COUNTRY", 
     "START_DATE", 
     "PROJECTED_END_DATE", 
     "SQUAD_NUMBER",
     "SQUAD_NAME",
+    "SQUAD_LEADER",
+    "TRIBE_NUMBER",
+    "TRIBE_NAME",
+    "TRIBE_LEADER",
     "CNUM",
+    "WORKER_ID",
+    "CFIRST_ID",
     "OFFBOARDED_DATE",
     "ORGANISATION",
     "FM",
     "SM"
 );
-$additionalSelect = null;
+// default fields
+$additionalSelect = " P.KYN_EMAIL_ADDRESS, ";
+$additionalSelect .= personTable::getStatusSelect($withProvClear, 'P');
 
 $onlyActiveBool = false;
 $onlyActiveInTimeBool = false;
@@ -145,22 +152,10 @@ try {
     
     // ob_clean();
 
-    $sql = " SELECT DISTINCT P.NOTES_ID, P.KYN_EMAIL_ADDRESS, ";
-    $sql.=" CASE WHEN " . personTable::activePersonPredicate($withProvClear, 'P') . " THEN 'active' ELSE 'inactive' END AS INT_STATUS ";
+    $sql = " SELECT DISTINCT ";
     $sql.= $additionalSelect;
-    $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
-    $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS F "; // lookup firstline
-    $sql.= " ON P.FM_CNUM = F.CNUM ";
-    $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS U "; // lookup upline ( second line )
-    $sql.= " ON F.FM_CNUM = U.CNUM ";
-    $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD .  " AS AS1 ";
-    $sql.= " ON P.SQUAD_NUMBER = AS1.SQUAD_NUMBER ";
-    $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE .  " AS AT ";
-    $sql.= " ON AS1.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
-    $sql.= " LEFT JOIN " .  $GLOBALS['Db2Schema'] . "." . allTables::$STATIC_SKILLSETS . " as SS ";
-    $sql.= " ON P.SKILLSET_ID = SS.SKILLSET_ID ";
+    $sql.= personTable::getTablesForQuery();
     $sql.= " WHERE 1=1 AND trim(P.KYN_EMAIL_ADDRESS) != '' ";
-    // $sql.= " WHERE 1=1 AND trim(NOTES_ID) != '' ";
     // $sql.= $onlyActiveBool ? " AND " . personTable::activePersonPredicate($withProvClear, 'P') : null;
     // $sql.= $onlyActiveInTimeBool ? " AND (" . personTable::activePersonPredicate($withProvClear, 'P') . " OR P.OFFBOARDED_DATE > '" . $offboardedDate->format('Y-m-d') . "')" : null;
     $sql.= " ORDER BY P.KYN_EMAIL_ADDRESS ";

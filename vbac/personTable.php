@@ -39,9 +39,12 @@ class personTable extends DbTable
     const PERSON_BAU = 'Bau';
 
     const DEFAULT_SELECT_FIELDS = " P.*, AS1.SQUAD_LEADER, AS1.SQUAD_NAME, AT.TRIBE_LEADER, AT.TRIBE_NUMBER, AT.TRIBE_NAME, AT.ITERATION_MGR, SS.SKILLSET ";
+    
+    const FULLNAME_SELECT = " CONCAT(TRIM(P.FIRST_NAME), ' ', TRIM(P.LAST_NAME)) AS FULL_NAME ";
     const FLM_SELECT = ' F.CNUM AS FLM_CNUM, F.WORKER_ID AS FLM_WORKER_ID, F.KYN_EMAIL_ADDRESS AS FLM_EMAIL_ADDRESS ';
     const SLM_SELECT = ' U.CNUM AS SLM_CNUM, U.WORKER_ID AS SLM_WORKER_ID, U.KYN_EMAIL_ADDRESS AS SLM_EMAIL_ADDRESS ';
     const ORGANISATION_SELECT = ' CASE WHEN AS1.ORGANISATION IS NULL THEN AT.ORGANISATION ELSE AS1.ORGANISATION END AS ORGANISATION, AT.ORGANISATION AS TRIBE_ORGANISATION, AS1.ORGANISATION AS SQUAD_ORGANISATION ';
+    const EMPLOYEE_TYPE_SELECT = ' P.EMPLOYEE_TYPE AS EMPLOYEE_TYPE_CODE, CASE WHEN EM.DESCRIPTION is not null then EM.DESCRIPTION else P.EMPLOYEE_TYPE end as EMPLOYEE_TYPE ';
 
     private static $revalStatusChangeEmail = 'Functional Manager,'
         . '<br/>You have been identified from VBAC as being the functional manager of :  &&leaversNotesid&&'
@@ -92,6 +95,30 @@ class personTable extends DbTable
         parent::__construct($table, $pwd, $log);
     }
 
+    public static function getTablesForQuery()
+    {
+        $sql = " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
+        $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS F "; // lookup firstline
+        $sql.= " ON P.FM_CNUM = F.CNUM ";
+        $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS U "; // lookup upline ( second line )
+        $sql.= " ON F.FM_CNUM = U.CNUM ";
+        $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PES_TRACKER . " AS PT ";
+        $sql.= " ON P.CNUM = PT.CNUM ";
+        $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$EMPLOYEE_TYPE_MAPPING .  " AS EM ";
+        $sql.= " ON upper(P.EMPLOYEE_TYPE) = upper(EM.CODE) ";
+        $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS1 ";
+        $sql.= " ON P.SQUAD_NUMBER = AS1.SQUAD_NUMBER ";
+        $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " AS AT ";
+        $sql.= " ON AS1.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
+        $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON .  " AS ASP ";
+        $sql.= " ON AS1.SQUAD_LEADER = ASP.KYN_EMAIL_ADDRESS ";
+        $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON .  " AS ATP ";
+        $sql.= " ON AT.TRIBE_LEADER = ATP.KYN_EMAIL_ADDRESS ";
+        $sql.= " LEFT JOIN " .  $GLOBALS['Db2Schema'] . "." . allTables::$STATIC_SKILLSETS . " AS SS ";
+        $sql.= " ON P.SKILLSET_ID = SS.SKILLSET_ID ";
+        return $sql;
+    }
+
     public static function getNextVirtualCnum()
     {
         $sql = " SELECT CNUM FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
@@ -114,6 +141,12 @@ class personTable extends DbTable
             $nextVirtualCnum = 'V00001XXX';
         }
         return $nextVirtualCnum;
+    }
+
+    public static function getStatusSelect($includeProvisionalClearance = true, $tableAbbrv = null)
+    {
+        $select = " CASE WHEN " . personTable::activePersonPredicate($includeProvisionalClearance, $tableAbbrv) . " THEN 'active' ELSE 'inactive' END AS INT_STATUS ";
+        return $select;
     }
 
     public static function activePersonPredicate($includeProvisionalClearance = true, $tableAbbrv = null)
@@ -265,15 +298,9 @@ class personTable extends DbTable
         AS1.SHIFT,
         AS1.SQUAD_LEADER,";
         $sql .= self::ORGANISATION_SELECT;
-        $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
-        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PES_TRACKER . " as PT ";
-        $sql .= " ON P.CNUM = PT.CNUM ";
-        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS1 ";
-        $sql .= " ON P.SQUAD_NUMBER = AS1.SQUAD_NUMBER ";
-        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " as AT ";
-        $sql .= " ON AS1.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
-        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$STATIC_SKILLSETS . " as SS ";
-        $sql .= " ON P.SKILLSET_ID = SS.SKILLSET_ID ";
+
+        $sql .= personTable::getTablesForQuery();
+        
         $sql .= " WHERE " . $preBoardersPredicate;
         $sql .= !empty($predicate) ? " $predicate " : null;
         // $sql .= !empty($sorting) ? " $sorting " : null;
@@ -290,15 +317,9 @@ class personTable extends DbTable
     public static function preparePersonCountStmt($preBoardersPredicate = null, $predicate = null)
     {
         $sql = " SELECT COUNT(*) AS COUNTER ";
-        $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
-        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PES_TRACKER . " as PT ";
-        $sql .= " ON PT.CNUM = P.CNUM ";
-        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS1 ";
-        $sql .= " ON AS1.SQUAD_NUMBER = P.SQUAD_NUMBER ";
-        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " as AT ";
-        $sql .= " ON AS1.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
-        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$STATIC_SKILLSETS . " as SS ";
-        $sql .= " ON P.SKILLSET_ID = SS.SKILLSET_ID ";
+
+        $sql .= personTable::getTablesForQuery();
+        
         $sql .= " WHERE " . $preBoardersPredicate;
         $sql .= !empty($predicate) ? " $predicate " : null;
 
@@ -1316,8 +1337,9 @@ class personTable extends DbTable
     public function activeFmEmailAddressesByCnum()
     {
         $loader = new Loader();
-        $allActivePeople = $loader->loadIndexed('EMAIL_ADDRESS', 'CNUM', $this->tableName, personTable::activePersonPredicate());
-        $allFuncMgr = $loader->loadIndexed('FM_CNUM', 'FM_CNUM', $this->tableName, personTable::activePersonPredicate());
+        $activePredicate = personTable::activePersonPredicate();
+        $allActivePeople = $loader->loadIndexed('EMAIL_ADDRESS', 'CNUM', $this->tableName, $activePredicate);
+        $allFuncMgr = $loader->loadIndexed('FM_CNUM', 'FM_CNUM', $this->tableName, $activePredicate);
 
         $activeManagers = array_intersect_key($allActivePeople, $allFuncMgr);
 

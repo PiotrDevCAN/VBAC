@@ -84,19 +84,9 @@ class personPortalLiteTable extends personTable
         AT.TRIBE_LEADER,
         AT.ITERATION_MGR,";
         $sql .= self::ORGANISATION_SELECT;
-        $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
-        $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PES_TRACKER . " AS PT ";
-        $sql.= " ON P.CNUM = PT.CNUM ";
-        $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS1 ";
-        $sql.= " ON P.SQUAD_NUMBER = AS1.SQUAD_NUMBER ";
-        $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " AS AT ";
-        $sql.= " ON AS1.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
-        $sql.= " LEFT JOIN " .  $GLOBALS['Db2Schema'] . "." . allTables::$STATIC_SKILLSETS . " as SS ";
-        $sql.= " ON P.SKILLSET_ID = SS.SKILLSET_ID ";
-        $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS F ";
-        $sql.= " ON P.FM_CNUM = F.CNUM ";
-        $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$EMPLOYEE_TYPE_MAPPING . " AS EM ";
-        $sql.= " ON P.EMPLOYEE_TYPE = EM.CODE ";
+
+        $sql .= personTable::getTablesForQuery();
+        
         $sql.= " WHERE " . $predicate;
         
         $startOfSql = microtime(true);

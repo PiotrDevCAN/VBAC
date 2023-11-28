@@ -1,6 +1,7 @@
 <?php
 
 use vbac\allTables;
+use vbac\personTable;
 
 ob_start();
 
@@ -11,31 +12,50 @@ if($_REQUEST['token']!= $token){
 $emailID = !empty($_GET['emailid']) ? $_GET['emailid'] : null;
 $notesId = !empty($_GET['notesid']) ? $_GET['notesid'] : null;
 $cnum    = !empty($_GET['cnum']) ? $_GET['cnum'] : null;
+
+$withProvClear = !empty($_GET['withProvClear']) ? $_GET['withProvClear'] : null;
+
 $row = false;
 $trimmedRow = false;
 
-$sql = " SELECT P.*, M.EMAIL_ADDRESS as FM_EMAIL, M.NOTES_ID as FM_NOTES_ID,  CONCAT(trim(P.FIRST_NAME), ' ', trim(P.LAST_NAME)) as FULL_NAME  ";
-$sql.= " , CASE WHEN T.DESCRIPTION is not null then T.DESCRIPTION else P.EMPLOYEE_TYPE end as EMPLOYEE_TYPE ";
-$sql.= " , SQ.SQUAD_NAME, SQ.SQUAD_LEADER, SQP.EMAIL_ADDRESS as SQUAD_LEADER_EMAIL ";
-$sql.= " , TR.TRIBE_NAME, TR.TRIBE_LEADER, TRP.EMAIL_ADDRESS as TRIBE_LEADER_EMAIL, TR.ORGANISATION ";
-$sql.= " , 'tbc_notes' as ITERATION_MGR,'tbc_email' as ITERATION_MGR_EMAIL  ";
-$sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
-$sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS M ";
-$sql.= " ON P.FM_CNUM = M.CNUM ";
-$sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$EMPLOYEE_TYPE_MAPPING .  " AS T ";
-$sql.= " ON upper(P.EMPLOYEE_TYPE) = upper(T.CODE) ";
-$sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD .  " AS SQ ";
-$sql.= " ON P.SQUAD_NUMBER = SQ.SQUAD_NUMBER ";
-$sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE .  " AS TR ";
-$sql.= " ON SQ.TRIBE_NUMBER = TR.TRIBE_NUMBER ";
-$sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON .  " AS SQP ";
-$sql.= " ON SQ.SQUAD_LEADER = SQP.NOTES_ID ";
-$sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON .  " AS TRP ";
-$sql.= " ON TR.TRIBE_LEADER = TRP.NOTES_ID ";
+$sql = " SELECT DISTINCT ";
+$sql.=" P.*, ";
+
+$sql.=personTable::FULLNAME_SELECT.", ";
+$sql.=personTable::EMPLOYEE_TYPE_SELECT.", ";
+
+// $sql.=" F.*, ";
+
+// $sql.=" U.*, ";
+
+// $sql.=" AS1.*, ";
+$sql.=" AS1.SQUAD_NUMBER, ";
+$sql.=" AS1.SQUAD_TYPE, ";
+// $sql.=" AS1.TRIBE_NUMBER, ";
+$sql.=" AS1.SHIFT, ";
+$sql.=" AS1.SQUAD_LEADER, ";
+$sql.=" AS1.SQUAD_NAME, ";
+// $sql.=" AS1.ORGANISATION AS SQUAD_ORGANISATION, ";
+
+// $sql.=" AT.*, ";
+$sql.=" AT.TRIBE_NUMBER, ";
+$sql.=" AT.TRIBE_NAME, ";
+$sql.=" AT.TRIBE_LEADER, ";
+// $sql.=" AT.ORGANISATION AS TRIBE_ORGANISATION, ";
+$sql.=" AT.ITERATION_MGR, ";
+
+$sql.=personTable::ORGANISATION_SELECT.", ";
+$sql.=personTable::FLM_SELECT.", ";
+$sql.=personTable::SLM_SELECT.", ";
+
+$sql.=" SS.*, ";
+
+$sql.= personTable::getStatusSelect($withProvClear, 'P');
+$sql.= personTable::getTablesForQuery();
 $sql.= " WHERE 1=1 ";
 $sql.= !empty($emailID) ? " AND (lower(P.EMAIL_ADDRESS) = '" . htmlspecialchars(strtolower($emailID)) . "' OR lower(P.KYN_EMAIL_ADDRESS) = '" . htmlspecialchars(strtolower($emailID)) . "') " : null;
-$sql.= !empty($notesId) ? " AND lower(P.NOTES_ID) = '" . htmlspecialchars(strtolower($notesId)) . "'; " : null;
-$sql.= !empty($cnum) ? " AND lower(P.CNUM) = '" . htmlspecialchars(strtolower($cnum)) . "'; " : null;
+$sql.= !empty($notesId) ? " AND lower(P.NOTES_ID) = '" . htmlspecialchars(strtolower($notesId)) . "'  " : null;
+$sql.= !empty($cnum) ? " AND lower(P.CNUM) = '" . htmlspecialchars(strtolower($cnum)) . "'  " : null;
 
 error_log($sql);
 
@@ -47,4 +67,5 @@ if($rs){
 }
 
 ob_clean();
+header('Content-Type: application/json');
 echo json_encode($trimmedRow);

@@ -30,10 +30,10 @@ foreach ($additionalFields as $field) {
 $sql = " SELECT P.NOTES_ID " . $additionalSelect;
 $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
 
-$sql.= " WHERE 1=1 AND trim(NOTES_ID) != ''  AND " . personTable::inactivePersonPredicate();
+$sql.= " WHERE 1=1 AND trim(NOTES_ID) != ''  AND " . personTable::inactivePersonPredicate(true, 'P');
 $sql.= !empty($emailID) ? " AND (lower(P.EMAIL_ADDRESS) = '" . htmlspecialchars(strtolower($emailID)) . "' OR lower(P.KYN_EMAIL_ADDRESS) = '" . htmlspecialchars(strtolower($emailID)) . "') " : null;
-$sql.= !empty($notesId) ? " AND lower(P.NOTES_ID) = '" . htmlspecialchars(strtolower($notesId)) . "'; " : null;
-$sql.= !empty($cnum) ? " AND lower(P.CNUM) = '" . htmlspecialchars(strtolower($cnum)) . "'; " : null;
+$sql.= !empty($notesId) ? " AND lower(P.NOTES_ID) = '" . htmlspecialchars(strtolower($notesId)) . "'  " : null;
+$sql.= !empty($cnum) ? " AND lower(P.CNUM) = '" . htmlspecialchars(strtolower($cnum)) . "'  " : null;
 $sql.= " ORDER BY P.NOTES_ID ";
 
 $rs = sqlsrv_query($GLOBALS['conn'], $sql);

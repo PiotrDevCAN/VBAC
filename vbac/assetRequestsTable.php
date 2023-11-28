@@ -1515,15 +1515,15 @@ class assetRequestsTable extends DbTable{
         foreach ($age as $ageTitle => $agePredicate) {
         $sql = " SELECT AR.*, P.FIRST_NAME, P.LAST_NAME, P.NOTES_ID, P.EMAIL_ADDRESS, P.LBG_EMAIL ";
         $sql.= ", CASE WHEN EM.DESCRIPTION IS NOT NULL THEN EM.DESCRIPTION ELSE P.EMPLOYEE_TYPE END AS EMPLOYEE_TYPE ";
-        $sql.= ", P.CNUM, P.CT_ID, P.FM_CNUM as MGR_CNUM, FM.EMAIL_ADDRESS as MGR_EMAIL, FM.NOTES_ID as MGR_NOTESID, P.PES_STATUS, P.WORK_STREAM,P.CTB_RTB, P.TT_BAU, P.LOB, P.ROLE_ON_THE_ACCOUNT, P.CIO_ALIGNMENT, A.EMAIL_ADDRESS as APPROVER_EMAIL, A.NOTES_ID as APPROVER_NOTESID,A.WORK_STREAM as APPROVER_WORK_STREAM, A.TT_BAU as APPROVER_TT_BAU  ";
-        $sql .= " FROM " . $GLOBALS['Db2Schema']. "." . allTables::$ASSET_REQUESTS  . " as AR ";
-        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema']. "." . allTables::$PERSON . " as P ";
+        $sql.= ", P.CNUM, P.CT_ID, P.FM_CNUM AS MGR_CNUM, FM.EMAIL_ADDRESS AS MGR_EMAIL, FM.NOTES_ID AS MGR_NOTESID, P.PES_STATUS, P.WORK_STREAM,P.CTB_RTB, P.TT_BAU, P.LOB, P.ROLE_ON_THE_ACCOUNT, P.CIO_ALIGNMENT, A.EMAIL_ADDRESS as APPROVER_EMAIL, A.NOTES_ID as APPROVER_NOTESID,A.WORK_STREAM as APPROVER_WORK_STREAM, A.TT_BAU as APPROVER_TT_BAU  ";
+        $sql .= " FROM " . $GLOBALS['Db2Schema']. "." . allTables::$ASSET_REQUESTS  . " AS AR ";
+        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema']. "." . allTables::$PERSON . " AS P ";
         $sql .= " ON P.CNUM = AR.CNUM ";
-        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema']. "." . allTables::$PERSON . " as FM ";
+        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema']. "." . allTables::$PERSON . " AS FM ";
         $sql .= " ON P.FM_CNUM = FM.CNUM ";
-        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema']. "." . allTables::$PERSON . " as A ";
+        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema']. "." . allTables::$PERSON . " AS A ";
         $sql .= " ON lower(A.EMAIL_ADDRESS) = lower(AR.APPROVER_EMAIL) ";
-        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema']. "." . allTables::$EMPLOYEE_TYPE_MAPPING . " as EM ";
+        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema']. "." . allTables::$EMPLOYEE_TYPE_MAPPING . " AS EM ";
         $sql .= " ON upper(P.EMPLOYEE_TYPE) = upper(EM.CODE) ";
         $sql .= " WHERE 1=1 ";
         $sql .= " AND (AR.REQUEST_RETURN = 'No' or AR.REQUEST_RETURN is null ) ";

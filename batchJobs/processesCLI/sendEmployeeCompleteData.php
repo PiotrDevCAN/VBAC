@@ -4,13 +4,9 @@ use PhpOffice\PhpSpreadsheet\Helper\Sample;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use itdq\DbTable;
-use vbac\allTables;
 use itdq\BlueMail;
-use vbac\AgileSquadRecord;
-use vbac\AgileTribeRecord;
-use vbac\personRecord;
+use vbac\employeeCompleteTable;
 use vbac\personTable;
-use vbac\staticDataSkillsetsRecord;
 
 set_time_limit(0);
 ini_set('memory_limit','2048M');
@@ -52,6 +48,8 @@ try {
     $sql = " SELECT ";
     $sql.=" P.*, ";
     
+    $sql.=personTable::EMPLOYEE_TYPE_SELECT.", ";
+
     // $sql.=" F.*, ";
 
     // $sql.=" U.*, ";
@@ -75,28 +73,22 @@ try {
     $sql.=personTable::ORGANISATION_SELECT.", ";
     $sql.=personTable::FLM_SELECT.", ";
     $sql.=personTable::SLM_SELECT.", ";
+
+    // EMPLOYEE_TYPE
     
     $sql.=" SS.*, ";
     
-    $sql.=" CASE WHEN " . personTable::activePersonPredicate($withProvClear, 'P') . " THEN 'active' ELSE 'inactive' END AS INT_STATUS ";
-    $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
-    $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS F "; // lookup firstline
-    $sql.= " ON P.FM_CNUM = F.CNUM ";
-    $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS U "; // lookup upline ( second line )
-    $sql.= " ON F.FM_CNUM = U.CNUM ";
-    $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD .  " AS AS1 ";
-    $sql.= " ON P.SQUAD_NUMBER = AS1.SQUAD_NUMBER ";
-    $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE .  " AS AT ";
-    $sql.= " ON AS1.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
-    $sql.= " LEFT JOIN " .  $GLOBALS['Db2Schema'] . "." . allTables::$STATIC_SKILLSETS . " as SS ";
-    $sql.= " ON P.SKILLSET_ID = SS.SKILLSET_ID ";
+    $sql.= personTable::getStatusSelect($withProvClear, 'P');
+    $sql.= personTable::getTablesForQuery();
     $sql.= " WHERE 1=1 AND trim(P.KYN_EMAIL_ADDRESS) != '' ";
+    // $sql.= $onlyActiveBool ? " AND " . personTable::activePersonPredicate($withProvClear, 'P') : null;
+    // $sql.= $onlyActiveInTimeBool ? " AND (" . personTable::activePersonPredicate($withProvClear, 'P') . " OR P.OFFBOARDED_DATE > '" . $offboardedDate->format('Y-m-d') . "')" : null;
     $sql.= " ORDER BY P.KYN_EMAIL_ADDRESS ";
 
     $resultSet = sqlsrv_query($GLOBALS['conn'], $sql);
 
     if ($resultSet) {
-        DbTable::writeResultSetToXls($resultSet, $spreadsheet);
+        employeeCompleteTable::writeResultSetToXls($resultSet, $spreadsheet);
     }
     
     DbTable::autoFilter($spreadsheet);

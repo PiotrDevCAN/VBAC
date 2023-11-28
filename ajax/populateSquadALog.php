@@ -10,29 +10,12 @@ ob_start();
 // session_start();
 
 $personTable = new personTable(allTables::$PERSON);
-// { "data": "CNUM" , "defaultContent": "" },
-// { "data": "NOTES_ID" ,"defaultContent": "" },
-// { "data": "JRSS"       ,"defaultContent": "<i>unknown</i>"},
-// { "data": "SQUAD_TYPE", "defaultContent": "<i>unknown</i>" },
-// { "data": "TRIBE", "defaultContent": "<i>unknown</i>" },
-// { "data": "SHIFT", "defaultContent": "<i>unknown</i>" },
-// { "data": "SQUAD_LEADER", "defaultContent": "<i>unknown</i>" },
-// { "data": "FLL", "defaultContent": "" },
-// { "data": "SLL", "defaultContent": "" },
-// { "data": "SQUAD_NUMBER", "defaultContent": "" },
 
-$sql = " SELECT distinct P.CNUM, P.NOTES_ID, P.ROLE_ON_THE_ACCOUNT as JRSS, S.SQUAD_TYPE, S.TRIBE_NUMBER as TRIBE, ";
-$sql.= " S.SHIFT, T.ITERATION_MGR,  S.SQUAD_LEADER, F.CNUM as FLL_CNUM, F.NOTES_ID as FLL_NOTES_ID, U.CNUM as SLL_CNUM, U.NOTES_ID as SLL_NOTES_ID, S.SQUAD_NUMBER, S.SQUAD_NAME ";
-$sql.= " ,T.TRIBE_NAME ";
-$sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
-$sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS F "; // lookup firstline
-$sql.= " ON P.FM_CNUM = F.CNUM ";
-$sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS U "; // lookup upline ( second line )
-$sql.= " ON F.FM_CNUM = U.CNUM ";
-$sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS S "; // lookup upline ( second line )
-$sql.= " ON P.SQUAD_NUMBER  = S.SQUAD_NUMBER ";
-$sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " AS T "; // lookup upline ( second line )
-$sql.= " ON S.TRIBE_NUMBER  = T.TRIBE_NUMBER ";
+$sql = " SELECT distinct P.CNUM, P.NOTES_ID, P.ROLE_ON_THE_ACCOUNT as JRSS, AS1.SQUAD_TYPE, AS1.TRIBE_NUMBER as TRIBE, ";
+$sql.= " AS1.SHIFT, AT.ITERATION_MGR,  AS1.SQUAD_LEADER, F.CNUM as FLL_CNUM, F.NOTES_ID as FLL_NOTES_ID, U.CNUM as SLL_CNUM, U.NOTES_ID as SLL_NOTES_ID, AS1.SQUAD_NUMBER, AS1.SQUAD_NAME ";
+$sql.= " ,AT.TRIBE_NAME ";
+
+$sql.= personTable::getTablesForQuery();
 
 $sql.= " WHERE " . personTable::activePersonPredicate(true,"P");
 $sql.= " AND ( P.SQUAD_NUMBER is not null  AND P.SQUAD_NUMBER > 0 ) ";

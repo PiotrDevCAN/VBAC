@@ -15,9 +15,8 @@ namespace itdq;
  * @package itdqLib
  *
  */
-class DbTable
-
-{
+class DbTable {
+    
     use xls;
 
     protected $tableName;
