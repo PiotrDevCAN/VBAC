@@ -83,7 +83,7 @@ if (!is_null($additionalFields)) {
 
     $skillsetRecord = new staticDataSkillsetsRecord();
     $skillsetRecordColumns = $skillsetRecord->getColumns();
-    $skillseTableAliases = array('SS.');
+    $skillsetTableAliases = array('SS.');
 
     foreach ($additionalFields as $field) {
 
@@ -180,7 +180,7 @@ if (!is_null($additionalFields)) {
         }
 
         // validate field against STATIC_SKILLSET table
-        $tableField = str_replace($skillseTableAliases, '', $field);
+        $tableField = str_replace($skillsetTableAliases, '', $field);
 
         if (array_key_exists($tableField, $skillsetRecordColumns)) {
             $additionalSelect .= ", " . htmlspecialchars("SS.".$tableField);

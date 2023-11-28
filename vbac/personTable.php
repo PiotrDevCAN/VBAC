@@ -95,6 +95,12 @@ class personTable extends DbTable
         parent::__construct($table, $pwd, $log);
     }
 
+    public static function getTablesForLiteQuery()
+    {
+        $sql = " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
+        return $sql;
+    }
+
     public static function getTablesForQuery()
     {
         $sql = " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
@@ -318,7 +324,11 @@ class personTable extends DbTable
     {
         $sql = " SELECT COUNT(*) AS COUNTER ";
 
-        $sql .= personTable::getTablesForQuery();
+        if (!is_null($predicate)) {
+            $sql .= personTable::getTablesForQuery();
+        } else {
+            $sql .= personTable::getTablesForLiteQuery();
+        }
         
         $sql .= " WHERE " . $preBoardersPredicate;
         $sql .= !empty($predicate) ? " $predicate " : null;

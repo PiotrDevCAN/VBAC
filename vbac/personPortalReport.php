@@ -14,7 +14,7 @@ class personPortalReport extends DbTable
     protected $agileTribeColumns;
     protected $agileTribeTableAliases;
     protected $skillsetRecordColumns;
-    protected $skillseTableAliases;
+    protected $skillsetTableAliases;
 
     public function prepareColumn($column = '')
     {
@@ -30,7 +30,7 @@ class personPortalReport extends DbTable
         $agileTribeTableAliases = $this->agileTribeTableAliases;
         $agileTribeColumns = $this->agileTribeColumns;
 
-        $skillseTableAliases = $this->skillseTableAliases;
+        $skillsetTableAliases = $this->skillsetTableAliases;
         $skillsetRecordColumns = $this->skillsetRecordColumns;
 
         // validate field against PERSON table
@@ -62,10 +62,10 @@ class personPortalReport extends DbTable
         }
 
         // validate field against STATIC_SKILLSETS table
-        $tableField = str_replace($skillseTableAliases, '', $column);
+        $tableField = str_replace($skillsetTableAliases, '', $column);
 
         if (array_key_exists($tableField, $skillsetRecordColumns)) {
-            return $skillseTableAliases[0] . $tableField;
+            return $skillsetTableAliases[0] . $tableField;
         }
 
         return false;
@@ -99,7 +99,7 @@ class personPortalReport extends DbTable
         // PERSON
         $personRecord = new personRecord();
         $availableColumns = $personRecord->getColumns();
-        $personTableAliases = array('P.');
+        $personTableAliases = array('P.', 'F.', 'U.');
 
         unset($availableColumns['PROCESSING_STATUS']);
         unset($availableColumns['PROCESSING_STATUS_CHANGED']);
@@ -134,10 +134,10 @@ class personPortalReport extends DbTable
         // STATIC_SKILLSETS
         $skillsetRecord = new staticDataSkillsetsRecord();
         $skillsetRecordColumns = $skillsetRecord->getColumns();
-        $skillseTableAliases = array('SS.');
+        $skillsetTableAliases = array('SS.');
 
         $this->skillsetRecordColumns = $skillsetRecordColumns;
-        $this->skillseTableAliases = $skillseTableAliases;
+        $this->skillsetTableAliases = $skillsetTableAliases;
     }
 
     public function buildPreBoardersPredicate($preboadersAction = personTable::PORTAL_PRE_BOARDER_EXCLUDE)
