@@ -2,7 +2,8 @@
 namespace vbac;
 
 use Exception;
-use Cocur\BackgroundProcess\BackgroundProcess;
+// use Cocur\BackgroundProcess\BackgroundProcess;
+use itdq\Process;
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -36,18 +37,25 @@ class batchJob
             // $cmd = 'nohup '.$this->cmd.' > /dev/null 2>&1 & echo $!';
             // $cmd = 'nohup '.$this->cmd.' > nohup.out & > /dev/null';
 
-            $process = new BackgroundProcess($this->cmd);
-            $process->run('nohup.out');
+            // $process = new BackgroundProcess($this->cmd);
+            // // $process->run('nohup.out');
+            // $process->run();
+            
+            // sleep(5);
+            // if ($process->isRunning()) {
+            //     echo 'Process is running ';
+            // } else {
+            //     echo 'Process has been stopped ';
+            // }
 
-            sleep(5);
-            if ($process->isRunning()) {
-                echo 'Process is running ';
-            } else {
-                echo 'Process has been stopped ';
-            }
+            // echo '<br>';
+            // echo ' test 1';
+            // echo '<br>';
+            // echo $process->getPid();
 
-            echo "( ".$this->cmd." )";
 
+            $process = new Process($this->cmd);
+            $pid = $process->getPid();
             echo $this->processName." has succeed to be executed: ".$this->email.PHP_EOL;
             error_log($this->processName." has succeed to be executed: ".$this->email.PHP_EOL);
         } catch (Exception $exception) {
