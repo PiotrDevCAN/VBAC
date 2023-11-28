@@ -116,10 +116,6 @@ class personTable extends DbTable
         $sql.= " ON P.SQUAD_NUMBER = AS1.SQUAD_NUMBER ";
         $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " AS AT ";
         $sql.= " ON AS1.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
-        $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON .  " AS ASP ";
-        $sql.= " ON AS1.SQUAD_LEADER = ASP.KYN_EMAIL_ADDRESS ";
-        $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON .  " AS ATP ";
-        $sql.= " ON AT.TRIBE_LEADER = ATP.KYN_EMAIL_ADDRESS ";
         $sql.= " LEFT JOIN " .  $GLOBALS['Db2Schema'] . "." . allTables::$STATIC_SKILLSETS . " AS SS ";
         $sql.= " ON P.SKILLSET_ID = SS.SKILLSET_ID ";
         return $sql;
