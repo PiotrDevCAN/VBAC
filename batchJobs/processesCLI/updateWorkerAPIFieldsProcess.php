@@ -13,6 +13,8 @@ error_reporting(E_ALL);
 set_time_limit(0);
 ini_set('memory_limit','2048M');
 
+$notFound = 'not found';
+
 $personTable = new personTable(allTables::$PERSON);
 $loader = new Loader();
 $workerAPI = new WorkerAPI();
@@ -56,9 +58,9 @@ foreach ($allEntriesNotFound as $cnum => $email) {
             ) {
                 $errorMessage = 'Employee NOT found';
                 $notFoundArray = array(
-                    'workerID' => 'not found',
-                    'businessTitle' => 'not found',
-                    'matrixManagerEmail' => 'not found'
+                    'workerID' => $notFound,
+                    'businessTitle' => $notFound,
+                    'matrixManagerEmail' => $notFound
                 );
                 // final error 
                 $data = array();
@@ -93,7 +95,7 @@ $timeMeasurements['phase_3'] = (float)($endPhase3-$startPhase3);
 $startPhase4 = microtime(true);
 foreach ($allEntriesNull as $key => $email) {
     $email = trim($email);
-    $personTable->setWorkerAPIDataByEmail($email, 'not found');
+    $personTable->setWorkerAPIDataByEmail($email, $notFound, $notFound, $notFound);
     unset($allEntriesNull[$email]);
 }
 $allEntriesNullCounterLeft = count($allEntriesNull);
