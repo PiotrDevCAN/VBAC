@@ -22,8 +22,9 @@ $start =  microtime(true);
 
 // get number of employees - Worker ID = 'not found' AND KYN_EMAIL_ADDRESS IS NOT NULL
 $startPhase1 = microtime(true);
-$emptyWorkerIdPredicate = " WORKER_ID = 'not found' AND KYN_EMAIL_ADDRESS IS NOT NULL";
-$allEntriesNotFound = $loader->loadIndexed('KYN_EMAIL_ADDRESS','CNUM',allTables::$PERSON, $emptyWorkerIdPredicate);
+// $emptyWorkerIdPredicate = " WORKER_ID = 'not found' AND KYN_EMAIL_ADDRESS IS NOT NULL";
+$emptyWorkerIdPredicate = " KYN_EMAIL_ADDRESS IS NOT NULL";
+$allEntriesNotFound = $loader->loadIndexed('KYN_EMAIL_ADDRESS','CNUM', allTables::$PERSON, $emptyWorkerIdPredicate);
 $allEntriesNotFoundCounter = count($allEntriesNotFound);
 $endPhase1 = microtime(true);
 $timeMeasurements['phase_1'] = (float)($endPhase1-$startPhase1);
@@ -35,47 +36,43 @@ foreach ($allEntriesNotFound as $cnum => $email) {
     $cnum = trim($cnum);
     $email = trim($email);
 
+    // default message
+    $errorMessage = 'Employee FOUND';
+
     // first attempt by SEARCH 
     $data = $workerAPI->typeaheadSearch($email);
     if (
-        is_array($data)
-        && array_key_exists('count', $data)
-        && $data['count'] > 0
+        ! $workerAPI->validateData($data)
     ) {
-        $errorMessage = 'Employee FOUND';
-        $employeeData = $data['results'][0];
-        $workerId = $employeeData['workerID'];
-    } else {
         // second attempt by Email Address
         $data = $workerAPI->getworkerByEmail($email);
         if (
-            is_array($data)
-            && array_key_exists('count', $data)
-            && $data['count'] > 0
+            ! $workerAPI->validateData($data)
         ) {
-            $errorMessage = 'Employee FOUND';
-            $employeeData = $data['results'][0];
-            $workerId = $employeeData['workerID'];
-        } else {
             // third attempt by CNUM
             $data = $workerAPI->getworkerByCNUM($cnum);
             if (
-                is_array($data)
-                && array_key_exists('count', $data)
-                && $data['count'] > 0
+                ! $workerAPI->validateData($data)
             ) {
-                $errorMessage = 'Employee FOUND';
-                $employeeData = $data['results'][0];
-                $workerId = $employeeData['workerID'];
-            } else {
                 $errorMessage = 'Employee NOT found';
-                $workerId = 'not found';
+                $notFoundArray = array(
+                    'workerID' => 'not found',
+                    'businessTitle' => 'not found',
+                    'matrixManagerEmail' => 'not found'
+                );
+                // final error 
+                $data = array();
+                $data['results'][0] = $notFoundArray;
             }
         }
     }
-    
+
+    $employeeData = $workerAPI->getRecord($data);
+    list('workerID' => $workerId, 'businessTitle' => $businessTitle, 'matrixManagerEmail' => $managerEmail) = $employeeData;
+
+
     error_log($errorMessage .': ' . $cnum.' == '.$email);
-    $personTable->setWorkerIdByKynEmail($email, $workerId);
+    $personTable->setWorkerAPIDataByKynEmail($email, $workerId, $businessTitle, $managerEmail);
     if ($workerId != 'not found') {    
         unset($allEntriesNotFound[$cnum]);
     }
@@ -96,7 +93,7 @@ $timeMeasurements['phase_3'] = (float)($endPhase3-$startPhase3);
 $startPhase4 = microtime(true);
 foreach ($allEntriesNull as $key => $email) {
     $email = trim($email);
-    $personTable->setWorkerIdByEmail($email, 'not found');
+    $personTable->setWorkerAPIDataByEmail($email, 'not found');
     unset($allEntriesNull[$email]);
 }
 $allEntriesNullCounterLeft = count($allEntriesNull);

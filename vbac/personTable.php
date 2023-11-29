@@ -44,7 +44,7 @@ class personTable extends DbTable
     const FLM_SELECT = ' F.CNUM AS FLM_CNUM, F.WORKER_ID AS FLM_WORKER_ID, F.KYN_EMAIL_ADDRESS AS FLM_EMAIL_ADDRESS ';
     const SLM_SELECT = ' U.CNUM AS SLM_CNUM, U.WORKER_ID AS SLM_WORKER_ID, U.KYN_EMAIL_ADDRESS AS SLM_EMAIL_ADDRESS ';
     const ORGANISATION_SELECT = ' CASE WHEN AS1.ORGANISATION IS NULL THEN AT.ORGANISATION ELSE AS1.ORGANISATION END AS ORGANISATION, AT.ORGANISATION AS TRIBE_ORGANISATION, AS1.ORGANISATION AS SQUAD_ORGANISATION ';
-    const EMPLOYEE_TYPE_SELECT = ' P.EMPLOYEE_TYPE AS EMPLOYEE_TYPE_CODE, CASE WHEN EM.DESCRIPTION is not null then EM.DESCRIPTION else P.EMPLOYEE_TYPE end as EMPLOYEE_TYPE ';
+    const EMPLOYEE_TYPE_SELECT = ' P.EMPLOYEE_TYPE AS EMPLOYEE_TYPE_CODE, CASE WHEN EM.DESCRIPTION IS NOT NULL THEN EM.DESCRIPTION ELSE P.EMPLOYEE_TYPE END AS EMPLOYEE_TYPE ';
 
     private static $revalStatusChangeEmail = 'Functional Manager,'
         . '<br/>You have been identified from VBAC as being the functional manager of :  &&leaversNotesid&&'
@@ -1012,7 +1012,7 @@ class personTable extends DbTable
         return true;
     }
 
-    public function setWorkerIdByCNUM($cnum = null, $workerId = null)
+    public function setWorkerAPIDataByCNUM($cnum = null, $workerId = null, $businessTitle = null, $managerEmail = null)
     {
         if (!$cnum) {
             throw new \Exception('No CNUM provided in ' . __METHOD__);
@@ -1020,11 +1020,24 @@ class personTable extends DbTable
         if (!$workerId) {
             throw new \Exception('No WORKER_ID provided in ' . __METHOD__);
         }
+        if (!$businessTitle) {
+            throw new \Exception('No BUSINESS_TITLE provided in ' . __METHOD__);
+        }
+        if (!$managerEmail) {
+            throw new \Exception('No MATRIX_MANAGER_EMAIL provided in ' . __METHOD__);
+        }
 
-        $data = array(trim($workerId), trim($cnum));
+        $data = array(
+            trim($workerId),
+            trim($businessTitle),
+            trim($managerEmail),
+            trim($cnum)
+        );
 
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql .= " SET WORKER_ID=? ";
+        $sql .= " SET WORKER_ID=? ,";
+        $sql .= " BUSINESS_TITLE=? ,";
+        $sql .= " MATRIX_MANAGER_EMAIL=? ";
         $sql .= " WHERE CNUM=?  ";
 
         try {
@@ -1043,7 +1056,7 @@ class personTable extends DbTable
         return true;
     }
 
-    public function setWorkerIdByEmail($email = null, $workerId = null)
+    public function setWorkerAPIDataByEmail($email = null, $workerId = null, $businessTitle = null, $managerEmail = null)
     {
         if (!$email) {
             throw new \Exception('No Email Address provided in ' . __METHOD__);
@@ -1051,11 +1064,24 @@ class personTable extends DbTable
         if (!$workerId) {
             throw new \Exception('No WORKER_ID provided in ' . __METHOD__);
         }
+        if (!$businessTitle) {
+            throw new \Exception('No BUSINESS_TITLE provided in ' . __METHOD__);
+        }
+        if (!$managerEmail) {
+            throw new \Exception('No MATRIX_MANAGER_EMAIL provided in ' . __METHOD__);
+        }
 
-        $data = array(trim($workerId), trim($email));
+        $data = array(
+            trim($workerId),
+            trim($businessTitle),
+            trim($managerEmail),
+            trim($email)
+        );
 
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql .= " SET WORKER_ID=? ";
+        $sql .= " SET WORKER_ID=? ,";
+        $sql .= " BUSINESS_TITLE=? ,";
+        $sql .= " MATRIX_MANAGER_EMAIL=? ";
         $sql .= " WHERE EMAIL_ADDRESS=? ";
 
         try {
@@ -1074,7 +1100,7 @@ class personTable extends DbTable
         return true;
     }
 
-    public function setWorkerIdByKynEmail($email = null, $workerId = null)
+    public function setWorkerAPIDataByKynEmail($email = null, $workerId = null, $businessTitle = null, $managerEmail = null)
     {
         if (!$email) {
             throw new \Exception('No Kyn Email Address provided in ' . __METHOD__);
@@ -1082,11 +1108,24 @@ class personTable extends DbTable
         if (!$workerId) {
             throw new \Exception('No WORKER_ID provided in ' . __METHOD__);
         }
+        if (!$businessTitle) {
+            throw new \Exception('No BUSINESS_TITLE provided in ' . __METHOD__);
+        }
+        if (!$managerEmail) {
+            throw new \Exception('No MATRIX_MANAGER_EMAIL provided in ' . __METHOD__);
+        }
 
-        $data = array(trim($workerId), trim($email));
+        $data = array(
+            trim($workerId),
+            trim($businessTitle),
+            trim($managerEmail),
+            trim($email)
+        );
 
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql .= " SET WORKER_ID=? ";
+        $sql .= " SET WORKER_ID=? ,";
+        $sql .= " BUSINESS_TITLE=? ,";
+        $sql .= " MATRIX_MANAGER_EMAIL=? ";
         $sql .= " WHERE KYN_EMAIL_ADDRESS=? ";
 
         try {

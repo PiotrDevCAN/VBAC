@@ -82,6 +82,24 @@ class WorkerAPI {
 		return $result;
 	}
 
+	public function validateData($data)
+	{
+		if (
+			is_array($data)
+			&& array_key_exists('count', $data)
+			&& $data['count'] > 0
+		) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public function getRecord($data)
+	{
+		return $data['results'][0];
+	}
+	
 	// Individual Worker Profile Data
 	// Below endpoints will return extended worker data model
 
