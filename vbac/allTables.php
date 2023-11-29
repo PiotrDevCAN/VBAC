@@ -26,6 +26,7 @@ class allTables
     public static $DLP                = 'DLP';
 
     public static $EMPLOYEE_TYPE_MAPPING  = 'EMPLOYEE_TYPE_MAPPING';
+    public static $BUSINESS_TITLE_MAPPING  = 'BUSINESS_TITLE_MAPPING';
 
     public static $FEB_TRAVEL_REQUEST_TEMPLATES = 'FEB_TRAVEL_REQUEST_TEMPLATES';
 

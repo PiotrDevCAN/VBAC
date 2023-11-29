@@ -97,7 +97,18 @@ class WorkerAPI {
 
 	public function getRecord($data)
 	{
-		return $data['results'][0];
+		$notFound = 'not found';
+		$record = $data['results'][0];
+		if (!array_key_exists('workerID', $record)) {
+			$record['workerID'] = $notFound;
+		}
+		if (!array_key_exists('businessTitle', $record)) {
+			$record['businessTitle'] = $notFound;
+		}
+		if (!array_key_exists('matrixManagerEmail', $record)) {
+			$record['matrixManagerEmail'] = $notFound;
+		}
+		return $record;
 	}
 	
 	// Individual Worker Profile Data

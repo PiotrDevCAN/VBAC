@@ -90,8 +90,7 @@ $timeMeasurements['overallTime'] = (float)($end-$start);
 $to = array($_ENV['devemailid']);
 $cc = array();
 if (strstr($_ENV['environment'], 'vbac')) {
-    // $cc[] = 'Anthony.Stark@kyndryl.com';
-    $cc[] = 'Piotr.Tajanowicz@kyndryl.com';
+    $cc[] = 'Anthony.Stark@kyndryl.com';
 }
 
 $subject = 'PES Recheck Potential Leavers timings';

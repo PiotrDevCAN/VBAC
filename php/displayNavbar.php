@@ -35,7 +35,8 @@ $cbn            		= new NavbarOption('Initiate CBN','batchJobs/sendCbnEmail.php'
 $recheck       			= new NavbarOption('Batch ReCheck','batchJobs/recheckPotentialLeavers.php','accessCdi');
 $emailDlp       		= new NavbarOption('Email DLP','batchJobs/emailWorkflowTracker.php','accessCdi');
 $employeeData			= new NavbarOption('Email Employee Data','batchJobs/sendEmployeeData.php','accessCdi');
-$employeeCompleteData	= new NavbarOption('Email Employee Data','batchJobs/sendEmployeeCompleteData.php','accessCdi');
+$employeeCompleteData	= new NavbarOption('Email Employee Complete Data','batchJobs/sendEmployeeCompleteData.php','accessCdi');
+$headcountReport		= new NavbarOption('Email Headcount Report','batchJobs/sendHeadcountReport.php','accessCdi');
 $link           		= new NavbarOption('Link Reg to PreB','pi_linkIbmerToPreboarder.php','accessCdi');
 $workLocation   		= new NavbarOption('Work Location','pi_manageLocation.php','accessCdi');
 $skillSet       		= new NavbarOption('Skillset','pi_manageSkillset.php','accessCdi');
@@ -51,6 +52,7 @@ $cdiAdmin->addOption($recheck);
 $cdiAdmin->addOption($emailDlp);
 $cdiAdmin->addOption($employeeData);
 $cdiAdmin->addOption($employeeCompleteData);
+$cdiAdmin->addOption($headcountReport);
 $cdiAdmin->addOption( new NavbarDivider('accessCdi'));
 $cdiAdmin->addOption($link);
 $cdiAdmin->addOption($workLocation);

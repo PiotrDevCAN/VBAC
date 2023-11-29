@@ -75,7 +75,7 @@ foreach ($allEntriesNotFound as $cnum => $email) {
 
     error_log($errorMessage .': ' . $cnum.' == '.$email);
     $personTable->setWorkerAPIDataByKynEmail($email, $workerId, $businessTitle, $managerEmail);
-    if ($workerId != 'not found') {    
+    if ($workerId != $notFound) {    
         unset($allEntriesNotFound[$cnum]);
     }
 }
@@ -120,8 +120,7 @@ $timeMeasurements['overallTime'] = (float)($end-$start);
 $to = array($_ENV['devemailid']);
 $cc = array();
 if (strstr($_ENV['environment'], 'vbac')) {
-    // $cc[] = 'Anthony.Stark@kyndryl.com';
-    $cc[] = 'Piotr.Tajanowicz@kyndryl.com';
+    $cc[] = 'Anthony.Stark@kyndryl.com';
 }
 
 $subject = 'Update Worker ID field timings';

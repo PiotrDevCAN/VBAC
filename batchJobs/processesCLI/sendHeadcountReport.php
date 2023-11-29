@@ -21,7 +21,7 @@ $_ENV['email'] = 'on';
 
 $noreplemailid = $_ENV['noreplykyndrylemailid'];
 $emailAddress = array(
-    // 'philip.bibby@kyndryl.com',
+    'philip.bibby@kyndryl.com',
     $_ENV['automationemailid']
 );
 
@@ -64,7 +64,13 @@ try {
     $sql.=str_replace($search, $replace, $str2);
 
     $sql.=" P.BUSINESS_TITLE AS Job_Title,";
-    $sql.=" 'tbc' AS Band,";
+    
+    // $sql.=" 'tbc' AS Band,";
+    $str3 = personTable::BAND_SELECT.",";
+    $search = array('AS BAND');
+    $replace = array('AS band');
+    $sql.=str_replace($search, $replace, $str3);
+
     $sql.=" P.COUNTRY AS Country,";
     $sql.=" P.LBG_LOCATION AS LBG_Approved_Location,";
     $sql.=" SS.SKILLSET AS Skillset,";
@@ -136,7 +142,7 @@ try {
         );
     }
     
-    $result = BlueMail::send_mail($emailAddress, 'Draft version of Headcount Report : ' . $fileNameSuffix, 'Please find attached Headcount Report XLS',$noreplemailid,array(),array(),true,$attachments);    
+    $result = BlueMail::send_mail($emailAddress, 'Pre-release version of Headcount Report - No BAND info enclosed yet: ' . $fileNameSuffix, 'Please find attached Headcount Report XLS',$noreplemailid,array(),array(),true,$attachments);    
     var_dump($result);
 
 } catch (Exception $e) {
