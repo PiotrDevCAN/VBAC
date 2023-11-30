@@ -2,7 +2,7 @@
 
 use vbac\batchJob;
 
-$processName = 'Update Worker ID field Script';
+$processName = 'Update Worker API fields Script';
 $processFile = 'updateWorkerAPIFieldsProcess.php';
 
 $job = new batchJob($processName, $processFile);

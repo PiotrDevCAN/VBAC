@@ -114,7 +114,7 @@ class personTable extends DbTable
         $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$EMPLOYEE_TYPE_MAPPING .  " AS EM ";
         $sql.= " ON upper(P.EMPLOYEE_TYPE) = upper(EM.CODE) ";
         $sql.= " LEFT JOIN " .  $GLOBALS['Db2Schema'] . "." . allTables::$BUSINESS_TITLE_MAPPING . " AS BM ";
-        $sql.= " ON upper(P.BUSINESS_TITLE) = upper(BM.BUSINESS_TITLE) ";
+        $sql.= " ON P.BUSINESS_TITLE LIKE concat(BM.BUSINESS_TITLE, ',%')";
         $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS1 ";
         $sql.= " ON P.SQUAD_NUMBER = AS1.SQUAD_NUMBER ";
         $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " AS AT ";
@@ -1143,6 +1143,40 @@ class personTable extends DbTable
         }
 
         AuditTable::audit("WORKER_ID for kyndryl email address: $email set to : $workerId by " . $_SESSION['ssoEmail'], AuditTable::RECORD_TYPE_AUDIT);
+
+        return true;
+    }
+
+    public function setcFIRSTDataByEmail($email = null, $cfirstId = null)
+    {
+        if (!$email) {
+            throw new \Exception('No Email Address provided in ' . __METHOD__);
+        }
+        if (!$cfirstId) {
+            throw new \Exception('No cFIRST_ID provided in ' . __METHOD__);
+        }
+
+        $data = array(
+            trim($cfirstId),
+            trim($email)
+        );
+
+        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
+        $sql .= " SET CFIRST_ID=? ,";
+        $sql .= " WHERE EMAIL_ADDRESS=? ";
+
+        try {
+            $result = sqlsrv_query($GLOBALS['conn'], $sql, $data);
+        } catch (\Exception $e) {
+            var_dump($e);
+        }
+
+        if (!$result) {
+            DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+
+        AuditTable::audit("CFIRST_ID for email address: $email set to : $cfirstId by " . $_SESSION['ssoEmail'], AuditTable::RECORD_TYPE_AUDIT);
 
         return true;
     }

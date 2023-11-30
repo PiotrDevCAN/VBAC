@@ -125,9 +125,10 @@ $to = array($_ENV['devemailid']);
 $cc = array();
 if (strstr($_ENV['environment'], 'vbac')) {
     $cc[] = 'Anthony.Stark@kyndryl.com';
+    $cc[] = 'philip.bibby@kyndryl.com';
 }
 
-$subject = 'Update Worker ID field timings';
+$subject = 'Update Worker API fields timings';
 
 $message = 'Updated vBAC Environment: ' . $GLOBALS['Db2Schema'];
 
