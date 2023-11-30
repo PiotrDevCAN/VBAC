@@ -142,7 +142,7 @@ try {
         );
     }
     
-    $result = BlueMail::send_mail($emailAddress, 'Pre-release version of Headcount Report - No BAND info enclosed yet: ' . $fileNameSuffix, 'Please find attached Headcount Report XLS',$noreplemailid,array(),array(),true,$attachments);    
+    $result = BlueMail::send_mail($emailAddress, 'Pre-release version of Headcount Report - NOTE: Mapped BAND info is eventually ENCLOSED: ' . $fileNameSuffix, 'Please find attached Headcount Report XLS',$noreplemailid,array(),array(),true,$attachments);    
     var_dump($result);
 
 } catch (Exception $e) {

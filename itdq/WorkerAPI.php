@@ -10,12 +10,15 @@ include_once "WorkerAPI/class/include.php";
  */
 class WorkerAPI {
 	
+	private $auth = null;
 	private $token = null;
 	private $hostname = null;
 
 	public function __construct()
 	{
 		$auth = new Auth();
+		$this->auth = $auth;
+
 		$auth->ensureAuthorized();
 
 		$this->hostname = trim($_ENV['worker_api_host']);
@@ -41,6 +44,10 @@ class WorkerAPI {
 
 	private function processURL($url, $type = 'GET')
 	{
+		// make sure script is logged in
+		$authorized = $this->auth->ensureAuthorized();
+		error_log('is authorized '.$authorized);
+
 		$url = $this->hostname . $url;
 		$ch = $this->createCurl($type);
 		// echo "<BR>Processing";

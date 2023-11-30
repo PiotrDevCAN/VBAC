@@ -113,6 +113,8 @@ class personTable extends DbTable
         $sql.= " ON P.CNUM = PT.CNUM ";
         $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$EMPLOYEE_TYPE_MAPPING .  " AS EM ";
         $sql.= " ON upper(P.EMPLOYEE_TYPE) = upper(EM.CODE) ";
+        $sql.= " LEFT JOIN " .  $GLOBALS['Db2Schema'] . "." . allTables::$BUSINESS_TITLE_MAPPING . " AS BM ";
+        $sql.= " ON upper(P.BUSINESS_TITLE) = upper(BM.BUSINESS_TITLE) ";
         $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS1 ";
         $sql.= " ON P.SQUAD_NUMBER = AS1.SQUAD_NUMBER ";
         $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " AS AT ";

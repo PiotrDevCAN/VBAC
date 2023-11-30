@@ -70,7 +70,11 @@ foreach ($allEntriesNotFound as $cnum => $email) {
     }
 
     $employeeData = $workerAPI->getRecord($data);
-    list('workerID' => $workerId, 'businessTitle' => $businessTitle, 'matrixManagerEmail' => $managerEmail) = $employeeData;
+    list(
+        'workerID' => $workerId, 
+        'businessTitle' => $businessTitle, 
+        'matrixManagerEmail' => $managerEmail
+    ) = $employeeData;
 
 
     error_log($errorMessage .': ' . $cnum.' == '.$email);
