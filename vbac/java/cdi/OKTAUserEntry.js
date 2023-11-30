@@ -4,8 +4,14 @@
 
 class OKTAUserEntry {
 
-    table;
+    tables;
     responseObj;
+
+    static groupPrefix = 'the vBAC tool - production-';
+    static vbacPrefix = 'vbac_';
+    static ventusPrefix = 'ventus_';
+
+    static tableNameSuffix = 'MembersTable';
 
     constructor() {
         this.prepareSelect2();
@@ -14,6 +20,19 @@ class OKTAUserEntry {
         this.listenForDeleteRecord();
         this.listenForSaveOktaUser();
         this.listenForResetForm();
+    }
+
+    getTableName(groupName) {
+        var result = groupName
+            .replace(OKTAUserEntry.groupPrefix, '')
+            .replace(OKTAUserEntry.vbacPrefix, '')
+            .replace(OKTAUserEntry.ventusPrefix, '')
+        if (result.length == 3) {
+            result = result.toUpperCase();
+        } else {
+            result = result.toLowerCase();
+        }
+        return result + OKTAUserEntry.tableNameSuffix;
     }
 
     prepareSelect2() {
@@ -58,7 +77,9 @@ class OKTAUserEntry {
     }
 
     listenForDeleteRecord() {
+        var $this = this;
         $(document).on("click", ".deleteRecord", function () {
+            var groupName = $(this).data('groupname');
             var groupId = $(this).data('groupid');
             var userId = $(this).data('userid');
             $.ajax({
@@ -77,17 +98,18 @@ class OKTAUserEntry {
                             messages = 'Record deleted';
                         }
                         $('#messageModalBody').html(messages);
-                        $('#messageModal').modal('show');
-                        $('.spinning').removeClass('spinning').attr('disabled', false);
+
                     } catch (e) {
                         $('#messageModalBody').html(
                             "<p>Save has encountered a problem</p><p>" +
                             e +
                             "</p>"
                         );
-                        $('#messageModal').modal('show');
-                        $('.spinning').removeClass('spinning').attr('disabled', false);
                     }
+                    $('#messageModal').modal('show');
+                    $('.spinning').removeClass('spinning').attr('disabled', false);
+                    var tableNameId = $this.getTableName(groupName);
+                    $this.tables[tableNameId].ajax.reload();
                 }
             });
         });
@@ -97,11 +119,13 @@ class OKTAUserEntry {
         var $this = this;
         $(document).on('click', '#saveOktaEntry', function (e) {
             e.preventDefault();
-            $('#saveOktaEntry').addClass('spinning').attr('disabled', true);
+            // $('#saveOktaEntry').addClass('spinning').attr('disabled', true);
             var disabledFields = $(':disabled:not(:submit)');
             $(disabledFields).removeAttr('disabled');
             var formData = $('#oktaEntryForm').serialize();
             $(disabledFields).attr('disabled', true);
+            var selectedGroup = $('#GROUP').val();
+            var tableNameId = $this.getTableName(selectedGroup);
             $.ajax({
                 url: "ajax/saveOktaUser.php",
                 type: 'POST',
@@ -115,19 +139,18 @@ class OKTAUserEntry {
                             messages = 'Save successful';
                         }
                         $('#messageModalBody').html(messages);
-                        $('#messageModal').modal('show');
-                        $('.spinning').removeClass('spinning').attr('disabled', false);
-                        $('#GROUP').val('').trigger('change');
-                        $('#EMAIL_ADDRESS').val('');                        
                     } catch (e) {
                         $('#messageModalBody').html(
                             "<p>Save has encountered a problem</p><p>" +
                             e +
                             "</p>"
                         );
-                        $('#messageModal').modal('show');
-                        $('.spinning').removeClass('spinning').attr('disabled', false);
                     }
+                    $('#messageModal').modal('show');
+                    $('.spinning').removeClass('spinning').attr('disabled', false);
+                    $('#GROUP').val('').trigger('change');
+                    $('#EMAIL_ADDRESS').val('');
+                    $this.tables[tableNameId].ajax.reload();
                 }
             });
             // e.preventDefault();

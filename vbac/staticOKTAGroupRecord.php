@@ -18,8 +18,12 @@ class staticOKTAGroupRecord extends DbRecord
 	function displayForm($mode){
         $allButtons = array();
 		$allGroups = $GLOBALS['site']['allGroups'];
-		$groupPrefix = 'the vBAC tool - production-';
-        ?>
+        $replace = array(
+			'the vBAC tool - production-',
+			'vbac_',
+			'ventus_'
+		);
+		?>
         <form id='oktaEntryForm' class="form-horizontal"  method='post'>
         <div class="form-group ">
 			<div class='required'>
@@ -32,9 +36,15 @@ class staticOKTAGroupRecord extends DbRecord
 					foreach($allGroups as $group) {
 						$selected = null;
 						$value = $group;
-						$group = str_replace($groupPrefix, '', $group);
+						$group = str_replace($replace, '', $group);
+						$groupName = str_replace('_', ' ', $group);
+						if (strlen($groupName) == 3) {
+							$groupName = strtoupper($groupName);
+						} else {
+							$groupName = ucwords($groupName);
+						}
 					?>
-						<option value="<?=$value?>" <?=$selected?>><?=$group?></option>
+						<option value="<?=$value?>" <?=$selected?>><?=$groupName?></option>
 					<?php
 					}
 				?>
