@@ -44,7 +44,7 @@ $sql.=" AT.TRIBE_LEADER, ";
 // $sql.=" AT.ORGANISATION AS TRIBE_ORGANISATION, ";
 $sql.=" AT.ITERATION_MGR, ";
 
-$sql.=personTable::ORGANISATION_SELECT.", ";
+$sql.=personTable::ORGANISATION_SELECT_ALL.", ";
 $sql.=personTable::FLM_SELECT.", ";
 $sql.=personTable::SLM_SELECT.", ";
 

@@ -46,7 +46,7 @@ if (isset($argv[1])) {
             $filePrefix = 'personExtractFull';
 
             $excludePredicate = personTable::excludeBoardedPreboardersPredicate('P');
-            $sql.= " SELECT " . personTable::DEFAULT_SELECT_FIELDS .', ' . personTable::ORGANISATION_SELECT;
+            $sql.= " SELECT " . personTable::DEFAULT_SELECT_FIELDS .', ' . personTable::ORGANISATION_SELECT_ALL;
             $sql.= personTable::getTablesForQuery();
             $sql.= " WHERE 1=1 AND " . $excludePredicate;
         
@@ -56,7 +56,7 @@ if (isset($argv[1])) {
             $filePrefix = 'personExtractActive';
             
             $activePredicate = personTable::activePersonPredicate(true, 'P');
-            $sql.= " SELECT " . personTable::DEFAULT_SELECT_FIELDS .', ' . personTable::ORGANISATION_SELECT;
+            $sql.= " SELECT " . personTable::DEFAULT_SELECT_FIELDS .', ' . personTable::ORGANISATION_SELECT_ALL;
             $sql.= personTable::getTablesForQuery();
             $sql.= " WHERE 1=1 AND " . $activePredicate;
         
@@ -76,7 +76,7 @@ if (isset($argv[1])) {
             $joins.= " LEFT JOIN " .  $GLOBALS['Db2Schema'] . "." . allTables::$STATIC_SKILLSETS . " AS SS ";
             $joins.= " ON P.SKILLSET_ID = SS.SKILLSET_ID ";
             
-            $sql.= " SELECT " . personTable::DEFAULT_SELECT_FIELDS .', ' . personTable::ORGANISATION_SELECT;
+            $sql.= " SELECT " . personTable::DEFAULT_SELECT_FIELDS .', ' . personTable::ORGANISATION_SELECT_ALL;
             $sql.= ", O.* ";
             $sql.= personTable::odcStaffSql($joins);
 
@@ -88,7 +88,7 @@ if (isset($argv[1])) {
             $activePredicate = personTable::activePersonPredicate(true, 'P');
             $excludePredicate = personTable::excludeBoardedPreboardersPredicate('P');
 
-            $sql.= " SELECT " . personTable::DEFAULT_SELECT_FIELDS .', ' . personTable::ORGANISATION_SELECT;
+            $sql.= " SELECT " . personTable::DEFAULT_SELECT_FIELDS .', ' . personTable::ORGANISATION_SELECT_ALL;
             $sql.= personTable::getTablesForQuery();
             $sql.= " WHERE P.CNUM NOT IN ( ";
             $sql.= "  SELECT CNUM " ;
@@ -107,7 +107,7 @@ if (isset($argv[1])) {
             $description = 'BAU report from Person Table Extract generated from vBAC';
 
             $activePredicate = personTable::activePersonPredicate(true, 'P');
-            $sql.= " SELECT " . personTable::DEFAULT_SELECT_FIELDS .', ' . personTable::ORGANISATION_SELECT;
+            $sql.= " SELECT " . personTable::DEFAULT_SELECT_FIELDS .', ' . personTable::ORGANISATION_SELECT_ALL;
             $sql.= personTable::getTablesForQuery();
             $sql.= " WHERE 1=1 AND " . $activePredicate;
             $sql.= " AND P.LOB     in ('GTS','Cloud','Security') ";

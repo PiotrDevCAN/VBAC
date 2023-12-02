@@ -336,7 +336,7 @@ class FormClass
      * @param string $maxLength
      *            length expected on the Input field. But you need to code a javascript form checker to impose it. NOTE: The last digit can be used to determin how many rows on the screen the textarea will occupy. 503 would be a 500 byte field over 3 lines.
      */
-function formTextArea($label, $fieldName, $state = null, $textAreaclass = null, $help = null, $maxlength = 15000, $dataPlacement = 'top', $textAreaDivClass = null, $rows = 2, $placeholder = null)
+    function formTextArea($label, $fieldName, $state = null, $textAreaclass = null, $help = null, $maxlength = 15000, $dataPlacement = 'top', $textAreaDivClass = null, $rows = 2, $placeholder = null)
     {
         if (strtoupper($state) == "READONLY") {
             ?>
@@ -430,7 +430,7 @@ function formTextArea($label, $fieldName, $state = null, $textAreaclass = null, 
     }
 
 
-    function formFileInput($title, $fieldName, $state = null, $multiple = 'true', $uploadPath)
+    function formFileInput($title, $fieldName, $state = null, $multiple = 'true', $uploadPath = null)
     {
         $dir = $uploadPath;
         if ($state == "READONLY") {
@@ -860,7 +860,7 @@ function formTextArea($label, $fieldName, $state = null, $textAreaclass = null, 
 
 
 
-        function formSelect($wayToHandleArray=null, $arrayOfSelectableValues, $label, $fieldName, $readonly=false, $class = null, $onChange = null,   $placeHolder = 'Select...', $arrayOfDisabledValues=array())
+        function formSelect($wayToHandleArray=null, $arrayOfSelectableValues=null, $label=null, $fieldName=null, $readonly=false, $class = null, $onChange = null,   $placeHolder = 'Select...', $arrayOfDisabledValues=array())
         {
             $allowMultipleSelections = is_array($this->$fieldName);
             $wayToHandleArray = empty($wayToHandleArray) ? self::SELECT_DISPLAY_VALUE_RETURN_KEY : $wayToHandleArray;

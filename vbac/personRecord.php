@@ -142,8 +142,10 @@ class personRecord extends DbRecord
     const SECURITY_EDUCATION_COMPLETED = 'Yes';
     const SECURITY_EDUCATION_NOT_COMPLETED = 'No';
     const PMO_STATUS_TBA       = 'To be assessed';
-    const PMO_STATUS_CONFIRMED = 'Confirmed';
-    const PMO_STATUS_AWARE     = 'Aware';
+    // const PMO_STATUS_CONFIRMED = 'Confirmed';
+    // const PMO_STATUS_AWARE     = 'Aware';
+    const PMO_STATUS_CONFIRMED = 'Off Headcount';
+    const PMO_STATUS_AWARE     = 'On Headcount';
     const ROLE_ON_THE_ACCOUNT_WIPRO     = 'Wipro';
     const ROLE_ON_THE_ACCOUNT_COGNIZANT = 'Cognizant';
     const ROLE_ON_THE_ACCOUNT_DENSIFY   = 'Densify';
@@ -158,6 +160,9 @@ class personRecord extends DbRecord
     const CIO_ALIGNMENT_TYPE_CTB = 'CTB';
     const CIO_ALIGNMENT_TYPE_RTB = 'RTB';
     const CIO_ALIGNMENT_TYPE_OTHER = 'Other';
+
+    const NO_LONGER_AVAILABLE = 'No longer available';
+
 //    public static $employeeTypeMapping = array('A'=>'Regular','B'=>'Contractor','C'=>'Contractor','I'=>'Regular','J'=>'Pre-Hire','L'=>'Regular','O'=>'Regular','P'=>'Regular','V'=>'Contractor','X'=>'Regular');
     const AURORA_TRAINING_URL = 'https://kyndryl.percipio.com/track/26c2c517-29c2-4671-bfc1-024271d8fe6b';
     public static $cio = array('CTB Leadership','CTB Central BU','CTB PMO','Commercial & Business Banking','Insurance & Enterprise Programmes','Cyber & TRP','Enterprise Transformation','Retail & Community Banking Transformation','Cross Platform','Product & Engineering');

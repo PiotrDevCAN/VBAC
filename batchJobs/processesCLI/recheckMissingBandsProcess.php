@@ -59,10 +59,10 @@ $timeMeasurements['overallTime'] = (float)($end-$start);
 
 $to = array($_ENV['devemailid']);
 $cc = array();
-// if (strstr($_ENV['environment'], 'vbac')) {
-    // $cc[] = 'Anthony.Stark@kyndryl.com';
+if (strstr($_ENV['environment'], 'vbac')) {
+    $cc[] = 'Anthony.Stark@kyndryl.com';
     $cc[] = 'philip.bibby@kyndryl.com';
-// }
+}
 
 $subject = 'Recheck missing Bands timings';
 

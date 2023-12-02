@@ -20,7 +20,7 @@ class Redis {
 		$this->port = $_ENV['redis_port'];
 		$this->password = $_ENV['redis_password'];
 
-		define('REDIS_EXPIRE', 120);
+		define('REDIS_EXPIRE', 1200);
 		
 		$redis = new \Redis();
 		//Connecting to Redis

@@ -4,7 +4,6 @@ use itdq\Loader;
 use itdq\WorkerAPI;
 use itdq\AuditTable;
 use itdq\BlueMail;
-use itdq\slack;
 use vbac\personRecord;
 use vbac\personTable;
 use vbac\allTables;
@@ -13,68 +12,69 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// $slack = new slack();
-
 AuditTable::audit("Revalidation invoked.",AuditTable::RECORD_TYPE_REVALIDATION);
-// $response = $slack->slackApiPostMessage(slack::CHANNEL_ID_SM_CDI_AUDIT,$_ENV['environment'] . ":Revalidation invoked.");
 
 set_time_limit(0);
 ini_set('memory_limit','2048M');
 
 $personTable = new personTable(allTables::$PERSON);
-
 $loader = new Loader();
+
 $timeMeasurements = array();
 $start =  microtime(true);
 
 // sets preboarder status
 $startPhase0 = microtime(true);
-$personTable->flagPreboarders();
+$personTable->flagPreboarders();    // checked!!!
 $endPhase0 = microtime(true);
 $timeMeasurements['phase_0'] = (float)($endPhase0-$startPhase0);
 
 // get number of employees with offboard status
 $startPhase1 = microtime(true);
-$offboardersPredicate = " ( REVALIDATION_STATUS like '" . personRecord::REVALIDATED_OFFBOARD . "%') ";
-$allOffboarders = $loader->load('CNUM',allTables::$PERSON, $offboardersPredicate ); //
+$offboardersPredicate = " ( REVALIDATION_STATUS LIKE '" . personRecord::REVALIDATED_OFFBOARD . "%') ";
+$allOffboarders = $loader->load('CNUM',allTables::$PERSON, $offboardersPredicate );
 $allOffboardersCounter = count($allOffboarders);
-AuditTable::audit("Revalidation will ignore " . $allOffboardersCounter . " offboarding/ed.",AuditTable::RECORD_TYPE_REVALIDATION);
-// $response = $slack->slackApiPostMessage(slack::CHANNEL_ID_SM_CDI_AUDIT,$_ENV['environment'] . ":Revalidation will ignore " .$allOffboardersCounter . " offboarding/ed.");
 $allOffboarders = null; // free up some storage
 $endPhase1 = microtime(true);
 $timeMeasurements['phase_1'] = (float)($endPhase1-$startPhase1);
+
+// ignore REVALIDATION_STATUS = OFFBOARDING/ED
+AuditTable::audit("Revalidation will ignore " . $allOffboardersCounter . " offboarding/ed.", AuditTable::RECORD_TYPE_REVALIDATION);
 
 // get number of employees with preboarder status
 $startPhase2 = microtime(true);
 $preBoardersPredicate = " ( trim(REVALIDATION_STATUS) = '" . personRecord::REVALIDATED_PREBOARDER . "') ";
 $allPreboarders = $loader->load('CNUM',allTables::$PERSON, $preBoardersPredicate );
 $allPreboardersCounter = count($allPreboarders);
-AuditTable::audit("Revalidation will ignore " . $allPreboardersCounter . " pre-boarders.",AuditTable::RECORD_TYPE_REVALIDATION);
-// $response = $slack->slackApiPostMessage(slack::CHANNEL_ID_SM_CDI_AUDIT,$_ENV['environment'] . ":Revalidation will ignore " . $allPreboardersCounter . " pre-boarders.");
 $allPreboarders = null; // free up some storage
 $endPhase2 = microtime(true);
 $timeMeasurements['phase_2'] = (float)($endPhase2-$startPhase2);
 
+// ignore REVALIDATION_STATUS = PREBOARDER
+AuditTable::audit("Revalidation will ignore " . $allPreboardersCounter . " pre-boarders.", AuditTable::RECORD_TYPE_REVALIDATION);
+
 // get number of employees with vendor status
 $startPhase3 = microtime(true);
 $vendorsPredicate = " ( trim(REVALIDATION_STATUS) = '" . personRecord::REVALIDATED_VENDOR . "') ";
-$allVendors = $loader->load('CNUM',allTables::$PERSON, $vendorsPredicate ); //
+$allVendors = $loader->load('CNUM',allTables::$PERSON, $vendorsPredicate );
 $allVendorsCounter = count($allVendors);
-AuditTable::audit("Revalidation will ignore " . $allVendorsCounter . " vendors.",AuditTable::RECORD_TYPE_REVALIDATION);
-// $response = $slack->slackApiPostMessage(slack::CHANNEL_ID_SM_CDI_AUDIT,$_ENV['environment'] . ":Revalidation will ignore " . $allVendorsCounter . " vendors.");
 $allVendors = null; // free up some storage
 $endPhase3 = microtime(true);
 $timeMeasurements['phase_3'] = (float)($endPhase3-$startPhase3);
 
+// ignore REVALIDATION_STATUS = VENDORS
+AuditTable::audit("Revalidation will ignore " . $allVendorsCounter . " vendors.", AuditTable::RECORD_TYPE_REVALIDATION);
+
 // get number of employees with empty OR null OR found status
 $startPhase4 = microtime(true);
-$activeIbmErsPredicate = " ( trim(REVALIDATION_STATUS) = '' or REVALIDATION_STATUS is null or trim(REVALIDATION_STATUS) = '" . personRecord::REVALIDATED_FOUND . "') ";
+$activeIbmErsPredicate = " ( trim(REVALIDATION_STATUS) = '' OR REVALIDATION_STATUS IS NULL OR trim(REVALIDATION_STATUS) = '" . personRecord::REVALIDATED_FOUND . "') ";
 $allNonLeavers = $loader->load('CNUM',allTables::$PERSON, $activeIbmErsPredicate );
 $allNonLeaversCounter = count($allNonLeavers);
-AuditTable::audit("Revalidation will check " . $allNonLeaversCounter . " people currently flagged as found.",AuditTable::RECORD_TYPE_REVALIDATION);
-// $response = $slack->slackApiPostMessage(slack::CHANNEL_ID_SM_CDI_AUDIT,$_ENV['environment'] . ":Revalidation will check " . $allNonLeaversCounter . " people currently flagged as found.");
 $endPhase4 = microtime(true);
 $timeMeasurements['phase_4'] = (float)($endPhase4-$startPhase4);
+
+// iterate throught these employees' records
+AuditTable::audit("Revalidation will check " . $allNonLeaversCounter . " people currently flagged as found.", AuditTable::RECORD_TYPE_REVALIDATION);
 
 $startPhase5 = microtime(true);
 $workerAPI = new WorkerAPI();
@@ -86,7 +86,7 @@ foreach ($allNonLeavers as $key => $CNUM) {
         && $data['count'] > 0
     ) {
         $employeeData = $data['results'][0];
-        $notesid = 'No longer available';
+        $notesid = personRecord::NO_LONGER_AVAILABLE;
         $mail = $employeeData['email'];
         $serial = $employeeData['cnum'];
         $personTable->confirmRevalidation($notesid,$mail,$serial);
@@ -98,7 +98,6 @@ $timeMeasurements['phase_5'] = (float)($endPhase5-$startPhase5);
 
 // At this stage, anyone still in the $allNonLeavers array - has NOT been found in BP and so is now POTENTIALLY a leaver and needs to be flagged as such.
 AuditTable::audit("Revalidation found " . count($allNonLeavers) . " potential leavers.",AuditTable::RECORD_TYPE_REVALIDATION);
-// $response = $slack->slackApiPostMessage(slack::CHANNEL_ID_SM_CDI_AUDIT,$_ENV['environment'] . ":Revalidation found " . count($allNonLeavers) . " potential leavers.");
 
 // sets potentialLeaver status
 $startPhase6 = microtime(true);
@@ -121,7 +120,6 @@ $timeMeasurements['phase_6'] = (float)($endPhase6-$startPhase6);
 // $timeMeasurements['phase_7'] = (float)($endPhase7-$startPhase7);
 
 AuditTable::audit("Revalidation completed.",AuditTable::RECORD_TYPE_REVALIDATION);
-// $response = $slack->slackApiPostMessage(slack::CHANNEL_ID_SM_CDI_AUDIT,$_ENV['environment'] . ":Revalidation completed.");
 
 $end = microtime(true);
 $timeMeasurements['overallTime'] = (float)($end-$start);
@@ -130,6 +128,7 @@ $to = array($_ENV['devemailid']);
 $cc = array();
 if (strstr($_ENV['environment'], 'vbac')) {
     $cc[] = 'Anthony.Stark@kyndryl.com';
+    $cc[] = 'philip.bibby@kyndryl.com';
 }
 
 $subject = 'PES Revalidation timings';

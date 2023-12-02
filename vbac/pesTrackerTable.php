@@ -500,9 +500,17 @@ class pesTrackerTable extends DbTable{
 
     function prepareResetForRecheck($data){
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql.= " SET CONSENT = null, RIGHT_TO_WORK = null, PROOF_OF_ID = null, PROOF_OF_RESIDENCY = null, CREDIT_CHECK = null, FINANCIAL_SANCTIONS = null ";
-        $sql.= " , CRIMINAL_RECORDS_CHECK = null, PROOF_OF_ACTIVITY = null, PROCESSING_STATUS = 'PES' ";
-        $sql.= " , PROCESSING_STATUS_CHANGED = CURRENT_TIMESTAMP, DATE_LAST_CHASED = null ";
+        $sql.= " SET CONSENT = null, ";
+        $sql.= " RIGHT_TO_WORK = null, ";
+        $sql.= " PROOF_OF_ID = null, ";
+        $sql.= " PROOF_OF_RESIDENCY = null, "; 
+        $sql.= " CREDIT_CHECK = null, ";
+        $sql.= " FINANCIAL_SANCTIONS = null, ";
+        $sql.= " CRIMINAL_RECORDS_CHECK = null, "; 
+        $sql.= " PROOF_OF_ACTIVITY = null, ";
+        $sql.= " PROCESSING_STATUS = 'PES', ";
+        $sql.= " PROCESSING_STATUS_CHANGED = CURRENT_TIMESTAMP, "; 
+        $sql.= " DATE_LAST_CHASED = null ";
         $sql.= " WHERE CNUM = ? ";
 
         $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);

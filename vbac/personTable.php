@@ -43,8 +43,10 @@ class personTable extends DbTable
     const FULLNAME_SELECT = " CONCAT(TRIM(P.FIRST_NAME), ' ', TRIM(P.LAST_NAME)) AS FULL_NAME ";
     const FLM_SELECT = ' F.CNUM AS FLM_CNUM, F.WORKER_ID AS FLM_WORKER_ID, F.KYN_EMAIL_ADDRESS AS FLM_EMAIL_ADDRESS ';
     const SLM_SELECT = ' U.CNUM AS SLM_CNUM, U.WORKER_ID AS SLM_WORKER_ID, U.KYN_EMAIL_ADDRESS AS SLM_EMAIL_ADDRESS ';
-    const ORGANISATION_SELECT = ' CASE WHEN AS1.ORGANISATION IS NULL THEN AT.ORGANISATION ELSE AS1.ORGANISATION END AS ORGANISATION, AT.ORGANISATION AS TRIBE_ORGANISATION, AS1.ORGANISATION AS SQUAD_ORGANISATION ';
+    const ORGANISATION_SELECT = ' CASE WHEN AS1.ORGANISATION IS NULL THEN AT.ORGANISATION ELSE AS1.ORGANISATION END AS ORGANISATION ';
+    const ORGANISATION_SELECT_ALL = ' CASE WHEN AS1.ORGANISATION IS NULL THEN AT.ORGANISATION ELSE AS1.ORGANISATION END AS ORGANISATION, AT.ORGANISATION AS TRIBE_ORGANISATION, AS1.ORGANISATION AS SQUAD_ORGANISATION ';
     const EMPLOYEE_TYPE_SELECT = ' P.EMPLOYEE_TYPE AS EMPLOYEE_TYPE_CODE, CASE WHEN EM.DESCRIPTION IS NOT NULL THEN EM.DESCRIPTION ELSE P.EMPLOYEE_TYPE END AS EMPLOYEE_TYPE ';
+    const EMPLOYEE_TYPE_SELECT_WITHOUT_CODE = ' CASE WHEN EM.DESCRIPTION IS NOT NULL THEN EM.DESCRIPTION ELSE P.EMPLOYEE_TYPE END AS EMPLOYEE_TYPE ';
     const BAND_SELECT = ' CASE WHEN BM.BAND IS NULL THEN NULL ELSE BM.BAND END AS BAND ';
 
     private static $revalStatusChangeEmail = 'Functional Manager,'
@@ -302,7 +304,7 @@ class personTable extends DbTable
         AS1.SQUAD_NAME, 
         AS1.SHIFT,
         AS1.SQUAD_LEADER,";
-        $sql .= self::ORGANISATION_SELECT;
+        $sql .= self::ORGANISATION_SELECT_ALL;
 
         $sql .= personTable::getTablesForQuery();
         
@@ -825,9 +827,9 @@ class personTable extends DbTable
                 break;
         }
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql .= " SET $dateField = ? ";
-        $sql .= " ,PES_STATUS = ? ";
-        $sql .= " ,PES_REQUESTOR = ? ";
+        $sql .= " SET $dateField = ? ,";
+        $sql .= " PES_STATUS = ? ,";
+        $sql .= " PES_REQUESTOR = ? ";
         $sql .= " WHERE CNUM = ? ";
 
         $requestor = trim($status) == personRecord::PES_STATUS_INITIATED ? htmlspecialchars($requestor) : null;
@@ -1788,7 +1790,7 @@ class personTable extends DbTable
     {
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET REVALIDATION_STATUS = '" . personRecord::REVALIDATED_PREBOARDER . "', REVALIDATION_DATE_FIELD = CAST( CURRENT_TIMESTAMP AS Date ) ";
-        $sql .= " WHERE (CNUM like '%999' or CNUM like '%xxx' or CNUM like '%XXX' )  AND ( REVALIDATION_STATUS is null )";
+        $sql .= " WHERE ( CNUM like '%999' OR CNUM LIKE '%xxx' OR CNUM LIKE '%XXX' ) AND ( REVALIDATION_STATUS IS NULL )";
 
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
@@ -2531,9 +2533,10 @@ class personTable extends DbTable
         $sql = " SELECT CNUM, NOTES_ID, PES_STATUS, REVALIDATION_STATUS, PES_RECHECK_DATE ";
         $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE 1=1 ";
-        $sql .= " AND PES_STATUS not in (" . self::$excludeFromRecheckNotification . ") ";
-        $sql .= " and PES_RECHECK_DATE is not null ";
-        $sql .= " and PES_RECHECK_DATE <= DATEADD(day, 56, CURRENT_TIMESTAMP) ";
+        $sql .= " AND PES_STATUS NOT IN (" . self::$excludeFromRecheckNotification . ") ";
+        $sql .= " AND PES_RECHECK_DATE IS NOT NULL ";
+        $sql .= " AND PES_RECHECK_DATE <= DATEADD(day, 56, CURRENT_TIMESTAMP) ";
+        $sql .= " AND CNUM NOT LIKE '" . personRecord::NO_LONGER_AVAILABLE . "' ";
 
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 

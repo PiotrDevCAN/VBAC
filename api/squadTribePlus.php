@@ -93,7 +93,7 @@ if (!is_null($additionalFields)) {
         // an additional mapping
         switch($field) {
             case 'ORGANISATION':
-                $fieldExpression = personTable::ORGANISATION_SELECT;
+                $fieldExpression = personTable::ORGANISATION_SELECT_ALL;
                 $additionalSelect .= ", " . htmlspecialchars($fieldExpression);
                 continue 2;
                 break;

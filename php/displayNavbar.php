@@ -40,6 +40,7 @@ $headcountReport		= new NavbarOption('Email Headcount Report','batchJobs/sendHea
 $link           		= new NavbarOption('Link Reg to PreB','pi_linkIbmerToPreboarder.php','accessCdi');
 $workLocation   		= new NavbarOption('Work Location','pi_manageLocation.php','accessCdi');
 $skillSet       		= new NavbarOption('Skillset','pi_manageSkillset.php','accessCdi');
+$band 		      		= new NavbarOption('Business Title to Band','pi_manageBandMapping.php','accessCdi');
 $manageGroups    		= new NavbarOption('Manage Okta Groups', 'pi_manageGroups.php' ,'accessCdi');
 $workerAPIlookup    	= new NavbarOption('Worker API lookup', 'pi_workerAPIlookup.php' ,'accessCdi');
 $cdiAdmin->addOption($trace);
@@ -57,6 +58,7 @@ $cdiAdmin->addOption( new NavbarDivider('accessCdi'));
 $cdiAdmin->addOption($link);
 $cdiAdmin->addOption($workLocation);
 $cdiAdmin->addOption($skillSet);
+$cdiAdmin->addOption($band);
 $cdiAdmin->addOption( new NavbarDivider('accessCdi'));
 $cdiAdmin->addOption($manageGroups);
 $cdiAdmin->addOption( new NavbarDivider('accessCdi'));

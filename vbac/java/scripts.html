@@ -58,6 +58,7 @@ $isPESStatusChange = strpos($file, 'pr_pesStatusChangeReport.php') !== false;
 $isStatusUpdate = strpos($file, 'pa_statusUpdate.php') !== false;
 $isWorklocation = strpos($file, 'pi_manageLocation.php') !== false;
 $isSkillSet = strpos($file, 'pi_manageSkillset.php') !== false;
+$isBandMapping = strpos($file, 'pi_manageBandMapping.php') !== false;
 $isRingFencing = strpos($file, 'pa_ringFencing.php') !== false;
 $isLinkIbmerToPreboarder = strpos($file, 'pi_linkIbmerToPreboarder.php') !== false;
 
@@ -171,6 +172,11 @@ switch (true) {
     case $isSkillSet:
         ?>
             <script type="module" src="vbac/java/admin/skillSet.js?<?=$hash;?>"></script>        
+        <?php
+        break;
+    case $isBandMapping:
+        ?>
+            <script type="module" src="vbac/java/admin/bandMapping.js?<?=$hash;?>"></script>        
         <?php
         break;
     case $isRingFencing:

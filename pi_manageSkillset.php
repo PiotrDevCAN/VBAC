@@ -28,7 +28,6 @@ $setRecord->displayForm(FormClass::$modeDEFINE);
 </div>
 
 <?php
-$skillset = new skillSetRecord();
-$skillset->confirmDeleteSkillsetModal();
+$setRecord->confirmDeleteSkillsetModal();
 // include_once 'includes/modalConfirmDeleteSkillset.html';
 ?>

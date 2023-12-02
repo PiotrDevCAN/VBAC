@@ -77,7 +77,10 @@ jobs:
             kps-gd-app-vbac/data/testqa/w3us/SSOserver client_secret | SSO_CLIENT_SECRET ;
             kps-gd-app-vbac/data/testqa/w3us/SSOserver client_api_token | SSO_API_TOKEN ;
             kps-gd-app-kpes/data/testqa/w3us/Redis PORT | REDIS_PORT ;
-            kps-gd-app-kpes/data/testqa/w3us/Redis PASSWORD | REDIS_PW
+            kps-gd-app-kpes/data/testqa/w3us/Redis PASSWORD | REDIS_PW ;
+            kps-gd-app-kpes/data/testqa/w3us/cFIRST USER_ID | CFIRST_USER_ID ;
+            kps-gd-app-kpes/data/testqa/w3us/cFIRST PASSWORD | CFIRST_PW ;
+            kps-gd-app-kpes/data/testqa/w3us/cFIRST API_KEY | CFIRST_API_KEY
       - name: Get Worker API Credentials
         id: import-secrets-worker-api
         uses: hashicorp/vault-action@v2
@@ -152,6 +155,15 @@ jobs:
           secret-name: vbac-app-docker-secrets-redis
           secret-type: 'generic'
           arguments: --from-literal=redis_host=${{ vars.REDIS_URL }} --from-literal=redis_port=${{ steps.import-secrets.outputs.REDIS_PORT }} --from-literal=redis_password=${{ steps.import-secrets.outputs.REDIS_PW }}          
+      - name: Set ImagePullSecrets cFIRST
+        id: image_secret-worker-cfirst
+        uses: azure/k8s-actions/k8s-create-secret@master
+        # uses: Azure/k8s-create-secret@v4.0
+        with:
+          namespace: ${{ steps.import-secrets.outputs.NAMESPACE }}
+          secret-name: vbac-app-docker-secrets-cfirst
+          secret-type: 'generic'
+          arguments: --from-literal=cfirst_api_base_host=${{ vars.CFIRST_BASE_URL }} --from-literal=cfirst_api_aux_host=${{ vars.CFIRST_AUX_URL }} --from-literal=cfirst_user_id=${{ steps.import-secrets.outputs.CFIRST_USER_ID }} --from-literal=cfirst_password=${{ steps.import-secrets.outputs.CFIRST_PW }} --from-literal=cfirst_api_key=${{ steps.import-secrets.outputs.CFIRST_API_KEY }} 
       - name: Deploy application
         id: deploy-app
         uses: Azure/k8s-deploy@v4
@@ -176,5 +188,6 @@ jobs:
             vbac-app-docker-secrets-sso
             vbac-app-docker-secrets-worker-api
             vbac-app-docker-secrets-redis
+            vbac-app-docker-secrets-cfirst
             env-configmap-testqa
             env-secrets

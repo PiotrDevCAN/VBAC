@@ -378,6 +378,7 @@ if (isset($argv[1])) {
         $cc = array();
         if (strstr($_ENV['environment'], 'vbac')) {
             $cc[] = 'Anthony.Stark@kyndryl.com';
+            $cc[] = 'philip.bibby@kyndryl.com';
         }
     
         $subject = 'PES Status update timings';

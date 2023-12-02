@@ -67,9 +67,9 @@ class OKTAUsers {
 			} else {
 				// So Bluegroups has processed our URL - What was the result.
 				$bgapiRC  = substr($ret,0,1);
-				if($bgapiRC!=0){
+				if($bgapiRC==''){
 					// Bluegroups has NOT returned a ZERO - so there was a problem
-					echo "<H3>Error processing OKTA Groups URL </H3>";
+					echo "<H3>Error processing OKTA Users URL </H3>";
 					echo "<H2>Please take a screen print of this page and send to the ITDQ Team ASAP.</H2>";
 					echo "<BR>URL<BR>";
 					print_r($url);

@@ -4,10 +4,10 @@
  *
  */
 
-let skillSetTable = await cacheBustImport('./modules/tables/skillSet.js');
-let editSkillSet = await cacheBustImport('./modules/boxes/editSkillSet.js');
+let bandMappingTable = await cacheBustImport('./modules/tables/bandMapping.js');
+let editBandMapping = await cacheBustImport('./modules/boxes/editBandMapping.js');
 
-class skillSet {
+class bandMapping {
 
   table;
   tableObj;
@@ -15,31 +15,31 @@ class skillSet {
   constructor() {
     $('.select2').select2();
 
-    this.listenForSubmitSkillsetForm();
+    this.listenForSubmitBandMappingForm();
   }
 
-  listenForSubmitSkillsetForm() {
+  listenForSubmitBandMappingForm() {
     var $this = this;
-    $(document).on('submit', '#skillSetForm', function (event) {
+    $(document).on('submit', '#bandMappingForm', function (event) {
       console.log("submit clicked");
       event.preventDefault();
       $(":submit").addClass("spinning").attr("disabled", true);
       var disabledFields = $(":disabled");
       $(disabledFields).attr("disabled", false);
-      var formData = $("#skillSetForm").serialize();
+      var formData = $("#bandMappingForm").serialize();
 
       console.log(formData);
 
       $(disabledFields).attr("disabled", true);
       $.ajax({
         type: "post",
-        url: "ajax/saveSkillSetRecord.php",
+        url: "ajax/saveBandMappingRecord.php",
         data: formData,
         success: function (response) {
           var responseObj = JSON.parse(response);
           console.log(responseObj);
           if (responseObj.success) {
-            $('#messageModalBody').html("<p>Skillset Record Saved</p>");
+            $('#messageModalBody').html("<p>Band Mapping Record Saved</p>");
             $('#messageModal').modal('show');
           } else {
             $('#messageModalBody').html(
@@ -50,7 +50,8 @@ class skillSet {
             $('#messageModal').modal('show');
           }
           $(".spinning").removeClass("spinning").attr("disabled", false);
-          $("#SKILLSET").val("");
+          $("#BUSINESS_TITLE").val("");
+          $("#BAND").val("");
           $this.table.ajax.reload();
         }
       });
@@ -58,12 +59,12 @@ class skillSet {
   }
 }
 
-const SkillSet = new skillSet();
+const BandMapping = new bandMapping();
 
-const SkillSetTable = new skillSetTable();
-SkillSet.table = SkillSetTable.table;
-SkillSet.tableObj = SkillSetTable;
+const BandMappingTable = new bandMappingTable();
+BandMapping.table = BandMappingTable.table;
+BandMapping.tableObj = BandMappingTable;
 
-const EditSkillSet = new editSkillSet(SkillSet);
+const EditBandMapping = new editBandMapping(BandMapping);
 
-export { SkillSet as default };
+export { BandMapping as default };

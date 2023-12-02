@@ -2097,7 +2097,7 @@ class DbTable {
         return $truncatedValue;
     }
 
-    function getWordCloudCsv($fileName, $colourCode = 1, $column, $predicate = null, $factor=null)
+    function getWordCloudCsv($fileName, $colourCode = 1, $column = null, $predicate = null, $factor=null)
     {
         $factor = empty($factor) ? self::$wordCloudMagnifyFactor : $factor;
         $fileMode = (trim($colourCode) == '1') ? self::$wordCloudCreateMode : self::$wordCloudAppendMode;

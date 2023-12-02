@@ -83,7 +83,7 @@ class personPortalLiteTable extends personTable
         AT.TRIBE_NAME,
         AT.TRIBE_LEADER,
         AT.ITERATION_MGR,";
-        $sql .= self::ORGANISATION_SELECT;
+        $sql .= self::ORGANISATION_SELECT_ALL;
 
         $sql .= personTable::getTablesForQuery();
         
