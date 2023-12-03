@@ -517,6 +517,25 @@ class pesTrackerTable extends DbTable{
         return $preparedStmt;
     }
 
+    function prepareResetForRecheckByWORKER_ID($data){
+        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
+        $sql.= " SET CONSENT = null, ";
+        $sql.= " RIGHT_TO_WORK = null, ";
+        $sql.= " PROOF_OF_ID = null, ";
+        $sql.= " PROOF_OF_RESIDENCY = null, "; 
+        $sql.= " CREDIT_CHECK = null, ";
+        $sql.= " FINANCIAL_SANCTIONS = null, ";
+        $sql.= " CRIMINAL_RECORDS_CHECK = null, "; 
+        $sql.= " PROOF_OF_ACTIVITY = null, ";
+        $sql.= " PROCESSING_STATUS = 'PES', ";
+        $sql.= " PROCESSING_STATUS_CHANGED = CURRENT_TIMESTAMP, "; 
+        $sql.= " DATE_LAST_CHASED = null ";
+        $sql.= " WHERE WORKER_ID = ? ";
+
+        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
+        return $preparedStmt;
+    }
+
     function createNewTrackerRecord($cnum){
         $trackerRecord = new pesTrackerRecord();
         $trackerRecord->setFromArray(array('CNUM'=>$cnum));
@@ -538,7 +557,7 @@ class pesTrackerTable extends DbTable{
         return false;
     }
 
-    function resetForRecheck($cnum){
+    function resetForRecheckByCNUM($cnum){
         $this->createNewTrackerRecord($cnum); // In case there wasn't already a record.
 
         $trackerRecord = new pesTrackerRecord();
@@ -552,6 +571,23 @@ class pesTrackerTable extends DbTable{
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared sql');
             throw new \Exception('Unable to reset for recheck Tracker record for ' . $cnum);
+        }
+    }
+
+    function resetForRecheckByWORKER_ID($WORKER_ID){
+        $this->createNewTrackerRecord($WORKER_ID); // In case there wasn't already a record.
+
+        $trackerRecord = new pesTrackerRecord();
+        $trackerRecord->setFromArray(array('WORKER_ID'=>$WORKER_ID));
+
+        $data = array($WORKER_ID);
+        $preparedStmt = $this->prepareResetForRecheckByWORKER_ID($WORKER_ID);
+        
+        $rs = sqlsrv_execute($preparedStmt);
+
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared sql');
+            throw new \Exception('Unable to reset for recheck Tracker record for ' . $WORKER_ID);
         }
     }
 

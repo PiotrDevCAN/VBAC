@@ -5,7 +5,7 @@ use itdq\AuditTable;
 use itdq\BlueMail;
 use itdq\DbTable;
 use itdq\Loader;
-use itdq\slack;
+// use itdq\slack;
 use vbac\personRecord;
 use vbac\pesTrackerTable;
 
@@ -19,9 +19,7 @@ class personTable extends DbTable
 
     private $thirtyDaysHence;
 
-    private $slack;
-
-    private $squadNames;
+    // private $slack;
 
     protected $allDelegates;
 
@@ -83,7 +81,7 @@ class personTable extends DbTable
 
     public function __construct($table, $pwd = null, $log = true)
     {
-        $this->slack = new slack();
+        // $this->slack = new slack();
 
         $this->allDelegates = delegateTable::allDelegates();
         
@@ -129,7 +127,7 @@ class personTable extends DbTable
     public static function getNextVirtualCnum()
     {
         $sql = " SELECT CNUM FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
-        $sql .= " WHERE CNUM LIKE '%XXX' OR CNUM LIKE '%xxx' OR CNUM LIKE '%999' ";
+        $sql .= " WHERE " . personTable::externalCNUMPredicate();
         $sql .= " ORDER BY CNUM desc ";
 
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
@@ -231,6 +229,46 @@ class personTable extends DbTable
         $archivedPredicate = !empty($tableAbbrv) ? $tableAbbrv . "." : null;
         $archivedPredicate .= "PES_STATUS not in ('" . personRecord::PES_STATUS_LEFT_IBM . "','" . personRecord::PES_STATUS_REMOVED . "','" . personRecord::PES_STATUS_DECLINED . "')";
         return $archivedPredicate;   
+    }
+
+    public static function externalCNUMPredicate($includeProvisionalClearance = true, $tableAbbrv = null)
+    {
+        $predicate = !empty($tableAbbrv) ? $tableAbbrv . "." : null;
+        $predicate .= "CNUM LIKE '%XXX' ";
+        $predicate .= " OR ";
+        $predicate .= !empty($tableAbbrv) ? $tableAbbrv . "." : null;
+        $predicate .= "CNUM LIKE '%xxx' ";
+        $predicate .= " OR ";
+        $predicate .= !empty($tableAbbrv) ? $tableAbbrv . "." : null;
+        $predicate .= "CNUM LIKE '%999' ";
+        return $predicate;
+    }
+
+    public static function normalCNUMPredicate($includeProvisionalClearance = true, $tableAbbrv = null)
+    {
+        $predicate = !empty($tableAbbrv) ? $tableAbbrv . "." : null;
+        $predicate .= "CNUM NOT LIKE '%XXX' ";
+        $predicate .= " AND ";
+        $predicate .= !empty($tableAbbrv) ? $tableAbbrv . "." : null;
+        $predicate .= "CNUM NOT LIKE '%xxx' ";
+        $predicate .= " AND ";
+        $predicate .= !empty($tableAbbrv) ? $tableAbbrv . "." : null;
+        $predicate .= "CNUM NOT LIKE '%999' ";
+        return $predicate;
+    }
+
+    public static function unavailableCNUMPredicate($includeProvisionalClearance = true, $tableAbbrv = null)
+    {
+        $predicate = !empty($tableAbbrv) ? $tableAbbrv . "." : null;
+        $predicate .= "CNUM LIKE '" . personRecord::NO_LONGER_AVAILABLE . "'";
+        return $predicate;
+    }
+
+    public static function availableCNUMPredicate($includeProvisionalClearance = true, $tableAbbrv = null)
+    {
+        $predicate = !empty($tableAbbrv) ? $tableAbbrv . "." : null;
+        $predicate .= "CNUM NOT LIKE '" . personRecord::NO_LONGER_AVAILABLE . "'";
+        return $predicate;
     }
 
     public static function odcPredicate()
@@ -1040,10 +1078,10 @@ class personTable extends DbTable
         );
 
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql .= " SET WORKER_ID=? ,";
-        $sql .= " BUSINESS_TITLE=? ,";
-        $sql .= " MATRIX_MANAGER_EMAIL=? ";
-        $sql .= " WHERE CNUM=?  ";
+        $sql .= " SET WORKER_ID = ? ,";
+        $sql .= " BUSINESS_TITLE = ? ,";
+        $sql .= " MATRIX_MANAGER_EMAIL = ? ";
+        $sql .= " WHERE CNUM = ?  ";
 
         try {
             $result = sqlsrv_query($GLOBALS['conn'], $sql, $data);
@@ -1084,10 +1122,10 @@ class personTable extends DbTable
         );
 
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql .= " SET WORKER_ID=? ,";
-        $sql .= " BUSINESS_TITLE=? ,";
-        $sql .= " MATRIX_MANAGER_EMAIL=? ";
-        $sql .= " WHERE EMAIL_ADDRESS=? ";
+        $sql .= " SET WORKER_ID = ? ,";
+        $sql .= " BUSINESS_TITLE = ? ,";
+        $sql .= " MATRIX_MANAGER_EMAIL = ? ";
+        $sql .= " WHERE EMAIL_ADDRESS = ? ";
 
         try {
             $result = sqlsrv_query($GLOBALS['conn'], $sql, $data);
@@ -1128,10 +1166,10 @@ class personTable extends DbTable
         );
 
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql .= " SET WORKER_ID=? ,";
-        $sql .= " BUSINESS_TITLE=? ,";
-        $sql .= " MATRIX_MANAGER_EMAIL=? ";
-        $sql .= " WHERE KYN_EMAIL_ADDRESS=? ";
+        $sql .= " SET WORKER_ID = ? ,";
+        $sql .= " BUSINESS_TITLE = ? ,";
+        $sql .= " MATRIX_MANAGER_EMAIL = ? ";
+        $sql .= " WHERE KYN_EMAIL_ADDRESS = ? ";
 
         try {
             $result = sqlsrv_query($GLOBALS['conn'], $sql, $data);
@@ -1164,8 +1202,8 @@ class personTable extends DbTable
         );
 
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql .= " SET CFIRST_ID=? ,";
-        $sql .= " WHERE EMAIL_ADDRESS=? ";
+        $sql .= " SET CFIRST_ID = ? ,";
+        $sql .= " WHERE EMAIL_ADDRESS = ? ";
 
         try {
             $result = sqlsrv_query($GLOBALS['conn'], $sql, $data);
@@ -1188,8 +1226,8 @@ class personTable extends DbTable
         $data = array(trim($ctid), trim($cnum));
 
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql .= " SET CT_ID=? ";
-        $sql .= " WHERE CNUM=? ";
+        $sql .= " SET CT_ID = ? ";
+        $sql .= " WHERE CNUM = ? ";
 
         $result = sqlsrv_query($GLOBALS['conn'], $sql);
 
@@ -1207,8 +1245,8 @@ class personTable extends DbTable
         $data = array(trim($flag), trim($cnum));
 
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql .= " SET FM_MANAGER_FLAG=? ";
-        $sql .= " WHERE CNUM=? ";
+        $sql .= " SET FM_MANAGER_FLAG = ? ";
+        $sql .= " WHERE CNUM = ? ";
 
         $result = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
@@ -1252,7 +1290,7 @@ class personTable extends DbTable
 
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET CT_ID = null ";
-        $sql .= " WHERE CNUM=? ";
+        $sql .= " WHERE CNUM = ? ";
 
         $result = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
@@ -1272,7 +1310,7 @@ class personTable extends DbTable
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET ";
         $sql .= $version == 'original' ? " SQUAD_NUMBER = null " : " OLD_SQUAD_NUMBER = null";
-        $sql .= " WHERE CNUM=? ";
+        $sql .= " WHERE CNUM = ? ";
 
         $result = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
@@ -1292,7 +1330,7 @@ class personTable extends DbTable
 
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET CIO_ALIGNMENT = null ";
-        $sql .= " WHERE CNUM=? ";
+        $sql .= " WHERE CNUM = ? ";
 
         $result = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
@@ -1310,8 +1348,8 @@ class personTable extends DbTable
         $data = array(trim($toFmCnum), trim($cnum));
 
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql .= " SET FM_CNUM=? ";
-        $sql .= " WHERE CNUM=? ";
+        $sql .= " SET FM_CNUM = ? ";
+        $sql .= " WHERE CNUM = ? ";
 
         $result = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
@@ -1418,7 +1456,7 @@ class personTable extends DbTable
         return $_SESSION['myManagersCnum'];
     }
 
-    public function activeFmEmailAddressesByCnum()
+    public function activeFmEmailAddressesByCNUM()
     {
         $loader = new Loader();
         $activePredicate = personTable::activePersonPredicate();
@@ -1584,7 +1622,7 @@ class personTable extends DbTable
     public static function optionsForPreBoarded($preBoarded = null)
     {
         if (empty($preBoarded)) {
-            $availPreBoPredicate = " ( CNUM LIKE '%xxx' or CNUM LIKE '%XXX' or CNUM LIKE '%999' ) ";
+            $availPreBoPredicate = " ( " . personTable::externalCNUMPredicate() . " ) ";
             $availPreBoPredicate .= " AND ( trim(REVALIDATION_STATUS) like '%" . personRecord::REVALIDATED_PREBOARDER . "' or trim(REVALIDATION_STATUS) like '%" . personRecord::REVALIDATED_VENDOR . "') ";
             $availPreBoPredicate .= " AND ((PES_STATUS_DETAILS not like '" . personRecord::PES_STATUS_DETAILS_BOARDED_AS . "%' )  or ( PES_STATUS_DETAILS is null)) ";
             $availPreBoPredicate .= " AND PES_STATUS not in (";
@@ -1670,7 +1708,23 @@ class personTable extends DbTable
     {
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET NOTES_ID = ?, EMAIL_ADDRESS = ?,  REVALIDATION_STATUS = '" . personRecord::REVALIDATED_FOUND . "' , REVALIDATION_DATE_FIELD = CAST( CURRENT_TIMESTAMP AS Date ) ";
-        $sql .= " WHERE CNUM=? ";
+        $sql .= " WHERE CNUM = ? ";
+
+        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
+
+        if (!$preparedStmt) {
+            DbTable::displayErrorMessage($preparedStmt, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+        
+        return $preparedStmt;
+    }
+
+    private function prepareRevalidationStmtWORKER_ID($data)
+    {
+        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
+        $sql .= " SET NOTES_ID = ?, EMAIL_ADDRESS = ?,  REVALIDATION_STATUS = '" . personRecord::REVALIDATED_FOUND . "' , REVALIDATION_DATE_FIELD = CAST( CURRENT_TIMESTAMP AS Date ) ";
+        $sql .= " WHERE WORKER_ID = ? ";
 
         $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
 
@@ -1686,7 +1740,23 @@ class personTable extends DbTable
     {
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET PROJECTED_END_DATE = CAST( CURRENT_TIMESTAMP AS Date ) ";
-        $sql .= " WHERE CNUM=? AND PROJECTED_END_DATE is null ";
+        $sql .= " WHERE CNUM = ? AND PROJECTED_END_DATE is null ";
+
+        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
+
+        if (!$preparedStmt) {
+            DbTable::displayErrorMessage($preparedStmt, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+        
+        return $preparedStmt;
+    }
+
+    private function prepareLeaverProjectedEndDateStmtWORKER_ID($data)
+    {
+        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
+        $sql .= " SET PROJECTED_END_DATE = CAST( CURRENT_TIMESTAMP AS Date ) ";
+        $sql .= " WHERE WORKER_ID = ? AND PROJECTED_END_DATE is null ";
 
         $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
 
@@ -1702,7 +1772,23 @@ class personTable extends DbTable
     {
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET REVALIDATION_STATUS = '" . personRecord::REVALIDATED_LEAVER . "' , REVALIDATION_DATE_FIELD = CAST( CURRENT_TIMESTAMP AS Date ) ";
-        $sql .= " WHERE CNUM=? ";
+        $sql .= " WHERE CNUM = ? ";
+
+        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
+
+        if (!$preparedStmt) {
+            DbTable::displayErrorMessage($preparedStmt, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+
+        return $preparedStmt;
+    }
+
+    private function prepareRevalidationLeaverStmtWORKER_ID($data)
+    {
+        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
+        $sql .= " SET REVALIDATION_STATUS = '" . personRecord::REVALIDATED_LEAVER . "' , REVALIDATION_DATE_FIELD = CAST( CURRENT_TIMESTAMP AS Date ) ";
+        $sql .= " WHERE WORKER_ID = ? ";
 
         $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
 
@@ -1719,7 +1805,7 @@ class personTable extends DbTable
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
 //            $sql .= " SET REVALIDATION_STATUS = '" . personRecord::REVALIDATED_POTENTIAL . "' , REVALIDATION_DATE_FIELD = CAST( CURRENT_TIMESTAMP AS Date ) ";
         $sql .= " SET REVALIDATION_STATUS = '" . personRecord::REVALIDATED_POTENTIAL . "'  "; // Storing the date was cutting to many history records
-        $sql .= " WHERE CNUM=? ";
+        $sql .= " WHERE CNUM = ? ";
 
         $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
 
@@ -1731,7 +1817,24 @@ class personTable extends DbTable
         return $preparedStmt;
     }
 
-    public function confirmRevalidation($notesId, $email, $cnum)
+    private function prepareRevalidationPotentialLeaverStmtWORKER_ID($data)
+    {
+        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
+//            $sql .= " SET REVALIDATION_STATUS = '" . personRecord::REVALIDATED_POTENTIAL . "' , REVALIDATION_DATE_FIELD = CAST( CURRENT_TIMESTAMP AS Date ) ";
+        $sql .= " SET REVALIDATION_STATUS = '" . personRecord::REVALIDATED_POTENTIAL . "'  "; // Storing the date was cutting to many history records
+        $sql .= " WHERE WORKER_ID = ? ";
+
+        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
+
+        if (!$preparedStmt) {
+            DbTable::displayErrorMessage($preparedStmt, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+        
+        return $preparedStmt;
+    }
+
+    public function confirmRevalidationByCNUM($notesId, $email, $cnum)
     {
         $data = array(trim($notesId), trim($email), trim($cnum));
         $preparedStmt = $this->prepareRevalidationStmt($data);
@@ -1745,7 +1848,21 @@ class personTable extends DbTable
         return true;
     }
 
-    public function flagLeaver($cnum)
+    public function confirmRevalidationByWORKER_ID($notesId, $email, $WORKER_ID)
+    {
+        $data = array(trim($notesId), trim($email), trim($WORKER_ID));
+        $preparedStmt = $this->prepareRevalidationStmtWORKER_ID($data);
+
+        $rs = sqlsrv_execute($preparedStmt);
+
+        if (!$rs) {
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, "prepared: revalidationStmt");
+            return false;
+        }
+        return true;
+    }
+
+    public function flagLeaverByCNUM($cnum)
     {
         $data = array(trim($cnum));
         $preparedStmt = $this->prepareRevalidationLeaverStmt($data);
@@ -1766,11 +1883,36 @@ class personTable extends DbTable
         }
 
         AuditTable::audit("Flaging leaver: $cnum ", AuditTable::RECORD_TYPE_REVALIDATION);
-        $this->slack->slackApiPostMessage(slack::CHANNEL_SM_CDI_AUDIT, $_ENV['environment'] . " Flaging leaver : $cnum ");
+        // $this->slack->slackApiPostMessage(slack::CHANNEL_SM_CDI_AUDIT, $_ENV['environment'] . " Flaging leaver : $cnum ");
         return true;
     }
 
-    public function flagPotentialLeaver($cnum)
+    public function flagLeaverByWORKER_ID($WORKER_ID)
+    {
+        $data = array(trim($WORKER_ID));
+        $preparedStmt = $this->prepareRevalidationLeaverStmtWORKER_ID($data);
+        $rs = sqlsrv_execute($preparedStmt);
+
+        if (!$rs) {
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, "prepared: revalidationLeaverStmt");
+            return false;
+        }
+
+        $data = array(trim($WORKER_ID));
+        $preparedStmt = $this->prepareLeaverProjectedEndDateStmtWORKER_ID($data);
+        $rs = sqlsrv_execute($preparedStmt);
+
+        if (!$rs) {
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, "prepared: leaverProjectedEndDateStmt");
+            return false;
+        }
+
+        AuditTable::audit("Flaging leaver: $WORKER_ID ", AuditTable::RECORD_TYPE_REVALIDATION);
+        // $this->slack->slackApiPostMessage(slack::CHANNEL_SM_CDI_AUDIT, $_ENV['environment'] . " Flaging leaver : $WORKER_ID ");
+        return true;
+    }
+
+    public function flagPotentialLeaverByCNUM($cnum)
     {
         $data = array(trim($cnum));
         $preparedStmt = $this->prepareRevalidationPotentialLeaverStmt($data);
@@ -1782,15 +1924,33 @@ class personTable extends DbTable
         }
 
         AuditTable::audit("Flaging potential leaver : $cnum ", AuditTable::RECORD_TYPE_REVALIDATION);
-        $this->slack->slackApiPostMessage(slack::CHANNEL_SM_CDI_AUDIT, $_ENV['environment'] . " Flaging potential leaver : $cnum ");
+        // $this->slack->slackApiPostMessage(slack::CHANNEL_SM_CDI_AUDIT, $_ENV['environment'] . " Flaging potential leaver : $cnum ");
+        return true;
+    }
+
+    public function flagPotentialLeaverByWORKER_ID($WORKER_ID)
+    {
+        $data = array(trim($WORKER_ID));
+        $preparedStmt = $this->prepareRevalidationPotentialLeaverStmtWORKER_ID($data);
+        $rs = sqlsrv_execute($preparedStmt);
+
+        if (!$rs) {
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, "prepared: revalidationPotentialLeaverStmt");
+            return false;
+        }
+
+        AuditTable::audit("Flaging potential leaver : $WORKER_ID ", AuditTable::RECORD_TYPE_REVALIDATION);
+        // $this->slack->slackApiPostMessage(slack::CHANNEL_SM_CDI_AUDIT, $_ENV['environment'] . " Flaging potential leaver : $WORKER_ID ");
         return true;
     }
 
     public function flagPreboarders()
     {
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql .= " SET REVALIDATION_STATUS = '" . personRecord::REVALIDATED_PREBOARDER . "', REVALIDATION_DATE_FIELD = CAST( CURRENT_TIMESTAMP AS Date ) ";
-        $sql .= " WHERE ( CNUM like '%999' OR CNUM LIKE '%xxx' OR CNUM LIKE '%XXX' ) AND ( REVALIDATION_STATUS IS NULL )";
+        $sql .= " SET 
+        REVALIDATION_STATUS = '" . personRecord::REVALIDATED_PREBOARDER . "', 
+        REVALIDATION_DATE_FIELD = CAST( CURRENT_TIMESTAMP AS Date ) ";
+        $sql .= " WHERE ( " . personTable::externalCNUMPredicate() . " ) AND ( REVALIDATION_STATUS IS NULL )";
 
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
@@ -1802,7 +1962,7 @@ class personTable extends DbTable
         return true;
     }
 
-    public function flagOffboarding($cnum, $revalidationStatusWas, $notesId, $proposedLeavingDate)
+    public function flagOffboardingByCNUM($cnum, $revalidationStatusWas, $notesId, $proposedLeavingDate)
     {
         if (!empty($cnum)) {
             $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
@@ -1952,8 +2112,8 @@ class personTable extends DbTable
     private function prepareUpdateLbgLocationStmt($data)
     {
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql .= " SET LBG_LOCATION=? ";
-        $sql .= " WHERE CNUM=?  ";
+        $sql .= " SET LBG_LOCATION = ? ";
+        $sql .= " WHERE CNUM = ?  ";
 
         $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
 
@@ -2028,8 +2188,8 @@ class personTable extends DbTable
     private function prepareUpdateSecurityEducationStmt($data)
     {
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql .= " SET SECURITY_EDUCATION=? ";
-        $sql .= " WHERE CNUM=?  ";
+        $sql .= " SET SECURITY_EDUCATION = ? ";
+        $sql .= " WHERE CNUM = ?  ";
 
         $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
 
@@ -2387,10 +2547,6 @@ class personTable extends DbTable
 
     public function getAgileSquadWithButtons($row, $original = true)
     {
-//         if (empty($this->squadNames)){
-        //             $loader = new Loader();
-        //             $this->squadNames = $loader->loadIndexed('SQUAD_NAME','SQUAD_NUMBER',allTables::$AGILE_SQUAD);
-        //         }
         $originalSquad = !empty($row['SQUAD_NUMBER']) ? $row['SQUAD_NUMBER'] : 'none';
         $oldSquad = !empty($row['OLD_SQUAD_NUMBER']) ? $row['OLD_SQUAD_NUMBER'] : 'none';
         $squadNumber = $original ? $originalSquad : $oldSquad;
@@ -2530,13 +2686,12 @@ class personTable extends DbTable
     {
         $pesTrackerTable = new pesTrackerTable(allTables::$PES_TRACKER);
 
-        $sql = " SELECT CNUM, NOTES_ID, PES_STATUS, REVALIDATION_STATUS, PES_RECHECK_DATE ";
+        $sql = " SELECT CNUM, WORKER_ID, NOTES_ID, PES_STATUS, REVALIDATION_STATUS, PES_RECHECK_DATE ";
         $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE 1=1 ";
         $sql .= " AND PES_STATUS NOT IN (" . self::$excludeFromRecheckNotification . ") ";
         $sql .= " AND PES_RECHECK_DATE IS NOT NULL ";
         $sql .= " AND PES_RECHECK_DATE <= DATEADD(day, 56, CURRENT_TIMESTAMP) ";
-        $sql .= " AND CNUM NOT LIKE '" . personRecord::NO_LONGER_AVAILABLE . "' ";
 
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
@@ -2549,7 +2704,12 @@ class personTable extends DbTable
             $trimmedRow = array_map('trim', $row);
             $allRecheckers[] = $trimmedRow;
             $this->setPesStatus($trimmedRow['CNUM'], personRecord::PES_STATUS_RECHECK_REQ);
-            $pesTrackerTable->resetForRecheck($trimmedRow['CNUM']);
+        
+            if ($trimmedRow['CNUM'] != personRecord::NO_LONGER_AVAILABLE) {
+                $pesTrackerTable->resetForRecheckByCNUM($trimmedRow['CNUM']);
+            } else {
+                // $pesTrackerTable->resetForRecheckByWORKER_ID($trimmedRow['WORKER_ID']);
+            }
         }
 
         if ($allRecheckers) {

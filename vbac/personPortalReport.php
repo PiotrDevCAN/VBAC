@@ -166,7 +166,7 @@ class personPortalReport extends DbTable
             // Person Portal
             case personTable::PORTAL_PRE_BOARDER_EXCLUDE:
                 $preBoardersPredicate .= " AND (";
-                $preBoardersPredicate .= " (P.CNUM LIKE '%xxx' OR P.CNUM LIKE '%XXX' OR P.CNUM LIKE '%999')";
+                $preBoardersPredicate .= " (" . personTable::externalCNUMPredicate(true, 'P') . ")";
                 $preBoardersPredicate .= " AND NOT EXISTS (
                     SELECT
                         1
@@ -174,7 +174,7 @@ class personPortalReport extends DbTable
                     WHERE
                         P.CNUM = P1.PRE_BOARDED
                 )";
-                $preBoardersPredicate .= " OR (P.CNUM NOT LIKE '%xxx' AND P.CNUM NOT LIKE '%XXX' AND P.CNUM NOT LIKE '%999')";
+                $preBoardersPredicate .= " OR (" . personTable::normalCNUMPredicate(true, 'P') . ")";
                 $preBoardersPredicate .= ")";
                 $preBoardersPredicate .= " AND " . personTable::notArchivedPersonPredicate(true, 'P');
                 break;
@@ -186,7 +186,7 @@ class personPortalReport extends DbTable
             // Person Portal - Lite
             case personTable::PORTAL_ONLY_ACTIVE:
                 $preBoardersPredicate .= " AND (";
-                $preBoardersPredicate .= " (P.CNUM LIKE '%xxx' OR P.CNUM LIKE '%XXX' OR P.CNUM LIKE '%999')";
+                $preBoardersPredicate .= " (" . personTable::externalCNUMPredicate(true, 'P') . ")";
                 $preBoardersPredicate .= " AND NOT EXISTS (
                     SELECT
                         1
@@ -194,7 +194,7 @@ class personPortalReport extends DbTable
                     WHERE
                         P.CNUM = P1.PRE_BOARDED
                 )";
-                $preBoardersPredicate .= " OR (P.CNUM NOT LIKE '%xxx' AND P.CNUM NOT LIKE '%XXX' AND P.CNUM NOT LIKE '%999')";
+                $preBoardersPredicate .= " OR (" . personTable::normalCNUMPredicate(true, 'P') . ")";
                 $preBoardersPredicate .= ")";
                 $preBoardersPredicate .= " AND " . personTable::activePersonPredicate(true, 'P');
                 break;

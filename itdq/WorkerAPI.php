@@ -123,7 +123,7 @@ class WorkerAPI {
 	// Below endpoints will return extended worker data model
 
 	// Worker Profile By Worker Id : GET /workers/wid/{wid}
-	public function getworkerByWId($wid)
+	public function getworkerByWorkerId($wid)
 	{
 		$url = "/workers/wid/" . urlencode($wid);
 		return $this->processURL($url);

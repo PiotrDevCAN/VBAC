@@ -113,7 +113,7 @@ class personWithSubPRecord extends personRecord
         $onlyEditable = $mode==FormClass::$modeEDIT ? 'text' : 'hidden'; // Some fields the user can edit - but not see/set the first time.
         $hideDivFromEdit = $mode==FormClass::$modeEDIT ? ' style="display: none;"  ' : null; //Some fields we don't show on the edit screen.
 
-//         $availPreBoPredicate  = " CNUM LIKE '%xxx' AND PES_STATUS not like '%xxx' AND PES_STATUS not in (";
+//         $availPreBoPredicate  = personTable::externalCNUMPredicate() . " AND PES_STATUS not like '%xxx' AND PES_STATUS not in (";
 //         $availPreBoPredicate .= " '" . personRecord::PES_STATUS_REMOVED . "' "; // Pre-boarded who haven't been boarded
 //         $availPreBoPredicate .= ",'" . personRecord::PES_STATUS_DECLINED ."' ";
 //         $availPreBoPredicate .= ",'" . personRecord::PES_STATUS_FAILED ."' ";
@@ -449,7 +449,7 @@ class personWithSubPRecord extends personRecord
         $preBoardersAvailable = count($availableFromPreBoarding) > 1 ? null : " disabled='disabled' ";
         $notEditable = $mode==FormClass::$modeEDIT ? ' disabled ' : null;
 
-        $availableForLinking = " PRE_BOARDED is null and CNUM not like '%XXX' ";
+        $availableForLinking = " PRE_BOARDED is null and " . personTable::normalCNUMPredicate();
         $allNonLinkedKyndrylEmployees = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON, $availableForLinking);
 
         ?>

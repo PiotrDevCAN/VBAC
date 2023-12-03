@@ -6,13 +6,9 @@ use vbac\personTable;
 use vbac\allTables;
 use itdq\AuditTable;
 use itdq\DbTable;
-use itdq\slack;
 use vbac\pesEmail;
 
-$slack = new slack();
-
 AuditTable::audit("Check for Leavers invoked.",AuditTable::RECORD_TYPE_REVALIDATION);
-$response = $slack->slackApiPostMessage(slack::CHANNEL_SM_CDI_AUDIT,$_ENV['environment'] . ":Check for Leavers invoked.");
 
 set_time_limit(0);
 ini_set('memory_limit','2048M');
@@ -20,8 +16,8 @@ ini_set('memory_limit','2048M');
 $personTable = new personTable(allTables::$PERSON);
 $loader = new Loader();
 
-$pesToCheck = " ( REVALIDATION_STATUS like '" . personRecord::REVALIDATED_OFFBOARDED . "%' AND REVALIDATION_STATUS not like '%" . personRecord::REVALIDATED_LEAVER . "%' ) ";
-$pesToCheck.= " AND PES_STATUS in ('" . personRecord::PES_STATUS_CLEARED . "'";
+$pesToCheck = " ( REVALIDATION_STATUS like '" . personRecord::REVALIDATED_OFFBOARDED . "%' AND REVALIDATION_STATUS NOT LIKE '%" . personRecord::REVALIDATED_LEAVER . "%' ) ";
+$pesToCheck.= " AND PES_STATUS IN ('" . personRecord::PES_STATUS_CLEARED . "'";
 $pesToCheck.= ",'" . personRecord::PES_STATUS_CLEARED_PERSONAL . "'";
 $pesToCheck.= ",'" . personRecord::PES_STATUS_CLEARED_AMBER . "'";
 $pesToCheck.= ",'" . personRecord::PES_STATUS_EXCEPTION. "'";
@@ -36,7 +32,6 @@ $pesToCheck.= ")";
 
 $allPeopleToCheck = $loader->load('CNUM',allTables::$PERSON, $pesToCheck ); //
 AuditTable::audit("Check for Leavers will check " . count($allPeopleToCheck) . " Offboarded & PES Cleared.",AuditTable::RECORD_TYPE_REVALIDATION);
-$response = $slack->slackApiPostMessage(slack::CHANNEL_SM_CDI_AUDIT,$_ENV['environment'] . ":Check for Leavers will check " . count($allPeopleToCheck) . " Offboarded & PES Cleared.");
 
 $chunkedCnum = array_chunk($allPeopleToCheck, 200);
 $detailsFromBp = "&notesid";
@@ -52,13 +47,11 @@ foreach ($chunkedCnum as $key => $cnumList){
 }
 // At this stage, anyone still in the $allNonLeavers array - has NOT been found in BP TWICE and so is now a leaver and needs to be flagged as such.
 AuditTable::audit("Check for Leavers found " . count($allPeopleToCheck) . "  leavers.",AuditTable::RECORD_TYPE_REVALIDATION);
-$response = $slack->slackApiPostMessage(slack::CHANNEL_SM_CDI_AUDIT,$_ENV['environment'] . ":Check for Leavers found  " . count($allPeopleToCheck) . "  leavers.");
 
 foreach ($allPeopleToCheck as $cnum){
     set_time_limit(10);
-    $personTable->flagPotentialLeaver($cnum);
+    $personTable->flagPotentialLeaverByCNUM($cnum);
 }
 
 // pesEmail::notifyPesTeamOfLeavers($allPeopleToCheck); Mar 2021 - Carra doesn't want this email anymore.
 AuditTable::audit("Check for Leavers completed.",AuditTable::RECORD_TYPE_REVALIDATION);
-$response = $slack->slackApiPostMessage(slack::CHANNEL_SM_CDI_AUDIT,$_ENV['environment'] . ":Check for Leavers completed. ");

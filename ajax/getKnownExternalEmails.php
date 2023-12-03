@@ -2,6 +2,7 @@
 
 use itdq\Loader;
 use vbac\allTables;
+use vbac\personTable;
 
 set_time_limit(0);
 ob_start();
@@ -15,7 +16,7 @@ if (!$redis->get($redisKey)) {
     $predicate=null;
 
     $loader = new Loader();
-    $data = $loader->load('EMAIL_ADDRESS', allTables::$PERSON, " CNUM like '%XXX' ", false);
+    $data = $loader->load('EMAIL_ADDRESS', allTables::$PERSON, personTable::externalCNUMPredicate(), false);
 
     $redis->set($redisKey, json_encode($data));
     $redis->expire($redisKey, REDIS_EXPIRE);

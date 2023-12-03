@@ -162,6 +162,7 @@ class personRecord extends DbRecord
     const CIO_ALIGNMENT_TYPE_OTHER = 'Other';
 
     const NO_LONGER_AVAILABLE = 'No longer available';
+    const NOT_FOUND = 'not found';
 
 //    public static $employeeTypeMapping = array('A'=>'Regular','B'=>'Contractor','C'=>'Contractor','I'=>'Regular','J'=>'Pre-Hire','L'=>'Regular','O'=>'Regular','P'=>'Regular','V'=>'Contractor','X'=>'Regular');
     const AURORA_TRAINING_URL = 'https://kyndryl.percipio.com/track/26c2c517-29c2-4671-bfc1-024271d8fe6b';
@@ -481,7 +482,7 @@ class personRecord extends DbRecord
 
     static function loadKnownExternalEmail($predicate=null){
       $sql = " SELECT EMAIL_ADDRESS FROM " . $GLOBALS['Db2Schema'] . "." .  allTables::$PERSON;
-      $sql.= " WHERE CNUM like '%XXX' ";
+      $sql.= " WHERE " . personTable::externalCNUMPredicate();
       $sql.= " ORDER BY 1 ";
 
       $rs = sqlsrv_query($GLOBALS['conn'], $sql);
@@ -507,7 +508,7 @@ class personRecord extends DbRecord
 
     static function loadKnownIBMEmail($predicate=null){
       $sql = " SELECT EMAIL_ADDRESS FROM " . $GLOBALS['Db2Schema'] . "." .  allTables::$PERSON;
-      $sql.= " WHERE CNUM not like '%XXX' ";
+      $sql.= " WHERE " . personTable::normalCNUMPredicate();
       $sql.= " ORDER BY 1 ";
 
       $rs = sqlsrv_query($GLOBALS['conn'], $sql);
@@ -533,7 +534,7 @@ class personRecord extends DbRecord
 
     static function loadKnownKyndrylEmail($predicate=null){
       $sql = " SELECT KYN_EMAIL_ADDRESS FROM " . $GLOBALS['Db2Schema'] . "." .  allTables::$PERSON;
-      $sql.= " WHERE CNUM not like '%XXX' ";
+      $sql.= " WHERE " . personTable::normalCNUMPredicate();
       $sql.= " ORDER BY 1 ";
 
       $rs = sqlsrv_query($GLOBALS['conn'], $sql);
@@ -603,7 +604,7 @@ class personRecord extends DbRecord
         AuditTable::audit("Prior to Offboarding for Cnum:" . $this->CNUM . " Revalidation Status:" . $this->REVALIDATION_STATUS . " Revalidation Date:" . $this->REVALIDATION_DATE_FIELD . " Updater:" . $_SESSION['ssoEmail'], AuditTable::RECORD_TYPE_DETAILS);
         AuditTable::audit("Initiated Offboarding for Cnum:" . $this->CNUM . " Id:" . $mailAccount . " Projected End Date:" . $this->PROJECTED_END_DATE . " Proposed Leaving Date:" . $this->PROPOSED_LEAVING_DATE, AuditTable::RECORD_TYPE_AUDIT);
         $personTable = new personTable(allTables::$PERSON);
-        $personTable->flagOffboarding($this->CNUM, $this->REVALIDATION_STATUS, $this->NOTES_ID, $this->PROPOSED_LEAVING_DATE);
+        $personTable->flagOffboardingByCNUM($this->CNUM, $this->REVALIDATION_STATUS, $this->NOTES_ID, $this->PROPOSED_LEAVING_DATE);
     }
 
     function displayBoardingForm($mode){
@@ -1355,7 +1356,7 @@ class personRecord extends DbRecord
       $preBoardersAvailable = count($availableFromPreBoarding) > 1 ? null : " disabled='disabled' ";
       $notEditable = $mode==FormClass::$modeEDIT ? ' disabled ' : null;
 
-      $availableForLinking = " PRE_BOARDED is null and CNUM not like '%XXX' ";
+      $availableForLinking = " PRE_BOARDED IS NULL AND " . personTable::normalCNUMPredicate();
       $allNonLinkedKyndrylEmployees = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON, $availableForLinking);
       ?>
       <form id='linkingForm'  class="form-horizontal" onsubmit="return false;">
@@ -1728,7 +1729,7 @@ class personRecord extends DbRecord
         $personTable = new personTable(allTables::$PERSON);
 //        $allFm = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON, " UPPER(FM_MANAGER_FLAG) like 'Y%' ");
 
-        $allFm = $personTable->activeFmEmailAddressesByCnum();
+        $allFm = $personTable->activeFmEmailAddressesByCNUM();
         $emailableFmLists = array_chunk($allFm, 49);
         $replacements = array("https://" . $_SERVER['HTTP_HOST']);
         $to = self::$pmoTaskId;

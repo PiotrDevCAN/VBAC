@@ -20,25 +20,31 @@ ini_set('memory_limit','2048M');
 
 $personTable = new personTable(allTables::$PERSON);
 $loader = new Loader();
+$workerAPI = new WorkerAPI();
 
 $timeMeasurements = array();
 $start =  microtime(true);
 
-// get number of employees with potential status
+/*
+*
+* CNUM section
+*
+*/
+
+// get number of employees with potential status - BY CNUM
 $startPhase1 = microtime(true);
 $potentialLeaversPredicate = " ( REVALIDATION_STATUS like '" . personRecord::REVALIDATED_POTENTIAL_BEGINNING . "%')";
-$potentialLeaversPredicate .= " AND CNUM NOT LIKE '" . personRecord::NO_LONGER_AVAILABLE . "'";
-$allPotentialLeavers = $loader->load('CNUM',allTables::$PERSON, $potentialLeaversPredicate );
-$allPotentialLeaversCounterStart = count($allPotentialLeavers);
+$potentialLeaversPredicate .= " AND " . personTable::availableCNUMPredicate();
+$allPotentialLeaversCNUMs = $loader->load('CNUM',allTables::$PERSON, $potentialLeaversPredicate );
+$allPotentialLeaversCNUMsCounterStart = count($allPotentialLeaversCNUMs);
 $endPhase1 = microtime(true);
 $timeMeasurements['phase_1'] = (float)($endPhase1-$startPhase1);
 
-AuditTable::audit("Potential Leavers re-check will re-check " . $allPotentialLeaversCounterStart . " potential leavers.",AuditTable::RECORD_TYPE_REVALIDATION);
+AuditTable::audit("Potential Leavers re-check will re-check " . $allPotentialLeaversCNUMsCounterStart . " potential leavers.",AuditTable::RECORD_TYPE_REVALIDATION);
 
-// check if employee has a record in Worker API
+// check if employee has a record in Worker API - BY CNUM
 $startPhase2 = microtime(true);
-$workerAPI = new WorkerAPI();
-foreach ($allPotentialLeavers as $key => $CNUM) {
+foreach ($allPotentialLeaversCNUMs as $key => $CNUM) {
     $data = $workerAPI->getworkerByCNUM($CNUM);
     if (
         is_array($data) 
@@ -49,33 +55,97 @@ foreach ($allPotentialLeavers as $key => $CNUM) {
         $notesid = personRecord::NO_LONGER_AVAILABLE;
         $mail = $employeeData['email'];
         $serial = $employeeData['cnum'];
-        $personTable->confirmRevalidation($notesid, $mail, $serial);
-        unset($allPotentialLeavers[$serial]);
+        $personTable->confirmRevalidationByCNUM($notesid, $mail, $serial);
+        unset($allPotentialLeaversCNUMs[$serial]);
     }
 }
 $endPhase2 = microtime(true);
 $timeMeasurements['phase_2'] = (float)($endPhase2-$startPhase2);
 
 // At this stage, anyone still in the $allNonLeavers array - has NOT been found in BP TWICE and so is now a leaver and needs to be flagged as such.
-AuditTable::audit("Potential Leavers re-check found " . count($allPotentialLeavers) . "  leavers.",AuditTable::RECORD_TYPE_REVALIDATION);
+AuditTable::audit("Potential Leavers re-check found " . count($allPotentialLeaversCNUMs) . "  leavers.",AuditTable::RECORD_TYPE_REVALIDATION);
 
-// sets leaver status
+// sets leaver status - BY CNUM
 $startPhase3 = microtime(true);
-$allPotentialLeaversCounterEnd = count($allPotentialLeavers);
-foreach ($allPotentialLeavers as $cnum){
+$allPotentialLeaversCNUMsCounterEnd = count($allPotentialLeaversCNUMs);
+foreach ($allPotentialLeaversCNUMs as $cnum){
     set_time_limit(10);
-    $personTable->flagLeaver($cnum);
+    $personTable->flagLeaverByCNUM($cnum);
 }
 $endPhase3 = microtime(true);
 $timeMeasurements['phase_3'] = (float)($endPhase3-$startPhase3);
 
 // send out notification with list of leavers
 $startPhase4 = microtime(true);
-// pesEmail::notifyPesTeamOfLeavers($allPotentialLeavers);
+// pesEmail::notifyPesTeamOfLeavers($allPotentialLeaversCNUMs);
 $endPhase4 = microtime(true);
 $timeMeasurements['phase_4'] = (float)($endPhase4-$startPhase4);
 
 AuditTable::audit("Potential Leavers re-check completed.",AuditTable::RECORD_TYPE_REVALIDATION);
+
+/*
+*
+* Worker ID section
+*
+*/
+
+// get number of employees with potential status - BY CNUM
+$startPhase5 = microtime(true);
+$potentialLeaversPredicate = " ( REVALIDATION_STATUS like '" . personRecord::REVALIDATED_POTENTIAL_BEGINNING . "%')";
+$potentialLeaversPredicate .= " AND WORKER_ID NOT LIKE '" . personRecord::NOT_FOUND . "'";
+$allPotentialLeaversWorkerIDs = $loader->load('WORKER_ID',allTables::$PERSON, $potentialLeaversPredicate );
+$allPotentialLeaversWorkerIDsCounterStart = count($allPotentialLeaversWorkerIDs);
+$endPhase5 = microtime(true);
+$timeMeasurements['phase_5'] = (float)($endPhase5-$startPhase5);
+
+AuditTable::audit("Potential Leavers re-check will re-check " . $allPotentialLeaversWorkerIDsCounterStart . " potential leavers.",AuditTable::RECORD_TYPE_REVALIDATION);
+
+// check if employee has a record in Worker API - BY WORKER_ID
+$startPhase6 = microtime(true);
+foreach ($allPotentialLeaversWorkerIDs as $key => $WORKER_ID) {
+    $data = $workerAPI->getworkerByWorkerId($WORKER_ID);
+    if (
+        is_array($data) 
+        && array_key_exists('count', $data) 
+        && $data['count'] > 0
+    ) {
+        $employeeData = $data['results'][0];
+        $notesid = personRecord::NO_LONGER_AVAILABLE;
+        $mail = $employeeData['email'];
+        // $serial = $employeeData['cnum'];
+        $personTable->confirmRevalidationByWORKER_ID($notesid, $mail, $WORKER_ID);
+        unset($allPotentialLeaversWorkerIDs[$WORKER_ID]);
+    }
+}
+$endPhase6 = microtime(true);
+$timeMeasurements['phase_6'] = (float)($endPhase6-$startPhase6);
+
+// At this stage, anyone still in the $allNonLeavers array - has NOT been found in BP TWICE and so is now a leaver and needs to be flagged as such.
+AuditTable::audit("Potential Leavers re-check found " . count($allPotentialLeaversWorkerIDs) . "  leavers.",AuditTable::RECORD_TYPE_REVALIDATION);
+
+// sets leaver status - BY WORKER_ID
+$startPhase7 = microtime(true);
+$allPotentialLeaversWorkerIDsCounterEnd = count($allPotentialLeaversWorkerIDs);
+foreach ($allPotentialLeaversWorkerIDs as $WORKER_ID){
+    set_time_limit(10);
+    $personTable->flagLeaverByWORKER_ID($WORKER_ID);
+}
+$endPhase7 = microtime(true);
+$timeMeasurements['phase_7'] = (float)($endPhase7-$startPhase7);
+
+// send out notification with list of leavers
+$startPhase8 = microtime(true);
+// pesEmail::notifyPesTeamOfLeavers($allPotentialLeaversWorkerIDs);
+$endPhase8 = microtime(true);
+$timeMeasurements['phase_8'] = (float)($endPhase8-$startPhase8);
+
+AuditTable::audit("Potential Leavers re-check completed.",AuditTable::RECORD_TYPE_REVALIDATION);
+
+/*
+*
+* sending notification section
+*
+*/
 
 $end = microtime(true);
 $timeMeasurements['overallTime'] = (float)($end-$start);
@@ -93,14 +163,30 @@ $message = 'Updated vBAC Environment: ' . $GLOBALS['Db2Schema'];
 
 $message .= '<HR>';
 
-$message .= '<BR/>All potential leavers before recheck ' . $allPotentialLeaversCounterStart;
-$message .= '<BR/>All potential leavers left upon recheck ' . $allPotentialLeaversCounterEnd;
+$message .= '<BR/>List by <b>CNUM</b> field';
+$message .= '<BR/>All potential leavers before recheck ' . $allPotentialLeaversCNUMsCounterStart;
+$message .= '<BR/>All potential leavers left upon recheck ' . $allPotentialLeaversCNUMsCounterEnd;
 
 $message .= '<HR>';
 
 $message .= '<BR/>Time of obtaining a number of employees with POTENTIAL revalidation status: ' . $timeMeasurements['phase_1'];
 $message .= '<BR/>Time of revalidating statuses of all none leaving employees: ' . $timeMeasurements['phase_2'];
 $message .= '<BR/>Time of setting a LEAVER revalidation status: ' . $timeMeasurements['phase_3'];
+
+$message .= '<HR>';
+
+$message .= '<BR/>List by <b>Worker Id</b> field';
+$message .= '<BR/>All potential leavers before recheck ' . $allPotentialLeaversWorkerIDsCounterStart;
+$message .= '<BR/>All potential leavers left upon recheck ' . $allPotentialLeaversWorkerIDsCounterEnd;
+
+$message .= '<HR>';
+
+$message .= '<BR/>Time of obtaining a number of employees with POTENTIAL revalidation status: ' . $timeMeasurements['phase_5'];
+$message .= '<BR/>Time of revalidating statuses of all none leaving employees: ' . $timeMeasurements['phase_6'];
+$message .= '<BR/>Time of setting a LEAVER revalidation status: ' . $timeMeasurements['phase_7'];
+
+$message .= '<HR>';
+
 $message .= '<BR/>Overall time: ' . $timeMeasurements['overallTime'];
 
 $message .= '<HR>';
