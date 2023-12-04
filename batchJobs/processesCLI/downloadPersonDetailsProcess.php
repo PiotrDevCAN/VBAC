@@ -5,9 +5,12 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use itdq\BlueMail;
 use itdq\DbTable;
-use vbac\allTables;
-use vbac\personRecord;
-use vbac\personTable;
+use vbac\reports\person\downloadablePersonBAU;
+use vbac\reports\person\downloadablePersonDetails;
+use vbac\reports\person\downloadablePersonDetailsActive;
+use vbac\reports\person\downloadablePersonDetailsActiveODC;
+use vbac\reports\person\downloadablePersonDetailsFull;
+use vbac\reports\person\downloadablePersonDetailsInactive;
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -17,104 +20,29 @@ error_log("download Aurora Person Table Extract process started");
 
 if (isset($argv[1])) {
 
-    // default parameters
-    $title = 'Aurora Person Table Extract generated from vBAC';
-    $subject = 'Full Person Table';
-    $description = 'Aurora Person Table Extract generated from vBAC';
-
     $toEmailParam = trim($argv[1]);
     $trackerType = strtolower(trim($argv[2]));
 
     error_log("Execution parameters: ".$toEmailParam." ".$trackerType);
 
-    $activePredicate = '';
-    $excludePredicate = '';
-
-    $sql = '';
-
     switch ($trackerType) {
         case 'details':
-            $type = personTable::PERSON_DETAILS;
-            $filePrefix = 'personExtract';
-            
-            $sql.= " SELECT * ";
-            $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
-            
+            $report = new downloadablePersonDetails();
             break;
         case 'details_full':
-            $type = personTable::PERSON_DETAILS_FULL;
-            $filePrefix = 'personExtractFull';
-
-            $excludePredicate = personTable::excludeBoardedPreboardersPredicate('P');
-            $sql.= " SELECT " . personTable::DEFAULT_SELECT_FIELDS .', ' . personTable::ORGANISATION_SELECT_ALL;
-            $sql.= personTable::getTablesForQuery();
-            $sql.= " WHERE 1=1 AND " . $excludePredicate;
-        
+            $report = new downloadablePersonDetailsFull();
             break;
         case 'details_active':
-            $type = personTable::PERSON_DETAILS_ACTIVE;
-            $filePrefix = 'personExtractActive';
-            
-            $activePredicate = personTable::activePersonPredicate(true, 'P');
-            $sql.= " SELECT " . personTable::DEFAULT_SELECT_FIELDS .', ' . personTable::ORGANISATION_SELECT_ALL;
-            $sql.= personTable::getTablesForQuery();
-            $sql.= " WHERE 1=1 AND " . $activePredicate;
-        
+            $report = new downloadablePersonDetailsActive();
             break;
         case 'details_active_odc':
-            $type = personTable::PERSON_DETAILS_ACTIVE_ODC;
-            $filePrefix = 'personExtractActiveOdc';
-
-            $title = 'Aurora Person Table Extract(ODC) generated from vBAC';
-            $subject = 'Person Table(ODC)';
-            $description = 'Aurora Person Table Extract(ODC) generated from vBAC';
-
-            $joins = " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS1 ";
-            $joins.= " ON P.SQUAD_NUMBER = AS1.SQUAD_NUMBER ";
-            $joins.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " AS AT ";
-            $joins.= " ON AS1.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
-            $joins.= " LEFT JOIN " .  $GLOBALS['Db2Schema'] . "." . allTables::$STATIC_SKILLSETS . " AS SS ";
-            $joins.= " ON P.SKILLSET_ID = SS.SKILLSET_ID ";
-            
-            $sql.= " SELECT " . personTable::DEFAULT_SELECT_FIELDS .', ' . personTable::ORGANISATION_SELECT_ALL;
-            $sql.= ", O.* ";
-            $sql.= personTable::odcStaffSql($joins);
-
+            $report = new downloadablePersonDetailsActiveODC();
             break;
         case 'details_inactive':
-            $type = personTable::PERSON_DETAILS_INACTIVE;
-            $filePrefix = 'personExtractInactive';
-
-            $activePredicate = personTable::activePersonPredicate(true, 'P');
-            $excludePredicate = personTable::excludeBoardedPreboardersPredicate('P');
-
-            $sql.= " SELECT " . personTable::DEFAULT_SELECT_FIELDS .', ' . personTable::ORGANISATION_SELECT_ALL;
-            $sql.= personTable::getTablesForQuery();
-            $sql.= " WHERE P.CNUM NOT IN ( ";
-            $sql.= "  SELECT CNUM " ;
-            $sql.= "  FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
-            $sql.= "  WHERE 1=1 AND $activePredicate ";
-            $sql.= "  ) ";
-            $sql.= " AND $excludePredicate";
-
+            $report = new downloadablePersonDetailsInactive();
             break;
         case 'bau':
-            $type = personTable::PERSON_BAU;
-            $filePrefix = 'personBauReport';
-
-            $title = 'Aurora BAU Person Table Extract generated from vBAC';
-            $subject = 'BAU Report';
-            $description = 'BAU report from Person Table Extract generated from vBAC';
-
-            $activePredicate = personTable::activePersonPredicate(true, 'P');
-            $sql.= " SELECT " . personTable::DEFAULT_SELECT_FIELDS .', ' . personTable::ORGANISATION_SELECT_ALL;
-            $sql.= personTable::getTablesForQuery();
-            $sql.= " WHERE 1=1 AND " . $activePredicate;
-            $sql.= " AND P.LOB     in ('GTS','Cloud','Security') ";
-            $sql.= " AND P.TT_BAU  in ('BAU') ";
-            $sql.= " AND P.CTB_RTB in ('CTB','RTB') ";
-            $sql.= " AND trim(P.REVALIDATION_STATUS) = '" . personRecord::REVALIDATED_FOUND . "' ";
-
+            $report = new downloadablePersonBAU();
             break;
         default:
             throw new \Exception('Incorrect way of execution of script.');
@@ -127,6 +55,14 @@ if (isset($argv[1])) {
     //     $helper->log('This example should only be run from a Web Browser' . PHP_EOL);
     //     return;
     // }
+
+    $details = $report->getDetails();
+    list(
+        'title' => $title,
+        'subject' => $subject,
+        'description' => $description,
+        'prefix' => $filePrefix
+    ) = $details;
 
     // Create new Spreadsheet object
     $spreadsheet = new Spreadsheet();
@@ -141,16 +77,17 @@ if (isset($argv[1])) {
         // Add some data
 
     $now = new DateTime();
-
-    $sheet = 1;
-
+    $resultSetOnly = true;
+    $recordsFound = false;
+    
     set_time_limit(0);
     ini_set('memory_limit','2048M');
 
-    $rs = sqlsrv_query($GLOBALS['conn'], $sql);
-
-    if($rs){
-        $recordsFound = personTable::writeResultSetToXls($rs, $spreadsheet);
+    try {
+        $resultSet = $report->getReport($resultSetOnly);
+        if ($resultSet) {
+            $recordsFound = DbTable::writeResultSetToXls($resultSet, $spreadsheet);
+        }
         if($recordsFound){
             DbTable::autoFilter($spreadsheet);
             DbTable::autoSizeColumns($spreadsheet);
@@ -214,10 +151,19 @@ if (isset($argv[1])) {
             // if ($handle !== false) {
             //     unlink($fileName);
             // }
-
         } else {
             echo "<h1>No records found to prepare this report</h1>";
         }
+    } catch (Exception $e) {
+    
+        //    ob_clean();
+        
+        echo "<br/><br/><br/><br/><br/>";
+        
+        echo $e->getMessage();
+        echo $e->getLine();
+        echo $e->getFile();
+        echo "<h1>No data found to export to tracker</h1>";
     }
 } else {
     throw new \Exception('Recipient email address was missing.');

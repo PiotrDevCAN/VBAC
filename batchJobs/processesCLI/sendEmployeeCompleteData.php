@@ -6,7 +6,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use itdq\DbTable;
 use itdq\BlueMail;
 use vbac\employeeCompleteTable;
-use vbac\personTable;
+use vbac\reports\employeeComplete;
 
 set_time_limit(0);
 ini_set('memory_limit','2048M');
@@ -39,50 +39,12 @@ $spreadsheet->getProperties()->setCreator('vBAC')
     // Add some data
 
 $now = new DateTime();
-$withProvClear = null;
+$resultSetOnly = true;
+
+$report = new employeeComplete();
 
 try {
-    
-    // ob_clean();
-
-    $sql = " SELECT ";
-    $sql.=" P.*, ";
-    
-    $sql.=personTable::EMPLOYEE_TYPE_SELECT.", ";
-
-    // $sql.=" F.*, ";
-
-    // $sql.=" U.*, ";
-
-    // $sql.=" AS1.*, ";
-    $sql.=" AS1.SQUAD_NUMBER, ";
-    $sql.=" AS1.SQUAD_TYPE, ";
-    $sql.=" AS1.TRIBE_NUMBER, ";
-    $sql.=" AS1.SHIFT, ";
-    $sql.=" AS1.SQUAD_LEADER, ";
-    $sql.=" AS1.SQUAD_NAME, ";
-    // $sql.=" AS1.ORGANISATION AS SQUAD_ORGANISATION, ";
-
-    // $sql.=" AT.*, ";
-    // $sql.=" AT.TRIBE_NUMBER, ";
-    $sql.=" AT.TRIBE_NAME, ";
-    $sql.=" AT.TRIBE_LEADER, ";
-    // $sql.=" AT.ORGANISATION AS TRIBE_ORGANISATION, ";
-    $sql.=" AT.ITERATION_MGR, ";
-
-    $sql.=personTable::ORGANISATION_SELECT_ALL.", ";
-    $sql.=personTable::FLM_SELECT.", ";
-    $sql.=personTable::SLM_SELECT.", ";
-
-    $sql.=" SS.*, ";
-    
-    $sql.= personTable::getStatusSelect($withProvClear, 'P');
-    $sql.= personTable::getTablesForQuery();
-    $sql.= " WHERE 1=1 AND trim(P.KYN_EMAIL_ADDRESS) != '' ";
-    $sql.= " ORDER BY P.KYN_EMAIL_ADDRESS ";
-
-    $resultSet = sqlsrv_query($GLOBALS['conn'], $sql);
-
+    $resultSet = $report->getReport($resultSetOnly);
     if ($resultSet) {
         employeeCompleteTable::writeResultSetToXls($resultSet, $spreadsheet);
     }

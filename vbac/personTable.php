@@ -271,6 +271,28 @@ class personTable extends DbTable
         return $predicate;
     }
 
+    public static function isPreBoardedPredicate($includeProvisionalClearance = true, $tableAbbrv = null)
+    {
+        $predicate = !empty($tableAbbrv) ? $tableAbbrv . "." : null;
+        $predicate .= "PES_STATUS_DETAILS LIKE '" . personRecord::PES_STATUS_DETAILS_BOARDED_AS . "%'";
+        $predicate .= " OR ";
+        $predicate .= !empty($tableAbbrv) ? $tableAbbrv . "." : null;
+        $predicate .= "PRE_BOARDED is not null";
+        return $predicate;
+    }
+
+    public static function hasPreBoarderPredicate($includeProvisionalClearance = true, $tableAbbrv = null)
+    {
+        $predicate = "EXISTS (";
+        $predicate .= "SELECT 1";
+        $predicate .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P1 ";
+        $predicate .= " WHERE ";
+        $predicate .= !empty($tableAbbrv) ? $tableAbbrv . "." : null;
+        $predicate .= "CNUM = P1.PRE_BOARDED ";
+        $predicate .= ") ";
+        return $predicate;
+    }
+
     public static function odcPredicate()
     {
         $odcPredicate = " ( lower(LBG_LOCATION) LIKE '%pune' or lower(LBG_LOCATION)  LIKE '%bangalore' ) ";
@@ -279,7 +301,7 @@ class personTable extends DbTable
 
     public function getForRfFlagReport($resultSetOnly = false, $withButtons = true)
     {
-        $sql = "select P.CNUM ";
+        $sql = "SELECT P.CNUM ";
         $sql .= ",P.NOTES_ID ";
         $sql .= ", P.LOB ";
         $sql .= ", P.CTB_RTB ";

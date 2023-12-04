@@ -167,36 +167,24 @@ class personPortalReport extends DbTable
             case personTable::PORTAL_PRE_BOARDER_EXCLUDE:
                 $preBoardersPredicate .= " AND (";
                 $preBoardersPredicate .= " (" . personTable::externalCNUMPredicate(true, 'P') . ")";
-                $preBoardersPredicate .= " AND NOT EXISTS (
-                    SELECT
-                        1
-                    FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P1
-                    WHERE
-                        P.CNUM = P1.PRE_BOARDED
-                )";
+                $preBoardersPredicate .= " AND NOT " . personTable::hasPreBoarderPredicate(true, 'P');
                 $preBoardersPredicate .= " OR (" . personTable::normalCNUMPredicate(true, 'P') . ")";
                 $preBoardersPredicate .= ")";
-                $preBoardersPredicate .= " AND " . personTable::notArchivedPersonPredicate(true, 'P');
-                break;
-            // Linked Portal
-            case personTable::PORTAL_PRE_BOARDER_WITH_LINKED:
-                $preBoardersPredicate .= " AND ( P.PES_STATUS_DETAILS like '" . personRecord::PES_STATUS_DETAILS_BOARDED_AS . "%' or P.PRE_BOARDED is not null)";
                 $preBoardersPredicate .= " AND " . personTable::notArchivedPersonPredicate(true, 'P');
                 break;
             // Person Portal - Lite
             case personTable::PORTAL_ONLY_ACTIVE:
                 $preBoardersPredicate .= " AND (";
                 $preBoardersPredicate .= " (" . personTable::externalCNUMPredicate(true, 'P') . ")";
-                $preBoardersPredicate .= " AND NOT EXISTS (
-                    SELECT
-                        1
-                    FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P1
-                    WHERE
-                        P.CNUM = P1.PRE_BOARDED
-                )";
+                $preBoardersPredicate .= " AND NOT " . personTable::hasPreBoarderPredicate(true, 'P');
                 $preBoardersPredicate .= " OR (" . personTable::normalCNUMPredicate(true, 'P') . ")";
                 $preBoardersPredicate .= ")";
                 $preBoardersPredicate .= " AND " . personTable::activePersonPredicate(true, 'P');
+                break;
+            // Linked Portal
+            case personTable::PORTAL_PRE_BOARDER_WITH_LINKED:
+                $preBoardersPredicate .= " AND (" . personTable::isPreBoardedPredicate(true, 'P') . ")";
+                $preBoardersPredicate .= " AND " . personTable::notArchivedPersonPredicate(true, 'P');
                 break;
             // Person Portal - Archive
             case personTable::PORTAL_ONLY_ARCHIVED:
