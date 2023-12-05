@@ -65,8 +65,8 @@ index 3b4cb26..34974a7 100644
          $projectedEndDateObj = !empty($row['PROJECTED_END_DATE']) ? \DateTime::createFromFormat('Y-m-d', $row['PROJECTED_END_DATE']) : false;
          $potentialForOffboarding = $projectedEndDateObj ? $projectedEndDateObj <= $this->thirtyDaysHence : false; // Thirty day rule.
          $potentialForOffboarding = $potentialForOffboarding || $row['REVALIDATION_STATUS']==personRecord::REVALIDATED_LEAVER ? true : $potentialForOffboarding;  // Any leaver - has potential to be offboarded
-         $potentialForOffboarding = substr(trim($row['REVALIDATION_STATUS']),0,10)==personRecord::REVALIDATED_OFFBOARDED ? false : $potentialForOffboarding;
-         $potentialForOffboarding = substr(trim($row['REVALIDATION_STATUS']),0,11)==personRecord::REVALIDATED_OFFBOARDING ? false : $potentialForOffboarding;
+         $potentialForOffboarding = substr(trim($row['REVALIDATION_STATUS']), 0, 10)==personRecord::REVALIDATED_OFFBOARDED ? false : $potentialForOffboarding;
+         $potentialForOffboarding = substr(trim($row['REVALIDATION_STATUS']), 0, 11)==personRecord::REVALIDATED_OFFBOARDING ? false : $potentialForOffboarding;
  
 -        $offboardingHint = $projectedEndDateObj <= $this->thirtyDaysHence ? '&nbsp;End date within 30 days' : null; // Thirty day rule.
 +        $offboardingHint = $projectedEndDateObj <= $this->thirtyDaysHence ? '&nbsp;End date within 60 days' : null; // Thirty day rule. (MOdified 4th July

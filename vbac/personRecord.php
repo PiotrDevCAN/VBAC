@@ -421,6 +421,18 @@ class personRecord extends DbRecord
 //         return $headerCells;
 //     }
 
+    static function checkIsOffboarding($status = '') {
+      return substr($status, 0, 11) == personRecord::REVALIDATED_OFFBOARDING;
+    }
+
+    static function checkIsOffboarded($status = '') {
+      return substr($status, 0, 10) == personRecord::REVALIDATED_OFFBOARDED;
+    }
+
+    static function checkIsBoardedAs($details = '') {
+      return substr($details, 0, 10) == personRecord::PES_STATUS_DETAILS_BOARDED_AS;
+    }
+
     static function getPesTaskId() {
       return self::$pesTaskId['Kyndryl'];
     }

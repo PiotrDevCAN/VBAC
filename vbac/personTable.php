@@ -451,7 +451,7 @@ class personTable extends DbTable
             while (($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)) == true) {
                 // Only editable, if they're not a "pre-Boarder" who has now been boarded.
                 $preparedRow = $this->prepareFields($row);
-                $rowWithButtonsAdded = (substr($row['PES_STATUS_DETAILS'], 0, 10) == personRecord::PES_STATUS_DETAILS_BOARDED_AS) ? $preparedRow : $this->addButtons($preparedRow);
+                $rowWithButtonsAdded = personRecord::checkIsBoardedAs($row['PES_STATUS_DETAILS']) ? $preparedRow : $this->addButtons($preparedRow);
                 $allData['data'][] = $rowWithButtonsAdded;
             }
         }
@@ -744,15 +744,15 @@ class personTable extends DbTable
         $projectedEndDateObj = !empty($projectedEndDate) ? \DateTime::createFromFormat('Y-m-d', $projectedEndDate) : false;
         $potentialForOffboarding = $projectedEndDateObj ? $projectedEndDateObj <= $this->thirtyDaysHence : false; // Thirty day rule.
         $potentialForOffboarding = $potentialForOffboarding || $revalidationStatus == personRecord::REVALIDATED_LEAVER ? true : $potentialForOffboarding; // Any leaver - has potential to be offboarded
-        $potentialForOffboarding = substr($revalidationStatus, 0, 10) == personRecord::REVALIDATED_OFFBOARDED ? false : $potentialForOffboarding;
-        $potentialForOffboarding = substr($revalidationStatus, 0, 11) == personRecord::REVALIDATED_OFFBOARDING ? false : $potentialForOffboarding;
+        $potentialForOffboarding = personRecord::checkIsOffboarded($revalidationStatus) ? false : $potentialForOffboarding;
+        $potentialForOffboarding = personRecord::checkIsOffboarding($revalidationStatus) ? false : $potentialForOffboarding;
         $potentialForOffboarding = $revalidationStatus == personRecord::REVALIDATED_PREBOARDER ? true : $potentialForOffboarding;
 
         $offboardingHint = $projectedEndDateObj <= $this->thirtyDaysHence ? '&nbsp;End date within 60 days' : null; // Thirty day rule. (Modified 4th July)
         $offboardingHint = $revalidationStatus == personRecord::REVALIDATED_LEAVER ? '&nbsp;Flagged as Leaver' : $offboardingHint; // flagged as a leaver.
         $offboardingHint = $revalidationStatus == personRecord::REVALIDATED_PREBOARDER ? '&nbsp;Is a preboarder' : $offboardingHint; // flagged as a preboarder.
 
-        if (($_SESSION['isPmo'] || $_SESSION['isCdi']) && (substr($revalidationStatus, 0, 11) == personRecord::REVALIDATED_OFFBOARDING)) {
+        if (($_SESSION['isPmo'] || $_SESSION['isCdi']) && personRecord::checkIsOffboarding($revalidationStatus)) {
             $row['REVALIDATION_STATUS'] = "<button type='button' class='btn btn-default btn-xs btnStopOffboarding btn-danger' aria-label='Left Align' ";
             $row['REVALIDATION_STATUS'] .= "data-cnum='" . $cnum . "'";
             $row['REVALIDATION_STATUS'] .= " data-toggle='tooltip' data-placement='top' title='Stop Offboarding Process'";
@@ -769,7 +769,7 @@ class personTable extends DbTable
             $row['REVALIDATION_STATUS'] .= $revalidationStatus;
         }
 
-        if ($potentialForOffboarding && ($_SESSION['isPmo'] || $_SESSION['isCdi']) && substr($revalidationStatus, 0, 11) != personRecord::REVALIDATED_OFFBOARDING) {
+        if ($potentialForOffboarding && ($_SESSION['isPmo'] || $_SESSION['isCdi']) && !personRecord::checkIsOffboarding($revalidationStatus)) {
             $row['REVALIDATION_STATUS'] = "<button type='button' class='btn btn-default btn-xs btnOffboarding btn-warning' aria-label='Left Align' ";
             $row['REVALIDATION_STATUS'] .= "data-cnum='" . $cnum . "'";
             $row['REVALIDATION_STATUS'] .= " data-toggle='tooltip' data-placement='top' title='Initiate Offboarding." . $offboardingHint . "' ";
@@ -779,7 +779,7 @@ class personTable extends DbTable
             $row['REVALIDATION_STATUS'] .= $revalidationStatus;
         }
 
-        if (($_SESSION['isPmo'] || $_SESSION['isCdi']) && substr($revalidationStatus, 0, 10) == personRecord::REVALIDATED_OFFBOARDED) {
+        if (($_SESSION['isPmo'] || $_SESSION['isCdi']) && personRecord::checkIsOffboarded($revalidationStatus)) {
             $row['REVALIDATION_STATUS'] = "<button type='button' class='btn btn-default btn-xs btnDeoffBoarding btn-danger' aria-label='Left Align' ";
             $row['REVALIDATION_STATUS'] .= "data-cnum='" . $cnum . "'";
             $row['REVALIDATION_STATUS'] .= "title='Bring back from Offboarding.'";
@@ -2360,7 +2360,7 @@ class personTable extends DbTable
         $currentValue = $status;
         $processingStatus = array_key_exists('PROCESSING_STATUS', $row) ? trim($row['PROCESSING_STATUS']) : null;
 
-        $boarder = stripos(trim($row['PES_STATUS_DETAILS']), personRecord::PES_STATUS_DETAILS_BOARDED_AS) !== false;
+        $boarder = personRecord::checkIsBoardedAs($row['PES_STATUS_DETAILS']);
         $passportFirst = array_key_exists('PASSPORT_FIRST_NAME', $row) ? $row['PASSPORT_FIRST_NAME'] : null;
         $passportSurname = array_key_exists('PASSPORT_SURNAME', $row) ? $row['PASSPORT_SURNAME'] : null;
 

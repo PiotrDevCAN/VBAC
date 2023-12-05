@@ -20,9 +20,8 @@ $currentLicences = $loader->loadIndexed('HOSTNAME','CNUM', allTables::$DLP," STA
 
 $options = array();
 
-
 foreach ($selectableEmailAddress as $cnum => $emailAddress){
-    $isOffboarding = substr($selectableRevalidationStatus[$cnum],0,11)==personRecord::REVALIDATED_OFFBOARDING;
+    $isOffboarding = personRecord::checkIsOffboarding($selectableRevalidationStatus[$cnum]);
     // $dataOffboarding = " data-revalidationstatus" . "='" . $selectableRevalidationStatus[$cnum] . "' ";
     $displayedName = !empty(trim($emailAddress)) ?  trim($emailAddress) : $selectableEmailAddress[$cnum];
     $hostname = isset($currentLicences[trim($cnum)]) ? " (" .  $currentLicences[trim($cnum)] . ")" : " (no licence)";
@@ -30,8 +29,6 @@ foreach ($selectableEmailAddress as $cnum => $emailAddress){
         $options[]= (object) array('id'=> trim($cnum),'text'=> $displayedName . $hostname);
     }
 };
-
-
 
 $response = array("results"=>$options,'currentLicences'=>print_r($currentLicences,true));
 

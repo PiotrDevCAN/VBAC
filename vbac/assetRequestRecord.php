@@ -126,7 +126,7 @@ class assetRequestRecord extends DbRecord {
                     <option value=''></option>
                     <?php
                     foreach ($selectableEmailAddress as $cnum => $emailId){
-                        // $isOffboarding = substr($selectableRevalidationStatus[$cnum],0,11)==personRecord::REVALIDATED_OFFBOARDING;
+                        // $isOffboarding = personRecord::checkIsOffboarding($selectableRevalidationStatus[$cnum]);
                         $dataOffboarding = " data-revalidationstatus" . "='" . $selectableRevalidationStatus[$cnum] . "' ";
                         // $dataOffboarding.= $isOffboarding ? "='true' " : "='false'";
                         $displayedName = !empty(trim($emailId)) ? trim($emailId) : $allEmailAddress[$cnum];

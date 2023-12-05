@@ -86,7 +86,7 @@ class dlpRecord extends DbRecord
                     <option value=''></option>
                 <?php                
                 foreach ($selectableEmailAddress as $cnum => $emailAddress){
-                    $isOffboarding = substr($selectableRevalidationStatus[$cnum],0,11)==personRecord::REVALIDATED_OFFBOARDING;
+                    $isOffboarding = personRecord::checkIsOffboarding($selectableRevalidationStatus[$cnum]);
                     // $dataOffboarding = " data-revalidationstatus" . "='" . $selectableRevalidationStatus[$cnum] . "' ";
                     $displayedName = !empty(trim($emailAddress)) ?  trim($emailAddress) : $allEmailAddress[$cnum];
                     // $hostname = isset($currentLicences[trim($cnum)]) ? " (" .  $currentLicences[trim($cnum)] . ")" : " (no licence)";
