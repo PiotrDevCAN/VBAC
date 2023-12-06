@@ -1369,7 +1369,7 @@ class personRecord extends DbRecord
       $notEditable = $mode==FormClass::$modeEDIT ? ' disabled ' : null;
 
       $availableForLinking = " PRE_BOARDED IS NULL AND " . personTable::normalCNUMPredicate();
-      $allNonLinkedKyndrylEmployees = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON, $availableForLinking);
+      $allNonLinkedKyndrylEmployees = $loader->loadIndexed('KYN_EMAIL_ADDRESS','CNUM',allTables::$PERSON, $availableForLinking);
       ?>
       <form id='linkingForm'  class="form-horizontal" onsubmit="return false;">
         <div class="panel panel-default">

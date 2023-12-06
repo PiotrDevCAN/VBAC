@@ -87,7 +87,7 @@ $allPersons = $loader->loadIndexed('EMAIL_ADDRESS', 'CNUM', allTables::$PERSON, 
 
 <hr/>
 
-<div class='container'>
+<div class='container-fluid'>
 <h3>Person Database</h3>
 <button id='reportPesUpdate' class='btn btn-primary btn-sm '>Update PES Status</button>
 &nbsp;
@@ -96,12 +96,12 @@ $allPersons = $loader->loadIndexed('EMAIL_ADDRESS', 'CNUM', allTables::$PERSON, 
 <div id='personDatabaseDiv' class='portalDiv'>
 <table id='updateStatusTable' class='table table-striped table-bordered compact' cellspacing='0' width='100%' style='display: none;'>
 <thead>
-<tr><th>CNUM</th><th>First Name</th><th>Last Name</th><th>Email Address</th><th>Notes Id</th><th>PES Status</th></tr>
+<tr><th>CNUM</th><th>Worker ID</th><th>First Name</th><th>Last Name</th><th>Email Address</th><th>Kyn Email Address</th><th>PES Status</th></tr>
 </thead>
 <tbody>
 </tbody>
 <tfoot>
-<tr><th>CNUM</th><th>First Name</th><th>Last Name</th><th>Email Address</th><th>Notes Id</th><th>PES Status</th></tr>
+<tr><th>CNUM</th><th>Worker ID</th><th>First Name</th><th>Last Name</th><th>Email Address</th><th>Kyn Email Address</th><th>PES Status</th></tr>
 </tfoot>
 </table>
 </div>

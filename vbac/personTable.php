@@ -254,6 +254,8 @@ class personTable extends DbTable
         $predicate .= " AND ";
         $predicate .= !empty($tableAbbrv) ? $tableAbbrv . "." : null;
         $predicate .= "CNUM NOT LIKE '%999' ";
+        $predicate .= " AND ";
+        $predicate .= personTable::availableCNUMPredicate($includeProvisionalClearance, $tableAbbrv);
         return $predicate;
     }
 
@@ -466,7 +468,7 @@ class personTable extends DbTable
         $predicate = " PES_STATUS in ('" . personRecord::PES_STATUS_NOT_REQUESTED . "', '" . personRecord::PES_STATUS_INITIATED . "')";
         $data = array();
 
-        $sql = " SELECT CNUM, FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, NOTES_ID, PES_STATUS ";
+        $sql = " SELECT CNUM, WORKER_ID, FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, KYN_EMAIL_ADDRESS, PES_STATUS ";
         $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " WHERE " . $predicate;
 
@@ -2674,7 +2676,16 @@ class personTable extends DbTable
             return false;
         }
 
-        $preBoarderData['PES_STATUS_DETAILS'] = personRecord::PES_STATUS_DETAILS_BOARDED_AS . " " . $ibmerData['CNUM'] . ":" . $ibmerData['NOTES_ID'] . " Status was:" . $preboarderPesStatus;
+        // $cnum = $ibmerData['CNUM'];
+        // switch($cnum) {
+        //     case personRecord::NO_LONGER_AVAILABLE:
+        //         $preBoarderData['PES_STATUS_DETAILS'] = personRecord::PES_STATUS_DETAILS_BOARDED_AS . " " . $ibmerData['WORKER_ID'] . ":" . $ibmerData['KYN_EMAIL_ADDRESS'] . " Status was:" . $preboarderPesStatus;
+        //         break;
+        //     default:
+                $preBoarderData['PES_STATUS_DETAILS'] = personRecord::PES_STATUS_DETAILS_BOARDED_AS . " " . $ibmerData['CNUM'] . ":" . $ibmerData['KYN_EMAIL_ADDRESS'] . " Status was:" . $preboarderPesStatus;
+        //         break;
+        // }
+
         $preBoarderData['EMAIL_ADDRESS'] = str_replace('ibm.com', '###.com', strtolower($preBoarderData['EMAIL_ADDRESS']));
         $preBoarder->setFromArray($preBoarderData);
         if (!$this->update($preBoarder)) {

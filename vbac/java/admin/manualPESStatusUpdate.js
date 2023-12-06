@@ -105,10 +105,11 @@ class manualPESStatusUpdate {
 			},
 			columns: [
 				{ data: "CNUM" },
+				{ data: "WORKER_ID" },
 				{ data: "FIRST_NAME" },
 				{ data: "LAST_NAME" },
 				{ data: "EMAIL_ADDRESS" },
-				{ data: "NOTES_ID" },
+				{ data: "KYN_EMAIL_ADDRESS" },
 				{ data: "PES_STATUS" },
 			],
 			order: [[1, "asc"]],
