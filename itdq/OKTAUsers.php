@@ -28,7 +28,7 @@ class OKTAUsers {
 	{
 		// create a new cURL resource
 		$ch = curl_init();
-		$authorization = "Authorization: SSWS ".$this->token; // Prepare the authorisation token
+		$authorization = "Authorization: SSWS ".$this->token; // Prepare the authorization token
 		$headers = [
 			'Content-Type: application/json',
 			'Accept: application/json, text/json, application/xml, text/xml',

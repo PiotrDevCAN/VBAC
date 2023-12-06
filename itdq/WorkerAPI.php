@@ -11,7 +11,6 @@ include_once "WorkerAPI/class/include.php";
 class WorkerAPI {
 	
 	private $auth = null;
-	private $token = null;
 	private $hostname = null;
 
 	public function __construct()
@@ -19,17 +18,19 @@ class WorkerAPI {
 		$auth = new Auth();
 		$this->auth = $auth;
 
-		$auth->ensureAuthorized();
+		// setup Worker API client
+		$technology = $this->auth->getTechnology();
+		$config = $this->auth->getConfig($technology);
+		$this->hostname = $config->hostname;
 
-		$this->hostname = trim($_ENV['worker_api_host']);
-		$this->token = $_SESSION['worker_token'];
+		$auth->ensureAuthorized();
 	}
 
 	private function createCurl($type = "GET")
 	{
 		// create a new cURL resource
 		$ch = curl_init();
-		$authorization = "Authorization: Bearer ".$this->token; // Prepare the authorisation token
+		$authorization = "Authorization: Bearer ".$this->auth->getToken(); // Prepare the authorization token
 		$headers = [
 			'Content-type: Not defined',
 			'Accept: application/json, text/json, application/xml, text/xml',

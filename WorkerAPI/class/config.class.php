@@ -19,7 +19,7 @@ class Config {
 		}
 		else
 		{
-			throw new Exception(htmlentities($technology).' not yet implemented.');
+			throw new \Exception(htmlentities($technology).' not yet implemented.');
 		}
 	}
 

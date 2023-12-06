@@ -224,7 +224,7 @@
 			$ch = curl_init();
 
 			curl_setopt($ch, CURLOPT_URL, $url);
-			$authorization = "Authorization: Bearer ".$token; // Prepare the authorisation token
+			$authorization = "Authorization: Bearer ".$token; // Prepare the authorization token
 			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json' , $authorization )); // Inject the token into the header
 			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

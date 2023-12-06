@@ -6,6 +6,9 @@ $config_openidconnect = new stdClass();
  *
  */
 
+$config_openidconnect->hostname       = $_ENV['worker_api_host'];
+$config_openidconnect->authority      = $_ENV['worker_api_authority'];
+
 $config_openidconnect->client_id      = $_ENV['worker_api_client_id'];
 $config_openidconnect->client_secret  = $_ENV['worker_api_client_secret'];
 $config_openidconnect->token_scope    = $_ENV['worker_api_token_scope'];
