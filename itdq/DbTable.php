@@ -521,13 +521,18 @@ class DbTable {
         // }
 
         $sql = "SELECT * FROM ".$GLOBALS['Db2Schema'].'.'.strtoupper($this->tableName);
-        $stmt = sqlsrv_prepare( $GLOBALS['conn'], $sql );
-        foreach( sqlsrv_field_metadata( $stmt ) as $row ) {
-            foreach( $row as $name => $value) {
-                if($name == 'Name') {
-                    Trace::traceVariable($row, __METHOD__, __LINE__);
-                    $row['Type_name_new'] = self::$typeNames[$row["Type"]];
-                    $this->columns[trim($value)] = $row;
+        $rs = sqlsrv_prepare( $GLOBALS['conn'], $sql );
+
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, null, __FILE__, $sql);
+        } else {
+            foreach( sqlsrv_field_metadata( $rs ) as $row ) {
+                foreach( $row as $name => $value) {
+                    if($name == 'Name') {
+                        Trace::traceVariable($row, __METHOD__, __LINE__);
+                        $row['Type_name_new'] = self::$typeNames[$row["Type"]];
+                        $this->columns[trim($value)] = $row;
+                    }
                 }
             }
         }
@@ -1312,7 +1317,13 @@ class DbTable {
         $pred = $this->buildKeyPredicate($record);
         $sql = $select . " WHERE " . $pred;
         Trace::traceVariable($sql, __METHOD__);
-        $row = sqlsrv_fetch_array($this->execute($sql));
+        $stmt = sqlsrv_prepare( $GLOBALS['conn'], $sql );
+        $rs = sqlsrv_execute($stmt);
+        if ($rs) {
+            $row = sqlsrv_fetch_array($stmt);
+        } else {
+            $row = null;
+        }
         return $row;
     }
 
@@ -1328,9 +1339,10 @@ class DbTable {
         Trace::traceVariable($predicate, __METHOD__);
         $sql = "SELECT * FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName . " WHERE " . $predicate;
         Trace::traceVariable($sql, __METHOD__);
-        $resultSet = $this->execute($sql);
-        if ($resultSet) {
-            $result = sqlsrv_fetch_array($resultSet, SQLSRV_FETCH_ASSOC);
+        $stmt = sqlsrv_prepare( $GLOBALS['conn'], $sql );
+        $rs = sqlsrv_execute($stmt);
+        if ($rs) {
+            $result = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
         } else {
             return false;
         }

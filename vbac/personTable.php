@@ -244,6 +244,16 @@ class personTable extends DbTable
         return $predicate;
     }
 
+    public static function normalWorkerIDPredicate($includeProvisionalClearance = true, $tableAbbrv = null)
+    {
+        $predicate = !empty($tableAbbrv) ? $tableAbbrv . "." : null;
+        $predicate .= "WORKER_ID IS NOT NULL";
+        $predicate .= " AND ";
+        $predicate .= !empty($tableAbbrv) ? $tableAbbrv . "." : null;
+        $predicate .= "WORKER_ID NOT LIKE '" . personRecord::NOT_FOUND . "' ";
+        return $predicate;
+    }
+
     public static function normalCNUMPredicate($includeProvisionalClearance = true, $tableAbbrv = null)
     {
         $predicate = !empty($tableAbbrv) ? $tableAbbrv . "." : null;
@@ -279,7 +289,22 @@ class personTable extends DbTable
         $predicate .= "PES_STATUS_DETAILS LIKE '" . personRecord::PES_STATUS_DETAILS_BOARDED_AS . "%'";
         $predicate .= " OR ";
         $predicate .= !empty($tableAbbrv) ? $tableAbbrv . "." : null;
-        $predicate .= "PRE_BOARDED is not null";
+        $predicate .= "PRE_BOARDED IS NOT NULL";
+        return $predicate;
+    }
+
+    public static function isNotPreBoardedPredicate($includeProvisionalClearance = true, $tableAbbrv = null)
+    {
+        $predicate = " (";
+        $predicate .= !empty($tableAbbrv) ? $tableAbbrv . "." : null;
+        $predicate .= "PES_STATUS_DETAILS NOT LIKE '" . personRecord::PES_STATUS_DETAILS_BOARDED_AS . "%'";
+        $predicate .= " OR ";
+        $predicate .= !empty($tableAbbrv) ? $tableAbbrv . "." : null;
+        $predicate .= "PES_STATUS_DETAILS IS NULL";
+        $predicate .= " ) ";
+        $predicate .= " AND ";
+        $predicate .= !empty($tableAbbrv) ? $tableAbbrv . "." : null;
+        $predicate .= "PRE_BOARDED IS NULL";
         return $predicate;
     }
 
@@ -1253,7 +1278,7 @@ class personTable extends DbTable
         $sql .= " SET CT_ID = ? ";
         $sql .= " WHERE CNUM = ? ";
 
-        $result = sqlsrv_query($GLOBALS['conn'], $sql);
+        $result = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
         if (!$result) {
             DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
@@ -1657,7 +1682,7 @@ class personTable extends DbTable
             $availPreBoPredicate = " ( CNUM = '" . htmlspecialchars($preBoarded) . "' ) ";
         }
 
-        $sql = " SELECT distinct FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, CNUM  FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
+        $sql = " SELECT DISTINCT FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, CNUM  FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE " . $availPreBoPredicate;
         $sql .= " ORDER BY FIRST_NAME, LAST_NAME ";
 
@@ -1728,10 +1753,13 @@ class personTable extends DbTable
         return $data;
     }
 
-    private function prepareRevalidationStmt($data)
+    private function prepareRevalidationStmtCNUM($data)
     {
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql .= " SET NOTES_ID = ?, EMAIL_ADDRESS = ?,  REVALIDATION_STATUS = '" . personRecord::REVALIDATED_FOUND . "' , REVALIDATION_DATE_FIELD = CAST( CURRENT_TIMESTAMP AS Date ) ";
+        $sql .= " SET NOTES_ID = ?, ";
+        $sql .= " EMAIL_ADDRESS = ?, ";
+        $sql .= " REVALIDATION_STATUS = '" . personRecord::REVALIDATED_FOUND . "' , ";
+        $sql .= " REVALIDATION_DATE_FIELD = CAST( CURRENT_TIMESTAMP AS Date ) ";
         $sql .= " WHERE CNUM = ? ";
 
         $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
@@ -1747,7 +1775,10 @@ class personTable extends DbTable
     private function prepareRevalidationStmtWORKER_ID($data)
     {
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql .= " SET NOTES_ID = ?, EMAIL_ADDRESS = ?,  REVALIDATION_STATUS = '" . personRecord::REVALIDATED_FOUND . "' , REVALIDATION_DATE_FIELD = CAST( CURRENT_TIMESTAMP AS Date ) ";
+        $sql .= " SET NOTES_ID = ?, ";
+        $sql .= " EMAIL_ADDRESS = ?, ";
+        $sql .= " REVALIDATION_STATUS = '" . personRecord::REVALIDATED_FOUND . "' , ";
+        $sql .= " REVALIDATION_DATE_FIELD = CAST( CURRENT_TIMESTAMP AS Date ) ";
         $sql .= " WHERE WORKER_ID = ? ";
 
         $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
@@ -1760,7 +1791,7 @@ class personTable extends DbTable
         return $preparedStmt;
     }
 
-    private function prepareLeaverProjectedEndDateStmt($data)
+    private function prepareLeaverProjectedEndDateStmtCNUM($data)
     {
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET PROJECTED_END_DATE = CAST( CURRENT_TIMESTAMP AS Date ) ";
@@ -1792,7 +1823,7 @@ class personTable extends DbTable
         return $preparedStmt;
     }
 
-    private function prepareRevalidationLeaverStmt($data)
+    private function prepareRevalidationLeaverStmtCNUM($data)
     {
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET REVALIDATION_STATUS = '" . personRecord::REVALIDATED_LEAVER . "' , REVALIDATION_DATE_FIELD = CAST( CURRENT_TIMESTAMP AS Date ) ";
@@ -1861,7 +1892,7 @@ class personTable extends DbTable
     public function confirmRevalidationByCNUM($notesId, $email, $cnum)
     {
         $data = array(trim($notesId), trim($email), trim($cnum));
-        $preparedStmt = $this->prepareRevalidationStmt($data);
+        $preparedStmt = $this->prepareRevalidationStmtCNUM($data);
 
         $rs = sqlsrv_execute($preparedStmt);
 
@@ -1889,7 +1920,7 @@ class personTable extends DbTable
     public function flagLeaverByCNUM($cnum)
     {
         $data = array(trim($cnum));
-        $preparedStmt = $this->prepareRevalidationLeaverStmt($data);
+        $preparedStmt = $this->prepareRevalidationLeaverStmtCNUM($data);
         $rs = sqlsrv_execute($preparedStmt);
 
         if (!$rs) {
@@ -1898,7 +1929,7 @@ class personTable extends DbTable
         }
 
         $data = array(trim($cnum));
-        $preparedStmt = $this->prepareLeaverProjectedEndDateStmt($data);
+        $preparedStmt = $this->prepareLeaverProjectedEndDateStmtCNUM($data);
         $rs = sqlsrv_execute($preparedStmt);
 
         if (!$rs) {
@@ -1974,7 +2005,8 @@ class personTable extends DbTable
         $sql .= " SET 
         REVALIDATION_STATUS = '" . personRecord::REVALIDATED_PREBOARDER . "', 
         REVALIDATION_DATE_FIELD = CAST( CURRENT_TIMESTAMP AS Date ) ";
-        $sql .= " WHERE ( " . personTable::externalCNUMPredicate() . " ) AND ( REVALIDATION_STATUS IS NULL )";
+        $sql .= " WHERE ( " . personTable::externalCNUMPredicate() . " ) ";
+        $sql .= " AND ( REVALIDATION_STATUS IS NULL )";
 
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
@@ -2710,6 +2742,111 @@ class personTable extends DbTable
 
             $pesTrackerTable->savePesComment($ibmerCnum, "Serial Number changed from $preboarderCnum to $ibmerCnum");
             $pesTrackerTable->savePesComment($ibmerCnum, "Email Address changed from $emailAddress[$preboarderCnum] to $emailAddress[$ibmerCnum] ");
+        }
+
+        sqlsrv_commit($GLOBALS['conn']);
+    }
+    
+    public function linkPreBoarderToRegular($preboarderCnum, $regularId)
+    {
+        $type = null;
+        $sp = strpos($regularId, personRecord::KEY_TYPE_CNUM);
+        if($sp !== FALSE){
+            $type = personRecord::KEY_TYPE_CNUM;
+        } else {
+            $sp = strpos($regularId, personRecord::KEY_TYPE_WORKER_ID);
+            if($sp !== FALSE){
+                $type = personRecord::KEY_TYPE_WORKER_ID;
+            }
+        }
+        $regularId = str_replace($type.'_', '', $regularId);
+
+        echo $type;
+        echo '<br>';
+        echo $regularId;
+        exit;
+        
+        if (sqlsrv_begin_transaction($GLOBALS['conn']) === false) {
+            die( print_r( sqlsrv_errors(), true ));
+        }
+
+        // get pre boarder record
+        $preBoarder = new personRecord();
+        $preBoarder->setFromArray(array('CNUM' => $preboarderCnum));
+        $preBoarderData = $this->getFromDb($preBoarder);
+
+        $preboarderPesStatus = $preBoarderData['PES_STATUS'];
+        $preboarderPesStatusD = $preBoarderData['PES_STATUS_DETAILS'];
+        $preBoarderPesEvidence = $preBoarderData['PES_DATE_EVIDENCE'];
+        $preboarderPesCleared = $preBoarderData['PES_CLEARED_DATE'];
+        $preboarderPesRecheck = $preBoarderData['PES_RECHECK_DATE'];
+        $preboarderPesLevel = $preBoarderData['PES_LEVEL'];
+
+        // get regular record
+        $regular = new personRecord();
+        switch($type) {
+            case personRecord::KEY_TYPE_CNUM:
+                $regular->setFromArray(array('CNUM' => $regularId));  
+                $regularData = $this->getFromDb($regular);
+                break;
+            case personRecord::KEY_TYPE_WORKER_ID:
+                $regular->setFromArray(array('WORKER_ID' => $regularId));                                     
+                $regularData = $this->getWithPredicate(" WORKER_ID='" . htmlspecialchars(trim($regularId)) . "' ");
+                break;
+            default:
+                $regularData = array();
+                break;
+        }
+        $regularData['PRE_BOARDED'] = $preboarderCnum;
+
+        $regularPesStatus = $regularData['PES_STATUS'];
+        $regularPesStatusD = $regularData['PES_STATUS_DETAILS'];
+
+        if (trim($regularPesStatus) == personRecord::PES_STATUS_INITIATED
+            || trim($regularPesStatus) == personRecord::PES_STATUS_REQUESTED
+            || trim($regularPesStatus) == personRecord::PES_STATUS_NOT_REQUESTED
+            || trim($regularPesStatus) == personRecord::PES_STATUS_RECHECK_REQ
+            || trim($regularPesStatus) == personRecord::PES_STATUS_RECHECK_PROGRESSING
+            || trim($regularPesStatus) == personRecord::PES_STATUS_MOVER) {
+            $regularData['PES_STATUS'] = $preboarderPesStatus;
+            $regularData['PES_STATUS_DETAILS'] = $regularPesStatusD . ":" . $preboarderPesStatusD;
+            $regularData['PES_DATE_EVIDENCE'] = $preBoarderPesEvidence;
+            $regularData['PES_CLEARED_DATE'] = $preboarderPesCleared;
+            $regularData['PES_RECHECK_DATE'] = $preboarderPesRecheck;
+            $regularData['PES_LEVEL'] = $preboarderPesLevel;
+        }
+        $regular->setFromArray($regularData);
+        if (!$this->update($regular)) {
+            sqlsrv_rollback($GLOBALS['conn']);
+            throw new \Exception("Failed to update Kyndryl employee record for CNUM: $regularId when linking to $preboarderCnum");
+            return false;
+        }
+
+        $preBoarderData['PES_STATUS_DETAILS'] = personRecord::PES_STATUS_DETAILS_BOARDED_AS . " " . $type .": " . $regularId . ":" . $regularData['KYN_EMAIL_ADDRESS'] . " Status was:" . $preboarderPesStatus;
+        $preBoarderData['EMAIL_ADDRESS'] = str_replace('ibm.com', '###.com', strtolower($preBoarderData['EMAIL_ADDRESS']));
+        $preBoarder->setFromArray($preBoarderData);
+        if (!$this->update($preBoarder)) {
+            sqlsrv_rollback($GLOBALS['conn']);
+            throw new \Exception("Failed to update Preboarder record for CNUM: $preboarderCnum when linking to $regularId");
+            return false;
+        }
+
+        $pesTrackerTable = new pesTrackerTable(allTables::$PES_TRACKER);
+
+        $trackerRecord = new pesTrackerRecord();
+        $trackerRecord->setFromArray(array('CNUM' => $regularId));
+        if (!$pesTrackerTable->existsInDb($trackerRecord)) {
+            if (!$pesTrackerTable->changeCnum($preboarderCnum, $regularId)) {
+                sqlsrv_rollback($GLOBALS['conn']);
+                throw new \Exception("Failed amending PES TRACKER Table to reflect that pre-boarder($preboarderCnum has been boarded as ($regularId) ");
+                return false;
+            }
+        } else {
+            $loader = new Loader();
+            $emailAddress = $loader->loadIndexed('EMAIL_ADDRESS', 'CNUM', allTables::$PERSON, " CNUM in('" . htmlspecialchars(trim($preboarderCnum)) . "','" . htmlspecialchars(trim($regularId)) . "') ");
+
+            $pesTrackerTable->savePesComment($regularId, "Serial Number changed from $preboarderCnum to $regularId");
+            $pesTrackerTable->savePesComment($regularId, "Email Address changed from $emailAddress[$preboarderCnum] to $emailAddress[$regularId] ");
         }
 
         sqlsrv_commit($GLOBALS['conn']);

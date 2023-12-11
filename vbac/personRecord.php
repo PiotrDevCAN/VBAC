@@ -81,6 +81,15 @@ class personRecord extends DbRecord
     protected $WORKER_ID;
     protected $CFIRST_ID;
 
+    // protected $BUSINESS_TITLE;
+    // protected $MATRIX_MANAGER_EMAIL;
+
+    // protected $PMO_STATUS_AWARE_INITIATE_DATE;
+
+    const KEY_TYPE_CNUM = 'CNUM';
+    const KEY_TYPE_WORKER_ID = 'WORKER_ID';
+    const KEY_TYPE_CFIRST_ID = 'CFIRST_ID';
+
     // Fields to be edited in the DataTables Reports. Need to know their position in the array $row;
     // const FIELD_CNUM = 0;
     // const FIELD_NOTES_ID = 5;
@@ -573,11 +582,7 @@ class personRecord extends DbRecord
     function checkIfTimeToWarnPmo(){
         if(!empty($this->PROJECTED_END_DATE)){
             $projectedEndDate = DateTime::createFromFormat('Y-m-d', $this->PROJECTED_END_DATE);
-
             $offboardingDate = new \DateTime();
-       //    $offboardThreshold = new \DateInterval('P30D');
-       //    $offboardingDate->add($offboardThreshold);
-
             return $projectedEndDate <= $offboardingDate;
         } else {
             return false;
@@ -1390,6 +1395,95 @@ class personRecord extends DbRecord
                         $emailAddress = 'Unknown email address';
                       }
                       ?><option value='<?=$cnum?>'><?="(" . $cnum . ") " . $emailAddress?></option><?php
+                  };
+                  ?>
+                </select>
+              </div>
+            </div>
+
+            <div class='form-group' id='linkToPreBoardedFormgroupDiv'>
+              <div class="col-sm-6" id='linkToPreBoarded'>
+                <select class='form-control select select2' id='person_preboarded'
+                  name='person_preboarded'
+                  <?=$preBoardersAvailable?>
+                  <?=$notEditable?>
+                  data-placeholder='Was pre-boarded as:' >
+                <option value=''>Link to Pre-Boarded</option>
+                <?php
+                    foreach ($availableFromPreBoarding as $option){
+                      echo $option;
+                    };
+                ?>
+                </select>
+              </div>
+            </div>
+		      </div>
+	      </div>
+        <?php
+        $allButtons = null;
+        $submitButton =  $this->formButton('submit','Submit','saveLinking',null,'Save','btn btn-primary');
+        $allButtons[] = $submitButton;
+        $this->formBlueButtons($allButtons);
+        $this->formHiddenInput('requestor',$_SESSION['ssoEmail'],'requestor');
+      ?>
+      </form>
+      <?php
+    }
+    
+    function displayLinkForm_NEW($mode){
+      $loader = new Loader();
+      $availableFromPreBoarding = personTable::optionsForPreBoarded();
+      $preBoardersAvailable = count($availableFromPreBoarding) > 1 ? null : " disabled='disabled' ";
+      $notEditable = $mode==FormClass::$modeEDIT ? ' disabled ' : null;
+
+      $availableForLinking = personTable::isNotPreBoardedPredicate();
+      $availableForLinking .= " AND " . personTable::normalCNUMPredicate();
+      $allNonLinkedKyndrylEmployees = $loader->loadIndexed('KYN_EMAIL_ADDRESS','CNUM',allTables::$PERSON, $availableForLinking);
+
+      $availableForLinkingWorkerID = personTable::isNotPreBoardedPredicate();
+      $availableForLinkingWorkerID .= " AND " . personTable::normalWorkerIDPredicate();
+      $allNonLinkedKyndrylEmployeesWorkerIDs = $loader->loadIndexed('KYN_EMAIL_ADDRESS','WORKER_ID',allTables::$PERSON, $availableForLinkingWorkerID);
+
+      $allPersons = array();
+      foreach($allNonLinkedKyndrylEmployees as $cnum => $emailAddress) {
+        $allPersons[$emailAddress]['cnum'] = $cnum; 
+      }
+      foreach($allNonLinkedKyndrylEmployeesWorkerIDs as $workerId => $emailAddress) {
+        $allPersons[$emailAddress]['workerId'] = $workerId; 
+      }
+
+      ksort($allPersons);
+
+      ?>
+      <form id='linkingForm'  class="form-horizontal" onsubmit="return false;">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title" id='employeeResourceHeading'>Employee Details</h3>
+          </div>
+          <div class="panel-body">
+            <div class='form-group' id='ibmerForLinking'>
+              <div class="col-sm-6" id='ibmerSelect'>
+                <select class='form-control select select2' 
+                  id='ibmer_preboarded'
+                  name='ibmer_preboarded'
+                  data-placeholder='Select Kyndryl employee:' >
+                <option value=''>Reg to Link</option>
+                <?php
+                  $cnum = self::NO_LONGER_AVAILABLE;
+                  $workerId = self::NOT_FOUND;
+                  foreach ($allPersons as $key => $employee) {
+                      if (array_key_exists('cnum', $employee)) {
+                        $type = personRecord::KEY_TYPE_CNUM;
+                        $value = $employee['cnum'];
+                        $cnum = $value;
+                      } else {
+                        if (array_key_exists('workerId', $employee)) {
+                          $type = personRecord::KEY_TYPE_WORKER_ID;
+                          $value = $employee['workerId'];
+                          $workerId = $value;
+                        }
+                      }
+                      ?><option data-email = '<?=$key?>' data-workerid = '<?=$workerId?>' data-cnum = '<?=$cnum?>' value='<?=$type.'_'.$value?>'><?=$key?></option><?php
                   };
                   ?>
                 </select>

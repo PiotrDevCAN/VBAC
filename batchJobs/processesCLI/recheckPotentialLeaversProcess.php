@@ -33,7 +33,7 @@ $start =  microtime(true);
 
 // get number of employees with potential status - BY CNUM
 $startPhase1 = microtime(true);
-$potentialLeaversPredicate = " ( REVALIDATION_STATUS like '" . personRecord::REVALIDATED_POTENTIAL_BEGINNING . "%')";
+$potentialLeaversPredicate = " ( REVALIDATION_STATUS LIKE '" . personRecord::REVALIDATED_POTENTIAL_BEGINNING . "%')";
 $potentialLeaversPredicate .= " AND " . personTable::availableCNUMPredicate();
 $allPotentialLeaversCNUMs = $loader->load('CNUM',allTables::$PERSON, $potentialLeaversPredicate );
 $allPotentialLeaversCNUMsCounterStart = count($allPotentialLeaversCNUMs);
@@ -89,10 +89,10 @@ AuditTable::audit("Potential Leavers re-check completed.",AuditTable::RECORD_TYP
 *
 */
 
-// get number of employees with potential status - BY CNUM
+// get number of employees with potential status - BY WORKER_ID
 $startPhase5 = microtime(true);
-$potentialLeaversPredicate = " ( REVALIDATION_STATUS like '" . personRecord::REVALIDATED_POTENTIAL_BEGINNING . "%')";
-$potentialLeaversPredicate .= " AND WORKER_ID NOT LIKE '" . personRecord::NOT_FOUND . "'";
+$potentialLeaversPredicate = " ( REVALIDATION_STATUS LIKE '" . personRecord::REVALIDATED_POTENTIAL_BEGINNING . "%')";
+$potentialLeaversPredicate .= " AND " . personTable::normalWorkerIDPredicate();
 $allPotentialLeaversWorkerIDs = $loader->load('WORKER_ID',allTables::$PERSON, $potentialLeaversPredicate );
 $allPotentialLeaversWorkerIDsCounterStart = count($allPotentialLeaversWorkerIDs);
 $endPhase5 = microtime(true);
@@ -112,7 +112,6 @@ foreach ($allPotentialLeaversWorkerIDs as $key => $WORKER_ID) {
         $employeeData = $data['results'][0];
         $notesid = personRecord::NO_LONGER_AVAILABLE;
         $mail = $employeeData['email'];
-        // $serial = $employeeData['cnum'];
         $personTable->confirmRevalidationByWORKER_ID($notesid, $mail, $WORKER_ID);
         unset($allPotentialLeaversWorkerIDs[$WORKER_ID]);
     }

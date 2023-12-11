@@ -3,6 +3,7 @@
 use itdq\BlueMail;
 use itdq\DbTable;
 use vbac\allTables;
+use vbac\personRecord;
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -11,6 +12,8 @@ error_reporting(E_ALL);
 set_time_limit(0);
 ini_set('memory_limit','2048M');
 
+$notFound = personRecord::NOT_FOUND;
+
 $_ENV['email'] = 'on';
 
 $timeMeasurements = array();
@@ -18,7 +21,7 @@ $start =  microtime(true);
 
 $startPhase1 = microtime(true);
 $allEntriesNotFound = array();
-$predicate = " BM.BUSINESS_TITLE IS NULL AND P.BUSINESS_TITLE NOT LIKE 'not found' AND P.BUSINESS_TITLE NOT LIKE 'Read value from Worker API' ";
+$predicate = " BM.BUSINESS_TITLE IS NULL AND P.BUSINESS_TITLE NOT LIKE '" . personRecord::NOT_FOUND . "' ";
 $sql = " SELECT DISTINCT P.BUSINESS_TITLE, P.KYN_EMAIL_ADDRESS ";
 $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
 $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$BUSINESS_TITLE_MAPPING . " AS BM ";

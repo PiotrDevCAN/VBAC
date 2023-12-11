@@ -32,7 +32,7 @@ $start =  microtime(true);
 
 // sets preboarder status
 $startPhase0 = microtime(true);
-$personTable->flagPreboarders();    // checked!!!
+$personTable->flagPreboarders();
 $endPhase0 = microtime(true);
 $timeMeasurements['phase_0'] = (float)($endPhase0-$startPhase0);
 
@@ -143,7 +143,7 @@ AuditTable::audit("Revalidation completed.",AuditTable::RECORD_TYPE_REVALIDATION
 // get number of employees with empty OR null OR found status
 $startPhase8 = microtime(true);
 $activeIbmErsPredicate = " ( trim(REVALIDATION_STATUS) = '' OR REVALIDATION_STATUS IS NULL OR trim(REVALIDATION_STATUS) = '" . personRecord::REVALIDATED_FOUND . "') ";
-$activeIbmErsPredicate .= " AND WORKER_ID NOT LIKE '" . personRecord::NOT_FOUND . "'";
+$activeIbmErsPredicate .= " AND " . personTable::normalWorkerIDPredicate();
 $allNonLeaversWorkerIDs = $loader->load('WORKER_ID',allTables::$PERSON, $activeIbmErsPredicate );
 $allNonLeaversWorkerIDsCounter = count($allNonLeaversWorkerIDs);
 $endPhase8 = microtime(true);
@@ -151,7 +151,6 @@ $timeMeasurements['phase_8'] = (float)($startPhase8-$startPhase8);
 
 // iterate through these employees' records
 AuditTable::audit("Revalidation will check " . $allNonLeaversWorkerIDsCounter . " people currently flagged as found.", AuditTable::RECORD_TYPE_REVALIDATION);
-
 
 $startPhase9 = microtime(true);
 foreach ($allNonLeaversWorkerIDs as $key => $WORKER_ID) {
@@ -164,7 +163,6 @@ foreach ($allNonLeaversWorkerIDs as $key => $WORKER_ID) {
         $employeeData = $data['results'][0];
         $notesid = personRecord::NO_LONGER_AVAILABLE;
         $mail = $employeeData['email'];
-        // $serial = $employeeData['cnum'];
         $personTable->confirmRevalidationByWORKER_ID($notesid, $mail, $WORKER_ID);
         unset($allNonLeaversWorkerIDs[$WORKER_ID]);
     }
