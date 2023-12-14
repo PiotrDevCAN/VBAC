@@ -33,6 +33,7 @@ class pesRequestEmail {
         $loader = new Loader();
 
         $cnum = $person->getValue('CNUM');
+        $workerId = $person->getValue('WORKER_ID');
         $fmCNUM = $person->getValue('FM_CNUM');
         if(!empty($fmCNUM)){
             $fmEmailArray = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON," CNUM='" . htmlspecialchars(trim($fmCNUM)) . "' ");
@@ -67,7 +68,7 @@ class pesRequestEmail {
           $level
         );
         $to[] = $pesTaskId;
-        $title = 'vBAC PES Request - ' . $cnum ." (" . trim($firstName) . " " . trim($lastName) . ")";
+        $title = 'vBAC PES Request - ' . $cnum ." / " . $workerId . " (" . trim($firstName) . " " . trim($lastName) . ")";
         $message = preg_replace(self::$pesEmailPatterns, $replacements, self::$pesEmailBody);
         
         $sendResponse = BlueMail::send_mail($to, $title, $message, self::$vbacNoReplyId);
