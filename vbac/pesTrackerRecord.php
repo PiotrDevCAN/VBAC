@@ -24,7 +24,8 @@ class pesTrackerRecord extends DbRecord
     protected $DATE_LAST_CHASED;
     protected $COMMENT;
     protected $PRIORITY;
-
+    
+    protected $WORKER_ID;
 }
     
     

@@ -14,10 +14,10 @@ $status = personRecord::PES_STATUS_PES_PROGRESSING;
 if(isset($_REQUEST['cnum']) && !empty($_POST['cnum'])){
     if(is_array($_POST['cnum'])){
         foreach($_POST['cnum'] as $key => $cnum) {
-            $personTable->setPesStatus($cnum, $status);
+            $personTable->setPesStatus($cnum, 'not found', $status);
         }
     } else {
-        $personTable->setPesStatus($_POST['cnum'], $status);
+        $personTable->setPesStatus($_POST['cnum'], $_POST['workerid'], $status);
     }
 }
 

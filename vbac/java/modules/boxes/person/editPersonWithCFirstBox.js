@@ -40,7 +40,9 @@ class editPersonWithCFirstBox extends box {
             $("#editPersonModal").modal("show");
             $.ajax({
                 url: "ajax/getEditPersonModalBody.php",
-                data: { cnum: cnum },
+                data: {
+                    cnum: cnum
+                },
                 type: "POST",
                 success: function (result) {
                     var resultObj = JSON.parse(result);
@@ -64,7 +66,7 @@ class editPersonWithCFirstBox extends box {
                             $("#existingIbmer").show();
                         }
                         $("#employeeResourceHeading").text(newHeading);
-                        
+
                         initialisePersonFormSelect2();
                         $.fn.modal.Constructor.prototype.enforceFocus = function () { };
                         var accountOrganisation = resultObj.accountOrganisation;

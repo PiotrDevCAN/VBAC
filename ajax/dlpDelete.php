@@ -10,11 +10,11 @@ AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_POST,
 $dlp = new dlpTable(allTables::$DLP);
 
 $trimmedParms = array_map('trim', $_POST);
-$dlp->delete($trimmedParms['cnum'], $trimmedParms['hostname'], $trimmedParms['transferred']);
+$dlp->delete($trimmedParms['cnum'], $trimmedParms['workerid'], $trimmedParms['hostname'], $trimmedParms['transferred']);
 
 $messages = ob_get_clean();
 ob_start();
 $success = (trim($messages) == "");
-$response = array('success'=>$success,'cnum'=>$trimmedParms['cnum'],'hostname'=>$trimmedParms['hostname'],'messages'=>$messages,"post"=>print_r($_POST,true));
+$response = array('success'=>$success,'cnum'=>$trimmedParms['cnum'],'workerid'=> $trimmedParms['workerid'],'hostname'=>$trimmedParms['hostname'],'messages'=>$messages,"post"=>print_r($_POST,true));
 ob_clean();
 echo json_encode($response);

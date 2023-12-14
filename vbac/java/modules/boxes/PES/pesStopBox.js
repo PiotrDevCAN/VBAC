@@ -22,16 +22,17 @@ class pesStopBox extends box {
         $(document).on("click", ".btnPesStop", function (e) {
             $(this).addClass("spinning");
             var cnum = $(this).data("cnum");
+            var workerId = $(this).data("workerid");
             var notesid = $(this).data("notesid");
             var email = $(this).data("email");
             var now = new Date();
             var passportFirst = $(this).data("passportfirst");
             var passportSurname = $(this).data("psm_passportSurname");
-
             $.ajax({
                 url: "ajax/sendPesStopRequestedEmail.php",
                 data: {
                     psm_cnum: cnum,
+                    psm_worker_id: workerId
                 },
                 type: "POST",
                 success: function (result) {

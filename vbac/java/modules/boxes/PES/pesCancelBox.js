@@ -22,8 +22,7 @@ class pesCancelBox extends box {
         $(document).on("click", ".btnPesCancel", function (e) {
             $(this).addClass("spinning");
             var cnum = $(this).data("cnum");
-            var notesid = $(this).data("notesid");
-            var email = $(this).data("email");
+            var workerId = $(this).data("workerid");
             var now = new Date();
             var passportFirst = $(this).data("passportfirst");
             var passportSurname = $(this).data("psm_passportSurname");
@@ -32,6 +31,7 @@ class pesCancelBox extends box {
                 url: "ajax/savePesStatus.php",
                 data: {
                     psm_cnum: cnum,
+                    psm_worker_id: workerId,
                     psm_status: "Cancel Requested",
                     psm_detail: "PES Cancel Requested",
                     PES_DATE_RESPONDED: now.toLocaleDateString("en-US"),

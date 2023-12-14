@@ -72,12 +72,17 @@ class editAgileNumberBox extends box {
             $(this).addClass("spinning").attr("disabled", true);
             $("#updateSquad").attr("disabled", true);
             var cnum = $(this).data("cnum");
+            var workerId = $(this).data("workerid");
             var version = $(this).data("version");
             $("#editAgileSquadModal .modal-body").html(spinner);
             $("#editAgileSquadModal").modal("show");
             $.ajax({
                 url: "ajax/getEditAgileNumberModalBody.php",
-                data: { cnum: cnum, version: version },
+                data: {
+                    cnum: cnum,
+                    workerid: workerId,
+                    version: version
+                },
                 type: "POST",
                 success: function (result) {
                     var resultObj = JSON.parse(result);

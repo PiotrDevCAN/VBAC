@@ -28,7 +28,8 @@ class completeOffboardingBox extends box {
                 url: "ajax/completeOffboarding.php",
                 type: "POST",
                 data: {
-                    cnum: data.cnum
+                    cnum: data.cnum,
+                    workerid: data.workerid
                 },
                 success: function (result) {
                     var resultObj = JSON.parse(result);

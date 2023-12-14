@@ -22,6 +22,7 @@ class amendPESLevelBox extends box {
 	listenForEditPesStatus() {
 		$(document).on("click", ".btnPesStatus", function (e) {
 			var cnum = $(this).data("cnum");
+			var workerId = $(this).data("workerid");
 			var notesid = $(this).data("notesid");
 			var email = $(this).data("email");
 			var revalidationStatus = $(this).data("revalidationstatus");
@@ -43,6 +44,7 @@ class amendPESLevelBox extends box {
 			notesid = notesid.trim() != "" ? notesid : email;
 			$("#psm_notesid").val(notesid);
 			$("#psm_cnum").val(cnum);
+			$("#psm_worker_id").val(workerId);
 			$("#psm_revalidationstatus").val(revalidationStatus);
 			$('#psm_status').val(status);
 

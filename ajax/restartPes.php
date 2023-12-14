@@ -3,6 +3,7 @@ use vbac\personRecord;
 use vbac\personTable;
 use vbac\allTables;
 use itdq\AuditTable;
+use vbac\emails\pesStatusChangeEmail;
 use vbac\pesEmail;
 
 ob_start();
@@ -12,16 +13,18 @@ $formattedEmailField= null;
 
 try {
     $personTable= new personTable(allTables::$PERSON);
-    $personTable->setPesStatus($_POST['psm_cnum'],$_POST['psm_status'],$_SESSION['ssoEmail']);
+    $personTable->setPesStatus($_POST['psm_cnum'],$_POST['psm_workerid'],$_POST['psm_status'],$_SESSION['ssoEmail']);
 
     $person = new personRecord();
-    $person->setFromArray(array('CNUM'=>$_POST['psm_cnum'],'PES_STATUS_DETAILS'=>$_POST['psm_detail'],'PES_DATE_RESPONDED'=>$_POST['PES_DATE_RESPONDED']));
+    $person->setFromArray(array('CNUM'=>$_POST['psm_cnum'],'WORKER_ID'=>$_POST['psm_workerid'],'PES_STATUS_DETAILS'=>$_POST['psm_detail'],'PES_DATE_RESPONDED'=>$_POST['PES_DATE_RESPONDED']));
     $updateRecordResult = $personTable->update($person,false,false);
 
     $personData = $personTable->getRecord($person);
     $person->setFromArray($personData);
 
-   AuditTable::audit("Saved Person <pre>" . print_r($person,true) . "</pre>", AuditTable::RECORD_TYPE_DETAILS);
+    $pesStatusChangeEmail = new pesStatusChangeEmail();
+    
+    AuditTable::audit("Saved Person <pre>" . print_r($person,true) . "</pre>", AuditTable::RECORD_TYPE_DETAILS);
 
     if(!$updateRecordResult){
         echo json_encode(sqlsrv_errors());
@@ -49,7 +52,7 @@ try {
             case personRecord::PES_STATUS_CLEARED_AMBER:
             case personRecord::PES_STATUS_CANCEL_REQ:
             case personRecord::PES_STATUS_RESTART:
-                $emailResponseData = $person->sendPesStatusChangedEmail(pesEmail::EMAIL_NOT_PES_SUPRESSABLE);
+                $emailResponseData = $pesStatusChangeEmail->sendPesStatusChangedEmail($person, pesEmail::EMAIL_NOT_PES_SUPRESSABLE);
                 list(
                     'response' => $emailResponse,
                     'to' => $to,
@@ -84,6 +87,7 @@ $response = array(
     'messages' => $messages, 
     'emailResponse' => $notificationStatus,
     'cnum' => $_POST['psm_cnum'], 
+    'workerId' => $_POST['psm_workerid'], 
     'formattedEmailField' => $formattedEmailField
 );
 $jse = json_encode($response);

@@ -78,6 +78,7 @@ $allPersons = $loader->loadIndexed('EMAIL_ADDRESS', 'CNUM', allTables::$PERSON, 
             $allButtons[] = $resetButton;
             $form->formBlueButtons($allButtons);
             $form->formHiddenInput('status', personRecord::PES_STATUS_PES_PROGRESSING, 'status');
+            $form->formHiddenInput('workerid', 'not found', 'workerid');
             ?>
         </div>
     </div>

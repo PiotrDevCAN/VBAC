@@ -8,7 +8,7 @@ ob_start();
 AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_REQUEST,true) . "</b>",AuditTable::RECORD_TYPE_DETAILS);
 
 $personTable = new personTable(allTables::$PERSON);
-$updateResult = $personTable->updateAgileSquadNumber($_POST['agileCnum'],$_POST['agileSquad'], $_POST['version']);
+$updateResult = $personTable->updateAgileSquadNumber($_POST['agileCnum'], $_POST['agileWorkerId'], $_POST['agileSquad'], $_POST['version']);
 
 if(!$updateResult){
     echo json_encode(sqlsrv_errors());

@@ -7,6 +7,8 @@ use itdq\WorkerAPI;
 use vbac\cFIRST\APICaller;
 use vbac\cFIRST\AddCandidateRequestRecord;
 use vbac\cFIRST\AddCandidateRequestTable;
+use vbac\emails\cbcEmail;
+use vbac\emails\offboardingWarningEmail;
 
 ob_start();
 
@@ -300,7 +302,8 @@ try {
             AuditTable::audit("PROJECTED_END_DATE:<pre>". print_r($_POST['PROJECTED_END_DATE'],true) . "</pre>", AuditTable::RECORD_TYPE_DETAILS);
         
             $timeToWarnPmo = $person->checkIfTimeToWarnPmo();
-            $timeToWarnPmo ? $person->sendOffboardingWarning() : null;
+            $offboardingWarning = new offboardingWarningEmail();
+            $timeToWarnPmo ? $offboardingWarning->sendOffboardingWarning($person) : null;
 
             // $saveRecordResult
             if ($saveRecordResult) {
@@ -354,8 +357,9 @@ try {
                             }
                             
                             $cnum = $person->getValue('CNUM');
-                            if (!empty($cnum)) {                    
-                                $person->checkForCBC();
+                            if (!empty($cnum)) {
+                                $cbc = new cbcEmail();
+                                $cbc->sendCbcEmail($person);
                             } else {
                                 echo "<br/>CBC Check notification has been NOT sent due to missing person data.";
                             }
@@ -363,7 +367,7 @@ try {
                             // Do we need to update a PRE-BOARDING record ?
                             if (!empty($_POST['person_preboarded'])){
                                 try {
-                                    $table->linkPreBoarderToIbmer($_POST['person_preboarded'], $_POST['CNUM']);
+                                    $table->linkPreBoarderToRegular($_POST['person_preboarded'], $_POST['CNUM']);
                                 } catch (Exception $e) {
                                     echo "Link PreBoarder To Ocean Id: " . $e->getMessage();
                                 }

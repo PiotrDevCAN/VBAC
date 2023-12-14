@@ -3,6 +3,7 @@ use vbac\personTable;
 use vbac\allTables;
 use vbac\personRecord;
 use itdq\AuditTable;
+use vbac\emails\pesRequestEmail;
 use vbac\pesTrackerTable;
 
 ob_start();
@@ -14,17 +15,22 @@ AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_POST,
 
 try {
 
+    $cnum = $_POST['cnum'];
+    $workerId = $_POST['workerid'];
+    
     $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER);
-    $pesTracker->createNewTrackerRecord($_POST['cnum']);
+    $pesTracker->createNewTrackerRecord($cnum, $workerId);
 
     $table = new personTable(allTables::$PERSON);
-    $personData = $table->getWithPredicate(" CNUM='" . htmlspecialchars(trim($_POST['cnum'])) . "' ");
+    $personData = $table->getWithPredicate(" CNUM='" . htmlspecialchars(trim($cnum)) . "' AND WORKER_ID='" . htmlspecialchars(trim($workerId)) . "' ");
 
     $person = new personRecord();
     $person->setFromArray($personData);
-    $person->sendPesRequest();
 
-    $success = $person->setPesRequested();
+    $pesRequest = new pesRequestEmail();
+    $pesRequest->sendPesRequest($person);
+
+    $success = $table->setPesRequested($cnum, $workerId, $_SESSION['ssoEmail']);
 
     echo $success ? "PES Check initiated" : "Problem Initiating PES check";
 } catch (Exception $e) {

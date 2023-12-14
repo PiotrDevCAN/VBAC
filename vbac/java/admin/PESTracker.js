@@ -6,11 +6,11 @@
 
 let pesTrackerTable = await cacheBustImport('./modules/tables/pesTracker.js');
 let pesevent = await cacheBustImport('./modules/pesEvent.js');
-let restartPesBox = await cacheBustImport('./modules/boxes/restartPesBox.js');
-let amendPESLevelBox = await cacheBustImport('./modules/boxes/amendPESLevelBox.js');
-let amendPESStatusBox = await cacheBustImport('./modules/boxes/amendPESStatusBox.js');
+let restartPesBox = await cacheBustImport('./modules/boxes/PES/restartPesBox.js');
+let amendPESLevelBox = await cacheBustImport('./modules/boxes/PES/amendPESLevelBox.js');
+let amendPESStatusBox = await cacheBustImport('./modules/boxes/PES/amendPESStatusBox.js');
 
-let pesInitiateFromPesTrackerBox = await cacheBustImport('./modules/boxes/person/pesInitiateFromPesTrackerBox.js');
+let pesInitiateFromPesTrackerBox = await cacheBustImport('./modules/boxes/PES/pesInitiateFromPesTrackerBox.js');
 let sendPesEmailBox = await cacheBustImport('./modules/boxes/person/sendPesEmailBox.js');
 let togglePesTrackerStatusDetailsBox = await cacheBustImport('./modules/boxes/person/togglePesTrackerStatusDetailsBox.js');
 

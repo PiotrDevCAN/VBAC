@@ -1,7 +1,6 @@
 <?php
 
 use itdq\AuditTable;
-use vbac\pesEventTable;
 use vbac\allTables;
 use vbac\pesTrackerTable;
 
@@ -12,9 +11,9 @@ $chasedDate = DateTime::createFromFormat('d M Y', $_POST['date']);
 
 try {
 
-    $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER   );
-    $pesTracker->setPesDateLastChased($_POST['cnum'],$chasedDate->format('Y-m-d'));
-    $comment = $pesTracker->savePesComment($_POST['cnum'],"Date last chased set to :" . $chasedDate->format('Y-m-d') );
+    $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER);
+    $pesTracker->setPesDateLastChased($_POST['cnum'],$_POST['workerid'],$chasedDate->format('Y-m-d'));
+    $comment = $pesTracker->savePesComment($_POST['cnum'],$_POST['workerid'],"Date last chased set to :" . $chasedDate->format('Y-m-d') );
 
     $messages  = ob_get_clean();
     ob_start();

@@ -25,6 +25,7 @@ function saveVendorBoarding(mode, form, saveButton, initiatePesButton, table) {
                 var panelclass = "panel-success";
                 if (resultObj.success == true) {
                     $("#resource_uid").val(resultObj.cnum);
+                    $("#resource_worker_id").val(resultObj.workerid);
                     message += "<div class=panel-heading><h3 class=panel-title>Success</h3>" + resultObj.messages;
                     form.find(':input').attr("disabled", true);
                     saveButton.attr("disabled", true);

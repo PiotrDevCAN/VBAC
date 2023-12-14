@@ -1,28 +1,13 @@
 <?php
 
-use itdq\Loader;
-use vbac\allTables;
+use vbac\knownValues\knownWorkerIDs;
 
 set_time_limit(0);
 ob_start();
 
-$redis = $GLOBALS['redis'];
-$key = 'getKnownWorkerIDs';
-$redisKey = md5($key.'_key_'.$_ENV['environment']);
-if (!$redis->get($redisKey)) {
-    $source = 'SQL Server';
-        
-    $predicate=null;
-
-    $loader = new Loader();
-    $data = $loader->load('WORKER_ID', allTables::$PERSON, null, false);
-
-    $redis->set($redisKey, json_encode($data));
-    $redis->expire($redisKey, REDIS_EXPIRE);
-} else {
-    $source = 'Redis Server';
-    $data = json_decode($redis->get($redisKey), true);
-}
+$direcory = new knownWorkerIDs();
+$knownData = $direcory->getData();
+list('data' => $data, 'source' => $source) = $knownData;
 
 $messages = ob_get_clean();
 $response = array("data"=>$data,'messages'=>$messages,'count'=>count($data),'source'=>$source);

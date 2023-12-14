@@ -21,12 +21,11 @@ class setPmoStatusBox extends box {
         var $this = this;
         $(document).on("click", ".btnSetPmoStatus", function (e) {
             $(this).addClass("spinning");
-            var cnum = $(this).data("cnum");
-            var setpmostatusto = $(this).data("setpmostatusto");
+            var data = $(this).data();
             $.ajax({
                 url: "ajax/setPmoStatus.php",
                 type: "POST",
-                data: { cnum: cnum, setpmostatusto: setpmostatusto },
+                data: data,
                 success: function (result) {
                     var resultObj = JSON.parse(result);
                     $this.tableObj.table.ajax.reload();

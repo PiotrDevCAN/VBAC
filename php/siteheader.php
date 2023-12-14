@@ -390,6 +390,18 @@ if (isset($_SERVER['HTTP_USER_AGENT']) && !empty($_SERVER['HTTP_USER_AGENT'])) {
     error_log("Pre Redis:" . (float)($elapsed-$start));
     $redisClient = new Redis();
     
+    /*
+    $twigLoader = new \Twig\Loader\FilesystemLoader('./templates');
+    $twig = new \Twig\Environment($twigLoader, [
+        'cache' => './templates/cache',
+    ]);
+
+    $GLOBALS['twig'] = $twig;
+
+    $template = $twig->render('index.html');
+    var_dump($template);
+    */
+    
     if ($helper->isCli()) {
         // $helper->log('This example should only be run from a Web Browser' . PHP_EOL);
     } else {

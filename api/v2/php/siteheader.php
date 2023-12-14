@@ -20,4 +20,3 @@ $GLOBALS['Db2Schema'] = str_replace('_LOCAL', '', $GLOBALS['Db2Schema']);
 
 $_SESSION['ssoEmail'] = empty($_SESSION['ssoEmail']) ? 'API Invocation' : $_SESSION['ssoEmail'];
 include "connect.php";
-// personRecord::employeeTypeMappingToDb2();

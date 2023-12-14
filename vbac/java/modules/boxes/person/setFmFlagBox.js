@@ -21,6 +21,7 @@ class setFmFlagBox extends box {
     listenForToggleFmFlag() {
         $(document).on("click", ".btnSetFmFlag", function (e) {
             var cnum = $(this).data("cnum");
+            var workerId = $(this).data("workerid");
             var notesid = $(this).data("notesid");
             var flag = $(this).data("fmflag");
             var message = "<p>For: <b>" + notesid + "</b></p>";
@@ -28,6 +29,10 @@ class setFmFlagBox extends box {
             message +=
                 "<input id='cFmCnum' name='cnum' value='" +
                 cnum +
+                "' type='hidden' >";
+            message +=
+                "<input id='cFmWorkerId' name='workerid' value='" +
+                workerId +
                 "' type='hidden' >";
             message +=
                 "<input id='cFmNotesid' name='notesid' value='" +

@@ -1,4 +1,5 @@
 <?php
+
 namespace vbac;
 
 use itdq\AuditTable;
@@ -110,7 +111,7 @@ class personTable extends DbTable
         $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS U "; // lookup upline ( second line )
         $sql.= " ON F.FM_CNUM = U.CNUM ";
         $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PES_TRACKER . " AS PT ";
-        $sql.= " ON P.CNUM = PT.CNUM ";
+        $sql.= " ON P.CNUM = PT.CNUM AND P.WORKER_ID = PT.WORKER_ID";
         $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$EMPLOYEE_TYPE_MAPPING .  " AS EM ";
         $sql.= " ON upper(P.EMPLOYEE_TYPE) = upper(EM.CODE) ";
         $sql.= " LEFT JOIN " .  $GLOBALS['Db2Schema'] . "." . allTables::$BUSINESS_TITLE_MAPPING . " AS BM ";
@@ -619,6 +620,7 @@ class personTable extends DbTable
         $employeeType = trim($row['EMPLOYEE_TYPE']);
         $cnum = trim($row['CNUM']);
         $row['actualCNUM'] = $cnum;
+        $workerId = trim($row['WORKER_ID']);
         $flag = isset($row['FM_MANAGER_FLAG']) ? trim($row['FM_MANAGER_FLAG']) : null;
         $status = empty($row['PES_STATUS']) ? personRecord::PES_STATUS_NOT_REQUESTED : trim($row['PES_STATUS']);
         $pesLevel = trim($row['PES_LEVEL']);
@@ -663,6 +665,7 @@ class personTable extends DbTable
         if (($_SESSION['isPes'] || $_SESSION['isPmo'] || $_SESSION['isFm'] || $_SESSION['isCdi']) && ($revalidationStatus != personRecord::REVALIDATED_OFFBOARDED)) {
             $row['CNUM'] .= "<button type='button' class='btn btn-default btn-xs ".$btnClass."' aria-label='Left Align' ";
             $row['CNUM'] .= " data-cnum='" . $cnum . "'";
+            $row['CNUM'] .= " data-workerid='" . $workerId . "'";
             $row['CNUM'] .= " data-toggle='tooltip' data-placement='top' title='Edit Person Record (".$employeeType.")'";
             $row['CNUM'] .= " > ";
             $row['CNUM'] .= " <span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
@@ -684,8 +687,9 @@ class personTable extends DbTable
             if ($pmoStatus == personRecord::PMO_STATUS_TBA || $pmoStatus == personRecord::PMO_STATUS_AWARE) {
                 $row['PMO_STATUS'] .= "<button type='button' class='btn btn-default btn-xs btnSetPmoStatus' aria-label='Left Align' ";
                 $row['PMO_STATUS'] .= " data-cnum='" . $cnum . "' ";
+                $row['PMO_STATUS'] .= " data-workerid='" . $workerId . "' ";
                 $row['PMO_STATUS'] .= " data-setpmostatusto='" . personRecord::PMO_STATUS_CONFIRMED . "' ";
-                $row['PMO_STATUS'] .= " data-toggle='tooltip' data-placement='top' title='Set PMO Status Aware'";
+                $row['PMO_STATUS'] .= " data-toggle='tooltip' data-placement='top' title='Set PMO Status Confirmed'";
                 $row['PMO_STATUS'] .= " > ";
                 $row['PMO_STATUS'] .= " <span class='glyphicon glyphicon-thumbs-up ' aria-hidden='true'></span>";
                 $row['PMO_STATUS'] .= " </button> ";
@@ -694,8 +698,9 @@ class personTable extends DbTable
             if ($pmoStatus == personRecord::PMO_STATUS_TBA || $pmoStatus == personRecord::PMO_STATUS_CONFIRMED) {
                 $row['PMO_STATUS'] .= "<button type='button' class='btn btn-default btn-xs btnSetPmoStatus' aria-label='Left Align' ";
                 $row['PMO_STATUS'] .= " data-cnum='" . $cnum . "' ";
+                $row['PMO_STATUS'] .= " data-workerid='" . $workerId . "' ";
                 $row['PMO_STATUS'] .= " data-setpmostatusto='" . personRecord::PMO_STATUS_AWARE . "' ";
-                $row['PMO_STATUS'] .= " data-toggle='tooltip' data-placement='top' title='Set PMO Status Confirmed'";
+                $row['PMO_STATUS'] .= " data-toggle='tooltip' data-placement='top' title='Set PMO Status Aware'";
                 $row['PMO_STATUS'] .= " > ";
                 $row['PMO_STATUS'] .= " <span class='glyphicon glyphicon-thumbs-down ' aria-hidden='true'></span>";
                 $row['PMO_STATUS'] .= " </button> ";
@@ -708,6 +713,7 @@ class personTable extends DbTable
             if (strtoupper(substr($flag, 0, 1)) == 'N' || empty($flag)) {
                 $row['FM_MANAGER_FLAG'] = "<button type='button' class='btn btn-default btn-xs btnSetFmFlag' aria-label='Left Align' ";
                 $row['FM_MANAGER_FLAG'] .= " data-cnum='" . $cnum . "' ";
+                $row['FM_MANAGER_FLAG'] .= " data-workerid='" . $workerId . "'";
                 $row['FM_MANAGER_FLAG'] .= " data-notesid='" . $notesId . "' ";
                 $row['FM_MANAGER_FLAG'] .= " data-fmflag='Yes' ";
                 $row['FM_MANAGER_FLAG'] .= " data-toggle='tooltip' data-placement='top' title='Toggle FM Flag'";
@@ -717,6 +723,7 @@ class personTable extends DbTable
             } elseif (strtoupper(substr($flag, 0, 1) == 'Y')) {
                 $row['FM_MANAGER_FLAG'] = "<button type='button' class='btn btn-default btn-xs btnSetFmFlag' aria-label='Left Align' ";
                 $row['FM_MANAGER_FLAG'] .= " data-cnum='" . $cnum . "' ";
+                $row['FM_MANAGER_FLAG'] .= " data-workerid='" . $workerId . "'";
                 $row['FM_MANAGER_FLAG'] .= " data-notesid='" . $notesId . "' ";
                 $row['FM_MANAGER_FLAG'] .= " data-fmflag='No' ";
                 $row['FM_MANAGER_FLAG'] .= " data-toggle='tooltip' data-placement='top' title='Toggle FM Flag'";
@@ -744,6 +751,7 @@ class personTable extends DbTable
         if (($_SESSION['isCdi'])) {
             $row['EMAIL_ADDRESS'] .= "<button type='button' class='btn btn-default btn-xs btnEditEmail' aria-label='Left Align' ";
             $row['EMAIL_ADDRESS'] .= " data-cnum='" . $cnum . "'";
+            $row['EMAIL_ADDRESS'] .= " data-workerid='" . $workerId . "'";
             $row['EMAIL_ADDRESS'] .= " data-email='" . $email . "'";
             $row['EMAIL_ADDRESS'] .= " data-toggle='tooltip' data-placement='top' title='Edit Email Address'";
             $row['EMAIL_ADDRESS'] .= " > ";
@@ -758,6 +766,7 @@ class personTable extends DbTable
             if (endsWith($email, 'ocean.ibm.com')) {
                 $row['KYN_EMAIL_ADDRESS'] .= "<button type='button' class='btn btn-default btn-xs btnEditKyndrylEmail' aria-label='Left Align' ";
                 $row['KYN_EMAIL_ADDRESS'] .= " data-cnum='" . $cnum . "'";
+                $row['KYN_EMAIL_ADDRESS'] .= " data-workerid='" . $workerId . "'";
                 $row['KYN_EMAIL_ADDRESS'] .= " data-email='" . $kyndrylEmail . "'";
                 $row['KYN_EMAIL_ADDRESS'] .= " data-toggle='tooltip' data-placement='top' title='Edit Kyndryl Email Address'";
                 $row['KYN_EMAIL_ADDRESS'] .= " > ";
@@ -781,35 +790,39 @@ class personTable extends DbTable
 
         if (($_SESSION['isPmo'] || $_SESSION['isCdi']) && personRecord::checkIsOffboarding($revalidationStatus)) {
             $row['REVALIDATION_STATUS'] = "<button type='button' class='btn btn-default btn-xs btnStopOffboarding btn-danger' aria-label='Left Align' ";
-            $row['REVALIDATION_STATUS'] .= "data-cnum='" . $cnum . "'";
+            $row['REVALIDATION_STATUS'] .= " data-cnum='" . $cnum . "'";
+            $row['REVALIDATION_STATUS'] .= " data-workerid='" . $workerId . "'";
             $row['REVALIDATION_STATUS'] .= " data-toggle='tooltip' data-placement='top' title='Stop Offboarding Process'";
-            $row['REVALIDATION_STATUS'] .= "title='Stop Offboarding'";
+            $row['REVALIDATION_STATUS'] .= " title='Stop Offboarding'";
             $row['REVALIDATION_STATUS'] .= " > ";
-            $row['REVALIDATION_STATUS'] .= "<span class='glyphicon glyphicon-remove-sign ' aria-hidden='true'></span>";
+            $row['REVALIDATION_STATUS'] .= " <span class='glyphicon glyphicon-remove-sign ' aria-hidden='true'></span>";
             $row['REVALIDATION_STATUS'] .= " </button> ";
             $row['REVALIDATION_STATUS'] .= "<button type='button' class='btn btn-default btn-xs btnOffboarded btn-danger' aria-label='Left Align' ";
-            $row['REVALIDATION_STATUS'] .= "data-cnum='" . $cnum . "'";
-            $row['REVALIDATION_STATUS'] .= "title='Complete Offboarding.'";
+            $row['REVALIDATION_STATUS'] .= " data-cnum='" . $cnum . "'";
+            $row['REVALIDATION_STATUS'] .= " data-workerid='" . $workerId . "'";
+            $row['REVALIDATION_STATUS'] .= " title='Complete Offboarding.'";
             $row['REVALIDATION_STATUS'] .= " > ";
-            $row['REVALIDATION_STATUS'] .= "<span class='glyphicon glyphicon-log-out ' aria-hidden='true'></span>";
+            $row['REVALIDATION_STATUS'] .= " <span class='glyphicon glyphicon-log-out ' aria-hidden='true'></span>";
             $row['REVALIDATION_STATUS'] .= " </button> ";
             $row['REVALIDATION_STATUS'] .= $revalidationStatus;
         }
 
         if ($potentialForOffboarding && ($_SESSION['isPmo'] || $_SESSION['isCdi']) && !personRecord::checkIsOffboarding($revalidationStatus)) {
             $row['REVALIDATION_STATUS'] = "<button type='button' class='btn btn-default btn-xs btnOffboarding btn-warning' aria-label='Left Align' ";
-            $row['REVALIDATION_STATUS'] .= "data-cnum='" . $cnum . "'";
+            $row['REVALIDATION_STATUS'] .= " data-cnum='" . $cnum . "'";
+            $row['REVALIDATION_STATUS'] .= " data-workerid='" . $workerId . "'";
             $row['REVALIDATION_STATUS'] .= " data-toggle='tooltip' data-placement='top' title='Initiate Offboarding." . $offboardingHint . "' ";
             $row['REVALIDATION_STATUS'] .= " > ";
-            $row['REVALIDATION_STATUS'] .= "<span class='glyphicon glyphicon-log-out ' aria-hidden='true'></span>";
+            $row['REVALIDATION_STATUS'] .= " <span class='glyphicon glyphicon-log-out ' aria-hidden='true'></span>";
             $row['REVALIDATION_STATUS'] .= " </button> ";
             $row['REVALIDATION_STATUS'] .= $revalidationStatus;
         }
 
         if (($_SESSION['isPmo'] || $_SESSION['isCdi']) && personRecord::checkIsOffboarded($revalidationStatus)) {
             $row['REVALIDATION_STATUS'] = "<button type='button' class='btn btn-default btn-xs btnDeoffBoarding btn-danger' aria-label='Left Align' ";
-            $row['REVALIDATION_STATUS'] .= "data-cnum='" . $cnum . "'";
-            $row['REVALIDATION_STATUS'] .= "title='Bring back from Offboarding.'";
+            $row['REVALIDATION_STATUS'] .= " data-cnum='" . $cnum . "'";
+            $row['REVALIDATION_STATUS'] .= " data-workerid='" . $workerId . "'";
+            $row['REVALIDATION_STATUS'] .= " title='Bring back from Offboarding.'";
             $row['REVALIDATION_STATUS'] .= " data-toggle='tooltip' data-placement='top' title='Recover person from Offboarding'";
             $row['REVALIDATION_STATUS'] .= " > ";
             $row['REVALIDATION_STATUS'] .= "<span class='glyphicon glyphicon-log-in ' aria-hidden='true'></span>";
@@ -820,8 +833,9 @@ class personTable extends DbTable
         // CT_ID
         if (($_SESSION['isPmo'] || $_SESSION['isCdi']) && !empty($ctid)) {
             $row['CT_ID'] = "<button type='button' class='btn btn-default btn-xs btnClearCtid btn-danger' aria-label='Left Align' ";
-            $row['CT_ID'] .= "data-cnum='" . $cnum . "'";
-            $row['CT_ID'] .= "title='Delete CT ID.'";
+            $row['CT_ID'] .= " data-cnum='" . $cnum . "'";
+            $row['CT_ID'] .= " data-workerid='" . $workerId . "'";
+            $row['CT_ID'] .= " title='Delete CT ID.'";
             $row['CT_ID'] .= " data-toggle='tooltip' data-placement='top' title='Clear CT ID'";
             $row['CT_ID'] .= " > ";
             $row['CT_ID'] .= "<span class='glyphicon glyphicon-trash ' aria-hidden='true'></span>";
@@ -831,7 +845,6 @@ class personTable extends DbTable
 
         // FM_CNUM
         $btnColor = isset($this->allDelegates[$row['fmCnum']]) ? 'btn-success' : 'btn-secondary';
-
         if (!empty($row['fmCnum'])) {
             $row['FM_CNUM'] = "<button ";
             $row['FM_CNUM'] .= " type='button' class='btn $btnColor btn-xs' aria-label='Left Align' ";
@@ -856,30 +869,39 @@ class personTable extends DbTable
         return $row;
     }
 
-    public function setPesRequested($cnum = null, $requestor = null, $recheck = false)
+    public function setPesRequested($cnum = null, $workerId = null, $requestor = null, $recheck = false)
     {
         if (!$cnum) {
             throw new \Exception('No CNUM provided in ' . __METHOD__);
+        }
+        if (!$workerId) {
+            throw new \Exception('No WORKER ID provided in ' . __METHOD__);
         }
         $statusToSetTo = $recheck ? personRecord::PES_STATUS_RECHECK_PROGRESSING : personRecord::PES_STATUS_INITIATED;
-        $result = $this->setPesStatus($cnum, $statusToSetTo, $requestor);
+        $result = $this->setPesStatus($cnum, $workerId, $statusToSetTo, $requestor);
         return $result;
     }
 
-    public function setPesEvidence($cnum = null, $requestor = null)
+    public function setPesEvidence($cnum = null, $workerId = null, $requestor = null)
     {
         if (!$cnum) {
             throw new \Exception('No CNUM provided in ' . __METHOD__);
         }
+        if (!$workerId) {
+            throw new \Exception('No WORKER ID provided in ' . __METHOD__);
+        }
         $requestor = empty($requestor) ? $_SESSION['ssoEmail'] : $requestor;
-        $result = $this->setPesStatus($cnum, personRecord::PES_STATUS_REQUESTED, $requestor);
+        $result = $this->setPesStatus($cnum, $workerId, personRecord::PES_STATUS_REQUESTED, $requestor);
         return $result;
     }
 
-    public function setPesStatus($cnum = null, $status = null, $requestor = null, $dateToUse = null)
+    public function setPesStatus($cnum = null, $workerId = null, $status = null, $requestor = null, $dateToUse = null)
     {
         if (!$cnum) {
             throw new \Exception('No CNUM provided in ' . __METHOD__);
+        }
+        if (!$workerId) {
+            throw new \Exception('No WORKER ID provided in ' . __METHOD__);
         }
 
         $dateToUseObj = isset($dateToUse) ? \DateTime::createFromFormat('Y-m-d', $dateToUse) : new \DateTime();
@@ -906,7 +928,7 @@ class personTable extends DbTable
             case personRecord::PES_STATUS_CLEARED_PERSONAL:
             case personRecord::PES_STATUS_CLEARED_AMBER:
                 $dateField = personRecord::COLUMN_PES_CLEARED_DATE;
-                $this->setPesRescheckDate($cnum, $requestor, $dateToUse);
+                $this->setPesRescheckDate($cnum, $workerId, $requestor, $dateToUse);
                 break;
             case personRecord::PES_STATUS_PROVISIONAL:
             default:
@@ -918,6 +940,7 @@ class personTable extends DbTable
         $sql .= " PES_STATUS = ? ,";
         $sql .= " PES_REQUESTOR = ? ";
         $sql .= " WHERE CNUM = ? ";
+        $sql .= " AND WORKER_ID = ? ";
 
         $requestor = trim($status) == personRecord::PES_STATUS_INITIATED ? htmlspecialchars($requestor) : null;
 
@@ -925,7 +948,8 @@ class personTable extends DbTable
             $dateToUseObj->format('Y-m-d'),
             htmlspecialchars($status),
             $requestor,
-            htmlspecialchars($cnum)
+            htmlspecialchars($cnum),
+            htmlspecialchars($workerId)
         );
         $result = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
@@ -935,17 +959,20 @@ class personTable extends DbTable
         }
 
         $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER);
-        $pesTracker->savePesComment($cnum, "PES_STATUS set to :" . $status . " Date Used:" . $dateToUseObj->format('Y-m-d'));
+        $pesTracker->savePesComment($cnum, $workerId, "PES_STATUS set to :" . $status . " Date Used:" . $dateToUseObj->format('Y-m-d'));
 
-        AuditTable::audit("PES Status set for:" . $cnum . " To : " . $status . " By:" . $requestor, AuditTable::RECORD_TYPE_AUDIT);
+        AuditTable::audit("PES Status set for:" . $cnum . "/" . $workerId . " To : " . $status . " By:" . $requestor, AuditTable::RECORD_TYPE_AUDIT);
 
         return true;
     }
 
-    public function setPesLevel($cnum = null, $level = null, $requestor = null)
+    public function setPesLevel($cnum = null, $workerId = null, $level = null, $requestor = null)
     {
         if (!$cnum) {
             throw new \Exception('No CNUM provided in ' . __METHOD__);
+        }
+        if (!$workerId) {
+            throw new \Exception('No WORKER ID provided in ' . __METHOD__);
         }
 
         $requestor = empty($requestor) ? $_SESSION['ssoEmail'] : $requestor;
@@ -953,6 +980,7 @@ class personTable extends DbTable
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET PES_LEVEL = '" . htmlspecialchars($level) . "' ";
         $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
+        $sql .= " AND WORKER_ID = '" . htmlspecialchars($workerId) . "' ";
 
         $result = sqlsrv_query($GLOBALS['conn'], $sql);
 
@@ -960,14 +988,17 @@ class personTable extends DbTable
             DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
             return false;
         }
-        AuditTable::audit("PES Level set for:" . $cnum . " To : " . $level . " By:" . $requestor, AuditTable::RECORD_TYPE_AUDIT);
+        AuditTable::audit("PES Level set for:" . $cnum . "/" . $workerId . " To : " . $level . " By:" . $requestor, AuditTable::RECORD_TYPE_AUDIT);
         return true;
     }
 
-    public function setPesRescheckDate($cnum = null, $requestor = null, $dateToUse = null, $recheckImmediately = null)
+    public function setPesRescheckDate($cnum = null, $workerId = null, $requestor = null, $dateToUse = null, $recheckImmediately = null)
     {
         if (!$cnum) {
             throw new \Exception('No CNUM provided in ' . __METHOD__);
+        }
+        if (!$workerId) {
+            throw new \Exception('No WORKER ID provided in ' . __METHOD__);
         }
 
         $requestor = empty($requestor) ? $_SESSION['ssoEmail'] : $requestor;
@@ -975,7 +1006,7 @@ class personTable extends DbTable
         if (!$recheckImmediately) {
 
             $loader = new Loader();
-            $predicate = " CNUM = '" . htmlspecialchars(trim($cnum)) . "' ";
+            $predicate = " CNUM = '" . htmlspecialchars(trim($cnum)) . "' AND WORKER_ID = '" . htmlspecialchars(trim($workerId)) . "' ";
 
             $pesLevels = $loader->loadIndexed('PES_LEVEL', 'CNUM', allTables::$PERSON, $predicate);
             $pesLevel = isset($pesLevels[trim($cnum)]) ? $pesLevels[trim($cnum)] : self::PES_LEVEL_DEFAULT;
@@ -994,6 +1025,7 @@ class personTable extends DbTable
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET PES_RECHECK_DATE = DATEADD(year, " . $pesRecheckPeriod . ", '" . $dateToUseObj->format('Y-m-d') . "') ";
         $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
+        $sql .= " AND WORKER_ID = '" . htmlspecialchars($workerId) . "' ";
 
         $result = sqlsrv_query($GLOBALS['conn'], $sql);
 
@@ -1004,6 +1036,7 @@ class personTable extends DbTable
 
         $sql = " SELECT PES_RECHECK_DATE FROM  " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
+        $sql .= " AND WORKER_ID = '" . htmlspecialchars($workerId) . "' ";
 
         $res = sqlsrv_query($GLOBALS['conn'], $sql);
 
@@ -1015,7 +1048,7 @@ class personTable extends DbTable
         $row = sqlsrv_fetch_array($res, SQLSRV_FETCH_ASSOC);
 
         $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER);
-        $pesTracker->savePesComment($cnum, "PES_RECHECK_DATE set to :" . $row['PES_RECHECK_DATE']);
+        $pesTracker->savePesComment($cnum, $workerId, "PES_RECHECK_DATE set to :" . $row['PES_RECHECK_DATE']);
 
         AuditTable::audit("PES_RECHECK_DATE set to :  " . $row['PES_RECHECK_DATE'] . " by " . $requestor, AuditTable::RECORD_TYPE_AUDIT);
 
@@ -1049,15 +1082,22 @@ class personTable extends DbTable
     }
      */
 
-    public function setPmoStatus($cnum = null, $status = null, $requestor = null)
+    public function setPmoStatus($cnum = null, $workerId = null, $status = null, $requestor = null)
     {
         if (!$cnum) {
             throw new \Exception('No CNUM provided in ' . __METHOD__);
+        }
+        if (!$workerId) {
+            throw new \Exception('No WORKER ID provided in ' . __METHOD__);
+        }
+        if (!$status) {
+            throw new \Exception('No PMO STATUS provided in ' . __METHOD__);
         }
 
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET PMO_STATUS = '" . htmlspecialchars($status) . "' ";
         $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
+        $sql .= " AND WORKER_ID = '" . htmlspecialchars($workerId) . "' ";
 
         try {
             $result = sqlsrv_query($GLOBALS['conn'], $sql);
@@ -1068,6 +1108,30 @@ class personTable extends DbTable
         if (!$result) {
             DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
             return false;
+        }
+
+        switch($status) {
+            case personRecord::PMO_STATUS_AWARE:
+                
+                $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
+                $sql .= " SET PMO_STATUS_AWARE_INITIATE_DATE = CAST( CURRENT_TIMESTAMP AS Date ) ";
+                $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
+                $sql .= " AND WORKER_ID = '" . htmlspecialchars($workerId) . "' ";
+                $sql .= " AND PMO_STATUS_AWARE_INITIATE_DATE IS NULL";
+
+                try {
+                    $result = sqlsrv_query($GLOBALS['conn'], $sql);
+                } catch (\Exception $e) {
+                    var_dump($e);
+                }
+
+                if (!$result) {
+                    DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
+                    return false;
+                }
+                break;
+            default:
+                break;
         }
 
         AuditTable::audit("PMO Status for cnum: $cnum set to : $status by " . $_SESSION['ssoEmail'], AuditTable::RECORD_TYPE_AUDIT);
@@ -1110,13 +1174,13 @@ class personTable extends DbTable
             throw new \Exception('No CNUM provided in ' . __METHOD__);
         }
         if (!$workerId) {
-            throw new \Exception('No WORKER_ID provided in ' . __METHOD__);
+            throw new \Exception('No WORKER ID provided in ' . __METHOD__);
         }
         if (!$businessTitle) {
-            throw new \Exception('No BUSINESS_TITLE provided in ' . __METHOD__);
+            throw new \Exception('No BUSINESS TITLE provided in ' . __METHOD__);
         }
         if (!$managerEmail) {
-            throw new \Exception('No MATRIX_MANAGER_EMAIL provided in ' . __METHOD__);
+            throw new \Exception('No MATRIX MANAGER EMAIL provided in ' . __METHOD__);
         }
 
         $data = array(
@@ -1154,13 +1218,13 @@ class personTable extends DbTable
             throw new \Exception('No Email Address provided in ' . __METHOD__);
         }
         if (!$workerId) {
-            throw new \Exception('No WORKER_ID provided in ' . __METHOD__);
+            throw new \Exception('No WORKER ID provided in ' . __METHOD__);
         }
         if (!$businessTitle) {
-            throw new \Exception('No BUSINESS_TITLE provided in ' . __METHOD__);
+            throw new \Exception('No BUSINESS TITLE provided in ' . __METHOD__);
         }
         if (!$managerEmail) {
-            throw new \Exception('No MATRIX_MANAGER_EMAIL provided in ' . __METHOD__);
+            throw new \Exception('No MATRIX MANAGER EMAIL provided in ' . __METHOD__);
         }
 
         $data = array(
@@ -1198,13 +1262,13 @@ class personTable extends DbTable
             throw new \Exception('No Kyn Email Address provided in ' . __METHOD__);
         }
         if (!$workerId) {
-            throw new \Exception('No WORKER_ID provided in ' . __METHOD__);
+            throw new \Exception('No WORKER ID provided in ' . __METHOD__);
         }
         if (!$businessTitle) {
-            throw new \Exception('No BUSINESS_TITLE provided in ' . __METHOD__);
+            throw new \Exception('No BUSINESS TITLE provided in ' . __METHOD__);
         }
         if (!$managerEmail) {
-            throw new \Exception('No MATRIX_MANAGER_EMAIL provided in ' . __METHOD__);
+            throw new \Exception('No MATRIX MANAGER EMAIL provided in ' . __METHOD__);
         }
 
         $data = array(
@@ -1289,13 +1353,14 @@ class personTable extends DbTable
         return true;
     }
 
-    public function setFmFlag($cnum, $flag)
+    public function setFmFlag($cnum, $workerId, $flag)
     {
-        $data = array(trim($flag), trim($cnum));
+        $data = array(trim($flag), trim($cnum), trim($workerId));
 
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET FM_MANAGER_FLAG = ? ";
         $sql .= " WHERE CNUM = ? ";
+        $sql .= " AND WORKER_ID = ? ";
 
         $result = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
@@ -1303,12 +1368,12 @@ class personTable extends DbTable
             DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
             return false;
         }
-        AuditTable::audit("Set FM_MANAGER_FLAG to $flag for $cnum", AuditTable::RECORD_TYPE_AUDIT);
+        AuditTable::audit("Set FM_MANAGER_FLAG to $flag for $cnum / $workerId", AuditTable::RECORD_TYPE_AUDIT);
 
         return true;
     }
 
-    public function setEmailField($cnum, $field, $email)
+    public function setEmailField($cnum, $workerId, $field, $email)
     {
         switch ($field) {
             case 'EMAIL_ADDRESS':
@@ -1317,6 +1382,7 @@ class personTable extends DbTable
                 $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
                 $sql .= " SET " . htmlspecialchars($field) . " = '" . htmlspecialchars($email) . "' ";
                 $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
+                $sql .= " AND WORKER_ID = '" . htmlspecialchars($workerId) . "' ";
 
                 $result = sqlsrv_query($GLOBALS['conn'], $sql);
 
@@ -1324,7 +1390,7 @@ class personTable extends DbTable
                     DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
                     return false;
                 }
-                AuditTable::audit("Set " . htmlspecialchars($field) . " to $email for $cnum", AuditTable::RECORD_TYPE_AUDIT);
+                AuditTable::audit("Set " . htmlspecialchars($field) . " to $email for $cnum / $workerId", AuditTable::RECORD_TYPE_AUDIT);
 
                 return true;
                 break;
@@ -1333,13 +1399,14 @@ class personTable extends DbTable
         }
     }
 
-    public function clearCtid($cnum)
+    public function clearCtid($cnum, $workerId)
     {
-        $data = array(trim($cnum));
+        $data = array(trim($cnum), trim($workerId));
 
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET CT_ID = null ";
         $sql .= " WHERE CNUM = ? ";
+        $sql .= " AND WORKER_ID = ? ";
 
         $result = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
@@ -1347,19 +1414,20 @@ class personTable extends DbTable
             DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
             return false;
         }
-        AuditTable::audit("Clear CT ID for $cnum", AuditTable::RECORD_TYPE_AUDIT);
+        AuditTable::audit("Clear CT ID for $cnum / $workerId", AuditTable::RECORD_TYPE_AUDIT);
 
         return true;
     }
 
-    public function clearSquadNumber($cnum, $version = 'original')
+    public function clearSquadNumber($cnum, $workerId, $version = 'original')
     {
-        $data = array(trim($cnum));
+        $data = array(trim($cnum), trim($workerId));
 
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET ";
         $sql .= $version == 'original' ? " SQUAD_NUMBER = null " : " OLD_SQUAD_NUMBER = null";
         $sql .= " WHERE CNUM = ? ";
+        $sql .= " AND WORKER_ID = ? ";
 
         $result = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
@@ -1373,13 +1441,14 @@ class personTable extends DbTable
         return true;
     }
 
-    public function clearCioAlignment($cnum)
+    public function clearCioAlignment($cnum, $workerId)
     {
-        $data = array(trim($cnum));
+        $data = array(trim($cnum), trim($workerId));
 
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET CIO_ALIGNMENT = null ";
         $sql .= " WHERE CNUM = ? ";
+        $sql .= " AND WORKER_ID = ? ";
 
         $result = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
@@ -1517,12 +1586,13 @@ class personTable extends DbTable
         return $activeManagers;
     }
 
-    public static function getRevalidationFromCnum($cnum = null, $email = null)
+    public static function getRevalidationStatus($cnum = null, $workerId = null, $email = null)
     {
         $sql = " SELECT REVALIDATION_STATUS FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE ";
         $sql .= !empty($cnum) ? " CNUM = '" . htmlspecialchars(strtoupper(trim($cnum))) . "' " : null;
-        $sql .= !empty($email) ? " upper(EMAIL_ADDRESS) = upper('" . htmlspecialchars(strtoupper(trim($email))) . "') " : null;
+        $sql .= !empty($workerId) ? " AND WORKER_ID = '" . htmlspecialchars(strtoupper(trim($workerId))) . "' " : null;
+        $sql .= !empty($email) ? " AND upper(EMAIL_ADDRESS) = upper('" . htmlspecialchars(strtoupper(trim($email))) . "') " : null;
 
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
         if (!$rs) {
@@ -1579,6 +1649,26 @@ class personTable extends DbTable
         return $email;
     }
 
+    public static function getWorkerIdFromCnum($cnum)
+    {
+        $sql = " SELECT WORKER_ID FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
+        $sql .= " WHERE CNUM = '" . htmlspecialchars(strtoupper(trim($cnum))) . "' ";
+
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
+        if (!$rs) {
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+
+        $row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
+        if (!$row) {
+            return false;
+        }
+
+        $email = trim($row['WORKER_ID']);
+        return $email;
+    }
+
     public static function getPesLevelFromEmail($email)
     {
         $sql = " SELECT PES_LEVEL FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
@@ -1604,8 +1694,8 @@ class personTable extends DbTable
         $sql = " SELECT case when PT.PASSPORT_FIRST_NAME is null then P.FIRST_NAME else PT.PASSPORT_FIRST_NAME end as FIRST_NAME ";
         $sql .= ", case when PT.PASSPORT_SURNAME is null then P.LAST_NAME else PT.PASSPORT_SURNAME end as LAST_NAME  ";
         $sql .= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
-        $sql .= " left join " . $GLOBALS['Db2Schema'] . "." . allTables::$PES_TRACKER . " as PT ";
-        $sql .= " ON P.CNUM = PT.CNUM ";
+        $sql .= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PES_TRACKER . " as PT ";
+        $sql .= " ON P.CNUM = PT.CNUM AND P.WORKER_ID = PT.WORKER_ID";
         $sql .= " WHERE P.CNUM = '" . htmlspecialchars(strtoupper(trim($cnum))) . "' ";
 
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
@@ -1672,9 +1762,9 @@ class personTable extends DbTable
     {
         if (empty($preBoarded)) {
             $availPreBoPredicate = " ( " . personTable::externalCNUMPredicate() . " ) ";
-            $availPreBoPredicate .= " AND ( trim(REVALIDATION_STATUS) like '%" . personRecord::REVALIDATED_PREBOARDER . "' or trim(REVALIDATION_STATUS) like '%" . personRecord::REVALIDATED_VENDOR . "') ";
-            $availPreBoPredicate .= " AND ((PES_STATUS_DETAILS not like '" . personRecord::PES_STATUS_DETAILS_BOARDED_AS . "%' )  or ( PES_STATUS_DETAILS is null)) ";
-            $availPreBoPredicate .= " AND PES_STATUS not in (";
+            $availPreBoPredicate .= " AND ( trim(REVALIDATION_STATUS) LIKE '%" . personRecord::REVALIDATED_PREBOARDER . "' OR trim(REVALIDATION_STATUS) like '%" . personRecord::REVALIDATED_VENDOR . "') ";
+            $availPreBoPredicate .= " AND ((PES_STATUS_DETAILS NOT LIKE '" . personRecord::PES_STATUS_DETAILS_BOARDED_AS . "%' )  OR ( PES_STATUS_DETAILS IS NULL)) ";
+            $availPreBoPredicate .= " AND PES_STATUS NOT IN (";
             $availPreBoPredicate .= " '" . personRecord::PES_STATUS_FAILED . "' "; // Pre-boarded who haven't been boarded
             $availPreBoPredicate .= ",'" . personRecord::PES_STATUS_REMOVED . "' ";
             $availPreBoPredicate .= " )";
@@ -2018,15 +2108,16 @@ class personTable extends DbTable
         return true;
     }
 
-    public function flagOffboardingByCNUM($cnum, $revalidationStatusWas, $notesId, $proposedLeavingDate)
+    public function flagOffboardingByCNUM($cnum, $workerId, $revalidationStatusWas, $notesId, $proposedLeavingDate)
     {
-        if (!empty($cnum)) {
+        if (!empty($cnum) && !empty($workerId)) {
             $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
             $sql .= " SET
             REVALIDATION_STATUS = CONCAT(TRIM('" . personRecord::REVALIDATED_OFFBOARDING . "'),':', TRIM(REVALIDATION_STATUS)),
             REVALIDATION_DATE_FIELD = CAST( CURRENT_TIMESTAMP AS Date ),
             PROPOSED_LEAVING_DATE = '" . htmlspecialchars($proposedLeavingDate) . "'";
             $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "'";
+            $sql .= " AND WORKER_ID = '" . htmlspecialchars($workerId) . "'";
 
             $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
@@ -2035,16 +2126,16 @@ class personTable extends DbTable
                 return false;
             }
 
-            $this->notifyFmOfRevalStatusChange($cnum, personRecord::REVALIDATED_OFFBOARDING);
+            $this->notifyFmOfRevalStatusChange($cnum, $workerId, personRecord::REVALIDATED_OFFBOARDING);
             pesEmail::notifyPesTeamOfOffboarding($cnum, $revalidationStatusWas, $notesId);
-            AuditTable::audit("CNUM: $cnum (Reval:$revalidationStatusWas) has been flagged as :" . personRecord::REVALIDATED_OFFBOARDING, AuditTable::RECORD_TYPE_AUDIT);
+            AuditTable::audit("CNUM: $cnum WORKER_ID: $workerId (Reval:$revalidationStatusWas) has been flagged as :" . personRecord::REVALIDATED_OFFBOARDING, AuditTable::RECORD_TYPE_AUDIT);
             return true;
         }
     }
 
-    public function flagOffboarded($cnum, $revalidationStatus)
+    public function flagOffboarded($cnum, $workerId, $revalidationStatus)
     {
-        if (!empty($cnum)) {
+        if (!empty($cnum) && !empty($workerId)) {
             $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
             // $sql .= " SET REVALIDATION_STATUS = CONCAT(TRIM('" . personRecord::REVALIDATED_OFFBOARDED . "'), ':', TRIM(SUBSTRING(REVALIDATION_STATUS,13,LEN(REVALIDATION_STATUS)))), REVALIDATION_DATE_FIELD = CAST( CURRENT_TIMESTAMP AS Date ), OFFBOARDED_DATE = CAST( CURRENT_TIMESTAMP AS Date ) ";
             $sql .= " SET REVALIDATION_STATUS = CONCAT(
@@ -2056,6 +2147,7 @@ class personTable extends DbTable
                 END
             ), REVALIDATION_DATE_FIELD = CAST( CURRENT_TIMESTAMP AS Date ), OFFBOARDED_DATE = CAST( CURRENT_TIMESTAMP AS Date ) ";
             $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "'";
+            $sql .= " AND WORKER_ID = '" . htmlspecialchars($workerId) . "'";
 
             $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
@@ -2064,16 +2156,16 @@ class personTable extends DbTable
                 return false;
             }
 
-            $this->notifyFmOfRevalStatusChange($cnum, personRecord::REVALIDATED_OFFBOARDED);
-            pesEmail::notifyPesTeamOfOffboarded($cnum, $revalidationStatus);
-            AuditTable::audit("CNUM: $cnum  has been flagged as :" . personRecord::REVALIDATED_OFFBOARDED, AuditTable::RECORD_TYPE_AUDIT);
+            $this->notifyFmOfRevalStatusChange($cnum, $workerId, personRecord::REVALIDATED_OFFBOARDED);
+            pesEmail::notifyPesTeamOfOffboarded($cnum, $workerId, $revalidationStatus);
+            AuditTable::audit("CNUM: $cnum WORKER_ID: $workerId has been flagged as :" . personRecord::REVALIDATED_OFFBOARDED, AuditTable::RECORD_TYPE_AUDIT);
             return true;
         }
     }
 
-    public function stopOffboarded($cnum)
+    public function stopOffboarded($cnum, $workerId)
     {
-        if (!empty($cnum)) {
+        if (!empty($cnum) && !empty($workerId)) {
             $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
             // $sql .= " SET REVALIDATION_STATUS = TRIM(SUBSTRING(REVALIDATION_STATUS,13,LEN(REVALIDATION_STATUS))), REVALIDATION_DATE_FIELD = CAST( CURRENT_TIMESTAMP AS Date ), OFFBOARDED_DATE = null  ";
             $sql .= " SET REVALIDATION_STATUS = CASE
@@ -2085,6 +2177,7 @@ class personTable extends DbTable
             OFFBOARDED_DATE = null,
             PROPOSED_LEAVING_DATE = null ";
             $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "'";
+            $sql .= " AND WORKER_ID = '" . htmlspecialchars($workerId) . "'";
 
             $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
@@ -2093,15 +2186,15 @@ class personTable extends DbTable
                 return false;
             }
 
-            $this->notifyFmOfRevalStatusChange($cnum, personRecord::REVALIDATED_OFFBOARDING_STOPPED);
-            AuditTable::audit("CNUM: $cnum  has been been STOPPED from Offboarding", AuditTable::RECORD_TYPE_AUDIT);
+            $this->notifyFmOfRevalStatusChange($cnum, $workerId, personRecord::REVALIDATED_OFFBOARDING_STOPPED);
+            AuditTable::audit("CNUM: $cnum WORKER_ID: $workerId has been been STOPPED from Offboarding", AuditTable::RECORD_TYPE_AUDIT);
             return true;
         }
     }
 
-    public function deOffboarded($cnum)
+    public function deOffboarded($cnum, $workerId)
     {
-        if (!empty($cnum)) {
+        if (!empty($cnum) && !empty($lbgLocation)) {
             $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
             // $sql .= " SET REVALIDATION_STATUS = TRIM(SUBSTRING(REVALIDATION_STATUS,12,LEN(REVALIDATION_STATUS))), REVALIDATION_DATE_FIELD = CAST( CURRENT_TIMESTAMP AS Date ), OFFBOARDED_DATE = null  ";
             $sql .= " SET REVALIDATION_STATUS = CASE
@@ -2113,6 +2206,7 @@ class personTable extends DbTable
             OFFBOARDED_DATE = null,
             PROPOSED_LEAVING_DATE = null ";
             $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "'";
+            $sql .= " AND WORKER_ID = '" . htmlspecialchars($workerId) . "'";
 
             $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
@@ -2121,13 +2215,13 @@ class personTable extends DbTable
                 return false;
             }
 
-            $this->notifyFmOfRevalStatusChange($cnum, personRecord::REVALIDATED_OFFBOARDED_REVERSED);
-            AuditTable::audit("CNUM: $cnum  has been been REVERSED from Offboarded", AuditTable::RECORD_TYPE_AUDIT);
+            $this->notifyFmOfRevalStatusChange($cnum, $workerId, personRecord::REVALIDATED_OFFBOARDED_REVERSED);
+            AuditTable::audit("CNUM: $cnum WORER_ID: $workerId has been been REVERSED from Offboarded", AuditTable::RECORD_TYPE_AUDIT);
             return true;
         }
     }
 
-    public function notifyFmOfRevalStatusChange($employeeCnum, $revalidationStatus)
+    public function notifyFmOfRevalStatusChange($employeeCnum, $employeeWorkerId, $revalidationStatus)
     {
         $empsFm = $this->loader->loadIndexed('FM_CNUM', 'CNUM', allTables::$PERSON, " CNUM = '" . htmlspecialchars($employeeCnum) . "' ");
         $empsNotesid = $this->loader->loadIndexed('NOTES_ID', 'CNUM', allTables::$PERSON, " CNUM = '" . htmlspecialchars($employeeCnum) . "' ");
@@ -2384,6 +2478,7 @@ class personTable extends DbTable
     {
         $cnum = trim($row['CNUM']);
         $actualCnum = isset($row['actualCNUM']) ? trim($row['actualCNUM']) : trim($row['CNUM']);
+        $workerId = trim($row['WORKER_ID']);
         $firstName = trim($row['FIRST_NAME']);
         $lastName = trim($row['LAST_NAME']);
         $emailAddress = trim($row['EMAIL_ADDRESS']);        
@@ -2413,21 +2508,23 @@ class personTable extends DbTable
                 $pesStatusWithButton .= "<button type='button' class='btn btn-default btn-xs btnPesInitiate accessRestrict accessPmo accessFm' ";
                 $pesStatusWithButton .= " aria-label='Left Align' ";
                 $pesStatusWithButton .= " data-cnum='" . $actualCnum . "' ";
+                $pesStatusWithButton .= " data-workerid='" . $workerId . "' ";
                 $pesStatusWithButton .= " data-pesstatus='$status' ";
                 $pesStatusWithButton .= " data-toggle='tooltip' data-placement='top' title='Initiate PES Request'";
                 $pesStatusWithButton .= " > ";
                 $pesStatusWithButton .= "<span class='glyphicon glyphicon-plane' aria-hidden='true'></span>";
                 $pesStatusWithButton .= "</button>&nbsp;";
                 /*
-                $pesStatusWithButton.= "<button type='button' class='btn btn-default btn-xs btnPesProgressing accessRestrict accessCdi accessPes' ";
-                $pesStatusWithButton.= " aria-label='Left Align' ";
-                $pesStatusWithButton.= " data-cnum='" . $actualCnum . "' ";
-                $pesStatusWithButton.= " data-pesstatus='$status' ";
-                $pesStatusWithButton.= " data-newpesstatus='" . personRecord::PES_STATUS_PES_PROGRESSING . "' ";
-                $pesStatusWithButton.= " data-toggle='tooltip' data-placement='top' title='Toggle Not Requested to PES Progressing'";
-                $pesStatusWithButton.= " > ";
-                $pesStatusWithButton.= "<span class='glyphicon glyphicon-fire' aria-hidden='true'></span>";
-                $pesStatusWithButton.= "</button>&nbsp;";
+                $pesStatusWithButton .= "<button type='button' class='btn btn-default btn-xs btnPesProgressing accessRestrict accessCdi accessPes' ";
+                $pesStatusWithButton .= " aria-label='Left Align' ";
+                $pesStatusWithButton .= " data-cnum='" . $actualCnum . "' ";
+                $pesStatusWithButton .= " data-workerid='" . $workerId . "' ";
+                $pesStatusWithButton .= " data-pesstatus='$status' ";
+                $pesStatusWithButton .= " data-newpesstatus='" . personRecord::PES_STATUS_PES_PROGRESSING . "' ";
+                $pesStatusWithButton .= " data-toggle='tooltip' data-placement='top' title='Toggle Not Requested to PES Progressing'";
+                $pesStatusWithButton .= " > ";
+                $pesStatusWithButton .= "<span class='glyphicon glyphicon-fire' aria-hidden='true'></span>";
+                $pesStatusWithButton .= "</button>&nbsp;";
                  */
                 break;
             case $status == personRecord::PES_STATUS_INITIATED && $_SESSION['isPes']:
@@ -2448,21 +2545,23 @@ class personTable extends DbTable
 
                 $pesStatusWithButton .= "<button type='button' class='btn btn-default btn-xs btnSendPesEmail accessRestrict accessPmo accessFm' ";
                 $pesStatusWithButton .= " aria-label='Left Align' ";
-                $pesStatusWithButton .= " data-emailaddress='$emailAddress' ";
-                $pesStatusWithButton .= " data-firstname='$firstName' ";
-                $pesStatusWithButton .= " data-lastname='$lastName' ";
-                $pesStatusWithButton .= " data-country='$country' ";
-                $pesStatusWithButton .= " data-openseat='$openseat' ";
-                $pesStatusWithButton .= " data-cnum='$cnum' ";
-                $pesStatusWithButton .= " data-recheck='$recheck' ";
-                $pesStatusWithButton .= " data-toggle='tooltip' data-placement='top' title='$tooltip'";
+                $pesStatusWithButton .= " data-cnum='". $actualCnum ."' ";
+                $pesStatusWithButton .= " data-workerid='" . $workerId . "' ";
+                $pesStatusWithButton .= " data-emailaddress='" . $emailAddress ."' ";
+                $pesStatusWithButton .= " data-firstname='". $firstName ."' ";
+                $pesStatusWithButton .= " data-lastname='". $lastName ."' ";
+                $pesStatusWithButton .= " data-country='". $country ."' ";
+                $pesStatusWithButton .= " data-openseat='". $openseat ."' ";
+                $pesStatusWithButton .= " data-recheck='". $recheck ."' ";
+                $pesStatusWithButton .= " data-toggle='tooltip' data-placement='top' title='". $tooltip . "'";
                 $pesStatusWithButton .= " $disabled  ";
                 $pesStatusWithButton .= " > ";
-                $pesStatusWithButton .= "<span class='glyphicon glyphicon-send ' aria-hidden='true' style='color:$aeroplaneColor' ></span>";
+                $pesStatusWithButton .= "<span class='glyphicon glyphicon-send ' aria-hidden='true' style='color:" . $aeroplaneColor . "' ></span>";
                 $pesStatusWithButton .= "</button>&nbsp;";
 
                 $pesStatusWithButton .= "<button type='button' class='btn btn-default btn-xs btnPesStatus' aria-label='Left Align' ";
                 $pesStatusWithButton .= " data-cnum='" . $actualCnum . "' ";
+                $pesStatusWithButton .= " data-workerid='" . $workerId . "' ";
                 $pesStatusWithButton .= " data-notesid='" . $notesId . "' ";
                 $pesStatusWithButton .= " data-email='" . $emailAddress . "' ";
                 $pesStatusWithButton .= " data-pesdaterequested='" . $pesDateRequested . "' ";
@@ -2481,6 +2580,7 @@ class personTable extends DbTable
             case $status == personRecord::PES_STATUS_REMOVED && ($_SESSION['isFm'] || $_SESSION['isCdi']):
                 $pesStatusWithButton .= "<button type='button' class='btn btn-default btn-xs btnPesRestart accessRestrict accessFm accessCdi' aria-label='Left Align' ";
                 $pesStatusWithButton .= " data-cnum='" . $actualCnum . "' ";
+                $pesStatusWithButton .= " data-workerid='" . $workerId . "' ";
                 $pesStatusWithButton .= " data-notesid='" . $notesId . "' ";
                 $pesStatusWithButton .= " data-email='" . $emailAddress . "' ";
                 $pesStatusWithButton .= " data-pesdaterequested='" . $pesDateRequested . "' ";
@@ -2511,6 +2611,7 @@ class personTable extends DbTable
             case $status == personRecord::PES_STATUS_PES_PROGRESSING && $_SESSION['isPes']:
                 $pesStatusWithButton .= "<button type='button' class='btn btn-default btn-xs btnPesStatus' aria-label='Left Align' ";
                 $pesStatusWithButton .= " data-cnum='" . $actualCnum . "' ";
+                $pesStatusWithButton .= " data-workerid='" . $workerId . "' ";
                 $pesStatusWithButton .= " data-notesid='" . $notesId . "' ";
                 $pesStatusWithButton .= " data-email='" . $emailAddress . "' ";
                 $pesStatusWithButton .= " data-pesdaterequested='" . $pesDateRequested . "' ";
@@ -2531,6 +2632,7 @@ class personTable extends DbTable
             case $status == personRecord::PES_STATUS_RECHECK_PROGRESSING && !$_SESSION['isPes']:
                 $pesStatusWithButton .= "<button type='button' class='btn btn-default btn-xs btnPesStop accessRestrict accessFm' aria-label='Left Align' ";
                 $pesStatusWithButton .= " data-cnum='" . $actualCnum . "' ";
+                $pesStatusWithButton .= " data-workerid='" . $workerId . "' ";
                 $pesStatusWithButton .= " data-notesid='" . $notesId . "' ";
                 $pesStatusWithButton .= " data-email='" . $emailAddress . "' ";
                 $pesStatusWithButton .= " data-pesdaterequested='" . $pesDateRequested . "' ";
@@ -2574,6 +2676,7 @@ class personTable extends DbTable
         $notesId = trim($row['NOTES_ID']);
         $email = trim($row['EMAIL_ADDRESS']);
         $actualCnum = isset($row['actualCNUM']) ? trim($row['actualCNUM']) : trim($row['CNUM']);
+        $workerId = trim($row['WORKER_ID']);
         $level = trim($row['PES_LEVEL']);
         $currentValue = $level;
         $pesClearedDate = trim($row['PES_CLEARED_DATE']);
@@ -2586,6 +2689,7 @@ class personTable extends DbTable
             case $test:
                 $pesLevelWithButton .= "<button type='button' class='btn btn-default btn-xs btnPesLevel' aria-label='Left Align' ";
                 $pesLevelWithButton .= " data-cnum='" . $actualCnum . "' ";
+                $pesLevelWithButton .= " data-workerid='" . $workerId . "' ";
                 $pesLevelWithButton .= " data-notesid='" . $notesId . "' ";
                 $pesLevelWithButton .= " data-email='" . $email . "' ";
                 $pesLevelWithButton .= " data-pesdatecleared='" . $pesClearedDate . "' ";
@@ -2613,9 +2717,11 @@ class personTable extends DbTable
         $oldSquadName = !empty($row['OLD_SQUAD_NAME']) ? $row['OLD_SQUAD_NAME'] : "Not allocated to Squad";
         $squadName = $original ? $originalSquadName : $oldSquadName;
         $cnum = $row['actualCNUM'];
+        $workerId = $row['WORKER_ID'];
 
         $agileSquadWithButton = $original ? "<button type='button' class='btn btn-default btn-xs btnEditAgileNumber accessRestrict  accessCdi' aria-label='Left Align' " : null;
         $agileSquadWithButton .= $original ? " data-cnum='" . $cnum . "' " : null;
+        $agileSquadWithButton .= $original ? " data-workerid='" . $workerId . "' " : null;
 //        $agileSquadWithButton.= $original ? " data-version='original' " : " data-version='old' ";
         $agileSquadWithButton .= $original ? " data-version='original' " : null;
         $agileSquadWithButton .= $original ? " data-toggle='tooltip' data-placement='top' " : null;
@@ -2629,6 +2735,7 @@ class personTable extends DbTable
         if (!empty($squadNumberField) && $original) {
             $agileSquadWithButton .= "<button type='button' class='btn btn-danger btn-xs btnClearSquadNumber accessRestrict  accessCdi' aria-label='Left Align' ";
             $agileSquadWithButton .= " data-cnum='" . $cnum . "' ";
+            $agileSquadWithButton .= " data-workerid='" . $workerId . "' ";
             $agileSquadWithButton .= $original ? " data-version='original' " : " data-version='new' ";
             $agileSquadWithButton .= " data-toggle='tooltip' data-placement='top' ";
             $agileSquadWithButton .= $original ? " title='Clear Squad Number'" : " title='Clear New Squad Number'";
@@ -2643,13 +2750,14 @@ class personTable extends DbTable
         return array('display' => $agileSquadWithButton, 'sort' => $squadName);
     }
 
-    public function updateAgileSquadNumber($cnum, $agileNumber, $version = 'original')
+    public function updateAgileSquadNumber($cnum, $workerId, $agileNumber, $version = 'original')
     {
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET ";
         $sql .= $version == 'original' ? " SQUAD_NUMBER=" : " OLD_SQUAD_NUMBER=";
         $sql .= htmlspecialchars($agileNumber);
         $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
+        $sql .= " AND WORKER_ID = '" . htmlspecialchars($workerId) . "' ";
 
         $this->lastUpdateSql = $sql;
 
@@ -2662,117 +2770,16 @@ class personTable extends DbTable
         return true;
     }
 
-    public function linkPreBoarderToIbmer($preboarderCnum, $ibmerCnum)
+    public function linkPreBoarderToRegular($preboarderCnum, $preboarderWorkerId, $cnum, $workerId)
     {
-        if (sqlsrv_begin_transaction($GLOBALS['conn']) === false) {
-            die( print_r( sqlsrv_errors(), true ));
-        }
-
-        $preBoarder = new personRecord();
-        $preBoarder->setFromArray(array('CNUM' => $preboarderCnum));
-        $preBoarderData = $this->getFromDb($preBoarder);
-
-        $preboarderPesStatus = $preBoarderData['PES_STATUS'];
-        $preboarderPesStatusD = $preBoarderData['PES_STATUS_DETAILS'];
-        $preBoarderPesEvidence = $preBoarderData['PES_DATE_EVIDENCE'];
-        $preboarderPesCleared = $preBoarderData['PES_CLEARED_DATE'];
-        $preboarderPesRecheck = $preBoarderData['PES_RECHECK_DATE'];
-        $preboarderPesLevel = $preBoarderData['PES_LEVEL'];
-
-        $ibmer = new personRecord();
-        $ibmer->setFromArray(array('CNUM' => $ibmerCnum));
-        $ibmerData = $this->getFromDb($ibmer);
-        $ibmerData['PRE_BOARDED'] = $preboarderCnum;
-
-        $ibmerPesStatus = $ibmerData['PES_STATUS'];
-        $ibmerPesStatusD = $ibmerData['PES_STATUS_DETAILS'];
-
-        if (trim($ibmerPesStatus) == personRecord::PES_STATUS_INITIATED
-            || trim($ibmerPesStatus) == personRecord::PES_STATUS_REQUESTED
-            || trim($ibmerPesStatus) == personRecord::PES_STATUS_NOT_REQUESTED
-            || trim($ibmerPesStatus) == personRecord::PES_STATUS_RECHECK_REQ
-            || trim($ibmerPesStatus) == personRecord::PES_STATUS_RECHECK_PROGRESSING
-            || trim($ibmerPesStatus) == personRecord::PES_STATUS_MOVER) {
-            $ibmerData['PES_STATUS'] = $preboarderPesStatus;
-            $ibmerData['PES_STATUS_DETAILS'] = $ibmerPesStatusD . ":" . $preboarderPesStatusD;
-            $ibmerData['PES_DATE_EVIDENCE'] = $preBoarderPesEvidence;
-            $ibmerData['PES_CLEARED_DATE'] = $preboarderPesCleared;
-            $ibmerData['PES_RECHECK_DATE'] = $preboarderPesRecheck;
-            $ibmerData['PES_LEVEL'] = $preboarderPesLevel;
-        }
-        $ibmer->setFromArray($ibmerData);
-
-        if (!$this->update($ibmer)) {
-            sqlsrv_rollback($GLOBALS['conn']);
-            throw new \Exception("Failed to update IBMer record for CNUM: $ibmerCnum when linking to $preboarderCnum");
-            return false;
-        }
-
-        // $cnum = $ibmerData['CNUM'];
-        // switch($cnum) {
-        //     case personRecord::NO_LONGER_AVAILABLE:
-        //         $preBoarderData['PES_STATUS_DETAILS'] = personRecord::PES_STATUS_DETAILS_BOARDED_AS . " " . $ibmerData['WORKER_ID'] . ":" . $ibmerData['KYN_EMAIL_ADDRESS'] . " Status was:" . $preboarderPesStatus;
-        //         break;
-        //     default:
-                $preBoarderData['PES_STATUS_DETAILS'] = personRecord::PES_STATUS_DETAILS_BOARDED_AS . " " . $ibmerData['CNUM'] . ":" . $ibmerData['KYN_EMAIL_ADDRESS'] . " Status was:" . $preboarderPesStatus;
-        //         break;
-        // }
-
-        $preBoarderData['EMAIL_ADDRESS'] = str_replace('ibm.com', '###.com', strtolower($preBoarderData['EMAIL_ADDRESS']));
-        $preBoarder->setFromArray($preBoarderData);
-        if (!$this->update($preBoarder)) {
-            sqlsrv_rollback($GLOBALS['conn']);
-            throw new \Exception("Failed to update Preboarder record for CNUM: $preboarderCnum when linking to $ibmerCnum");
-            return false;
-        }
-
-        $pesTrackerTable = new pesTrackerTable(allTables::$PES_TRACKER);
-
-        $trackerRecord = new pesTrackerRecord();
-        $trackerRecord->setFromArray(array('CNUM' => $ibmerCnum));
-        if (!$pesTrackerTable->existsInDb($trackerRecord)) {
-            if (!$pesTrackerTable->changeCnum($preboarderCnum, $ibmerCnum)) {
-                sqlsrv_rollback($GLOBALS['conn']);
-                throw new \Exception("Failed amending PES TRACKER Table to reflect that pre-boarder($preboarderCnum has been boarded as ($ibmerCnum) ");
-                return false;
-            }
-        } else {
-            $loader = new Loader();
-            $emailAddress = $loader->loadIndexed('EMAIL_ADDRESS', 'CNUM', allTables::$PERSON, " CNUM in('" . htmlspecialchars(trim($preboarderCnum)) . "','" . htmlspecialchars(trim($ibmerCnum)) . "') ");
-
-            $pesTrackerTable->savePesComment($ibmerCnum, "Serial Number changed from $preboarderCnum to $ibmerCnum");
-            $pesTrackerTable->savePesComment($ibmerCnum, "Email Address changed from $emailAddress[$preboarderCnum] to $emailAddress[$ibmerCnum] ");
-        }
-
-        sqlsrv_commit($GLOBALS['conn']);
-    }
-    
-    public function linkPreBoarderToRegular($preboarderCnum, $regularId)
-    {
-        $type = null;
-        $sp = strpos($regularId, personRecord::KEY_TYPE_CNUM);
-        if($sp !== FALSE){
-            $type = personRecord::KEY_TYPE_CNUM;
-        } else {
-            $sp = strpos($regularId, personRecord::KEY_TYPE_WORKER_ID);
-            if($sp !== FALSE){
-                $type = personRecord::KEY_TYPE_WORKER_ID;
-            }
-        }
-        $regularId = str_replace($type.'_', '', $regularId);
-
-        echo $type;
-        echo '<br>';
-        echo $regularId;
-        exit;
-        
+        // start transaction
         if (sqlsrv_begin_transaction($GLOBALS['conn']) === false) {
             die( print_r( sqlsrv_errors(), true ));
         }
 
         // get pre boarder record
         $preBoarder = new personRecord();
-        $preBoarder->setFromArray(array('CNUM' => $preboarderCnum));
+        $preBoarder->setFromArray(array('CNUM' => $preboarderCnum, 'WORKER_ID' => $preboarderWorkerId));
         $preBoarderData = $this->getFromDb($preBoarder);
 
         $preboarderPesStatus = $preBoarderData['PES_STATUS'];
@@ -2784,19 +2791,9 @@ class personTable extends DbTable
 
         // get regular record
         $regular = new personRecord();
-        switch($type) {
-            case personRecord::KEY_TYPE_CNUM:
-                $regular->setFromArray(array('CNUM' => $regularId));  
-                $regularData = $this->getFromDb($regular);
-                break;
-            case personRecord::KEY_TYPE_WORKER_ID:
-                $regular->setFromArray(array('WORKER_ID' => $regularId));                                     
-                $regularData = $this->getWithPredicate(" WORKER_ID='" . htmlspecialchars(trim($regularId)) . "' ");
-                break;
-            default:
-                $regularData = array();
-                break;
-        }
+        $regular->setFromArray(array('CNUM' => $cnum, 'WORKER_ID' => $workerId));  
+        $regularData = $this->getFromDb($regular);
+        
         $regularData['PRE_BOARDED'] = $preboarderCnum;
 
         $regularPesStatus = $regularData['PES_STATUS'];
@@ -2818,35 +2815,36 @@ class personTable extends DbTable
         $regular->setFromArray($regularData);
         if (!$this->update($regular)) {
             sqlsrv_rollback($GLOBALS['conn']);
-            throw new \Exception("Failed to update Kyndryl employee record for CNUM: $regularId when linking to $preboarderCnum");
+            throw new \Exception("Failed to update Kyndryl employee record for CNUM: $cnum / Worker ID: $workerId when linking to $preboarderCnum");
             return false;
         }
 
-        $preBoarderData['PES_STATUS_DETAILS'] = personRecord::PES_STATUS_DETAILS_BOARDED_AS . " " . $type .": " . $regularId . ":" . $regularData['KYN_EMAIL_ADDRESS'] . " Status was:" . $preboarderPesStatus;
+        $preBoarderData['PES_STATUS_DETAILS'] = personRecord::PES_STATUS_DETAILS_BOARDED_AS . " " . $cnum .": " . $workerId . ":" . $regularData['KYN_EMAIL_ADDRESS'] . " Status was:" . $preboarderPesStatus;
         $preBoarderData['EMAIL_ADDRESS'] = str_replace('ibm.com', '###.com', strtolower($preBoarderData['EMAIL_ADDRESS']));
+        $preBoarderData['EMAIL_ADDRESS'] = str_replace('kyndryl.com', '###.com', strtolower($preBoarderData['EMAIL_ADDRESS']));
         $preBoarder->setFromArray($preBoarderData);
         if (!$this->update($preBoarder)) {
             sqlsrv_rollback($GLOBALS['conn']);
-            throw new \Exception("Failed to update Preboarder record for CNUM: $preboarderCnum when linking to $regularId");
+            throw new \Exception("Failed to update Preboarder record for CNUM: $preboarderCnum when linking to $cnum / $workerId");
             return false;
         }
 
         $pesTrackerTable = new pesTrackerTable(allTables::$PES_TRACKER);
 
         $trackerRecord = new pesTrackerRecord();
-        $trackerRecord->setFromArray(array('CNUM' => $regularId));
+        $trackerRecord->setFromArray(array('CNUM' => $cnum, 'WORKER_ID' => $workerId));
         if (!$pesTrackerTable->existsInDb($trackerRecord)) {
-            if (!$pesTrackerTable->changeCnum($preboarderCnum, $regularId)) {
+            if (!$pesTrackerTable->changeCnum($preboarderCnum, $preboarderWorkerId, $cnum, $workerId)) {
                 sqlsrv_rollback($GLOBALS['conn']);
-                throw new \Exception("Failed amending PES TRACKER Table to reflect that pre-boarder($preboarderCnum has been boarded as ($regularId) ");
+                throw new \Exception("Failed amending PES TRACKER Table to reflect that pre-boarder($preboarderCnum has been boarded as ($cnum / $workerId) ");
                 return false;
             }
         } else {
             $loader = new Loader();
-            $emailAddress = $loader->loadIndexed('EMAIL_ADDRESS', 'CNUM', allTables::$PERSON, " CNUM in('" . htmlspecialchars(trim($preboarderCnum)) . "','" . htmlspecialchars(trim($regularId)) . "') ");
+            $emailAddress = $loader->loadIndexed('EMAIL_ADDRESS', 'CNUM', allTables::$PERSON, " CNUM in('" . htmlspecialchars(trim($preboarderCnum)) . "','" . htmlspecialchars(trim($cnum)) . "') ");
 
-            $pesTrackerTable->savePesComment($regularId, "Serial Number changed from $preboarderCnum to $regularId");
-            $pesTrackerTable->savePesComment($regularId, "Email Address changed from $emailAddress[$preboarderCnum] to $emailAddress[$regularId] ");
+            $pesTrackerTable->savePesComment($cnum, $workerId, "Serial Number changed from $preboarderCnum to $cnum / $workerId");
+            $pesTrackerTable->savePesComment($cnum, $workerId, "Email Address changed from $emailAddress[$preboarderCnum] to $emailAddress[$cnum] ");
         }
 
         sqlsrv_commit($GLOBALS['conn']);
@@ -2875,11 +2873,7 @@ class personTable extends DbTable
             $allRecheckers[] = $trimmedRow;
             $this->setPesStatus($trimmedRow['CNUM'], personRecord::PES_STATUS_RECHECK_REQ);
         
-            if ($trimmedRow['CNUM'] != personRecord::NO_LONGER_AVAILABLE) {
-                $pesTrackerTable->resetForRecheckByCNUM($trimmedRow['CNUM']);
-            } else {
-                // $pesTrackerTable->resetForRecheckByWORKER_ID($trimmedRow['WORKER_ID']);
-            }
+            $pesTrackerTable->resetForRecheck($trimmedRow['CNUM'], $trimmedRow['WORKER_ID']);
         }
 
         if ($allRecheckers) {

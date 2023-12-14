@@ -38,6 +38,7 @@ class delegate {
         type: "POST",
         data: {
           cnum: cnum,
+          // add worker_id
           requestorCnum: requestorCnum,
           requestorEmail: requestorEmail,
         },

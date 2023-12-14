@@ -22,10 +22,14 @@ class clearCtidBox extends box {
         $(document).on("click", ".btnClearCtid", function (e) {
             $(this).addClass("spinning");
             var cnum = $(this).data("cnum");
+            var workerId = $(this).data("workerid");
             $.ajax({
                 url: "ajax/clearCtid.php",
                 type: "POST",
-                data: { cnum: cnum },
+                data: {
+                    cnum: cnum,
+                    workerid: workerId
+                },
                 success: function (result) {
                     console.log(result);
                     var resultObj = JSON.parse(result);

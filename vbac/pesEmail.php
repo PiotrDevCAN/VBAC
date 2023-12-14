@@ -1,14 +1,15 @@
 <?php
 namespace vbac;
 
-use itdq\DbTable;
-use vbac\allTables;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use itdq\DbTable;
+use vbac\allTables;
 use itdq\BlueMail;
 use itdq\Loader;
 
 class pesEmail {
+
     const EMAIL_PES_SUPRESSABLE = true;
     const EMAIL_NOT_PES_SUPRESSABLE = false;
     const FILE_TYPE_WORD = 'application/msword';
@@ -66,13 +67,11 @@ class pesEmail {
         return $encodedXlsAttachment;
     }
 
-
     private function determineInternalExternal($emailAddress){
         $ibmEmail = stripos(strtolower($emailAddress), "ibm.com") !== false;
 
         return $ibmEmail ? 'Internal' : 'External';
     }
-
 
     private function getAttachments($intExt, $emailType, $attachFiles = true){
         switch (true) {
@@ -191,13 +190,13 @@ class pesEmail {
         );
     }
 
-    function getEmailDetails($emailAddress, $country, $openSeat=null, $recheck='no', $attachFiles = true){
+    function getEmailDetails($cnum, $workerId, $emailAddress, $country, $openSeat=null, $recheck='no', $attachFiles = true){
         
-        $revalidationStatus = personTable::getRevalidationFromCnum(null, $emailAddress);
+        $revalidationStatus = personTable::getRevalidationStatus($cnum, $workerId, $emailAddress);
         
         $offboarded = substr($revalidationStatus,0,10)==personRecord::REVALIDATED_OFFBOARDED ? true : false;
         
-        error_log($emailAddress . ":" . $revalidationStatus);
+        error_log($cnum . ":" . $workerId . ":" . $emailAddress . ":" . $revalidationStatus);
         error_log(substr($revalidationStatus,0,10));
         error_log($offboarded);
             
@@ -274,7 +273,6 @@ class pesEmail {
         );
     }
 
-
     private static function getApplicationFormFile($fileName)
     {
         $handle = fopen($fileName, "r", true);
@@ -282,7 +280,6 @@ class pesEmail {
         fclose($handle);
         return base64_encode($applicationForm);
     }
-
 
     private static function getXlsApplicationFormFile($fileName)
     {
@@ -370,7 +367,6 @@ class pesEmail {
         $revalidation = $recheck=='yes' ? " - REVALIDATION " : "";
         
         $sendResponse = BlueMail::send_mail(array($emailAddress), "NEW URGENT - Pre Employment Screening $revalidation - $cnum : $firstName, $lastName", $emailBody, $pesTaskId, array(), array(),false,$pesAttachments, pesEmail::EMAIL_PES_SUPRESSABLE);
-        // $sendResponse = BlueMail::send_mail(array($emailAddress), "NEW URGENT - Pre Employment Screening $revalidation - $cnum : $firstName, $lastName", $emailBody, $pesTaskId, array(), array(),false,$pesAttachments, pesEmail::EMAIL_NOT_PES_SUPRESSABLE);
         return $sendResponse;
     }
 
@@ -391,11 +387,10 @@ class pesEmail {
         $emailBody = preg_replace($pesEmailPattern, $replacements, $pesEmail);
         
         $sendResponse = BlueMail::send_mail(array($emailAddress), "Reminder- Pre Employment Screening - $cnum : $firstName, $lastName", $emailBody, $pesTaskId, array($flm),array(),true, array(),pesEmail::EMAIL_PES_SUPRESSABLE);
-        // $sendResponse = BlueMail::send_mail(array($emailAddress), "Reminder- Pre Employment Screening - $cnum : $firstName, $lastName", $emailBody, $pesTaskId, array($flm),array(),true, array(),pesEmail::EMAIL_NOT_PES_SUPRESSABLE);
         return $sendResponse;
     }
 
-    function sendPesProcessStatusChangedConfirmation($cnum, $firstName, $lastName, $emailAddress, $processStatus, $flm=null){
+    function sendPesProcessStatusChangedConfirmation($cnum, $workerId, $firstName, $lastName, $emailAddress, $processStatus, $flm=null){
 
         $pesEmailPattern = array(); // Will be overridden when we include_once from emailBodies later.
         // $pesEmail = null;          // Will be overridden when we include_once from emailBodies later.
@@ -411,10 +406,10 @@ class pesEmail {
         
         $flmArray = empty($flm) ? array() : array($flm);
 
-        $sendResponse = BlueMail::send_mail(array($emailAddress), "Status Change - Pre Employment Screening - $cnum : $firstName, $lastName", $emailBody, $pesTaskId, $flmArray, array(), true,  array(), pesEmail::EMAIL_PES_SUPRESSABLE);
-        // $sendResponse = BlueMail::send_mail(array($emailAddress), "Status Change - Pre Employment Screening - $cnum : $firstName, $lastName", $emailBody, $pesTaskId, $flmArray, array(), true,  array(), pesEmail::EMAIL_NOT_PES_SUPRESSABLE);
+        $sendResponse = BlueMail::send_mail(array($emailAddress), "Status Change - Pre Employment Screening - $cnum / $workerId : $firstName, $lastName", $emailBody, $pesTaskId, $flmArray, array(), true,  array(), pesEmail::EMAIL_PES_SUPRESSABLE);
         return $sendResponse;
     }
+
     static function notifyPesTeamOfUpcomingRechecks($detialsOfPeopleToBeRechecked=null){
 
         $now = new \DateTime();
@@ -439,6 +434,7 @@ class pesEmail {
         $sendResponse = BlueMail::send_mail(array($pesTaskId), "Upcoming Rechecks", $emailBody, $pesTaskId);
         return $sendResponse;
     }
+
     static function notifyPesTeamNoUpcomingRechecks(){
 
         $now = new \DateTime();
@@ -455,6 +451,7 @@ class pesEmail {
         $sendResponse = BlueMail::send_mail(array($pesTaskId), "Upcoming Rechecks-None", $emailBody, $pesTaskId);
         return $sendResponse;
     }
+
     static function notifyPesTeamOfLeavers(array $leavers){
         $loader = new Loader();
         $now = new \DateTime();
@@ -484,6 +481,7 @@ class pesEmail {
 
         return BlueMail::send_mail(array($pesTaskId), "vBAC Leavers", $pesEmail, $pesTaskId);
     }
+
     static function notifyPesTeamOfOffboarding($cnum, $revalidationStatusWas, $notesId){
         $loader = new Loader();
         $now = new \DateTime();
@@ -508,7 +506,7 @@ class pesEmail {
         return BlueMail::send_mail(array($pesTaskId), "vbac Offboarding - $cnum : $notesId (Reval:$revalidationStatusWas)", $pesEmail, $pesTaskId);
     }
 
-    static function notifyPesTeamOfOffboarded($cnum,$revalidationStatus){
+    static function notifyPesTeamOfOffboarded($cnum, $workerId, $revalidationStatus){
         $loader = new Loader();
         $now = new \DateTime();
         $pesEmail = null;          // Will be overridden when we include_once from emailBodies later.
@@ -533,7 +531,7 @@ class pesEmail {
         return BlueMail::send_mail(array($pesTaskId), "vbac Offboarded - $cnum : $notesId", $pesEmail, $pesTaskId);
     }
 
-    static function notifyPesTeamOfOffStopRequest($cnum,$requestor=null){
+    static function notifyPesTeamOfOffStopRequest($cnum, $workerId, $requestor=null){
 
         $requestor = empty($requestor) ? $_SESSION['ssoEmail'] : $requestor;
 
@@ -543,25 +541,22 @@ class pesEmail {
 
         $pesTaskId = personRecord::getPesTaskId();
 
-        $cnumPredicate = " CNUM = '" . trim($cnum) . "' ";
+        $cnumPredicate = " CNUM = '" . trim($cnum) . "' AND WORKER_ID = '" . trim($workerId) . "' ";
         $allPesStatus = $loader->loadIndexed('PES_STATUS','CNUM',allTables::$PERSON,$cnumPredicate);
         $allNotesid = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON,$cnumPredicate);
 
         $pesEmail.= '<h2>A request to STOP PES checking the following individual has been raised.<h2>';
         $pesEmail.= "<h4>Requested by : " . $requestor . "</h4>";
         $pesEmail.= "<h4>Generated by vBac: " . $now->format('jS M Y') . "</h4>";
-        $pesEmail.= "<table border='1' style='border-collapse:collapse;'  ><thead style='background-color: #cce6ff; padding:25px;'><tr><th style='padding:25px;'>CNUM</th><th style='padding:25px;'>Notes ID</th><th style='padding:25px;'>PES Status</th></tr></thead><tbody>";
+        $pesEmail.= "<table border='1' style='border-collapse:collapse;'  ><thead style='background-color: #cce6ff; padding:25px;'><tr><th style='padding:25px;'>CNUM</th><th style='padding:25px;'>WORKER ID</th><th style='padding:25px;'>Notes ID</th><th style='padding:25px;'>PES Status</th></tr></thead><tbody>";
 
         $pesStatus = isset($allPesStatus[$cnum]) ? $allPesStatus[$cnum] : 'unknown';
         $notesId   = isset($allNotesid[$cnum]) ? $allNotesid[$cnum] : 'unknown';
-        $pesEmail.="<tr><td style='padding:15px;'>" . $cnum . "</td><td style='padding:15px;'>" . $notesId  . "</td><td style='padding:15px;'>" . $pesStatus . "</td></tr>";
+        $pesEmail.="<tr><td style='padding:15px;'>" . $cnum . "</td><td style='padding:15px;'>" . $workerId . "</td><td style='padding:15px;'>" . $notesId  . "</td><td style='padding:15px;'>" . $pesStatus . "</td></tr>";
 
         $pesEmail.="</tbody></table>";
         $pesEmail.= "<style> th { background:red; padding:15px; } </style>";
 
-        return BlueMail::send_mail(array($pesTaskId), "vbac Stop Requested - $cnum : $notesId", $pesEmail, $pesTaskId);
+        return BlueMail::send_mail(array($pesTaskId), "vbac Stop Requested - $cnum / $workerId : $notesId", $pesEmail, $pesTaskId);
     }
-
-
-
 }

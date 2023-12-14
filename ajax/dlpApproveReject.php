@@ -11,7 +11,7 @@ $dlp = new dlpTable(allTables::$DLP);
 $trimmedParms = array_map('trim', $_POST);
 
 $approveReject = $trimmedParms['approveReject'] == dlpRecord::STATUS_APPROVED ? dlpRecord::STATUS_APPROVED : dlpRecord::STATUS_REJECTED;
-$dlp->approveReject($trimmedParms['cnum'], $trimmedParms['hostname'], $approveReject);
+$dlp->approveReject($trimmedParms['cnum'], $trimmedParms['workerid'], $trimmedParms['hostname'], $approveReject);
 
 $messages = ob_get_clean();
 ob_start();

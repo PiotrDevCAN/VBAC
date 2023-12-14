@@ -3,6 +3,10 @@ use vbac\personRecord;
 use vbac\personTable;
 use vbac\allTables;
 use itdq\AuditTable;
+use vbac\emails\cbcEmail;
+use vbac\emails\offboardingWarningEmail;
+use vbac\knownValues\knownExternalEmails;
+use vbac\knownValues\knownIBMEmails;
 
 ob_start();
 
@@ -11,52 +15,40 @@ AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_POST,
 $person = new personRecord();
 $table = new personTable(allTables::$PERSON);
 
-$save = $_POST['mode'] == 'Save' ? true : false;
-$update = $_POST['mode'] == 'Update' ? true : false;
+$mode = !empty($_POST['mode']) ? trim($_POST['mode']) : '';
+$save = $mode == 'Save' ? true : false;
+$update = $mode == 'Update' ? true : false;
 
 try {
+    // set initial value of REVALIDATION_STATUS
+    if ($save == true){
+        $_POST['REVALIDATION_STATUS'] = $_POST['EMPLOYEE_TYPE']==personRecord::EMPLOYEE_TYPE_VENDOR ? personRecord::REVALIDATED_VENDOR : personRecord::REVALIDATED_PREBOARDER;
+    }
+    $_POST['EMAIL_ADDRESS'] = filter_var($_POST['EMAIL_ADDRESS'], FILTER_SANITIZE_EMAIL);
+    $_POST['KYN_EMAIL_ADDRESS'] = filter_var($_POST['KYN_EMAIL_ADDRESS'], FILTER_SANITIZE_EMAIL);
+
+    // And put their name in the NOTES_ID as that's the field we display as their identity.
+    // And copy over their fields into the standard fields.
+    $_POST['NOTES_ID'] = $_POST['FIRST_NAME'] . " " . $_POST['LAST_NAME'];
+    
+    // set initial value of CNUM
     switch (true) {
         case $save:
-    
             // save not ibmer
             $cnum = personTable::getNextVirtualCnum();
             $_POST['CNUM'] = $cnum;
-            // And put their name in the NOTES_ID as that's the field we display as their identity.
-            // And copy over their fields into the standard fields.
-            $_POST['NOTES_ID'] = $_POST['FIRST_NAME'] . " " . $_POST['LAST_NAME'];
-
-            if ($_POST['EMPLOYEE_TYPE']==personRecord::EMPLOYEE_TYPE_VENDOR){
-                $_POST['REVALIDATION_STATUS'] = personRecord::REVALIDATED_VENDOR;
-            } else {
-                $_POST['REVALIDATION_STATUS'] = personRecord::REVALIDATED_PREBOARDER;
-            }
-
-            AuditTable::audit("Pre boarding:<b>" . $cnum . "</b> Type:" .  $_POST['EMPLOYEE_TYPE'],AuditTable::RECORD_TYPE_AUDIT);
-
+            $_POST['WORKER_ID'] = personRecord::NOT_FOUND;
+            AuditTable::audit("Pre boarding:<b>" . $cnum . "</b> Type:" .  $_POST['EMPLOYEE_TYPE'], AuditTable::RECORD_TYPE_AUDIT);
             break;
         case $update:
-
             // update not ibmer
-            $_POST['CNUM'] = $_POST['person_uid'];
-            // And put their name in the NOTES_ID as that's the field we display as their identity.
-            // And copy over their fields into the standard fields.
-            $_POST['NOTES_ID'] = $_POST['FIRST_NAME'] . " " . $_POST['LAST_NAME'];
-
-            if ($_POST['EMPLOYEE_TYPE']==personRecord::EMPLOYEE_TYPE_VENDOR){
-                $_POST['REVALIDATION_STATUS'] = personRecord::REVALIDATED_VENDOR;
-            } else {
-                $_POST['REVALIDATION_STATUS'] = personRecord::REVALIDATED_PREBOARDER;
-            }
+            $_POST['CNUM'] = $_POST['resource_uid'];
+            $_POST['WORKER_ID'] = isset($_POST['WORKER_ID']) ? $_POST['WORKER_ID'] : personRecord::NOT_FOUND;        
+            AuditTable::audit("Pre boarded update:<b>" . $cnum . "</b> Type:" .  $_POST['EMPLOYEE_TYPE'], AuditTable::RECORD_TYPE_AUDIT);
             break;
         default:
             break;
     }
-
-    if ($_POST['mode']!='Update'){
-        $_POST['REVALIDATION_STATUS'] = isset($_POST['REVALIDATION_STATUS']) ? $_POST['REVALIDATION_STATUS'] : personRecord::REVALIDATED_FOUND;
-    }
-    $_POST['EMAIL_ADDRESS'] = filter_var($_POST['EMAIL_ADDRESS'], FILTER_SANITIZE_EMAIL);
-    $_POST['KYN_EMAIL_ADDRESS'] = filter_var($_POST['KYN_EMAIL_ADDRESS'], FILTER_SANITIZE_EMAIL);
 
     // prepare PERSON from POST
     $person->setFromArray($_POST);
@@ -69,6 +61,7 @@ try {
     }
 
     if (empty($person->getValue('CNUM'))
+        || empty($person->getValue('WORKER_ID'))
         || empty($person->getValue('NOTES_ID'))
         || empty($person->getValue('FIRST_NAME'))
         || empty($person->getValue('LAST_NAME'))
@@ -82,7 +75,9 @@ try {
 
     $saveRecordResult = false;
     $timeToWarnPmo = false;
-    $allowPESInit = true;
+    $allowPESInit = false;
+
+    $success = false;
 
     switch (true) {
         case $invalidPersonEmailAddress:
@@ -102,47 +97,47 @@ try {
             $saveRecordResult = $table->saveRecord($person, false, false);
 
             if ($_POST['CTB_RTB'] != personRecord::CIO_ALIGNMENT_TYPE_CTB){
-                $table->clearCioAlignment($_POST['CNUM']);
+                $table->clearCioAlignment($_POST['CNUM'], $_POST['WORKER_ID']);
             }
             
-            AuditTable::audit("Saved Boarding Record:<B>" . $_POST['CNUM'] .":" . $_POST['NOTES_ID'] .  "</b>Mode:<b>" . $_POST['mode'],AuditTable::RECORD_TYPE_AUDIT);
+            AuditTable::audit("Saved Boarding Record:<B>" . $_POST['CNUM'] .":" . $_POST['WORKER_ID'] .  "</b>Mode:<b>" . $mode, AuditTable::RECORD_TYPE_AUDIT);
             AuditTable::audit("Saved Record:<pre>". print_r($person,true) . "</pre>", AuditTable::RECORD_TYPE_DETAILS);
             AuditTable::audit("PROJECTED_END_DATE:<pre>". print_r($_POST['PROJECTED_END_DATE'],true) . "</pre>", AuditTable::RECORD_TYPE_DETAILS);
         
             $timeToWarnPmo = $person->checkIfTimeToWarnPmo();
-            $timeToWarnPmo ? $person->sendOffboardingWarning() : null;
+            $offboardingWarning = new offboardingWarningEmail();
+            $timeToWarnPmo ? $offboardingWarning->sendOffboardingWarning($person) : null;
 
-            if ($saveRecordResult) {
+            // null - default return value
+            // false - update row
+            if ($saveRecordResult === null) {
                 $saveRecordResult = true;
             }
-            // null - default
-            // false - update
-            // rs - insert
-
+            
             switch (true) {
                 case $saveRecordResult:
                     switch (true) {
                         case $save:
                             echo "<br/>Boarding Form Pre-Boarder / Vendor Record - Saved.";
-
-                            // Ant Stark note - 14th June 2023
-                            // vendors will need to go through PES now. Hopefully this makes the logic simpler
-                            // if ($_POST['EMPLOYEE_TYPE']==personRecord::EMPLOYEE_TYPE_VENDOR){
-                            //     echo "<br/>There is no need to initiate the PES Check Process due to on-boarding vendor employee";
-                            // } else {
-                            //     echo "<br/>Click 'Initiate PES' button to initiate the PES Check Process";
-                            //     $allowPESInit = true;
-                            // }
-
                             echo "<br/>Click 'Initiate PES' button to initiate the PES Check Process";
                             $allowPESInit = true;
                             
                             $cnum = $person->getValue('CNUM');
-                            if (!empty($cnum)) {                    
-                                $person->checkForCBC();
+                            $workerId = $person->getValue('WORKER_ID');
+                            if (!empty($cnum) && !empty($workerId)) {                    
+                                $cbc = new cbcEmail();
+                                $cbc->sendCbcEmail($person);
                             } else {
                                 echo "<br/>CBC Check notification has been NOT sent due to missing person data.";
                             }
+
+                            // refresh list of know values
+                            $extenalEmails = new knownExternalEmails();
+                            $extenalEmails->reloadCache();
+
+                            $IBMEmails = new knownIBMEmails();
+                            $IBMEmails->reloadCache();
+                            
                             $success = true;
                             break;
                         case $update:
@@ -189,6 +184,7 @@ ob_start();
 
 $response = array(
     'cnum'=>$_POST['CNUM'],
+    'workerid'=>$_POST['WORKER_ID'],
     'employeetype'=>$_POST['EMPLOYEE_TYPE'],
     'pesstatus'=>$_POST['PES_STATUS'],
     'success'=>$success,

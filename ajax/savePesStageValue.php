@@ -1,6 +1,5 @@
 <?php
 use itdq\AuditTable;
-use vbac\pesEventTable;
 use vbac\allTables;
 use vbac\pesTrackerTable;
 
@@ -9,9 +8,9 @@ AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_POST,
 
 try {
 
-    $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER   );
-    $pesTracker->setPesStageValue($_POST['cnum'],$_POST['stage'], $_POST['stageValue']);
-    $comment = $pesTracker->savePesComment($_POST['cnum'],"Stage " . $_POST['stage'] . " Set to " . $_POST['stageValue']);
+    $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER);
+    $pesTracker->setPesStageValue($_POST['cnum'],$_POST['workerid'],$_POST['stage'], $_POST['stageValue']);
+    $comment = $pesTracker->savePesComment($_POST['cnum'],$_POST['workerid'],"Stage " . $_POST['stage'] . " Set to " . $_POST['stageValue']);
 
     $messages  = ob_get_clean();
     ob_start();

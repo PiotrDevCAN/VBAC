@@ -12,9 +12,9 @@ ini_set('display_startup_errors',1);
 
 try {
     $table = new personTable(allTables::$PERSON);
-    $response = $table->setFmFlag($_POST['cnum'],$_POST['flag']);
+    $response = $table->setFmFlag($_POST['cnum'],$_POST['workerid'],$_POST['flag']);
     if($response){
-        $body = "<p>Functional Mgr Flag set to : " . $_POST['flag'] . " for :" . $_POST['notesid'] . "</p>";
+        $body = "<p>Functional Mgr Flag set to : " . $_POST['flag'] . " for :" . $_POST['cnum'] . " / " . $_POST['workerid'] . "</p>";
     }
 } catch (Exception $e) {
     echo $e->getCode();

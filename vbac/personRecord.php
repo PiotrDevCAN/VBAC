@@ -16,8 +16,6 @@ use DateTime;
  *
  * @author gb001399
  *
- * ALTER TABLE "ROB_DEV"."PERSON" ADD COLUMN "SQUAD_NUMBER" NUMERIC(5);
- *
  */
 class personRecord extends DbRecord
 {
@@ -133,10 +131,6 @@ class personRecord extends DbRecord
     const PES_API_STATUS_NOT_FOUND = 'not found';
     const PES_API_STATUS_IGNORE = 'ignore';
 
-    // const IBM_STATUS_NOT_IBMER = 'Not an IBMer';
-    // const IBM_STATUS_CONTRACTOR = 'Contractor';
-    // const IBM_STATUS_REGULAR = 'Regular';
-    // const IBM_STATUS_PRE_HIRE = 'Pre-Hire';
     const REVALIDATED_FOUND = 'found';
     const REVALIDATED_VENDOR = 'vendor';
     const REVALIDATED_LEAVER = 'leaver';
@@ -173,11 +167,9 @@ class personRecord extends DbRecord
     const NO_LONGER_AVAILABLE = 'No longer available';
     const NOT_FOUND = 'not found';
 
-//    public static $employeeTypeMapping = array('A'=>'Regular','B'=>'Contractor','C'=>'Contractor','I'=>'Regular','J'=>'Pre-Hire','L'=>'Regular','O'=>'Regular','P'=>'Regular','V'=>'Contractor','X'=>'Regular');
     const AURORA_TRAINING_URL = 'https://kyndryl.percipio.com/track/26c2c517-29c2-4671-bfc1-024271d8fe6b';
     public static $cio = array('CTB Leadership','CTB Central BU','CTB PMO','Commercial & Business Banking','Insurance & Enterprise Programmes','Cyber & TRP','Enterprise Transformation','Retail & Community Banking Transformation','Cross Platform','Product & Engineering');
 
-    // public static $pesTaskId = array('LBGVETPR@uk.ibm.com'); // Only first entry will be used as the "contact" in the PES status emails.
     // Only first entry will be used as the "contact" in the PES status emails.
     public static $pesTaskId = array(
       'Kyndryl' => 'Aurora.Central.Pmo@kyndryl.com',
@@ -199,176 +191,6 @@ class personRecord extends DbRecord
     public static $smCdiAuditEmail = 'e3h3j0u9u6l2q3a3@ventusdelivery.slack.com';
     public static $securityOps = array('Kyndryl.LBG.IAM.Requests@Kyndryl.com');
 
-    private static $pesEmailBody = 'Please initiate PES check for the following individual : Name : &&name&&, Email Address : &&email&&, Notes Id : &&notesid&&, Country working in : &&country&&, LoB : &&lob&&, Role on Project : &&role&&, Contract : &&contract&&, Open Seat : &&openSeat&&, Requested By : &&requestor&&, Requested Timestamp : &&requested&&, Functional Mgr (on CC) : &&functionalMgr&&, PES Level : &&level&&';
-    
-    private static $pesEmailPatterns = array(
-        '/&&name&&/',
-        '/&&email&&/',
-        '/&&notesid&&/',
-        '/&&country&&/',
-        '/&&lob&&/',
-        '/&&role&&/',
-        '/&&contract&&/',
-        '/&&openSeat&&/',
-        '/&&requestor&&/',
-        '/&&requested&&/',
-        '/&&functionalMgr&&/',
-        '/&&level&&/',
-    );
-
-    private static $preboarderStatusChangeEmailBody = '<table width="100%" border="0"   cellpadding="0">
-      <tr><td align="center">
-        <table width="50%">
-            <tr><td colspan="2" style="font-size:16px;padding-bottom:10px"">Please Note the <b>PES STATUS</b> for a <b>Pre-Boarder</b> has changed :</td></tr>
-            <tr><th style="background-color:silver;font-size:16px">Email Address</th><td style="font-size:20px">&&email&&</td></tr>
-            <tr><th style="background-color:silver;font-size:16px">Notes Id</th><td style="font-size:20px">&&notesid&&</td></tr>
-            <tr><th style="background-color:SkyBlue;font-size:18px">Status Is</th><td style="font-size:18px">&&StatusIs&&</td></tr>
-            <tr><th style="background-color:WhiteSmoke;font-size:16px">Changed By</th><td style="font-size:16px">&&changeor&&</td></tr>
-            <tr><th style="background-color:WhiteSmoke;font-size:16px">Changed Date</th><td style="font-size:16px">&&changed&&</td></tr>
-        </table>
-    </td></tr>
-    </table>';
-
-    private static $preboarderStatusChangeEmailPattern = array(
-      '/&&email&&/',
-      '/&&notesid&&/',
-      '/&&StatusIs&&/',
-      '/&&changeor&&/',
-      '/&&changed&&/'
-    );
-
-    private static $pesClearedPersonalEmail = 'Hello &&candidate&&,
-      <br/>I can confirm that you have successfully passed Lloyds Bank PES Screening, with a personal reference, effective from &&effectiveDate&&
-      <br/>If you need any more information regarding your PES clearance, please contact the taskid &&taskid&&.
-      <br/>You are now required to successfully complete the mandatory Aurora Security Education.
-      <br/>Undertake the training via the following link: <a href="'.personRecord::AURORA_TRAINING_URL.'">'.personRecord::AURORA_TRAINING_URL.'</a>
-      <br/>Please note that your PES clearance will require revalidation after 1 or 3 years (depending on your access levels), you will be contacted 8 weeks before your revalidation date with instructions.
-      <br/>Many Thanks for your cooperation';
-
-    private static $pesClearedPersonalEmailPattern = array('/&&candidate&&/','/&&effectiveDate&&/','/&&taskid&&/');
-
-    private static $pesClearedEmail = 'Hello &&candidate&&,
-      <br/>I can confirm that you have successfully passed Lloyds Bank PES Screening, effective from &&effectiveDate&&
-      <br/>If you need any more information regarding your PES clearance, please contact the taskid &&taskid&&.
-
-      <br/>If this is the first time you have been PES Cleared for Lloyds Bank, you are required to successfully complete the mandatory Aurora Security Education.
-      <br/>If you have previously successfully completed the Aurora Security Education, then this requirement does not apply.
-      <br/>Undertake the training via the following link: <a href="'.personRecord::AURORA_TRAINING_URL.'">'.personRecord::AURORA_TRAINING_URL.'</a>
-      <br/>Please note that your PES clearance will require revalidation after 1 or 3 years (depending on your access levels), you will be contacted 8 weeks before your revalidation date with instructions.
-      <br/>Many Thanks for your cooperation,';
-
-    private static $pesClearedEmailPattern = array('/&&candidate&&/','/&&effectiveDate&&/','/&&taskid&&/');
-
-    private static $pesClearedAmberEmail = 'Hello &&candidate&&,
-      <br/>I can confirm that you have successfully passed Lloyds Bank PES Screening, effective from &&effectiveDate&&
-      <br/>If you need any more information regarding your PES clearance, please contact the taskid &&taskid&&.
-
-      <br/>If this is the first time you have been PES Cleared for Lloyds Bank, you are required to successfully complete the mandatory Aurora Security Education.
-      <br/>If you have previously successfully completed the Aurora Security Education, then this requirement does not apply.
-      <br/>Undertake the training via the following link: <a href="'.personRecord::AURORA_TRAINING_URL.'">'.personRecord::AURORA_TRAINING_URL.'</a>
-      <br/>Please note that your PES clearance will require revalidation after 1 or 3 years (depending on your access levels), you will be contacted 8 weeks before your revalidation date with instructions.
-      <br/>Many Thanks for your cooperation,';
-
-    private static $pesClearedAmberEmailPattern = array('/&&candidate&&/','/&&effectiveDate&&/','/&&taskid&&/');
-
-    private static $pesCancelPesEmail = 'PES Team,
-      <br/>Please stop processing the PES Clearance for : &&candidateFirstName&& <b>&&candidateSurname&&</b> CNUM:( &&cnum&& )
-      <br/>This action has been requested by  &&requestor&&.';
-    private static $pesCancelPesEmailPattern = array('/&&candidateFirstName&&/','/&&candidateSurname&&/','/&&cnum&&/','/&&requestor&&/');
-
-    private static $pesRestartPesEmail = 'PES Team,
-      <br/>Please <b>restart</b> processing the PES Clearance for : &&candidateFirstName&& <b>&&candidateSurname&&</b> CNUM:( &&cnum&& )
-      <br/>This action has been requested by  &&requestor&&.';
-    private static $pesRestartPesEmailPattern = array('/&&candidateFirstName&&/','/&&candidateSurname&&/','/&&cnum&&/','/&&requestor&&/');
-
-    private static $pesClearedProvisionalEmail = '<p>Hello &&candidate&&,</p>
-      <p>Due to the recent situation we understand that many people will be unable to meet with fellow IBM\'ers to have their documents Certified.  We have implemented a \'provisional clearance\' process and will be accepting all documents without certification - however these documents will require to be certified as soon as the restrictions are lifted.</p>
-      <p>Therefore I can confirm that you have provisionally passed  Lloyds Bank PES Screening.</p>
-      <p>Please note that this will not give you full PES clearance, and your account may not recognise Provisional Clearance, therefore, if you can get your documents certified correctly (as per below) please do so.</p>
-      <p>When sending your document please only send to the PES team.</p>
-      <p><b>The Certification MUST be done by another IBM�er</b>, to confirm that they have seen the original document. The following statement should be handwritten on <b>each document</b>, on the <b>same side as the image</b>.</p>
-      <p style=\'text-align:center;color:red\'>True & Certified Copy<br/>Name of certifier  in BLOCK CAPITALS<br/>IBM Serial number of certifier<br/>Certification Date<br/>Signature of certifier</p>
-      <p>If you need any more information regarding your PES clearance, please let me know.</p>
-      <p>Many Thanks for your cooperation,</p>'
-    ;
-
-    private static $pesClearedProvisionalEmailPattern = array('/&&candidate&&/');
-
-    private static $offboardingEmail = 'Please initiate OFFBOARDING for the following individual:\n
-      Name : &&name&&
-      Serial: &&cnum&&
-      Email Address : &&email&&
-      Notes Id : &&notesid&&
-
-      Projected End Date : &&projectedEndDate&&
-
-      Country working in : &&country&&
-      LoB : &&lob&&
-      Employee Type:&&type&&
-      Functional Mgr: &&functionalMgr&&'
-    ;
-
-    private static $offboardingEmailPattern = array(
-      '/&&name&&/',
-      '/&&cnum&&/',
-      '/&&email&&/',
-      '/&&notesid&&/',
-      '/&&projectedEndDate&&/',
-      '/&&country&&/',
-      '/&&lob&&/',
-      '/&&type&&/',
-      '/&&functionalMgr&&/',
-    );
-
-    private static $warnPmoDateChange = 'Please consider OFFBOARDING the following individual:
-      Name : &&name&&
-      Serial: &&cnum&&
-      Email Address : &&email&&
-      Notes Id : &&notesid&&
-
-      Projected End Date : &&projectedEndDate&&
-
-      Country working in : &&country&&
-      LoB : &&lob&&
-      Employee Type:&&type&&
-      Functional Mgr: &&functionalMgr&&'
-    ;
-
-    private static $warnPmoDateChangePattern = array(
-      '/&&name&&/',
-      '/&&cnum&&/',
-      '/&&email&&/',
-      '/&&notesid&&/',
-      '/&&projectedEndDate&&/',
-      '/&&country&&/',
-      '/&&lob&&/',
-      '/&&type&&/',
-      '/&&functionalMgr&&/',
-    );
-    
-    private static $cbnEmailBody = "You are recorded in the <a href='&&host&&'>vBAC</a> tool, as a Functional Manager for one or more people.<h3>Please review the people assigned to you for continued business need and/or to correct any inaccuracies. <a href='&&host&&/pa_pmo.php'>Link here</a></h3>"
-      . "<p>Select the <b><em>Mgrs CBN Report</em></b> and use the <b><em>Hide Offboarded/ing</em></b> option, both are buttons on the Person Portal page.</p>"
-      . "<ul><li>If your reportee has moved to a new functional manager or changed roles, you can amend their details using the <b>Edit Icon</b> in the <em>Notes ID</em> column to do this. All mandatory information must be completed to save the person record. </li>"
-      . "<li>If you have people who no longer work on the account  please initiate offboarding by amending their <b>Projected End Date</b>.  Use the <b>Edit Icon</b> in the <em>Notes ID</em> column to do this</li>"
-      . "<li> If you are missing people who should report to you<br/>Ensure they have been boarded to the account using the vBAC <a href='&&host&&/pa_personFinder.php'>People Finder</a> screen<br/>You can transfer someone to yourself from another manager by clicking the <b>Transfer Icon</b> in the <em>FM Column</em></li>"
-      . "<li>If the person needs to be boarded, then please use the <a href='&&host&&/pb_onboard.php'>Boarding</a> screen</li></ul>";
-
-    private static $cbnEmailPattern = array('/&&host&&/');
-
-    private static $cbcEmailBody = "<h3>The following person has been boarded with a location that may not have a CBC/DOU in place.</h3>"
-      . "<table>"
-      . "<tbody>"
-      . "<tr><th>Notes Id</th><td>&&notesid&&</td></tr>"
-      . "<tr><th>CNUM</th><td>&&cnum&&</td></tr>"
-      . "<tr><th>Country</th><td>&&countryCode&&</td></tr>"
-      . "<tr><th>LBG Location</th><td>&&lbgLocation&&</td></tr>"
-      . "<tr><th>Role</th><td>&&role&&</td></tr>"
-      . "<tbody>"
-      . "<table>";
-
-    private static $cbcEmailPattern = array('/&&notesid&&/','/&&cnum&&/','/&&countryCode&&/','/&&lbgLocation&&/','/&&role&&/');
-
-    // protected static $lobValue = array('GTS','GBS','IMI','Cloud','Security','Other');
     protected static $lobValue = array('Kyndryl', 'IBM - GBS', 'IBM - TSS', 'IBM - Cloud', 'IBM - Security', 'Other');
 
     const PES_STATUS_NOT_REQUESTED        = 'Not Requested';
@@ -417,18 +239,6 @@ class personRecord extends DbRecord
 
     const EMP_RESOURCE_REG = 'Resource Details - Kyndryl employees use Kyndryl IDs';
     const EMP_RESOURCE_EXT = 'Resource Details - Use external email addresses';
-
-//     function htmlHeaderCells(){
-//         $headerCols = array('Notesid','Fm Cnum','Pes Status','Revalidation Status','Email','CNUM');
-//         foreach ($headerCols  as $column) {
-//             $headerCells .= "<th>";
-//             $headerCells .= $column;
-//             $headerCells .= "</th>";
-//         }
-
-// //        $headerCells = "<th>Name</th><th>Position</th><th>Office</th><th>Extn.</th><th>Start date</th><th>Salary</th>";
-//         return $headerCells;
-//     }
 
     static function checkIsOffboarding($status = '') {
       return substr($status, 0, 11) == personRecord::REVALIDATED_OFFBOARDING;
@@ -589,39 +399,22 @@ class personRecord extends DbRecord
         }
     }
 
-    function checkForCBC(){
-        $to = self::$pmoTaskId;
-        $title = 'vBAC CBC Check Required -' . $this->CNUM ." (" . trim($this->FIRST_NAME) . " " . trim($this->LAST_NAME) . ")";
-        $countryCode = strtoupper(substr(trim($this->CNUM),-3));
-        switch ($countryCode) {
-            case 'XXX':
-                // Not an IBM'er
-                break;
-            case '709' :
-                // India
-            case '744' :
-                // India
-            case '866' :
-                // UK
-                break;
-            default:
-                AuditTable::audit('CBC Check Required for ' . $this->NOTES_ID . " ($countryCode)", AuditTable::RECORD_TYPE_AUDIT);
-                // private static $cbcEmailPattern = array('/&&notesid&&/','/&&cnum&&/','/&&countryCode&&/','/&&lbgLocation&&/','/&&role&&/');
-                $replacements = array($this->NOTES_ID, $this->CNUM, $this->COUNTRY, $this->LBG_LOCATION,  $this->ROLE_ON_THE_ACCOUNT );
-                $message = preg_replace(self::$cbcEmailPattern, $replacements, self::$cbcEmailBody);
-                BlueMail::send_mail($to, $title, $message, self::$vbacNoReplyId, self::$securityOps);
-            break;
-        }
+    function convertCountryCodeToName(){
+      if(strlen($this->COUNTRY)== 2){
+          $loader = new Loader();
+          $countryName = $loader->loadIndexed('COUNTRY_NAME','COUNTRY_CODE',allTables::$STATIC_COUNTRY_CODES, " COUNTRY_CODE='" . htmlspecialchars(trim($this->COUNTRY)) . "' ");
+          $this->COUNTRY = isset($countryName[$this->COUNTRY]) ? $countryName[$this->COUNTRY] : $this->COUNTRY;
+      }
     }
 
     function initiateOffboarding(){
 
         $mailAccount = empty($this->NOTES_ID) ? $this->EMAIL_ADDRESS : $this->NOTES_ID;
 
-        AuditTable::audit("Prior to Offboarding for Cnum:" . $this->CNUM . " Revalidation Status:" . $this->REVALIDATION_STATUS . " Revalidation Date:" . $this->REVALIDATION_DATE_FIELD . " Updater:" . $_SESSION['ssoEmail'], AuditTable::RECORD_TYPE_DETAILS);
-        AuditTable::audit("Initiated Offboarding for Cnum:" . $this->CNUM . " Id:" . $mailAccount . " Projected End Date:" . $this->PROJECTED_END_DATE . " Proposed Leaving Date:" . $this->PROPOSED_LEAVING_DATE, AuditTable::RECORD_TYPE_AUDIT);
+        AuditTable::audit("Prior to Offboarding for Cnum:" . $this->CNUM . " / Worker Id:" . $this->WORKER_ID . " Revalidation Status:" . $this->REVALIDATION_STATUS . " Revalidation Date:" . $this->REVALIDATION_DATE_FIELD . " Updater:" . $_SESSION['ssoEmail'], AuditTable::RECORD_TYPE_DETAILS);
+        AuditTable::audit("Initiated Offboarding for Cnum:" . $this->CNUM. " / Worker Id:" . $this->WORKER_ID . " Id:" . $mailAccount . " Projected End Date:" . $this->PROJECTED_END_DATE . " Proposed Leaving Date:" . $this->PROPOSED_LEAVING_DATE, AuditTable::RECORD_TYPE_AUDIT);
         $personTable = new personTable(allTables::$PERSON);
-        $personTable->flagOffboardingByCNUM($this->CNUM, $this->REVALIDATION_STATUS, $this->NOTES_ID, $this->PROPOSED_LEAVING_DATE);
+        $personTable->flagOffboardingByCNUM($this->CNUM, $this->WORKER_ID, $this->REVALIDATION_STATUS, $this->NOTES_ID, $this->PROPOSED_LEAVING_DATE);
     }
 
     function displayBoardingForm($mode){
@@ -743,8 +536,8 @@ class personRecord extends DbRecord
             <input id='person_first_name'            name='FIRST_NAME'             value='<?=$this->FIRST_NAME?>'        type='hidden' <?=$notEditable?>>
             <input id='person_last_name'             name='LAST_NAME'              value='<?=$this->LAST_NAME?>'         type='hidden' <?=$notEditable?>>
             <input id='person_ibm_location'          name='IBM_BASE_LOCATION'      value='<?=$this->IBM_BASE_LOCATION?>' type='hidden' >
-            <input id='person_uid'                   name='person_uid'             value=''                              type='hidden' required>
-            <input id='person_worker_id'             name='WORKER_ID'              value=''                              type='hidden' required>
+            <input id='person_uid'                   name='person_uid'             value='<?=$this->CNUM?>'              type='hidden' required>
+            <input id='person_worker_id'             name='WORKER_ID'              value='<?=$this->WORKER_ID?>'         type='hidden' required>
             <input id='person_is_mgr'                name='FM_MANAGER_FLAG'        value='<?=$fmManagerFlag?>'           type='hidden' >
             <input id='person_employee_type'         name='EMPLOYEE_TYPE'          value='<?=$employeeType?>'		         type='hidden' >
             <input id='person_country'               name='COUNTRY'                value='<?=$this->COUNTRY?>'           type='hidden' >
@@ -1131,9 +924,9 @@ class personRecord extends DbRecord
             </select>
           </div>
           </div>
-          <input id='resource_uid'                name='person_uid'          value='<?=$this->CNUM?>'   				    type='hidden' >
-          <input id='resource_worker_id'          name='person_worker_id'    value='<?=$this->WORKER_ID?>'   			  type='hidden' >
-          <input id='resource_cfirst_id'          name='person_cfirst_id'    value='<?=$this->CFIRST_ID?>'   				type='hidden' >
+          <input id='resource_uid'                name='resource_uid'        value='<?=$this->CNUM?>'   				    type='hidden' >
+          <input id='resource_worker_id'          name='WORKER_ID'           value='<?=$this->WORKER_ID?>'   			  type='hidden' >
+          <input id='resource_cfirst_id'          name='CFIRST_ID'           value='<?=$this->CFIRST_ID?>'   				type='hidden' >
           <input id='resource_is_mgr'	            name='FM_MANAGER_FLAG'     value='<?=$fmManagerFlag?>'            type='hidden' >
           <input id='resource_ibm_location'       name='IBM_BASE_LOCATION'   value='<?=$this->IBM_BASE_LOCATION?>'	type='hidden' >
           <input id='resource_pes_status'         name='PES_STATUS'          value='<?=$pesStatus?>'                type='hidden' >
@@ -1367,7 +1160,7 @@ class personRecord extends DbRecord
     <?php
     }
 
-    function displayLinkForm($mode){
+    function displayLinkForm_OLD_($mode){
       $loader = new Loader();
       $availableFromPreBoarding = personTable::optionsForPreBoarded();
       $preBoardersAvailable = count($availableFromPreBoarding) > 1 ? null : " disabled='disabled' ";
@@ -1430,7 +1223,7 @@ class personRecord extends DbRecord
       <?php
     }
     
-    function displayLinkForm_NEW($mode){
+    function displayLinkForm($mode){
       $loader = new Loader();
       $availableFromPreBoarding = personTable::optionsForPreBoarded();
       $preBoardersAvailable = count($availableFromPreBoarding) > 1 ? null : " disabled='disabled' ";
@@ -1510,7 +1303,7 @@ class personRecord extends DbRecord
 	      </div>
         <?php
         $allButtons = null;
-        $submitButton =  $this->formButton('submit','Submit','saveLinking',null,'Save','btn btn-primary');
+        $submitButton =  $this->formButton('submit','Submit','saveLinking','disabled','Save','btn btn-primary');
         $allButtons[] = $submitButton;
         $this->formBlueButtons($allButtons);
         $this->formHiddenInput('requestor',$_SESSION['ssoEmail'],'requestor');
@@ -1602,314 +1395,6 @@ class personRecord extends DbRecord
         <?php
     }
 
-    function convertCountryCodeToName(){
-        if(strlen($this->COUNTRY)== 2){
-            $loader = new Loader();
-            $countryName = $loader->loadIndexed('COUNTRY_NAME','COUNTRY_CODE',allTables::$STATIC_COUNTRY_CODES, " COUNTRY_CODE='" . htmlspecialchars(trim($this->COUNTRY)) . "' ");
-            $this->COUNTRY = isset($countryName[$this->COUNTRY]) ? $countryName[$this->COUNTRY] : $this->COUNTRY;
-        }
-    }
-
-    function sendPesRequest(){
-        $loader = new Loader();
-
-        if(!empty($this->FM_CNUM)){
-            $fmEmailArray = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON," CNUM='" . htmlspecialchars(trim($this->FM_CNUM)) . "' ");
-            $fmEmail = isset($fmEmailArray[trim($this->FM_CNUM)]) ? $fmEmailArray[trim($this->FM_CNUM)] : $this->FM_CNUM;
-        } else {
-            $fmEmail = 'Unknown';
-        }
-        $firstName = !empty($this->FIRST_NAME) ? $this->FIRST_NAME : "firstName";
-        $lastName  = !empty($this->LAST_NAME) ? $this->LAST_NAME : "lastName";
-        $emailAddress = !empty($this->EMAIL_ADDRESS) ? $this->EMAIL_ADDRESS : "emailAddress";
-        $notesId = !empty($this->NOTES_ID) ? $this->NOTES_ID : "notesId";
-        $country = !empty($this->COUNTRY) ? $this->COUNTRY : "country";
-        $openSeat = !empty($this->OPEN_SEAT_NUMBER) ? $this->OPEN_SEAT_NUMBER : "open seat/hiring";
-        $lob = !empty($this->LOB) ? $this->LOB : "lob";
-        $role = !empty($this->ROLE_ON_THE_ACCOUNT) ? $this->ROLE_ON_THE_ACCOUNT : "role";
-        $level = !empty($this->PES_LEVEL) ? $this->PES_LEVEL : personTable::PES_LEVEL_TWO;
-
-        $ctbRtb = !empty($this->CTB_RTB) ? trim($this->CTB_RTB) : null;
-        $pesTaskId = personRecord::getPesTaskIdByCIO($ctbRtb);
-
-        $now = new \DateTime();
-        $replacements = array($firstName . " " . $lastName,
-          $emailAddress,
-          $notesId,
-          $country,
-          $lob,
-          $role,
-          'Ventus',
-          $openSeat,
-          $_SESSION['ssoEmail'],
-          $now->format('Y-m-d H:i:s'),
-          $fmEmail,
-          $level
-        );
-        $to[] = $pesTaskId;
-        $title = 'vBAC PES Request - ' . $this->CNUM ." (" . trim($this->FIRST_NAME) . " " . trim($this->LAST_NAME) . ")";
-        $message = preg_replace(self::$pesEmailPatterns, $replacements, self::$pesEmailBody);
-        
-        BlueMail::send_mail($to, $title, $message, self::$vbacNoReplyId);
-
-    }
-
-    function sendPesStatusChangedEmail($isPesSuppressable = true){
-
-        $fmIsIbmEmail = false;
-
-        if(!empty($this->FM_CNUM)){
-            $loader = new Loader();
-            $fmEmailArray = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON," CNUM='" . htmlspecialchars(trim($this->FM_CNUM)) . "' ");
-            $fmEmail = isset($fmEmailArray[trim($this->FM_CNUM)]) ? $fmEmailArray[trim($this->FM_CNUM)] : null;
-            $fmIsIbmEmail = strtolower(substr($fmEmail,-7))=='ibm.com';
-        }
-
-        $fmEmail = $fmIsIbmEmail ? $fmEmail : null;
-
-        $ctbRtb = !empty($this->CTB_RTB) ? trim($this->CTB_RTB) : null;
-        $pesTaskId = personRecord::getPesTaskIdByCIO($ctbRtb);
-
-        $emailAddress = trim($this->EMAIL_ADDRESS);
-        $isIbmEmail = strtolower(substr($emailAddress,-7))=='ibm.com';
-
-        if(!$isIbmEmail && !$fmIsIbmEmail){
-            throw new \Exception('No IBM Email Address for individual or Functional Manager');
-        }
-
-        $to = array();
-        $cc = array();
-        $bcc = array();
-        $noAttachments = array();
-
-        switch ($this->PES_STATUS) {
-            case self::PES_STATUS_CLEARED_PERSONAL:
-                $pattern   = self::$pesClearedPersonalEmailPattern;
-                $emailBody = self::$pesClearedPersonalEmail;
-                $replacements = array(
-                  $this->FIRST_NAME, 
-                  $this->PES_DATE_RESPONDED, 
-                  $pesTaskId
-                );
-                $title = 'vBAC PES Status Change';
-                !empty($emailAddress) ? $to[] = $emailAddress : null;
-                !empty($fmEmail)      ? $to[] = $fmEmail : null;
-                break;
-            case self::PES_STATUS_CLEARED_AMBER:
-                $pattern   = self::$pesClearedAmberEmailPattern;
-                $emailBody = self::$pesClearedAmberEmail;
-                $replacements = array(
-                  $this->FIRST_NAME, 
-                  $this->PES_CLEARED_DATE, 
-                  $pesTaskId
-                );
-                $title = 'vBAC PES Status Change';
-                !empty($emailAddress) ? $to[] = $emailAddress : null;
-                !empty($fmEmail)      ? $to[] = $fmEmail : null;
-                break;
-            case self::PES_STATUS_CLEARED:
-                $pattern   = self::$pesClearedEmailPattern;
-                $emailBody = self::$pesClearedEmail;
-                $replacements = array(
-                  $this->FIRST_NAME, 
-                  $this->PES_CLEARED_DATE, 
-                  $pesTaskId
-                );
-                $title = 'vBAC PES Status Change';
-                !empty($emailAddress) ? $to[] = $emailAddress : null;
-                !empty($fmEmail)      ? $to[] = $fmEmail : null;
-                break;
-            case self::PES_STATUS_PROVISIONAL: // For Covid
-                $pattern   = self::$pesClearedProvisionalEmailPattern;
-                $emailBody = self::$pesClearedProvisionalEmail;
-                $replacements = array(
-                  $this->FIRST_NAME
-                );
-                $title = 'vBAC PES Status Change';
-                !empty($emailAddress) ? $to[] = $emailAddress : null;
-                !empty($fmEmail)      ? $to[] = $fmEmail : null;
-                break;
-            case self::PES_STATUS_CANCEL_REQ:
-                $pattern   = self::$pesCancelPesEmailPattern;
-                $emailBody = self::$pesCancelPesEmail;
-                $title = 'vBAC Cancel Request';
-                $replacements = array(
-                  $this->FIRST_NAME, 
-                  $this->LAST_NAME, 
-                  $this->CNUM, 
-                  $_SESSION['ssoEmail']
-                );
-                foreach (personRecord::$pesKyndrylTaskIds as $key => $taskId){
-                  $to[] = $taskId;
-                }
-                !empty($fmEmail) ? $cc[] = $fmEmail : null;
-                $cc[] = $_SESSION['ssoEmail'];
-                break;
-            case self::PES_STATUS_RESTART:
-                $pattern   = self::$pesRestartPesEmailPattern;
-                $emailBody = self::$pesRestartPesEmail;
-                $title = 'vBAC Restart Request';
-                $replacements = array(
-                  $this->FIRST_NAME, 
-                  $this->LAST_NAME, 
-                  $this->CNUM, 
-                  $_SESSION['ssoEmail']
-                );
-                foreach (personRecord::$pesKyndrylTaskIds as $key => $taskId){
-                  $to[] = $taskId;
-                }
-                !empty($fmEmail) ? $cc[] = $fmEmail : null;
-                $cc[] = $_SESSION['ssoEmail'];
-            default:
-              break;
-        }
-
-        AuditTable::audit(print_r($pattern,true),AuditTable::RECORD_TYPE_DETAILS);
-        AuditTable::audit(print_r($replacements,true),AuditTable::RECORD_TYPE_DETAILS);
-        AuditTable::audit(print_r($emailBody,true),AuditTable::RECORD_TYPE_DETAILS);
-
-        $message = preg_replace($pattern, $replacements, $emailBody);
-
-        AuditTable::audit(print_r($message,true),AuditTable::RECORD_TYPE_DETAILS);
-        
-        // $responseData = BlueMail::send_mail($to, $title ,$message, $pesTaskId, $cc, $bcc, true, $noAttachments, pesEmail::EMAIL_PES_SUPRESSABLE );
-        $responseData = BlueMail::send_mail($to, $title ,$message, $pesTaskId, $cc, $bcc, true, $noAttachments, $isPesSuppressable );
-        list(
-            'sendResponse' => $response, 
-            'Status' => $status
-        ) = $responseData;
-
-        return array(
-          'response' => $response,
-          'to' => $to,
-          'message' => $message,
-          'pesTaskId' => $pesTaskId
-        );
-    }
-
-    function setPesRequested(){
-        $table = new personTable(allTables::$PERSON);
-        $success = $table->setPesRequested($this->CNUM, $_SESSION['ssoEmail']);
-        return $success;
-    }
-
-    function sendOffboardingWarning(){
-        $loader = new Loader();
-
-        if(!empty($this->FM_CNUM)){
-            $fmEmailArray = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON," CNUM='" . htmlspecialchars(trim($this->FM_CNUM)) . "' ");
-            $fmEmail = isset($fmEmailArray[trim($this->FM_CNUM)]) ? $fmEmailArray[trim($this->FM_CNUM)] : $this->FM_CNUM;
-        } else {
-            $fmEmail = 'Unknown';
-        }
-        $firstName = !empty($this->FIRST_NAME) ? $this->FIRST_NAME : "firstName";
-        $lastName  = !empty($this->LAST_NAME) ? $this->LAST_NAME : "lastName";
-        $cnum  = !empty($this->CNUM) ? $this->CNUM : "serial  missing from vBAC";
-        $emailAddress = !empty($this->EMAIL_ADDRESS) ? $this->EMAIL_ADDRESS : "emailAddress  missing from vBAC";
-        $notesId = !empty($this->NOTES_ID) ? $this->NOTES_ID : "notesId  missing from vBAC";
-        $country = !empty($this->COUNTRY) ? $this->COUNTRY : "county  missing from vBAC";
-        $lob     = !empty($this->LOB) ? $this->LOB : "lob  missing from vBAC";
-        $type    = !empty($this->EMPLOYEE_TYPE) ? $this->EMPLOYEE_TYPE : "employee type missing from vBAC";
-        $projectedEndDate = !empty($this->PROJECTED_END_DATE) ? $this->PROJECTED_END_DATE : "projected_end_date";
-
-        $now = new \DateTime();
-        $replacements = array($firstName . " " . $lastName,
-          $cnum,
-          $emailAddress,
-          $notesId,
-          $projectedEndDate,
-          $country,
-          $lob,
-          $type,
-          $fmEmail
-        );
-        $to = self::$pmoTaskId;
-        $title = 'vBAC Projected End Date Change - ' . $this->CNUM ." (" . trim($this->FIRST_NAME) . " " . trim($this->LAST_NAME) . ")";
-        $message = preg_replace(self::$warnPmoDateChangePattern, $replacements, self::$warnPmoDateChange);
-
-        BlueMail::send_mail($to, $title, $message, self::$vbacNoReplyId);
-    }
-
-    function sendCbnEmail(){
-//         $loader = new Loader();
-        $personTable = new personTable(allTables::$PERSON);
-//        $allFm = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON, " UPPER(FM_MANAGER_FLAG) like 'Y%' ");
-
-        $allFm = $personTable->activeFmEmailAddressesByCNUM();
-        $emailableFmLists = array_chunk($allFm, 49);
-        $replacements = array("https://" . $_SERVER['HTTP_HOST']);
-        $to = self::$pmoTaskId;
-        $title = 'CBN Initiation Request';
-        $emailMessage = preg_replace(self::$cbnEmailPattern, $replacements, self::$cbnEmailBody);
-        foreach ($emailableFmLists as $groupOfFmEmail){
-            $cc = array();
-            $bcc = $groupOfFmEmail;
-            /*
-             *
-             * Next few lines - use for Testing. Comment out for Live.
-             *
-             */
-//             $to  = array('Piotr.Tajanowicz@ocean.ibm.com');
-//             $cc  = array('jayhunter@uk.ibm.com');
-//             $bcc = array('Piotr.Tajanowicz@ocean.ibm.com','antstark@uk.ibm.com');
-            /*
-             *
-             * Lines above - use for testing. Comment out for Live.
-             *
-             */
-            $bcc[] = self::$smCdiAuditEmail;  // Always copy the slack channel.
-            set_time_limit(60);
-            BlueMail::send_mail($to, $title, $emailMessage, self::$vbacNoReplyId, $cc, $bcc);
-        }
-   }
-
-   function informPmoOfPesStatusChange($newPesStatus, $ctbRtb){
-      $pesTaskId = personRecord::getPesTaskIdByCIO($ctbRtb);
-      $to = array($pesTaskId);
-      $cc = array();
-      $bcc = array();
-      $title = 'Pre-Boarder PES Status Change';
-      $noAttachments = array();
-      
-      $emailAddress = !empty($this->EMAIL_ADDRESS) ? $this->EMAIL_ADDRESS : "emailAddress  missing from vBAC";
-      $notesId = !empty($this->NOTES_ID) ? $this->NOTES_ID : "NotesId  missing from vBAC";
-
-      $now = new \DateTime();
-      $replacements = array($emailAddress,$notesId,$newPesStatus,$_SESSION['ssoEmail'],$now->format('d-m-Y'));
-      $emailMessage = preg_replace(self::$preboarderStatusChangeEmailPattern, $replacements, self::$preboarderStatusChangeEmailBody);
-
-      set_time_limit(60);
-      $responseData = BlueMail::send_mail($to, $title, $emailMessage, self::$vbacNoReplyId, $cc, $bcc, true, $noAttachments, pesEmail::EMAIL_NOT_PES_SUPRESSABLE );
-      list(
-        'sendResponse' => $response, 
-        'Status' => $status
-      ) = $responseData;
-   }
-
-//    static function employeeTypeMappingToDb2(){
-//        $sqlDrop  = "DROP TABLE SESSION.EMPLOYEE_TYPE_MAPPING;";
-//        $sqlCreate = "Create global temporary table SESSION.EMPLOYEE_TYPE_MAPPING  (code char(1) not null, description char(20) not null) ON COMMIT PRESERVE ROWS;";
-//        $sqlInsert = array();
-
-//        foreach (self::$employeeTypeMapping as $code => $description){
-//            $sqlInsert[] = "INSERT into SESSION.EMPLOYEE_TYPE_MAPPING  ( code, description ) values ('$code','$description') ";
-//        }
-
-//         sqlsrv_query($GLOBALS['conn'], $sqlDrop);
-//         $created = sqlsrv_query($GLOBALS['conn'], $sqlCreate);
-
-//         if(!$created){
-//             throw new \Exception('Unable to create EmployeeTypeMapping Temp Table');
-//         }
-
-//         foreach ($sqlInsert as $insertStatement){
-//             $inserted = sqlsrv_query($GLOBALS['conn'], $insertStatement);
-//             if(!$inserted){
-//                 throw new \Exception('Unable to populate EmployeeTypeMapping Temp Table');
-//             }
-//         }
-//    }
-  
 function amendPesStatusModal(){
   $now = new \DateTime();
 ?>
@@ -1933,11 +1418,18 @@ function amendPesStatusModal(){
   <div class="panel-body">
       <div class='row'>
         <div class='form-group' >
-          <div class='col-sm-6'>
+          <div class='col-sm-12'>
               <input class="form-control" id="psm_notesid" name="psm_notesid" value="" type="text" disabled>
           </div>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='form-group' >
           <div class='col-sm-6'>
               <input class="form-control" id="psm_cnum" name="psm_cnum" value="" type="text" disabled>
+          </div>
+          <div class='col-sm-6'>
+              <input class="form-control" id="psm_worker_id" name="psm_worker_id" value="" type="text" disabled>
           </div>
        </div>
      </div>
@@ -2036,11 +1528,16 @@ function amendPesLevelModal(){
               <div class="panel-body">
                 <div class='row'>
                   <div class='form-group' >
-                    <div class='col-sm-6'>
+                    <div class='col-sm-12'>
                       <input class="form-control" id="plm_notesid" name="plm_notesid" value="" type="text" disabled>
                     </div>
+                  </div>
+                  <div class='form-group' >
                     <div class='col-sm-6'>
                       <input class="form-control" id="plm_cnum" name="plm_cnum" value="" type="text" disabled>
+                    </div>
+                    <div class='col-sm-6'>
+                      <input class="form-control" id="plm_worker_id" name="plm_worker_id" value="" type="text" disabled>
                     </div>
                   </div>
                 </div>
@@ -2133,67 +1630,66 @@ function confirmChangeFmFlagModal(){
 }
 
 function confirmSendPesEmailModal(){
-  ?>
- <!-- Modal -->
+?>
+<!-- Modal -->
 <div id="confirmSendPesEmailModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
+  <div class="modal-dialog">
     <!-- Modal content-->
     <div class="modal-content">
-    <div class="modal-header">
-       <button type="button" class="close" data-dismiss="modal">&times;</button>
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title">Confirm PES Email Details</h4>
       </div>
-       <div class="modal-body" >
+      <div class="modal-body" >
        <div class="panel panel-default">
         <div class="panel-heading">Applicant Details</div>
-        <div class="panel-body">
-        <form>
-        <input type='hidden' id='pesEmailCnum' name='pesEmailCnum' >
-        <div class="form-group">
-        <label for="pesEmailFirstName">First Name</label>
-        <input type="text" class="form-control" id="pesEmailFirstName" name="pesEmailFirstName" disabled >
-        </div>
-        <div class="form-group">
-        <label for="pesEmailLastName">Last Name</label>
-        <input type="text" class="form-control" id="pesEmailLastName" name="pesEmailLastName" disabled >
-        </div>
-        <div class="form-group">
-        <label for="pesEmailOpenSeat">Open Seat</label>
-        <input type="text" class="form-control" id="pesEmailOpenSeat" name="pesEmailOpenSeat" disabled >
-        </div>
-        <div class="form-group">
-        <label for="pesEmailAddress">Email address</label>
-        <input type="text" class="form-control" id="pesEmailAddress" name="pesEmailAddress" disabled >
-        </div>
-        <div class="form-group">
-        <label for="pesEmailCountry">Country</label>
-        <input type="text" class="form-control" id="pesEmailCountry" name="pesEmailCountry" disabled >
-        </div>
-        <div class="form-group">
-        <label for="pesEmailFilename">Filename</label>
-        <input type="text" class="form-control" id="pesEmailFilename" name="pesEmailFilename" disabled >
-        </div>
-
-        <div class="form-group">
-        <label for="pesEmailAttachments">Attachments</label>
-        <textarea class="form-control" id="pesEmailAttachments" name="pesEmailAttachments" disabled ></textarea>
-        </div>
-        <input type="hidden" id="pesEmailRecheck" name="pesEmailRecheck" >
-
-        </form>
-        </div>
+          <div class="panel-body">
+            <form>
+              <input type='hidden' id='pesEmailCnum' name='pesEmailCnum' >
+              <input type='hidden' id='pesEmailWorkerId' name='pesEmailWorkerId' >
+              <input type="hidden" id="pesEmailRecheck" name="pesEmailRecheck" >
+              <div class="form-group">
+                <label for="pesEmailFirstName">First Name</label>
+                <input type="text" class="form-control" id="pesEmailFirstName" name="pesEmailFirstName" disabled >
+              </div>
+              <div class="form-group">
+                <label for="pesEmailLastName">Last Name</label>
+                <input type="text" class="form-control" id="pesEmailLastName" name="pesEmailLastName" disabled >
+              </div>
+              <div class="form-group">
+                <label for="pesEmailOpenSeat">Open Seat</label>
+                <input type="text" class="form-control" id="pesEmailOpenSeat" name="pesEmailOpenSeat" disabled >
+              </div>
+              <div class="form-group">
+                <label for="pesEmailAddress">Email address</label>
+                <input type="text" class="form-control" id="pesEmailAddress" name="pesEmailAddress" disabled >
+              </div>
+              <div class="form-group">
+                <label for="pesEmailCountry">Country</label>
+                <input type="text" class="form-control" id="pesEmailCountry" name="pesEmailCountry" disabled >
+              </div>
+              <div class="form-group">
+                <label for="pesEmailFilename">Filename</label>
+                <input type="text" class="form-control" id="pesEmailFilename" name="pesEmailFilename" disabled >
+              </div>
+              <div class="form-group">
+                <label for="pesEmailAttachments">Attachments</label>
+                <textarea class="form-control" id="pesEmailAttachments" name="pesEmailAttachments" disabled ></textarea>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
        <div class='modal-footer'>
-              <?php
-              $allButtons = null;
-              $submitButton = $this->formButton('submit','confirmSendPesEmail','confirmSendPesEmail',null,'Confirm','btn-primary');
-              $allButtons[] = $submitButton;
-              $this->formBlueButtons($allButtons);
-              ?>
+          <?php
+          $allButtons = null;
+          $submitButton = $this->formButton('submit','confirmSendPesEmail','confirmSendPesEmail',null,'Confirm','btn-primary');
+          $allButtons[] = $submitButton;
+          $this->formBlueButtons($allButtons);
+          ?>
         <button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
        </div>
-      </div>
+    </div>
   </div>
 </div>
 <?php
@@ -2312,6 +1808,9 @@ $squadDetails = !empty($squadNumber) ?  AgileSquadTable::getSquadDetails($this->
           <input type="hidden" class="form-control" id="agileCnum" name="agileCnum"
                 value='<?=$this->CNUM;?>'
           >
+          <input type="hidden" class="form-control" id="agileWorkerId" name="agileWorkerId"
+                value='<?=$this->WORKER_ID;?>'
+          >
           <input type="hidden" class="form-control" id="version" name="version"
                 value='<?=$version;?>'
           >
@@ -2401,6 +1900,12 @@ function confirmOffboardingModal() {
                     placeholder="CNUM" readonly="">
                 </div>
                 <div class='col-sm-6'>
+                  <input class="form-control" id="offboarding_worker_id" name="offboarding_worker_id" value="" type="text" 
+                    placeholder="WORKER ID" readonly="">
+                </div>
+              </div>
+              <div class='form-group'>
+                <div class='col-sm-12'>
                   <input class="form-control" id="offboarding_proposed_leaving_date" value="" type="text" placeholder='Proposed Leaving Date' title='Proposed Leaving Date'>
                   <input class="form-control" id="offboarding_proposed_leaving_date_db2" name="offboardingProposedLeavingDate" value="" type="hidden" >
                 </div>

@@ -22,6 +22,7 @@ class pesProgressingBox extends box {
         $(document).on("click", ".btnPesProgressing", function (e) {
             $(this).addClass("spinning");
             var cnum = $(this).data("cnum");
+            var workerId = $(this).data("workerid");
             var currentStatus = $(this).data("pesstatus");
             var status = $(this).data("newpesstatus");
             $.ajax({
@@ -29,6 +30,7 @@ class pesProgressingBox extends box {
                 type: "POST",
                 data: {
                     cnum: cnum,
+                    workerid: workerId,
                     currentStatus: currentStatus,
                     status: status
                 },

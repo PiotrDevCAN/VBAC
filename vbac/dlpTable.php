@@ -123,11 +123,14 @@ class dlpTable extends DbTable {
     function addButtons($row){
         
         $cnum = trim($row['CNUM']);
+        // $workerId = trim($row['WORKER_ID']);
+        $workerId = 'not found';
         $hostname = trim($row['HOSTNAME']); 
         $transferred = trim($row['TRANSFERRED_TO_HOSTNAME']);
             
         $approveButton  = "<button type='button' class='btn btn-default btn-xs btnDlpLicenseApprove btn-success' aria-label='Left Align' ";
         $approveButton .= "data-cnum='" .$cnum . "' ";
+        $approveButton .= "data-workerid='" .$workerId . "' ";
         $approveButton .= "data-hostname='" .$hostname . "' ";
         $approveButton .= " > ";
         $approveButton .= "<span class='glyphicon glyphicon-ok ' aria-hidden='true'></span>";
@@ -135,6 +138,7 @@ class dlpTable extends DbTable {
                
         $rejectButton  = "<button type='button' class='btn btn-default btn-xs btnDlpLicenseReject btn-danger' aria-label='Left Align' ";
         $rejectButton .= "data-cnum='" .$cnum . "' ";
+        $rejectButton .= "data-workerid='" .$workerId . "' ";
         $rejectButton .= "data-hostname='" .$hostname . "' ";
         $rejectButton .= " > ";
         $rejectButton .= "<span class='glyphicon glyphicon-trash ' aria-hidden='true'></span>";
@@ -142,6 +146,7 @@ class dlpTable extends DbTable {
         
         $deleteButton  = "<button type='button' class='btn btn-default btn-xs btnDlpLicenseDelete ' aria-label='Left Align' ";
         $deleteButton .= "data-cnum='" .$cnum . "' ";
+        $deleteButton .= "data-workerid='" .$workerId . "' ";
         $deleteButton .= "data-hostname='" .$hostname . "' ";
         $deleteButton .= "data-transferred='" . $transferred . "' ";
         $deleteButton .= " > ";
@@ -174,7 +179,7 @@ class dlpTable extends DbTable {
         return $row;
     }
     
-    function approveReject($cnum, $hostname, $approveReject){
+    function approveReject($cnum, $workerId, $hostname, $approveReject){
         $sql = " UPDATE ";
         $sql.= $GLOBALS['Db2Schema'] . "." . allTables::$DLP;
         $sql.= " SET ";
@@ -198,7 +203,7 @@ class dlpTable extends DbTable {
         return true;
     }
     
-    function delete($cnum, $hostname, $transferred=null){ 
+    function delete($cnum, $workerId, $hostname, $transferred=null){ 
         $sql = " DELETE FROM ";
         $sql.= $GLOBALS['Db2Schema'] . "." . allTables::$DLP;
         $sql.= " WHERE ";

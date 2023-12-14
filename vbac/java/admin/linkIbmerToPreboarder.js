@@ -4,6 +4,8 @@
  *
  */
 
+let formatKyndrylPerson = await cacheBustImport('./modules/functions/formatKyndrylPerson.js');
+
 class linkIbmerToPreboarder {
 
     constructor() {
@@ -12,7 +14,9 @@ class linkIbmerToPreboarder {
     }
 
     initialiseLinkingFormSelect2() {
-        $('#ibmer_preboarded').select2();
+        $('#ibmer_preboarded').select2({
+            templateResult: formatKyndrylPerson
+        });
         $('#person_preboarded').select2();
     }
 

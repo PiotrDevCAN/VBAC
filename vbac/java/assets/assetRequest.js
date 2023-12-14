@@ -85,7 +85,9 @@ class assetRequest {
 
       $.ajax({
         url: "ajax/checkForOpenRequests.php",
-        data: { cnum: cnum_id },
+        data: {
+          cnum: cnum_id
+        },
         type: "POST",
         success: function (result) {
           var resultObj = JSON.parse(result);
@@ -108,7 +110,9 @@ class assetRequest {
           $.ajax({
             url: "ajax/getLbgLocationForCnum.php",
             type: "GET",
-            data: { cnum: cnum_id },
+            data: {
+              cnum: cnum_id
+            },
             success: function (result) {
               console.log("did we get a location?");
               var resultObj = JSON.parse(result);

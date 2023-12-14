@@ -7,50 +7,51 @@ function confirmSendPesEmailModal(){
       <!-- Modal content-->
       <div class="modal-content">
       <div class="modal-header">
-         <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Confirm PES Email Details</h4>
-        </div>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Confirm PES Email Details</h4>
+      </div>
          <div class="modal-body" >
          <div class="panel panel-default">
-<div class="panel-heading">Applicant Details</div>
-<div class="panel-body">
-<form>
-<input type='hidden' id='pesEmailCnum' name='pesEmailCnum' >
-<div class="form-group">
-<label for="pesEmailFirstName">First Name</label>
-<input type="text" class="form-control" id="pesEmailFirstName" name="pesEmailFirstName" disabled >
-</div>
-<div class="form-group">
-<label for="pesEmailLastName">Last Name</label>
-<input type="text" class="form-control" id="pesEmailLastName" name="pesEmailLastName" disabled >
-</div>
-<div class="form-group">
-<label for="pesEmailOpenSeat">Open Seat</label>
-<input type="text" class="form-control" id="pesEmailOpenSeat" name="pesEmailOpenSeat" disabled >
-</div>
-<div class="form-group">
-<label for="pesEmailAddress">Email address</label>
-<input type="text" class="form-control" id="pesEmailAddress" name="pesEmailAddress" disabled >
-</div>
-<div class="form-group">
-<label for="pesEmailCountry">Country</label>
-<input type="text" class="form-control" id="pesEmailCountry" name="pesEmailCountry" disabled >
-</div>
-<div class="form-group">
-<label for="pesEmailFilename">Filename</label>
-<input type="text" class="form-control" id="pesEmailFilename" name="pesEmailFilename" disabled >
-</div>
+          <div class="panel-heading">Applicant Details</div>
+          <div class="panel-body">
+          <form>
+          <input type='hidden' id='pesEmailCnum' name='pesEmailCnum' >
+          <input type='hidden' id='pesEmailWorkerId' name='pesEmailWorkerId' >
+          <div class="form-group">
+          <label for="pesEmailFirstName">First Name</label>
+          <input type="text" class="form-control" id="pesEmailFirstName" name="pesEmailFirstName" disabled >
+          </div>
+          <div class="form-group">
+          <label for="pesEmailLastName">Last Name</label>
+          <input type="text" class="form-control" id="pesEmailLastName" name="pesEmailLastName" disabled >
+          </div>
+          <div class="form-group">
+          <label for="pesEmailOpenSeat">Open Seat</label>
+          <input type="text" class="form-control" id="pesEmailOpenSeat" name="pesEmailOpenSeat" disabled >
+          </div>
+          <div class="form-group">
+          <label for="pesEmailAddress">Email address</label>
+          <input type="text" class="form-control" id="pesEmailAddress" name="pesEmailAddress" disabled >
+          </div>
+          <div class="form-group">
+          <label for="pesEmailCountry">Country</label>
+          <input type="text" class="form-control" id="pesEmailCountry" name="pesEmailCountry" disabled >
+          </div>
+          <div class="form-group">
+          <label for="pesEmailFilename">Filename</label>
+          <input type="text" class="form-control" id="pesEmailFilename" name="pesEmailFilename" disabled >
+          </div>
 
-<div class="form-group">
-<label for="pesEmailAttachments">Attachments</label>
-<textarea class="form-control" id="pesEmailAttachments" name="pesEmailAttachments" disabled ></textarea>
-</div>
-<input type="hidden" id="pesEmailRecheck" name="pesEmailRecheck" >
+          <div class="form-group">
+          <label for="pesEmailAttachments">Attachments</label>
+          <textarea class="form-control" id="pesEmailAttachments" name="pesEmailAttachments" disabled ></textarea>
+          </div>
+          <input type="hidden" id="pesEmailRecheck" name="pesEmailRecheck" >
 
 
-</form>
-</div>
-</div>
+          </form>
+          </div>
+          </div>
         </div>
          <div class='modal-footer'>
                 <?php

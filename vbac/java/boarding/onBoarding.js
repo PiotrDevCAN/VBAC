@@ -4,8 +4,10 @@
  *
  */
 
-let pesInitiateFromBoardingBox = await cacheBustImport('./modules/boxes/person/pesInitiateFromBoardingBox.js');
-let pesDescriptionBox = await cacheBustImport('./modules/boxes/person/pesDescriptionBox.js');
+let pesInitiateFromBoardingRegularBox = await cacheBustImport('./modules/boxes/PES/pesInitiateFromBoardingRegularBox.js');
+let pesInitiateFromBoardingVendorBox = await cacheBustImport('./modules/boxes/PES/pesInitiateFromBoardingVendorBox.js');
+
+let pesDescriptionBox = await cacheBustImport('./modules/boxes/PES/pesDescriptionBox.js');
 
 let RegularOnboardEntry = await cacheBustImport('./modules/forms/regularOnboardEntry.js');
 let VendorOnboardEntry = await cacheBustImport('./modules/forms/vendorOnboardEntry.js');
@@ -24,6 +26,8 @@ class onBoarding {
     vendorFormInitialized;
 
     constructor() {
+        console.log('+++ Function +++ onBoarding.constructor');
+
         this.initialiseTabs();
         this.listenForTabSelect();
 
@@ -47,6 +51,8 @@ class onBoarding {
                 results.forEach((result) => console.log(result.status));
                 FormMessageArea.clearMessageArea();
             });
+
+        console.log('--- Function --- onBoarding.constructor');
     }
 
     initialiseTabs() {
@@ -81,7 +87,8 @@ class onBoarding {
 
 const OnBoarding = new onBoarding();
 
-const PesInitiateFromBoardingBox = new pesInitiateFromBoardingBox(OnBoarding);
+const PesInitiateFromBoardingRegularBox = new pesInitiateFromBoardingRegularBox(OnBoarding);
+const PesInitiateFromBoardingVendorBox = new pesInitiateFromBoardingVendorBox(OnBoarding);
 const PesDescriptionBox = new pesDescriptionBox(OnBoarding);
 
 $('#myTabs a[href="#regularTab"]').tab('show'); // Select tab by name

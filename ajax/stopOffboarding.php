@@ -9,16 +9,16 @@ $success = false;
 
 AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_POST,true) . "</b>",AuditTable::RECORD_TYPE_DETAILS);
 
-AuditTable::audit("Stopped Offboarding for " . $_POST['cnum']);
+AuditTable::audit("Stopped Offboarding for " . $_POST['cnum'] . " / " . $_POST['workerid']);
 
 $person = new personRecord();
 $table = new personTable(allTables::$PERSON);
 
 try {
-    if(!empty($_POST['cnum'])){
-        $table->stopOffboarded($_POST['cnum']);
+    if(!empty($_POST['cnum']) && !empty($_POST['workerid'])){
+        $table->stopOffboarded($_POST['cnum'], $_POST['workerid']);
     } else {
-        echo "No cnum provided";
+        echo "No cnum / worker id provided";
     }
 
     $success = true;
@@ -37,6 +37,7 @@ $response = array(
     'success'=>$success,
     'messages'=>$messages,
     'cnum'=>$_POST['cnum'],
+    'workerId'=>$_POST['workerid'],
     'post'=>print_r($_POST,true),
     'stopped'=>true
 );

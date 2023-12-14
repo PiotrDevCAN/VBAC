@@ -8,8 +8,8 @@ AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_POST,
 
 $personTable = new personTable(allTables::$PERSON);
 
-if(!empty($_POST['cnum'])){
-    $personTable->clearSquadNumber($_POST['cnum'],$_POST['version']);
+if(!empty($_POST['cnum']) && !empty($_POST['workerid'])){
+    $personTable->clearSquadNumber($_POST['cnum'], $_POST['workerid'], $_POST['version']);
 }
 
 $messages = ob_get_clean();

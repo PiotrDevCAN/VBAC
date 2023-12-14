@@ -14,14 +14,15 @@ $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER);
 
 $pesLevel = !empty($_POST['level']) ? trim($_POST['level']) : 'Level 2';
 
-if(!empty($_POST['cnum'])){
-    $setSuccess = $personTable->setPesLevel($_POST['cnum'], $pesLevel);
+if(!empty($_POST['cnum']) && !empty($_POST['workerid'])){
+    // set new PES Level
+    $setSuccess = $personTable->setPesLevel($_POST['cnum'], $_POST['workerid'], $pesLevel);
 }
 
 if($setSuccess){
-    $dummyRow = array('CNUM'=>$_POST['cnum'],'PES_LEVEL'=>$pesLevel);
+    $dummyRow = array('CNUM'=>$_POST['cnum'], 'WORKER_ID'=>$_POST['workerid'], 'PES_LEVEL'=>$pesLevel);
     $cellContents = pesTrackerTable::getCellContentsForPesLevel($dummyRow);
-    $comment = $pesTracker->savePesComment($_POST['cnum'],"PES_LEVEL set to : " . $pesLevel);
+    $comment = $pesTracker->savePesComment($_POST['cnum'], $_POST['workerid'], "PES_LEVEL set to : " . $pesLevel);
 }
 
 

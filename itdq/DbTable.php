@@ -595,7 +595,7 @@ class DbTable {
         // }
 
         $sql = "SELECT TABLE_NAME, COLUMN_NAME, CONSTRAINT_NAME AS PK_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE TABLE_NAME = '" . $this->tableName ."'";        
-        $rs = sqlsrv_query($GLOBALS['conn'], $sql);        
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
         }
@@ -641,9 +641,7 @@ class DbTable {
         }
         $sql .= " WHERE " . $predicate;
         Trace::traceVariable($sql, __METHOD__);
-        $rs = sqlsrv_query($GLOBALS['conn'], $sql, array(
-            'cursor' => SQLSRV_CURSOR_DYNAMIC
-        ));
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
         return $rs;
     }
 
@@ -663,15 +661,24 @@ class DbTable {
         $pred = $this->buildKeyPredicate($record);
         $sql = $select . " WHERE " . $pred . $predicate;
         Trace::traceVariable($sql, __METHOD__);
-
-        $row = sqlsrv_fetch_array($this->execute($sql));
-        if (! $row) {
-            self::displayErrorMessage($row, __CLASS__, __METHOD__, $sql);
-        } else {
-            foreach ($row as $key => $value) {
-                $row[$key] = trim($value);
+        $rs = $this->execute($sql);
+        $row = null;
+        if ($rs) {
+            $row = sqlsrv_fetch_array($rs);
+            if ($row) {
+                foreach ($row as $key => $value) {
+                    $row[$key] = trim($value);
+                }
             }
         }
+        // $row = sqlsrv_fetch_array($this->execute($sql));
+        // if (! $row) {
+        //     self::displayErrorMessage($row, __CLASS__, __METHOD__, $sql);
+        // } else {
+        //     foreach ($row as $key => $value) {
+        //         $row[$key] = trim($value);
+        //     }
+        // }
         return $row;
     }
 

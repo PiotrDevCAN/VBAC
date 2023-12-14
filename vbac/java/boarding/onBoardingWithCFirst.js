@@ -16,9 +16,9 @@ let initialiseOnboardPersonFormSelect2 = await cacheBustImport('./modules/functi
 let initialiseOnboardNonIBMPersonFormSelect2 = await cacheBustImport('./modules/functions/initialiseOnboardNonIBMPersonFormSelect2.js');
 let initialiseStartEndDate = await cacheBustImport('./modules/functions/initialiseStartEndDate.js');
 
-let pesInitiateFromBoardingBox = await cacheBustImport('./modules/boxes/person/pesInitiateFromBoardingBox.js');
+let pesInitiateFromBoardingBox = await cacheBustImport('./modules/boxes/PES/pesInitiateFromBoardingBox.js');
 let editEntryBox = await cacheBustImport('./modules/boxes/person/editEntryWithCFirstBox.js');
-let pesDescriptionBox = await cacheBustImport('./modules/boxes/person/pesDescriptionBox.js');
+let pesDescriptionBox = await cacheBustImport('./modules/boxes/PES/pesDescriptionBox.js');
 
 // let knownCNUMs = await cacheBustImport('./modules/dataSources/knownCNUMs.js');
 // let knownExternalEmails = await cacheBustImport('./modules/dataSources/knownExternalEmails.js');
@@ -121,9 +121,9 @@ class onBoardingWithCFirst {
         var $this = this;
         $(".typeahead").bind("typeahead:select", function (ev, suggestion) {
             $(".tt-menu").hide();
-            
+
             var newCnum = suggestion.cnum;
-            
+
             $("#person_notesid").val(suggestion.notesEmail);
             $("#person_serial").val(newCnum).attr("disabled", "disabled");
             $("#person_bio").val(suggestion.role);
@@ -176,9 +176,9 @@ class onBoardingWithCFirst {
                         // comes back with Position in array(true) or false is it's NOT in the array.
                         $("#saveBoarding").attr("disabled", true);
                         $("#resource_email").css("background-color", "LightPink");
-                    // } else if (ibmEmailAddress) {
-                    //     $("#saveBoarding").attr("disabled", true);
-                    //     $("#resource_email").css("background-color", "Red");
+                        // } else if (ibmEmailAddress) {
+                        //     $("#saveBoarding").attr("disabled", true);
+                        //     $("#resource_email").css("background-color", "Red");
                     } else if (oceanEmailAddress) {
                         $("#saveBoarding").attr("disabled", true);
                         $("#resource_email").css("background-color", "Red");
@@ -276,7 +276,9 @@ class onBoardingWithCFirst {
                 $.ajax({
                     url: "ajax/prePopulateFromLink.php",
                     type: "POST",
-                    data: { cnum: data.id },
+                    data: {
+                        cnum: data.id
+                    },
                     success: function (result) {
                         $("#saveBoarding").removeClass("spinning");
                         var resultObj = JSON.parse(result);

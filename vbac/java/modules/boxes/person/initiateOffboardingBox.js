@@ -53,6 +53,7 @@ class initiateOffboardingBox extends box {
         $(document).on("click", ".btnOffboarding", function (e) {
             var data = $(this).data();
             $("#offboarding_cnum").val(data.cnum);
+            $("#offboarding_worker_id").val(data.workerid);
             $("#offboarding_proposed_leaving_date").val('');
             $("#offboarding_proposed_leaving_date_db2").val('');
             $this.resetModal();
@@ -64,6 +65,7 @@ class initiateOffboardingBox extends box {
         var $this = this;
         $(document).on("click", "#saveOffboarding", function () {
             var cnum = $('#offboarding_cnum').val();
+            var workerId = $('#offboarding_worker_id').val();
             var leavingDate = $('#offboarding_proposed_leaving_date_db2').val();
             var trimmedDate = leavingDate.trim();
             if (trimmedDate !== "") {
@@ -75,6 +77,7 @@ class initiateOffboardingBox extends box {
                     type: "POST",
                     data: {
                         cnum: cnum,
+                        workerid: workerId,
                         proposedLeavingDate: leavingDate
                     },
                     success: function (result) {

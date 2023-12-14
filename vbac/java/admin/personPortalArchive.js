@@ -7,15 +7,15 @@
 let personTable = await cacheBustImport('./modules/tables/person.js');
 let actions = await cacheBustImport('./modules/actions/person/personPortalActions.js');
 
-let restartPesBox = await cacheBustImport('./modules/boxes/restartPesBox.js');
-let amendPESLevelBox = await cacheBustImport('./modules/boxes/amendPESLevelBox.js');
-let amendPESStatusBox = await cacheBustImport('./modules/boxes/amendPESStatusBox.js');
+let restartPesBox = await cacheBustImport('./modules/boxes/PES/restartPesBox.js');
+let amendPESLevelBox = await cacheBustImport('./modules/boxes/PES/amendPESLevelBox.js');
+let amendPESStatusBox = await cacheBustImport('./modules/boxes/PES/amendPESStatusBox.js');
 
 let editRegularPersonBox = await cacheBustImport('./modules/boxes/person/editRegularPersonBox.js');
 let editVendorPersonBox = await cacheBustImport('./modules/boxes/person/editVendorPersonBox.js');
 let editEmailAddressBox = await cacheBustImport('./modules/boxes/person/editEmailAddressBox.js');
 
-let pesInitiateFromPortalBox = await cacheBustImport('./modules/boxes/person/pesInitiateFromPortalBox.js');
+let pesInitiateFromPortalBox = await cacheBustImport('./modules/boxes/PES/pesInitiateFromPesTrackerBox.js');
 let setFmFlagBox = await cacheBustImport('./modules/boxes/person/setFmFlagBox.js');
 let stopOffboardingBox = await cacheBustImport('./modules/boxes/person/stopOffboardingBox.js');
 let deoffBoardingBox = await cacheBustImport('./modules/boxes/person/deoffBoardingBox.js');
@@ -26,8 +26,8 @@ let clearCtidBox = await cacheBustImport('./modules/boxes/person/clearCtidBox.js
 let setPmoStatusBox = await cacheBustImport('./modules/boxes/person/setPmoStatusBox.js');
 let sendPesEmailBox = await cacheBustImport('./modules/boxes/person/sendPesEmailBox.js');
 let togglePesTrackerStatusDetailsBox = await cacheBustImport('./modules/boxes/person/togglePesTrackerStatusDetailsBox.js');
-let pesStopBox = await cacheBustImport('./modules/boxes/person/pesStopBox.js');
-let pesProgressingBox = await cacheBustImport('./modules/boxes/person/pesProgressingBox.js');
+let pesStopBox = await cacheBustImport('./modules/boxes/PES/pesStopBox.js');
+let pesProgressingBox = await cacheBustImport('./modules/boxes/PES/pesProgressingbox.js');
 
 let editAgileNumberBox = await cacheBustImport('./modules/boxes/person/editAgileNumberBox.js');
 let clearSquadNumberBox = await cacheBustImport('./modules/boxes/person/clearSquadNumberBox.js');

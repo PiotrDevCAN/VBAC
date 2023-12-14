@@ -65,6 +65,7 @@ class pesTrackerTable extends DbTable{
         }
 
         $sql = " SELECT P.CNUM ";
+        $sql.= ", P.WORKER_ID  ";
         $sql.= ", P.EMAIL_ADDRESS  ";
         $sql.= ", P.KYN_EMAIL_ADDRESS  ";
         $sql.= ", P.NOTES_ID  ";
@@ -101,9 +102,9 @@ class pesTrackerTable extends DbTable{
         $sql.= ", F.EMAIL_ADDRESS as FLM ";
 
         $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
-        $sql.= " left join " . $GLOBALS['Db2Schema'] . "." . allTables::$PES_TRACKER . " as PT ";
-        $sql.= " ON P.CNUM = PT.CNUM ";
-        $sql.= " left join " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as F ";
+        $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PES_TRACKER . " as PT ";
+        $sql.= " ON P.CNUM = PT.CNUM AND P.WORKER_ID = PT.WORKER_ID";
+        $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as F ";
         $sql.= " ON P.FM_CNUM = F.CNUM ";
         $sql.= " WHERE 1=1 ";
         $sql.= " and (PT.CNUM is not null or ( PT.CNUM is null  AND P.PES_STATUS_DETAILS is null )) "; // it has a tracker record
@@ -184,6 +185,7 @@ class pesTrackerTable extends DbTable{
             $date = DateTime::createFromFormat('Y-m-d', $row['PES_DATE_REQUESTED']);
             $age  = !empty($row['PES_DATE_REQUESTED']) ?  $date->diff($today)->format('%R%a days') : null ;
             $cnum = $row['CNUM'];
+            $workerId = $row['WORKER_ID'];
             $firstName = trim($row['FIRST_NAME']);
             $lastName = trim($row['LAST_NAME']);
             $emailaddress = trim($row['EMAIL_ADDRESS']);
@@ -207,14 +209,14 @@ class pesTrackerTable extends DbTable{
                 $stageAlertValue    = self::getAlertClassForPesStage($stageValue);
                 ?>
                 <td class='nonSearchable'>
-            	<?=self::getButtonsForPesStage($stageValue, $stageAlertValue, $stage, $cnum);?>
+            	<?=self::getButtonsForPesStage($stageValue, $stageAlertValue, $stage, $cnum, $workerId);?>
                 </td>
                 <?php
             }
         ?>
             <td class='nonSearchable'>
             <div class='alert alert-info text-center pesProcessStatusDisplay' role='alert' ><?=self::formatProcessingStatusCell($row);?></div>
-            <div class='text-center personDetails '   data-cnum='<?=$cnum;?>' data-firstname='<?=$firstName;?>' data-lastname='<?=$lastName;?>' data-emailaddress='<?=$emailaddress;?>'  data-flm='<?=$flm;?>'   >
+            <div class='text-center personDetails' data-cnum='<?=$cnum;?>' data-workerid='<?=$workerId;?>' data-firstname='<?=$firstName;?>' data-lastname='<?=$lastName;?>' data-emailaddress='<?=$emailaddress;?>' data-flm='<?=$flm;?>'   >
             <span style='white-space:nowrap' >
             <a class="btn btn-xs btn-info  btnProcessStatusChange accessPes accessCdi" 		data-processstatus='PES' data-toggle="tooltip" data-placement="top" title="With PES Team" ><i class="fas fa-users"></i></a>
             <a class="btn btn-xs btn-info  btnProcessStatusChange accessPes accessCdi" 		data-processstatus='User' data-toggle="tooltip" data-placement="top" title="With Applicant" ><i class="fas fa-user"></i></a>
@@ -230,7 +232,7 @@ class pesTrackerTable extends DbTable{
             $alertClass = !empty($row['DATE_LAST_CHASED']) ? self::getAlertClassForPesChasedDate($row['DATE_LAST_CHASED']) : 'alert-info';
             ?>
             <div class='alert <?=$alertClass;?>'>
-            <input class="form-control input-sm pesDateLastChased" value="<?=$dateLastChasedWithLevel?>" type="text" placeholder='Last Chased' data-toggle='tooltip' title='PES Date Last Chased' data-cnum='<?=$cnum?>'>
+            <input class="form-control input-sm pesDateLastChased" value="<?=$dateLastChasedWithLevel?>" type="text" placeholder='Last Chased' data-toggle='tooltip' title='PES Date Last Chased' data-cnum='<?=$cnum?>' data-workerid='<?=$workerId?>'>
             </div>
             <span style='white-space:nowrap' >
             <a class="btn btn-xs btn-info  btnChaser accessPes accessCdi" data-chaser='One'  data-toggle="tooltip" data-placement="top" title="Chaser One" ><i>1</i></a>
@@ -241,7 +243,7 @@ class pesTrackerTable extends DbTable{
             </td>
             <td class='nonSearchable pesStatusCell'><?=personTable::getPesStatusWithButtons($row)['display']?></td>
             <td><?=pesTrackerTable::getCellContentsForPesLevel($row)?></td>
-            <td class='pesCommentsTd'><textarea rows="3" cols="20"  data-cnum='<?=$cnum?>'></textarea>
+            <td class='pesCommentsTd'><textarea rows="3" cols="20" data-cnum='<?=$cnum?>' data-workerid='<?=$workerId?>'></textarea>
             <button class='btn btn-default btn-xs btnPesSaveComment accessPes accessCdi' data-setpesto='Yes' data-toggle="tooltip" data-placement="top" title="Save Comment" ><span class="glyphicon glyphicon-save" ></span></button>
             <div class='pesComments' data-cnum='<?=$cnum?>'><small><?=$row['COMMENT']?></small></div>
             </td>
@@ -322,6 +324,7 @@ class pesTrackerTable extends DbTable{
     static function formatEmailFieldOnTracker($row){
 
         $cnum = trim($row['CNUM']);
+        $workerId = trim($row['WORKER_ID']);
         $email = trim($row['EMAIL_ADDRESS']);
         $firstName = trim($row['FIRST_NAME']);
         $lastName = trim($row['LAST_NAME']);
@@ -359,10 +362,10 @@ class pesTrackerTable extends DbTable{
         }
         $formattedField.= "<div class='alert $alertClass priorityDiv'>Priority:" . $priority . "</div>";
         $formattedField.="<span style='white-space:nowrap' >
-            <button class='btn btn-xs btn-danger  btnPesPriority accessPes accessCdi' data-pespriority='1' data-cnum='" . $cnum ."'  data-toggle='tooltip'  title='High' ><span class='glyphicon glyphicon-king' ></button>
-            <button class='btn btn-xs btn-warning  btnPesPriority accessPes accessCdi' data-pespriority='2' data-cnum='" . $cnum ."' data-toggle='tooltip'  title='Medium' ><span class='glyphicon glyphicon-knight' ></button>
-            <button class='btn btn-xs btn-success  btnPesPriority accessPes accessCdi' data-pespriority='3' data-cnum='" . $cnum ."' data-toggle='tooltip'  title='Low'><span class='glyphicon glyphicon-pawn' ></button>
-            <button class='btn btn-xs btn-info btnPesPriority accessPes accessCdi' data-pespriority='99' data-cnum='" . $cnum ."'data-toggle='tooltip'  title='Unknown'><span class='glyphicon glyphicon-erase' ></button>
+            <button class='btn btn-xs btn-danger btnPesPriority accessPes accessCdi' data-pespriority='1' data-cnum='" . $cnum ."' data-workerid='" . $workerId ."' data-toggle='tooltip'  title='High' ><span class='glyphicon glyphicon-king' ></button>
+            <button class='btn btn-xs btn-warning btnPesPriority accessPes accessCdi' data-pespriority='2' data-cnum='" . $cnum ."' data-workerid='" . $workerId ."' data-toggle='tooltip'  title='Medium' ><span class='glyphicon glyphicon-knight' ></button>
+            <button class='btn btn-xs btn-success btnPesPriority accessPes accessCdi' data-pespriority='3' data-cnum='" . $cnum ."' data-workerid='" . $workerId ."' data-toggle='tooltip'  title='Low'><span class='glyphicon glyphicon-pawn' ></button>
+            <button class='btn btn-xs btn-info btnPesPriority accessPes accessCdi' data-pespriority='99' data-cnum='" . $cnum ."' data-workerid='" . $workerId ."' data-toggle='tooltip'  title='Unknown'><span class='glyphicon glyphicon-erase' ></button>
             </span>";
 
         return $formattedField;
@@ -377,8 +380,8 @@ class pesTrackerTable extends DbTable{
         echo $processingStatus;?><br/><small><?=substr(trim($row['PROCESSING_STATUS_CHANGED']),0,10);?><br/><?=$age?></small><?php
     }
 
-    function getProcessingStatusCell($cnum){
-        $data = array($cnum);
+    function getProcessingStatusCell($cnum, $workerId){
+        $data = array($cnum, $workerId);
         $preparedStmt = $this->prepareGetProcessingStatusStmt($data);
         
         $rs = sqlsrv_execute($preparedStmt);
@@ -395,7 +398,6 @@ class pesTrackerTable extends DbTable{
 
             echo ">>>>>>>>>>>>>>>>>>";
             die('another death');
-
 
             return $cellContents;
         }
@@ -439,10 +441,10 @@ class pesTrackerTable extends DbTable{
         return $alertClass;
     }
 
-    static function getButtonsForPesStage($value, $alertClass, $stage, $cnum){
+    static function getButtonsForPesStage($value, $alertClass, $stage, $cnum, $workerId){
         ?>
         <div class='alert <?=$alertClass;?> text-center pesStageDisplay' role='alert' ><?=$value;?></div>
-        <div class='text-center' data-pescolumn='<?=$stage?>' data-cnum='<?=$cnum?>'>
+        <div class='text-center' data-pescolumn='<?=$stage?>' data-cnum='<?=$cnum?>' data-workerid='<?=$workerId?>'>
         <span style='white-space:nowrap' >
         <button class='btn btn-success btn-xs btnPesStageValueChange accessPes accessCdi' data-setpesto='Yes' data-toggle="tooltip" data-placement="top" title="Cleared" ><span class="glyphicon glyphicon-ok-sign" ></span></button>
   		<button class='btn btn-warning btn-xs btnPesStageValueChange accessPes accessCdi'  data-setpesto='Prov' data-toggle="tooltip"  title="Stage Cleared Provisionally"><span class="glyphicon glyphicon-alert" ></span></button>
@@ -457,8 +459,8 @@ class pesTrackerTable extends DbTable{
     static function getCellContentsForPesLevel($row){
         $cell = $row['PES_LEVEL'];
         $cell.= "<br/><span style='white-space:nowrap' >";
-        $cell.= trim($row['PES_LEVEL'])!='Level 1' ? "<a class='btn btn-xs btn-info  btnSetPesLevel accessPes accessCdi' data-cnum='" . $row['CNUM'] . "' data-level='Level 1'  data-toggle='tooltip' data-placement='top' title='Set to Level 1' ><i class='fas fa-dice-one'></i></a>" : null;
-        $cell.= trim($row['PES_LEVEL'])!='Level 2' ? "<a class='btn btn-xs btn-info  btnSetPesLevel accessPes accessCdi' data-cnum='" . $row['CNUM'] . "' data-level='Level 2'  data-toggle='tooltip' data-placement='top' title='Set to Level 2' ><i class='fas fa-dice-two'></i></a>" : null;
+        $cell.= trim($row['PES_LEVEL'])!='Level 1' ? "<a class='btn btn-xs btn-info  btnSetPesLevel accessPes accessCdi' data-cnum='" . $row['CNUM'] . "' data-workerid='" . $row['WORKER_ID'] . "' data-level='Level 1'  data-toggle='tooltip' data-placement='top' title='Set to Level 1' ><i class='fas fa-dice-one'></i></a>" : null;
+        $cell.= trim($row['PES_LEVEL'])!='Level 2' ? "<a class='btn btn-xs btn-info  btnSetPesLevel accessPes accessCdi' data-cnum='" . $row['CNUM'] . "' data-workerid='" . $row['WORKER_ID'] . "' data-level='Level 2'  data-toggle='tooltip' data-placement='top' title='Set to Level 2' ><i class='fas fa-dice-two'></i></a>" : null;
         $cell.= "</span>";
         return $cell;
     }
@@ -467,6 +469,7 @@ class pesTrackerTable extends DbTable{
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql.= " SET " . strtoupper(htmlspecialchars($stage)) . " = ? ";
         $sql.= " WHERE CNUM = ? ";
+        $sql.= " AND WORKER_ID = ? ";
 
         $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
         return $preparedStmt;
@@ -476,6 +479,7 @@ class pesTrackerTable extends DbTable{
         $sql = " SELECT PROCESSING_STATUS, PROCESSING_STATUS_CHANGED ";
         $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql.= " WHERE CNUM = ? ";
+        $sql.= " AND WORKER_ID = ? ";
 
         $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql);
         return $preparedStmt;
@@ -485,6 +489,7 @@ class pesTrackerTable extends DbTable{
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql.= " SET PROCESSING_STATUS =?, PROCESSING_STATUS_CHANGED = CURRENT_TIMESTAMP ";
         $sql.= " WHERE CNUM = ? ";
+        $sql.= " AND WORKER_ID = ? ";
 
         $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
         return $preparedStmt;
@@ -492,7 +497,7 @@ class pesTrackerTable extends DbTable{
 
     function prepareTrackerInsert($data){
         $sql = " INSERT INTO " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql.= " ( CNUM ) VALUES (?) ";
+        $sql.= " ( CNUM, WORKER_ID ) VALUES (?, ?) ";
         
         $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
         return $preparedStmt;
@@ -512,44 +517,26 @@ class pesTrackerTable extends DbTable{
         $sql.= " PROCESSING_STATUS_CHANGED = CURRENT_TIMESTAMP, "; 
         $sql.= " DATE_LAST_CHASED = null ";
         $sql.= " WHERE CNUM = ? ";
+        $sql.= " AND WORKER_ID = ? ";
 
         $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
         return $preparedStmt;
     }
 
-    function prepareResetForRecheckByWORKER_ID($data){
-        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql.= " SET CONSENT = null, ";
-        $sql.= " RIGHT_TO_WORK = null, ";
-        $sql.= " PROOF_OF_ID = null, ";
-        $sql.= " PROOF_OF_RESIDENCY = null, "; 
-        $sql.= " CREDIT_CHECK = null, ";
-        $sql.= " FINANCIAL_SANCTIONS = null, ";
-        $sql.= " CRIMINAL_RECORDS_CHECK = null, "; 
-        $sql.= " PROOF_OF_ACTIVITY = null, ";
-        $sql.= " PROCESSING_STATUS = 'PES', ";
-        $sql.= " PROCESSING_STATUS_CHANGED = CURRENT_TIMESTAMP, "; 
-        $sql.= " DATE_LAST_CHASED = null ";
-        $sql.= " WHERE WORKER_ID = ? ";
-
-        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
-        return $preparedStmt;
-    }
-
-    function createNewTrackerRecord($cnum){
+    function createNewTrackerRecord($cnum, $workerId = 'not found'){
         $trackerRecord = new pesTrackerRecord();
-        $trackerRecord->setFromArray(array('CNUM'=>$cnum));
+        $trackerRecord->setFromArray(array('CNUM'=>$cnum, 'WORKER_ID'=>$workerId));
 
         if (!$this->existsInDb($trackerRecord)) {
 
-            $data = array($cnum);
+            $data = array($cnum, $workerId);
             $preparedStmt = $this->prepareTrackerInsert($data);
 
             $rs = sqlsrv_execute($preparedStmt);
 
             if(!$rs){
                 DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared sql');
-                throw new \Exception('Unable to create blank Tracker record for ' . $cnum);
+                throw new \Exception('Unable to create blank Tracker record for ' . $cnum . ' ' . $workerId);
             }
 
             return;
@@ -557,13 +544,13 @@ class pesTrackerTable extends DbTable{
         return false;
     }
 
-    function resetForRecheckByCNUM($cnum){
-        $this->createNewTrackerRecord($cnum); // In case there wasn't already a record.
-
+    function resetForRecheck($cnum, $workerId = null){
+        $this->createNewTrackerRecord($cnum, $workerId);
+        
         $trackerRecord = new pesTrackerRecord();
-        $trackerRecord->setFromArray(array('CNUM'=>$cnum));
+        $trackerRecord->setFromArray(array('CNUM'=>$cnum, 'WORKER_ID'=>$workerId));
 
-        $data = array($cnum);
+        $data = array($cnum, $workerId);
         $preparedStmt = $this->prepareResetForRecheck($data);
         
         $rs = sqlsrv_execute($preparedStmt);
@@ -574,51 +561,34 @@ class pesTrackerTable extends DbTable{
         }
     }
 
-    function resetForRecheckByWORKER_ID($WORKER_ID){
-        $this->createNewTrackerRecord($WORKER_ID); // In case there wasn't already a record.
-
+    function setPesStageValue($cnum, $workerId, $stage, $stageValue){
         $trackerRecord = new pesTrackerRecord();
-        $trackerRecord->setFromArray(array('WORKER_ID'=>$WORKER_ID));
-
-        $data = array($WORKER_ID);
-        $preparedStmt = $this->prepareResetForRecheckByWORKER_ID($WORKER_ID);
-        
-        $rs = sqlsrv_execute($preparedStmt);
-
-        if(!$rs){
-            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared sql');
-            throw new \Exception('Unable to reset for recheck Tracker record for ' . $WORKER_ID);
-        }
-    }
-
-    function setPesStageValue($cnum,$stage,$stageValue){
-        $trackerRecord = new pesTrackerRecord();
-        $trackerRecord->setFromArray(array('CNUM'=>$cnum));
+        $trackerRecord->setFromArray(array('CNUM'=>$cnum, 'WORKER_ID'=>$workerId));
 
         if (!$this->existsInDb($trackerRecord)) {
-            $this->createNewTrackerRecord($cnum);
+            $this->createNewTrackerRecord($cnum, $workerId);
         }
-        $data = array($stageValue, $cnum);
+        $data = array($stageValue, $cnum, $workerId);
         $preparedStmt = $this->prepareStageUpdate($stage, $data);
 
         $rs = sqlsrv_execute($preparedStmt);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared sql');
-            throw new \Exception("Failed to update PES Stage: $stage to $stageValue for $cnum");
+            throw new \Exception("Failed to update PES Stage: $stage to $stageValue for $cnum / $workerId");
         }
 
         return true;
     }
 
-    function setPesProcessStatus($cnum,$processStatus){
+    function setPesProcessStatus($cnum, $workerId, $processStatus){
         $trackerRecord = new pesTrackerRecord();
-        $trackerRecord->setFromArray(array('CNUM'=>$cnum));
+        $trackerRecord->setFromArray(array('CNUM'=>$cnum, 'WORKER_ID'=>$workerId));
 
         if (!$this->existsInDb($trackerRecord)) {
-            $this->createNewTrackerRecord($cnum);
+            $this->createNewTrackerRecord($cnum, $workerId);
         }
-        $data = array($processStatus,$cnum);
+        $data = array($processStatus, $cnum, $workerId);
         $preparedStmt = $this->prepareProcessStatusUpdate($data);
         
         $rs = sqlsrv_execute($preparedStmt);
@@ -631,35 +601,36 @@ class pesTrackerTable extends DbTable{
         return true;
     }
 
-    function savePesPriority($cnum,$pesPriority=null){
+    function savePesPriority($cnum, $workerId, $pesPriority=null){
         $trackerRecord = new pesTrackerRecord();
-        $trackerRecord->setFromArray(array('CNUM'=>$cnum));
+        $trackerRecord->setFromArray(array('CNUM'=>$cnum, 'WORKER_ID'=>$workerId));
 
         if (!$this->existsInDb($trackerRecord)) {
-            $this->createNewTrackerRecord($cnum);
+            $this->createNewTrackerRecord($cnum, $workerId);
         }
 
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql.= " SET PRIORITY=";
         $sql.= !empty($pesPriority) ? "'" . htmlspecialchars($pesPriority) . "' " : " null, ";
         $sql.= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
+        $sql.= " AND WORKER_ID='" . htmlspecialchars($workerId) . "' ";
 
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared sql');
-            throw new \Exception("Failed to update Pes Priority: $pesPriority for $cnum");
+            throw new \Exception("Failed to update Pes Priority: $pesPriority for $cnum / $workerId");
         }
 
         return true;
     }
 
-    function setPesPassportNames($cnum,$passportFirstname=null,$passportSurname=null){
+    function setPesPassportNames($cnum, $workerId, $passportFirstname=null, $passportSurname=null){
         $trackerRecord = new pesTrackerRecord();
         $trackerRecord->setFromArray(array('CNUM'=>$cnum));
 
         if (!$this->existsInDb($trackerRecord)) {
-            $this->createNewTrackerRecord($cnum);
+            $this->createNewTrackerRecord($cnum, $workerId);
         }
 
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
@@ -668,48 +639,50 @@ class pesTrackerTable extends DbTable{
         $sql.= " PASSPORT_SURNAME=";
         $sql.= !empty($passportSurname) ? "'" . htmlspecialchars($passportSurname) . "'  " : " null ";
         $sql.= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
+        $sql.= " AND WORKER_ID='" . htmlspecialchars($workerId) . "' ";
 
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared sql');
-            throw new \Exception("Failed to update Passport Names: $passportFirstname  / $passportSurname for $cnum");
+            throw new \Exception("Failed to update Passport Names: $passportFirstname  / $passportSurname for $cnum / $workerId");
         }
 
         return true;
     }
 
-    function setPesDateLastChased($cnum,$dateLastChased){
+    function setPesDateLastChased($cnum, $workerId, $dateLastChased){
         $trackerRecord = new pesTrackerRecord();
-        $trackerRecord->setFromArray(array('CNUM'=>$cnum));
+        $trackerRecord->setFromArray(array('CNUM'=>$cnum, 'WORKER_ID'=>$workerId));
 
         if (!$this->existsInDb($trackerRecord)) {
-            $this->createNewTrackerRecord($cnum);
+            $this->createNewTrackerRecord($cnum, $workerId);
         }
 
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql.= " SET DATE_LAST_CHASED=DATE('" . htmlspecialchars($dateLastChased) . "') ";
         $sql.= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
+        $sql.= " AND WORKER_ID='" . htmlspecialchars($workerId) . "' ";
 
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared sql');
-            throw new \Exception("Failed to update Date Last Chased to : $dateLastChased for $cnum");
+            throw new \Exception("Failed to update Date Last Chased to : $dateLastChased for $cnum / $workerId");
         }
 
         return true;
     }
 
-    function savePesComment($cnum,$comment){
+    function savePesComment($cnum, $workerId, $comment){
         $trackerRecord = new pesTrackerRecord();
-        $trackerRecord->setFromArray(array('CNUM'=>$cnum));
+        $trackerRecord->setFromArray(array('CNUM'=>$cnum, 'WORKER_ID'=>$workerId));
 
         if (!$this->existsInDb($trackerRecord)) {
-            $this->createNewTrackerRecord($cnum);
+            $this->createNewTrackerRecord($cnum, $workerId);
         }
 
-        $existingComment = $this->getPesComment($cnum);
+        $existingComment = $this->getPesComment($cnum, $workerId);
         $now = new \DateTime();
 
         $newComment = trim($comment) . "<br/><small>" . $_SESSION['ssoEmail'] . ":" . $now->format('Y-m-d H:i:s') . "</small><br/>" . $existingComment;
@@ -721,16 +694,16 @@ class pesTrackerTable extends DbTable{
             $newComment = substr($newComment,0,$commentFieldSize-20);
         }
 
-
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql.= " SET COMMENT='" . htmlspecialchars($newComment) . "' ";
         $sql.= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
+        $sql.= " AND WORKER_ID='" . htmlspecialchars($workerId) . "' ";
 
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
-            throw new \Exception("Failed to update PES Comment for $cnum. Comment was " . $comment);
+            throw new \Exception("Failed to update PES Comment for $cnum / $workerId. Comment was " . $comment);
         }
 
         return $newComment;
@@ -739,20 +712,21 @@ class pesTrackerTable extends DbTable{
     function prepareGetPesCommentStmt($data){
         $sql = " SELECT COMMENT FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql.= " WHERE CNUM=? ";
+        $sql.= " AND WORKER_ID=? ";
 
         $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
         return $preparedStmt;
     }
 
-    function getPesComment($cnum){
-        $data = array($cnum);
+    function getPesComment($cnum, $workerId){
+        $data = array($cnum, $workerId);
         $preparedStmt = $this->prepareGetPesCommentStmt($data);
 
         $rs = sqlsrv_execute($preparedStmt);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'Prepared Stmt');
-            throw new \Exception('Unable to getPesComment for ' . $cnum);
+            throw new \Exception('Unable to getPesComment for ' . $cnum . ' / ' . $workerId);
         }
 
         $row = sqlsrv_fetch_array($preparedStmt, SQLSRV_FETCH_ASSOC);
@@ -787,15 +761,12 @@ class pesTrackerTable extends DbTable{
         return true;
     }
 
-    function changeCnum($fromCnum, $toCnum){
-
-        if (sqlsrv_begin_transaction($GLOBALS['conn']) === false) {
-            die( print_r( sqlsrv_errors(), true ));
-        }
-
+    function changeCnum($fromCnum, $fromWorkerId, $toCnum, $toWorkerId){
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql.= " SET CNUM='" . htmlspecialchars(trim($toCnum)) . "' ";
+        $sql.= " SET CNUM='" . htmlspecialchars(trim($toCnum)) . "', ";
+        $sql.= " WORKER_ID='" . htmlspecialchars(trim($toWorkerId)) . "' ";
         $sql.= " WHERE CNUM='" . htmlspecialchars(trim($fromCnum)) . "' ";
+        $sql.= " AND WORKER_ID='" . htmlspecialchars(trim($fromWorkerId)) . "' ";
 
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
@@ -804,23 +775,11 @@ class pesTrackerTable extends DbTable{
             return false;
         }
 
-        sqlsrv_commit($GLOBALS['conn']);
-
-//         $sql = " DELETE FROM  " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-//         $sql.= " WHERE CNUM='" . htmlspecialchars(trim($fromCnum)) . "' ";
-
-//         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
-
-//         if(!$rs){
-//             DbTable::displayErrorMessage($rs, __CLASS__,__METHOD__, $sql);
-//             return false;
-//         }
-
         $loader = new Loader();
         $emailAddress = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON," CNUM in('" . htmlspecialchars(trim($fromCnum)) . "','" . htmlspecialchars(trim($toCnum)) . "') ");
 
-        $this->savePesComment($toCnum, "Serial Number changed from $fromCnum to $toCnum");
-        $this->savePesComment($toCnum, "Email Address changed from $emailAddress[$fromCnum] to $emailAddress[$toCnum] ");
+        $this->savePesComment($toCnum, $toWorkerId, "Serial Number changed from $fromCnum to $toCnum");
+        $this->savePesComment($toCnum, $toWorkerId, "Email Address changed from $emailAddress[$fromCnum] to $emailAddress[$toCnum] ");
 
         return true;
      }

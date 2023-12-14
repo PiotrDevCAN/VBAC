@@ -7,7 +7,9 @@
 class offBoarding {
 
     constructor() {
-        
+        console.log('+++ Function +++ offBoarding.constructor');
+
+        console.log('--- Function --- offBoarding.constructor');
     }
 }
 

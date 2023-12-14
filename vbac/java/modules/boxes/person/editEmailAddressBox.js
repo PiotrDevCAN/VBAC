@@ -10,7 +10,6 @@ let checkOceanEmailAddress = await cacheBustImport('./modules/functions/checkOce
 let checkKyndrylEmailAddress = await cacheBustImport('./modules/functions/checkKyndrylEmailAddress.js');
 let inArrayCaseInsensitive = await cacheBustImport('./modules/functions/inArrayCaseInsensitive.js');
 
-let knownCNUMs = await cacheBustImport('./modules/dataSources/knownCNUMs.js');
 let knownExternalEmails = await cacheBustImport('./modules/dataSources/knownExternalEmails.js');
 let knownIBMEmails = await cacheBustImport('./modules/dataSources/knownIBMEmails.js');
 let knownKyndrylEmails = await cacheBustImport('./modules/dataSources/knownKyndrylEmails.js');
@@ -60,10 +59,11 @@ class editEmailAddressBox extends box {
         console.log('--- Function --- editEmailAddressBox.constructor');
     }
 
-    setupModal(title, field, cnum, email) {
+    setupModal(title, field, cnum, workerId, email) {
         $("#editEmailAddressModal .modal-title").text(title);
         $("#eam_field").val(field);
         $("#eam_cnum").val(cnum);
+        $("#eam_workerid").val(workerId);
         $("#eam_email").val(email);
     }
 
@@ -255,8 +255,9 @@ class editEmailAddressBox extends box {
             var field = $this.fieldGeneric;
             $this.field = field;
             var cnum = $(this).data("cnum");
+            var workerId = $(this).data("workerid");
             var email = $(this).data("email");
-            $this.setupModal(title, field, cnum, email);
+            $this.setupModal(title, field, cnum, workerId, email);
             $this.showModal();
         });
     }
@@ -270,8 +271,9 @@ class editEmailAddressBox extends box {
             var field = $this.fieldKyndryl;
             $this.field = field;
             var cnum = $(this).data("cnum");
+            var workerId = $(this).data("workerid");
             var email = $(this).data("email");
-            $this.setupModal(title, field, cnum, email);
+            $this.setupModal(title, field, cnum, workerId, email);
             $this.showModal();
         });
     }

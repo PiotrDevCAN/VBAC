@@ -13,9 +13,9 @@ $pattern  = '/(PES[ _]STATUS set to :(.*?)<br\/><small>(.*?):(.*?) (.*?)<\/small
 $otherRecords = "";
 
 $sql = " SELECT T.CNUM, P.NOTES_ID,  T.COMMENT ";
-$sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PES_TRACKER . " as T ";
+$sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PES_TRACKER . " as PT ";
 $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
-$sql.= " ON T.CNUM = P.CNUM ";
+$sql.= " ON P.CNUM = PT.CNUM AND P.WORKER_ID = PT.WORKER_ID";
 $sql.= " ORDER BY 1 asc ";
 
 // echo $sql;

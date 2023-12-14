@@ -6,19 +6,26 @@ use itdq\AuditTable;
 use itdq\OKTAGroups;
 use itdq\OKTAUsers;
 use itdq\WorkerAPI;
+use vbac\emails\cbcEmail;
+use vbac\emails\offboardingWarningEmail;
+use vbac\knownValues\knownCNUMs;
+use vbac\knownValues\knownKyndrylEmails;
+use vbac\knownValues\knownWorkerIDs;
 
 ob_start();
 
 AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_POST,true) . "</b>",AuditTable::RECORD_TYPE_DETAILS);
 
+$personTable = new personTable(allTables::$PERSON);
 $person = new personRecord();
-$table = new personTable(allTables::$PERSON);
 
-$save = $_POST['mode'] == 'Save' ? true : false;
-$update = $_POST['mode'] == 'Update' ? true : false;
+$mode = !empty($_POST['mode']) ? trim($_POST['mode']) : '';
+$save = $mode == 'Save' ? true : false;
+$update = $mode == 'Update' ? true : false;
 
 try {
-    if ($_POST['mode']!='Update'){
+    // set initial value of REVALIDATION_STATUS
+    if ($save == true){
         $_POST['REVALIDATION_STATUS'] = isset($_POST['REVALIDATION_STATUS']) ? $_POST['REVALIDATION_STATUS'] : personRecord::REVALIDATED_FOUND;
     }
     $_POST['EMAIL_ADDRESS'] = filter_var($_POST['EMAIL_ADDRESS'], FILTER_SANITIZE_EMAIL);
@@ -27,13 +34,15 @@ try {
     // prepare PERSON from POST
     $person->setFromArray($_POST);
 
+    $cnum = $person->getValue('CNUM');
+    $workerId = $person->getValue('WORKER_ID');
+
     switch (true) {
         case $save:
-            $cnum = $person->getValue('CNUM');
             if (strlen($cnum) == 9) {
                 if (endsWith($cnum, 'XXX') || endsWith($cnum, 'xxx') || endsWith($cnum, '999')) {
                     // skip CNUM
-                    $invalidPersonCnum = false;
+                    $invalidPersonId = false;
                 } else {
 
                     $workerAPI = new WorkerAPI();
@@ -43,25 +52,53 @@ try {
                         && array_key_exists('count', $data)
                         && $data['count'] > 0
                     ) {
-                        //valid ocean
-                        $invalidPersonCnum = false;
+                        //valid Kyndryl
+                        $invalidPersonId = false;
                     } else {
-                        // invalid ocean
-                        $invalidPersonCnum = true;
+                        // invalid Kyndryl
+                        $invalidPersonId = true;
 
                         $messages = 'Employee data not found in the Worker API.';
                         echo $messages;
                     }
                 }
             } else {
-                $invalidPersonCnum = false;
+                if ($cnum == personRecord::NO_LONGER_AVAILABLE) {
+                    if (!empty($workerId)) {
+
+                        $workerAPI = new WorkerAPI();
+                        $data = $workerAPI->getworkerByWorkerId($workerId);
+                        if (
+                            is_array($data)
+                            && array_key_exists('count', $data)
+                            && $data['count'] > 0
+                        ) {
+                            //valid Kyndryl
+                            $invalidPersonId = false;
+                        } else {
+                            // invalid Kyndryl
+                            $invalidPersonId = true;
+
+                            $messages = 'Employee data not found in the Worker API.';
+                            echo $messages;
+                        }
+                    } else {
+                        // invalid CNUM and Worker Id
+                        $invalidPersonId = true;
+
+                        $messages = 'Employee does not have either CNUM and Worker Id.';
+                        echo $messages;
+                    }
+                } else {
+                    $invalidPersonId = true;
+                }
             }
             break;
         case $update:
-            $invalidPersonCnum = false;
+            $invalidPersonId = false;
             break;
         default:
-            $invalidPersonCnum = false;
+            $invalidPersonId = false;
             break;
     }
 
@@ -72,7 +109,15 @@ try {
         $invalidPersonEmailAddress = true;
     }
 
+    $kynEmail = $person->getValue('KYN_EMAIL_ADDRESS');
+    if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $invalidPersonKynEmailAddress = false;
+    } else {
+        $invalidPersonKynEmailAddress = true;
+    }
+
     if (empty($person->getValue('CNUM'))
+        || empty($person->getValue('WORKER_ID'))
         || empty($person->getValue('NOTES_ID'))
         || empty($person->getValue('FIRST_NAME'))
         || empty($person->getValue('LAST_NAME'))
@@ -88,16 +133,24 @@ try {
     $timeToWarnPmo = false;
     $allowPESInit = false;
 
+    $success = false;
+
     switch (true) {
-        case $invalidPersonCnum:
+        case $invalidPersonId:
             // required parameters protection
-            $messages = 'Provided Employee Serial Number is invalid';
+            $messages = 'Provided Employee Serial Number or Worker Id is invalid';
             echo $messages;
             $success = false;
             break;
         case $invalidPersonEmailAddress:
             // required parameters protection
             $messages = 'Provided Email Address is invalid';
+            echo $messages;
+            $success = false;
+            break;
+        case $invalidPersonKynEmailAddress:
+            // required parameters protection
+            $messages = 'Provided Kyndryl Email Address is invalid';
             echo $messages;
             $success = false;
             break;
@@ -109,18 +162,19 @@ try {
             break;
         default:
             $person->convertCountryCodeToName();
-            $saveRecordResult = $table->saveRecord($person, false, false);
+            $saveRecordResult = $personTable->saveRecord($person, false, false);
 
             if ($_POST['CTB_RTB'] != personRecord::CIO_ALIGNMENT_TYPE_CTB){
-                $table->clearCioAlignment($_POST['CNUM']);
+                $personTable->clearCioAlignment($_POST['CNUM'], $_POST['WORKER_ID']);
             }
             
-            AuditTable::audit("Saved Boarding Record:<B>" . $_POST['CNUM'] .":" . $_POST['NOTES_ID'] .  "</b>Mode:<b>" . $_POST['mode'],AuditTable::RECORD_TYPE_AUDIT);
+            AuditTable::audit("Saved Boarding Record:<B>" . $_POST['CNUM'] .":" . $_POST['WORKER_ID'] .  "</b>Mode:<b>" . $mode, AuditTable::RECORD_TYPE_AUDIT);
             AuditTable::audit("Saved Record:<pre>". print_r($person,true) . "</pre>", AuditTable::RECORD_TYPE_DETAILS);
             AuditTable::audit("PROJECTED_END_DATE:<pre>". print_r($_POST['PROJECTED_END_DATE'],true) . "</pre>", AuditTable::RECORD_TYPE_DETAILS);
         
             $timeToWarnPmo = $person->checkIfTimeToWarnPmo();
-            $timeToWarnPmo ? $person->sendOffboardingWarning() : null;
+            $offboardingWarning = new offboardingWarningEmail();
+            $timeToWarnPmo ? $offboardingWarning->sendOffboardingWarning($person) : null;
 
             if (isset($_POST['OktaRoles'])) {
                 $OKTAGroups = new OKTAGroups();
@@ -134,13 +188,12 @@ try {
                 }
             }
 
-            if ($saveRecordResult) {
+            // null - default return value
+            // false - update row
+            if ($saveRecordResult === null) {
                 $saveRecordResult = true;
             }
-            // null - default
-            // false - update
-            // rs - insert
-
+            
             switch (true) {
                 case $saveRecordResult:
                     switch (true) {
@@ -150,56 +203,72 @@ try {
                             // Ant Stark note - 14th February 2022
                             // If pre-boarder record is filled and PES status is filled after the record is saved 
                             // then 'initiate Pes' button should be disabled.
+                            // Do we need to update a PRE-BOARDING record ?
                             if (!empty($_POST['PRE_BOARDED'])) {
-                
-                                $table = new personTable(allTables::$PERSON);
-                                $personData = $table->getWithPredicate(" EMAIL_ADDRESS='" . htmlspecialchars(trim($_POST['PRE_BOARDED'])) . "' ");
                                 
-                                if (!empty($personData)) {
+                                $preboardedPersonData = $personTable->getWithPredicate(" EMAIL_ADDRESS='" . htmlspecialchars(trim($_POST['PRE_BOARDED'])) . "' ");
+                                
+                                if (!empty($preboardedPersonData)) {
                                     echo '<br/>Preboarded person data read from EMAIL_ADDRESS.';
                                 } else {
-                                    $personData = $table->getWithPredicate(" CNUM='" . htmlspecialchars(trim($_POST['PRE_BOARDED'])) . "' ");
-                                    if (!empty($personData)) {
+                                    $preboardedPersonData = $personTable->getWithPredicate(" CNUM='" . htmlspecialchars(trim($_POST['PRE_BOARDED'])) . "' ");
+                                    if (!empty($preboardedPersonData)) {
                                         echo '<br/>Preboarded person data read from CNUM.';
                                     } else {
                                         echo '<br/>Unable to read preboarded person data neither from EMAIL_ADDRESS nor CNUM.';
                                     }
                                 }
+
+                                if (!empty($preboardedPersonData)) {
+
+                                    $preboardedPerson = new personRecord();
+                                    $preboardedPerson->setFromArray($preboardedPersonData);
+                                    
+                                    $preboarderCnum = $preboardedPerson->getValue('CNUM');
+                                    $preboarderWorkerId = $preboardedPerson->getValue('WORKER_ID');
+                                    
+                                    $pesStatus = $preboardedPerson->getValue('PES_STATUS');
         
-                                $person = new personRecord();
-                                $person->setFromArray($personData);
-                                
-                                $pesStatus = $person->getValue('PES_STATUS');
-                                
-                                switch($pesStatus) {
-                                    case personRecord::PES_STATUS_NOT_REQUESTED:
-                                        echo "<br/>Click 'Initiate PES' button to initiate the PES Check Process";
-                                        $allowPESInit = true;
-                                        break;
-                                    default:
-                                        echo "<br/>The PES Check Process has been already initialized for preboarded person";
-                                        break;
-                                }
+                                    switch($pesStatus) {
+                                        case personRecord::PES_STATUS_NOT_REQUESTED:
+                                            echo "<br/>Click 'Initiate PES' button to initiate the PES Check Process";
+                                            $allowPESInit = true;
+                                            break;
+                                        default:
+                                            echo "<br/>The PES Check Process has been already initialized for preboarded person";
+                                            break;
+                                    }
+
+                                    try {
+                                        $personTable->linkPreBoarderToRegular($preboarderCnum, $preboarderWorkerId, $cnum, $workerId);
+                                    } catch (Exception $e) {
+                                        echo "Link PreBoarder To Kyndryl Id: " . $e->getMessage();
+                                    }
+                                } 
                             } else {
                                 echo "<br/>Click 'Initiate PES' button to initiate the PES Check Process";
                                 $allowPESInit = true;
                             }
                             
-                            $cnum = $person->getValue('CNUM');
-                            if (!empty($cnum)) {                    
-                                $person->checkForCBC();
+                            // check regular record
+                            if (!empty($cnum) && !empty($workerId)) {
+                                $cbc = new cbcEmail();
+                                $cbc->sendCbcEmail($person);
                             } else {
                                 echo "<br/>CBC Check notification has been NOT sent due to missing person data.";
                             }
+                            
+                            // refresh list of know values
+                            $kyndrylEmails = new knownKyndrylEmails();
+                            $kyndrylEmails->reloadCache();
+
+                            $knownCNUMS = new knownCNUMs();
+                            $knownCNUMS->reloadCache();
+
+                            $knownWorkerIDS = new knownWorkerIDs();
+                            $knownWorkerIDS->reloadCache();
+                            
                             $success = true;
-                            // Do we need to update a PRE-BOARDING record ?
-                            if (!empty($_POST['PRE_BOARDED'])){
-                                try {
-                                    $table->linkPreBoarderToIbmer($_POST['PRE_BOARDED'], $_POST['CNUM']);
-                                } catch (Exception $e) {
-                                    echo "Link PreBoarder To Ocean Id: " . $e->getMessage();
-                                }
-                            }
                             break;
                         case $update:
                             // incorrect option
@@ -245,6 +314,7 @@ ob_start();
 
 $response = array(
     'cnum'=>$_POST['CNUM'],
+    'workerId'=>$_POST['WORKER_ID'],
     'employeetype'=>$_POST['EMPLOYEE_TYPE'],
     'pesstatus'=>$_POST['PES_STATUS'],
     'success'=>$success,

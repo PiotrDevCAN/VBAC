@@ -26,7 +26,11 @@ class editDelegateBox extends box {
             $.ajax({
                 url: "ajax/deleteDelegate.php",
                 type: "POST",
-                data: { cnum: cnum, delegateCnum: delegateCnum },
+                data: {
+                    cnum: cnum,
+                    delegateCnum: delegateCnum
+                    // add worker_id
+                },
                 success: function (result) {
                     $(".btnDeleteDelegate").removeClass("spinning");
                     var resultObj = JSON.parse(result);

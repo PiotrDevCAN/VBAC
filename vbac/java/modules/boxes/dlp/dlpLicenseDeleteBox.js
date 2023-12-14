@@ -21,11 +21,17 @@ class dlpLicenseDeleteBox extends box {
         var $this = this;
         $(document).on("click", ".btnDlpLicenseDelete", function (e) {
             var cnum = $(this).data("cnum");
+            var workerId = $(this).data("workerid");
             var hostname = $(this).data("hostname");
             var transferred = $(this).data("transferred");
             $.ajax({
                 url: "ajax/dlpDelete.php",
-                data: { cnum: cnum, hostname: hostname, transferred: transferred },
+                data: {
+                    cnum: cnum,
+                    workerid: workerId,
+                    hostname: hostname,
+                    transferred: transferred
+                },
                 type: "POST",
                 success: function (result) {
                     var resultObj = JSON.parse(result);

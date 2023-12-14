@@ -9,17 +9,17 @@ $success = false;
 
 AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_POST,true) . "</b>",AuditTable::RECORD_TYPE_DETAILS);
 
-AuditTable::audit("Completed Offboarding for " . $_POST['cnum']);
+AuditTable::audit("Completed Offboarding for " . $_POST['cnum'] . " / " . $_POST['workerid']);
 
 $person = new personRecord();
 $table = new personTable(allTables::$PERSON);
-$revalidationStatus = $table->getRevalidationFromCnum($_POST['cnum']);
+$revalidationStatus = $table->getRevalidationStatus($_POST['cnum'], $_POST['workerid']);
 
 try {
-    if(!empty($_POST['cnum'])){
-        $table->flagOffboarded($_POST['cnum'], $revalidationStatus);
+    if(!empty($_POST['cnum']) && !empty($_POST['workerid'])){
+        $table->flagOffboarded($_POST['cnum'], $_POST['workerid'], $revalidationStatus);
     } else {
-        echo "No cnum provided";
+        echo "No cnum / worker id provided";
     }
 
     $success = true;
@@ -38,6 +38,7 @@ $response = array(
     'success'=>$success,
     'messages'=>$messages,
     'cnum'=>$_POST['cnum'],
+    'workerId'=>$_POST['workerid'],
     'post'=>print_r($_POST,true),
     'completed'=>true,
     'revalidationStatus'=>$revalidationStatus

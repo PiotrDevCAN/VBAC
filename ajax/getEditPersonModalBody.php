@@ -16,7 +16,7 @@ $success = false;
 try {
     $person = new personRecord();
     $table = new personTable(allTables::$PERSON);
-    $person->setFromArray(array('CNUM'=>$_POST['cnum']));
+    $person->setFromArray(array('CNUM'=>$_POST['cnum'], 'WORKER_ID'=>$_POST['workerid']));
     $personData = $table->getRecord($person);
     $person->setFromArray($personData);
     ob_start();
@@ -29,9 +29,25 @@ try {
     echo $e->getMessage();
     $success = false;
 }
+$ttBau = '';
+if (isset($personData['TT_BAU'])) {
+    $ttBau = $personData['TT_BAU'];
+}
+
+$ctbRtb = '';
+if (isset($personData['CTB_RTB'])) {
+    $ctbRtb = $personData['CTB_RTB'];    
+}
 
 $messages = ob_get_clean();
 ob_start();
-$response = array('body'=>$body,'success'=>$success,'messages'=>$messages,'data'=>print_r($personData,true),'accountOrganisation'=>$personData['TT_BAU'],'ctbRtb'=>$personData['CTB_RTB']);
+$response = array(
+    'body'=>$body,
+    'success'=>$success,
+    'messages'=>$messages,
+    'data'=>print_r($personData,true),
+    'accountOrganisation'=>$ttBau,
+    'ctbRtb'=>$ctbRtb
+);
 ob_clean();
 echo json_encode($response);

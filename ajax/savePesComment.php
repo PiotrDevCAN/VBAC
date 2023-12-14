@@ -9,8 +9,8 @@ AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_POST,
 
 try {
 
-    $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER   );
-    $comment = $pesTracker->savePesComment($_POST['cnum'],$_POST['comment']);
+    $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER);
+    $comment = $pesTracker->savePesComment($_POST['cnum'],$_POST['workerid'],$_POST['comment']);
 
     $messages  = ob_get_clean();
     ob_start();

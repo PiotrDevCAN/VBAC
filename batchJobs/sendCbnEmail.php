@@ -1,14 +1,15 @@
 <?php
-use vbac\personRecord;
+
 use itdq\AuditTable;
+use vbac\cbnEmail;
 
 AuditTable::audit('CBN Initiated',AuditTable::RECORD_TYPE_AUDIT);
 
 $timeMeasurements = array();
 $start = microtime(true);
 
-$personRecord = new personRecord();
-$personRecord->sendCbnEmail();
+$cbn = new cbnEmail();
+$cbn->sendCbnEmail();
 
 $end = microtime(true);
 $timeMeasurements['phase_0'] = (float)($end-$start);

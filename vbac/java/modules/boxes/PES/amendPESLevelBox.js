@@ -24,6 +24,7 @@ class amendPESLevelBox extends box {
 		var $this = this;
 		$(document).on("click", ".btnPesLevel", function (e) {
 			var cnum = $(this).data("cnum");
+			var workerId = $(this).data("workerid");
 			var notesid = $(this).data("notesid");
 			var email = $(this).data("email");
 			var pesDateclrd = $(this).data("pesdatecleared");
@@ -33,6 +34,7 @@ class amendPESLevelBox extends box {
 			notesid = notesid.trim() != "" ? notesid : email;
 			$("#plm_notesid").val(notesid);
 			$("#plm_cnum").val(cnum);
+			$("#plm_worker_id").val(workerId);
 			$('#plm_level').val(level);
 
 			if (pesDateclrd) {

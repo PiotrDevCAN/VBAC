@@ -29,6 +29,7 @@ class sendPesEmailBox extends box {
                     emailaddress: data.emailaddress,
                     country: data.country,
                     cnum: data.cnum,
+                    workerid: data.workerid,
                     recheck: data.recheck,
                 },
                 success: function (result) {
@@ -40,14 +41,11 @@ class sendPesEmailBox extends box {
                         $("#pesEmailAddress").val(data.emailaddress);
                         $("#pesEmailCountry").val(data.country);
                         $("#pesEmailOpenSeat").val(data.openseat);
-                        $("#pesEmailFilename").val(resultObj.filename);
                         $("#pesEmailCnum").val(resultObj.cnum);
+                        $("#pesEmailWorkerId").val(resultObj.workerId);
                         $("#pesEmailRecheck").val(resultObj.recheck);
-                        $("#pesEmailFilename").css("background-color", "#eeeeee");
-                        $("#pesEmailAttachments").val(""); // clear it out the first time.
-
+                        $("#pesEmailAttachments").val(""); // clear it out the first time.                        
                         console.log(resultObj.attachmentFileNames);
-
                         if (resultObj.attachmentFileNames == null) {
                             $("#pesEmailAttachments").val("");
                         } else {
@@ -59,15 +57,18 @@ class sendPesEmailBox extends box {
                                 );
                             }
                         }
+                        $("#pesEmailFilename").val(resultObj.filename);
+                        $("#pesEmailFilename").css("background-color", "#eeeeee");
                         $("#confirmSendPesEmail").prop("disabled", false);
                         $("#confirmSendPesEmailModal").modal("show");
                     } else {
-                        $("#confirmSendPesEmail").prop("disabled", true);
                         $("#pesEmailFirstName").val(data.firstname);
                         $("#pesEmailLastName").val(data.lastname);
                         $("#pesEmailAddress").val(data.emailaddress);
                         $("#pesEmailCountry").val(data.country);
                         $("#pesEmailOpenSeat").val(data.openseat);
+                        $("#pesEmailCnum").val(resultObj.cnum);
+                        $("#pesEmailWorkerId").val(resultObj.workerId);
                         $("#pesEmailRecheck").val("");
                         $("#pesEmailAttachments").val(""); // clear it out the first time.
                         if (resultObj.attachmentFileNames) {
@@ -83,6 +84,7 @@ class sendPesEmailBox extends box {
                             $("#pesEmailFilename").val(resultObj.warning.filename);
                             $("#pesEmailFilename").css("background-color", "red");
                         }
+                        $("#confirmSendPesEmail").prop("disabled", true);
                         $("#confirmSendPesEmailModal").modal("show");
                     }
                 },
@@ -100,17 +102,19 @@ class sendPesEmailBox extends box {
             var country = $("#pesEmailCountry").val();
             var openseat = $("#pesEmailOpenSeat").val();
             var cnum = $("#pesEmailCnum").val();
+            var workerId = $("#pesEmailCnum").val();
             var recheck = $("#pesEmailRecheck").val();
             $.ajax({
                 url: "ajax/sendPesEmail.php",
                 type: "POST",
                 data: {
-                    emailaddress: emailAddress,
                     firstname: firstname,
                     lastname: lastname,
+                    emailaddress: emailAddress,
                     country: country,
                     openseat: openseat,
                     cnum: cnum,
+                    workerid: workerId,
                     recheck: recheck,
                 },
                 success: function (result) {

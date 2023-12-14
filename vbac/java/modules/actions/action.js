@@ -18,6 +18,10 @@ class action {
       this.table = parent.table;
       this.tableObj = parent.tableObj;
       this.title = parent.title;
+
+      if (this.constructor == action) {
+        throw new Error('Cannot create a instance of Abstract class');
+      }
     }
 
     disableRemoveOffboarding() {

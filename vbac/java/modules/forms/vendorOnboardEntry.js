@@ -10,7 +10,7 @@ let inArrayCaseInsensitive = await cacheBustImport('./modules/functions/inArrayC
 
 let initialiseStartEndDate = await cacheBustImport('./modules/functions/initialiseStartEndDate_Vendor.js');
 let initialiseOtherDates = await cacheBustImport('./modules/functions/initialiseOtherDates_Vendor.js');
-let initialiseOnboardNonIBMPersonFormSelect2 = await cacheBustImport('./modules/functions/initialiseFormSelect2_Vendor.js');
+let initialiseFormSelect2 = await cacheBustImport('./modules/functions/initialiseFormSelect2_Vendor.js');
 
 let saveVendorBoarding = await cacheBustImport('./modules/functions/saveVendorBoarding.js');
 
@@ -18,7 +18,9 @@ let knownExternalEmails = await cacheBustImport('./modules/dataSources/knownExte
 let knownIBMEmails = await cacheBustImport('./modules/dataSources/knownIBMEmails.js');
 // let knownKyndrylEmails = await cacheBustImport('./modules/dataSources/knownKyndrylEmails.js');
 
-class vendorOnboardEntry {
+let entry = await cacheBustImport('./modules/forms/onboardEntry.js');
+
+class vendorOnboardEntry extends entry {
 
   static formId = 'boardingFormNotIbmer';
   static resourceEmailInputId = 'resource_email';
@@ -26,30 +28,29 @@ class vendorOnboardEntry {
   static resetButtonId = 'resetVendorBoarding';
   static initiatePesButtonId = 'initiateVendorPes';
 
-  saveButton;
-  initiatePesButton;
-  emailAddressInput;
+  static saveBoarding = saveVendorBoarding;
+
   table;
   responseObj;
 
   constructor() {
+    console.log('+++ Function +++ vendorOnboardEntry.constructor');
 
-    this.saveButton = $("#" + vendorOnboardEntry.saveButtonId);
-    this.initiatePesButton = $("#" + vendorOnboardEntry.initiatePesButtonId);
-    this.emailAddressInput = $("#" + vendorOnboardEntry.resourceEmailInputId);
+    super(vendorOnboardEntry);
 
     this.listenForEmailChange();
     this.listenForEmailFocusOut();
     this.listenForEmployeeTypeRadioBtn();
 
-    this.listenForSaveBoarding();
     this.listenForResetForm();
+
+    console.log('--- Function --- vendorOnboardEntry.constructor');
   }
 
   initialiseForm() {
     initialiseStartEndDate();
     initialiseOtherDates();
-    initialiseOnboardNonIBMPersonFormSelect2();
+    initialiseFormSelect2();
   }
 
   listenForEmailChange() {
@@ -194,15 +195,6 @@ class vendorOnboardEntry {
         default:
           break;
       }
-    });
-  }
-
-  listenForSaveBoarding() {
-    var $this = this;
-    $(document).on("click", "#" + vendorOnboardEntry.saveButtonId, function () {
-      $(this).attr("disabled", true);
-      var form = $("#" + vendorOnboardEntry.formId);
-      saveVendorBoarding("Save", form, $this.saveButton, $this.initiatePesButton);
     });
   }
 

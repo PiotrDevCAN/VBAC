@@ -17,7 +17,7 @@ $success = false;
 try {
     $person = new personRecord();
     $table = new personTable(allTables::$PERSON);
-    $person->setFromArray(array('CNUM'=>$_POST['cnum']));
+    $person->setFromArray(array('CNUM'=>$_POST['cnum'], 'WORKER_ID'=>$_POST['workerid']));
     $personData = $table->getRecord($person);
     $person->setFromArray($personData);
     ob_start();

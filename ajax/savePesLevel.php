@@ -15,13 +15,13 @@ try {
     
     // original record data
     $person = new personRecord();
-    $person->setFromArray(array('CNUM'=>$_POST['plm_cnum']));
+    $person->setFromArray(array('CNUM'=>$_POST['plm_cnum'], 'WORKER_ID'=>$_POST['plm_worker_id']));
 
     $personData = $personTable->getRecord($person);
     $person->setFromArray($personData);
 
     // set new PES Level
-    $updateRecordResult = $personTable->setPesLevel($_POST['plm_cnum'], $_POST['plm_level'], $_SESSION['ssoEmail']);
+    $updateRecordResult = $personTable->setPesLevel($_POST['plm_cnum'], $_POST['plm_worker_id'], $_POST['plm_level'], $_SESSION['ssoEmail']);
 
     // set new PES recheck date
     $currentPesLevel = $person->getValue('PES_LEVEL');
@@ -45,7 +45,7 @@ try {
             $plusTwoYearsDate = $plusTwoYears->format('Y-m-d');
     
             echo 'Current PES recheck date has been extended by 2 years!';
-            $updateRecordResult2 = $personTable->setPesRescheckDate($_POST['plm_cnum'], $_SESSION['ssoEmail'], $plusTwoYearsDate, true);
+            $updateRecordResult2 = $personTable->setPesRescheckDate($_POST['plm_cnum'], $_POST['plm_worker_id'], $_SESSION['ssoEmail'], $plusTwoYearsDate, true);
         } elseif (
             $currentPesLevel == personTable::PES_LEVEL_TWO 
             && $newPesLevel == personTable::PES_LEVEL_ONE
@@ -63,10 +63,10 @@ try {
             // If -2 Years is < Today then make Recheck date = Today 
             if ($minuseTwoYears < $now) {
                 echo 'Current PES recheck date is within two years from now - set today date!';
-                $updateRecordResult2 = $personTable->setPesRescheckDate($_POST['plm_cnum'], $_SESSION['ssoEmail'], $nowDate, true);
+                $updateRecordResult2 = $personTable->setPesRescheckDate($_POST['plm_cnum'], $_POST['plm_worker_id'], $_SESSION['ssoEmail'], $nowDate, true);
             } else {
                 echo 'Current PES recheck date is beyond two years from now - take away two years from current recheck date!';
-                $updateRecordResult2 = $personTable->setPesRescheckDate($_POST['plm_cnum'], $_SESSION['ssoEmail'], $minusTwoYearsDate, true);
+                $updateRecordResult2 = $personTable->setPesRescheckDate($_POST['plm_cnum'], $_POST['plm_worker_id'], $_SESSION['ssoEmail'], $minusTwoYearsDate, true);
             }
         } else {
             $updateRecordResult2 = true;
@@ -94,7 +94,7 @@ try {
         AuditTable::audit("Db2 Error in " . __FILE__ . " Code:<b>" . json_encode(sqlsrv_errors()) . "</b> Msg:<b>" . json_encode(sqlsrv_errors()) . "</b>", AuditTable::RECORD_TYPE_DETAILS);
         $success = false;
     } else {
-        $comment = $pesTracker->savePesComment($_POST['plm_cnum'],"PES_LEVEL set to : " . $_POST['plm_level']);
+        $comment = $pesTracker->savePesComment($_POST['plm_cnum'],$_POST['plm_worker_id'],"PES_LEVEL set to : " . $_POST['plm_level']);
         $success = true;
 
     }

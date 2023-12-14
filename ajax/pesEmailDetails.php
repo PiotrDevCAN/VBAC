@@ -2,13 +2,15 @@
 
 use vbac\pesEmail;
 
-
 ob_start();
 $pesEmailObj = new pesEmail();
 
+$cnum = $_GET['cnum'];
+$workerId = $_GET['workerid'];
+
 try {
     $recheck = $_GET['recheck']=='yes';
-    $emailDetails = $pesEmailObj->getEmailDetails($_GET['emailaddress'], $_GET['country'], null, $recheck, false);
+    $emailDetails = $pesEmailObj->getEmailDetails($cnum, $workerId, $_GET['emailaddress'], $_GET['country'], null, $recheck, false);
 } catch ( \Exception $e) {
     switch ($e->getCode()) {
         case 800:
@@ -38,6 +40,7 @@ unset($emailDetails['attachments']); // dont need them at this point.
 $emailDetails['success'] = $success;
 $emailDetails['messages'] = $messages;
 $emailDetails['cnum'] = $_GET['cnum'];
+$emailDetails['workerId'] = $_GET['workerid'];
 $emailDetails['recheck'] = $_GET['recheck'];
 
 ob_clean();

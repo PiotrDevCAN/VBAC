@@ -1,8 +1,11 @@
-function initiatePes(cnum, table) {
+function initiatePes(cnum, workerId, table) {
 	var $this = this;
 	$.ajax({
 		url: "ajax/initiatePes.php",
-		data: { cnum: cnum },
+		data: {
+			cnum: cnum,
+			workerid: workerId
+		},
 		type: "POST",
 		success: function (result) {
 			var resultObj = JSON.parse(result);
@@ -30,8 +33,6 @@ function initiatePes(cnum, table) {
 				);
 			}
 			$("#savingBoardingDetailsModal").modal("show");
-			// $("#initiatePes").removeClass("spinning");
-			// $("#initiatePes").attr("disabled", true);
 			$(".btnPesInitiate").removeClass("spinning");
 			$(".btnPesInitiate").attr("disabled", true);
 			if (typeof table != "undefined") {

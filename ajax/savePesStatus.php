@@ -1,6 +1,8 @@
 <?php
 use itdq\AuditTable;
 use vbac\allTables;
+use vbac\emails\informPmoOfPesStatusChangeEmail;
+use vbac\emails\pesStatusChangeEmail;
 use vbac\personRecord;
 use vbac\personTable;
 use vbac\pesEmail;
@@ -15,12 +17,13 @@ $formattedPesStatusField = null;
 
 try {
     $personTable= new personTable(allTables::$PERSON);
-    $personTable->setPesStatus($_POST['psm_cnum'],$_POST['psm_status'],$_SESSION['ssoEmail'],$_POST['PES_DATE_RESPONDED']);
+    $personTable->setPesStatus($_POST['psm_cnum'],$_POST['psm_worker_id'],$_POST['psm_status'],$_SESSION['ssoEmail'],$_POST['PES_DATE_RESPONDED']);
 
     $person = new personRecord();
     $person->setFromArray(
         array(
             'CNUM'=>$_POST['psm_cnum'],
+            'WORKER_ID'=>$_POST['psm_worker_id'],
             'PES_STATUS_DETAILS'=>$_POST['psm_detail'],
             'PES_DATE_RESPONDED'=>$_POST['PES_DATE_RESPONDED']
         )
@@ -30,20 +33,23 @@ try {
     $personData = $personTable->getRecord($person);
     $person->setFromArray($personData);
 
+    $pesStatusChange = new pesStatusChangeEmail();
+    $informPmoOfPesStatusChange = new informPmoOfPesStatusChangeEmail();
+
     $formattedPesStatusField = personTable::getPesStatusWithButtons($personData);
 
     if(array_key_exists('psm_passportFirst', $_POST)){
         /// We've been called from the PES TRACKER Screen;
-        $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER   );
+        $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER);
 
         $pesTrackeRecord = new pesTrackerRecord();
-        $pesTrackeRecord->setFromArray(array('CNUM'=>$_POST['psm_cnum']));
+        $pesTrackeRecord->setFromArray(array('CNUM'=>$_POST['psm_cnum'], 'WORKER_ID'=>$_POST['psm_worker_id']));
 
         if (!$pesTracker->existsInDb($pesTrackeRecord)) {
-             $pesTracker->createNewTrackerRecord($_POST['psm_cnum']);
+             $pesTracker->createNewTrackerRecord($_POST['psm_cnum'], $_POST['psm_worker_id']);
         }
 
-        $pesTracker->setPesPassportNames($_POST['psm_cnum'],trim($_POST['psm_passportFirst']), trim($_POST['psm_passportSurname']));
+        $pesTracker->setPesPassportNames($_POST['psm_cnum'], $_POST['psm_worker_id'], trim($_POST['psm_passportFirst']), trim($_POST['psm_passportSurname']));
 
         $pesTrackerData = $pesTracker->getRecord($pesTrackeRecord);
 
@@ -72,7 +78,7 @@ try {
             case personRecord::PES_STATUS_REVOKED:
                 $ctbRtb = !empty($personData['CTB_RTB']) ? trim($personData['CTB_RTB']) : null;
                 if (endsWith($_POST['psm_revalidationstatus'], personRecord::REVALIDATED_PREBOARDER)) {
-                    $person->informPmoOfPesStatusChange($_POST['psm_status'], $ctbRtb);
+                    $informPmoOfPesStatusChange->informPmoOfPesStatusChange($person, $_POST['psm_status'], $ctbRtb);
                     $notificationStatus = 'Email sent to PMO. PES Status is: ' . $_POST['psm_status'];
                 } else {
                     $notificationStatus = 'Email not applicable';
@@ -88,7 +94,7 @@ try {
             case personRecord::PES_STATUS_CLEARED_AMBER:
             case personRecord::PES_STATUS_CANCEL_REQ:
             case personRecord::PES_STATUS_PROVISIONAL: // For Covid
-                $emailResponseData = $person->sendPesStatusChangedEmail(pesEmail::EMAIL_NOT_PES_SUPRESSABLE);
+                $emailResponseData = $pesStatusChange->sendPesStatusChangedEmail($person, pesEmail::EMAIL_NOT_PES_SUPRESSABLE);
                 list(
                     'response' => $emailResponse,
                     'to' => $to,
@@ -123,6 +129,7 @@ $response = array(
     'messages' => $messages, 
     'emailResponse' => $notificationStatus,
     'cnum' => $_POST['psm_cnum'],
+    'workerId' => $_POST['psm_worker_id'],
     'formattedEmailField' => $formattedEmailField, 
     'formattedPesStatusField' => $formattedPesStatusField
 );

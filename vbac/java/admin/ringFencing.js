@@ -105,7 +105,13 @@ class ringFencing {
         $.ajax({
           url: "ajax/setRfFlag.php",
           type: "POST",
-          data: { cnum: cnum, rfFlag: 1, rfStart: rfStart, rfEnd: rfEnd },
+          data: {
+            cnum: cnum,
+            // add worker_id
+            rfFlag: 1,
+            rfStart: rfStart,
+            rfEnd: rfEnd
+          },
           success: function (result) {
             $("#saveRfFlag").removeClass("spinning");
             var resultObj = JSON.parse(result);
@@ -133,7 +139,11 @@ class ringFencing {
       $.ajax({
         url: "ajax/setRfFlag.php",
         type: "POST",
-        data: { cnum: cnum, rfFlag: 0 },
+        data: {
+          cnum: cnum,
+          // add worker_id
+          rfFlag: 0
+        },
         success: function (result) {
           console.log(result);
           var resultObj = JSON.parse(result);

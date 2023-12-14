@@ -22,6 +22,7 @@ class restartPesBox extends box {
 		$(document).on("click", ".btnPesRestart", function (e) {
 			$(this).addClass("spinning");
 			var cnum = $(this).data("cnum");
+			var workerid = $(this).data("workerid");
 			var notesid = $(this).data("notesid");
 			var email = $(this).data("email");
 			var now = new Date();
@@ -31,6 +32,7 @@ class restartPesBox extends box {
 				url: "ajax/restartPes.php",
 				data: {
 					psm_cnum: cnum,
+					psm_workerid: workerid,
 					psm_status: "Restart Requested",
 					psm_detail: "PES Restart Requested",
 					PES_DATE_RESPONDED: now.toLocaleDateString("en-US"),

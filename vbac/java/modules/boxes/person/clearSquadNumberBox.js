@@ -22,10 +22,15 @@ class clearSquadNumberBox extends box {
         $(document).on("click", ".btnClearSquadNumber", function (e) {
             $(this).addClass("spinning").attr("disabled", true);
             var cnum = $(this).data("cnum");
+            var workerId = $(this).data("workerid");
             var version = $(this).data("version");
             $.ajax({
                 url: "ajax/clearSquadNumber.php",
-                data: { cnum: cnum, version: version },
+                data: {
+                    cnum: cnum,
+                    workerid: workerId,
+                    version: version
+                },
                 type: "POST",
                 success: function (result) {
                     var resultObj = JSON.parse(result);

@@ -14,7 +14,8 @@ $table = new personTable(allTables::$PERSON);
 
 try {
     $person->setFromArray(array(
-        'CNUM'=>$_POST['cnum']
+        'CNUM'=>$_POST['cnum'],
+        'WORKER_ID'=>$_POST['workerid']
     ));
     $personData = $table->getRecord($person);
     $person->setFromArray($personData);
@@ -22,9 +23,6 @@ try {
         'PROPOSED_LEAVING_DATE'=>$_POST['proposedLeavingDate']
     ));
     $person->initiateOffboarding();
-
-//     $timeToInitiateOffboarding = $person->checkIfTimeToInitiateOffboarding();
-//     $timeToInitiateOffboarding ? $person->initiateOffboarding() : null;
 
     $success = true;
 
@@ -42,6 +40,7 @@ $response = array(
     'success'=>$success,
     'messages'=>$messages,
     'cnum'=>$_POST['cnum'],
+    'workerId'=>$_POST['workerid'],
     'post'=>print_r($_POST,true),
     'proposedLeavingDate'=>$_POST['proposedLeavingDate'],
     'initiated'=>true,

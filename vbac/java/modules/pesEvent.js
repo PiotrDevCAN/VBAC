@@ -50,7 +50,8 @@ class pesEvent {
         maxDate: 0,
         onSelect: function (dateText) {
           var cnum = $(this).data("cnum");
-          $this.saveDateLastChased(dateText, cnum, this);
+          var workerId = $(this).data("workerid");
+          $this.saveDateLastChased(dateText, cnum, workerId, this);
         },
       })
       .on("change", function () {
@@ -77,8 +78,10 @@ class pesEvent {
         .children(".personDetails")
         .first();
       var cnum = $(details).data("cnum");
+      var workerId = $(details).data("workerid");
       var firstName = $(details).data("firstname");
       var lastName = $(details).data("lastname");
+      var emailaddress = $(details).data("emailaddress");
       var flm = $(details).data("flm");
 
       var buttonObj = $(this);
@@ -93,9 +96,11 @@ class pesEvent {
         type: "POST",
         data: {
           cnum: cnum,
+          workerid: workerId,
+          firstname: firstName,
+          lastname: lastName,
+          emailaddress: emailaddress,
           chaser: chaser,
-          firstName: firstName,
-          lastName: lastName,
           flm: flm,
         },
         success: function (result) {
@@ -123,6 +128,7 @@ class pesEvent {
   listenForBtnSetPesLevel() {
     $(document).on("click", ".btnSetPesLevel", function () {
       var cnum = $(this).data("cnum");
+      var workerId = $(this).data("workerid");
       var level = $(this).data("level");
 
       var buttonObj = $(this);
@@ -137,6 +143,7 @@ class pesEvent {
         type: "POST",
         data: {
           cnum: cnum,
+          workerid: workerId,
           level: level
         },
         success: function (result) {
@@ -249,7 +256,7 @@ class pesEvent {
     });
   }
 
-  saveDateLastChased(date, cnum, field) {
+  saveDateLastChased(date, cnum, workerId, field) {
     console.log(field);
     console.log($(field));
     var $this = this;
@@ -259,6 +266,7 @@ class pesEvent {
       type: "POST",
       data: {
         cnum: cnum,
+        workerid: workerId,
         date: date
       },
       success: function (result) {
@@ -276,13 +284,14 @@ class pesEvent {
 
   listenForComment() {
     $("textarea").on("input", function () {
-      
+
     });
   }
 
   listenForSavePesComment() {
     $(document).on("click", ".btnPesSaveComment", function () {
       var cnum = $(this).siblings("textarea").data("cnum");
+      var workerid = $(this).siblings("textarea").data("workerid");
       var comment = $(this).siblings("textarea").val();
       var button = $(this);
 
@@ -295,6 +304,7 @@ class pesEvent {
         type: "POST",
         data: {
           cnum: cnum,
+          workerid: workerid,
           comment: comment
         },
         success: function (result) {
@@ -313,6 +323,7 @@ class pesEvent {
       var setPesTo = $(this).data("setpesto");
       var column = $(this).parents("div").data("pescolumn");
       var cnum = $(this).parents("div").data("cnum");
+      var workerId = $(this).parents("div").data("workerid");
 
       var alertClass = $this.getAlertClassForPesStage(setPesTo);
 
@@ -333,6 +344,7 @@ class pesEvent {
         type: "POST",
         data: {
           cnum: cnum,
+          workerid: workerId,
           stageValue: setPesTo,
           stage: column
         },
@@ -383,6 +395,7 @@ class pesEvent {
       var processStatus = $(this).data("processstatus");
       var dataDiv = $(this).parents("td").children(".personDetails").first();
       var cnum = $(dataDiv).data("cnum");
+      var workerId = $(dataDiv).data("workerid");
       var firstname = $(dataDiv).data("firstname");
       var lastname = $(dataDiv).data("lastname");
       var emailaddress = $(dataDiv).data("emailaddress");
@@ -393,6 +406,7 @@ class pesEvent {
         type: "POST",
         data: {
           cnum: cnum,
+          workerid: workerId,
           processStatus: processStatus,
           firstname: firstname,
           lastname: lastname,
@@ -425,12 +439,14 @@ class pesEvent {
       var buttonObj = $(this);
       var pespriority = $(this).data("pespriority");
       var cnum = $(this).data("cnum");
+      var workerId = $(this).data("workerid");
       $(this).addClass("spinning");
       $.ajax({
         url: "ajax/savePesPriority.php",
         type: "POST",
         data: {
           cnum: cnum,
+          workerid: workerId,
           pespriority: pespriority
         },
         success: function (result) {

@@ -17,30 +17,33 @@ let knownCNUMs = await cacheBustImport('./modules/dataSources/knownCNUMs.js');
 let knownWorkerIDs = await cacheBustImport('./modules/dataSources/knownWorkerIDs.js');
 let knownKyndrylEmails = await cacheBustImport('./modules/dataSources/knownKyndrylEmails.js');
 
-class regularOnboardEntry {
+let entry = await cacheBustImport('./modules/forms/onboardEntry.js');
+
+class regularOnboardEntry extends entry {
 
   static formId = 'boardingFormIbmer';
   static saveButtonId = 'saveRegularBoarding';
   static resetButtonId = 'resetRegularBoarding';
   static initiatePesButtonId = 'initiateRegularPes';
 
+  static saveBoarding = saveRegularBoarding;
+
   static noLongerAvailable = 'No longer available';
 
-  saveButton;
-  initiatePesButton;
   table;
   responseObj;
 
   constructor() {
+    console.log('+++ Function +++ regularOnboardEntry.constructor');
 
-    this.saveButton = $("#" + regularOnboardEntry.saveButtonId);
-    this.initiatePesButton = $("#" + regularOnboardEntry.initiatePesButtonId);
+    super(regularOnboardEntry);
 
     this.listenForName();
     this.listenForLinkToPreBoarded();
 
-    this.listenForSaveBoarding();
     this.listenForResetForm();
+
+    console.log('--- Function --- regularOnboardEntry.constructor');
   }
 
   initialiseForm() {
@@ -91,7 +94,7 @@ class regularOnboardEntry {
         if (trimmedCnum !== "") {
           var allreadyExistsCNUM = inArrayCaseInsensitive(trimmedCnum, knownCnum) >= 0;
         }
-        
+
         var allreadyExistsWorkerID = false;
         if (trimmedWorkerId !== 0) {
           var allreadyExistsWorkerID = $.inArray(trimmedWorkerId, knownWorkerIds) >= 0;
@@ -195,7 +198,8 @@ class regularOnboardEntry {
   listenForLinkToPreBoarded() {
     $(document).on("select2:select", "#person_preboarded", function (e) {
       var data = e.params.data;
-      if (data.id != "") {
+      var cnum = data.id;
+      if (cnum != "") {
         // They have selected an entry
         var allEnabled = $("form :enabled");
         $(allEnabled).attr("disabled", true);
@@ -204,7 +208,9 @@ class regularOnboardEntry {
         $.ajax({
           url: "ajax/prePopulateFromLink.php",
           type: "POST",
-          data: { cnum: data.id },
+          data: {
+            cnum: cnum
+          },
           success: function (result) {
             $("#" + regularOnboardEntry.saveButtonId).removeClass("spinning");
             var resultObj = JSON.parse(result);
@@ -371,15 +377,6 @@ class regularOnboardEntry {
       } else {
 
       }
-    });
-  }
-
-  listenForSaveBoarding() {
-    var $this = this;
-    $(document).on("click", "#" + regularOnboardEntry.saveButtonId, function () {
-      $(this).attr("disabled", true);
-      var form = $("#" + regularOnboardEntry.formId);
-      saveRegularBoarding("Save", form, $this.saveButton, $this.initiatePesButton);
     });
   }
 

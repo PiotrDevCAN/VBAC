@@ -17,6 +17,8 @@ class employeeComplete implements report
         
         $sql.=personTable::EMPLOYEE_TYPE_SELECT.", ";
 
+        $sql.=personTable::BAND_SELECT.", ";
+
         // $sql.=" F.*, ";
 
         // $sql.=" U.*, ";
