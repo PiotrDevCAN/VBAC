@@ -17,16 +17,23 @@ class reportPesUpdate extends action {
         var $this = this;
         $(document).on("click", "#reportPesUpdate", function (e) {
             var cnums = [];
+            var workerIds = [];
             $this.table.$('tr.selected').each(function () {
-                var cnum = this.firstChild.innerHTML;
+                var children = this.children;
+                var cnumChild = children.item(0);
+                var workerIdChild = children.item(1);
+                var cnum = cnumChild.innerHTML;
+                var workerid = workerIdChild.innerHTML;
                 cnums.push(cnum);
+                workerIds.push(workerid);
             });
-            if (cnums.length > 0) {
+            if (cnums.length > 0 && workerIds.length > 0) {
                 $.ajax({
                     url: "ajax/setPesProgressing.php",
                     type: "POST",
                     data: {
-                        cnum: cnums
+                        cnum: cnums,
+                        workerid: workerIds
                     },
                     success: function (result) {
                         var resultObj = JSON.parse(result);

@@ -11,10 +11,13 @@ AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_POST,
 $personTable = new personTable(allTables::$PERSON);
 $status = personRecord::PES_STATUS_PES_PROGRESSING;
 
-if(isset($_REQUEST['cnum']) && !empty($_POST['cnum'])){
-    if(is_array($_POST['cnum'])){
-        foreach($_POST['cnum'] as $key => $cnum) {
-            $personTable->setPesStatus($cnum, 'not found', $status);
+if(isset($_REQUEST['cnum']) && !empty($_POST['cnum']) && isset($_REQUEST['workerid']) && !empty($_POST['workerid'])) {
+    if(is_array($_POST['cnum']) && is_array($_POST['workerid'])) {
+        $cnums = $_POST['cnum'];
+        $workerIds = $_POST['workerid'];
+        foreach($cnums as $key => $cnum) {
+            $workerId = $workerIds[$key];
+            $personTable->setPesStatus($cnum, $workerId, $status);
         }
     } else {
         $personTable->setPesStatus($_POST['cnum'], $_POST['workerid'], $status);
