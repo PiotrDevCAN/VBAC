@@ -1,8 +1,5 @@
 <?php
 use vbac\personRecord;
-use itdq\FormClass;
-use itdq\Loader;
-use vbac\allTables;
 
 set_time_limit(0);
 

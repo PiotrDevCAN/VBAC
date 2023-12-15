@@ -5,6 +5,8 @@
 let buttonCommon = await cacheBustImport('./modules/functions/buttonCommon.js');
 let actions = await cacheBustImport('./modules/actions/person/personManualPesUpdateActions.js');
 
+let formatKyndrylPerson = await cacheBustImport('./modules/functions/formatKyndrylPerson.js');
+
 class manualPESStatusUpdate {
 
 	table;
@@ -12,27 +14,47 @@ class manualPESStatusUpdate {
 	constructor() {
 		console.log('+++ Function +++ manualPESStatusUpdate.constructor');
 
-		this.initialiseUpdateStatusTable();
+		this.initialiseLinkingFormSelect2();
 		this.listenForPerson();
 		// this.listenForPesStatus();
+
 		this.listenForUpdatePerson();
 		this.listenForClosingSaveFeedbackModal();
+		this.initialiseUpdateStatusTable();
 		this.listenForTableRowSelect();
 
 		// pass table to actions
 		const Actions = new actions(this);
 
-		$('.select2').select2();
-
 		console.log('--- Function --- manualPESStatusUpdate.constructor');
 	}
 
+	initialiseLinkingFormSelect2() {
+		$('#person').select2({
+			templateResult: formatKyndrylPerson
+		});
+		$('#pesStatus').select2();
+	}
+
+	listenForPerson() {
+		$(document).on("select2:select", "#person", function (e) {
+			var data = e.params.data;
+			var $el = $(data.element);
+			var $data = $el.data();
+			$('#cnum').val($data.cnum);
+			$('#workerid').val($data.workerid);
+			$('#updatePerson').attr('disabled', false);
+		});
+	}
+
+	/*
 	listenForPerson() {
 		$(document).on('change', '#person', function () {
 			// $('#pesStatus').attr('disabled', false);
 			$('#updatePerson').attr('disabled', false);
 		});
 	}
+	*/
 
 	/*
 	listenForPesStatus() {
@@ -61,6 +83,9 @@ class manualPESStatusUpdate {
 				success: function (response) {
 					var resultObj = JSON.parse(response);
 					console.log(resultObj);
+
+					$("#cnum").val("");
+					$("#workerid").val("");
 
 					$('.spinning').removeClass('spinning').attr('disabled', false);
 

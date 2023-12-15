@@ -10,6 +10,8 @@ class linkIbmerToPreboarder {
 
     constructor() {
         this.initialiseLinkingFormSelect2();
+        this.listenForRegularPerson();
+        this.listenForPreboardedPerson();
         this.listenForSaveLinking();
     }
 
@@ -18,6 +20,26 @@ class linkIbmerToPreboarder {
             templateResult: formatKyndrylPerson
         });
         $('#person_preboarded').select2();
+    }
+
+    listenForRegularPerson() {
+        $(document).on("select2:select", "#ibmer_preboarded", function (e) {
+            var data = e.params.data;
+            var $el = $(data.element);
+            var $data = $el.data();
+            $('#cnum').val($data.cnum);
+            $('#workerid').val($data.workerid);
+        });
+    }
+
+    listenForPreboardedPerson() {
+        $(document).on("select2:select", "#person_preboarded", function (e) {
+            var data = e.params.data;
+            var $el = $(data.element);
+            var $data = $el.data();
+            $('#preboarderCnum').val($data.cnum);
+            $('#preboarderWorkerId').val($data.workerid);
+        });
     }
 
     listenForSaveLinking() {
@@ -41,6 +63,10 @@ class linkIbmerToPreboarder {
                         var resultObj = JSON.parse(result);
                         $("#ibmer_preboarded").val("");
                         $("#person_preboarded").val("");
+                        $("#preboarderCnum").val("");
+                        $("#preboarderWorkerId").val("");
+                        $("#cnum").val("");
+                        $("#workerid").val("");
                     },
                 });
             } else {

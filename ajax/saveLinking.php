@@ -8,13 +8,15 @@ ob_start();
 
 AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_POST,true) . "</pre>",AuditTable::RECORD_TYPE_DETAILS);
 
-$personCnum = $_POST['person_preboarded'];
-$regularId = $_POST['ibmer_preboarded'];
+$preboarderCnum = $_POST['preboarderCnum'];
+$preboarderWorkerId = $_POST['preboarderWorkerId'];
+
+$regularCnum = $_POST['cnum'];
+$regularWorkerId = $_POST['workerid'];
 
 $table = new personTable(allTables::$PERSON);
 try {
-    // regular ID
-    $table->linkPreBoarderToRegular($personCnum, $regularId);
+    $table->linkPreBoarderToRegular($preboarderCnum, $preboarderWorkerId, $regularCnum, $regularWorkerId);
 } catch (Exception $e) {
     echo $e->getMessage();
 }

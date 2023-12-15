@@ -327,6 +327,12 @@ class personTable extends DbTable
         return $odcPredicate;
     }
 
+    public static function pesProcessBeginPredicate()
+    {
+        $predicate = " PES_STATUS in ('" . personRecord::PES_STATUS_NOT_REQUESTED . "', '" . personRecord::PES_STATUS_INITIATED . "')";
+        return $predicate;
+    }
+
     public function getForRfFlagReport($resultSetOnly = false, $withButtons = true)
     {
         $sql = "SELECT P.CNUM ";
@@ -491,7 +497,7 @@ class personTable extends DbTable
 
     public function returnManualUpdateArray()
     {
-        $predicate = " PES_STATUS in ('" . personRecord::PES_STATUS_NOT_REQUESTED . "', '" . personRecord::PES_STATUS_INITIATED . "')";
+        $predicate = self::pesProcessBeginPredicate();
         $data = array();
 
         $sql = " SELECT CNUM, WORKER_ID, FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, KYN_EMAIL_ADDRESS, PES_STATUS ";
@@ -1772,7 +1778,7 @@ class personTable extends DbTable
             $availPreBoPredicate = " ( CNUM = '" . htmlspecialchars($preBoarded) . "' ) ";
         }
 
-        $sql = " SELECT DISTINCT FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, CNUM  FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
+        $sql = " SELECT DISTINCT FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, KYN_EMAIL_ADDRESS, CNUM, WORKER_ID FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
         $sql .= " WHERE " . $availPreBoPredicate;
         $sql .= " ORDER BY FIRST_NAME, LAST_NAME ";
 
@@ -1783,7 +1789,9 @@ class personTable extends DbTable
         }
         $options = array();
         while (($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)) == true) {
-            $option = "<option value='" . trim($row['CNUM']) . "'";
+            $option = "<option ";
+            $option .= " data-email = '".trim($row['EMAIL_ADDRESS'])."' data-workerid = '".trim($row['WORKER_ID'])."' data-cnum = '".trim($row['CNUM'])."'";
+            $option .= " value='" . trim($row['CNUM']) . "'";
             $option .= trim($row['CNUM']) == trim($preBoarded) ? ' selected ' : null;
             if (!empty(trim($row['EMAIL_ADDRESS']))) {
                 $option .= " >" . trim($row['FIRST_NAME']) . " " . trim($row['LAST_NAME']) . " (" . trim($row['EMAIL_ADDRESS']) . ") ";
