@@ -66,7 +66,7 @@ class regularOnboardEntry extends entry {
 
       var workerId = suggestion.workerID;
       var workerIdRAW = suggestion.workerID;
-      if (typeof (newCnum) == 'undefined') {
+      if (typeof (workerId) == 'undefined') {
         workerId = '';
         workerIdRAW = 0;
       }
@@ -97,7 +97,7 @@ class regularOnboardEntry extends entry {
 
         var allreadyExistsWorkerID = false;
         if (trimmedWorkerId !== 0) {
-          var allreadyExistsWorkerID = $.inArray(trimmedWorkerId, knownWorkerIds) >= 0;
+          var allreadyExistsWorkerID = inArrayCaseInsensitive(trimmedWorkerId, knownWorkerIds) >= 0;
         }
 
         var allreadyKyndrylExists = false;

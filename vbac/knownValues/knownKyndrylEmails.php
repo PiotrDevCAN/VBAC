@@ -2,7 +2,7 @@
 
 namespace vbac\knownValues;
 
-use vbac\personTable;
+// use vbac\personTable;
 
 class knownKyndrylEmails extends knownValues
 {
@@ -10,7 +10,9 @@ class knownKyndrylEmails extends knownValues
     {
         $this->redisMainKey = 'getKnownKyndrylEMails';
         $this->loaderField = 'KYN_EMAIL_ADDRESS';
-        $this->predicate = personTable::normalCNUMPredicate();
+        // condition was too strict since we cannot rely on CNUM or Worker ID
+        // $this->predicate = personTable::normalCNUMPredicate();
+        $this->predicate = ' KYN_EMAIL_ADDRESS IS NOT NULL';
         parent::__construct();
     }
 }

@@ -2,7 +2,7 @@
  *
  */
 
-let knownWorkerIDsFetch = await cacheBustImport('./modules/dataSources/fetch/knownCNUMs.js');
+let knownWorkerIDsFetch = await cacheBustImport('./modules/dataSources/fetch/knownWorkerIDs.js');
 
 let APIData = knownWorkerIDsFetch;
 
