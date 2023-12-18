@@ -28,7 +28,7 @@ let setPmoStatusBox = await cacheBustImport('./modules/boxes/person/setPmoStatus
 let sendPesEmailBox = await cacheBustImport('./modules/boxes/person/sendPesEmailBox.js');
 let togglePesTrackerStatusDetailsBox = await cacheBustImport('./modules/boxes/person/togglePesTrackerStatusDetailsBox.js');
 let pesStopBox = await cacheBustImport('./modules/boxes/PES/pesStopBox.js');
-let pesProgressingBox = await cacheBustImport('./modules/boxes/PES/pesProgressingbox.js');
+let pesProgressingBox = await cacheBustImport('./modules/boxes/PES/pesProgressingBox.js');
 
 let editAgileNumberBox = await cacheBustImport('./modules/boxes/person/editAgileNumberBox.js');
 let clearSquadNumberBox = await cacheBustImport('./modules/boxes/person/clearSquadNumberBox.js');
