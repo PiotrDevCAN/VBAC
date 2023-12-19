@@ -42,7 +42,8 @@ try {
             break;
         case $update:
             // update not ibmer
-            $_POST['CNUM'] = $_POST['resource_uid'];
+            $cnum = $_POST['resource_uid'];
+            $_POST['CNUM'] = $cnum;
             $_POST['WORKER_ID'] = isset($_POST['WORKER_ID']) ? $_POST['WORKER_ID'] : personRecord::NOT_FOUND;        
             AuditTable::audit("Pre boarded update:<b>" . $cnum . "</b> Type:" .  $_POST['EMPLOYEE_TYPE'], AuditTable::RECORD_TYPE_AUDIT);
             break;

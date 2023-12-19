@@ -78,7 +78,7 @@ class IconRolesTable extends DbTable {
 // 			return false;
 // 		} else {
 // 			$allCustomerRefs = array ();
-// 			while ( $row = sqlsrv_fetch_array( $rs ) ) {
+// 			while ( $row = sqlsrv_fetch_array( $rs, SQLSRV_FETCH_ASSOC ) ) {
 // 				$allCustomerRefs [$row ['CUSTOMER_ID']] = $row ['CUSTOMER_REF'];
 // 			}
 // 			Trace::traceTimings ( null, __METHOD__, __LINE__ );
@@ -98,7 +98,7 @@ class IconRolesTable extends DbTable {
 // 			return false;
 // 		} else {
 // 			$allRoles = array ();
-// 			while ( $row = sqlsrv_fetch_array( $rs ) ) {
+// 			while ( $row = sqlsrv_fetch_array( $rs, SQLSRV_FETCH_ASSOC ) ) {
 // 				$allRoles [$row ['ROLE']] = $row ['ROLE'];
 // 			}
 // 			Trace::traceTimings ( null, __METHOD__, __LINE__ );
@@ -133,7 +133,7 @@ class IconRolesTable extends DbTable {
 // 			return false;
 // 		} else {
 // 			$allAddresses = array ();
-// 			while ( $row = sqlsrv_fetch_array( $rs ) ) {
+// 			while ( $row = sqlsrv_fetch_array( $rs, SQLSRV_FETCH_ASSOC ) ) {
 // 				$allAddresses [$row ['PERSON_INTRANET']] = $row ['PERSON_INTRANET'];
 // 			}
 // 			Trace::traceTimings ( null, __METHOD__, __LINE__ );
@@ -266,7 +266,7 @@ class IconRolesTable extends DbTable {
 						$rolesArray [trim ( urldecode ( $value ['role'] ) )] = trim ( urldecode ( $value ['role'] ) );
 						break;
 					default :
-						exit ( " Value is an unexpected type. Tell rob, let him sweat about it." );
+						exit ( " Value is an unexpected type. Tell Piotr, let him sweat about it." );
 						break;
 				}
 			}

@@ -15,7 +15,7 @@ let editRegularPersonBox = await cacheBustImport('./modules/boxes/person/editReg
 let editVendorPersonBox = await cacheBustImport('./modules/boxes/person/editVendorPersonBox.js');
 let editEmailAddressBox = await cacheBustImport('./modules/boxes/person/editEmailAddressBox.js');
 
-let pesInitiateFromPortalBox = await cacheBustImport('./modules/boxes/PES/pesInitiateFromPesTrackerBox.js');
+let pesInitiateFromPortalBox = await cacheBustImport('./modules/boxes/PES/pesInitiateFromPortalBox.js');
 let setFmFlagBox = await cacheBustImport('./modules/boxes/person/setFmFlagBox.js');
 let stopOffboardingBox = await cacheBustImport('./modules/boxes/person/stopOffboardingBox.js');
 let deoffBoardingBox = await cacheBustImport('./modules/boxes/person/deoffBoardingBox.js');

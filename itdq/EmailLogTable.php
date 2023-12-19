@@ -27,7 +27,7 @@ class EmailLogTable  extends DbTable {
                 foreach ($to as $emailAddress){
                     $record[1] .= $emailAddress . "<br/>";
                 }
-                $record[2] = preg_replace(array('/width="[0-9]{2}%"/','/[0-9]{2}px/'), array('width="100%"','8px'), $row['MESSAGE']);;
+                $record[2] = preg_replace(array('/width="[0-9]{2}%"/','/[0-9]{2}px/'), array('width="100%"','8px'), $row['MESSAGE']);
                 //$record[2] = preg_replace(array('/"([A-z]+)":/','/,/'), array('<b>\1</b>:','<br/>'), $row['RESPONSE']);
 
                 //Response
@@ -65,12 +65,8 @@ class EmailLogTable  extends DbTable {
             }
         }
 
-
-
 //          $rows[] = array('id','to','subject','message','response','status','sent timestamp','status_timestamp');
 //          $rows[] = array('id2','to2','subject2','message2','response2','status2','sent timestamp2','status_timestamp2');
         return $data;
-
     }
-
 }
