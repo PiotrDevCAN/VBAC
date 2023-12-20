@@ -28,7 +28,8 @@ class deoffBoardingBox extends box {
                 url: "ajax/deoffBoarding.php",
                 type: "POST",
                 data: {
-                    cnum: data.cnum
+                    cnum: data.cnum,
+                    workerid: data.workerid
                 },
                 success: function (result) {
                     var resultObj = JSON.parse(result);
