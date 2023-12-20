@@ -414,7 +414,7 @@ class personRecord extends DbRecord
         AuditTable::audit("Prior to Offboarding for Cnum:" . $this->CNUM . " / Worker Id:" . $this->WORKER_ID . " Revalidation Status:" . $this->REVALIDATION_STATUS . " Revalidation Date:" . $this->REVALIDATION_DATE_FIELD . " Updater:" . $_SESSION['ssoEmail'], AuditTable::RECORD_TYPE_DETAILS);
         AuditTable::audit("Initiated Offboarding for Cnum:" . $this->CNUM. " / Worker Id:" . $this->WORKER_ID . " Id:" . $mailAccount . " Projected End Date:" . $this->PROJECTED_END_DATE . " Proposed Leaving Date:" . $this->PROPOSED_LEAVING_DATE, AuditTable::RECORD_TYPE_AUDIT);
         $personTable = new personTable(allTables::$PERSON);
-        $personTable->flagOffboardingByCNUM($this->CNUM, $this->WORKER_ID, $this->REVALIDATION_STATUS, $this->NOTES_ID, $this->PROPOSED_LEAVING_DATE);
+        $personTable->flagOffboarding($this->CNUM, $this->WORKER_ID, $this->REVALIDATION_STATUS, $this->NOTES_ID, $this->PROPOSED_LEAVING_DATE);
     }
 
     function displayBoardingForm($mode){

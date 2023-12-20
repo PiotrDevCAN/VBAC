@@ -37,8 +37,6 @@ class pesEventTable extends DbTable{
             $headerCells.= "<th>" .strtoupper($event_title) . "</th>";
         }
 
-
-
         $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " as P ";
 
         foreach ($allEvents as $element => $event_title) {
