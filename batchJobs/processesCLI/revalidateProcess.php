@@ -132,7 +132,11 @@ if($rs){
             $employeeData = $data['results'][0];
             $notesid = personRecord::NO_LONGER_AVAILABLE;
             $mail = $employeeData['email'];
-            $serial = $employeeData['cnum'];
+            if (array_key_exists('cnum', $employeeData)) {
+                $serial = $employeeData['cnum'];
+            } else {
+                $serial = personRecord::NO_LONGER_AVAILABLE;
+            }
             $personTable->confirmRevalidation($notesid, $mail, $serial, $workerId);
             $allNonLeaversFoundCounter++;
         } else {
@@ -199,10 +203,26 @@ $message = 'Updated vBAC Environment: ' . $GLOBALS['Db2Schema'];
 
 $message .= '<HR>';
 
-$message .= '<BR/><b>Common part</b>';
+$message .= '<BR/><b>Summary</b>';
+
+$message .= '<HR>';
+
 $message .= '<BR/>All preBoarders ' . $allPreboardersCounter;
 $message .= '<BR/>All offBoarders ' . $allOffboardersCounter;
 $message .= '<BR/>All vendors ' . $allVendorsCounter;
+
+$message .= '<HR>';
+
+$message .= '<BR/>All non leavers ' . $allNonLeaversCounter;
+$message .= '<BR/>All non leavers FOUND in Worker API ' . $allNonLeaversFoundCounter;
+$message .= '<BR/>All non leavers NOT FOUND in Worker API ' . $allNonLeaversNotFoundCounter;
+
+$message .= '<BR/>All potential leavers ' . $allPotentialLeaversCounter;
+// $message .= '<BR/>All leavers ' . $allLeaverCounter;
+
+$message .= '<HR>';
+
+$message .= '<BR/><b>Timing summary</b>';
 
 $message .= '<HR>';
 
@@ -210,16 +230,6 @@ $message .= '<BR/>Time of setting a PREBOARDER revalidation status: ' . $timeMea
 $message .= '<BR/>Time of obtaining a number of employees with PREBOARDER revalidation status: ' . $timeMeasurements['phase_1'];
 $message .= '<BR/>Time of obtaining a number of employees with OFFBOARD revalidation status: ' . $timeMeasurements['phase_2'];
 $message .= '<BR/>Time of obtaining a number of employees with VENDOR revalidation status: ' . $timeMeasurements['phase_3'];
-
-$message .= '<HR>';
-
-$message .= '<BR/>Summary';
-$message .= '<BR/>All non leavers ' . $allNonLeaversCounter;
-$message .= '<BR/>All non leavers FOUND in Worker API ' . $allNonLeaversFoundCounter;
-$message .= '<BR/>All non leavers NOT FOUND in Worker API ' . $allNonLeaversNotFoundCounter;
-
-$message .= '<BR/>All potential leavers ' . $allPotentialLeaversCounter;
-// $message .= '<BR/>All leavers ' . $allLeaverCounter;
 
 $message .= '<HR>';
 

@@ -85,7 +85,11 @@ if($rs){
             $employeeData = $data['results'][0];
             $notesid = personRecord::NO_LONGER_AVAILABLE;
             $mail = $employeeData['email'];
-            $serial = $employeeData['cnum'];
+            if (array_key_exists('cnum', $employeeData)) {
+                $serial = $employeeData['cnum'];
+            } else {
+                $serial = personRecord::NO_LONGER_AVAILABLE;
+            }
             $personTable->confirmRevalidation($notesid, $mail, $serial, $workerId);
             $allPotentialLeaversFoundCounter++;
         } else {
