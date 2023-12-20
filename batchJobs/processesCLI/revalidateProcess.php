@@ -94,6 +94,7 @@ if($rs){
     $allNonLeaversNotFoundCounter = 0;
     while ($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)){
         
+        $employeeFound = true;
         $allNonLeaversCounter++;
 
         $cnum = $row['CNUM'];
@@ -121,18 +122,22 @@ if($rs){
                     if (
                         ! $workerAPI->validateData($data)
                     ) {
-                        $employeeData = $data['results'][0];
-                        $notesid = personRecord::NO_LONGER_AVAILABLE;
-                        $mail = $employeeData['email'];
-                        $serial = $employeeData['cnum'];
-                        $personTable->confirmRevalidation($notesid, $mail, $serial, $workerId);
-                        $allNonLeaversFoundCounter++;
-                    } else {
-                        $allPotentialLeavers[$cnum] = $row;
-                        $allNonLeaversNotFoundCounter++;
+                        $employeeFound = false;
                     }
                 }
             }
+        }
+
+        if ($employeeFound == true) {
+            $employeeData = $data['results'][0];
+            $notesid = personRecord::NO_LONGER_AVAILABLE;
+            $mail = $employeeData['email'];
+            $serial = $employeeData['cnum'];
+            $personTable->confirmRevalidation($notesid, $mail, $serial, $workerId);
+            $allNonLeaversFoundCounter++;
+        } else {
+            $allPotentialLeavers[$cnum] = $row;
+            $allNonLeaversNotFoundCounter++;
         }
     }
 } else {

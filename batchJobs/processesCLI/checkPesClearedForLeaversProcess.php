@@ -38,6 +38,7 @@ if($rs){
     $allNotFoundCounter = 0;
     while ($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)){
         
+        $employeeFound = true;
         $allCounter++;
 
         $cnum = $row['CNUM'];
@@ -65,13 +66,20 @@ if($rs){
                     if (
                         ! $workerAPI->validateData($data)
                     ) {
+                        $employeeFound = false;
                         $allFoundCounter++;
                     } else {
-                        $allPotentialLeavers[$cnum] = $row;
-                        $allNotFoundCounter++;
+
                     }
                 }
             }
+        }
+
+        if ($employeeFound == true) {
+            $allFoundCounter++;
+        } else {
+            $allPotentialLeavers[$cnum] = $row;
+            $allNotFoundCounter++;
         }
     }
 } else {
