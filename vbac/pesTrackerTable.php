@@ -627,7 +627,7 @@ class pesTrackerTable extends DbTable{
 
     function setPesPassportNames($cnum, $workerId, $passportFirstname=null, $passportSurname=null){
         $trackerRecord = new pesTrackerRecord();
-        $trackerRecord->setFromArray(array('CNUM'=>$cnum));
+        $trackerRecord->setFromArray(array('CNUM'=>$cnum, 'WORKER_ID'=>$workerId));
 
         if (!$this->existsInDb($trackerRecord)) {
             $this->createNewTrackerRecord($cnum, $workerId);

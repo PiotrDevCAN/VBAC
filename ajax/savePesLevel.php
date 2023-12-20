@@ -79,7 +79,7 @@ try {
 
     // modified record data
     $person = new personRecord();
-    $person->setFromArray(array('CNUM'=>$_POST['plm_cnum']));
+    $person->setFromArray(array('CNUM'=>$_POST['plm_cnum'], 'WORKER_ID'=>$_POST['plm_worker_id']));
     
     $personData = $personTable->getRecord($person);
     $person->setFromArray($personData);
