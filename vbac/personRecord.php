@@ -339,7 +339,7 @@ class personRecord extends DbRecord
 
     static function loadKnownIBMEmail($predicate=null){
       $sql = " SELECT EMAIL_ADDRESS FROM " . $GLOBALS['Db2Schema'] . "." .  allTables::$PERSON;
-      $sql.= " WHERE " . personTable::normalCNUMPredicate();
+      $sql.= " WHERE " . personTable::regularCNUMPredicate();
       $sql.= " ORDER BY 1 ";
 
       $rs = sqlsrv_query($GLOBALS['conn'], $sql);
@@ -365,7 +365,7 @@ class personRecord extends DbRecord
 
     static function loadKnownKyndrylEmail($predicate=null){
       $sql = " SELECT KYN_EMAIL_ADDRESS FROM " . $GLOBALS['Db2Schema'] . "." .  allTables::$PERSON;
-      $sql.= " WHERE " . personTable::normalCNUMPredicate();
+      $sql.= " WHERE " . personTable::regularCNUMPredicate();
       $sql.= " ORDER BY 1 ";
 
       $rs = sqlsrv_query($GLOBALS['conn'], $sql);
@@ -1167,12 +1167,14 @@ class personRecord extends DbRecord
       $notEditable = $mode==FormClass::$modeEDIT ? ' disabled ' : null;
 
       $availableForLinking = personTable::isNotPreBoardedPredicate();
-      $availableForLinking .= " AND " . personTable::normalCNUMPredicate();
+      $availableForLinking .= " AND " . personTable::regularCNUMPredicate();
+      $availableForLinking .= " AND " . personTable::availableCNUMPredicate();
       $availableForLinking .= " AND " . personTable::normalWorkerIDPredicate();
       $allNonLinkedKyndrylEmployees = $loader->loadIndexed('KYN_EMAIL_ADDRESS','CNUM',allTables::$PERSON, $availableForLinking);
 
       $availableForLinkingWorkerID = personTable::isNotPreBoardedPredicate();
-      $availableForLinkingWorkerID .= " AND " . personTable::normalCNUMPredicate();
+      $availableForLinkingWorkerID .= " AND " . personTable::regularCNUMPredicate();
+      $availableForLinkingWorkerID .= " AND " . personTable::availableCNUMPredicate();
       $availableForLinkingWorkerID .= " AND " . personTable::normalWorkerIDPredicate();
       $allNonLinkedKyndrylEmployeesWorkerIDs = $loader->loadIndexed('KYN_EMAIL_ADDRESS','WORKER_ID',allTables::$PERSON, $availableForLinkingWorkerID);
 

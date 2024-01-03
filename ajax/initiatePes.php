@@ -41,7 +41,6 @@ try {
 
 $messages = ob_get_clean();
 ob_start();
-ob_start();
 echo "<pre>" . print_r($personData,true) . "</pre><br/>";
 $diags = ob_get_clean();
 ob_start();

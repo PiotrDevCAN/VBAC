@@ -232,6 +232,25 @@ class personTable extends DbTable
         return $archivedPredicate;   
     }
 
+    /*
+    * select REGULAR employees CNUM
+    */
+    public static function regularCNUMPredicate($includeProvisionalClearance = true, $tableAbbrv = null)
+    {
+        $predicate = !empty($tableAbbrv) ? $tableAbbrv . "." : null;
+        $predicate .= "CNUM NOT LIKE '%XXX' ";
+        $predicate .= " AND ";
+        $predicate .= !empty($tableAbbrv) ? $tableAbbrv . "." : null;
+        $predicate .= "CNUM NOT LIKE '%xxx' ";
+        $predicate .= " AND ";
+        $predicate .= !empty($tableAbbrv) ? $tableAbbrv . "." : null;
+        $predicate .= "CNUM NOT LIKE '%999' ";
+        return $predicate;
+    }
+
+    /*
+    * select EXTERNAL employees CNUM
+    */
     public static function externalCNUMPredicate($includeProvisionalClearance = true, $tableAbbrv = null)
     {
         $predicate = !empty($tableAbbrv) ? $tableAbbrv . "." : null;
@@ -255,32 +274,23 @@ class personTable extends DbTable
         return $predicate;
     }
 
-    public static function normalCNUMPredicate($includeProvisionalClearance = true, $tableAbbrv = null)
-    {
-        $predicate = !empty($tableAbbrv) ? $tableAbbrv . "." : null;
-        $predicate .= "CNUM NOT LIKE '%XXX' ";
-        $predicate .= " AND ";
-        $predicate .= !empty($tableAbbrv) ? $tableAbbrv . "." : null;
-        $predicate .= "CNUM NOT LIKE '%xxx' ";
-        $predicate .= " AND ";
-        $predicate .= !empty($tableAbbrv) ? $tableAbbrv . "." : null;
-        $predicate .= "CNUM NOT LIKE '%999' ";
-        $predicate .= " AND ";
-        $predicate .= personTable::availableCNUMPredicate($includeProvisionalClearance, $tableAbbrv);
-        return $predicate;
-    }
-
-    public static function unavailableCNUMPredicate($includeProvisionalClearance = true, $tableAbbrv = null)
-    {
-        $predicate = !empty($tableAbbrv) ? $tableAbbrv . "." : null;
-        $predicate .= "CNUM LIKE '" . personRecord::NO_LONGER_AVAILABLE . "'";
-        return $predicate;
-    }
-
+    /*
+    * select available CNUM 
+    */
     public static function availableCNUMPredicate($includeProvisionalClearance = true, $tableAbbrv = null)
     {
         $predicate = !empty($tableAbbrv) ? $tableAbbrv . "." : null;
         $predicate .= "CNUM NOT LIKE '" . personRecord::NO_LONGER_AVAILABLE . "'";
+        return $predicate;
+    }
+
+    /*
+    * select unavailable CNUM 
+    */
+    public static function unavailableCNUMPredicate($includeProvisionalClearance = true, $tableAbbrv = null)
+    {
+        $predicate = !empty($tableAbbrv) ? $tableAbbrv . "." : null;
+        $predicate .= "CNUM LIKE '" . personRecord::NO_LONGER_AVAILABLE . "'";
         return $predicate;
     }
 

@@ -168,7 +168,7 @@ class personPortalReport extends DbTable
                 $preBoardersPredicate .= " AND (";
                 $preBoardersPredicate .= " (" . personTable::externalCNUMPredicate(true, 'P') . ")";
                 $preBoardersPredicate .= " AND NOT " . personTable::hasPreBoarderPredicate(true, 'P');
-                $preBoardersPredicate .= " OR (" . personTable::normalCNUMPredicate(true, 'P') . ")";
+                $preBoardersPredicate .= " OR (" . personTable::regularCNUMPredicate(true, 'P') . ")";
                 $preBoardersPredicate .= ")";
                 $preBoardersPredicate .= " AND " . personTable::notArchivedPersonPredicate(true, 'P');
                 break;
@@ -177,7 +177,7 @@ class personPortalReport extends DbTable
                 $preBoardersPredicate .= " AND (";
                 $preBoardersPredicate .= " (" . personTable::externalCNUMPredicate(true, 'P') . ")";
                 $preBoardersPredicate .= " AND NOT " . personTable::hasPreBoarderPredicate(true, 'P');
-                $preBoardersPredicate .= " OR (" . personTable::normalCNUMPredicate(true, 'P') . ")";
+                $preBoardersPredicate .= " OR (" . personTable::regularCNUMPredicate(true, 'P') . ")";
                 $preBoardersPredicate .= ")";
                 $preBoardersPredicate .= " AND " . personTable::activePersonPredicate(true, 'P');
                 break;

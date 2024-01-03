@@ -449,8 +449,10 @@ class personWithSubPRecord extends personRecord
         $preBoardersAvailable = count($availableFromPreBoarding) > 1 ? null : " disabled='disabled' ";
         $notEditable = $mode==FormClass::$modeEDIT ? ' disabled ' : null;
 
-        $availableForLinking = " PRE_BOARDED is null and " . personTable::normalCNUMPredicate();
-        $allNonLinkedKyndrylEmployees = $loader->loadIndexed('NOTES_ID','CNUM',allTables::$PERSON, $availableForLinking);
+        $availableForLinking = " PRE_BOARDED IS NULL ";
+        $availableForLinking .= " AND " . personTable::regularCNUMPredicate();
+        $availableForLinking .= " AND " . personTable::availableCNUMPredicate();
+        $allNonLinkedKyndrylEmployees = $loader->loadIndexed('NOTES_ID','CNUM', allTables::$PERSON, $availableForLinking);
 
         ?>
         <form id='linkingForm'  class="form-horizontal" onsubmit="return false;">
