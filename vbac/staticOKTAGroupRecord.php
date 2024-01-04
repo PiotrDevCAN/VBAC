@@ -56,7 +56,7 @@ class staticOKTAGroupRecord extends DbRecord
 			<div class='required'>
         		<label for="EMAIL_ADDRESS" class="col-md-2 control-label ceta-label-left" data-toggle="tooltip" data-placement="top" title="Email Address">Email Address</label>
         		<div class="col-md-6">
-        		<input class="form-control typeahead tt-input" id="EMAIL_ADDRESS" name="EMAIL_ADDRESS" value="<?=$this->EMAIL_ADDRESS?>" placeholder="Enter Email Address" required="required" type="text" >
+        		<input class="form-control typeaheadEmailId tt-input" id="EMAIL_ADDRESS" name="EMAIL_ADDRESS" value="<?=$this->EMAIL_ADDRESS?>" placeholder="Enter Email Address" required="required" type="text" >
         		<input id="originalEMAIL_ADDRESS" name="originalEMAIL_ADDRESS"
 					value="<?=$this->EMAIL_ADDRESS;?>" type="hidden">
 				<p id="IBMNotAllowed" style="display:none; color: CRIMSON">IBM / Ocean email address is no longer allowed.</p>
