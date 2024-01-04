@@ -2067,7 +2067,7 @@ class personTable extends DbTable
 
     public function deOffboarded($cnum, $workerId)
     {
-        if (!empty($cnum) && !empty($lbgLocation)) {
+        if (!empty($cnum) && !empty($workerId)) {
             $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
             // $sql .= " SET REVALIDATION_STATUS = TRIM(SUBSTRING(REVALIDATION_STATUS,12,LEN(REVALIDATION_STATUS))), REVALIDATION_DATE_FIELD = CAST( CURRENT_TIMESTAMP AS Date ), OFFBOARDED_DATE = null  ";
             $sql .= " SET REVALIDATION_STATUS = CASE
