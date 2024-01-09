@@ -23,8 +23,9 @@ spec:
         image: kyndryl.jfrog.io/uki-business-intelligence-prod-docker-local/vbac:latest
         resources:
           limits:
-            cpu: 500m
-            memory: 2Gi
+            # no cpu limit! this is excluded on purpose
+            # cpu: "1"
+            memory: 3Gi
           requests:
             cpu: 32m
             memory: 128Mi
