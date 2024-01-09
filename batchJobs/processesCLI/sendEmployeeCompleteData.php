@@ -9,7 +9,7 @@ use vbac\employeeCompleteTable;
 use vbac\reports\employeeComplete;
 
 set_time_limit(0);
-ini_set('memory_limit','2048M');
+ini_set('memory_limit','3072M');
 
 $_ENV['email'] = 'on';
 

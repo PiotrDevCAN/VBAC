@@ -8,7 +8,7 @@ use itdq\BlueMail;
 use vbac\reports\headcount;
 
 set_time_limit(0);
-ini_set('memory_limit','2048M');
+ini_set('memory_limit','3072M');
 
 $_ENV['email'] = 'on';
 
@@ -84,6 +84,7 @@ try {
         );
     }
 
+    $subject = 'Pre-release version of Headcount Report - NOTE: Mapped BAND info is eventually ENCLOSED: ' . $fileNameSuffix;
     $message = 'Please find attached Headcount Report XLS<br>';
     $message .= 'List of recent changes:<br>';
     $message .= '<ul>';
@@ -97,7 +98,7 @@ try {
     $message .= '<ul>';
     $message .= '<li>Missing UK Business Titles to Bands alignment</li>';
     $message .= '</ul>';
-    $result = BlueMail::send_mail($emailAddress, 'Pre-release version of Headcount Report - NOTE: Mapped BAND info is eventually ENCLOSED: ' . $fileNameSuffix, $message ,$noreplemailid, array(),array(),true,$attachments);    
+    $result = BlueMail::send_mail($emailAddress, $subject, $message ,$noreplemailid, array(),array(),true,$attachments);
     var_dump($result);
 
 } catch (Exception $e) {

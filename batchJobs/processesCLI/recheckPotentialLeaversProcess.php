@@ -16,7 +16,7 @@ error_reporting(E_ALL);
 AuditTable::audit("Potential Leavers re-check invoked.",AuditTable::RECORD_TYPE_REVALIDATION);
 
 set_time_limit(0);
-ini_set('memory_limit','2048M');
+ini_set('memory_limit','3072M');
 
 $personTable = new personTable(allTables::$PERSON);
 $loader = new Loader();

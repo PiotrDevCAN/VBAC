@@ -31,7 +31,7 @@ $odcAccessTable = new odcAccessTable(allTables::$ODC_ACCESS_LIVE);
 
 try {
     set_time_limit(0);
-    ini_set('memory_limit', '2048M');
+    ini_set('memory_limit', '3072M');
     
     $rs = $odcAccessTable->locationMismatch();
     

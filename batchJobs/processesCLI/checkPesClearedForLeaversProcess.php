@@ -10,7 +10,7 @@ use vbac\allTables;
 AuditTable::audit("Check for Leavers invoked.",AuditTable::RECORD_TYPE_REVALIDATION);
 
 set_time_limit(0);
-ini_set('memory_limit','2048M');
+ini_set('memory_limit','3072M');
 
 $personTable = new personTable(allTables::$PERSON);
 

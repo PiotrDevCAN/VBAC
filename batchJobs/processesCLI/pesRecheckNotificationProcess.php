@@ -7,7 +7,7 @@ use itdq\AuditTable;
 AuditTable::audit("PES Recheck email to PES Team - invoked.",AuditTable::RECORD_TYPE_DETAILS);
 
 set_time_limit(0);
-ini_set('memory_limit','2048M');
+ini_set('memory_limit','3072M');
 
 $timeMeasurements = array();
 $start = microtime(true);

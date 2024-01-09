@@ -81,7 +81,7 @@ if (isset($argv[1])) {
     $recordsFound = false;
     
     set_time_limit(0);
-    ini_set('memory_limit','2048M');
+    ini_set('memory_limit','3072M');
 
     try {
         $resultSet = $report->getReport($resultSetOnly);
