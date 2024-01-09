@@ -86,11 +86,68 @@ class personTable extends DbTable
         $this->loader = new Loader();
         
         if ($complex == true) {
-            $this->allDelegates = delegateTable::allDelegates();
+
+            $redis = $GLOBALS['redis'];
+
+            $key = 'getDelegates';
+            $redisKey = md5($key.'_key_'.$_ENV['environment']);
+            if (!$redis->get($redisKey)) {
+                $source = 'SQL Server';
+                
+                $data = delegateTable::allDelegates();
+                
+                $redis->set($redisKey, json_encode($data));
+                $redis->expire($redisKey, REDIS_EXPIRE);
+            } else {
+                $source = 'Redis Server';
+                $data = json_decode($redis->get($redisKey), true);
+            }
+            $this->allDelegates = $data;
+
+            $key = 'getOceanEmailIdByCnum';
+            $redisKey = md5($key.'_key_'.$_ENV['environment']);
+            if (!$redis->get($redisKey)) {
+                $source = 'SQL Server';
+                
+                $data = $this->loader->loadIndexed('EMAIL_ADDRESS', 'CNUM', allTables::$PERSON);
+                
+                $redis->set($redisKey, json_encode($data));
+                $redis->expire($redisKey, REDIS_EXPIRE);
+            } else {
+                $source = 'Redis Server';
+                $data = json_decode($redis->get($redisKey), true);
+            }
+            $this->allOceanEmailIdByCnum = $data;
             
-            $this->allOceanEmailIdByCnum = empty($this->allOceanEmailIdByCnum) ? $this->loader->loadIndexed('EMAIL_ADDRESS', 'CNUM', allTables::$PERSON) : $this->allOceanEmailIdByCnum;
-            $this->allKyndrylEmailIdByCnum = empty($this->allKyndrylEmailIdByCnum) ? $this->loader->loadIndexed('KYN_EMAIL_ADDRESS', 'CNUM', allTables::$PERSON) : $this->allKyndrylEmailIdByCnum;
-            $this->employeeTypeMapping = empty($this->employeeTypeMapping) ? $this->loader->loadIndexed('DESCRIPTION', 'CODE', allTables::$EMPLOYEE_TYPE_MAPPING) : $this->employeeTypeMapping;
+            $key = 'getKyndrylEmailIdByCnum';
+            $redisKey = md5($key.'_key_'.$_ENV['environment']);
+            if (!$redis->get($redisKey)) {
+                $source = 'SQL Server';
+                
+                $data = $this->loader->loadIndexed('KYN_EMAIL_ADDRESS', 'CNUM', allTables::$PERSON);
+                
+                $redis->set($redisKey, json_encode($data));
+                $redis->expire($redisKey, REDIS_EXPIRE);
+            } else {
+                $source = 'Redis Server';
+                $data = json_decode($redis->get($redisKey), true);
+            }
+            $this->allKyndrylEmailIdByCnum = $data;
+            
+            $key = 'getEmployeeTypeMapping';
+            $redisKey = md5($key.'_key_'.$_ENV['environment']);
+            if (!$redis->get($redisKey)) {
+                $source = 'SQL Server';
+                
+                $data = $this->loader->loadIndexed('DESCRIPTION', 'CODE', allTables::$EMPLOYEE_TYPE_MAPPING);
+                
+                $redis->set($redisKey, json_encode($data));
+                $redis->expire($redisKey, REDIS_EXPIRE);
+            } else {
+                $source = 'Redis Server';
+                $data = json_decode($redis->get($redisKey), true);
+            }
+            $this->employeeTypeMapping = $data;
 
             $this->thirtyDaysHence = new \DateTime();
             $this->thirtyDaysHence->add(new \DateInterval('P60D')); // Modified 4th July 2017

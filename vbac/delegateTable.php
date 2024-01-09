@@ -126,7 +126,7 @@ class delegateTable extends DbTable {
     }
 
     static function allDelegates(){
-        $sql = " SELECT distinct CNUM, DELEGATE_EMAIL ";
+        $sql = " SELECT DISTINCT CNUM, DELEGATE_EMAIL ";
         $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$DELEGATE ;
 
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
@@ -141,7 +141,6 @@ class delegateTable extends DbTable {
         while(($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC))==true){
 
             $allDelegates[$row['CNUM']][] = $row['DELEGATE_EMAIL'];
-            // = isset($allDelegates[$row['CNUM']]) ? array_merge($allDelegates[$row['CNUM']],array($row['DELEGATE_EMAIL'])) : $row['DELEGATE_EMAIL'] ;
         }
 
         return !empty($allDelegates) ? $allDelegates: false;
