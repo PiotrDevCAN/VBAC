@@ -8,8 +8,7 @@ ob_start();
 
 // session_start();
 
-// $personTable = new personPortalLiteTable(allTables::$PERSON_PORTAL_LITE);
-$personTable = new personPortalLiteTable(allTables::$PERSON);
+$personTable = new personPortalLiteTable(allTables::$PERSON, null, true, true);
 $preBoardersAction = isset($_REQUEST['preBoardersAction']) ? $_REQUEST['preBoardersAction'] : null;
 
 $dataAndSql = $personTable->returnAsArray($preBoardersAction);

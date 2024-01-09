@@ -80,20 +80,21 @@ class personTable extends DbTable
     . ",'" . personRecord::PES_STATUS_INITIATED . "'"
     . ",'" . personRecord::PES_STATUS_REMOVED . "'";
 
-    public function __construct($table, $pwd = null, $log = true)
+    public function __construct($table, $pwd = null, $log = true, $complex = false)
     {
         // $this->slack = new slack();
-
-        $this->allDelegates = delegateTable::allDelegates();
-        
         $this->loader = new Loader();
-        $this->allOceanEmailIdByCnum = empty($this->allOceanEmailIdByCnum) ? $this->loader->loadIndexed('EMAIL_ADDRESS', 'CNUM', allTables::$PERSON) : $this->allOceanEmailIdByCnum;
-        $this->allKyndrylEmailIdByCnum = empty($this->allKyndrylEmailIdByCnum) ? $this->loader->loadIndexed('KYN_EMAIL_ADDRESS', 'CNUM', allTables::$PERSON) : $this->allKyndrylEmailIdByCnum;
-        $this->employeeTypeMapping = empty($this->employeeTypeMapping) ? $this->loader->loadIndexed('DESCRIPTION', 'CODE', allTables::$EMPLOYEE_TYPE_MAPPING) : $this->employeeTypeMapping;
+        
+        if ($complex == true) {
+            $this->allDelegates = delegateTable::allDelegates();
+            
+            $this->allOceanEmailIdByCnum = empty($this->allOceanEmailIdByCnum) ? $this->loader->loadIndexed('EMAIL_ADDRESS', 'CNUM', allTables::$PERSON) : $this->allOceanEmailIdByCnum;
+            $this->allKyndrylEmailIdByCnum = empty($this->allKyndrylEmailIdByCnum) ? $this->loader->loadIndexed('KYN_EMAIL_ADDRESS', 'CNUM', allTables::$PERSON) : $this->allKyndrylEmailIdByCnum;
+            $this->employeeTypeMapping = empty($this->employeeTypeMapping) ? $this->loader->loadIndexed('DESCRIPTION', 'CODE', allTables::$EMPLOYEE_TYPE_MAPPING) : $this->employeeTypeMapping;
 
-        $this->thirtyDaysHence = new \DateTime();
-        $this->thirtyDaysHence->add(new \DateInterval('P60D')); // Modified 4th July 2017
-
+            $this->thirtyDaysHence = new \DateTime();
+            $this->thirtyDaysHence->add(new \DateInterval('P60D')); // Modified 4th July 2017
+        }
         parent::__construct($table, $pwd, $log);
     }
 

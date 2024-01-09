@@ -8,8 +8,8 @@ class personWithSubPTable extends personTable {
 
     protected $personSubPlatform;
 
-    function __construct($table,$pwd=null, $log=true){
-        parent::__construct($table,$pwd,$log);
+    function __construct($table, $pwd=null, $log=true, $complex=true){
+        parent::__construct($table, $pwd, $log, $complex);
 
         $sql = " SELECT * FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON_SUBPLATFORM;
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);

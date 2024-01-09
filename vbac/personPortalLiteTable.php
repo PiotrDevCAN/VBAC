@@ -6,8 +6,8 @@ use itdq\DbTable;
 
 class personPortalLiteTable extends personTable
 {
-    function __construct($table,$pwd=null,$log=true){
-        parent::__construct($table,$pwd,$log);
+    function __construct($table, $pwd=null, $log=true, $complex=true){
+        parent::__construct($table, $pwd, $log, $complex);
         unset($this->columns['FCNUM']); // Ignore this column, only there for the predicate for Func Mgrs.        
     }
     

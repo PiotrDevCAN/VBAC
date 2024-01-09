@@ -14,7 +14,7 @@ $rfStart = isset($_POST['rfStart']) ? $_POST['rfStart'] : null;
 $rfEnd   = isset($_POST['rfEnd']) ? $_POST['rfEnd'] : null;
 
 if(!empty($_POST['cnum'])){
-    $personTable->updateRfFlag($_POST['cnum'], $_POST['rfFlag'],$rfStart,$rfEnd);
+    $personTable->updateRfFlag($_POST['cnum'], $_POST['rfFlag'], $rfStart, $rfEnd);
 }
 
 $messages = ob_get_clean();

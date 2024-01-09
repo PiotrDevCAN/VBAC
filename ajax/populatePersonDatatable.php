@@ -77,7 +77,7 @@ $columnsFromQuery = array(
     // 'HAS_DELEGATES',
 );
 
-$personTable = new personTable(allTables::$PERSON);
+$personTable = new personTable(allTables::$PERSON, null, true, true);
 $personPortalReport = new personPortalReport(allTables::$PERSON);
 
 $preBoardersAction = isset($_REQUEST['preBoardersAction']) ? $_REQUEST['preBoardersAction'] : null;

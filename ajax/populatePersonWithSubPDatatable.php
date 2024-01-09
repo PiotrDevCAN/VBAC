@@ -9,7 +9,7 @@ ob_start();
 
 // session_start();
 
-$personTable = new personWithSubPTable(allTables::$PERSON);
+$personTable = new personWithSubPTable(allTables::$PERSON, null, true, true);
 $preBoardersAction = isset($_REQUEST['preBoardersAction']) ? $_REQUEST['preBoardersAction'] : null;
 
 $data = $personTable->returnAsArray($preBoardersAction);

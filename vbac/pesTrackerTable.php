@@ -539,7 +539,7 @@ class pesTrackerTable extends DbTable{
                 throw new \Exception('Unable to create blank Tracker record for ' . $cnum . ' ' . $workerId);
             }
 
-            return;
+            return true;
         }
         return false;
     }
