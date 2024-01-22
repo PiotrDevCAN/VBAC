@@ -44,30 +44,45 @@ class BlueMail
         
         $emailLogRecordID = null;
 
-        $cleanedTo = $to;
-        $cleanedCc = array_diff($cc, $cleanedTo, $bcc); // We can't CC/BCC someone already in the TO list.
-        $cleanedBcc = array_diff($bcc, $cleanedTo, $cleanedCc);
+        $to =  array_map('strtolower',array_map('strtolower',$to));
+        $cc =  array_map('strtolower',array_map('strtolower',$cc));
+        $bcc =  array_map('strtolower',array_map('strtolower',$bcc));
         
+        $cleanedTo  = array_unique($to);
+        $cleanedCc  = array_unique(array_diff($cc,$cleanedTo, $bcc)); // We can't CC/BCC someone already in the TO list.
+        $cleanedBcc = array_unique(array_diff($bcc,$cleanedTo,$cleanedCc));
+        
+        error_log('Subject:' . print_r($subject,true));
+        error_log('To:' . print_r($cleanedTo,true));
+        error_log('Cc:' . print_r($cleanedCc,true));
+        error_log('BCc:' . print_r($cleanedBcc,true));
+
         $status = '';
         $resp = true;
+
+        $response = array();
 
         $mail = new PHPMailer();
 
         foreach ($cleanedTo as $emailAddress){
             if(!empty(trim($emailAddress))){
                 $resp = $resp ? $mail->addAddress($emailAddress) : $resp;
+                error_log('Resp(to):' . print_r($resp,true));
+                error_log("ErrorInfo:" . $mail->ErrorInfo);
             }
         }
-        
         foreach ($cleanedCc as $emailAddress){
             if(!empty(trim($emailAddress))){
                 $resp = $resp ? $mail->addCC($emailAddress) : $resp;
+                error_log('Resp(Cc):' . print_r($resp,true));
+                error_log("ErrorInfo:" . $mail->ErrorInfo);
             }
         }
-        
         foreach ($cleanedBcc as $emailAddress){
             if(!empty(trim($emailAddress))){
                 $resp = $resp ? $mail->addBCC($emailAddress) : $resp;
+                error_log('Resp(Bcc):' . print_r($resp,true));
+                error_log("ErrorInfo:" . $mail->ErrorInfo);
             }
         }
         $mail->Subject = $subject;
@@ -95,6 +110,10 @@ class BlueMail
                 }
             }
         }
+        
+        error_log('Resp:' . print_r($resp,true));
+        error_log("ErrorInfo:" . $mail->ErrorInfo);
+        
         if ($resp) {
             switch (trim($_ENV['email'])) {
                 case 'dev':
@@ -104,7 +123,7 @@ class BlueMail
                     if (filter_var($_SESSION['ssoEmail'], FILTER_VALIDATE_EMAIL)) {
                         $localEmail = $_SESSION['ssoEmail'];
                     } else {
-                        $localEmail = ! empty($_ENV['devemailid']) ? $_ENV['devemailid'] : 'Piotr.Tajanowicz@kyndryl.com';
+                        $localEmail = ! empty($_ENV['devemailid']) ? $_ENV['devemailid'] : 'piotr.tajanowicz@kyndryl.com';
                     }
 
                     $recipient = $_ENV['email'] == 'user' ? $localEmail : $_ENV['devemailid'];
@@ -149,14 +168,17 @@ class BlueMail
                             'response' => 'Mailer error: ' . $mail->ErrorInfo
                         );
                         $status = 'error sending';
-                        throw new \Exception('Error trying to send email :' . $subject);
+                        throw new \Exception('Error trying to send email :' . $subject . ' ' . serialize($response));
                     } else {
                         $response = array(
                             'response' => 'Message has been sent.'
                         );
                         $status = 'sent';
                     }
-
+                    
+                    error_log('Response:' . print_r($response,true));
+                    error_log('ErrorInfo' . $mail->ErrorInfo);                    
+                    
                     $responseObject = json_encode($response);
                     if ($emailLogRecordID) {
                         self::updatelog($emailLogRecordID, $responseObject);
@@ -178,7 +200,19 @@ class BlueMail
                     }
                     break;
             }
+        } else {
+            $response = array(
+                'response' => "Problems adding addresses/attachements to the email",
+                'errorInfor'=> $mail->ErrorInfo
+            );
+            error_log("resp:" . $resp);
+            error_log("ErrorInfo:" . $mail->ErrorInfo);
         }
+        
+        error_log("respone:" . print_r($response,true));
+        error_log("status:" . $status);
+        error_log("ErrorInfo:" . $mail->ErrorInfo);
+        
         return array(
             'sendResponse' => $response, 
             'Status' => $status
@@ -219,6 +253,7 @@ class BlueMail
 
         !empty($cc)  ? $data[] = serialize($cc) : null;
         !empty($bcc) ? $data[] = serialize($bcc) : null;
+
         $preparedStatement = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
         $rs = sqlsrv_execute($preparedStatement);
 

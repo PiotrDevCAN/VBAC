@@ -176,7 +176,9 @@ $w3php = array(
 
 foreach ($site as $key => $value) {
     if (!is_array($value)) {
-        $value = trim($value);
+        if (!is_null($value)) {        
+            $value = trim($value);
+        }
     }
     $GLOBALS['site'][$key] = $value;
     $_SESSION[$key] = $value;
