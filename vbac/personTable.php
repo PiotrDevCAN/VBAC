@@ -213,6 +213,30 @@ class personTable extends DbTable
         return $select;
     }
 
+    public static function notOffboarded($includeProvisionalClearance = true, $tableAbbrv = null)
+    {
+        $predicate = " REVALIDATION_STATUS not like '" . personRecord::REVALIDATED_OFFBOARDED . "%'";
+        return $predicate;
+    }
+    
+    public static function offboarding($includeProvisionalClearance = true, $tableAbbrv = null)
+    {
+        $predicate = " REVALIDATION_STATUS like '" . personRecord::REVALIDATED_OFFBOARDING . "%'";
+        return $predicate;
+    }
+
+    public static function notOffboarding($includeProvisionalClearance = true, $tableAbbrv = null)
+    {
+        $predicate = " REVALIDATION_STATUS not like '" . personRecord::REVALIDATED_OFFBOARDING . "%'";
+        return $predicate;
+    }
+    
+    public static function offboarded($includeProvisionalClearance = true, $tableAbbrv = null)
+    {
+        $predicate = " REVALIDATION_STATUS like '" . personRecord::REVALIDATED_OFFBOARDED . "%'";
+        return $predicate;
+    }
+
     public static function activePersonPredicate($includeProvisionalClearance = true, $tableAbbrv = null)
     {
         $activePredicate = " ((( ";

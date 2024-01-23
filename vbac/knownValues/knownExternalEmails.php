@@ -10,7 +10,9 @@ class knownExternalEmails extends knownValues
     {
         $this->redisMainKey = 'getKnownExternalEmails';
         $this->loaderField = 'EMAIL_ADDRESS';
-        $this->predicate = personTable::externalCNUMPredicate();
+        $this->predicate = personTable::externalCNUMPredicate()
+        . ' AND ' . personTable::activePersonPredicate()
+        . ' AND ' . personTable::notOffboarded();
         parent::__construct();
     }
 }

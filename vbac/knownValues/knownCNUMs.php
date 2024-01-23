@@ -10,7 +10,9 @@ class knownCNUMs extends knownValues
     {
         $this->redisMainKey = 'getKnownCNUMs';
         $this->loaderField = 'CNUM';
-        $this->predicate = personTable::availableCNUMPredicate();
+        $this->predicate = personTable::availableCNUMPredicate()
+        . ' AND ' . personTable::activePersonPredicate()
+        . ' AND ' . personTable::notOffboarded();
         parent::__construct();
     }
 }

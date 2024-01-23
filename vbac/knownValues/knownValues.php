@@ -39,13 +39,13 @@ abstract class knownValues
     }
 
     function getData() {
-        if (!$this->redis->get($this->redisKey)) {
+        // if (!$this->redis->get($this->redisKey)) {
             $source = 'SQL Server';
             $data = $this->reloadCache();
-        } else {
-            $source = 'Redis Server';
-            $data = json_decode($this->redis->get($this->redisKey), true);
-        }  
+        // } else {
+        //     $source = 'Redis Server';
+        //     $data = json_decode($this->redis->get($this->redisKey), true);
+        // }  
         $return = array('data'=>$data, 'source'=>$source);
         return $return;
     }

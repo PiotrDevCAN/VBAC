@@ -10,7 +10,9 @@ class knownIBMEmails extends knownValues
     {
         $this->redisMainKey = 'getKnownIBMEMails';
         $this->loaderField = 'EMAIL_ADDRESS';
-        $this->predicate = personTable::regularCNUMPredicate();
+        $this->predicate = personTable::regularCNUMPredicate()
+        . ' AND ' . personTable::activePersonPredicate()
+        . ' AND ' . personTable::notOffboarded();
         parent::__construct();
     }
 }

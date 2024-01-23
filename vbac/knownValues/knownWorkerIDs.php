@@ -10,7 +10,9 @@ class knownWorkerIDs extends knownValues
     {
         $this->redisMainKey = 'getKnownWorkerIDs';
         $this->loaderField = 'WORKER_ID';
-        $this->predicate = personTable::normalWorkerIDPredicate();
+        $this->predicate = personTable::normalWorkerIDPredicate()
+        . ' AND ' . personTable::activePersonPredicate()
+        . ' AND ' . personTable::notOffboarded();
         parent::__construct();
     }
 }
