@@ -3,7 +3,7 @@ use itdq\JwtSecureSession;
 use itdq\Redis;
 
 function do_auth($group = null)
-{    
+{
     if(stripos($_ENV['environment'], 'local')) {
         $_SESSION['ssoEmail'] = $_ENV['SERVER_ADMIN'];
     } else {
@@ -29,6 +29,9 @@ function do_auth($group = null)
         }
     }
 }
+
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept');
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
