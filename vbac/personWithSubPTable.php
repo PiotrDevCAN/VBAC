@@ -1,6 +1,7 @@
 <?php
 namespace vbac;
 
+use itdq\Connection;
 use itdq\DbTable;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
@@ -42,7 +43,7 @@ class personWithSubPTable extends personTable {
         $personSubPlatform = array();
         $originalConnection = $GLOBALS['conn'];
 
-        include("connect.php");
+        $dbClient = new Connection();
 
         $sql = " SELECT * FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON_SUBPLATFORM;
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);

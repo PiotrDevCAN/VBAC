@@ -62,7 +62,7 @@ class BlueMail
 
         $response = array();
 
-        $mail = new PHPMailer();
+        $mail = $GLOBALS['mailer'];
 
         foreach ($cleanedTo as $emailAddress){
             if(!empty(trim($emailAddress))){
@@ -138,24 +138,7 @@ class BlueMail
                     // if (isset(AllItdqTables::$EMAIL_LOG)) {
                     //     $emailLogRecordID = self::prelog($to, $subject, $message, null, $cc, $bcc);
                     // }
-
-                    // $mail->SMTPDebug = SMTP::DEBUG_OFF; // Enable verbose debug output ; SMTP::DEBUG_OFF
-                    // $mail->isSMTP(); // Send using SMTP
-                    // $mail->Host = 'na.relay.ibm.com'; // Set the SMTP server to send through
-                    // $mail->SMTPAuth = false;
-                    // $mail->SMTPAutoTLS = false;
-                    // $mail->Port = 25;
-
-                    $mail->SMTPDebug = SMTP::DEBUG_OFF; // Enable verbose debug output ; SMTP::DEBUG_OFF
-                    $mail->isSMTP(); // Send using SMTP
-                    $mail->Host = $_ENV['smtp-server']; // Set the SMTP server to send through
-                    $mail->SMTPAuth = true;
-                    $mail->SMTPAutoTLS = true;
-                    $mail->SMTPSecure = 'ssl';
-                    $mail->Port = 465; // 25, 465, or 587
-                    $mail->Username = $_ENV['smtp-user-name'];             
-                    $mail->Password = $_ENV['smtp-user-pw']; 
-
+                    
                     $replyto = $_ENV['noreplyemailid'];
 
                     $mail->setFrom($replyto);

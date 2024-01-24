@@ -1,4 +1,6 @@
 <?php
+
+use itdq\Connection;
 use itdq\JwtSecureSession;
 
 error_log("Back from SSO");
@@ -24,4 +26,4 @@ error_log(__FILE__ . "jwt_token:" . $_ENV['jwt_token']);
 error_log(__FILE__ . "session ID:" . session_id());
 error_log(__FILE__ . "session:" . print_r($_SESSION,true));
 
-include "connect.php";
+$dbClient = new Connection();

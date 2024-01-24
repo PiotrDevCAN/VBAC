@@ -2,7 +2,8 @@ function initiatePes(cnum, workerId, table) {
 	var $this = this;
 	$.ajax({
 		crossDomain: true,
-		url: "ajax/initiatePes.php",
+		// url: "ajax/initiatePes.php",
+		url: "ajax/initiate.php",
 		data: {
 			cnum: cnum,
 			workerid: workerId

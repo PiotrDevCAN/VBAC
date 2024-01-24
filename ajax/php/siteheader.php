@@ -1,5 +1,8 @@
 <?php
+
+use itdq\Connection;
 use itdq\JwtSecureSession;
+use itdq\Mailer;
 use itdq\Redis;
 
 function do_auth($group = null)
@@ -39,6 +42,8 @@ ini_set('display_startup_errors', 1);
 ini_set('memory_limit', '3072M');
 ini_set('max_execution_time', 360);
 
+// https://blog.programster.org/php-error-and-exception-handling
+
 error_reporting(E_ALL);
 
 date_default_timezone_set('UTC');
@@ -56,11 +61,14 @@ include_once ('../php/w3config.php');
 
 require_once("../php/errorHandlers.php");
 
+// trigger_error handler
 set_error_handler('myErrorHandler');
-register_shutdown_function('fatalErrorShutdownHandler');
 
-$GLOBALS['Db2Schema'] = strtoupper($_ENV['environment']);
-$GLOBALS['Db2Schema'] = str_replace('_LOCAL', '', $GLOBALS['Db2Schema']);
+// Exception handler
+set_exception_handler('myExceptionHandler');
+
+// Fatal Shutdown handler
+register_shutdown_function('fatalErrorShutdownHandler');
 
 $sessionConfig = (new \ByJG\Session\SessionConfig($_SERVER['SERVER_NAME']))
 ->withTimeoutMinutes(120)
@@ -73,5 +81,6 @@ $handler = new JwtSecureSession($sessionConfig);
 // session_start();
 error_log(__FILE__ . "session:" . session_id());
 // do_auth();
-include "connect.php";
+$dbClient = new Connection();
 $redisClient = new Redis();
+$mailerClient = new Mailer();

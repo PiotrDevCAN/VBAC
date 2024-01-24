@@ -45,13 +45,10 @@ try {
     $pesRequest->sendPesRequest($person);
     PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true,true);
 
-    // $success = $table->setPesRequested($cnum, $workerId, $_SESSION['ssoEmail']);
-    $success = false;
+    $success = $table->setPesRequested($cnum, $workerId, $_SESSION['ssoEmail']);
 
-    // echo $success ? "PES Check initiated" : "Problem Initiating PES check";
-    echo "Due to technical issues the functionality is under tests";
+    echo $success ? "PES Check initiated" : "Problem Initiating PES check";
     PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true,true);
-
 } catch (Exception $e) {
     echo $e->getCode();
     echo $e->getMessage();

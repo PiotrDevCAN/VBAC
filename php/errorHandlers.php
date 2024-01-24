@@ -1,11 +1,10 @@
 <?php
 
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
-use PHPMailer\PHPMailer\Exception;
+function sendErrorNotification($response = array()) {
 
-function myErrorHandler($code, $message, $file, $line) {
-    $mailError = new PHPMailer();
+    $code = $response['error_code'];
+
+    $mailError = $GLOBALS['mailer'];
     // We're in DEV mode for emails - override the recipients.
     // But if we're in "batch" mode, the ssoEmail doesn't contain a valid email address, so send it to devemailid or me.
     if (isSet($_SESSION['ssoEmail']) && filter_var($_SESSION['ssoEmail'], FILTER_VALIDATE_EMAIL)) {
@@ -20,24 +19,6 @@ function myErrorHandler($code, $message, $file, $line) {
     $mailError->clearCCs();
     $mailError->clearBCCs();
 
-    // $mailError->SMTPDebug = SMTP::DEBUG_OFF; // Enable verbose debug output ; SMTP::DEBUG_OFF
-    // $mailError->isSMTP(); // Send using SMTP
-    // $mailError->Host = 'na.relay.ibm.com'; // Set the SMTP server to send through
-    // $mailError->SMTPAuth = false;
-    // $mailError->SMTPAutoTLS = false;
-    // $mailError->Port = 25;
-    // $replyto = $_ENV['noreplyemailid'];
-
-    $mailError->SMTPDebug = SMTP::DEBUG_OFF; // Enable verbose debug output ; SMTP::DEBUG_OFF
-    $mailError->isSMTP(); // Send using SMTP
-    $mailError->Host = $_ENV['smtp-server']; // Set the SMTP server to send through
-    $mailError->SMTPAuth = true;
-    $mailError->SMTPAutoTLS = true;
-    $mailError->SMTPSecure = 'ssl';
-    $mailError->Port = 465; // 25, 465, or 587
-    $mailError->Username = $_ENV['smtp-user-name'];             
-    $mailError->Password = $_ENV['smtp-user-pw']; 
-
     $replyto = $_ENV['noreplyemailid'];
     $mailError->setFrom($replyto);
     $mailError->isHTML(true);
@@ -46,7 +27,7 @@ function myErrorHandler($code, $message, $file, $line) {
     switch($code) {
         case E_ERROR:
             // fatal error
-            $subject = "**" . $_ENV['environment'] . "**" . 'Error has occurred while running PHP script';
+            $subject = "**" . $_ENV['environment'] . "**" . 'Fatal Error has occurred while running PHP script';
             break;
         case E_USER_ERROR:
             $subject = "**" . $_ENV['environment'] . "**" . 'User Error has occurred while running PHP script';
@@ -65,22 +46,38 @@ function myErrorHandler($code, $message, $file, $line) {
             break;
     }
     $mailError->Subject = $subject;
+    $mailError->Body = serialize($response);
+    if (!$mailError->send()) {
+    
+    } else {
 
-    $response = array(
-        'code' => $code, 
-        'message' => $message, 
+    }
+}
+
+function myExceptionHandler(Throwable $e) {
+    $output = array(
+        'error_code' => $e->getCode(), 
+        'error_string' => $e->getMessage(),
+        'file' => $e->getFile(),
+        'line' => $e->getLine()
+    );
+    sendErrorNotification($output);
+}
+
+function myErrorHandler($code = null, $message = null, $file = null, $line = null, $context = null) {
+    $output = array(
+        'error_code' => $code, 
+        'error_string' => $message, 
         'file' => $file, 
         'line' => $line
     );
-    $mailError->Body = serialize($response);
-    if (!$mailError->send()) {
-            
-    }
+    sendErrorNotification($output);
 }
 
 function fatalErrorShutdownHandler() {
     $last_error = error_get_last();
     if (!is_null($last_error)) {
+        // print "Looks like there was an error: " . print_r($last_error, true) . PHP_EOL;
         switch($last_error['type']) {
             case E_ERROR:
                 // fatal error
@@ -89,5 +86,8 @@ function fatalErrorShutdownHandler() {
             default:
                 break;
         }  
+    } else {
+        // normal shutdown without an error
+        // print "Running a normal shutdown without error." . PHP_EOL;
     }
 }

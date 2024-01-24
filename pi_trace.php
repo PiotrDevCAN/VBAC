@@ -5,13 +5,13 @@ use itdq\AllItdqTables;
 use itdq\TraceControlRecord;
 use dpulse\AllTables;
 use dpulse\accountManagementList;
+use itdq\Connection;
 
 $csv = null;
 $excel = null;
 
 $country = 'E4';
-include_once 'connect.php';
-
+$dbClient = new Connection();
 
 do_auth($_SESSION['cdiBgAz']);
 

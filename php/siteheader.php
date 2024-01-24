@@ -4,7 +4,9 @@
 // ** session_cache_limiter('private');
 // ** for fpdf http://www.fpdf.org/ download of pdf files in https;
 
+use itdq\Connection;
 use itdq\JwtSecureSession;
+use itdq\Mailer;
 use itdq\Redis;
 use PhpOffice\PhpSpreadsheet\Helper\Sample;
 
@@ -314,7 +316,13 @@ if (isset($_SERVER['HTTP_USER_AGENT']) && !empty($_SERVER['HTTP_USER_AGENT'])) {
 
     require_once("php/errorHandlers.php");
 
+    // trigger_error handler
     set_error_handler('myErrorHandler');
+
+    // Exception handler
+    set_exception_handler('myExceptionHandler');
+
+    // Fatal Shutdown handler
     register_shutdown_function('fatalErrorShutdownHandler');
 
     date_default_timezone_set('UTC');
@@ -337,8 +345,6 @@ if (isset($_SERVER['HTTP_USER_AGENT']) && !empty($_SERVER['HTTP_USER_AGENT'])) {
         // exit('ob_html_compress 2');
     }
 
-    $GLOBALS['Db2Schema'] = strtoupper($_ENV['environment']);
-    $GLOBALS['Db2Schema'] = str_replace('_LOCAL', '', $GLOBALS['Db2Schema']);
     $https = (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == "on");
 
     // global var and config file
@@ -384,11 +390,15 @@ if (isset($_SERVER['HTTP_USER_AGENT']) && !empty($_SERVER['HTTP_USER_AGENT'])) {
     
     $elapsed = microtime(true);
     error_log("Pre connect:" . (float)($elapsed-$start));
-    include ('connect.php');
+    $dbClient = new Connection();
     
     $elapsed = microtime(true);
     error_log("Pre Redis:" . (float)($elapsed-$start));
     $redisClient = new Redis();
+
+    $elapsed = microtime(true);
+    error_log("Pre Mailer:" . (float)($elapsed-$start));
+    $mailerClient = new Mailer();
     
     /*
     $twigLoader = new \Twig\Loader\FilesystemLoader('./templates');

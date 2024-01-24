@@ -1,5 +1,8 @@
 <?php
+
+use itdq\Connection;
 use itdq\JwtSecureSession;
+use itdq\Mailer;
 use itdq\Redis;
 
 ini_set('display_errors', 1);
@@ -26,7 +29,13 @@ include ('splClassLoader.php');
 
 require_once("../php/errorHandlers.php");
 
+// trigger_error handler
 set_error_handler('myErrorHandler');
+
+// Exception handler
+set_exception_handler('myExceptionHandler');
+
+// Fatal Shutdown handler
 register_shutdown_function('fatalErrorShutdownHandler');
 
 $sessionConfig = (new \ByJG\Session\SessionConfig($_SERVER['SERVER_NAME']))
@@ -40,9 +49,7 @@ error_log(__FILE__ . "session:" . session_id());
 
 $token = $_ENV['api_token'];
 
-$GLOBALS['Db2Schema'] = strtoupper($_ENV['environment']);
-$GLOBALS['Db2Schema'] = str_replace('_LOCAL', '', $GLOBALS['Db2Schema']);
-
 $_SESSION['ssoEmail'] = empty($_SESSION['ssoEmail']) ? 'API Invocation' : $_SESSION['ssoEmail'];
-include "connect.php";
+$dbClient = new Connection();
 $redisClient = new Redis();
+$mailerClient = new Mailer();

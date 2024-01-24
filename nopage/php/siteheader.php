@@ -1,4 +1,7 @@
 <?php
+
+use itdq\Connection;
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 
@@ -13,4 +16,4 @@ include "vendor/autoload.php";
 include "splClassLoader.php";
 session_start();
 
-include "connect.php";
+$dbClient = new Connection();

@@ -5,7 +5,7 @@
 // # these settings control aspects of the site
 // # content (look and feel)
 $_SESSION['SITE_NAME'] = 'rest';
-$_SESSION['country'] = 'E4'; // Used in Connect.php
+$_SESSION['country'] = 'E4';
 
 if(!isset($_ENV['environment'])){
     echo "<pre>";

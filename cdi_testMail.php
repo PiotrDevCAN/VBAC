@@ -36,37 +36,6 @@ $message = '<table width="100%" border="0"   cellpadding="0">
 
 echo "<div class='container'>";
 
-// phpinfo();
-
-// $mail = new PHPMailer();
-
-// $mail->SMTPDebug = SMTP::DEBUG_OFF;                    // Enable verbose debug output ; SMTP::DEBUG_OFF
-// $mail->isSMTP();                                       // Send using SMTP
-// $mail->Host       = '9.57.199.108';                    // Set the SMTP server to send through
-// $mail->SMTPAuth = false;
-// $mail->SMTPAutoTLS = false;
-// $mail->Port       = 25;
-
-
-// $mail->setFrom('Piotr.Tajanowicz@kyndryl.com', 'Piotr Tajanowicz');
-// $mail->addAddress('Piotr.Tajanowicz@kyndryl.com', 'Another Piotr');
-// $mail->isHTML(true);
-
-// $mail->Subject  = 'First HTML Message';
-// $mail->Body     = $message;
-// $mail->AltBody  = 'Your mail client can\'t handle HTML';
-
-// echo "<br/><br/><br/><br/><br/>";
-// echo "<p> About to show response</p>";
-
-
-// if(!$mail->send()) {
-//     echo 'Message was not sent.';
-//     echo 'Mailer error: ' . $mail->ErrorInfo;
-// } else {
-//     echo 'Message has been sent.';
-// }
-
 $to[] = 'Piotr.Tajanowicz@kyndryl.com';
 $to[] = 'Piotr.Tajanowicz@kyndryl.com';
 // $response = BlueMail::send_mail($to, 'Testing new SendMail', '<h1>Some text</h1><p>Well this is, that was header</p>', 'vbac@noReply.co.uk');
@@ -74,14 +43,4 @@ $response = BlueMail::send_mail($to, 'Test', '<h1>Testing 1 2 3</h1>', 'vbac@noR
 
 var_dump($response);
 echo "<p> response above </p>";
-
-
-
 echo "</div>";
-
-// $person = new personRecord();
-
-// $person->sendPesRequest();
-
-
-
