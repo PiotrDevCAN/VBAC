@@ -1,14 +1,14 @@
 function initiatePes(cnum, workerId, table) {
 	var $this = this;
 	$.ajax({
-		crossDomain: true,
-		// url: "ajax/initiatePes.php",
-		url: "ajax/initiate.php",
+		type: "POST",
+		url: "ajax/initiatePes.php",
 		data: {
 			cnum: cnum,
 			workerid: workerId
 		},
-		type: "POST",
+		dataType: 'json',
+		encode: true,
 		success: function (result) {
 			var resultObj = JSON.parse(result);
 			$(document).on('hidden.bs.modal', '#savingBoardingDetailsModal', function () {
