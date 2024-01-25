@@ -20,21 +20,22 @@ PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true);
 
 try {
 
-    // // Takes raw data from the request
-    // $json = file_get_contents('php://input');
+    // Takes raw data from the request
+    $json = file_get_contents('php://input');
 
-    // // Converts it into a PHP object
-    // $data = json_decode($json, true);
+    // Converts it into a PHP object
+    $data = json_decode($json, true);
 
-    // $cnum = isset($data['cnum']) ? $data['cnum'] : null;
-    // $workerId = isset($data['workerid']) ? $data['workerid'] : null;
+    $cnum = isset($data['cnum']) ? $data['cnum'] : null;
+    $workerId = isset($data['workerid']) ? $data['workerid'] : null;
 
-    // if (!$cnum) {
-    //     throw new \Exception('No CNUM provided in ' . __METHOD__);
-    // }
-    // if (!$workerId) {
-    //     throw new \Exception('No WORKER ID provided in ' . __METHOD__);
-    // }
+    if (!$cnum) {
+        throw new \Exception('No CNUM provided in ' . __METHOD__);
+    }
+    if (!$workerId) {
+        throw new \Exception('No WORKER ID provided in ' . __METHOD__);
+    }
+    echo 'PARAMETERS EXIST';
 
     // $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER);
     // $return = $pesTracker->createNewTrackerRecord($cnum, $workerId);
