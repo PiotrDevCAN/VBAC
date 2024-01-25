@@ -16,12 +16,18 @@ AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_POST,
 
 $personData = array();
 
-PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true,true);
+PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true);
 
 try {
 
-    $cnum = isset($_POST['cnum']) ? $_POST['cnum'] : null;
-    $workerId = isset($_POST['workerid']) ? $_POST['workerid'] : null;
+    // Takes raw data from the request
+    $json = file_get_contents('php://input');
+
+    // Converts it into a PHP object
+    $data = json_decode($json, true);
+
+    $cnum = isset($data['cnum']) ? $data['cnum'] : null;
+    $workerId = isset($data['workerid']) ? $data['workerid'] : null;
 
     if (!$cnum) {
         throw new \Exception('No CNUM provided in ' . __METHOD__);
@@ -29,26 +35,27 @@ try {
     if (!$workerId) {
         throw new \Exception('No WORKER ID provided in ' . __METHOD__);
     }
+
     $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER);
     $return = $pesTracker->createNewTrackerRecord($cnum, $workerId);
-    PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true,true);
+    PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true);
 
     $table = new personTable(allTables::$PERSON);
     $personData = $table->getWithPredicate(" CNUM='" . trim($cnum) . "' AND WORKER_ID='" . trim($workerId) . "' ");
-    PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true,true);
+    PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true);
     
     $person = new personRecord();
     $person->setFromArray($personData);
-    PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true,true);
+    PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true);
 
     $pesRequest = new pesRequestEmail();
     $pesRequest->sendPesRequest($person);
-    PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true,true);
+    PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true);
 
     $success = $table->setPesRequested($cnum, $workerId, $_SESSION['ssoEmail']);
 
     echo $success ? "PES Check initiated" : "Problem Initiating PES check";
-    PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true,true);
+    PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true);
 } catch (Exception $e) {
     echo $e->getCode();
     echo $e->getMessage();

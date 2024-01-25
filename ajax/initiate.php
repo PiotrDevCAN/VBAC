@@ -22,8 +22,14 @@ PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true);
 
 try {
 
-    $cnum = isset($_POST['cnum']) ? $_POST['cnum'] : null;
-    $workerId = isset($_POST['workerid']) ? $_POST['workerid'] : null;
+    // Takes raw data from the request
+    $json = file_get_contents('php://input');
+
+    // Converts it into a PHP object
+    $data = json_decode($json, true);
+
+    $cnum = isset($data['cnum']) ? $data['cnum'] : null;
+    $workerId = isset($data['workerid']) ? $data['workerid'] : null;
 
     if (!$cnum) {
         throw new \Exception('No CNUM provided in ' . __METHOD__);
@@ -32,27 +38,27 @@ try {
         throw new \Exception('No WORKER ID provided in ' . __METHOD__);
     }
 
-    $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER);
-    $return = $pesTracker->createNewTrackerRecord($cnum, $workerId);
-    PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true);
+    // $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER);
+    // $return = $pesTracker->createNewTrackerRecord($cnum, $workerId);
+    // PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true);
 
-    $table = new personTable(allTables::$PERSON);
-    $personData = $table->getWithPredicate(" CNUM='" . trim($cnum) . "' AND WORKER_ID='" . trim($workerId) . "' ");
-    PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true);
+    // $table = new personTable(allTables::$PERSON);
+    // $personData = $table->getWithPredicate(" CNUM='" . trim($cnum) . "' AND WORKER_ID='" . trim($workerId) . "' ");
+    // PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true);
     
-    $person = new personRecord();
-    $person->setFromArray($personData);
-    PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true);
+    // $person = new personRecord();
+    // $person->setFromArray($personData);
+    // PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true);
 
-    $pesRequest = new pesRequestEmail();
-    $pesRequest->sendPesRequest($person);
-    PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true);
+    // $pesRequest = new pesRequestEmail();
+    // $pesRequest->sendPesRequest($person);
+    // PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true);
 
-    $success = $table->setPesRequested($cnum, $workerId, $_SESSION['ssoEmail']);
+    // $success = $table->setPesRequested($cnum, $workerId, $_SESSION['ssoEmail']);
     $success = true;
 
-    echo $success ? "PES Check initiated" : "Problem Initiating PES check";
-    // echo "Due to technical issues the functionality is under tests";
+    // echo $success ? "PES Check initiated" : "Problem Initiating PES check";
+    echo "Due to technical issues the functionality is under tests";
     PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true);
 
 } catch (Exception $e) {

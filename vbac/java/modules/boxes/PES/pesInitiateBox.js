@@ -5,7 +5,8 @@
  */
 
 let box = await cacheBustImport('./modules/boxes/box.js');
-let initiatePes = await cacheBustImport('./modules/functions/initiatePes.js');
+// let initiatePes = await cacheBustImport('./modules/functions/initiatePes.js');
+let initiatePes = await cacheBustImport('./modules/functions/initiatePesFetch.js');
 
 class pesInitiateBox extends box {
 
@@ -35,7 +36,7 @@ class pesInitiateBox extends box {
                 var cnum = $($this.child.cnumFieldId).val();
                 var workerId = $($this.child.workerIdFieldId).val();
             }
-            initiatePes(cnum, workerId);
+            initiatePes(cnum, workerId, $this.table);
         });
     }
 }
