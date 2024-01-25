@@ -12,7 +12,7 @@ ob_start();
 ini_set('display_errors',1);
 ini_set('display_startup_errors',1);
 
-// AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_POST,true) . "</b>",AuditTable::RECORD_TYPE_DETAILS);
+AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_POST,true) . "</b>",AuditTable::RECORD_TYPE_DETAILS);
 
 $personData = array();
 
@@ -35,26 +35,24 @@ try {
     if (!$workerId) {
         throw new \Exception('No WORKER ID provided in ' . __METHOD__);
     }
-    echo 'PARAMETERS EXIST';
 
-    // $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER);
-    // $return = $pesTracker->createNewTrackerRecord($cnum, $workerId);
-    // PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true);
+    $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER);
+    $return = $pesTracker->createNewTrackerRecord($cnum, $workerId);
+    PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true);
 
-    // $table = new personTable(allTables::$PERSON);
-    // $personData = $table->getWithPredicate(" CNUM='" . trim($cnum) . "' AND WORKER_ID='" . trim($workerId) . "' ");
-    // PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true);
+    $table = new personTable(allTables::$PERSON);
+    $personData = $table->getWithPredicate(" CNUM='" . trim($cnum) . "' AND WORKER_ID='" . trim($workerId) . "' ");
+    PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true);
     
-    // $person = new personRecord();
-    // $person->setFromArray($personData);
-    // PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true);
+    $person = new personRecord();
+    $person->setFromArray($personData);
+    PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true);
 
-    // $pesRequest = new pesRequestEmail();
-    // $pesRequest->sendPesRequest($person);
-    // PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true);
+    $pesRequest = new pesRequestEmail();
+    $pesRequest->sendPesRequest($person);
+    PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true);
 
-    // $success = $table->setPesRequested($cnum, $workerId, $_SESSION['ssoEmail']);
-    $success = false;
+    $success = $table->setPesRequested($cnum, $workerId, $_SESSION['ssoEmail']);
 
     echo $success ? "PES Check initiated" : "Problem Initiating PES check";
     PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true);
