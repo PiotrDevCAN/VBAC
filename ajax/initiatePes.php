@@ -12,7 +12,7 @@ ob_start();
 ini_set('display_errors',1);
 ini_set('display_startup_errors',1);
 
-AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_POST,true) . "</b>",AuditTable::RECORD_TYPE_DETAILS);
+// AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_POST,true) . "</b>",AuditTable::RECORD_TYPE_DETAILS);
 
 $personData = array();
 
