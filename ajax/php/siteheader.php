@@ -4,6 +4,7 @@ use itdq\Connection;
 use itdq\JwtSecureSession;
 use itdq\Mailer;
 use itdq\Redis;
+// use itdq\WorkerAPI;
 
 function do_auth($group = null)
 {
@@ -81,6 +82,8 @@ $handler = new JwtSecureSession($sessionConfig);
 // session_start();
 error_log(__FILE__ . "session:" . session_id());
 // do_auth();
+$_SESSION['ssoEmail'] = $_ENV['SERVER_ADMIN'];
 $dbClient = new Connection();
 $redisClient = new Redis();
 $mailerClient = new Mailer();
+// $workerAPIClient = new WorkerAPI();
