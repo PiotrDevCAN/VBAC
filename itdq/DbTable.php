@@ -1324,10 +1324,9 @@ class DbTable {
         $pred = $this->buildKeyPredicate($record);
         $sql = $select . " WHERE " . $pred;
         Trace::traceVariable($sql, __METHOD__);
-        $stmt = sqlsrv_prepare( $GLOBALS['conn'], $sql );
-        $rs = sqlsrv_execute($stmt);
+        $rs = sqlsrv_query( $GLOBALS['conn'], $sql);
         if ($rs) {
-            $row = sqlsrv_fetch_array($stmt);
+            $row = sqlsrv_fetch_array($rs);
         } else {
             $row = null;
         }
@@ -1346,11 +1345,9 @@ class DbTable {
         Trace::traceVariable($predicate, __METHOD__);
         $sql = "SELECT * FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName . " WHERE " . $predicate;
         Trace::traceVariable($sql, __METHOD__);
-        // $stmt = sqlsrv_prepare( $GLOBALS['conn'], $sql );
-        // $rs = sqlsrv_execute($stmt);
         $rs = sqlsrv_query( $GLOBALS['conn'], $sql);
         if ($rs) {
-            $result = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
+            $result = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
         } else {
             return false;
         }
