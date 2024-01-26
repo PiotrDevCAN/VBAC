@@ -12,13 +12,13 @@ ob_start();
 ini_set('display_errors',1);
 ini_set('display_startup_errors',1);
 
-// AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_POST,true) . "</b>",AuditTable::RECORD_TYPE_DETAILS);
+AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_POST,true) . "</b>",AuditTable::RECORD_TYPE_DETAILS);
 
 $personData = array();
 
 PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true);
 
-// try {
+try {
 
     // Takes raw data from the request
     $json = file_get_contents('php://input');
@@ -48,20 +48,19 @@ PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true);
     $person->setFromArray($personData);
     PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true);
 
-    // $pesRequest = new pesRequestEmail();
-    // $pesRequest->sendPesRequest($person);
-    // PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true);
+    $pesRequest = new pesRequestEmail();
+    $pesRequest->sendPesRequest($person);
+    PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true);
 
-    // $success = $table->setPesRequested($cnum, $workerId, $_SESSION['ssoEmail']);
-    $success = false;
+    $success = $table->setPesRequested($cnum, $workerId, $_SESSION['ssoEmail']);
 
     echo $success ? "PES Check initiated" : "Problem Initiating PES check";
     PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true);
-// } catch (Exception $e) {
-//     echo $e->getCode();
-//     echo $e->getMessage();
-//     $success = false;
-// }
+} catch (Exception $e) {
+    echo $e->getCode();
+    echo $e->getMessage();
+    $success = false;
+}
 
 $messages = ob_get_clean();
 ob_start();

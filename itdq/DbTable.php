@@ -1346,8 +1346,9 @@ class DbTable {
         Trace::traceVariable($predicate, __METHOD__);
         $sql = "SELECT * FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName . " WHERE " . $predicate;
         Trace::traceVariable($sql, __METHOD__);
-        $stmt = sqlsrv_prepare( $GLOBALS['conn'], $sql );
-        $rs = sqlsrv_execute($stmt);
+        // $stmt = sqlsrv_prepare( $GLOBALS['conn'], $sql );
+        // $rs = sqlsrv_execute($stmt);
+        $rs = sqlsrv_query( $GLOBALS['conn'], $sql);
         if ($rs) {
             $result = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
         } else {
