@@ -18,7 +18,7 @@ $personData = array();
 
 PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true);
 
-try {
+// try {
 
     // Takes raw data from the request
     $json = file_get_contents('php://input');
@@ -40,13 +40,13 @@ try {
     $return = $pesTracker->createNewTrackerRecord($cnum, $workerId);
     PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true);
 
-    // $table = new personTable(allTables::$PERSON);
-    // $personData = $table->getWithPredicate(" CNUM='" . trim($cnum) . "' AND WORKER_ID='" . trim($workerId) . "' ");
-    // PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true);
+    $table = new personTable(allTables::$PERSON);
+    $personData = $table->getWithPredicate(" CNUM='" . trim($cnum) . "' AND WORKER_ID='" . trim($workerId) . "' ");
+    PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true);
     
-    // $person = new personRecord();
-    // $person->setFromArray($personData);
-    // PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true);
+    $person = new personRecord();
+    $person->setFromArray($personData);
+    PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true);
 
     // $pesRequest = new pesRequestEmail();
     // $pesRequest->sendPesRequest($person);
@@ -57,11 +57,11 @@ try {
 
     echo $success ? "PES Check initiated" : "Problem Initiating PES check";
     PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true);
-} catch (Exception $e) {
-    echo $e->getCode();
-    echo $e->getMessage();
-    $success = false;
-}
+// } catch (Exception $e) {
+//     echo $e->getCode();
+//     echo $e->getMessage();
+//     $success = false;
+// }
 
 $messages = ob_get_clean();
 ob_start();
