@@ -1,7 +1,7 @@
 <?php
 
 use itdq\AuditTable;
-use vbac\cbnEmail;
+use vbac\emails\cbnEmail;
 
 AuditTable::audit('CBN Initiated',AuditTable::RECORD_TYPE_AUDIT);
 

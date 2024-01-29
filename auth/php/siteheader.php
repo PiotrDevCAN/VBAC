@@ -2,7 +2,7 @@
 
 use itdq\JwtSecureSession;
 use itdq\Connection;
-use itdq\WorkerAPI;
+// use itdq\WorkerAPI;
 
 error_log("Back from SSO");
 ini_set('display_errors', 1);
@@ -28,4 +28,4 @@ error_log(__FILE__ . "session ID:" . session_id());
 error_log(__FILE__ . "session:" . print_r($_SESSION,true));
 
 $dbClient = new Connection();
-$workerAPIClient = new WorkerAPI();
+// $workerAPIClient = new WorkerAPI();
