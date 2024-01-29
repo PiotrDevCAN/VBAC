@@ -54,4 +54,4 @@ $_SESSION['ssoEmail'] = empty($_SESSION['ssoEmail']) ? 'API Invocation' : $_SESS
 $dbClient = new Connection();
 $redisClient = new Redis();
 $mailerClient = new Mailer();
-$workerAPIClient = new WorkerAPI();
+// $workerAPIClient = new WorkerAPI();

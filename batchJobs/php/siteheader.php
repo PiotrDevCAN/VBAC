@@ -2,6 +2,8 @@
 
 //use ByJG\Session\JwtSession;
 use itdq\Connection;
+use itdq\Mailer;
+use itdq\Redis;
 use itdq\WorkerAPI;
 
 ini_set('display_errors', 1);
@@ -45,6 +47,8 @@ if (session_status() == PHP_SESSION_NONE) {
 
 include "php/w3config.php";
 $dbClient = new Connection();
-$workerAPIClient = new WorkerAPI();
+$mailerClient = new Mailer();
+$redisClient = new Redis();
+// $workerAPIClient = new WorkerAPI();
 
 $_SESSION['ssoEmail'] = 'Scheduled Job';

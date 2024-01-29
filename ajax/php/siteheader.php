@@ -86,4 +86,4 @@ $_SESSION['ssoEmail'] = $_ENV['SERVER_ADMIN'];
 $dbClient = new Connection();
 $redisClient = new Redis();
 $mailerClient = new Mailer();
-$workerAPIClient = new WorkerAPI();
+// $workerAPIClient = new WorkerAPI();

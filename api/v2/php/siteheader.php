@@ -1,6 +1,8 @@
 <?php
 
 use itdq\Connection;
+use itdq\Mailer;
+use itdq\Redis;
 use itdq\WorkerAPI;
 
 ini_set('display_errors', 1);
@@ -21,5 +23,6 @@ $token = $_ENV['api_token'];
 
 $_SESSION['ssoEmail'] = empty($_SESSION['ssoEmail']) ? 'API Invocation' : $_SESSION['ssoEmail'];
 $dbClient = new Connection();
-
-$workerAPIClient = new WorkerAPI();
+$mailerClient = new Mailer();
+$redisClient = new Redis();
+// $workerAPIClient = new WorkerAPI();

@@ -403,7 +403,7 @@ if (isset($_SERVER['HTTP_USER_AGENT']) && !empty($_SERVER['HTTP_USER_AGENT'])) {
     
     $elapsed = microtime(true);
     error_log("Pre Worker API:" . (float)($elapsed-$start));
-    $workerAPIClient = new WorkerAPI();
+    // $workerAPIClient = new WorkerAPI();
 
     /*
     $twigLoader = new \Twig\Loader\FilesystemLoader('./templates');

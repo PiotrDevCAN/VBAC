@@ -53,7 +53,6 @@ class batchJob
             // echo '<br>';
             // echo $process->getPid();
 
-
             $process = new Process($this->cmd);
             $pid = $process->getPid();
             echo $this->processName." has succeed to be executed: ".$this->email.PHP_EOL;
