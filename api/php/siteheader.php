@@ -1,9 +1,10 @@
 <?php
 
-use itdq\Connection;
 use itdq\JwtSecureSession;
+use itdq\Connection;
 use itdq\Mailer;
 use itdq\Redis;
+use itdq\WorkerAPI;
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -53,3 +54,4 @@ $_SESSION['ssoEmail'] = empty($_SESSION['ssoEmail']) ? 'API Invocation' : $_SESS
 $dbClient = new Connection();
 $redisClient = new Redis();
 $mailerClient = new Mailer();
+$workerAPIClient = new WorkerAPI();

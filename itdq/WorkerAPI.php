@@ -24,6 +24,8 @@ class WorkerAPI {
 		$this->hostname = $config->hostname;
 
 		$auth->ensureAuthorized();
+
+		$GLOBALS['workerAPI'] = $this;
 	}
 
 	private function createCurl($type = "GET")

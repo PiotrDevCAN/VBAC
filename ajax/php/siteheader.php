@@ -1,10 +1,10 @@
 <?php
 
-use itdq\Connection;
 use itdq\JwtSecureSession;
-use itdq\Mailer;
+use itdq\Connection;
 use itdq\Redis;
-// use itdq\WorkerAPI;
+use itdq\Mailer;
+use itdq\WorkerAPI;
 
 function do_auth($group = null)
 {
@@ -86,4 +86,4 @@ $_SESSION['ssoEmail'] = $_ENV['SERVER_ADMIN'];
 $dbClient = new Connection();
 $redisClient = new Redis();
 $mailerClient = new Mailer();
-// $workerAPIClient = new WorkerAPI();
+$workerAPIClient = new WorkerAPI();

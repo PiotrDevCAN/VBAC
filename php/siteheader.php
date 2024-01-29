@@ -4,10 +4,11 @@
 // ** session_cache_limiter('private');
 // ** for fpdf http://www.fpdf.org/ download of pdf files in https;
 
-use itdq\Connection;
 use itdq\JwtSecureSession;
+use itdq\Connection;
 use itdq\Mailer;
 use itdq\Redis;
+use itdq\WorkerAPI;
 use PhpOffice\PhpSpreadsheet\Helper\Sample;
 
 # Takes a hash of values and files in a text template
@@ -400,6 +401,10 @@ if (isset($_SERVER['HTTP_USER_AGENT']) && !empty($_SERVER['HTTP_USER_AGENT'])) {
     error_log("Pre Mailer:" . (float)($elapsed-$start));
     $mailerClient = new Mailer();
     
+    $elapsed = microtime(true);
+    error_log("Pre Worker API:" . (float)($elapsed-$start));
+    $workerAPIClient = new WorkerAPI();
+
     /*
     $twigLoader = new \Twig\Loader\FilesystemLoader('./templates');
     $twig = new \Twig\Environment($twigLoader, [

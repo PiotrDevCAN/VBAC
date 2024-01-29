@@ -1,7 +1,8 @@
 <?php
-//use ByJG\Session\JwtSession;
 
+//use ByJG\Session\JwtSession;
 use itdq\Connection;
+use itdq\WorkerAPI;
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -44,5 +45,6 @@ if (session_status() == PHP_SESSION_NONE) {
 
 include "php/w3config.php";
 $dbClient = new Connection();
+$workerAPIClient = new WorkerAPI();
 
 $_SESSION['ssoEmail'] = 'Scheduled Job';
