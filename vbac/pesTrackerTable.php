@@ -1,14 +1,14 @@
 <?php
 namespace vbac;
 
+use PhpOffice\PhpSpreadsheet\Shared\Date;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use \DateTime;
+use itdq\xls;
+use itdq\AuditTable;
 use itdq\DbTable;
 use itdq\Loader;
 use vbac\pesTrackerRecord;
-use PhpOffice\PhpSpreadsheet\Shared\Date;
-use \DateTime;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use itdq\xls;
-use itdq\AuditTable;
 
 class pesTrackerTable extends DbTable{
 
@@ -382,11 +382,12 @@ class pesTrackerTable extends DbTable{
 
     function getProcessingStatusCell($cnum, $workerId){
         $data = array($cnum, $workerId);
-        $preparedStmt = $this->prepareGetProcessingStatusStmt($data);
+        $sql = $this->prepareGetProcessingStatusStmt($data);
         
-        $rs = sqlsrv_execute($preparedStmt);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql, $data);
+        
         if($rs){
-            $row = sqlsrv_fetch_array($preparedStmt, SQLSRV_FETCH_ASSOC);
+            $row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
 
             var_dump(ob_get_level());
 
@@ -471,18 +472,16 @@ class pesTrackerTable extends DbTable{
         $sql.= " WHERE CNUM = ? ";
         $sql.= " AND WORKER_ID = ? ";
 
-        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
-        return $preparedStmt;
+        return $sql;
     }
 
-    function prepareGetProcessingStatusStmt(){
+    function prepareGetProcessingStatusStmt($data){
         $sql = " SELECT PROCESSING_STATUS, PROCESSING_STATUS_CHANGED ";
         $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql.= " WHERE CNUM = ? ";
         $sql.= " AND WORKER_ID = ? ";
 
-        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql);
-        return $preparedStmt;
+        return $sql;
     }
 
     function prepareProcessStatusUpdate($data){
@@ -491,16 +490,14 @@ class pesTrackerTable extends DbTable{
         $sql.= " WHERE CNUM = ? ";
         $sql.= " AND WORKER_ID = ? ";
 
-        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
-        return $preparedStmt;
+        return $sql;
     }
 
     function prepareTrackerInsert($data){
         $sql = " INSERT INTO " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql.= " ( CNUM, WORKER_ID ) VALUES (?, ?) ";
         
-        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
-        return $preparedStmt;
+        return $sql;
     }
 
     function prepareResetForRecheck($data){
@@ -519,8 +516,7 @@ class pesTrackerTable extends DbTable{
         $sql.= " WHERE CNUM = ? ";
         $sql.= " AND WORKER_ID = ? ";
 
-        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
-        return $preparedStmt;
+        return $sql;
     }
 
     function createNewTrackerRecord($cnum, $workerId = 'not found'){
@@ -530,9 +526,9 @@ class pesTrackerTable extends DbTable{
         if (!$this->existsInDb($trackerRecord)) {
 
             $data = array($cnum, $workerId);
-            $preparedStmt = $this->prepareTrackerInsert($data);
+            $sql = $this->prepareTrackerInsert($data);
 
-            $rs = sqlsrv_execute($preparedStmt);
+            $rs = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
             if(!$rs){
                 DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared sql');
@@ -551,9 +547,9 @@ class pesTrackerTable extends DbTable{
         $trackerRecord->setFromArray(array('CNUM'=>$cnum, 'WORKER_ID'=>$workerId));
 
         $data = array($cnum, $workerId);
-        $preparedStmt = $this->prepareResetForRecheck($data);
-        
-        $rs = sqlsrv_execute($preparedStmt);
+        $sql = $this->prepareResetForRecheck($data);
+
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared sql');
@@ -569,9 +565,9 @@ class pesTrackerTable extends DbTable{
             $this->createNewTrackerRecord($cnum, $workerId);
         }
         $data = array($stageValue, $cnum, $workerId);
-        $preparedStmt = $this->prepareStageUpdate($stage, $data);
+        $sql = $this->prepareStageUpdate($stage, $data);
 
-        $rs = sqlsrv_execute($preparedStmt);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared sql');
@@ -589,9 +585,9 @@ class pesTrackerTable extends DbTable{
             $this->createNewTrackerRecord($cnum, $workerId);
         }
         $data = array($processStatus, $cnum, $workerId);
-        $preparedStmt = $this->prepareProcessStatusUpdate($data);
+        $sql = $this->prepareProcessStatusUpdate($data);
         
-        $rs = sqlsrv_execute($preparedStmt);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared sql');
@@ -714,22 +710,21 @@ class pesTrackerTable extends DbTable{
         $sql.= " WHERE CNUM=? ";
         $sql.= " AND WORKER_ID=? ";
 
-        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
-        return $preparedStmt;
+        return $sql;
     }
 
     function getPesComment($cnum, $workerId){
         $data = array($cnum, $workerId);
-        $preparedStmt = $this->prepareGetPesCommentStmt($data);
+        $sql = $this->prepareGetPesCommentStmt($data);
 
-        $rs = sqlsrv_execute($preparedStmt);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'Prepared Stmt');
             throw new \Exception('Unable to getPesComment for ' . $cnum . ' / ' . $workerId);
         }
 
-        $row = sqlsrv_fetch_array($preparedStmt, SQLSRV_FETCH_ASSOC);
+        $row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
         return $row['COMMENT'];
     }
 

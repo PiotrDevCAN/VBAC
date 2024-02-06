@@ -78,6 +78,7 @@ class pesStatusChangeEmail {
         $fmEmailArray = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON," CNUM='" . htmlspecialchars(trim($fmCNUM)) . "' ");
         $fmEmail = isset($fmEmailArray[trim($fmCNUM)]) ? $fmEmailArray[trim($fmCNUM)] : $fmCNUM;
         $fmIsIbmEmail = strtolower(substr($fmEmail,-7))=='ibm.com';
+        $fmIsKyndrylEmail = strtolower(substr($fmEmail,-11))=='kyndryl.com';
       } else {
         $fmEmail = 'Unknown';
     }
@@ -86,15 +87,20 @@ class pesStatusChangeEmail {
     $lastName  = !empty($person->getValue('LAST_NAME')) ? $person->getValue('LAST_NAME') : "lastName";
     $emailAddress = !empty($person->getValue('EMAIL_ADDRESS')) ? $person->getValue('EMAIL_ADDRESS') : "emailAddress";
     $isIbmEmail = strtolower(substr($emailAddress,-7))=='ibm.com';
+    $isKyndrylEmail = strtolower(substr($emailAddress,-11))=='kyndryl.com';
     $pesStatus = !empty($person->getValue('PES_STATUS')) ? $person->getValue('PES_STATUS') : "pesStatus";
     $pesDateResponded = !empty($person->getValue('PES_DATE_RESPONDED')) ? $person->getValue('PES_DATE_RESPONDED') : "pesDateResponded";
     $pesDateCleared = !empty($person->getValue('PES_CLEARED_DATE')) ? $person->getValue('PES_CLEARED_DATE') : "pesDateCleared";
     $ctbRtb = !empty($person->getValue('CTB_RTB')) ? trim($person->getValue('CTB_RTB')) : null;
     $pesTaskId = personRecord::getPesTaskIdByCIO($ctbRtb);
-    if(!$isIbmEmail && !$fmIsIbmEmail){
-        throw new \Exception('No IBM Email Address for individual or Functional Manager');
+    if(
+      !$isIbmEmail 
+      && !$isKyndrylEmail 
+      && !$fmIsIbmEmail 
+      && !$fmIsKyndrylEmail)
+    {
+      throw new \Exception('No IBM/Kyndryl Email Address for individual or Functional Manager');
     }
-
     $to = array();
     $cc = array();
     $bcc = array();
