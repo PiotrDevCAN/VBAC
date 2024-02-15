@@ -23,10 +23,7 @@ session_start();
 include ('vendor/autoload.php');
 include ('splClassLoader.php');
 
-/*
-* ByJG session
-*/
-// $handler = new ByJgJwtSecureSession();
+$mailerClient = new Mailer();
 
 require_once("php/errorHandlers.php");
 
@@ -41,15 +38,18 @@ register_shutdown_function('fatalErrorShutdownHandler');
 
 date_default_timezone_set('UTC');
 set_include_path("./" . PATH_SEPARATOR . "../" . PATH_SEPARATOR . "../../" . PATH_SEPARATOR . "../../../" . PATH_SEPARATOR);
-// session_start();
+
 if (session_status() == PHP_SESSION_NONE) {
-    session_start();
+    /*
+    * ByJG session
+    */
+    $handler = new ByJgJwtSecureSession();
 }
 
 include "php/w3config.php";
 $dbClient = new Connection();
-$mailerClient = new Mailer();
 $redisClient = new Redis();
+// $mailerClient = new Mailer();
 // $workerAPIClient = new WorkerAPI();
 
 $_SESSION['ssoEmail'] = 'Scheduled Job';

@@ -1,5 +1,6 @@
 <?php
 
+use itdq\ByJgJwtSecureSession;
 use itdq\Connection;
 use itdq\Mailer;
 use itdq\Redis;
@@ -27,6 +28,8 @@ set_include_path("./" . PATH_SEPARATOR . "../" . PATH_SEPARATOR . "../../" . PAT
 include ('vendor/autoload.php');
 include ('splClassLoader.php');
 
+$mailerClient = new Mailer();
+
 require_once("../php/errorHandlers.php");
 
 // trigger_error handler
@@ -38,13 +41,11 @@ set_exception_handler('myExceptionHandler');
 // Fatal Shutdown handler
 register_shutdown_function('fatalErrorShutdownHandler');
 
-$sessionConfig = (new \ByJG\Session\SessionConfig($_SERVER['SERVER_NAME']))
-->withSecret($_ENV['jwt_token']);
+/*
+* ByJG session
+*/
+$handler = new ByJgJwtSecureSession();
 
-$handler = new JwtSecureSession($sessionConfig);
-session_set_save_handler($handler, true);
-
-session_start();
 error_log(__FILE__ . "session:" . session_id());
 
 $token = $_ENV['api_token'];
@@ -52,5 +53,5 @@ $token = $_ENV['api_token'];
 $_SESSION['ssoEmail'] = empty($_SESSION['ssoEmail']) ? 'API Invocation' : $_SESSION['ssoEmail'];
 $dbClient = new Connection();
 $redisClient = new Redis();
-$mailerClient = new Mailer();
+// $mailerClient = new Mailer();
 // $workerAPIClient = new WorkerAPI();
