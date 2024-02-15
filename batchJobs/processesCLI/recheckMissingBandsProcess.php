@@ -34,6 +34,8 @@ if($rs){
     while ($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)){
         $allEntriesNotFound[trim($row['BUSINESS_TITLE'])] = trim($row['KYN_EMAIL_ADDRESS']);
     }
+    /* Free the statement resources. */
+    sqlsrv_free_stmt($rs);
 } else {
     DbTable::displayErrorMessage($rs, 'class', 'method', $sql);
     $errorMessage = ob_get_clean();

@@ -1,9 +1,10 @@
 <?php
 
-use itdq\JwtSecureSession;
+use itdq\ByJgJwtSecureSession;
 use itdq\Connection;
 use itdq\Redis;
 use itdq\Mailer;
+
 // use itdq\WorkerAPI;
 
 function do_auth($group = null)
@@ -60,6 +61,8 @@ include ('includes/endsWith.php');
 // global var and config file
 include_once ('../php/w3config.php');
 
+$mailerClient = new Mailer();
+
 require_once("../php/errorHandlers.php");
 
 // trigger_error handler
@@ -71,18 +74,14 @@ set_exception_handler('myExceptionHandler');
 // Fatal Shutdown handler
 register_shutdown_function('fatalErrorShutdownHandler');
 
-$sessionConfig = (new \ByJG\Session\SessionConfig($_SERVER['SERVER_NAME']))
-->withTimeoutMinutes(120)
-->withSecret($_ENV['jwt_token'])
-->replaceSessionHandler();
+/*
+* ByJG session
+*/
+$handler = new ByJgJwtSecureSession();
 
-$handler = new JwtSecureSession($sessionConfig);
-// session_set_save_handler($handler, true);
-
-// session_start();
 error_log(__FILE__ . "session:" . session_id());
 // do_auth();
 $dbClient = new Connection();
 $redisClient = new Redis();
-$mailerClient = new Mailer();
+// $mailerClient = new Mailer();
 // $workerAPIClient = new WorkerAPI();

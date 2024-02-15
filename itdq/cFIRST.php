@@ -244,8 +244,5 @@ echo '</pre>';
 		$response = $this->processPOST_URL($url, $dataJson);
 
 		return $response;
-		// echo '<pre>';
-		// var_dump($response);
-		// echo '</pre>';
 	}
 }

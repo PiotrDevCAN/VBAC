@@ -90,7 +90,6 @@ try {
 
     if(!$updateRecordResult || !$updateRecordResult2){
         echo json_encode(sqlsrv_errors());
-        echo json_encode(sqlsrv_errors());
         AuditTable::audit("Db2 Error in " . __FILE__ . " Code:<b>" . json_encode(sqlsrv_errors()) . "</b> Msg:<b>" . json_encode(sqlsrv_errors()) . "</b>", AuditTable::RECORD_TYPE_DETAILS);
         $success = false;
     } else {

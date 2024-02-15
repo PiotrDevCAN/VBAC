@@ -54,9 +54,9 @@ class assetRequestsTable extends DbTable{
     );
 
     private static $statusChangeEmail = "This is to inform you that your vBAC Request<b>&&requestReference&& (&&assetTitle&&)</b> has now moved to status :<b>&&status&&</b>.
-<br/>The associated comment is :
-<br/>&&comment&&
-<br/>Reference Information : Request:<b>&&requestReference&&</b> Varb:<b>&&varbNumber&&</b> LBG Number:<b>&&orderItNumber&&</b> Vbac Status:<b>&&vbacStatus&&</b> </b> Order IT Status:<b>&&orderItStatus&&";
+    <br/>The associated comment is :
+    <br/>&&comment&&
+    <br/>Reference Information : Request:<b>&&requestReference&&</b> Varb:<b>&&varbNumber&&</b> LBG Number:<b>&&orderItNumber&&</b> Vbac Status:<b>&&vbacStatus&&</b> </b> Order IT Status:<b>&&orderItStatus&&";
 
     private static $statusChangeEmailPattern = array('/&&requestReference&&/','/&&assetTitle&&/','/&&status&&/','/&&comment&&/','/&&varbNumber&&/','/&&orderItNumber&&/','/&&vbacStatus&&/','/&&orderItStatus&&/');
 
@@ -1757,21 +1757,14 @@ class assetRequestsTable extends DbTable{
 
         AuditTable::audit("Prepare SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
-        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
-
-        if(!$preparedStmt){
-            DbTable::displayErrorMessage($preparedStmt, __CLASS__, __METHOD__, $sql);
-            return false;
-        }
-
-        return $preparedStmt;
+        return $sql;
     }
 
     function saveRefToOrderItMapping($orderIt, $ref){
 
         $data = array($orderIt,$ref);
-        $preparedStatement = $this->prepareRefToOrderItMapping($data);
-        $rs = sqlsrv_execute($preparedStatement);
+        $sql = $this->prepareRefToOrderItMapping($data);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs,__CLASS__, __METHOD__, $sql);
@@ -1970,21 +1963,15 @@ class assetRequestsTable extends DbTable{
     }
 
     function setRequestsOrderItStatus($reference, $orderItStatus, $comment=null){
-
-//         $sql  = " UPDATE ";
-//         $sql .= $GLOBALS['Db2Schema'] . "." . $this->tableName ;
-//         $sql .= " SET ORDERIT_STATUS='" . htmlspecialchars($orderItStatus) . "' ";
-//         $sql .= " WHERE REQUEST_REFERENCE ='" . htmlspecialchars($reference) . "' " ;
-
         $data = array($orderItStatus,$reference);
-        $preparedStmt = $this->prepareSetRequestsOrderItStatus($data);
+        $sql = $this->prepareSetRequestsOrderItStatus($data);
 
         AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>Data:" . print_r($data,true),AuditTable::RECORD_TYPE_DETAILS);
 
-        $rs = sqlsrv_execute($preparedStmt);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
         if(!$rs){
-            DbTable::displayErrorMessage($preparedStmt,__CLASS__, __METHOD__, 'preparedStmt');
+            DbTable::displayErrorMessage($rs,__CLASS__, __METHOD__, 'preparedStmt');
             return false;
         }
         $this->notifyRequestee($reference, $orderItStatus, $comment);
@@ -2002,12 +1989,12 @@ class assetRequestsTable extends DbTable{
             $newComment = substr($newComment, 0,512);
 
             $data = array($newComment,$requestReference);
-            $preparedStmt = $this->prepareUpdateCommentField($data);
-            
-            $rs = sqlsrv_execute($preparedStmt);
+            $sql = $this->prepareUpdateCommentField($data);
+
+            $rs = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
             if(!$rs){
-                DbTable::displayErrorMessage($preparedStmt, __CLASS__, __METHOD__, 'preparedStmt');
+                DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'preparedStmt');
                 return false;
             }
         }
@@ -2020,19 +2007,14 @@ class assetRequestsTable extends DbTable{
 
             $data = array($orderitResponded,$requestReference);
 
-            $preparedStmt = $this->prepareUpdateOrderitRespondedField($data);
-
-            if(!$preparedStmt){
-                echo "Prepare for LBG Responded has failed.";
-                die('here');
-            }
+            $sql = $this->prepareUpdateOrderitRespondedField($data);
 
             AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>Data:" . print_r($data,true),AuditTable::RECORD_TYPE_DETAILS);
 
-            $rs = sqlsrv_execute($preparedStmt);
+            $rs = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
             if(!$rs){
-                DbTable::displayErrorMessage($preparedStmt, __CLASS__, __METHOD__, 'preparedStmt');
+                DbTable::displayErrorMessage($sql, __CLASS__, __METHOD__, 'preparedStmt');
                 return false;
             }
 
@@ -2051,14 +2033,7 @@ class assetRequestsTable extends DbTable{
 
         AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
-        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
-
-        if(!$preparedStmt){
-            DbTable::displayErrorMessage($preparedStmt,__CLASS__, __METHOD__, $sql);
-            return false;
-        }
-
-        return $preparedStmt;
+        return $sql;
     }
 
     function prepareUpdateCommentField($data){
@@ -2066,14 +2041,7 @@ class assetRequestsTable extends DbTable{
         $sql.= " SET COMMENT = ? ";
         $sql.= " WHERE REQUEST_REFERENCE=? ";
 
-        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
-
-        if(!$preparedStmt){
-            DbTable::displayErrorMessage($preparedStmt, __CLASS__, __METHOD__, $sql);
-            return false;
-        }
-
-        return $preparedStmt;
+        return $sql;
     }
 
     function prepareUpdateOrderitRespondedField($data){
@@ -2081,36 +2049,23 @@ class assetRequestsTable extends DbTable{
         $sql.= " SET ORDERIT_RESPONDED = ? ";
         $sql.= " WHERE REQUEST_REFERENCE=? ";
 
-        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
-
-        if(!$preparedStmt){
-            DbTable::displayErrorMessage($preparedStmt, __CLASS__, __METHOD__, $sql);
-            return false;
-        }
-
-        return $preparedStmt;
+        return $sql;
     }
 
 
-    function preparepGetCommentField($data){
+    function prepareGetCommentField($data){
         $sql = " SELECT COMMENT FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$ASSET_REQUESTS . " WHERE REQUEST_REFERENCE=? ";
 
-        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
-        if(!$preparedStmt){
-            DbTable::displayErrorMessage($preparedStmt, __CLASS__,__METHOD__, $sql);
-            return false;
-        }
-
-        return $preparedStmt;
+        return $sql;
     }
 
     function GetCommentField($requestReference){
         $data = array($requestReference);
-        $preparedStmt = $this->preparepGetCommentField($data);
+        $sql = $this->prepareGetCommentField($data);
         
-        sqlsrv_execute($preparedStmt);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
-        $row = sqlsrv_fetch_array($preparedStmt, SQLSRV_FETCH_ASSOC);
+        $row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
         return !empty($row['COMMENT']) ? $row['COMMENT'] : false;
     }
 
@@ -2227,26 +2182,19 @@ class assetRequestsTable extends DbTable{
 
         AuditTable::audit("SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
-        $preparedUpdateUidsStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
-
-        if(!$preparedUpdateUidsStmt){
-            DbTable::displayErrorMessage($preparedUpdateUidsStmt, __CLASS__, __METHOD__, $sql);
-            return false;
-        }
-
-        return $preparedUpdateUidsStmt;
+        return $sql;
     }
 
     function updateUids($reference, $primaryUid,$secondaryUid=''){
         $data = array($primaryUid, $secondaryUid, $reference);
-        $stmt = $this->prepareUpdateUidsStmt($data);
+        $sql = $this->prepareUpdateUidsStmt($data);
         
-        $result = sqlsrv_execute($stmt);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
-        if(!$result){
+        if(!$rs){
             echo print_r(sqlsrv_errors());
             echo print_r(sqlsrv_errors());
-            DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, 'prepared stmt');
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared stmt');
         }
         return true;
     }
@@ -2461,14 +2409,7 @@ class assetRequestsTable extends DbTable{
 
         AuditTable::audit("Prepare SQL:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>prepared sql:" . $sql,AuditTable::RECORD_TYPE_DETAILS);
 
-        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
-
-        if(!$preparedStmt){
-            DbTable::displayErrorMessage($preparedStmt, __CLASS__, __METHOD__, $sql);
-            return false;
-        }
-
-        return $preparedStmt;
+        return $sql;
     }
 
     function deVarb($requestRef = null){
@@ -2477,11 +2418,11 @@ class assetRequestsTable extends DbTable{
         }
 
         $data = array($requestRef);
-        $preparedStmt = $this->prepareDevarb($data);
+        $sql = $this->prepareDevarb($data);
 
         AuditTable::audit("Devarb:<b>" . __FILE__ . __FUNCTION__ . __LINE__ . "</b>Devarb:" . $requestRef,AuditTable::RECORD_TYPE_DETAILS);
 
-        $rs = sqlsrv_execute($preparedStmt);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);

@@ -174,7 +174,7 @@ try {
         
             $timeToWarnPmo = $person->checkIfTimeToWarnPmo();
             $offboardingWarning = new offboardingWarningEmail();
-            $timeToWarnPmo ? $offboardingWarning->sendOffboardingWarning($person) : null;
+            $timeToWarnPmo ? $offboardingWarning->send($person) : null;
 
             if (isset($_POST['OktaRoles'])) {
                 $OKTAGroups = new OKTAGroups();
@@ -253,7 +253,7 @@ try {
                             // check regular record
                             if (!empty($cnum) && !empty($workerId)) {
                                 $cbc = new cbcEmail();
-                                $cbc->sendCbcEmail($person);
+                                $cbc->send($person);
                             } else {
                                 echo "<br/>CBC Check notification has been NOT sent due to missing person data.";
                             }

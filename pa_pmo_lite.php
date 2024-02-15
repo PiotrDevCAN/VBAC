@@ -58,6 +58,7 @@ $person->confirmOffboardingInfoModal();
 include_once 'includes/modalSavingBoardingDetails.html';
 include_once 'includes/modalEditPerson.html';
 include_once 'includes/modalEditEmailAddress.html';
+include_once 'includes/modalEditCtid.html';
 // include_once 'includes/modalConfirmOffboarding.html';
 ?>
 

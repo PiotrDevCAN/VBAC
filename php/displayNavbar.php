@@ -68,6 +68,8 @@ $adminMenu      = new NavbarMenu('vBac Admin');
 $pmo            = new NavbarOption('Person Portal', 'pa_pmo.php','accessCdi accessPmo accessFm accessUser');
 $pmoLite        = new NavbarOption('Person Portal (Lite)', 'pa_pmo_lite.php','accessCdi accessPmo accessFm accessUser');
 $pmoArchive     = new NavbarOption('Person Portal (Archive)', 'pa_pmo_archive.php','accessCdi accessPmo');
+$pmoCFirst      = new NavbarOption('cFIRST Reflection', 'pa_cfirst.php','accessCdi accessPmo');
+$statusCrosscheck = new NavbarOption('Status Crosscheck', 'pa_statusCrosscheck.php','accessCdi accessPmo accessRepFullPerson');
 $personFinder   = new NavbarOption('Person Finder','pa_personFinder.php','accessCdi accessFm');
 $revalidation   = new NavbarOption('Revalidation Portal','pa_revalidation.php','accessCdi accessPmo');
 $linkedReport   = new NavbarOption('Linked Portal','pa_pmoLinked.php','accessCdi accessPmo');
@@ -89,6 +91,9 @@ $squadALog      = new NavbarOption('Squadalog', 'pa_squadalog.php','accessCdi ac
 $adminMenu->addOption($pmo);
 $adminMenu->addOption($pmoLite);
 $adminMenu->addOption($pmoArchive);
+$adminMenu->addOption( new NavbarDivider('accessPmo accessCdi'));
+$adminMenu->addOption($pmoCFirst);
+$adminMenu->addOption($statusCrosscheck);
 $adminMenu->addOption( new NavbarDivider('accessPmo accessCdi'));
 $adminMenu->addOption($personFinder);
 $adminMenu->addOption($revalidation);

@@ -27,12 +27,12 @@ class restartPesBox extends box {
 			var email = $(this).data("email");
 			var now = new Date();
 			var passportFirst = $(this).data("passportfirst");
-			var passportSurname = $(this).data("psm_passportSurname");
+			var passportSurname = $(this).data("passportSurname");
 			$.ajax({
 				url: "ajax/restartPes.php",
 				data: {
 					psm_cnum: cnum,
-					psm_workerid: workerid,
+					psm_worker_id: workerid,
 					psm_status: "Restart Requested",
 					psm_detail: "PES Restart Requested",
 					PES_DATE_RESPONDED: now.toLocaleDateString("en-US"),

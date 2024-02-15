@@ -8,6 +8,7 @@ use itdq\DbTable;
 use vbac\personRecord;
 use vbac\personTable;
 use vbac\allTables;
+use vbac\emails\pesTeamOfLeaversEmail;
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -97,6 +98,8 @@ if($rs){
             $allPotentialLeaversNotFoundCounter++;
         }
     }
+    /* Free the statement resources. */
+    sqlsrv_free_stmt($rs);
 } else {
     DbTable::displayErrorMessage($rs, 'class', 'method', $sql);
     $errorMessage = ob_get_clean();
@@ -123,7 +126,9 @@ $timeMeasurements['phase_2'] = (float)($endPhase2-$startPhase2);
 
 // send out notification with list of leavers
 $startPhase3 = microtime(true);
-// pesEmail::notifyPesTeamOfLeavers($allPotentialLeavers);
+// $person = new personRecord();
+// $email = new pesTeamOfLeaversEmail();
+// $email->send($person, $allPotentialLeavers);
 $endPhase3 = microtime(true);
 $timeMeasurements['phase_3'] = (float)($endPhase3-$startPhase3);
 

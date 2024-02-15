@@ -6,8 +6,6 @@ use vbac\personRecord;
 set_time_limit(0);
 ob_start();
 
-// session_start();
-
 $personTable = new personTable(allTables::$PERSON, null, true, true);
 $dataAndSql = $personTable->returnPersonFinderArray(personTable::ACTIVE_WITH_PROVISIONAL_CLEARANCE);
 list('data' => $data, 'sql' => $sql) = $dataAndSql;

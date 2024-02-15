@@ -34,22 +34,15 @@ class assetRequestsEventsTable extends DbTable{
         $sql.= " values ";
         $sql.= "( ?, ?, CURRENT_TIMESTAMP, '$initator') ";
 
-        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql);
-
-        if(!$preparedStmt){
-            DbTable::displayErrorMessage($preparedStmt, __CLASS__, __METHOD__, $sql);
-            return false;
-        }
-
-        return $preparedStmt;
+        return $sql;
     }
 
     function logEventForRequest($event, $requestReference){
         $data = array($requestReference, $event);
-        $preparedStmt = $this->prepareInsertStatement($data);
-        $rs = sqlsrv_execute($preparedStmt);
+        $sql = $this->prepareInsertStatement($data);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql, $data);
         if(!$rs){
-            DbTable::displayErrorMessage($rs,__CLASS__, __METHOD__, $sql);
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         }
         return true;
@@ -64,14 +57,11 @@ class assetRequestsEventsTable extends DbTable{
         $sql.= "( ?, ?, ?, '$initator') ";
         
         $data = array($requestReference, $event, $date);
-        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);   
-        $rs = sqlsrv_execute($preparedStmt);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql, $data);
         if(!$rs){
-            DbTable::displayErrorMessage($rs,__CLASS__, __METHOD__, $sql);
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         }
         return true;
     }
-
-
 }

@@ -69,15 +69,11 @@ class Loader
                 $array[$value] = trim($value);
             }
         }
+        /* Free the statement resources. */
+        sqlsrv_free_stmt($rs5);
         $arrayBuilt = microtime(TRUE);
-       // Trace::traceVariable($array, __METHOD__, __LINE__);
-       // asort($array);
-       //$arraySort = microtime(TRUE);
-       // Trace::traceVariable($array, __METHOD__, __LINE__);
-
         $queryTime = $queryCompleted - $preDb2Time;
         $buildTime = $arrayBuilt - $queryCompleted;
-       // $sortTime = $arraySort - $arrayBuilt;
         Trace::traceTimings("Loader Query $sql Timings: Query:($queryTime) Build:($buildTime) ", __METHOD__, __LINE__);
 
         return $array;
@@ -108,6 +104,9 @@ class Loader
         while ($row = sqlsrv_fetch_array($rs5, SQLSRV_FETCH_ASSOC)) {
             $array[utf8_encode(trim($row[$key]))] = utf8_encode(trim($row[$value]));
         }
+        /* Free the statement resources. */
+        sqlsrv_free_stmt($rs5);
+
         Trace::traceVariable($array, __METHOD__, __LINE__);
         return $array;
     }
@@ -257,8 +256,6 @@ class Loader
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
         }
 
-        $currentKey = null;
-
         while ($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)) {
             $array[trim($row[$keyColumn])][] = trim($row[$valuesColumn]);
         }
@@ -266,8 +263,6 @@ class Loader
         Trace::traceVariable($array, __METHOD__);
         return $array;
     }
-
-
 
     /**
      * Used internally - to build the SQL for the query for LoadQuad

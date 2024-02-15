@@ -1,82 +1,47 @@
 <?php
+use itdq\AuditTable;
+use vbac\allTables;
 use vbac\personRecord;
 use vbac\personTable;
-use vbac\allTables;
-use itdq\AuditTable;
-use vbac\emails\pesStatusChangeEmail;
-use vbac\pesEmail;
+use vbac\pesStatus;
+use vbac\pesStatusChangeNotification;
 
 ob_start();
 AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_POST,true) . "</b>",AuditTable::RECORD_TYPE_DETAILS);
 
-$formattedEmailField= null;
+$formattedEmailField = null;
 
 try {
-    $personTable= new personTable(allTables::$PERSON);
-    $personTable->setPesStatus($_POST['psm_cnum'],$_POST['psm_workerid'],$_POST['psm_status'],$_SESSION['ssoEmail']);
 
-    $person = new personRecord();
-    $person->setFromArray(array('CNUM'=>$_POST['psm_cnum'],'WORKER_ID'=>$_POST['psm_workerid'],'PES_STATUS_DETAILS'=>$_POST['psm_detail'],'PES_DATE_RESPONDED'=>$_POST['PES_DATE_RESPONDED']));
-    $updateRecordResult = $personTable->update($person,false,false);
-
-    $personData = $personTable->getRecord($person);
-    $person->setFromArray($personData);
-
-    $pesStatusChangeEmail = new pesStatusChangeEmail();
+    $requestor = $_SESSION['ssoEmail'];
+    $cnum = $_POST['psm_cnum'];
+    $workerId = $_POST['psm_worker_id'];
+    $status = $_POST['psm_status'];
+    $pesDetail = $_POST['psm_detail'];
+    $pesDateResponded = $_POST['PES_DATE_RESPONDED'];
     
-    AuditTable::audit("Saved Person <pre>" . print_r($person,true) . "</pre>", AuditTable::RECORD_TYPE_DETAILS);
-
-    if(!$updateRecordResult){
-        echo json_encode(sqlsrv_errors());
-        echo json_encode(sqlsrv_errors());
-        AuditTable::audit("Db2 Error in " . __FILE__ . " Code:<b>" . json_encode(sqlsrv_errors()) . "</b> Msg:<b>" . json_encode(sqlsrv_errors()) . "</b>", AuditTable::RECORD_TYPE_DETAILS);
-        $success = false;
-    } else {
-        switch ($_POST['psm_status']) {
-            case personRecord::PES_STATUS_REMOVED:
-            case personRecord::PES_STATUS_DECLINED:
-            case personRecord::PES_STATUS_FAILED:
-            case personRecord::PES_STATUS_INITIATED:
-            case personRecord::PES_STATUS_REQUESTED:
-            case personRecord::PES_STATUS_EXCEPTION:
-            case personRecord::PES_STATUS_PROVISIONAL;
-            case personRecord::PES_STATUS_RECHECK_REQ;
-            case personRecord::PES_STATUS_RECHECK_PROGRESSING;
-            case personRecord::PES_STATUS_MOVER;
-            case personRecord::PES_STATUS_LEFT_IBM;
-            case personRecord::PES_STATUS_REVOKED;
-                $notificationStatus = 'Email not applicable';
-                 break;
-            case personRecord::PES_STATUS_CLEARED:
-            case personRecord::PES_STATUS_CLEARED_PERSONAL:
-            case personRecord::PES_STATUS_CLEARED_AMBER:
-            case personRecord::PES_STATUS_CANCEL_REQ:
-            case personRecord::PES_STATUS_RESTART:
-                $emailResponseData = $pesStatusChangeEmail->sendPesStatusChangedEmail($person, pesEmail::EMAIL_NOT_PES_SUPRESSABLE);
-                list(
-                    'response' => $emailResponse,
-                    'to' => $to,
-                    'message' => $message,
-                    'pesTaskId' => $pesTaskId
-                ) = $emailResponseData;
-                $notificationStatus = $emailResponse ? 'Email sent' : 'No email sent';
-                break;
-            default:
-                $notificationStatus = 'Email not applicable(other)';
-            break;
-        }
-
-        AuditTable::audit("PES Status Email: " . $notificationStatus ,AuditTable::RECORD_TYPE_DETAILS);
-
-        $success = true;
-
+    $personTable = new personTable(allTables::$PERSON);
+    $person = new personRecord();
+    $person->setFromArray(
+        array(
+            'CNUM'=>$cnum,
+            'WORKER_ID'=>$workerId
+        )
+    );
+    $pesStatus = new pesStatus();
+    $success = $pesStatus->change($personTable, $person, $status, $requestor, $pesDetail, $pesDateResponded);
+    
+    if ($success) {
+        $notification = new pesStatusChangeNotification();
+        $notificationStatus = $notification->restart($person, $status);
+        AuditTable::audit("PES Status Email: " . $notificationStatus, AuditTable::RECORD_TYPE_DETAILS);
     }
 } catch (Exception $e) {
     echo $e->getCode();
     echo $e->getMessage();
     AuditTable::audit("Exception" . __FILE__ . " Code:<b>" . $e->getCode() . "</b> Msg:<b>" . $e->getMessage() . "</b>", AuditTable::RECORD_TYPE_DETAILS);
     $success = false;
-    $notificationStatus = "Email not applicable(error)";
+    $notificationStatus = pesStatusChangeNotification::EMAIL_NOT_APPLICABLE_ERROR;
 }
 
 $messages = ob_get_clean();
@@ -86,8 +51,8 @@ $response = array(
     'success' => $success,
     'messages' => $messages, 
     'emailResponse' => $notificationStatus,
-    'cnum' => $_POST['psm_cnum'], 
-    'workerId' => $_POST['psm_workerid'], 
+    'cnum' => $_POST['psm_cnum'],
+    'workerId' => $_POST['psm_worker_id'],
     'formattedEmailField' => $formattedEmailField
 );
 $jse = json_encode($response);

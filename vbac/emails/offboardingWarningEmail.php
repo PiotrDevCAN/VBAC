@@ -4,9 +4,10 @@ namespace vbac\emails;
 use itdq\BlueMail;
 use itdq\Loader;
 use vbac\allTables;
+use vbac\interfaces\notificationEmail;
 use vbac\personRecord;
 
-class offboardingWarningEmail {
+class offboardingWarningEmail implements notificationEmail {
 
     private static $warnPmoDateChange = 'Please consider OFFBOARDING the following individual:
       Name : &&name&&
@@ -19,8 +20,7 @@ class offboardingWarningEmail {
       Country working in : &&country&&
       LoB : &&lob&&
       Employee Type:&&type&&
-      Functional Mgr: &&functionalMgr&&'
-    ;
+      Functional Mgr: &&functionalMgr&&';
 
     private static $warnPmoDateChangePattern = array(
       '/&&name&&/',
@@ -34,7 +34,7 @@ class offboardingWarningEmail {
       '/&&functionalMgr&&/',
     );
 
-    function sendOffboardingWarning(personRecord $person){
+    function send(personRecord $person){
 
         $loader = new Loader();
 

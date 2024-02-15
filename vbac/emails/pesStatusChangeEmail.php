@@ -5,9 +5,10 @@ use itdq\AuditTable;
 use itdq\BlueMail;
 use itdq\Loader;
 use vbac\allTables;
+use vbac\interfaces\notificationEmail;
 use vbac\personRecord;
 
-class pesStatusChangeEmail {
+class pesStatusChangeEmail implements notificationEmail {
 
   private static $pesClearedPersonalEmail = 'Hello &&candidate&&,
     <br/>I can confirm that you have successfully passed Lloyds Bank PES Screening, with a personal reference, effective from &&effectiveDate&&
@@ -67,7 +68,7 @@ class pesStatusChangeEmail {
 
   private static $pesClearedProvisionalEmailPattern = array('/&&candidate&&/');
   
-  function sendPesStatusChangedEmail(personRecord $person, $isPesSuppressable = true){
+  function send(personRecord $person, $isPesSuppressable = true){
     
     $loader = new Loader();
 

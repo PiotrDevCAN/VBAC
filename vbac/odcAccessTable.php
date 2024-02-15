@@ -157,7 +157,7 @@ class odcAccessTable extends DbTable {
 
     function locationMismatch(){
 
-        $vbacActivePredicate = personTable::activePersonPredicate(true, 'P');
+        $vbacActivePredicate = personTable::activePersonPredicate(true);
 
         // records found in ODC_ACCESS as having access to a Secured Area that doesn't match with their LBG_LOCATION in VBAC PERSON table.
         $sql = "select * ";

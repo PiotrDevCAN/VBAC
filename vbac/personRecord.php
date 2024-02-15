@@ -1252,13 +1252,13 @@ class personRecord extends DbRecord
       $loader = new Loader();
 
       $availableForStatusUpdate = personTable::pesProcessBeginPredicate();
-      $allNondKyndrylEmployees = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON, $availableForStatusUpdate);
+      $allNonKyndrylEmployees = $loader->loadIndexed('EMAIL_ADDRESS','CNUM',allTables::$PERSON, $availableForStatusUpdate);
 
       $availableForStatusUpdateWorkerID = personTable::pesProcessBeginPredicate();
       $allKyndrylEmployeesWorkerIDs = $loader->loadIndexed('EMAIL_ADDRESS','WORKER_ID',allTables::$PERSON, $availableForStatusUpdateWorkerID);
 
       $allPersons = array();
-      foreach($allNondKyndrylEmployees as $cnum => $emailAddress) {
+      foreach($allNonKyndrylEmployees as $cnum => $emailAddress) {
         $allPersons[$emailAddress]['cnum'] = $cnum;
         $allPersons[$emailAddress]['workerId'] = self::NOT_FOUND;
       }

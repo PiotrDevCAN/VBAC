@@ -1,6 +1,5 @@
 <?php
 
-use itdq\JwtSecureSession;
 use itdq\Connection;
 use itdq\Mailer;
 use itdq\Redis;

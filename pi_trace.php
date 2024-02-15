@@ -3,15 +3,9 @@ use itdq\Trace;
 use itdq\TraceList;
 use itdq\AllItdqTables;
 use itdq\TraceControlRecord;
-use dpulse\AllTables;
-use dpulse\accountManagementList;
-use itdq\Connection;
 
 $csv = null;
 $excel = null;
-
-$country = 'E4';
-$dbClient = new Connection();
 
 do_auth($_SESSION['cdiBgAz']);
 

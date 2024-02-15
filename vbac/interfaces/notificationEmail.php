@@ -2,7 +2,9 @@
 
 namespace vbac\interfaces;
 
+use vbac\personRecord;
+
 interface notificationEmail
 {
-    function send($resultSetOnly = false);
+    function send(personRecord $person);
 }

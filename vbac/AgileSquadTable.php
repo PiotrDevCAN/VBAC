@@ -46,8 +46,7 @@ class AgileSquadTable extends DbTable{
         $sql.= " LEFT JOIN ". $GLOBALS['Db2Schema'] . "." . $tribeTable . " as T ";
         $sql.= " ON S.TRIBE_NUMBER = T.TRIBE_NUMBER ";
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
-// echo $sql;
-// exit;
+
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;

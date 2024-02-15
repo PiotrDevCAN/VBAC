@@ -4,12 +4,12 @@
 // ** session_cache_limiter('private');
 // ** for fpdf http://www.fpdf.org/ download of pdf files in https;
 
-use itdq\JwtSecureSession;
+use itdq\ByJgJwtSecureSession;
+use PhpOffice\PhpSpreadsheet\Helper\Sample;
 use itdq\Connection;
 use itdq\Mailer;
 use itdq\Redis;
 use itdq\WorkerAPI;
-use PhpOffice\PhpSpreadsheet\Helper\Sample;
 
 # Takes a hash of values and files in a text template
 function build_template($template, $vals) {
@@ -289,19 +289,11 @@ if (isset($_SERVER['HTTP_USER_AGENT']) && !empty($_SERVER['HTTP_USER_AGENT'])) {
 
     include ('includes/startsWith.php');
     include ('includes/endsWith.php');
-
-    // $sessionConfig = (new \ByJG\Session\SessionConfig($_SERVER['SERVER_NAME']))
-    // ->withTimeoutMinutes(120)
-    // ->withSecret($_ENV['jwt_token']);
-
-    $sessionConfig = new \ByJG\Session\SessionConfig($_SERVER['SERVER_NAME']);
-    $sessionConfig->withTimeoutMinutes(120);
-    $sessionConfig->withSecret($_ENV['jwt_token']);
-
-    $handler = new JwtSecureSession($sessionConfig);
-    session_set_save_handler($handler, true);
-
-    session_start();
+    
+    /*
+    * ByJG session
+    */
+    $handler = new ByJgJwtSecureSession();
 
     error_log(__FILE__ . "server_name:" . $_SERVER['SERVER_NAME']);
     error_log(__FILE__ . "jwt_token:" . $_ENV['jwt_token']);
@@ -311,6 +303,10 @@ if (isset($_SERVER['HTTP_USER_AGENT']) && !empty($_SERVER['HTTP_USER_AGENT'])) {
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
+
+    $elapsed = microtime(true);
+    error_log("Pre Mailer:" . (float)($elapsed-$start));
+    $mailerClient = new Mailer();
 
     ini_set('memory_limit', '3072M');
     ini_set('max_execution_time', 360);
@@ -397,9 +393,9 @@ if (isset($_SERVER['HTTP_USER_AGENT']) && !empty($_SERVER['HTTP_USER_AGENT'])) {
     error_log("Pre Redis:" . (float)($elapsed-$start));
     $redisClient = new Redis();
 
-    $elapsed = microtime(true);
-    error_log("Pre Mailer:" . (float)($elapsed-$start));
-    $mailerClient = new Mailer();
+    // $elapsed = microtime(true);
+    // error_log("Pre Mailer:" . (float)($elapsed-$start));
+    // $mailerClient = new Mailer();
     
     $elapsed = microtime(true);
     error_log("Pre Worker API:" . (float)($elapsed-$start));

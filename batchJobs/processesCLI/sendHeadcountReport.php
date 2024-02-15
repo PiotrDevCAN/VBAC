@@ -19,11 +19,12 @@ $_ENV['email'] = 'on';
 //     return;
 // }
 
-$noreplemailid = $_ENV['noreplykyndrylemailid'];
-$emailAddress = array(
-    'philip.bibby@kyndryl.com',
-    $_ENV['automationemailid']
-);
+$to = array($_ENV['devemailid']);
+$cc = array();
+if (strstr($_ENV['environment'], 'vbac')) {
+    $cc[] = 'Anthony.Stark@kyndryl.com';
+    $cc[] = 'philip.bibby@kyndryl.com';
+}
 
 // Create new Spreadsheet object
 $spreadsheet = new Spreadsheet();
@@ -98,7 +99,9 @@ try {
     $message .= '<ul>';
     $message .= '<li>Missing UK Business Titles to Bands alignment</li>';
     $message .= '</ul>';
-    $result = BlueMail::send_mail($emailAddress, $subject, $message ,$noreplemailid, array(),array(),true,$attachments);
+
+    $replyto = $_ENV['noreplyemailid'];
+    $result = BlueMail::send_mail($to, $subject, $message ,$replyto, $cc, array(), true, $attachments);
     var_dump($result);
 
 } catch (Exception $e) {

@@ -22,6 +22,7 @@ let stopOffboardingBox = await cacheBustImport('./modules/boxes/person/stopOffbo
 let deoffBoardingBox = await cacheBustImport('./modules/boxes/person/deoffBoardingBox.js');
 let offboardedBox = await cacheBustImport('./modules/boxes/person/completeOffboardingBox.js');
 let offboardingBox = await cacheBustImport('./modules/boxes/person/initiateOffboardingBox.js');
+let editCtidBox = await cacheBustImport('./modules/boxes/person/editCtidBox.js');
 let clearCtidBox = await cacheBustImport('./modules/boxes/person/clearCtidBox.js');
 
 let setPmoStatusBox = await cacheBustImport('./modules/boxes/person/setPmoStatusBox.js');
@@ -72,6 +73,7 @@ const StopOffboardingBox = new stopOffboardingBox(PersonPortalLinked);
 const DeoffBoardingBox = new deoffBoardingBox(PersonPortalLinked);
 const OffboardedBox = new offboardedBox(PersonPortalLinked);
 const OffboardingBox = new offboardingBox(PersonPortalLinked);
+const EditCtidBox = new editCtidBox(PersonPortalLinked);
 const ClearCtidBox = new clearCtidBox(PersonPortalLinked);
 
 const SetPmoStatusBox = new setPmoStatusBox(PersonPortalLinked);

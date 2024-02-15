@@ -21,7 +21,6 @@ switch (true) {
         
         if (! $rs) {
             echo json_encode(sqlsrv_errors());
-            echo json_encode(sqlsrv_errors());
             var_dump($sql);
         }
         
@@ -66,7 +65,6 @@ switch (true) {
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
         
         if (! $rs) {
-            echo json_encode(sqlsrv_errors());
             echo json_encode(sqlsrv_errors());
             var_dump($sql);
         }

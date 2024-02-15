@@ -4,8 +4,8 @@
 
 // # these settings control aspects of the site
 // # content (look and feel)
-$_SESSION['SITE_NAME'] = 'rest';
-$_SESSION['country'] = 'E4';
+$_SESSION['SITE_NAME'] = 'vbac';
+$_SESSION['country'] = 'azure';
 
 if(!isset($_ENV['environment'])){
     echo "<pre>";
@@ -77,6 +77,7 @@ $site = array(
     'email' => false,
     'emailId' => 'DoNotReply_vbac@uk.ibm.com',
     'devEmailId' => 'Piotr.Tajanowicz@kyndryl.com',
+    'automationemailid' => 'Piotr.Tajanowicz@kyndryl.com',
 
     'AuditLife' => '13 months',
     'AuditDetailsLife' => '6 months',

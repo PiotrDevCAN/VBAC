@@ -228,7 +228,10 @@ class assetRequest {
         $.ajax({
           url: "ajax/saveCtid.php",
           type: "POST",
-          data: { notesid: requestee, ctid: ctid },
+          data: {
+            notesid: requestee,
+            ctid: ctid
+          },
           success: function (result) {
             console.log("we have saved their CT ID");
             console.log(result);

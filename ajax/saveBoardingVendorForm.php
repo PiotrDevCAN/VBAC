@@ -107,7 +107,7 @@ try {
         
             $timeToWarnPmo = $person->checkIfTimeToWarnPmo();
             $offboardingWarning = new offboardingWarningEmail();
-            $timeToWarnPmo ? $offboardingWarning->sendOffboardingWarning($person) : null;
+            $timeToWarnPmo ? $offboardingWarning->send($person) : null;
 
             // null - default return value
             // false - update row
@@ -127,7 +127,7 @@ try {
                             $workerId = $person->getValue('WORKER_ID');
                             if (!empty($cnum) && !empty($workerId)) {                    
                                 $cbc = new cbcEmail();
-                                $cbc->sendCbcEmail($person);
+                                $cbc->send($person);
                             } else {
                                 echo "<br/>CBC Check notification has been NOT sent due to missing person data.";
                             }

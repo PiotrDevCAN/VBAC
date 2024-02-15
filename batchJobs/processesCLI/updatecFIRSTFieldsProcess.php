@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Script intended for populating an CFIRST_ID in records in the PERSON table
+ */
+
 use itdq\BlueMail;
 use itdq\cFIRST;
 use vbac\personTable;
@@ -12,50 +16,12 @@ error_reporting(E_ALL);
 set_time_limit(0);
 ini_set('memory_limit','3072M');
 
-$notFound = 'not found';
-
-$personTable = new personTable(allTables::$PERSON);
-$cFirst = new cFIRST();
-
-$timeMeasurements = array();
-$start =  microtime(true);
-$startPhase1 = microtime(true);
-$counter = 0;
-
-for($i = 1; $i <= 1000; $i++) {
-    $data = $cFirst->getBackgroundCheckRequestList(null, null, $i);
-    list(
-        'BGVErrors' => $error,
-        'BGVListResponse' => $list
-    ) = $data;
-    if (count($list) > 0) {
-        $counter += count($list);
-        foreach($list as $key => $record) {
-			list(
-				"APIReferenceCode" => $refCode,
-				"AddedOn" => $addedDate,
-				"CandidateId" => $candidateId,
-				"CurrentStatus" => $status,
-				"Email" => $emailAddress,
-				"FirstName" => $firstName,
-				"LastName" => $lastName,
-				"MiddleName" => $middleName,
-				"Phone" => $phone
-			) = $record;
-            if (!empty($email)) {
-                $personTable->setcFIRSTDataByEmail($email, $candidateId);
-            }
-        }
-    } else {
-        break;
-    }
-}
-
-$endPhase1 = microtime(true);
-$timeMeasurements['phase_1'] = (float)($endPhase1-$startPhase1);
-
-$end = microtime(true);
-$timeMeasurements['overallTime'] = (float)($end-$start);
+// require_once __DIR__ . '/../../src/Bootstrap.php';
+// $helper = new Sample();
+// if ($helper->isCli()) {
+//     $helper->log('This example should only be run from a Web Browser' . PHP_EOL);
+//     return;
+// }
 
 $to = array($_ENV['devemailid']);
 $cc = array();
@@ -64,20 +30,76 @@ if (strstr($_ENV['environment'], 'vbac')) {
     $cc[] = 'philip.bibby@kyndryl.com';
 }
 
-$subject = 'Update cFIRST API fields timings';
+try {
 
-$message = 'Updated vBAC Environment: ' . $GLOBALS['Db2Schema'];
+    $personTable = new personTable(allTables::$PERSON);
+    $cFirst = new cFIRST();
+    
+    $timeMeasurements = array();
+    $start =  microtime(true);
+    $startPhase1 = microtime(true);
+    $totalCounter = 0;
+    
+    $i = 1;
+    do {
+        $data = $cFirst->getBackgroundCheckRequestList(null, null, $i);
+        list(
+            'BGVErrors' => $error,
+            'BGVListResponse' => $list
+        ) = $data;
+        foreach($list as $key => $entry) {
+            list(
+                // "APIReferenceCode" => $refCode,
+                // "UniqueReferenceNo" => $uniqueReferenceNo,
+                // "ProfileId" => $profileId,
+                "CandidateId" => $candidateId,
+                // "CurrentStatus" => $status,
+                "Email" => $emailAddress,
+                // "FirstName" => $firstName,
+                // "MiddleName" => $middleName,
+                // "LastName" => $lastName,
+                // "Phone" => $phone,
+                // "AddedOn" => $addedDate,
+                // "InfoReceivedOn" => $infoReceivedDate,
+                // "InfoRequestedOn" => $infoRequestedDate,
+                // "InvitedOn" => $invitedDate,
+                // "SubmittedOn" => $submittedDate,
+                // "CompletedOn" => $completedDate,
+            ) = $entry;
+            if (!empty($emailAddress)) {
+                $personTable->setcFIRSTDataByEmail($emailAddress, $candidateId);
+            }
+        }
+        $i++;
+        $totalCounter += count($list);
+    } while (count($list) > 0);
+    
+    $endPhase1 = microtime(true);
+    $timeMeasurements['phase_1'] = (float)($endPhase1-$startPhase1);
+    
+    $end = microtime(true);
+    $timeMeasurements['overallTime'] = (float)($end-$start);
+    
+    $subject = 'Update cFIRST API fields timings';
+    $message = 'Updated vBAC Environment: ' . $GLOBALS['Db2Schema'];
+    $message .= '<HR>';
+    $message .= '<BR/>Amount of records read from cFIRST API ' . $totalCounter;
+    $message .= '<HR>';
+    $message .= '<BR/>Time of updating vBAC records: ' . $timeMeasurements['phase_1'];
+    $message .= '<BR/>Overall time: ' . $timeMeasurements['overallTime'];
+    $message .= '<HR>';
+    
+    $replyto = $_ENV['noreplyemailid'];
+    $resonse = BlueMail::send_mail($to, $subject, $message, $replyto, $cc);
 
-$message .= '<HR>';
+} catch (Exception $e) {
+    $subject = 'Error in: Update cFIRST Fields ';
+    $message = $e->getMessage() . ' ' . $e->getLine() . ' ' . $e->getFile();
 
-$message .= '<BR/>Amount of records read from cFIRST API ' . $counter;
-$message .= '<HR>';
-
-$message .= '<BR/>Time of updating vBAC records: ' . $timeMeasurements['phase_1'];
-
-$message .= '<BR/>Overall time: ' . $timeMeasurements['overallTime'];
-
-$message .= '<HR>';
-
-$replyto = $_ENV['noreplyemailid'];
-$resonse = BlueMail::send_mail($to, $subject, $message, $replyto, $cc);
+    $to = array($_ENV['devemailid']);
+    $cc = array();
+    $replyto = $_ENV['noreplyemailid'];
+    
+    $resonse = BlueMail::send_mail($to, $subject, $message, $replyto, $cc);
+    trigger_error($subject . " - ". $message, E_USER_ERROR);
+}

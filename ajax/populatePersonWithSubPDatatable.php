@@ -7,8 +7,6 @@ use vbac\personWithSubPTable;
 set_time_limit(0);
 ob_start();
 
-// session_start();
-
 $personTable = new personWithSubPTable(allTables::$PERSON, null, true, true);
 $preBoardersAction = isset($_REQUEST['preBoardersAction']) ? $_REQUEST['preBoardersAction'] : null;
 

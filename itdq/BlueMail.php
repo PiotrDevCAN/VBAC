@@ -237,8 +237,7 @@ class BlueMail
         !empty($cc)  ? $data[] = serialize($cc) : null;
         !empty($bcc) ? $data[] = serialize($bcc) : null;
 
-        $preparedStatement = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
-        $rs = sqlsrv_execute($preparedStatement);
+        $rs = sqlsrv_query( $GLOBALS['conn'], $sql, $data);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs,__CLASS__,__METHOD__,$sql);

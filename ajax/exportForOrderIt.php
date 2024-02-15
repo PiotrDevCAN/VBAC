@@ -60,7 +60,8 @@ foreach ($allOrderItTypes as $orderItType){
         while($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)){
             $allApproversForType[] = $row['APPROVER_EMAIL'] ;
         }
-//         $allApproversForType = $loader->load('APPROVER_EMAIL',allTables::$ASSET_REQUESTS,$restrictToFmPredicate);
+        /* Free the statement resources. */
+        sqlsrv_free_stmt($rs);
 
         foreach ($allApproversForType as $approverEmail){
             $requestForOneApproverPredicate = $restrictToApproverPredicate . " AND APPROVER_EMAIL='" . trim($approverEmail) . "' ";
@@ -69,13 +70,8 @@ foreach ($allOrderItTypes as $orderItType){
             $varbsCovered[] = $assetRequestTable->currentVarb;
         }
 
-//         $requestData .= $assetRequestTable->getRequestsForOrderIt($orderItType,$first, $predicate);
-//         $lastSql[] = $assetRequestTable->getLastSql();
-
-//         $varbsCovered[] = $assetRequestTable->currentVarb;
         $first = false;
 
-       // $lastSql[] = $assetRequestTable->getLastSql();
     }
     echo "<h5>Total requests for LBG Type " . $orderItType . " :" . $totalRequestsForType;
     $lastSql[] = $assetRequestTable->getLastSql();

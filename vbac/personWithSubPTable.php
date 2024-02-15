@@ -1,7 +1,6 @@
 <?php
 namespace vbac;
 
-use itdq\Connection;
 use itdq\DbTable;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
@@ -23,16 +22,13 @@ class personWithSubPTable extends personTable {
             $subPlatformRecord = array_map('trim', $subPlatformRecord);
             $this->personSubPlatform[$subPlatformRecord['CNUM']][] = $subPlatformRecord['SUBPLATFORM'];
         }
-
     }
-
 
     function addButtons($row){
         $row = parent::addButtons($row);
         $row['SUBPLATFORM'] = !empty($this->personSubPlatform[$row['CNUM']]) ? implode(',',$this->personSubPlatform[$row['CNUM']]) :  '';
         return $row;
     }
-
 
     function addSubplatform($row){
         $row['SUBPLATFORM'] = !empty($this->personSubPlatform[$row['CNUM']]) ? implode(',',$this->personSubPlatform[$row['CNUM']]) :  '';
@@ -42,8 +38,6 @@ class personWithSubPTable extends personTable {
     static function writeResultSetToXls( $resultSet,Spreadsheet $spreadsheet,$withColumnHeadings=true,$columnIndex=1,$rowIndex=1){
         $personSubPlatform = array();
         $originalConnection = $GLOBALS['conn'];
-
-        $dbClient = new Connection();
 
         $sql = " SELECT * FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON_SUBPLATFORM;
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
@@ -87,9 +81,4 @@ class personWithSubPTable extends personTable {
         }
         return $rowsWritten;
     }
-
-
-
-
-
 }

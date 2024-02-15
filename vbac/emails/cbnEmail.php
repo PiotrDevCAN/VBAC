@@ -3,10 +3,11 @@ namespace vbac\emails;
 
 use itdq\BlueMail;
 use vbac\allTables;
+use vbac\interfaces\notificationEmail;
 use vbac\personRecord;
 use vbac\personTable;
 
-class cbnEmail {
+class cbnEmail implements notificationEmail {
 
     private static $cbnEmailBody = "You are recorded in the <a href='&&host&&'>vBAC</a> tool, as a Functional Manager for one or more people.<h3>Please review the people assigned to you for continued business need and/or to correct any inaccuracies. <a href='&&host&&/pa_pmo.php'>Link here</a></h3>"
       . "<p>Select the <b><em>Mgrs CBN Report</em></b> and use the <b><em>Hide Offboarded/ing</em></b> option, both are buttons on the Person Portal page.</p>"
@@ -17,7 +18,7 @@ class cbnEmail {
 
     private static $cbnEmailPattern = array('/&&host&&/');
 
-    function sendCbnEmail(){
+    function send(personRecord $person){
         
         $sendResponse = false;
         $personTable = new personTable(allTables::$PERSON);

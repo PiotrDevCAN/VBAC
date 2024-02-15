@@ -64,4 +64,6 @@ class allTables
     public static $CANDIDATE_DETAILS      = 'CANDIDATE_DETAILS';
     public static $CANDIDATE_STATUS       = 'CANDIDATE_STATUS';
     public static $CANDIDATE_DOCUMENTS    = 'CANDIDATE_DOCUMENT';
+
+    public static $CFIRST_PERSON          = 'CFIRST_PERSON';
 }

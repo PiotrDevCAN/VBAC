@@ -7,14 +7,14 @@ ob_start();
 AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_POST,true) . "</b>",AuditTable::RECORD_TYPE_DETAILS);
 
 $cnum = !empty($_POST['cnum']) ? $_POST['cnum'] : personTable::getCnumFromNotesid($_POST['notesid']);
+$workerId = !empty($_POST['worker_id']) ? $_POST['worker_id'] : personTable::getCnumFromNotesid($_POST['notesid']);
 
 try {
 
     $table = new personTable(allTables::$PERSON);
-    $updateRecordResult = $table->saveCtid($cnum,$_POST['ctid']);
+    $updateRecordResult = $table->saveCtid($cnum, $workerId, $_POST['ctid']);
 
     if(!$updateRecordResult){
-        echo json_encode(sqlsrv_errors());
         echo json_encode(sqlsrv_errors());
         AuditTable::audit("Db2 Error in " . __FILE__ . " Code:<b>" . json_encode(sqlsrv_errors()) . "</b> Msg:<b>" . json_encode(sqlsrv_errors()) . "</b>", AuditTable::RECORD_TYPE_DETAILS);
         $success = false;

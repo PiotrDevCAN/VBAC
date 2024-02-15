@@ -29,24 +29,19 @@ if($uid != 'newEntry'){
     $sql .= " SET " . $valueField  . "  =  ? " ;
     $sql .= " WHERE " . $valueId . " = ? ";
     $data = array($value,$uid);
-    $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
 } else {
     $sql = " INSERT INTO " . $GLOBALS['Db2Schema'] . "." . $table;
     $sql .= " ( " . $valueField  . ") values (?) " ;
     $data = array($value);
-    $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
 }
 
-if(!$preparedStmt){
+$rs = sqlsrv_query($GLOBALS['conn'], $sql, $data);
+
+if(!$rs){
     echo json_encode(sqlsrv_errors());
-    echo json_encode(sqlsrv_errors());
-} else {
-    $execute = sqlsrv_execute($preparedStmt);
-    if(!$execute){
-        echo json_encode(sqlsrv_errors());
-        echo json_encode(sqlsrv_errors());
-    }
 }
+/* Free the statement resources. */
+sqlsrv_free_stmt($rs);
 
 $messages = ob_get_clean();
 ob_start();

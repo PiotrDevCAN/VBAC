@@ -3,9 +3,10 @@ namespace vbac\emails;
 
 use itdq\AuditTable;
 use itdq\BlueMail;
+use vbac\interfaces\notificationEmail;
 use vbac\personRecord;
 
-class cbcEmail {
+class cbcEmail implements notificationEmail {
     
     private static $cbcEmailBody = "<h3>The following person has been boarded with a location that may not have a CBC/DOU in place.</h3>"
       . "<table>"
@@ -20,7 +21,7 @@ class cbcEmail {
 
     private static $cbcEmailPattern = array('/&&notesid&&/','/&&cnum&&/','/&&workerId&&/','/&&countryCode&&/','/&&lbgLocation&&/','/&&role&&/');
 
-    function sendCbcEmail(personRecord $person){
+    function send(personRecord $person){
 
         $sendResponse = false;
         

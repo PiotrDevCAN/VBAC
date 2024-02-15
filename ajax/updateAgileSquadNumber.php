@@ -12,7 +12,6 @@ $updateResult = $personTable->updateAgileSquadNumber($_POST['agileCnum'], $_POST
 
 if(!$updateResult){
     echo json_encode(sqlsrv_errors());
-    echo json_encode(sqlsrv_errors());
 }
 
 $messages = ob_get_clean();

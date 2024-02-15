@@ -1,6 +1,8 @@
 <?php
 
 //use ByJG\Session\JwtSession;
+
+use itdq\ByJgJwtSecureSession;
 use itdq\Connection;
 use itdq\Mailer;
 use itdq\Redis;
@@ -21,11 +23,10 @@ session_start();
 include ('vendor/autoload.php');
 include ('splClassLoader.php');
 
-// $sessionConfig = (new \ByJG\Session\SessionConfig($_SERVER['SERVER_NAME']))
-// ->withSecret($_ENV['jwt_token']);
-
-// $handler = new \ByJG\Session\JwtSession($sessionConfig);
-// session_set_save_handler($handler, true);
+/*
+* ByJG session
+*/
+// $handler = new ByJgJwtSecureSession();
 
 require_once("php/errorHandlers.php");
 

@@ -7,8 +7,6 @@ use itdq\DbTable;
 set_time_limit(0);
 ob_start();
 
-// session_start();
-
 $personTable = new personTable(allTables::$PERSON);
 
 $sql = " SELECT distinct P.CNUM, P.NOTES_ID, P.ROLE_ON_THE_ACCOUNT as JRSS, AS1.SQUAD_TYPE, AS1.TRIBE_NUMBER as TRIBE, ";
@@ -21,17 +19,13 @@ $sql.= " WHERE " . personTable::activePersonPredicate(true,"P");
 $sql.= " AND ( P.SQUAD_NUMBER is not null  AND P.SQUAD_NUMBER > 0 ) ";
 
 $data = array();
-$preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
-
-$rs = sqlsrv_execute($preparedStmt);
+$rs = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
 if(!$rs){
     DbTable::displayErrorMessage($rs, null, __FILE__, $sql);
 }
 
-$data = false;
-
-while ($row = sqlsrv_fetch_array($preparedStmt, SQLSRV_FETCH_ASSOC)){
+while ($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)){
     $row = array_map('trim', $row);
     $cnum = $row['CNUM'];
     $row['CNUM'] = array('display'=>$row['CNUM'] . "<br/><small>" . $row['NOTES_ID'] . "</small>", 'sort'=>$row['CNUM']);
@@ -48,6 +42,8 @@ while ($row = sqlsrv_fetch_array($preparedStmt, SQLSRV_FETCH_ASSOC)){
     unset($row['SQUAD_NUMBER']);
     $data[] = $row;
 }
+/* Free the statement resources. */
+sqlsrv_free_stmt($rs);
 
 $dataJsonAble = json_encode($data);
 $messages = ob_get_clean();

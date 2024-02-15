@@ -1,5 +1,6 @@
 <?php
 
+use vbac\personRecord;
 use vbac\pesEmail;
 
 ob_start();
@@ -7,10 +8,23 @@ $pesEmailObj = new pesEmail();
 
 $cnum = $_GET['cnum'];
 $workerId = $_GET['workerid'];
+$emailAddress = $_GET['emailaddress']; 
+$country = $_GET['country'];
+$openSeat = null;
 
 try {
+    $person = new personRecord();
+    $person->setFromArray(
+        array(
+            'CNUM'=>$cnum,
+            'WORKER_ID'=>$workerId,
+            'EMAIL_ADDRESS'=>$emailAddress,
+            'COUNTRY'=>$country,
+            'OPEN_SEAT'=>$openSeat
+        )
+    );
     $recheck = $_GET['recheck']=='yes';
-    $emailDetails = $pesEmailObj->getEmailDetails($cnum, $workerId, $_GET['emailaddress'], $_GET['country'], null, $recheck, false);
+    $emailDetails = $pesEmailObj->getEmailDetails($person, $recheck, false);
 } catch ( \Exception $e) {
     switch ($e->getCode()) {
         case 800:

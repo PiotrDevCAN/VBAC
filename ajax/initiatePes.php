@@ -49,7 +49,7 @@ try {
     PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true);
 
     $pesRequest = new pesRequestEmail();
-    $pesRequest->sendPesRequest($person);
+    $pesRequest->send($person);
     PhpMemoryTrace::reportPeek(__FILE__,__LINE__,true);
 
     $success = $table->setPesRequested($cnum, $workerId, $_SESSION['ssoEmail']);

@@ -4,7 +4,6 @@ use vbac\allTables;
 use vbac\personRecord;
 use vbac\personTable;
 
-$personRecord = new personRecord();
 $personTable = new personTable(allTables::$PERSON);
 $headerCells = $personTable->headerRowForFullDatatable();
 
@@ -54,6 +53,7 @@ $person->confirmOffboardingInfoModal();
 include_once 'includes/modalSavingBoardingDetails.html';
 include_once 'includes/modalEditPerson.html';
 include_once 'includes/modalEditEmailAddress.html';
+include_once 'includes/modalEditCtid.html';
 // include_once 'includes/modalConfirmOffboarding.html';
 ?>
 

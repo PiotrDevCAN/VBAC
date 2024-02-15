@@ -22,17 +22,24 @@ class pesStopBox extends box {
         $(document).on("click", ".btnPesStop", function (e) {
             $(this).addClass("spinning");
             var cnum = $(this).data("cnum");
-            var workerId = $(this).data("workerid");
+            var workerid = $(this).data("workerid");
+            var pesrequestor =$(this).data("pesrequestor");
             var notesid = $(this).data("notesid");
             var email = $(this).data("email");
             var now = new Date();
             var passportFirst = $(this).data("passportfirst");
-            var passportSurname = $(this).data("psm_passportSurname");
+            var passportSurname = $(this).data("passportSurname");
             $.ajax({
-                url: "ajax/sendPesStopRequestedEmail.php",
+                url: "ajax/stopPes.php",
                 data: {
                     psm_cnum: cnum,
-                    psm_worker_id: workerId
+					psm_worker_id: workerid,
+                    psm_pesrequestor: pesrequestor,
+					psm_status: "Restart Requested",
+					psm_detail: "PES Restart Requested",
+					PES_DATE_RESPONDED: now.toLocaleDateString("en-US"),
+					psm_passportFirst: passportFirst,
+					psm_passportSurname: passportSurname
                 },
                 type: "POST",
                 success: function (result) {

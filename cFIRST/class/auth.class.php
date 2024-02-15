@@ -193,9 +193,9 @@ class Auth {
 		return $this->processOpenIDConnectCallback($result);
 	}
 
-	//loads openidconnect
-	//uses Config
-	//returns stdClass
+	// loads openidconnect
+	// uses Config
+	// returns stdClass
 	private function loadOpenIDConnectConfig()
 	{
 		$cfg = new Config();

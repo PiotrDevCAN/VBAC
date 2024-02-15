@@ -2,11 +2,11 @@
 namespace vbac\emails;
 
 use itdq\BlueMail;
+use vbac\interfaces\notificationEmail;
 use vbac\personRecord;
-use vbac\personTable;
 use vbac\pesEmail;
 
-class informPmoOfPesStatusChangeEmail {
+class pmoOfPesStatusChangeEmail implements notificationEmail {
     
     private static $preboarderStatusChangeEmailBody = '<table width="100%" border="0"   cellpadding="0">
       <tr><td align="center">
@@ -29,7 +29,7 @@ class informPmoOfPesStatusChangeEmail {
       '/&&changed&&/'
     );
 
-    function informPmoOfPesStatusChange(personRecord $person, $newPesStatus, $ctbRtb){
+    function send(personRecord $person, $newPesStatus = null, $ctbRtb = null){
 
       $pesTaskId = personRecord::getPesTaskIdByCIO($ctbRtb);
       $to = array($pesTaskId);

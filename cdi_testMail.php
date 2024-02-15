@@ -21,23 +21,22 @@ $message = '<table width="100%" border="0"   cellpadding="0">
     </tr>
 </table>';
 
-// $response = itdq\BlueMail::send_mail(array('Piotr.Tajanowicz@kyndryl.com'), 'Resendable 4',$message, 'rob_dev@uk.ibm.com');
+// $response = itdq\BlueMail::send_mail(array($_ENV['devemailid']), 'Resendable 4',$message, 'rob_dev@uk.ibm.com');
 // echo "<pre>";
 // var_dump($response);
 
-// $to      = 'Piotr.Tajanowicz@kyndryl.com';
+// $to      = $_ENV['devemailid'];
 // $subject = 'Test from Docker';
 // // $message = 'Testing 1 2 3';
 // $headers = array(
-//     'From' => 'Piotr.Tajanowicz@kyndryl.com',
-//     'Reply-To' => 'Piotr.Tajanowicz@kyndryl.com',
+//     'From' => $_ENV['devemailid'],
+//     'Reply-To' => $_ENV['devemailid'],
 //     'X-Mailer' => 'PHP/' . phpversion()
 // );
 
 echo "<div class='container'>";
 
-$to[] = 'Piotr.Tajanowicz@kyndryl.com';
-$to[] = 'Piotr.Tajanowicz@kyndryl.com';
+$to[] = $_ENV['devemailid'];
 // $response = BlueMail::send_mail($to, 'Testing new SendMail', '<h1>Some text</h1><p>Well this is, that was header</p>', 'vbac@noReply.co.uk');
 $response = BlueMail::send_mail($to, 'Test', '<h1>Testing 1 2 3</h1>', 'vbac@noReply.co.uk');
 

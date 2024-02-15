@@ -25,7 +25,7 @@ class pesCancelBox extends box {
             var workerId = $(this).data("workerid");
             var now = new Date();
             var passportFirst = $(this).data("passportfirst");
-            var passportSurname = $(this).data("psm_passportSurname");
+            var passportSurname = $(this).data("passportSurname");
 
             $.ajax({
                 url: "ajax/savePesStatus.php",

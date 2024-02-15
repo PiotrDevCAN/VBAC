@@ -1,8 +1,8 @@
 <?php
 
 use itdq\AuditTable;
-use vbac\pesEmail;
 use vbac\allTables;
+use vbac\emails\pesProcessEmail;
 use vbac\pesTrackerTable;
 use vbac\personRecord;
 
@@ -19,8 +19,20 @@ $cnum = $_POST['cnum'];
 $workerid = $_POST['workerid'];
 $recheck = $_POST['recheck'];
 
-$pesEmailObj = new pesEmail();
-$emailResponse = $pesEmailObj->sendPesEmail($firstName, $lastName, $emailAddress, $country, $openSeat, $cnum, $recheck);
+$person = new personRecord();
+$person->setFromArray(
+    array(
+        'CNUM'=>$cnum,
+        'WORKER_ID'=>$workerId,
+        'FIRST_NAME'=>$firstName,
+        'LAST_NAME'=>$lastName,
+        'EMAIL_ADDRESS'=>$emailAddress,
+        'COUNTRY'=>$country,
+        'OPEN_SEAT'=>$openSeat
+    )
+);
+$pesEmailObj = new pesProcessEmail();
+$emailResponse = $pesEmailObj->send($person, $recheck);
 
 $emailStatus = $emailResponse['Status'];
 $emailStatusMessage = $emailResponse['sendResponse']['response'];

@@ -1,6 +1,6 @@
 <?php
 
-use itdq\JwtSecureSession;
+use itdq\ByJgJwtSecureSession;
 use itdq\Connection;
 // use itdq\WorkerAPI;
 
@@ -15,12 +15,10 @@ set_include_path("./" . PATH_SEPARATOR . "../" . PATH_SEPARATOR . "../../" . PAT
 include ('vendor/autoload.php');
 include ('splClassLoader.php');
 
-$sessionConfig = (new \ByJG\Session\SessionConfig($_SERVER['SERVER_NAME']))
-->withSecret($_ENV['jwt_token']);
-
-$handler = new JwtSecureSession($sessionConfig);
-session_set_save_handler($handler, true);
-session_start();
+/*
+* ByJG session
+*/
+$handler = new ByJgJwtSecureSession();
 
 error_log(__FILE__ . "server_name:" . $_SERVER['SERVER_NAME']);
 error_log(__FILE__ . "jwt_token:" . $_ENV['jwt_token']);

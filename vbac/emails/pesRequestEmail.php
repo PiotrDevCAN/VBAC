@@ -4,10 +4,11 @@ namespace vbac\emails;
 use itdq\BlueMail;
 use itdq\Loader;
 use vbac\allTables;
+use vbac\interfaces\notificationEmail;
 use vbac\personRecord;
 use vbac\personTable;
 
-class pesRequestEmail {
+class pesRequestEmail implements notificationEmail {
 
     public static $vbacNoReplyId = 'UKI.Business.Intelligence@kyndryl.com';
 
@@ -29,7 +30,7 @@ class pesRequestEmail {
         '/&&level&&/',
     );
 
-    function sendPesRequest(personRecord $person){
+    function send(personRecord $person){
         
         $loader = new Loader();
 

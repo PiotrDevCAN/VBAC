@@ -1,7 +1,10 @@
 <?php
 namespace vbac\emails;
 
-class offboardingEmail {
+use vbac\interfaces\notificationEmail;
+use vbac\personRecord;
+
+class offboardingEmail implements notificationEmail {
 
     private static $offboardingEmail = 'Please initiate OFFBOARDING for the following individual:\n
       Name : &&name&&
@@ -14,8 +17,7 @@ class offboardingEmail {
       Country working in : &&country&&
       LoB : &&lob&&
       Employee Type:&&type&&
-      Functional Mgr: &&functionalMgr&&'
-    ;
+      Functional Mgr: &&functionalMgr&&';
 
     private static $offboardingEmailPattern = array(
       '/&&name&&/',
@@ -28,5 +30,8 @@ class offboardingEmail {
       '/&&type&&/',
       '/&&functionalMgr&&/',
     );
-    
+
+    function send(personRecord $person){
+      
+    }
 }

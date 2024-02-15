@@ -1,10 +1,6 @@
 <?php
 namespace itdq;
 
-// use WorkerApi\Auth;
-
-// include_once "WorkerAPI/class/include.php";
-
 /*
  *  Handles Worker API.
  */

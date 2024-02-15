@@ -1,8 +1,8 @@
 <?php
 
 use itdq\AuditTable;
-use vbac\pesEmail;
 use vbac\allTables;
+use vbac\emails\pesChaserEmail;
 use vbac\pesTrackerTable;
 use vbac\personRecord;
 
@@ -16,8 +16,16 @@ $emailAddress = $_POST['emailaddress'];
 $chaser = $_POST['chaser'];
 $flm = $_POST['flm'];
 
-$pesEmailObj = new pesEmail();
-$emailResponse = $pesEmailObj->sendPesEmailChaser($cnum, $emailAddress, $chaser, $flm);
+$person = new personRecord();
+$person->setFromArray(
+    array(
+        'CNUM'=>$cnum,
+        'WORKER_ID'=>$workerId,
+        'EMAIL_ADDRESS'=>$emailAddress
+    )
+);
+$pesEmailObj = new pesChaserEmail();
+$emailResponse = $pesEmailObj->send($person, $chaser, $flm);
 
 $emailStatus = $emailResponse['Status'];
 

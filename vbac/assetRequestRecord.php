@@ -256,9 +256,11 @@ class assetRequestRecord extends DbRecord {
 
     function createJsCtidLookup(){
         $loader = new Loader();
-        $ctId = $loader->loadIndexed('CT_ID','CNUM',allTables::$PERSON);
+        $ctIdCnum = $loader->loadIndexed('CT_ID','CNUM',allTables::$PERSON);
+        $ctIdWorkerId = $loader->loadIndexed('CT_ID','WORKER_ID',allTables::$PERSON);
         $ctbFlag = $loader->loadIndexed('CTB_RTB','CNUM',allTables::$PERSON);
-        JavaScript::buildObjectFromLoadIndexedPair($ctId,'cnum2ctid');
+        JavaScript::buildObjectFromLoadIndexedPair($ctIdCnum,'cnum2ctid');
+        JavaScript::buildObjectFromLoadIndexedPair($ctIdWorkerId,'workerId2ctid');
         JavaScript::buildObjectFromLoadIndexedPair($ctbFlag,'cnum2ctbflag');
     }
 

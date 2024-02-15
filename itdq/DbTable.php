@@ -521,7 +521,7 @@ class DbTable {
         // }
 
         $sql = "SELECT * FROM ".$GLOBALS['Db2Schema'].'.'.strtoupper($this->tableName);
-        $rs = sqlsrv_prepare( $GLOBALS['conn'], $sql );
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, null, __FILE__, $sql);
@@ -1014,7 +1014,7 @@ class DbTable {
             $this->preparedInsertSQL = $sql;
         }
 
-        $insertArrayValues = array_values($insertArray);        
+        $insertArrayValues = array_values($insertArray);
         $this->preparedInsert = sqlsrv_prepare($GLOBALS['conn'], $this->preparedInsertSQL, $insertArrayValues);
         if (! $this->preparedInsert) {
             echo "<BR/>" . json_encode(sqlsrv_errors());
@@ -1045,7 +1045,7 @@ class DbTable {
         Trace::traceVariable($insertArray, __METHOD__, __LINE__);
         $preparedInsert = $this->prepareInsert($insertArray);
 
-        $rs = @sqlsrv_execute($preparedInsert);
+        $rs = sqlsrv_execute($preparedInsert);
 
         if (! $rs) {
             $this->lastDb2StmtError = json_encode(sqlsrv_errors());
@@ -1105,7 +1105,7 @@ class DbTable {
         $updateArray = $record->getColumns($populatedColumns, true, $nullColumns, $db2);
         Trace::traceVariable($updateArray, __METHOD__, __LINE__);
         $values = " SET";
-        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . ".$this->tableName ";
+        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
 
         foreach ($this->columns as $key => $properties) {
             /*

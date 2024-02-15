@@ -6,6 +6,10 @@ use itdq\AuditTable;
 use itdq\BlueMail;
 use itdq\DbTable;
 use itdq\Loader;
+use vbac\emails\pesTeamNoUpcomingRechecksEmail;
+use vbac\emails\pesTeamOfOffboardedEmail;
+use vbac\emails\pesTeamOfOffboardingEmail;
+use vbac\emails\pesTeamUpcomingRechecksEmail;
 // use itdq\slack;
 use vbac\personRecord;
 use vbac\pesTrackerTable;
@@ -525,18 +529,18 @@ class personTable extends DbTable
 
     public static function recordsFiltered($preBoardersPredicate = null, $predicate = null)
     {
+        $data = array();
         $sql = self::preparePersonCountStmt($preBoardersPredicate, $predicate);
 
-        $data = array();
-        $preparedCountStatement = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
-        $rs = sqlsrv_execute($preparedCountStatement);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql, $data);
+        
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         }
 
         $counter = 0;
-        while ($row = sqlsrv_fetch_array($preparedCountStatement, SQLSRV_FETCH_ASSOC)) {
+        while ($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)) {
             $counter = $row['COUNTER'];
         }
         return $counter;
@@ -544,18 +548,18 @@ class personTable extends DbTable
 
     public static function totalRows($preBoardersPredicate = null)
     {
+        $data = array();
         $sql = self::preparePersonCountStmt($preBoardersPredicate);
 
-        $data = array();
-        $preparedCountStatement = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
-        $rs = sqlsrv_execute($preparedCountStatement);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql, $data);
+        
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
             return false;
         }
 
         $counter = 0;
-        while ($row = sqlsrv_fetch_array($preparedCountStatement, SQLSRV_FETCH_ASSOC)) {
+        while ($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)) {
             $counter = $row['COUNTER'];
         }
         return $counter;
@@ -580,6 +584,8 @@ class personTable extends DbTable
                 $rowWithButtonsAdded = personRecord::checkIsBoardedAs($row['PES_STATUS_DETAILS']) ? $preparedRow : $this->addButtons($preparedRow);
                 $allData['data'][] = $rowWithButtonsAdded;
             }
+            /* Free the statement resources. */
+            sqlsrv_free_stmt($rs);
         }
 
         $allData['sql'] = $sql;
@@ -929,15 +935,26 @@ class personTable extends DbTable
         }
 
         // CT_ID
-        if (($_SESSION['isPmo'] || $_SESSION['isCdi']) && !empty($ctid)) {
-            $row['CT_ID'] = "<button type='button' class='btn btn-default btn-xs btnClearCtid btn-danger' aria-label='Left Align' ";
+        if ($_SESSION['isPmo'] || $_SESSION['isCdi']) {
+            $row['CT_ID'] = "<button type='button' class='btn btn-default btn-xs btnEditCtid btn-success' aria-label='Left Align' ";
             $row['CT_ID'] .= " data-cnum='" . $cnum . "'";
             $row['CT_ID'] .= " data-workerid='" . $workerId . "'";
-            $row['CT_ID'] .= " title='Delete CT ID.'";
+            $row['CT_ID'] .= " data-ctid='" . $ctid . "'";
+            $row['CT_ID'] .= " title='Set CT ID.'";
             $row['CT_ID'] .= " data-toggle='tooltip' data-placement='top' title='Clear CT ID'";
             $row['CT_ID'] .= " > ";
-            $row['CT_ID'] .= "<span class='glyphicon glyphicon-trash ' aria-hidden='true'></span>";
+            $row['CT_ID'] .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
             $row['CT_ID'] .= " </button> ";
+            if (!empty($ctid)) {
+                $row['CT_ID'] .= "<button type='button' class='btn btn-default btn-xs btnClearCtid btn-danger' aria-label='Left Align' ";
+                $row['CT_ID'] .= " data-cnum='" . $cnum . "'";
+                $row['CT_ID'] .= " data-workerid='" . $workerId . "'";
+                $row['CT_ID'] .= " title='Delete CT ID.'";
+                $row['CT_ID'] .= " data-toggle='tooltip' data-placement='top' title='Clear CT ID'";
+                $row['CT_ID'] .= " > ";
+                $row['CT_ID'] .= "<span class='glyphicon glyphicon-trash ' aria-hidden='true'></span>";
+                $row['CT_ID'] .= " </button> ";
+            }
             $row['CT_ID'] .= $ctid;
         }
 
@@ -1060,6 +1077,48 @@ class personTable extends DbTable
         $pesTracker->savePesComment($cnum, $workerId, "PES_STATUS set to :" . $status . " Date Used:" . $dateToUseObj->format('Y-m-d'));
 
         AuditTable::audit("PES Status set for:" . $cnum . "/" . $workerId . " To : " . $status . " By:" . $requestor, AuditTable::RECORD_TYPE_AUDIT);
+
+        return true;
+    }
+
+    public function setPesStatusDetails($cnum = null, $workerId = null, $details = null, $dateToUse = null)
+    {
+        if (!$cnum) {
+            throw new \Exception('No CNUM provided in ' . __METHOD__);
+        }
+        if (!$workerId) {
+            throw new \Exception('No WORKER ID provided in ' . __METHOD__);
+        }
+
+        $dateToUseObj = isset($dateToUse) ? \DateTime::createFromFormat('Y-m-d', $dateToUse) : new \DateTime();
+
+        if (!$dateToUseObj) {
+            throw new \Exception('Date format mismatch. Expected Y-m-d. Date was:' . $dateToUse);
+        }
+
+        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
+        $sql .= " SET PES_STATUS_DETAILS = ? ,";
+        $sql .= " PES_DATE_RESPONDED = ? ";
+        $sql .= " WHERE CNUM = ? ";
+        $sql .= " AND WORKER_ID = ? ";
+
+        $data = array(
+            htmlspecialchars($details),
+            $dateToUseObj->format('Y-m-d'),            
+            htmlspecialchars($cnum),
+            htmlspecialchars($workerId)
+        );
+        $result = sqlsrv_query($GLOBALS['conn'], $sql, $data);
+
+        if (!$result) {
+            DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+
+        // $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER);
+        // $pesTracker->savePesComment($cnum, $workerId, "PES_STATUS set to :" . $status . " Date Used:" . $dateToUseObj->format('Y-m-d'));
+
+        AuditTable::audit("PES Status Details set for:" . $cnum . "/" . $workerId . " To : " . $details, AuditTable::RECORD_TYPE_AUDIT);
 
         return true;
     }
@@ -1386,7 +1445,7 @@ class personTable extends DbTable
         );
 
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql .= " SET CFIRST_ID = ? ,";
+        $sql .= " SET CFIRST_ID = ? ";
         $sql .= " WHERE EMAIL_ADDRESS = ? ";
 
         try {
@@ -1405,13 +1464,14 @@ class personTable extends DbTable
         return true;
     }
 
-    public function saveCtid($cnum, $ctid)
+    public function saveCtid($cnum, $workerId, $ctid)
     {
-        $data = array(trim($ctid), trim($cnum));
+        $data = array(trim($ctid), trim($cnum), trim($workerId));
 
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET CT_ID = ? ";
         $sql .= " WHERE CNUM = ? ";
+        $sql .= " AND WORKER_ID = ? ";
 
         $result = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
@@ -1419,7 +1479,7 @@ class personTable extends DbTable
             DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
             return false;
         }
-        AuditTable::audit("Set CT_ID to $ctid for $cnum", AuditTable::RECORD_TYPE_AUDIT);
+        AuditTable::audit("Set CT_ID to $ctid for $cnum / $workerId", AuditTable::RECORD_TYPE_AUDIT);
 
         return true;
     }
@@ -1926,14 +1986,7 @@ class personTable extends DbTable
         $sql .= " WHERE CNUM = ? ";
         $sql .= " AND WORKER_ID = ? ";
 
-        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
-
-        if (!$preparedStmt) {
-            DbTable::displayErrorMessage($preparedStmt, __CLASS__, __METHOD__, $sql);
-            return false;
-        }
-        
-        return $preparedStmt;
+        return $sql;
     }
 
     private function prepareLeaverProjectedEndDateStmt($data)
@@ -1944,14 +1997,7 @@ class personTable extends DbTable
         $sql .= " AND WORKER_ID = ? ";
         $sql .= " AND PROJECTED_END_DATE IS NULL ";
 
-        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
-
-        if (!$preparedStmt) {
-            DbTable::displayErrorMessage($preparedStmt, __CLASS__, __METHOD__, $sql);
-            return false;
-        }
-        
-        return $preparedStmt;
+        return $sql;
     }
 
     private function prepareRevalidationLeaverStmt($data)
@@ -1961,14 +2007,7 @@ class personTable extends DbTable
         $sql .= " WHERE CNUM = ? ";
         $sql .= " AND WORKER_ID = ? ";
 
-        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
-
-        if (!$preparedStmt) {
-            DbTable::displayErrorMessage($preparedStmt, __CLASS__, __METHOD__, $sql);
-            return false;
-        }
-
-        return $preparedStmt;
+        return $sql;
     }
 
     private function prepareRevalidationPotentialLeaverStmt($data)
@@ -1979,22 +2018,15 @@ class personTable extends DbTable
         $sql .= " WHERE CNUM = ? ";
         $sql .= " AND WORKER_ID = ? ";
 
-        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
-
-        if (!$preparedStmt) {
-            DbTable::displayErrorMessage($preparedStmt, __CLASS__, __METHOD__, $sql);
-            return false;
-        }
-        
-        return $preparedStmt;
+        return $sql;
     }
 
     public function confirmRevalidation($notesId, $email, $cnum, $workerId)
     {
         $data = array(trim($notesId), trim($email), trim($cnum), trim($workerId));
-        $preparedStmt = $this->prepareRevalidationStmt($data);
+        $sql = $this->prepareRevalidationStmt($data);
 
-        $rs = sqlsrv_execute($preparedStmt);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, "prepared: revalidationStmt");
@@ -2006,8 +2038,9 @@ class personTable extends DbTable
     public function flagLeaver($cnum, $workerId)
     {
         $data = array(trim($cnum), trim($workerId));
-        $preparedStmt = $this->prepareRevalidationLeaverStmt($data);
-        $rs = sqlsrv_execute($preparedStmt);
+        $sql = $this->prepareRevalidationLeaverStmt($data);
+
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, "prepared: revalidationLeaverStmt");
@@ -2015,8 +2048,9 @@ class personTable extends DbTable
         }
 
         $data = array(trim($cnum));
-        $preparedStmt = $this->prepareLeaverProjectedEndDateStmt($data);
-        $rs = sqlsrv_execute($preparedStmt);
+        $sql = $this->prepareLeaverProjectedEndDateStmt($data);
+
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, "prepared: leaverProjectedEndDateStmt");
@@ -2031,8 +2065,9 @@ class personTable extends DbTable
     public function flagPotentialLeaver($cnum, $workerId)
     {
         $data = array(trim($cnum), trim($workerId));
-        $preparedStmt = $this->prepareRevalidationPotentialLeaverStmt($data);
-        $rs = sqlsrv_execute($preparedStmt);
+        $sql = $this->prepareRevalidationPotentialLeaverStmt($data);
+        
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
         if (!$rs) {
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, "prepared: revalidationPotentialLeaverStmt");
@@ -2082,7 +2117,16 @@ class personTable extends DbTable
             }
 
             $this->notifyFmOfRevalStatusChange($cnum, $workerId, personRecord::REVALIDATED_OFFBOARDING);
-            pesEmail::notifyPesTeamOfOffboarding($cnum, $revalidationStatusWas, $notesId);
+            $person = new personRecord();
+            $person->setFromArray(
+                array(
+                    'CNUM'=>$cnum,
+                    'WORKER_ID'=>$workerId,
+                    'NOTES_ID'=>$notesId
+                )
+            );
+            $email = new pesTeamOfOffboardingEmail();
+            $email->send($person, $revalidationStatusWas);
             AuditTable::audit("CNUM: $cnum WORKER_ID: $workerId (Reval:$revalidationStatusWas) has been flagged as :" . personRecord::REVALIDATED_OFFBOARDING, AuditTable::RECORD_TYPE_AUDIT);
             return true;
         }
@@ -2112,7 +2156,15 @@ class personTable extends DbTable
             }
 
             $this->notifyFmOfRevalStatusChange($cnum, $workerId, personRecord::REVALIDATED_OFFBOARDED);
-            pesEmail::notifyPesTeamOfOffboarded($cnum, $workerId, $revalidationStatus);
+            $person = new personRecord();
+            $person->setFromArray(
+                array(
+                    'CNUM'=>$cnum,
+                    'WORKER_ID'=>$workerId
+                )
+            );
+            $email = new pesTeamOfOffboardedEmail();
+            $email->send($person, $revalidationStatus);
             AuditTable::audit("CNUM: $cnum WORKER_ID: $workerId has been flagged as :" . personRecord::REVALIDATED_OFFBOARDED, AuditTable::RECORD_TYPE_AUDIT);
             return true;
         }
@@ -2211,7 +2263,6 @@ class personTable extends DbTable
         } else {
             throw new \Exception("Unable to find Functional Manager for $employeeCnum");
         }
-        // ('FM_CNUM','CNUM');
     }
 
     private function prepareUpdateLbgLocationStmt($data)
@@ -2220,22 +2271,17 @@ class personTable extends DbTable
         $sql .= " SET LBG_LOCATION = ? ";
         $sql .= " WHERE CNUM = ?  ";
 
-        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
-
-        if (!$preparedStmt) {
-            DbTable::displayErrorMessage($preparedStmt, __CLASS__, __METHOD__, $sql);
-            return false;
-        }
-    
-        return $preparedStmt;
+        return $sql;
     }
 
     public function updateLbgLocationForCnum($lbgLocation, $cnum)
     {
         if (!empty($cnum) && !empty($lbgLocation)) {
             $data = array($lbgLocation, $cnum);
-            $preparedStmt = $this->prepareUpdateLbgLocationStmt($data);
-            $rs = sqlsrv_execute($preparedStmt);
+            $sql = $this->prepareUpdateLbgLocationStmt($data);
+
+            $rs = sqlsrv_query($GLOBALS['conn'], $sql, $data);
+            
             if (!$rs) {
                 DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared statment');
                 return false;
@@ -2296,22 +2342,17 @@ class personTable extends DbTable
         $sql .= " SET SECURITY_EDUCATION = ? ";
         $sql .= " WHERE CNUM = ?  ";
 
-        $preparedStmt = sqlsrv_prepare($GLOBALS['conn'], $sql, $data);
-
-        if (!$preparedStmt) {
-            DbTable::displayErrorMessage($preparedStmt, __CLASS__, __METHOD__, $sql);
-            return false;
-        }
-        
-        return $preparedStmt;
+        return $sql;
     }
 
     public function updateSecurityEducationForCnum($securityEducation, $cnum)
     {
         if (!empty($cnum) && !empty($securityEducation)) {
             $data = array($securityEducation, $cnum);
-            $preparedStmt = $this->prepareUpdateSecurityEducationStmt($data);
-            $rs = sqlsrv_execute($preparedStmt);
+            $sql = $this->prepareUpdateSecurityEducationStmt($data);
+
+            $rs = sqlsrv_query($GLOBALS['conn'], $sql, $data);
+            
             if (!$rs) {
                 DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared statment');
                 return false;
@@ -2830,11 +2871,13 @@ class personTable extends DbTable
         
             $pesTrackerTable->resetForRecheck($trimmedRow['CNUM'], $trimmedRow['WORKER_ID']);
         }
-
+        $person = new personRecord();
         if ($allRecheckers) {
-            pesEmail::notifyPesTeamOfUpcomingRechecks($allRecheckers);
+            $email = new pesTeamUpcomingRechecksEmail();
+            $email->send($person, $allRecheckers);
         } else {
-            pesEmail::notifyPesTeamNoUpcomingRechecks();
+            $email = new pesTeamNoUpcomingRechecksEmail();
+            $email->send($person);
         }
         return $allRecheckers;
     }

@@ -225,7 +225,6 @@ if (isset($argv[1])) {
     
         if(!$preparedUpdatePersonPESApiStatusSql){
             echo json_encode(sqlsrv_errors());
-            echo json_encode(sqlsrv_errors());
             // print_r($personData);
             DbTable::displayErrorMessage($preparedUpdatePersonPESApiStatusSql, __FILE__, __FILE__, $updatePersonPESApiStatusSql);
             return;
@@ -265,7 +264,6 @@ if (isset($argv[1])) {
                     
                     if(!$preparedUpdatePersonSql){
                         echo json_encode(sqlsrv_errors());
-                        echo json_encode(sqlsrv_errors());
                         print_r($personData);
                         DbTable::displayErrorMessage($preparedUpdatePersonSql, __FILE__, __FILE__, $updatePersonSql);
                         return;
@@ -303,7 +301,6 @@ if (isset($argv[1])) {
                     $preparedUpdatePesTrackerSql = sqlsrv_prepare($GLOBALS['conn'], $updatePesTrackerSql, $pesTrackerData);
                     
                     if(!$preparedUpdatePesTrackerSql){
-                        echo json_encode(sqlsrv_errors());
                         echo json_encode(sqlsrv_errors());
                         print_r($pesTrackerData);
                         DbTable::displayErrorMessage($preparedUpdatePesTrackerSql, __FILE__, __FILE__, $updatePesTrackerSql);

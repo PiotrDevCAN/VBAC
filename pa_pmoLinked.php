@@ -48,6 +48,7 @@ $person->amendPesLevelModal();
 $person->editAgileSquadModal();
 include_once 'includes/modalEditPerson.html';
 include_once 'includes/modalEditEmailAddress.html';
+include_once 'includes/modalEditCtid.html';
 ?>
 
 <script type="text/javascript">

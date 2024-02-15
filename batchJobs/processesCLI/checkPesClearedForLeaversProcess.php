@@ -82,6 +82,8 @@ if($rs){
             $allNotFoundCounter++;
         }
     }
+    /* Free the statement resources. */
+    sqlsrv_free_stmt($rs);
 } else {
     DbTable::displayErrorMessage($rs, 'class', 'method', $sql);
     $errorMessage = ob_get_clean();

@@ -1,8 +1,9 @@
 <?php
 use itdq\AuditTable;
 use vbac\allTables;
+use vbac\emails\pesStatusChangedConfirmationEmail;
+use vbac\personRecord;
 use vbac\pesTrackerTable;
-use vbac\pesEmail;
 
 ob_start();
 AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_POST,true) . "</b>",AuditTable::RECORD_TYPE_DETAILS);
@@ -15,7 +16,8 @@ $emailAddress = trim($_POST['emailaddress']);
 $flm = !empty(trim($_POST['flm']))  ? trim($_POST['flm']) : null;
 
 try {
-    $pesEmailObj = new pesEmail();
+
+    $pesEmailObj = new pesStatusChangedConfirmationEmail();
 
     $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER);
     $pesTracker->setPesProcessStatus($_POST['cnum'],$_POST['workerid'],$_POST['processStatus']);
@@ -26,23 +28,32 @@ try {
     ob_start();
     $success   = empty($messages);
 
+    $person = new personRecord();
+    $person->setFromArray(
+        array(
+            'CNUM'=>$cnum,
+            'WORKER_ID'=>$workerId,
+            'FIRST_NAME'=>$firstName, 
+            'LAST_NAME'=>$lastName, 
+            'EMAIL_ADDRESS'=>$emailAddress
+        )
+    );
+
     if($success){
         // Some Status Changes - we notify the subject, so they know what's happening.
         switch (trim($_POST['processStatus'])) {
             case 'CRC':
             case 'PES':
-                $emailResponse = $pesEmailObj->sendPesProcessStatusChangedConfirmation($cnum, $workerId, $firstName, $lastName, $emailAddress, trim($_POST['processStatus']), $flm);
+                $emailResponse = $pesEmailObj->send($person, trim($_POST['processStatus']), $flm);
                 $response['emailResponse'] = $emailResponse;
             break;
             case 'User':
-                $emailResponse = $pesEmailObj->sendPesProcessStatusChangedConfirmation($cnum, $workerId, $firstName, $lastName, $flm, trim($_POST['processStatus']));
+                $emailResponse = $pesEmailObj->send($person, trim($_POST['processStatus']), $flm);
                 $response['emailResponse'] = $emailResponse;
-
             default:
                 ;
             break;
         }
-
     }
 
     $now = new DateTime();

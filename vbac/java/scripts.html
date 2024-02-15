@@ -45,6 +45,8 @@ $workerAPIlookup = strpos($file, 'pi_workerAPIlookup.php') !== false;
 // admin section
 $isPMOFull = strpos($file, 'pa_pmo.php') !== false;
 $isPMOArchive = strpos($file, 'pa_pmo_archive.php') !== false;
+$isPMOcFIRST = strpos($file, 'pa_cfirst.php') !== false;
+$isStatusCrosscheck = strpos($file, 'pa_statusCrosscheck.php') !== false;
 $isPMOLite = strpos($file, 'pa_pmo_lite.php') !== false;
 $isPMOLinked = strpos($file, 'pa_pmoLinked.php') !== false;
 $isPersonFinder = strpos($file, 'pa_personFinder.php') !== false;
@@ -112,6 +114,16 @@ switch (true) {
     case $isPMOLite:
         ?>
             <script type="module" src="vbac/java/admin/personPortalLite.js?<?=$hash;?>"></script>
+        <?php
+        break;
+    case $isPMOcFIRST:
+        ?>
+            <script type="module" src="vbac/java/admin/personPortalcFirst.js?<?=$hash;?>"></script>
+        <?php
+        break;
+    case $isStatusCrosscheck:
+        ?>
+            <script type="module" src="vbac/java/admin/statusCrosscheck.js?<?=$hash;?>"></script>
         <?php
         break;
     case $isPMOLinked:
