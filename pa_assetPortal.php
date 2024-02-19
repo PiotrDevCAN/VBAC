@@ -79,7 +79,7 @@ $myCnum = personTable::myCnum();
 <input type='hidden' id='isFm' value='<?=$_SESSION['isFm']?>' />
 <input type='hidden' id='myCnum' value='<?=$myCnum?>' />
 
-<script>
+<script type="text/javascript">
 
 var dateReturned;
 var returnedPicker;

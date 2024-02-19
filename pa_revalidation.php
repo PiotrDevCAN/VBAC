@@ -9,7 +9,7 @@
 </div>
 </div>
 
-<script>
+<script type="text/javascript">
 $(document).ready(function(){
 	var audit = new auditRecord();
 	audit.initialiseRevalidationAuditTable();

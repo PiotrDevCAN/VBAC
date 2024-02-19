@@ -21,9 +21,7 @@
 </table>
 </div>
 
-
-
-<script>
+<script type="text/javascript">
 
 var table;
 

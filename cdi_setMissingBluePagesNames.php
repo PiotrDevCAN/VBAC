@@ -18,10 +18,7 @@ JavaScript::buildArrayOfObjectsFromArrayOfRows($firstNames, 'firstNames', 'first
 
 ?>
 
-
-
-
-<script>
+<script type="text/javascript">
 
 $(document).ready(function(){
 	for (var cnum in firstNamesObj) {

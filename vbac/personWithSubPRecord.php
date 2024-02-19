@@ -375,7 +375,7 @@ class personWithSubPRecord extends personRecord
         <?php
         if(substr($this->TT_BAU,0,3)=='T&T'){
             ?>
-            <script>
+            <script type="text/javascript">
             $(document).on('ready', function(){
               $(document).click($('.accountOrganisation')[0]);
             });

@@ -53,16 +53,11 @@ Trace::pageOpening($_SERVER['PHP_SELF']);
 </div>
 </div>
 
-
-
-
-
-
 <?php
 Trace::pageLoadComplete($_SERVER['PHP_SELF']);
 ?>
 
-<script>
+<script type="text/javascript">
 $(document).ready(function() {
 	var emailLog = new EmailLog();
 	emailLog.initialiseDateSelect();

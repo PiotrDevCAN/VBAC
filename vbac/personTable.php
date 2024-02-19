@@ -1134,12 +1134,18 @@ class personTable extends DbTable
 
         $requestor = empty($requestor) ? $_SESSION['ssoEmail'] : $requestor;
 
-        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql .= " SET PES_LEVEL = '" . htmlspecialchars($level) . "' ";
-        $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
-        $sql .= " AND WORKER_ID = '" . htmlspecialchars($workerId) . "' ";
+        $data = array(
+            trim($level),
+            trim($cnum),
+            trim($workerId)
+        );
 
-        $result = sqlsrv_query($GLOBALS['conn'], $sql);
+        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
+        $sql .= " SET PES_LEVEL = ? ";
+        $sql .= " WHERE CNUM = ? ";
+        $sql .= " AND WORKER_ID = ? ";
+
+        $result = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
         if (!$result) {
             DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
@@ -1179,12 +1185,17 @@ class personTable extends DbTable
             throw new \Exception('Date format mismatch. Expected Y-m-d. Date was:' . $dateToUse);
         }
 
+        $data = array(
+            trim($cnum),
+            trim($workerId)
+        );
+
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET PES_RECHECK_DATE = DATEADD(year, " . $pesRecheckPeriod . ", '" . $dateToUseObj->format('Y-m-d') . "') ";
-        $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
-        $sql .= " AND WORKER_ID = '" . htmlspecialchars($workerId) . "' ";
+        $sql .= " WHERE CNUM = ? ";
+        $sql .= " AND WORKER_ID = ? ";
 
-        $result = sqlsrv_query($GLOBALS['conn'], $sql);
+        $result = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
         if (!$result) {
             DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
@@ -1192,10 +1203,10 @@ class personTable extends DbTable
         }
 
         $sql = " SELECT PES_RECHECK_DATE FROM  " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
-        $sql .= " AND WORKER_ID = '" . htmlspecialchars($workerId) . "' ";
+        $sql .= " WHERE CNUM = ? ";
+        $sql .= " AND WORKER_ID = ? ";
 
-        $res = sqlsrv_query($GLOBALS['conn'], $sql);
+        $res = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
         if (!$res) {
             DbTable::displayErrorMessage($result, __CLASS__, __METHOD__, $sql);
@@ -1223,14 +1234,20 @@ class personTable extends DbTable
         if (!$status) {
             throw new \Exception('No PMO STATUS provided in ' . __METHOD__);
         }
+        
+        $data = array(
+            trim($status),
+            trim($cnum),
+            trim($workerId)
+        );
 
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql .= " SET PMO_STATUS = '" . htmlspecialchars($status) . "' ";
-        $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
-        $sql .= " AND WORKER_ID = '" . htmlspecialchars($workerId) . "' ";
+        $sql .= " SET PMO_STATUS = ? ";
+        $sql .= " WHERE CNUM = ? ";
+        $sql .= " AND WORKER_ID = ? ";
 
         try {
-            $result = sqlsrv_query($GLOBALS['conn'], $sql);
+            $result = sqlsrv_query($GLOBALS['conn'], $sql, $data);
         } catch (\Exception $e) {
             var_dump($e);
         }
@@ -1243,14 +1260,19 @@ class personTable extends DbTable
         switch($status) {
             case personRecord::PMO_STATUS_AWARE:
                 
+                $data = array(
+                    trim($cnum),
+                    trim($workerId)
+                );
+
                 $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
                 $sql .= " SET PMO_STATUS_AWARE_INITIATE_DATE = CAST( CURRENT_TIMESTAMP AS Date ) ";
-                $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
-                $sql .= " AND WORKER_ID = '" . htmlspecialchars($workerId) . "' ";
+                $sql .= " WHERE CNUM = ? ";
+                $sql .= " AND WORKER_ID = ? ";
                 $sql .= " AND PMO_STATUS_AWARE_INITIATE_DATE IS NULL";
 
                 try {
-                    $result = sqlsrv_query($GLOBALS['conn'], $sql);
+                    $result = sqlsrv_query($GLOBALS['conn'], $sql, $data);
                 } catch (\Exception $e) {
                     var_dump($e);
                 }

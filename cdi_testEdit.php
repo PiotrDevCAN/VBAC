@@ -25,8 +25,7 @@
 
 </style>
 
-
-<script>
+<script type="text/javascript">
 function underline(s) {
     var arr = s.split('');
     s = arr.join('\u0332');

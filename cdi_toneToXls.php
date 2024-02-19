@@ -72,9 +72,7 @@
 
 </style>
 
-
-
-<script>
+<script type="text/javascript">
 
 var buttonCommon = {
 		exportOptions: {

@@ -20,14 +20,11 @@ AuditTable::removeExpired();
 DbTable::db2ErrorModal();
 ?>
 
-
-
 <div id='auditDatabaseDiv'>
 </div>
 </div>
 
-
-<script>
+<script type="text/javascript">
 $(document).ready(function(){
 	var audit = new auditRecord();
 	audit.initialiseAuditTable();

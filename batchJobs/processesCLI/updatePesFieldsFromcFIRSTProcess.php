@@ -62,6 +62,9 @@ try {
     $insertCounter = 0;
     $failedCounter = 0;
     $i = 1;
+    
+    $txt = '';
+
     do {
         $data = $cFirst->getBackgroundCheckRequestList(null, null, $i);
         list(
@@ -120,8 +123,9 @@ try {
                     
                     if (!empty($personData)) {
 
-                        $pesStatus = $personData['PES_STATUS'];
-                        switch ($pesStatus) {
+                        $vBACpesStatus = $personData['PES_STATUS'];
+                        $vBACrevalidationStatus = $personData['REVALIDATION_STATUS'];
+                        switch ($vBACpesStatus) {
                             case personRecord::PES_STATUS_CLEARED:
                             case personRecord::PES_STATUS_CLEARED_PERSONAL:
                             case personRecord::PES_STATUS_CLEARED_AMBER:
@@ -137,14 +141,24 @@ try {
             
                                 $requestor = $_SESSION['ssoEmail'];
                                 $pesDetail = $firstName . ' ' . $lastName . ' ['. $candidateId .']';
-                                $pesDateResponded = $completedDate;
-                                // $success = $pesStatus->change($personTable, $person, $pesStatusCleared, $requestor, $pesDetail, $pesDateResponded);
-                                $success = true;
 
+                                // prepare date
+                                $dateToUseObj = \DateTime::createFromFormat('d-M-Y', $completedDate);
+                                $pesDateResponded = $dateToUseObj->format('Y-m-d');
+                                
+                                $txt .= '<li>';
+                                $txt .= $pesDetail;
+                                $txt .= ' === ';
+                                $txt .= $pesDateResponded;
+                                $txt .= ' === ';
+                                $txt .= $requestor;
+                                $txt .= '</li>';
+
+                                $success = $pesStatus->change($personTable, $person, $pesStatusCleared, $requestor, $pesDetail, $pesDateResponded);
                                 if ($success) {
 
-                                    // $notificationStatus = $notification->save($person, $status, $revalidationStatus);
-                                    // AuditTable::audit("PES Status Email: " . $notificationStatus, AuditTable::RECORD_TYPE_DETAILS);
+                                    $notificationStatus = $notification->save($person, $pesStatusCleared, $vBACrevalidationStatus);
+                                    AuditTable::audit("PES Status Email: " . $notificationStatus, AuditTable::RECORD_TYPE_DETAILS);
                                     
                                     $insertCounter++;
                                 } else {
@@ -175,6 +189,10 @@ try {
     $message .= '<br>';
     $message .= '<br> Amount of records already completed in vBAC: ' . $completedInVbac;
     $message .= '<br>';
+    $message .= '<br> List of employees set to Completed in vBAC';
+    $message .= '<ul>';
+    $message .= $txt;
+    $message .= '</ul>';
     $message .= '<br> Amount of records updated to Complete in vBAC: ' . $insertCounter;
     $message .= '<br> Amount of records failed to update to Complete in vBAC: ' . $failedCounter;
     

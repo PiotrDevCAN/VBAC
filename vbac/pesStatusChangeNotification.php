@@ -15,9 +15,9 @@ class pesStatusChangeNotification {
     const EMAIL_NOT_APPLICABLE_OTHER = 'Email not applicable(other)';
     const EMAIL_NOT_APPLICABLE_ERROR = 'Email not applicable(error)';
 
-    function send(personRecord $person) {
+    function send(personRecord $person, $newPesStatus = null) {
         $pesStatusChangeEmail = new pesStatusChangeEmail();
-        $emailResponseData = $pesStatusChangeEmail->send($person, pesEmail::EMAIL_NOT_PES_SUPRESSABLE);
+        $emailResponseData = $pesStatusChangeEmail->send($person, $newPesStatus, pesEmail::EMAIL_NOT_PES_SUPRESSABLE);
         list(
             'response' => $emailResponse,
             'to' => $to,
@@ -53,7 +53,7 @@ class pesStatusChangeNotification {
             case personRecord::PES_STATUS_CLEARED_AMBER:
             case personRecord::PES_STATUS_CANCEL_REQ:
             case personRecord::PES_STATUS_RESTART:
-                $notificationStatus = $this->send($person);
+                $notificationStatus = $this->send($person, $status);
                 break;
             default:
                 $notificationStatus = self::EMAIL_NOT_APPLICABLE_OTHER;
@@ -92,7 +92,7 @@ class pesStatusChangeNotification {
             case personRecord::PES_STATUS_CLEARED_AMBER:
             case personRecord::PES_STATUS_CANCEL_REQ:
             case personRecord::PES_STATUS_PROVISIONAL: // For Covid
-                $notificationStatus = $this->send($person);
+                $notificationStatus = $this->send($person, $status);
                 break;
             default:
                 $notificationStatus = self::EMAIL_NOT_APPLICABLE_OTHER;

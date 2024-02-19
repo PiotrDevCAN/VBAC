@@ -68,7 +68,7 @@ class pesStatusChangeEmail implements notificationEmail {
 
   private static $pesClearedProvisionalEmailPattern = array('/&&candidate&&/');
   
-  function send(personRecord $person, $isPesSuppressable = true){
+  function send(personRecord $person, $newPesStatus = null, $isPesSuppressable = true){
     
     $loader = new Loader();
 
@@ -82,14 +82,16 @@ class pesStatusChangeEmail implements notificationEmail {
         $fmIsKyndrylEmail = strtolower(substr($fmEmail,-11))=='kyndryl.com';
       } else {
         $fmEmail = 'Unknown';
-    }
+        $fmIsIbmEmail = false;
+        $fmIsKyndrylEmail = false;
+      }
     $fmEmail = $fmIsIbmEmail ? $fmEmail : null;
     $firstName = !empty($person->getValue('FIRST_NAME')) ? $person->getValue('FIRST_NAME') : "firstName";
     $lastName  = !empty($person->getValue('LAST_NAME')) ? $person->getValue('LAST_NAME') : "lastName";
     $emailAddress = !empty($person->getValue('EMAIL_ADDRESS')) ? $person->getValue('EMAIL_ADDRESS') : "emailAddress";
     $isIbmEmail = strtolower(substr($emailAddress,-7))=='ibm.com';
     $isKyndrylEmail = strtolower(substr($emailAddress,-11))=='kyndryl.com';
-    $pesStatus = !empty($person->getValue('PES_STATUS')) ? $person->getValue('PES_STATUS') : "pesStatus";
+    $pesStatus = !empty($newPesStatus) ? $newPesStatus : "pesStatus";
     $pesDateResponded = !empty($person->getValue('PES_DATE_RESPONDED')) ? $person->getValue('PES_DATE_RESPONDED') : "pesDateResponded";
     $pesDateCleared = !empty($person->getValue('PES_CLEARED_DATE')) ? $person->getValue('PES_CLEARED_DATE') : "pesDateCleared";
     $ctbRtb = !empty($person->getValue('CTB_RTB')) ? trim($person->getValue('CTB_RTB')) : null;
@@ -186,6 +188,11 @@ class pesStatusChangeEmail implements notificationEmail {
             !empty($fmEmail) ? $cc[] = $fmEmail : null;
             $cc[] = $_SESSION['ssoEmail'];
         default:
+            $to[] = $_ENV['devemailid'];
+            $title = 'vBAC Default Request';
+            $pattern = array();
+            $emailBody = 'Failing status: ' . $pesStatus;
+            $replacements = array();
           break;
     }
 

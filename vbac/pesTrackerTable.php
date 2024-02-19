@@ -486,7 +486,7 @@ class pesTrackerTable extends DbTable{
 
     function prepareProcessStatusUpdate($data){
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql.= " SET PROCESSING_STATUS =?, PROCESSING_STATUS_CHANGED = CURRENT_TIMESTAMP ";
+        $sql.= " SET PROCESSING_STATUS = ?, PROCESSING_STATUS_CHANGED = CURRENT_TIMESTAMP ";
         $sql.= " WHERE CNUM = ? ";
         $sql.= " AND WORKER_ID = ? ";
 
@@ -655,12 +655,18 @@ class pesTrackerTable extends DbTable{
             $this->createNewTrackerRecord($cnum, $workerId);
         }
 
-        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql.= " SET DATE_LAST_CHASED=DATE('" . htmlspecialchars($dateLastChased) . "') ";
-        $sql.= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
-        $sql.= " AND WORKER_ID='" . htmlspecialchars($workerId) . "' ";
+        $data = array(
+            trim($dateLastChased),
+            trim($cnum),
+            trim($workerId)
+        );
 
-        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
+        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
+        $sql.= " SET DATE_LAST_CHASED=DATE( ? ) ";
+        $sql.= " WHERE CNUM = ? ";
+        $sql.= " AND WORKER_ID = ? ";
+
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared sql');
@@ -690,15 +696,26 @@ class pesTrackerTable extends DbTable{
             $newComment = substr($newComment,0,$commentFieldSize-20);
         }
 
-        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql.= " SET COMMENT='" . htmlspecialchars($newComment) . "' ";
-        $sql.= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
-        $sql.= " AND WORKER_ID='" . htmlspecialchars($workerId) . "' ";
+        $data = array(
+            trim($newComment),
+            trim($cnum),
+            trim($workerId)
+        );
 
-        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
+        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
+        $sql.= " SET COMMENT = ? ";
+        $sql.= " WHERE CNUM = ? ";
+        $sql.= " AND WORKER_ID = ? ";
+
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+
+            // Error in: Update PES Fields From cFIRST
+            // Failed to update PES Comment for 001WCP744 / 5023722. Comment was 
+            // $comment = PES_RECHECK_DATE set to :2024-12-28 
+
             throw new \Exception("Failed to update PES Comment for $cnum / $workerId. Comment was " . $comment);
         }
 
@@ -707,8 +724,8 @@ class pesTrackerTable extends DbTable{
 
     function prepareGetPesCommentStmt($data){
         $sql = " SELECT COMMENT FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql.= " WHERE CNUM=? ";
-        $sql.= " AND WORKER_ID=? ";
+        $sql.= " WHERE CNUM = ? ";
+        $sql.= " AND WORKER_ID = ? ";
 
         return $sql;
     }
@@ -757,13 +774,21 @@ class pesTrackerTable extends DbTable{
     }
 
     function changeCnum($fromCnum, $fromWorkerId, $toCnum, $toWorkerId){
-        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
-        $sql.= " SET CNUM='" . htmlspecialchars(trim($toCnum)) . "', ";
-        $sql.= " WORKER_ID='" . htmlspecialchars(trim($toWorkerId)) . "' ";
-        $sql.= " WHERE CNUM='" . htmlspecialchars(trim($fromCnum)) . "' ";
-        $sql.= " AND WORKER_ID='" . htmlspecialchars(trim($fromWorkerId)) . "' ";
 
-        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
+        $data = array(
+            trim($toCnum),
+            trim($toWorkerId),
+            trim($fromCnum),
+            trim($fromWorkerId)
+        );
+
+        $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
+        $sql.= " SET CNUM = ?, ";
+        $sql.= " WORKER_ID = ? ";
+        $sql.= " WHERE CNUM = ? ";
+        $sql.= " AND WORKER_ID = ? ";
+
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__,__METHOD__, $sql);

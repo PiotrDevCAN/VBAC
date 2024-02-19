@@ -58,7 +58,7 @@ p {
 </div>
 </div>
 </div>
-<script>
+<script type="text/javascript">
 
 let dropArea = document.getElementById('drop-area');
 ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
