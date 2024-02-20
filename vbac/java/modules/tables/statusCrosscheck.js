@@ -47,6 +47,9 @@ class statusCrosscheck {
         { data: "STATUS_IN_VBAC", defaultContent: "" },
         { data: "STATUS_IN_CFIRST", defaultContent: "" },
         { data: "STATUS_MATCH", defaultContent: "" },
+        { data: "VBAC_CNUM", defaultContent: "" },
+        { data: "VBAC_WORKER_ID", defaultContent: "" },
+        { data: "CFIRST_CANDIDATE_ID", defaultContent: "" }
       ],
       order: [[3, "desc"]],
       processing: true,

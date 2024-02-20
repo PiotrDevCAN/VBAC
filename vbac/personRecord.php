@@ -166,6 +166,7 @@ class personRecord extends DbRecord
 
     const NO_LONGER_AVAILABLE = 'No longer available';
     const NOT_FOUND = 'not found';
+    const UNKNOWN = 'unknown';
 
     const AURORA_TRAINING_URL = 'https://kyndryl.percipio.com/track/26c2c517-29c2-4671-bfc1-024271d8fe6b';
     public static $cio = array('CTB Leadership','CTB Central BU','CTB PMO','Commercial & Business Banking','Insurance & Enterprise Programmes','Cyber & TRP','Enterprise Transformation','Retail & Community Banking Transformation','Cross Platform','Product & Engineering');
