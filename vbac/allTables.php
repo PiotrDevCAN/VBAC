@@ -51,6 +51,8 @@ class allTables
     public static $STATIC_DOMAINS         = 'STATIC_DOMAINS';
     public static $STATIC_GROUPS          = 'STATIC_GROUPS';
     public static $STATIC_LOCATIONS       = 'STATIC_LOCATIONS';
+    public static $STATIC_COUNTRIES       = 'STATIC_COUNTRIES';
+    public static $STATIC_CITIES          = 'STATIC_CITIES';
     public static $STATIC_ROLES           = 'STATIC_ROLES';
     public static $STATIC_WORKSTREAMS     = 'STATIC_WORKSTREAMS';
     public static $STATIC_SKILLSETS       = 'STATIC_SKILLSETS';

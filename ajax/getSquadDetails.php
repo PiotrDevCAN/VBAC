@@ -1,7 +1,5 @@
 <?php
 
-use itdq\Loader;
-use vbac\allTables;
 use vbac\AgileSquadTable;
 
 ob_start();
@@ -11,7 +9,7 @@ $squadDetails = AgileSquadTable::getSquadDetails($squadNumber);
 
 $messages = ob_get_clean();
 ob_start();
-$success = empty($messages) && $squadDetails;
+$success = empty($messages);
 
 $response = array('squadDetails'=>$squadDetails,'success'=>$success, 'messages'=>$messages);
 ob_clean();

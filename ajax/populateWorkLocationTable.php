@@ -6,9 +6,7 @@ use vbac\workLocationTable;
 set_time_limit(0);
 ob_start();
 
-$table = allTables::$STATIC_LOCATIONS;
-
-$workLocationTable = new workLocationTable($table);
+$workLocationTable = new workLocationTable(allTables::$STATIC_LOCATIONS);
 $data = $workLocationTable->returnAsArray();
 
 $dataJsonAble = json_encode($data);

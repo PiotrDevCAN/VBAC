@@ -2465,7 +2465,7 @@ class assetRequestsTable extends DbTable{
      }
 
 
-     function getOpenRequestsForCnum($cnum){
+     function getOpenRequestsForCnum($cnum, $workerId = null){
          $sql = " select distinct ASSET_TITLE ";
          $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
          $sql.= " WHERE CNUM='" . htmlspecialchars($cnum) . "' ";
@@ -2486,7 +2486,6 @@ class assetRequestsTable extends DbTable{
          }
 
         return $assetTitles;
-
      }
 
 }

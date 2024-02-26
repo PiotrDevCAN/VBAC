@@ -63,6 +63,8 @@ class editPersonBox extends box {
                         $this.child.initialiseOtherDates();
                         $this.child.initialiseFormSelect2();
 
+                        $this.child.postLoadActions();
+
                         if (isFm == "yes") {
                             // Dont let FM Edit the Func Mgr Field, Ant Stark November 12th 2020
                             // Let the FM Edit the FUnc Mgr Field, Ant Stark January 26th 2021

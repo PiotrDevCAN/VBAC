@@ -6,7 +6,7 @@ use itdq\DbTable;
 
 class staticDataWorkstreamTable extends staticDataTable {
 
-    function getallWorkstream(){
+    function getAllWorkstream(){
         $sql = " SELECT * FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " ORDER BY WORKSTREAM ";
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);

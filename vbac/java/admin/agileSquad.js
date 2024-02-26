@@ -4,7 +4,7 @@
  *
  */
 
-let buttonCommon = await cacheBustImport('./modules/functions/buttonCommon.js');
+let StaticAgileTribes = await cacheBustImport('./modules/dataSources/staticAgileTribes.js');
 let formatTribeName = await cacheBustImport('./modules/functions/formatTribeName.js');
 
 let agileSquadTable = await cacheBustImport('./modules/tables/agileSquad.js');
@@ -25,7 +25,6 @@ class agileSquad {
     });
 
     this.initialiseTribeNumber();
-    // this.setListenerForOrganisation();
 
     $('#version').bootstrapToggle();
     $('#version').attr('disabled', true);
@@ -38,9 +37,11 @@ class agileSquad {
       $('#TRIBE_NUMBER').select2('destroy');
     }
 
-    $('#TRIBE_NUMBER').select2({
-      data: tribes,
-      templateResult: formatTribeName
+    let agileTribesPromise = StaticAgileTribes.getTribes().then((response) => {
+      $('#TRIBE_NUMBER').select2({
+        data: response,
+        templateResult: formatTribeName
+      });
     });
 
     if (selectedTribeNumber) {
@@ -48,39 +49,6 @@ class agileSquad {
     }
     $('#SHIFT').select2();
   }
-
-  initialiseTribeNumberPerOrganisation(selectedTribeNumber) {
-    var version = $('#version').prop('checked') ? 'Original' : 'New';
-    var organisation = $('#radioTribeOrganisationManaged').prop('checked') ? 'Managed' : 'Project';
-    var tribeSelectName = 'tribes' + version + organisation;
-    var tribesSelect = eval(tribeSelectName);
-    if ($('#TRIBE_NUMBER').hasClass("select2-hidden-accessible")) {
-      // 	Select2 has been initialized
-      $('#TRIBE_NUMBER').empty().trigger('change');
-      $('#TRIBE_NUMBER').select2('destroy');
-    }
-
-    $('#TRIBE_NUMBER').select2({
-      data: tribesSelect,
-      templateResult: formatTribeName
-    });
-
-    if (selectedTribeNumber) {
-      $('#TRIBE_NUMBER').val(selectedTribeNumber).trigger('change');
-    }
-    $('#SHIFT').select2();
-  }
-
-  // Set the listener for change to Organisation
-  /*
-  setListenerForOrganisation() {
-    var $this = this;
-    console.log('set listener for radio button');
-    $('input[type=radio]').click(function () {
-      $this.initialiseTribeNumber();
-    });
-  }
-  */
 }
 
 const AgileSquad = new agileSquad();

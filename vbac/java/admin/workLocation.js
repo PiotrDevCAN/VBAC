@@ -4,6 +4,8 @@
  *
  */
 
+let StaticCountries = await cacheBustImport('./modules/dataSources/staticCountriesIds.js');
+let StaticCities = await cacheBustImport('./modules/dataSources/staticCitiesIds.js');
 let workLocationTable = await cacheBustImport('./modules/tables/workLocation.js');
 let editWorkLocation = await cacheBustImport('./modules/boxes/editWorkLocation.js');
 
@@ -13,22 +15,39 @@ class workLocation {
   tableObj;
 
   constructor() {
-    $('.select2').select2();
+    this.prepareSelect2();
+    this.listenForSubmitLocationForm();
+  }
 
-    $('#COUNTRY.select2, #CITY.select2').select2({
-      tags: true,
-      selectOnClose: true,
-      //Allow manually entered text in drop down.
-      createTag: function (params) {
-        var name = params.term.charAt(0).toUpperCase() + params.term.slice(1);
-        return {
-          id: name,
-          text: name
-        };
-      }
+  prepareSelect2() {
+
+    let countriesPromise = StaticCountries.getCountries().then((response) => {
+      $("#COUNTRY").select2({
+        data: response,
+        tags: true,
+        createTag: function (params) {
+          return undefined;
+        }
+      });
     });
 
-    this.listenForSubmitLocationForm();
+    let citiesPromise = StaticCities.getCities().then((response) => {
+      $("#CITY").select2({
+        data: response,
+        tags: true,
+        createTag: function (params) {
+          return undefined;
+        }
+      });
+    });
+
+    const promises = [countriesPromise, citiesPromise];
+    Promise.allSettled(promises)
+      .then((results) => {
+        results.forEach((result) => console.log(result.status));
+      });
+
+    $(".select2").select2();
   }
 
   listenForSubmitLocationForm() {

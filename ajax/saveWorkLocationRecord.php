@@ -77,9 +77,7 @@ switch (true) {
             $workLocationRecord->setFromArray($additionalFields);
         }
         
-        $table = allTables::$STATIC_LOCATIONS;
-        
-        $workLocationTable = new workLocationTable($table);
+        $workLocationTable = new workLocationTable(allTables::$STATIC_LOCATIONS);
         
         $saveRecordResult = $workLocationTable->saveRecord($workLocationRecord);
         if(($saveRecordResult && $_POST['mode']==FormClass::$modeDEFINE) || (!$saveRecordResult && $_POST['mode']==FormClass::$modeEDIT)){

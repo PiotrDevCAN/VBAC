@@ -4,8 +4,6 @@
  *
  */
 
-let buttonCommon = await cacheBustImport('./modules/functions/buttonCommon.js');
-
 let agileTribeTable = await cacheBustImport('./modules/tables/agileTribe.js');
 let editTribeBox = await cacheBustImport('./modules/boxes/editTribeBox.js');
 

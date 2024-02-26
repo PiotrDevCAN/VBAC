@@ -35,7 +35,7 @@ class PlannedOutages
                 $outagesOutstanding ++;
             } 
         }
-        $badge = $outagesOutstanding>0 ?  "<span class='badge'>$outagesOutstanding</span>" : null;
+        $badge = $outagesOutstanding > 0 ?  "<span class='badge'>$outagesOutstanding</span>" : null;
         
         return $badge;
     }

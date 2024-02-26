@@ -2287,20 +2287,21 @@ class personTable extends DbTable
         }
     }
 
-    private function prepareUpdateLbgLocationStmt($data)
+    private function prepareUpdateLbgLocationStmt()
     {
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET LBG_LOCATION = ? ";
         $sql .= " WHERE CNUM = ?  ";
+        $sql .= " AND WORKER_ID = ?  ";
 
         return $sql;
     }
 
-    public function updateLbgLocationForCnum($lbgLocation, $cnum)
+    public function updateLbgLocationForCnum($lbgLocation, $cnum, $workerId)
     {
-        if (!empty($cnum) && !empty($lbgLocation)) {
-            $data = array($lbgLocation, $cnum);
-            $sql = $this->prepareUpdateLbgLocationStmt($data);
+        if (!empty($cnum) && !empty($workerId) && !empty($lbgLocation)) {
+            $data = array($lbgLocation, $cnum, $workerId);
+            $sql = $this->prepareUpdateLbgLocationStmt();
 
             $rs = sqlsrv_query($GLOBALS['conn'], $sql, $data);
             
@@ -2308,17 +2309,18 @@ class personTable extends DbTable
                 DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, 'prepared statment');
                 return false;
             }
-            AuditTable::audit("CNUM: $cnum  has been recorded as working from Aurora Location :" . $lbgLocation, AuditTable::RECORD_TYPE_AUDIT);
+            AuditTable::audit("CNUM: $cnum / WokrerId: $workerId has been recorded as working from Aurora Location :" . $lbgLocation, AuditTable::RECORD_TYPE_AUDIT);
             return true;
         }
         return false;
     }
 
-    public static function getLbgLocationForCnum($cnum)
+    public static function getLbgLocationForCnum($cnum, $workerId)
     {
-        if (!empty($cnum)) {
+        if (!empty($cnum) && !empty($workerId)) {
             $sql = " SELECT LBG_LOCATION FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
             $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
+            $sql .= " AND WORKER_ID = '" . htmlspecialchars($workerId) . "' ";
 
             $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
@@ -2358,20 +2360,21 @@ class personTable extends DbTable
         return false;
     }
 
-    private function prepareUpdateSecurityEducationStmt($data)
+    private function prepareUpdateSecurityEducationStmt()
     {
         $sql = " UPDATE " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $sql .= " SET SECURITY_EDUCATION = ? ";
         $sql .= " WHERE CNUM = ?  ";
+        $sql .= " AND WORKER_ID = ?  ";
 
         return $sql;
     }
 
-    public function updateSecurityEducationForCnum($securityEducation, $cnum)
+    public function updateSecurityEducationForCnum($securityEducation, $cnum, $workerId)
     {
-        if (!empty($cnum) && !empty($securityEducation)) {
-            $data = array($securityEducation, $cnum);
-            $sql = $this->prepareUpdateSecurityEducationStmt($data);
+        if (!empty($cnum) && !empty($workerId) && !empty($securityEducation)) {
+            $data = array($securityEducation, $cnum, $workerId);
+            $sql = $this->prepareUpdateSecurityEducationStmt();
 
             $rs = sqlsrv_query($GLOBALS['conn'], $sql, $data);
             
@@ -2385,9 +2388,9 @@ class personTable extends DbTable
         return false;
     }
 
-    public static function getSecurityEducationForCnum($cnum)
+    public static function getSecurityEducationForCnum($cnum, $workerId)
     {
-        if (!empty($cnum)) {
+        if (!empty($cnum) && !empty($workerId)) {
             $sql = " SELECT SECURITY_EDUCATION FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON;
             $sql .= " WHERE CNUM = '" . htmlspecialchars($cnum) . "' ";
 

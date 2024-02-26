@@ -11,7 +11,7 @@ ob_start();
 switch ($_GET['data']) {
     case 'workstream':
         $workstreamTable = new staticDataWorkstreamTable(allTables::$STATIC_WORKSTREAMS);
-        $allWorkstream = $workstreamTable->getallWorkstream();
+        $allWorkstream = $workstreamTable->getAllWorkstream();
         ob_clean();
         echo json_encode($allWorkstream);
     break;

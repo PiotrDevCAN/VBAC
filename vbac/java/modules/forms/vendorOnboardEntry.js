@@ -18,7 +18,12 @@ let knownExternalEmails = await cacheBustImport('./modules/dataSources/knownExte
 let knownIBMEmails = await cacheBustImport('./modules/dataSources/knownIBMEmails.js');
 // let knownKyndrylEmails = await cacheBustImport('./modules/dataSources/knownKyndrylEmails.js');
 
+let StaticLocations = await cacheBustImport('./modules/dataSources/staticLocationsIds.js');
+let formatLocation = await cacheBustImport('./modules/functions/formatLBGLocation.js');
+
 let entry = await cacheBustImport('./modules/forms/onboardEntry.js');
+
+let LBGLocation = await cacheBustImport('./modules/functions/selects/LBGLocation.js');
 
 class vendorOnboardEntry extends entry {
 
@@ -51,6 +56,15 @@ class vendorOnboardEntry extends entry {
     initialiseStartEndDate();
     initialiseOtherDates();
     initialiseFormSelect2();
+
+    // skillset promise
+    // functional managers promise
+    // preboarders promise
+    // pes levels promise
+    // cFIRST packages promise
+    // country promise
+
+    LBGLocation('resource_LBG_LOCATION', 'resource_originalLBG_LOCATION');
   }
 
   listenForEmailChange() {

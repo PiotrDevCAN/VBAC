@@ -16,7 +16,6 @@ use itdq\Loader;
  *
  */
 
-
 class AgileSquadTable extends DbTable{
 
     static function nextAvailableSquadNumber($version=null) {
@@ -37,7 +36,27 @@ class AgileSquadTable extends DbTable{
 
     }
 
-    function returnAsArray($version=null){
+    static function getAllTribesAndSquads($predicate){
+        $sql = " SELECT * FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD;
+        $sql.= " WHERE 1=1 ";
+        $sql.= empty($predicate) ? null : " AND " . $predicate;
+        $sql .= " ORDER BY TRIBE_NUMBER, SQUAD_NUMBER  ";
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
+
+        $allSquads = array();
+        if($rs){
+            while($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)){
+                $trimmedRow = array_map('trim', $row);
+                $allSquads[trim($row['TRIBE_NUMBER'])][] = $trimmedRow;
+            }
+        } else {
+            DbTable::displayErrorMessage($rs,__CLASS__, __METHOD__, $sql);
+            return false;
+        }
+        return $allSquads;
+    }
+
+    function returnAsArray($version = null, $withButtons = true, $predicate = null){
         $tribeTable = $version=='Original' ? allTables::$AGILE_TRIBE : allTables::$AGILE_TRIBE_OLD;
 
         $sql = " SELECT S.SQUAD_NUMBER, S.SQUAD_TYPE, S.TRIBE_NUMBER, S.SHIFT, S.SQUAD_LEADER, S.SQUAD_NAME,    
@@ -45,6 +64,9 @@ class AgileSquadTable extends DbTable{
         $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName . " as S ";
         $sql.= " LEFT JOIN ". $GLOBALS['Db2Schema'] . "." . $tribeTable . " as T ";
         $sql.= " ON S.TRIBE_NUMBER = T.TRIBE_NUMBER ";
+        $sql.= " WHERE 1=1 ";
+        $sql.= empty($predicate) ? null : " AND " . $predicate;
+
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
         if(!$rs){
@@ -54,7 +76,7 @@ class AgileSquadTable extends DbTable{
         $data = false;
         while ($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)){
             $row = array_map('trim', $row);
-            $rowWithIcons = $this->addIcons($row);
+            $rowWithIcons = $withButtons ?  $this->addIcons($row) : $row ;
             $data[] = $rowWithIcons;
         }
         return $data;
@@ -82,20 +104,22 @@ class AgileSquadTable extends DbTable{
         return $row;
     }
 
-
     static function getSquadDetails($squadNumber, $version='original'){
 
         $squadTable = $version=='original'  ? allTables::$AGILE_SQUAD : allTables::$AGILE_SQUAD_OLD;
         $tribeTable = $version=='original'  ? allTables::$AGILE_TRIBE : allTables::$AGILE_TRIBE_OLD;
 
+        $data = array(
+            htmlspecialchars($squadNumber)
+        );
 
-        $sql = " SELECT S.SQUAD_NUMBER,S.SQUAD_NAME, S.SQUAD_TYPE, S.SQUAD_LEADER, S.TRIBE_NUMBER, T.TRIBE_NAME, T.TRIBE_LEADER ";
+        $sql = " SELECT S.SQUAD_NUMBER, S.SQUAD_NAME, S.SQUAD_TYPE, S.SQUAD_LEADER, S.TRIBE_NUMBER, T.TRIBE_NAME, T.TRIBE_LEADER ";
         $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . $squadTable . " AS S ";
         $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . $tribeTable . " AS T ";
         $sql.= " ON S.TRIBE_NUMBER = T.TRIBE_NUMBER ";
-        $sql.= " WHERE S.SQUAD_NUMBER = " . htmlspecialchars($squadNumber);
+        $sql.= " WHERE S.SQUAD_NUMBER = ? ";
 
-        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql, $data);
 
         if(!$rs){
             DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
@@ -105,9 +129,7 @@ class AgileSquadTable extends DbTable{
         $row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC);
 
         return $row;
-
     }
-
 
     static function buildTribeSelects(){
         $loader = new Loader();

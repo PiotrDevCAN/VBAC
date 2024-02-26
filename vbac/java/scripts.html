@@ -36,8 +36,6 @@ $isIndex = strpos($file, 'index.php') !== false;
 $isOnBoarding = strpos($file, 'pb_onboard.php') !== false;
 $isOffBoarding = strpos($file, 'pb_offboard.php') !== false;
 
-$isOnBoardingWithcFirst = strpos($file, 'cdi_test_first_form.php') !== false;
-
 // CDI Admin
 $isOktaUserManage = strpos($file, 'pi_manageGroups.php') !== false;
 $workerAPIlookup = strpos($file, 'pi_workerAPIlookup.php') !== false;
@@ -55,6 +53,7 @@ $isDelegate = strpos($file, 'pc_delegate.php') !== false;
 $isAgileTribes = strpos($file, 'pa_agileTribes.php') !== false;
 $isAgileSquads = strpos($file, 'pa_agileSquads.php') !== false;
 $isSquadALog = strpos($file, 'pa_squadalog.php') !== false;
+$isSquadCrosscheck = strpos($file, 'pa_squadCrosscheck.php') !== false;
 $isPESTracker = strpos($file, 'pc_pesTracker.php') !== false;
 $isPESStatusChange = strpos($file, 'pr_pesStatusChangeReport.php') !== false;
 $isStatusUpdate = strpos($file, 'pa_statusUpdate.php') !== false;
@@ -79,11 +78,6 @@ switch (true) {
     case $isOnBoarding:
         ?>
             <script type="module" src="vbac/java/boarding/onBoarding.js?<?=$hash;?>"></script>
-        <?php
-        break;
-    case $isOnBoardingWithcFirst:
-        ?>
-            <script type="module" src="vbac/java/boarding/onBoardingWithCFirst.js?<?=$hash;?>"></script>
         <?php
         break;
     case $isOffBoarding:
@@ -159,6 +153,11 @@ switch (true) {
     case $isSquadALog:
         ?>
             <script type="module" src="vbac/java/admin/squadALog.js?<?=$hash;?>"></script>
+        <?php
+        break;
+    case $isSquadCrosscheck:
+        ?>
+            <script type="module" src="vbac/java/admin/squadCrosscheck.js?<?=$hash;?>"></script>
         <?php
         break;
     case $isPESTracker:

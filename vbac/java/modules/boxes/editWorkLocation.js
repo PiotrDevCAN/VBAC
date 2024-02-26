@@ -21,12 +21,11 @@ class editWorkLocation extends box {
     listenForEditLocation() {
         $(document).on("click", ".btnEditLocation", function () {
             $("#ID").val($(this).data("id"));
-            $("#COUNTRY").val($(this).data("country")).trigger("change");
-            $("#CITY").val($(this).data("city")).trigger("change");
+            $("#COUNTRY").val($(this).data("countryid")).trigger("change");
+            $("#CITY").val($(this).data("cityid")).trigger("change");
             $("#ADDRESS").val($(this).data("address")).trigger("change");
             $("#ONSHORE").val($(this).data("onshore")).trigger("change");
             $("#CBC_IN_PLACE").val($(this).data("cbcinplace")).trigger("change");
-
             $("#mode").val("edit");
         });
     }

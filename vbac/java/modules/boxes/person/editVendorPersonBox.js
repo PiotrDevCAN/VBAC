@@ -7,6 +7,7 @@
 let initialiseStartEndDate = await cacheBustImport('./modules/functions/initialiseStartEndDate_Vendor.js');
 let initialiseOtherDates = await cacheBustImport('./modules/functions/initialiseOtherDates_Vendor.js');
 let initialiseFormSelect2 = await cacheBustImport('./modules/functions/initialiseFormSelect2_Vendor.js');
+let postActions = await cacheBustImport('./modules/functions/postActions_Vendor.js');
 
 let saveBoardingForm = await cacheBustImport('./modules/functions/saveVendorBoarding.js');
 
@@ -30,6 +31,8 @@ class editVendorPersonBox extends editPersonBox {
     static initialiseStartEndDate = initialiseStartEndDate;
     static initialiseOtherDates = initialiseOtherDates;
     static initialiseFormSelect2 = initialiseFormSelect2;
+
+    static postLoadActions = postActions;
 
     static saveBoardingForm = saveBoardingForm;
 

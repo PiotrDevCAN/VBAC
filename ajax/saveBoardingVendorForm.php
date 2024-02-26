@@ -12,8 +12,8 @@ ob_start();
 
 AuditTable::audit("Invoked:<b>" . __FILE__ . "</b>Parms:<pre>" . print_r($_POST,true) . "</b>",AuditTable::RECORD_TYPE_DETAILS);
 
+$personTable = new personTable(allTables::$PERSON);
 $person = new personRecord();
-$table = new personTable(allTables::$PERSON);
 
 $mode = !empty($_POST['mode']) ? trim($_POST['mode']) : '';
 $save = $mode == 'Save' ? true : false;
@@ -95,19 +95,7 @@ try {
             break;
         default:
             $person->convertCountryCodeToName();
-            $saveRecordResult = $table->saveRecord($person, false, false);
-
-            if ($_POST['CTB_RTB'] != personRecord::CIO_ALIGNMENT_TYPE_CTB){
-                $table->clearCioAlignment($_POST['CNUM'], $_POST['WORKER_ID']);
-            }
-            
-            AuditTable::audit("Saved Boarding Record:<B>" . $_POST['CNUM'] .":" . $_POST['WORKER_ID'] .  "</b>Mode:<b>" . $mode, AuditTable::RECORD_TYPE_AUDIT);
-            AuditTable::audit("Saved Record:<pre>". print_r($person,true) . "</pre>", AuditTable::RECORD_TYPE_DETAILS);
-            AuditTable::audit("PROJECTED_END_DATE:<pre>". print_r($_POST['PROJECTED_END_DATE'],true) . "</pre>", AuditTable::RECORD_TYPE_DETAILS);
-        
-            $timeToWarnPmo = $person->checkIfTimeToWarnPmo();
-            $offboardingWarning = new offboardingWarningEmail();
-            $timeToWarnPmo ? $offboardingWarning->send($person) : null;
+            $saveRecordResult = $personTable->saveRecord($person, false, false);
 
             // null - default return value
             // false - update row
@@ -119,6 +107,25 @@ try {
                 case $saveRecordResult:
                     switch (true) {
                         case $save:
+
+                            AuditTable::audit("Saved Boarding Record:<B>" . $_POST['CNUM'] .":" . $_POST['WORKER_ID'] .  "</b>Mode:<b>" . $mode, AuditTable::RECORD_TYPE_AUDIT);
+                            AuditTable::audit("Saved Record:<pre>". print_r($person,true) . "</pre>", AuditTable::RECORD_TYPE_DETAILS);
+                            AuditTable::audit("PROJECTED_END_DATE:<pre>". print_r($_POST['PROJECTED_END_DATE'],true) . "</pre>", AuditTable::RECORD_TYPE_DETAILS);
+
+                            /*
+                            * clear CIO alignment
+                            */
+                            if ($_POST['CTB_RTB'] != personRecord::CIO_ALIGNMENT_TYPE_CTB){
+                                $personTable->clearCioAlignment($_POST['CNUM'], $_POST['WORKER_ID']);
+                            }
+                            
+                            /*
+                            * send notification
+                            */
+                            $timeToWarnPmo = $person->checkIfTimeToWarnPmo();
+                            $offboardingWarning = new offboardingWarningEmail();
+                            $timeToWarnPmo ? $offboardingWarning->send($person) : null;
+
                             echo "<br/>Boarding Form Pre-Boarder / Vendor Record - Saved.";
                             echo "<br/>Click 'Initiate PES' button to initiate the PES Check Process";
                             $allowPESInit = true;
@@ -185,7 +192,7 @@ ob_start();
 
 $response = array(
     'cnum'=>$_POST['CNUM'],
-    'workerid'=>$_POST['WORKER_ID'],
+    'workerId'=>$_POST['WORKER_ID'],
     'employeetype'=>$_POST['EMPLOYEE_TYPE'],
     'pesstatus'=>$_POST['PES_STATUS'],
     'success'=>$success,

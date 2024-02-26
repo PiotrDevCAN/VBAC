@@ -3,6 +3,7 @@ use vbac\personRecord;
 use vbac\personTable;
 use vbac\allTables;
 use itdq\AuditTable;
+use itdq\cFIRST;
 use itdq\OKTAGroups;
 use itdq\OKTAUsers;
 use itdq\WorkerAPI;
@@ -116,6 +117,20 @@ try {
         $invalidPersonKynEmailAddress = true;
     }
 
+    $agileTribeId = isset($_POST['TRIBE_NUMBER']) ? $_POST['TRIBE_NUMBER'] : null;
+    if (empty($agileTribeId)) {
+        $invaliedAgileTribe = false;
+    } else {
+        $invaliedAgileTribe = true;
+    }
+
+    $agileSquadId = isset($_POST['SQUAD_NUMBER']) ? $_POST['SQUAD_NUMBER'] : null;
+    if (empty($agileSquadId)) {
+        $invaliedAgileSquad = false;
+    } else {
+        $invaliedAgileSquad = true;
+    }
+
     if (empty($person->getValue('CNUM'))
         || empty($person->getValue('WORKER_ID'))
         || empty($person->getValue('NOTES_ID'))
@@ -154,6 +169,18 @@ try {
             echo $messages;
             $success = false;
             break;
+        case $invaliedAgileTribe:
+            // required parameters protection
+            $messages = 'Provided Agile Tribe Name is invalid';
+            echo $messages;
+            $success = false;
+            break;
+        case $invaliedAgileSquad:
+            // required parameters protection
+            $messages = 'Provided Agile Squad Name is invalid';
+            echo $messages;
+            $success = false;
+            break;
         case $invalidOtherParameters:
             // required parameters protection
             $messages = 'Significant parameters from form are missing.';
@@ -163,30 +190,6 @@ try {
         default:
             $person->convertCountryCodeToName();
             $saveRecordResult = $personTable->saveRecord($person, false, false);
-
-            if ($_POST['CTB_RTB'] != personRecord::CIO_ALIGNMENT_TYPE_CTB){
-                $personTable->clearCioAlignment($_POST['CNUM'], $_POST['WORKER_ID']);
-            }
-            
-            AuditTable::audit("Saved Boarding Record:<B>" . $_POST['CNUM'] .":" . $_POST['WORKER_ID'] .  "</b>Mode:<b>" . $mode, AuditTable::RECORD_TYPE_AUDIT);
-            AuditTable::audit("Saved Record:<pre>". print_r($person,true) . "</pre>", AuditTable::RECORD_TYPE_DETAILS);
-            AuditTable::audit("PROJECTED_END_DATE:<pre>". print_r($_POST['PROJECTED_END_DATE'],true) . "</pre>", AuditTable::RECORD_TYPE_DETAILS);
-        
-            $timeToWarnPmo = $person->checkIfTimeToWarnPmo();
-            $offboardingWarning = new offboardingWarningEmail();
-            $timeToWarnPmo ? $offboardingWarning->send($person) : null;
-
-            if (isset($_POST['OktaRoles'])) {
-                $OKTAGroups = new OKTAGroups();
-                $OKTAUsers = new OKTAUsers();
-                foreach($_POST['OktaRoles'] as $key => $groupName) {
-                    // add on-boarded employee to OKTA groups
-                    $groupId = $OKTAGroups->getGroupId($groupName);
-                    $userId = $OKTAUsers->getUserID($_POST['EMAIL_ADDRESS']);
-                    $result = $OKTAGroups->addMember($groupId, $userId);
-                    $OKTAGroups->clearGroupMembersCache($groupName);
-                }
-            }
 
             // null - default return value
             // false - update row
@@ -198,6 +201,77 @@ try {
                 case $saveRecordResult:
                     switch (true) {
                         case $save:
+
+                            AuditTable::audit("Saved Boarding Record:<B>" . $cnum .":" . $workerId .  "</b>Mode:<b>" . $mode, AuditTable::RECORD_TYPE_AUDIT);
+                            AuditTable::audit("Saved Record:<pre>". print_r($person,true) . "</pre>", AuditTable::RECORD_TYPE_DETAILS);
+                            AuditTable::audit("PROJECTED_END_DATE:<pre>". print_r($_POST['PROJECTED_END_DATE'],true) . "</pre>", AuditTable::RECORD_TYPE_DETAILS);
+
+                            /*
+                            * clear CIO alignment
+                            */
+                            if ($_POST['CTB_RTB'] != personRecord::CIO_ALIGNMENT_TYPE_CTB){
+                                $personTable->clearCioAlignment($cnum, $workerId);
+                            }
+                            
+                            /*
+                            * send notification
+                            */
+                            $timeToWarnPmo = $person->checkIfTimeToWarnPmo();
+                            $offboardingWarning = new offboardingWarningEmail();
+                            $timeToWarnPmo ? $offboardingWarning->send($person) : null;
+
+                            /*
+                            * assign employee to requested groups
+                            */
+                            if (isset($_POST['OktaRoles'])) {
+                                $OKTAGroups = new OKTAGroups();
+                                $OKTAUsers = new OKTAUsers();
+                                foreach($_POST['OktaRoles'] as $key => $groupName) {
+                                    // add on-boarded employee to OKTA groups
+                                    $groupId = $OKTAGroups->getGroupId($groupName);
+                                    $userId = $OKTAUsers->getUserID($_POST['EMAIL_ADDRESS']);
+                                    $result = $OKTAGroups->addMember($groupId, $userId);
+                                    $OKTAGroups->clearGroupMembersCache($groupName);
+                                }
+                            }
+
+                            /*
+                            * add record to cFIRST
+                            */
+                            $employeeId = personRecord::UNKNOWN;
+                            if ($cnum == personRecord::NO_LONGER_AVAILABLE) {
+                                if (!empty($workerId)) {
+                                    $employeeId = $workerId;
+                                }
+                            } else {
+                                $employeeId = $cnum;
+                            }
+
+                            // PES_LEVEL
+                            // LBG_LOCATIOn
+                            
+                            // $candidateData = array(
+                            //     /*
+                            //     * a further discussion with Divya is required
+                            //     */
+                            //     "PackageName" => "Sample Pacakge", // not required
+                            //     "PackageId" => "28000000000006",
+                            //     "BGCResponseEmailIds" => $person->getValue('KYN_EMAIL_ADDRESS'),
+                            //     "EmployeeId" => $employeeId,
+                            //     "APIReferenceCode" => $employeeId, // CNUM or WORKER_ID in vBAC
+                            //     "RequesterId" => $person->getValue('PES_REQUESTOR'),
+                            //     "FirstName" => $person->getValue('FIRST_NAME'),
+                            //     "MiddleName" => "",
+                            //     "LastName" => $person->getValue('LAST_NAME'),
+                            //     "Email" => $person->getValue('KYN_EMAIL_ADDRESS'),
+                            //     "Phone" => ""
+                            // );
+                            // $cFirst = new cFIRST();
+                            // $cFIRSTSaveRecordResult = $cFirst->addCandidate($candidateData);
+                            // echo '<pre>';
+                            // var_dump($cFIRSTSaveRecordResult);
+                            // echo '</pre>';
+
                             echo "<br/>Boarding Form Regular Record - Saved.";
                 
                             // Ant Stark note - 14th February 2022
@@ -257,7 +331,7 @@ try {
                             } else {
                                 echo "<br/>CBC Check notification has been NOT sent due to missing person data.";
                             }
-                            
+
                             // refresh list of know values
                             $kyndrylEmails = new knownKyndrylEmails();
                             $kyndrylEmails->reloadCache();

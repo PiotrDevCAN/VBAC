@@ -7,6 +7,8 @@
 let spinner = await cacheBustImport('./modules/functions/spinner.js');
 let box = await cacheBustImport('./modules/boxes/box.js');
 
+let agileSquad = await cacheBustImport('./modules/functions/selects/agileSquad.js');
+
 class editAgileNumberBox extends box {
 
     constructor(parent) {
@@ -22,6 +24,7 @@ class editAgileNumberBox extends box {
     }
 
     listenForSelectAgileNumber() {
+        $(document).off("select2:select", "#agileSquad");
         $(document).on("select2:select", "#agileSquad", function (e) {
             $("#agileTribeNumber").val("");
             $("#agileTribeName").val("");
@@ -34,7 +37,9 @@ class editAgileNumberBox extends box {
             var squadNumber = e.params.data.id;
             $.ajax({
                 url: "ajax/getSquadDetails.php",
-                data: { squadNumber: squadNumber },
+                data: {
+                    squadNumber: squadNumber
+                },
                 type: "POST",
                 success: function (result) {
                     var resultObj = JSON.parse(result);
@@ -92,11 +97,7 @@ class editAgileNumberBox extends box {
                             $(resultObj.body).find(".modal-body")
                         );
                         $.fn.modal.Constructor.prototype.enforceFocus = function () { };
-                        $("#agileSquad").select2({
-                            width: "100%",
-                            placeholder: "Select Squad",
-                            allowClear: true,
-                        });
+                        agileSquad('agileSquad', 'originalAgileSquad');
                     } else {
                         $("#editAgileSquadModal .modal-body").html(resultObj.messages);
                     }

@@ -3,6 +3,7 @@
 ini_set("error_reporting", E_ALL);
 ini_set("display_errors", 1);
 
+use itdq\cFIRST;
 use vbac\allTables;
 use vbac\cFIRST\APICaller;
 use vbac\cFIRST\CandidateDetailsRecord;
@@ -15,9 +16,80 @@ use vbac\cFIRST\CandidateStatusRequestRecord;
 use vbac\cFIRST\CandidateStatusRequestTable;
 
 echo '<pre>';
-$api = new APICaller();
+// $cFirst = new cFIRST();
+// echo '<pre>';
+// var_dump($cFirst->getPackages());
+// echo '</pre>';
+// exit;
 
-$api->getPackages();
+// $cFirst = new cFIRST();
+// $totalCounter = 0;
+// $insertCounter = 0;
+// $failedCounter = 0;
+// $i = 1;
+// do {
+//     $data = $cFirst->getBackgroundCheckRequestList(null, null, $i);
+//     list(
+//         'BGVErrors' => $error,
+//         'BGVListResponse' => $list
+//     ) = $data;
+//     foreach($list as $key => $entry) {
+//         list(
+//             "APIReferenceCode" => $refCode,
+//             "UniqueReferenceNo" => $uniqueReferenceNo,
+//             "ProfileId" => $profileId,
+//             "CandidateId" => $candidateId,
+//             "CurrentStatus" => $status,
+//             "Email" => $emailAddress,
+//             "FirstName" => $firstName,
+//             "MiddleName" => $middleName,
+//             "LastName" => $lastName,
+//             "Phone" => $phone,
+//             "AddedOn" => $addedDate,
+//             "InfoReceivedOn" => $infoReceivedDate,
+//             "InfoRequestedOn" => $infoRequestedDate,
+//             "InvitedOn" => $invitedDate,
+//             "SubmittedOn" => $submittedDate,
+//             "CompletedOn" => $completedDate,
+//         ) = $entry;
+
+//         $additionalFields = array();
+//         $additionalFields['API_REFERENCE_CODE'] = trim($refCode);
+//         $additionalFields['UNIQUE_REFERENCE_NO'] = trim($uniqueReferenceNo);
+//         $additionalFields['PROFILE_ID'] = trim($profileId);
+//         $additionalFields['CANDIDATE_ID'] = trim($candidateId);
+//         $additionalFields['STATUS'] = trim($status);
+//         $additionalFields['EMAIL_ADDRESS'] = trim($emailAddress);
+//         $additionalFields['FIRST_NAME'] = trim($firstName);
+//         $additionalFields['MIDDLE_NAME'] = trim($middleName);
+//         $additionalFields['LAST_NAME'] = trim($lastName);
+//         $additionalFields['PHONE'] = trim($phone);
+//         $additionalFields['ADDED_ON_DATE'] = trim($addedDate);
+//         $additionalFields['INFO_RECEIVED_ON_DATE'] = trim($infoReceivedDate);
+//         $additionalFields['INFO_REQUESTED_ON_DATE'] = trim($infoRequestedDate);
+//         $additionalFields['INVITED_ON_DATE'] = trim($invitedDate);
+//         $additionalFields['SUBMITTED_ON_DATE'] = trim($submittedDate);
+//         $additionalFields['COMPLETED_ON_DATE'] = trim($completedDate);
+        
+//         // echo '<pre>';
+//         // var_dump($additionalFields);
+//         // echo '</pre>';
+
+//         // $record->setFromArray($additionalFields);
+
+//         // $table->insert($record);
+//         // null - default return value
+//         // false - update row
+//         // $saveRecordResult = $table->saveRecord($record);
+//         // if ($saveRecordResult) {
+//         //     $insertCounter++;
+//         // } else {
+//         //     $failedCounter++;
+//         // }
+//     }
+//     $i++;
+//     $totalCounter += count($list);
+// } while (count($list) > 0);
 
 // add candidate to cFIRST db
 $candidateData = array(

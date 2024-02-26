@@ -17,8 +17,8 @@ class workLocationRecord extends DbRecord {
     function displayForm($mode){
         $notEditable = $mode == FormClass::$modeEDIT ? ' disabled ' : '';
         $loader = new Loader();
-        $allCountries = $loader->load("COUNTRY",allTables::$STATIC_LOCATIONS);
-        $allCities = $loader->load("CITY",allTables::$STATIC_LOCATIONS);
+        $allCountries = $loader->loadIndexed('COUNTRY', 'COUNTRY_ID', allTables::$STATIC_COUNTRIES);
+        $allCities = $loader->loadIndexed('CITY','CITY_ID', allTables::$STATIC_CITIES);
         ?>
         <form id='workLocationForm' class="form-horizontal" method='post'>
             <div class="form-group required" >

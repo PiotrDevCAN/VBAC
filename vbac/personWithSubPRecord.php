@@ -105,7 +105,7 @@ class personWithSubPRecord extends personRecord
         $userDetails = $loader->loadIndexed('CNUM','EMAIL_ADDRESS',allTables::$PERSON, " EMAIL_ADDRESS='" . htmlspecialchars($_SESSION['ssoEmail']) . "' ");
         $userCnum = isset($userDetails[$_SESSION['ssoEmail']]) ? $userDetails[$_SESSION['ssoEmail']] : false;
         //$allWorkStream = array('Work Stream 1'=>'ws001','Work Stream 2'=>'ws002','Work Stream 3'=>'ws003','Work Stream 4'=>'ws004');
-        $allWorkstream = $workstreamTable->getallWorkstream();
+        $allWorkstream = $workstreamTable->getAllWorkstream();
         JavaScript::buildSelectArray($allWorkstream, 'workStream');
 
         $notEditable = $mode==FormClass::$modeEDIT ? ' disabled ' : null;

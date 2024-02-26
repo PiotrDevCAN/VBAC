@@ -37,5 +37,3 @@ $tribeRecord->displayForm(FormClass::$modeDEFINE);
 </tfoot>
 </table>
 </div>
-
-<?=AgileSquadTable::buildTribeSelects_NEW();?>

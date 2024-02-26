@@ -162,10 +162,10 @@ class assetRequestRecord extends DbRecord {
 				  	<div class='col-sm-8' id='allCtidHereDiv'>
             	  	<input class="form-control input-sm" id='ctidConfirmation' name='ctidConfirmation' value=''  type='hidden' disabled required >
             	   	<select class='form-control select select2 locationFor '
-                			  id='person-1-location'
-                              name='person-1-location'
-                              disabled=true
-                              required
+                        id='person-1-location'
+                        name='person-1-location'
+                        disabled=true
+                        required
                      >
                      <?php
                      $options = self::buildLocationOptions();

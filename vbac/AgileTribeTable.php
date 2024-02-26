@@ -34,7 +34,7 @@ class AgileTribeTable extends DbTable{
 
     }
 
-    function returnAsArray(){
+    function returnAsArray($withButtons = true){
         $sql = " SELECT * ";
         $sql.= " FROM " . $GLOBALS['Db2Schema'] . "." . $this->tableName;
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
@@ -46,7 +46,7 @@ class AgileTribeTable extends DbTable{
         $data = false;
         while ($row = sqlsrv_fetch_array($rs, SQLSRV_FETCH_ASSOC)){
             $row = array_map('trim', $row);
-            $rowWithIcons = $this->addIcons($row);
+            $rowWithIcons = $withButtons ?  $this->addIcons($row) : $row ;
             $data[] = $rowWithIcons;
         }
         return $data;

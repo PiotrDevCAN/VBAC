@@ -7,7 +7,6 @@ use itdq\Loader;
 use itdq\JavaScript;
 use itdq\DbTable;
 use itdq\AuditTable;
-use itdq\BlueMail;
 use vbac\allTables;
 use vbac\personTable;
 use DateTime;
@@ -434,6 +433,12 @@ class personRecord extends DbRecord
         $this->EMPLOYEE_TYPE = ucwords($this->EMPLOYEE_TYPE,' -');
       }
 
+      $squadTable = new AgileSquadTable(allTables::$AGILE_SQUAD);
+      $squadData = $squadTable->getWithPredicate(" SQUAD_NUMBER='" . trim($this->SQUAD_NUMBER) . "'");
+      
+      $squadRecord = new AgileSquadRecord();
+      $squadRecord->setFromArray($squadData);
+
       /*
        * Functional Mgr can board to ANY Functional Mgr Ant Stark 16th Jan 2018
        */
@@ -450,10 +455,9 @@ class personRecord extends DbRecord
         $inActiveFMCnum = null;
       }
       $allManagers = personTable::optionsForManagers($fmPredicate, $selectedManagerId, $inActiveFMCnum);
-      // $countryCodes = $loader->loadIndexed('COUNTRY_NAME','COUNTRY_CODE',allTables::$STATIC_COUNTRY_CODES);
       $skillSets = $loader->loadIndexed('SKILLSET','SKILLSET_ID',allTables::$STATIC_SKILLSETS);
 
-      $allWorkstream = $workstreamTable->getallWorkstream();
+      $allWorkstream = $workstreamTable->getAllWorkstream();
       JavaScript::buildSelectArray($allWorkstream, 'workStream');
 
       $notEditable = $mode==FormClass::$modeEDIT ? ' disabled ' : null;
@@ -572,13 +576,8 @@ class personRecord extends DbRecord
             <select class='form-control select select2 locationFor '
               id='person_LBG_LOCATION'
               name='LBG_LOCATION' 
-              data-placeholder='LBG Work Location'
-            >
-            <option value=''>LBG Work Location</option>
-            <?php
-              $options = assetRequestRecord::buildLocationOptions($this->LBG_LOCATION);
-              echo $options;
-            ?>
+              data-placeholder='LBG Work Location' >
+              <option value='0'>Select LBG Work Location</option>
             </select>
             </div>
           </div>
@@ -587,7 +586,42 @@ class personRecord extends DbRecord
 
         <div class="panel panel-default">
           <div class="panel-heading">
-          <h3 class="panel-title">Functional Manager Details</h3>
+            <h3 class="panel-title">Agile Tribe/Squad Assignment Details</h3>
+          </div>
+          <div class="panel-body" id='atPanelBody' >
+            <div class="form-group">
+              <div class="col-sm-6">
+                <select class='form-control select select2' 
+                  id='person_TRIBE_NUMBER'
+                  name='TRIBE_NUMBER'
+                  required='required'
+                  data-placeholder='Agile Tribe' >
+                  <option value='0'>Select Agile Tribe</option>
+                </select>
+              </div>
+              <div class="col-sm-6">
+                <?php
+                $disabledSquad = isset($this->SQUAD_NUMBER) ? null : 'disabled';
+                if ($mode==FormClass::$modeDISPLAY) {
+                    $disabledSquad = 'disabled';
+                }
+                ?>
+                <select class='form-control select select2' 
+                  id='person_SQUAD_NUMBER'
+                  name='SQUAD_NUMBER'
+                  required='required'
+                  data-placeholder='Agile Tribe first'
+                  <?=$disabledSquad;?> >
+                  <option value='0'>Select Agile Squad</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Functional Manager Details</h3>
           </div>
           <div class="panel-body" id='fmPanelBody' >
             <div class="form-group">
@@ -596,8 +630,8 @@ class personRecord extends DbRecord
                 id='person_FM_CNUM'
                 name='FM_CNUM'
                 required='required'
-                data-placeholder='Select functional manager' >
-              <option value=''>Select Functional Mgr</option>
+                data-placeholder='Functional Mgr' >
+              <option value='0'>Select Functional Mgr</option>
               <?php
                 foreach ($allManagers as $option){
                   echo $option;
@@ -620,6 +654,9 @@ class personRecord extends DbRecord
           </div>
           <div class="panel-body bg-danger" id='personFmPanelBodyCheckMsg' <?=$hideDivMgrChange?> >
           <input type='hidden' id='person_original_fm' value='<?=$this->FM_CNUM ?>' />
+          <input type='hidden' id='person_originalLBG_LOCATION' value='<?=$this->LBG_LOCATION ?>' />
+          <input type='hidden' id='person_originalTRIBE_NUMBER' value='<?=$squadRecord->getValue('TRIBE_NUMBER') ?>' />
+          <input type='hidden' id='person_originalSQUAD_NUMBER' value='<?=$this->SQUAD_NUMBER ?>' />
           <p>Before submitting this change please ensure that all HR/Workday, Bluepages and Department Code (GUDA) updates have been completed as necessary. If moving to a new role please ensure the assignment reference number, JRSS and Squad/Tribe alignment are also correct.</p>
           <?php
             $buttons = null;
@@ -730,6 +767,27 @@ class personRecord extends DbRecord
           <input id='person_pes_requestor'        name='PES_REQUESTOR'          value='<?=$pesRequestor?>'               type='hidden'  >
         </div>
 
+        <!-- <div class="panel panel-default">
+          <div class="panel-heading">
+          <h3 class="panel-title">cFIRST Candidate Details</h3>
+          </div>
+          <div class="panel-body">
+          <div class='form-group' >
+            <div class='col-sm-12'>
+              <p>Section will be populated upon saving the record.</p>
+              <p>PES Level One - sensitive and privileged package</p>
+              <p>PES Level Two - sensitive package only</p>
+              <select class='form-control select select2 ' 
+                id='person_package'
+                name='CFIRST_PACKAGE'
+                data-placeholder='cFIRST package:' >
+                <option value=''>Select cFIRST package</option>
+              </select>
+            </div>
+          </div>
+          </div>
+        </div> -->
+
         <div class="panel panel-default">
           <div class="panel-heading">
           <h3 class="panel-title">Revalidation Details</h3>
@@ -802,9 +860,8 @@ class personRecord extends DbRecord
           </div>
           </div>
         </div>
-        <?php
 
-        // include_once 'includes/formMessageArea.html';
+        <?php
 
         $allButtons = null;
         $submitButton = $mode==FormClass::$modeEDIT ?  $this->formButton('submit','Submit','updateRegularBoarding',null,'Update','btn btn-primary') :  $this->formButton('submit','Submit','saveRegularBoarding','disabled','Save','btn btn-primary');
@@ -849,7 +906,7 @@ class personRecord extends DbRecord
       $countryCodes = $loader->loadIndexed('COUNTRY_NAME','COUNTRY_CODE',allTables::$STATIC_COUNTRY_CODES);
       $skillSets = $loader->loadIndexed('SKILLSET','SKILLSET_ID',allTables::$STATIC_SKILLSETS);
 
-      $allWorkstream = $workstreamTable->getallWorkstream();
+      $allWorkstream = $workstreamTable->getAllWorkstream();
       JavaScript::buildSelectArray($allWorkstream, 'workStream');
 
       $notEditable = $mode==FormClass::$modeEDIT ? ' disabled ' : null;
@@ -883,102 +940,99 @@ class personRecord extends DbRecord
 
       <form id='boardingFormNotIbmer' class="form-horizontal" onsubmit="return false;">
         <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title" id='employeeResourceHeading'><?=$formHeading;?></h3>
-        </div>
-        <div class="panel-body">
-          <div class="form-group">
-          <div class="col-sm-6">
-            <input class="form-control" id="resource_first_name" name="FIRST_NAME"
-            value="<?=$this->FIRST_NAME?>"
-            type="text" placeholder='First Name'
-            <?=$notEditable?>>
+          <div class="panel-heading">
+            <h3 class="panel-title" id='employeeResourceHeading'><?=$formHeading;?></h3>
           </div>
-          <div class="col-sm-6">
-            <input class="form-control" id="resource_last_name" name="LAST_NAME"
-            value="<?=$this->LAST_NAME?>"
-            type="text" placeholder='Last Name'
-            <?=$notEditable?>>
-          </div>
-          </div>
+          <div class="panel-body">
+            <div class="form-group">
+            <div class="col-sm-6">
+              <input class="form-control" id="resource_first_name" name="FIRST_NAME"
+              value="<?=$this->FIRST_NAME?>"
+              type="text" placeholder='First Name'
+              <?=$notEditable?>>
+            </div>
+            <div class="col-sm-6">
+              <input class="form-control" id="resource_last_name" name="LAST_NAME"
+              value="<?=$this->LAST_NAME?>"
+              type="text" placeholder='Last Name'
+              <?=$notEditable?>>
+            </div>
+            </div>
 
-          <div class='form-group'>
-          <div class='col-sm-6'>
-            <input class='form-control' id='resource_email'
-            name='EMAIL_ADDRESS' value='<?=$this->EMAIL_ADDRESS?>'
-            type='text' placeholder="Email Address"
-            required
-            <?=$notEditable?>>
-          </div>
-          <div class='col-sm-6'>
-            <select class='form-control select select2 ' 
-            id='resource_country'
-            name='COUNTRY'
-            data-placeholder='Country working in:' >
-            <option value=''>Country working in</option>
-            <?php
-            foreach ($countryCodes as $countryName){
-              $selected = $this->COUNTRY == $countryName ? " selected " : null;
-              echo "<option value='$countryName' ".$selected." >$countryName</option>";
-            };
-            ?>
-            </select>
-          </div>
-          </div>
-          <input id='resource_uid'                name='resource_uid'        value='<?=$this->CNUM?>'   				    type='hidden' >
-          <input id='resource_worker_id'          name='WORKER_ID'           value='<?=$this->WORKER_ID?>'   			  type='hidden' >
-          <input id='resource_cfirst_id'          name='CFIRST_ID'           value='<?=$this->CFIRST_ID?>'   				type='hidden' >
-          <input id='resource_is_mgr'	            name='FM_MANAGER_FLAG'     value='<?=$fmManagerFlag?>'            type='hidden' >
-          <input id='resource_ibm_location'       name='IBM_BASE_LOCATION'   value='<?=$this->IBM_BASE_LOCATION?>'	type='hidden' >
-          <input id='resource_pes_status'         name='PES_STATUS'          value='<?=$pesStatus?>'                type='hidden' >
-          <input id='resource_pes_status_details' name='PES_STATUS_DETAILS'  value='<?=$pesStatusDetails?>'         type='hidden' >
-          <input id='resource_kyn_email'          name='KYN_EMAIL_ADDRESS'   value='<?=$this->KYN_EMAIL_ADDRESS?>'  type='hidden' >
+            <div class='form-group'>
+            <div class='col-sm-6'>
+              <input class='form-control' id='resource_email'
+              name='EMAIL_ADDRESS' value='<?=$this->EMAIL_ADDRESS?>'
+              type='text' placeholder="Email Address"
+              required
+              <?=$notEditable?>>
+            </div>
+            <div class='col-sm-6'>
+              <select class='form-control select select2 ' 
+              id='resource_country'
+              name='COUNTRY'
+              data-placeholder='Country working in:' >
+                <option value=''>Country working in</option>
+                <?php
+                foreach ($countryCodes as $countryName){
+                  $selected = $this->COUNTRY == $countryName ? " selected " : null;
+                  echo "<option value='$countryName' ".$selected." >$countryName</option>";
+                };
+                ?>
+              </select>
+            </div>
+            </div>
+            <input id='resource_uid'                name='resource_uid'        value='<?=$this->CNUM?>'   				    type='hidden' >
+            <input id='resource_worker_id'          name='WORKER_ID'           value='<?=$this->WORKER_ID?>'   			  type='hidden' >
+            <input id='resource_cfirst_id'          name='CFIRST_ID'           value='<?=$this->CFIRST_ID?>'   				type='hidden' >
+            <input id='resource_is_mgr'	            name='FM_MANAGER_FLAG'     value='<?=$fmManagerFlag?>'            type='hidden' >
+            <input id='resource_ibm_location'       name='IBM_BASE_LOCATION'   value='<?=$this->IBM_BASE_LOCATION?>'	type='hidden' >
+            <input id='resource_pes_status'         name='PES_STATUS'          value='<?=$pesStatus?>'                type='hidden' >
+            <input id='resource_pes_status_details' name='PES_STATUS_DETAILS'  value='<?=$pesStatusDetails?>'         type='hidden' >
+            <input id='resource_kyn_email'          name='KYN_EMAIL_ADDRESS'   value='<?=$this->KYN_EMAIL_ADDRESS?>'  type='hidden' >
+            <input id='resource_squad_number'       name='SQUAD_NUMBER'        value='<?=$this->SQUAD_NUMBER?>'       type='hidden' >
 
-          <div class='form-group'>
-          <div class='col-sm-12'>
-            <?php
-              $checked = personRecord::EMPLOYEE_TYPE_PREBOARDER == strtolower($this->EMPLOYEE_TYPE) || personRecord::EMPLOYEE_TYPE_PRE_HIRE == $this->EMPLOYEE_TYPE ? ' checked ' : null;
-            ?>
-            <label class="radio-inline employeeTypeRadioBtn" data-toggle='tooltip' data-placement='auto top' title='IBM Regular and IBM Contractors'>
-            <input type="radio" name="EMPLOYEE_TYPE" value='<?=personRecord::EMPLOYEE_TYPE_PREBOARDER?>' data-type='<?=personRecord::EMPLOYEE_TYPE_ADDITIONAL_IBMER?>' <?=$checked?> required>
-            Kyndryl Pre-Hire (Regular or Contractor)
-            </label>
-            <?php
-              $checked = personRecord::EMPLOYEE_TYPE_VENDOR == strtolower($this->EMPLOYEE_TYPE) ? ' checked ' : null;
-            ?>
-            <label class="radio-inline employeeTypeRadioBtn" data-toggle='tooltip' data-placement='auto top' title='3rd Party Vendors'>
-            <input type="radio" name="EMPLOYEE_TYPE" value='<?=personRecord::EMPLOYEE_TYPE_VENDOR?>' data-type='<?=personRecord::EMPLOYEE_TYPE_ADDITIONAL_OTHER?>' <?=$checked?> required>
-            Other (ie.3rd Party Vendor)
-            </label>
-          </div>
-          </div>
+            <div class='form-group'>
+              <div class='col-sm-12'>
+                <?php
+                  $checked = personRecord::EMPLOYEE_TYPE_PREBOARDER == strtolower($this->EMPLOYEE_TYPE) || personRecord::EMPLOYEE_TYPE_PRE_HIRE == $this->EMPLOYEE_TYPE ? ' checked ' : null;
+                ?>
+                <label class="radio-inline employeeTypeRadioBtn" data-toggle='tooltip' data-placement='auto top' title='IBM Regular and IBM Contractors'>
+                <input type="radio" name="EMPLOYEE_TYPE" value='<?=personRecord::EMPLOYEE_TYPE_PREBOARDER?>' data-type='<?=personRecord::EMPLOYEE_TYPE_ADDITIONAL_IBMER?>' <?=$checked?> required>
+                Kyndryl Pre-Hire (Regular or Contractor)
+                </label>
+                <?php
+                  $checked = personRecord::EMPLOYEE_TYPE_VENDOR == strtolower($this->EMPLOYEE_TYPE) ? ' checked ' : null;
+                ?>
+                <label class="radio-inline employeeTypeRadioBtn" data-toggle='tooltip' data-placement='auto top' title='3rd Party Vendors'>
+                <input type="radio" name="EMPLOYEE_TYPE" value='<?=personRecord::EMPLOYEE_TYPE_VENDOR?>' data-type='<?=personRecord::EMPLOYEE_TYPE_ADDITIONAL_OTHER?>' <?=$checked?> required>
+                Other (ie.3rd Party Vendor)
+                </label>
+              </div>
+            </div>
 
-          <input id='resource_preboarded' name='PRE_BOARDED' value='' type='hidden'>
+            <input id='resource_preboarded' name='PRE_BOARDED' value='' type='hidden'>
 
-          <div class='form-group'>
-          <?php $allowEditLocation = " style='display:block' "; ?>
-          <div id='editLocationDiv' class='col-sm-6' <?=$allowEditLocation;?>>
-            <select class='form-control select select2 locationFor '
-            id='resource_LBG_LOCATION'
-            name='LBG_LOCATION' 
-            data-placeholder='LBG Work Location'
-            >
-            <option value=''>LBG Work Location</option>
-            <?php
-            $options = assetRequestRecord::buildLocationOptions($this->LBG_LOCATION);
-            echo $options;
-            ?>
-            </select>
+            <div class='form-group'>
+              <?php $allowEditLocation = " style='display:block' "; ?>
+              <div id='editLocationDiv' class='col-sm-6' <?=$allowEditLocation;?>>
+                <select class='form-control select select2 locationFor '
+                id='resource_LBG_LOCATION'
+                name='LBG_LOCATION' 
+                data-placeholder='LBG Work Location'
+                >
+                  <option value=''>LBG Work Location</option>
+                </select>
+              </div>
+            </div>
           </div>
-          </div>
-        </div>
         </div>
 
         <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title">Functional Manager Details</h3>
-        </div>
-        <div class="panel-body" id='fmPanelBody' >
+          <div class="panel-heading">
+            <h3 class="panel-title">Functional Manager Details</h3>
+          </div>
+          <div class="panel-body" id='fmPanelBody' >
             <div class="form-group">
               <div class="col-sm-6">
               <select class='form-control select select2' 
@@ -986,12 +1040,12 @@ class personRecord extends DbRecord
                 name='FM_CNUM'
                 required='required'
                 data-placeholder='Select functional manager' >
-              <option value=''>Select Functional Mgr</option>
-              <?php
-                foreach ($allManagers as $option){
-                  echo $option;
-                };
-              ?>
+                <option value=''>Select Functional Mgr</option>
+                <?php
+                  foreach ($allManagers as $option){
+                    echo $option;
+                  };
+                ?>
               </select>
               </div>
               <?php
@@ -1007,117 +1061,139 @@ class personRecord extends DbRecord
               ?>
             </div>
           </div>
-        <div class="panel-body bg-danger" id='resourceFmPanelBodyCheckMsg' <?=$hideDivMgrChange?> >
-          <input type='hidden' id='resource_original_fm' value='<?=$this->FM_CNUM ?>' />
-          <p>Before submitting this change please ensure that all HR/Workday, Bluepages and Department Code (GUDA) updates have been completed as necessary. If moving to a new role please ensure the assignment reference number, JRSS and Squad/Tribe alignment are also correct.</p>
-          <?php
-          $buttons = null;
-          $confirmButton = $this->formButton('button','Confirm','confirmFmChangeResource',null,'Confirm','btn btn-primary') ;
-          $resetButton   = $this->formButton('button','Cancel','resetFmChangeResource',null,'Cancel','btn btn-primary ');
-          $buttons[] = $confirmButton;
-          $buttons[] = $resetButton;
-          $this->formBlueButtons($buttons); 
-          ?>
-        </div>
+          <div class="panel-body bg-danger" id='resourceFmPanelBodyCheckMsg' <?=$hideDivMgrChange?> >
+            <input type='hidden' id='resource_original_fm' value='<?=$this->FM_CNUM ?>' />
+            <input type='hidden' id='resource_originalLBG_LOCATION' value='<?=$this->LBG_LOCATION ?>' />
+            <p>Before submitting this change please ensure that all HR/Workday, Bluepages and Department Code (GUDA) updates have been completed as necessary. If moving to a new role please ensure the assignment reference number, JRSS and Squad/Tribe alignment are also correct.</p>
+            <?php
+            $buttons = null;
+            $confirmButton = $this->formButton('button','Confirm','confirmFmChangeResource',null,'Confirm','btn btn-primary') ;
+            $resetButton   = $this->formButton('button','Cancel','resetFmChangeResource',null,'Cancel','btn btn-primary ');
+            $buttons[] = $confirmButton;
+            $buttons[] = $resetButton;
+            $this->formBlueButtons($buttons); 
+            ?>
+          </div>
         </div>
 
         <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title">Role Details</h3>
-        </div>
-        <div class="panel-body">
-          <div class='form-group' >
-          <div class='col-sm-6'>
-            <input class="form-control" id="resource_open_seat" name="OPEN_SEAT_NUMBER"  required maxlength='15' value="<?=$this->OPEN_SEAT_NUMBER?>" type="text" placeholder='Open Seat Number' data-toggle='tooltip' title='Open Seat' max=12 >
+          <div class="panel-heading">
+            <h3 class="panel-title">Role Details</h3>
           </div>
-          <div class='col-sm-6'>
-            <select class='form-control select select2' 
-            id='resource_skill_set_id'
-            name='SKILLSET_ID'
-            required
-            >
-            <option value=''>Select Skillset</option>
-            <?php
-            foreach ($skillSets as $skillSetId => $skillSet) {
-            ?><option value='<?=$skillSetId?>' <?=trim($this->SKILLSET_ID)==trim($skillSetId)? ' selected ' : null ?> ><?=$skillSet?></option>
-            <?php
-            }
-            ?>
-            </select>
-          </div>
-          </div>
-          <div class='form-group' >
-          <input class="form-control" id="resource_lob" name="LOB" value="<?=$this->LOB?>" type="hidden" >
-          <?php $allowEditCtid = empty($this->CT_ID) ? " style='display:none;' " : null; ?>
-          <div id='editCtidDiv' class='col-sm-6' <?=$allowEditCtid;?>>
-            <input class="form-control" id="resource_ct_id" name="CT_ID" type="number" min='999999' max='9999999'  value="<?=$this->CT_ID?>" placeholder='7-digit Contractor Id(CT Id) (If known)' >
-            <input class="form-control" id="resource_ct_id_required" name="CT_ID_REQUIRED" value="<?=$this->CT_ID_REQUIRED?>" type="hidden" >
-          </div>
-          </div>
-          <div class='form-group' id='selectCioAllignment'>
-          <div class='col-sm-6'>
-            <div class="radio">
-            <label><input type="radio" name="CTB_RTB" class='ctbRtb' value='CTB' required  <?=substr($this->CTB_RTB,0,3) == self::CIO_ALIGNMENT_TYPE_CTB ? 'checked' : null ?>    <?=$_SESSION['isPmo'] || $_SESSION['isCdi'] ? null :  $notEditable;?>>CTB</label>
-            <label><input type="radio" name="CTB_RTB" class='ctbRtb' value='RTB' required <?=substr($this->CTB_RTB,0,3) == self::CIO_ALIGNMENT_TYPE_RTB ? 'checked' : null ?>     <?=$_SESSION['isPmo'] || $_SESSION['isCdi'] ? null :  $notEditable;?>>RTB</label>
-            <label><input type="radio" name="CTB_RTB" class='ctbRtb' value='Other' required <?=substr($this->CTB_RTB,0,5) == self::CIO_ALIGNMENT_TYPE_OTHER ? 'checked' : null ?> <?=$_SESSION['isPmo'] || $_SESSION['isCdi'] ? null :  $notEditable;?>>Other</label>
+          <div class="panel-body">
+            <div class='form-group' >
+              <div class='col-sm-6'>
+                <input class="form-control" id="resource_open_seat" name="OPEN_SEAT_NUMBER"  required maxlength='15' value="<?=$this->OPEN_SEAT_NUMBER?>" type="text" placeholder='Open Seat Number' data-toggle='tooltip' title='Open Seat' max=12 >
+              </div>
+              <div class='col-sm-6'>
+                <select class='form-control select select2' 
+                id='resource_skill_set_id'
+                name='SKILLSET_ID'
+                required
+                >
+                  <option value=''>Select Skillset</option>
+                  <?php
+                  foreach ($skillSets as $skillSetId => $skillSet) {
+                  ?><option value='<?=$skillSetId?>' <?=trim($this->SKILLSET_ID)==trim($skillSetId)? ' selected ' : null ?> ><?=$skillSet?></option>
+                  <?php
+                  }
+                  ?>
+                </select>
+              </div>
+            </div>
+            <div class='form-group' >
+              <input class="form-control" id="resource_lob" name="LOB" value="<?=$this->LOB?>" type="hidden" >
+              <?php $allowEditCtid = empty($this->CT_ID) ? " style='display:none;' " : null; ?>
+              <div id='editCtidDiv' class='col-sm-6' <?=$allowEditCtid;?>>
+                <input class="form-control" id="resource_ct_id" name="CT_ID" type="number" min='999999' max='9999999'  value="<?=$this->CT_ID?>" placeholder='7-digit Contractor Id(CT Id) (If known)' >
+                <input class="form-control" id="resource_ct_id_required" name="CT_ID_REQUIRED" value="<?=$this->CT_ID_REQUIRED?>" type="hidden" >
+              </div>
+            </div>
+            <div class='form-group' id='selectCioAllignment'>
+              <div class='col-sm-6'>
+                <div class="radio">
+                <label><input type="radio" name="CTB_RTB" class='ctbRtb' value='CTB' required  <?=substr($this->CTB_RTB,0,3) == self::CIO_ALIGNMENT_TYPE_CTB ? 'checked' : null ?>    <?=$_SESSION['isPmo'] || $_SESSION['isCdi'] ? null :  $notEditable;?>>CTB</label>
+                <label><input type="radio" name="CTB_RTB" class='ctbRtb' value='RTB' required <?=substr($this->CTB_RTB,0,3) == self::CIO_ALIGNMENT_TYPE_RTB ? 'checked' : null ?>     <?=$_SESSION['isPmo'] || $_SESSION['isCdi'] ? null :  $notEditable;?>>RTB</label>
+                <label><input type="radio" name="CTB_RTB" class='ctbRtb' value='Other' required <?=substr($this->CTB_RTB,0,5) == self::CIO_ALIGNMENT_TYPE_OTHER ? 'checked' : null ?> <?=$_SESSION['isPmo'] || $_SESSION['isCdi'] ? null :  $notEditable;?>>Other</label>
+                </div>
+              </div>
+              <input class="form-control" id="resource_cioAlignment" name="CIO_ALIGNMENT" value="<?=$this->CIO_ALIGNMENT?>" type="hidden" >
+            </div>
+            <div class='form-group required' >
+              <div class='col-sm-6'>
+                <input class="form-control required " required id="resource_start_date" value="<?=is_object($startDate) ?  $startDate->format('d M Y') : null?>" type="text" placeholder='Start Date' data-toggle='tooltip' title='Start Date'>
+                <input class="form-control" id="resource_start_date_db2" name="START_DATE" value="<?=$this->START_DATE?>" type="hidden" >
+              </div>
+              <div class='col-sm-6'>
+                <input class="form-control required " required id="resource_end_date"  value="<?=is_object($endDate) ? $endDate->format('d M Y') : null?>"  type="text" placeholder='End Date (if known)' data-toggle='tooltip' title='End Date'>
+                <input class="form-control" id="resource_end_date_db2" name="PROJECTED_END_DATE" value="<?=$this->PROJECTED_END_DATE?>" type="hidden" >
+              </div>
             </div>
           </div>
-          <input class="form-control" id="resource_cioAlignment" name="CIO_ALIGNMENT" value="<?=$this->CIO_ALIGNMENT?>" type="hidden" >
-          </div>
-          <div class='form-group required' >
-          <div class='col-sm-6'>
-            <input class="form-control required " required id="resource_start_date" value="<?=is_object($startDate) ?  $startDate->format('d M Y') : null?>" type="text" placeholder='Start Date' data-toggle='tooltip' title='Start Date'>
-            <input class="form-control" id="resource_start_date_db2" name="START_DATE" value="<?=$this->START_DATE?>" type="hidden" >
-          </div>
-          <div class='col-sm-6'>
-            <input class="form-control required " required id="resource_end_date"  value="<?=is_object($endDate) ? $endDate->format('d M Y') : null?>"  type="text" placeholder='End Date (if known)' data-toggle='tooltip' title='End Date'>
-            <input class="form-control" id="resource_end_date_db2" name="PROJECTED_END_DATE" value="<?=$this->PROJECTED_END_DATE?>" type="hidden" >
-          </div>
-          </div>
-        </div>
         </div>
 
         <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title">PES Details</h3>
+          <div class="panel-heading">
+            <h3 class="panel-title">PES Details</h3>
+          </div>
+          <div class="panel-body">
+            <div class='form-group' >
+              <div class='col-sm-6'>
+                <select class='form-control select select2' 
+                  id='resource_pesLevel'
+                  required='required'
+                  name='PES_LEVEL'
+                  <?=!empty($this->PES_LEVEL) ? ' disabled ' : null;?>
+                  <?=empty($this->PES_LEVEL) ? " data-toggle='tooltip' title='Please select appropriate PES LEVEL'" : " data-toggle='tooltip' title='Contact PES Team to change PES LEVEL'";?>
+                  >
+                  <option value=''>Select PES Level</option>
+                  <option value='<?=personTable::PES_LEVEL_ONE;?>' <?=$this->PES_LEVEL==personTable::PES_LEVEL_ONE ? ' selected ' : null;?>><?=personTable::PES_LEVEL_ONE . " (SPRH - Recheck Annually)";?></option>
+                  <option value='<?=personTable::PES_LEVEL_TWO;?>' <?=$this->PES_LEVEL==personTable::PES_LEVEL_TWO ? ' selected ' : null;?>><?=personTable::PES_LEVEL_TWO . " (SRH or No Client Access - Recheck every 3 Yrs)"?></option>        
+                </select>
+              </div>
+              <div class='col-sm-6'>
+                <button class="btn btn-xs btn-success btnPesDescription" title="PES Details explanation">
+                  <span class="glyphicon glyphicon-tags"></span>
+                </button>
+              </div>
+            </div>
+            <input id="resource_account_access" name="ACCT_ACC" value="<?=$this->ACCT_ACC?>" type="hidden" >
+            <div class='form-group' >
+              <div class='col-sm-6'>
+                <input class="form-control" id="resource_pes_cleared_date" value="<?=is_object($pesClearedDate) ?  $pesClearedDate->format('d M Y') . " (Cleared)" : null?>" type="text" placeholder='PES Cleared Date' data-toggle='tooltip' title='PES Cleared Date' disabled>
+                <input class="form-control" id="resource_pes_cleared_date_db2" name="pesClearedDate" value="<?=$this->PES_CLEARED_DATE . " (Cleared)"?>" type="hidden" >
+              </div>
+              <div class='col-sm-6'>
+                <input class="form-control" id="resource_pes_recheck_date"  value="<?=is_object($pesRecheckDate) ? $pesRecheckDate->format('d M Y')  . " (Recheck)" : null?>"  type="text" placeholder='PES Recheck Date' data-toggle='tooltip' title='PES Recheck Date' disabled>
+                <input class="form-control" id="resource_pes_recheck_date_db2" name="pesRecheckDate" value="<?=$this->PES_RECHECK_DATE?>" type="hidden" >
+              </div>
+            </div>
+          </div>
+          <input id='resource_pes_date_requested'   name='PES_DATE_REQUESTED'     value='<?=$pesDateRequested?>'           type='hidden'  >
+          <input id='resource_pes_date_responded'   name='PES_DATE_RESPONDED'     value='<?=$pesDateResponded?>'           type='hidden'  >
+          <input id='resource_pes_requestor'        name='PES_REQUESTOR'          value='<?=$pesRequestor?>'               type='hidden'  >
         </div>
-        <div class="panel-body">
+
+        <!-- <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">cFIRST Candidate Details</h3>
+          </div>
+          <div class="panel-body">
           <div class='form-group' >
-          <div class='col-sm-6'>
-            <select class='form-control select select2' 
-            id='resource_pesLevel'
-            required='required'
-            name='PES_LEVEL'
-            <?=!empty($this->PES_LEVEL) ? ' disabled ' : null;?>
-            <?=empty($this->PES_LEVEL) ? " data-toggle='tooltip' title='Please select appropriate PES LEVEL'" : " data-toggle='tooltip' title='Contact PES Team to change PES LEVEL'";?>
-            >
-            <option value=''>Select PES Level</option>
-            <option value='<?=personTable::PES_LEVEL_ONE;?>' <?=$this->PES_LEVEL==personTable::PES_LEVEL_ONE ? ' selected ' : null;?>><?=personTable::PES_LEVEL_ONE . " (SPRH - Recheck Annually)";?></option>
-            <option value='<?=personTable::PES_LEVEL_TWO;?>' <?=$this->PES_LEVEL==personTable::PES_LEVEL_TWO ? ' selected ' : null;?>><?=personTable::PES_LEVEL_TWO . " (SRH or No Client Access - Recheck every 3 Yrs)"?></option>        
-            </select>
-          </div>
-          <div class='col-sm-6'>
-            <button class="btn btn-xs btn-success btnPesDescription" title="PES Details explanation">
-            <span class="glyphicon glyphicon-tags"></span>
-            </button>
+            <div class='col-sm-12'>
+              <p>Section will be populated upon saving the record.</p>
+              <p>PES Level One - sensitive and privileged package</p>
+              <p>PES Level Two - sensitive package only</p>
+              <select class='form-control select select2 ' 
+                id='resource_package'
+                name='CFIRST_PACKAGE'
+                data-placeholder='cFIRST package:' >
+                <option value=''>Select cFIRST package</option>
+              </select>
+            </div>
           </div>
           </div>
-          <input id="resource_account_access" name="ACCT_ACC" value="<?=$this->ACCT_ACC?>" type="hidden" >
-          <div class='form-group' >
-          <div class='col-sm-6'>
-            <input class="form-control" id="resource_pes_cleared_date" value="<?=is_object($pesClearedDate) ?  $pesClearedDate->format('d M Y') . " (Cleared)" : null?>" type="text" placeholder='PES Cleared Date' data-toggle='tooltip' title='PES Cleared Date' disabled>
-            <input class="form-control" id="resource_pes_cleared_date_db2" name="pesClearedDate" value="<?=$this->PES_CLEARED_DATE . " (Cleared)"?>" type="hidden" >
-          </div>
-          <div class='col-sm-6'>
-            <input class="form-control" id="resource_pes_recheck_date"  value="<?=is_object($pesRecheckDate) ? $pesRecheckDate->format('d M Y')  . " (Recheck)" : null?>"  type="text" placeholder='PES Recheck Date' data-toggle='tooltip' title='PES Recheck Date' disabled>
-            <input class="form-control" id="resource_pes_recheck_date_db2" name="pesRecheckDate" value="<?=$this->PES_RECHECK_DATE?>" type="hidden" >
-          </div>
-          </div>
-        </div>
-        <input id='resource_pes_date_requested'   name='PES_DATE_REQUESTED'     value='<?=$pesDateRequested?>'           type='hidden'  >
-        <input id='resource_pes_date_responded'   name='PES_DATE_RESPONDED'     value='<?=$pesDateResponded?>'           type='hidden'  >
-        <input id='resource_pes_requestor'        name='PES_REQUESTOR'          value='<?=$pesRequestor?>'               type='hidden'  >
-        </div>
+        </div> -->
 
         <div class="panel panel-default">
           <div class="panel-heading">
@@ -1135,7 +1211,7 @@ class personRecord extends DbRecord
 
         <div class="panel panel-default">
           <div class="panel-heading">
-          <h3 class="panel-title">vBAC Access Details</h3>
+            <h3 class="panel-title">vBAC Access Details</h3>
           </div>
           <div class="panel-body">
           <div class='form-group' >
@@ -1366,15 +1442,13 @@ class personRecord extends DbRecord
               </select>
             </div>
             <div class="col-sm-3" id='rfStartDate'>
-                    <input class="form-control" id="rfStart_Date" value="<?=is_object($rfStartDate) ?  $rfStartDate->format('d M Y') : null?>" type="text" placeholder='RF Start Date' data-toggle='tooltip' title='RF Start Date'>
-                  <input class="form-control" id="rfStart_Date_Db2" name="RF_Start" value="<?=$this->RF_Start?>" type="hidden" >
+              <input class="form-control" id="rfStart_Date" value="<?=is_object($rfStartDate) ?  $rfStartDate->format('d M Y') : null?>" type="text" placeholder='RF Start Date' data-toggle='tooltip' title='RF Start Date'>
+              <input class="form-control" id="rfStart_Date_Db2" name="RF_Start" value="<?=$this->RF_Start?>" type="hidden" >
             </div>
             <div class="col-sm-3" id='rfEndDate'>
-                    <input class="form-control" id="rfEnd_Date" value="<?=is_object($rfEndDate) ?  $rfEndDate->format('d M Y') : null?>" type="text" placeholder='RF End Date' data-toggle='tooltip' title='RF End Date'>
-                  <input class="form-control" id="rfEnd_Date_Db2" name="RF_End" value="<?=$this->RF_End?>" type="hidden" >
+              <input class="form-control" id="rfEnd_Date" value="<?=is_object($rfEndDate) ?  $rfEndDate->format('d M Y') : null?>" type="text" placeholder='RF End Date' data-toggle='tooltip' title='RF End Date'>
+              <input class="form-control" id="rfEnd_Date_Db2" name="RF_End" value="<?=$this->RF_End?>" type="hidden" >
             </div>
-
-
           </div>
       </div>
     </div>
@@ -1766,12 +1840,6 @@ function confirmTransferModal(){
 
 function editAgileSquadModal($version='original'){
 
-$squadTable = $version=='original'  ? allTables::$AGILE_SQUAD : allTables::$AGILE_SQUAD_OLD;
-
-$loader = new Loader();
-$allSquadNames = $loader->loadIndexed('SQUAD_NAME','SQUAD_NUMBER',$squadTable);
-$allSquadLeaders = $loader->loadIndexed('SQUAD_LEADER','SQUAD_NUMBER',$squadTable);
-
 $squadNumber = $version=='original'  ? $this->SQUAD_NUMBER : $this->OLD_SQUAD_NUMBER;
 $title = $version=='original' ? "Edit Agile Squad" : "Edit Old Agile Squad" ;
 
@@ -1779,77 +1847,68 @@ $squadDetails = !empty($squadNumber) ?  AgileSquadTable::getSquadDetails($this->
  ?>
 <!-- Modal -->
 <div id="editAgileSquadModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-      <!-- Modal content-->
-      <div class="modal-content">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
       <div class="modal-header">
-         <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title"><?=$title?></h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title"><?=$title?></h4>
       </div>
       <div class="modal-body" >
+        <div class='container-fluid'>
          <form id='editAgileSquadForm' class="form-horizontal"  method='post' >
-
-         <div class="form-group">
-         <label for="agileSquad">Squad</label>
-              <select name='agileSquad' id='agileSquad' class='form-control' required='required'>
-              <option value=''></option>
-              <?php
-              foreach ($allSquadNames as $squadNumber => $squadName) {
-                  ?><option value='<?=$squadNumber;?>'
-                  <?=(int)$squadNumber==(int)$this->SQUAD_NUMBER ? " selected " : null;?>
-                  >
-                  <?=$squadName;?>
-                  <?=isset($allSquadLeaders[$squadNumber]) ? " (" . $allSquadLeaders[$squadNumber] . ")" : null;?>
-                  </option>
-                  <?php
-              }
-              ?>
-         </select>
-           </div>
-         <div class="form-group">
-         <label for="agileSquadType">Squad Type</label>
-         <input type="text" class="form-control" id="agileSquadType" name="agileSquadType"
-                value='<?=isset($squadDetails['SQUAD_TYPE'])? $squadDetails['SQUAD_TYPE'] : null ;?>'
-                disabled >
-         </div>
-         <div class="form-group">
-         <label for="agileTribeNumber">Tribe Number</label>
-         <input type="text" class="form-control" id="agileTribeNumber" name="agileTribeNumber"
-                value='<?=isset($squadDetails['TRIBE_NUMBER'])? $squadDetails['TRIBE_NUMBER'] : null ;?>'
-                disabled >
-         </div>
-         <div class="form-group">
-         <label for="agileTribeName">Tribe Name</label>
-         <input type="text" class="form-control" id="agileTribeName" name="agileTribeName"
-                value='<?=isset($squadDetails['TRIBE_NAME'])? $squadDetails['TRIBE_NAME'] : null ;?>'
-                disabled >
-         </div>
-         <div class="form-group">
-         <label for="agileTribeLeader">Tribe Leader</label>
-         <input type="text" class="form-control" id="agileTribeLeader" name="agileTribeLeader"
-                value='<?=isset($squadDetails['TRIBE_LEADER'])? $squadDetails['TRIBE_LEADER'] : null ;?>'
-                disabled >
-         </div>
-          <input type="hidden" class="form-control" id="agileCnum" name="agileCnum"
-                value='<?=$this->CNUM;?>'
-          >
-          <input type="hidden" class="form-control" id="agileWorkerId" name="agileWorkerId"
-                value='<?=$this->WORKER_ID;?>'
-          >
-          <input type="hidden" class="form-control" id="version" name="version"
-                value='<?=$version;?>'
-          >
-
-         <?php
-
-           $allButtons = array();
-              $submitButton = $this->formButton('submit','Submit','updateSquad',null,'Update');
-              $resetButton  = $this->formButton('reset','Reset','resetRfs',null,'Reset','btn-warning');
-              $allButtons[] = $submitButton;
-              $allButtons[] = $resetButton;
-              $this->formBlueButtons($allButtons);
+          <div class="form-group">
+            <label for="agileSquad">Squad Name</label>
+            <select name='agileSquad' id='agileSquad' class='form-control' required='required'>
+              <option value='0'>Select Squad</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="agileSquadType">Squad Type</label>
+            <input type="text" class="form-control" id="agileSquadType" name="agileSquadType"
+              value='<?=isset($squadDetails['SQUAD_TYPE'])? $squadDetails['SQUAD_TYPE'] : null ;?>'
+              disabled >
+          </div>
+          <div class="form-group">
+            <label for="agileTribeName">Tribe Name</label>
+            <input type="text" class="form-control" id="agileTribeName" name="agileTribeName"
+              value='<?=isset($squadDetails['TRIBE_NAME'])? $squadDetails['TRIBE_NAME'] : null ;?>'
+              disabled >
+          </div>
+          <div class="form-group">
+            <label for="agileTribeNumber">Tribe Number</label>
+            <input type="text" class="form-control" id="agileTribeNumber" name="agileTribeNumber"
+              value='<?=isset($squadDetails['TRIBE_NUMBER'])? $squadDetails['TRIBE_NUMBER'] : null ;?>'
+              disabled >
+          </div>
+          <div class="form-group">
+            <label for="agileTribeLeader">Tribe Leader</label>
+            <input type="text" class="form-control" id="agileTribeLeader" name="agileTribeLeader"
+              value='<?=isset($squadDetails['TRIBE_LEADER'])? $squadDetails['TRIBE_LEADER'] : null ;?>'
+              disabled >
+          </div>
+            <input type="hidden" class="form-control" id="agileCnum" name="agileCnum"
+              value='<?=$this->CNUM;?>'
+            >
+            <input type="hidden" class="form-control" id="agileWorkerId" name="agileWorkerId"
+              value='<?=$this->WORKER_ID;?>'
+            >
+            <input type="hidden" class="form-control" id="version" name="version"
+              value='<?=$version;?>'
+            >            
+            <input type="hidden" class="form-control" id="originalAgileSquad" name="originalAgileSquad"
+              value='<?=$this->SQUAD_NUMBER;?>'
+            >
+          <?php
+            $allButtons = array();
+            $submitButton = $this->formButton('submit','Submit','updateSquad',null,'Update');
+            $resetButton  = $this->formButton('reset','Reset','resetRfs',null,'Reset','btn-warning');
+            $allButtons[] = $submitButton;
+            $allButtons[] = $resetButton;
+            $this->formBlueButtons($allButtons);
           ?>
           </form>
+        </div>
       </div>
       <div class='modal-footer'>
       </div>

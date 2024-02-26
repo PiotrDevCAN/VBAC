@@ -7,6 +7,7 @@
 let initialiseStartEndDate = await cacheBustImport('./modules/functions/initialiseStartEndDate_Regular.js');
 let initialiseOtherDates = await cacheBustImport('./modules/functions/initialiseOtherDates_Regular.js');
 let initialiseFormSelect2 = await cacheBustImport('./modules/functions/initialiseFormSelect2_Regular.js');
+let postActions = await cacheBustImport('./modules/functions/postActions_Regular.js');
 
 let saveBoardingForm = await cacheBustImport('./modules/functions/saveRegularBoarding.js');
 
@@ -30,6 +31,8 @@ class editRegularPersonBox extends editPersonBox {
     static initialiseStartEndDate = initialiseStartEndDate;
     static initialiseOtherDates = initialiseOtherDates;
     static initialiseFormSelect2 = initialiseFormSelect2;
+
+    static postLoadActions = postActions;
 
     static saveBoardingForm = saveBoardingForm;
 

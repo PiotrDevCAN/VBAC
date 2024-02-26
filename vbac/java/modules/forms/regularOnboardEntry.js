@@ -19,6 +19,12 @@ let knownKyndrylEmails = await cacheBustImport('./modules/dataSources/knownKyndr
 
 let entry = await cacheBustImport('./modules/forms/onboardEntry.js');
 
+let LBGLocation = await cacheBustImport('./modules/functions/selects/LBGLocation.js');
+let agileTribe = await cacheBustImport('./modules/functions/selects/agileTribe.js');
+let agileSquad = await cacheBustImport('./modules/functions/selects/agileSquad.js');
+
+let agileTribeToSquadSelect = await cacheBustImport('./modules/functions/agileTribeToSquadSelect.js');
+
 class regularOnboardEntry extends entry {
 
   static formId = 'boardingFormIbmer';
@@ -50,6 +56,27 @@ class regularOnboardEntry extends entry {
     initialiseStartEndDate();
     initialiseOtherDates();
     initialiseFormSelect2();
+
+    // functional managers promise
+    // $("#person_FM_CNUM").select2();
+
+    // skillset promise
+    // $("#person_skill_set_id").select2();
+
+    // PES level promise
+    // $("#person_pesLevel").select2();
+
+    // cFIRST packages promise
+    // $("#person_package").select2();
+
+    // preboarders promise
+    // $("#person_preboarded").select2();
+
+    LBGLocation('person_LBG_LOCATION', 'person_originalLBG_LOCATION');
+    agileTribe('person_TRIBE_NUMBER', 'person_originalTRIBE_NUMBER');
+    agileSquad('person_SQUAD_NUMBER', 'person_originalSQUAD_NUMBER');
+
+    agileTribeToSquadSelect('person_TRIBE_NUMBER', 'person_SQUAD_NUMBER');
   }
 
   listenForName() {

@@ -61,8 +61,8 @@ class AgileSquadRecord extends DbRecord {
         <div class="form-group required" >
             <label for='TRIBE_NUMBER' class='col-sm-2 control-label ceta-label-left' data-toggle='tooltip' data-placement='top' title='Tribe'>Tribe</label>
         	<div class='col-md-4'>
-				<select id='TRIBE_NUMBER' class='form-control select2'  name='TRIBE_NUMBER' >
-                <option value=''>Select Tribe</option>
+				<select id='TRIBE_NUMBER' class='form-control select2' data-placeholder='Select Tribe' name='TRIBE_NUMBER' >
+                    <option value=''>Select Tribe</option>
     			</select>
         	</div>
         </div>

@@ -126,6 +126,26 @@ class cFIRST {
 		return $return;
 	}
 
+	public function getReadyPackages()
+	{
+		$data = $this->getPackages();
+		$return = array();
+		list('Packages' => $packages) = $data;
+		foreach ($packages as $key => $package){
+			$packageName = $package['PackageName'];
+
+			$raw = array('bank', 'sensitive', 'Sensitive&', 'Sensitive-', 'Sensitive–', '-Czech', 'Privileged-', 'BULGARIA', '–');
+			$clean   = array('Bank', 'Sensitive', 'Sensitive &', 'Sensitive -', 'Sensitive –', '- Czech', 'Privileged -', 'Bulgaria', '-');
+			$packageName = str_replace($raw, $clean, $packageName);
+
+			$package['PackageNameClean'] = $packageName;
+			$return[$packageName] = $package;	
+		}
+
+		ksort($return);
+		return $return;
+	}
+
 	function prepareCandidateData($data) {
 		$dataStr = json_encode($data);
 		$dataStrURLEnc = urlencode('['.$dataStr.']');
@@ -151,9 +171,10 @@ class cFIRST {
 		$dataJson = json_encode($data);
 		$response = $this->processPOST_URL($url, $dataJson);
 
-echo '<pre>';
-var_dump($response);
-echo '</pre>';
+		// list('AddCandidateResult' => $result) = $response;
+		// echo '<pre>';
+		// var_dump($result[0]);
+		// echo '</pre>';
 
 		$return = false;
     	if (is_array($response)) {
