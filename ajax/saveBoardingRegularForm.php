@@ -119,16 +119,16 @@ try {
 
     $agileTribeId = isset($_POST['TRIBE_NUMBER']) ? $_POST['TRIBE_NUMBER'] : null;
     if (empty($agileTribeId)) {
-        $invaliedAgileTribe = false;
-    } else {
         $invaliedAgileTribe = true;
+    } else {
+        $invaliedAgileTribe = false;
     }
 
     $agileSquadId = isset($_POST['SQUAD_NUMBER']) ? $_POST['SQUAD_NUMBER'] : null;
     if (empty($agileSquadId)) {
-        $invaliedAgileSquad = false;
-    } else {
         $invaliedAgileSquad = true;
+    } else {
+        $invaliedAgileSquad = false;
     }
 
     if (empty($person->getValue('CNUM'))
