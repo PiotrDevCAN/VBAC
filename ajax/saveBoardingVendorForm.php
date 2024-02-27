@@ -97,14 +97,8 @@ try {
             $person->convertCountryCodeToName();
             $saveRecordResult = $personTable->saveRecord($person, false, false);
 
-            // null - default return value
-            // false - update row
-            if ($saveRecordResult === null) {
-                $saveRecordResult = true;
-            }
-            
             switch (true) {
-                case $saveRecordResult:
+                case $saveRecordResult === true:
                     switch (true) {
                         case $save:
 
@@ -158,7 +152,7 @@ try {
                             break;
                     }
                     break;
-                case !$saveRecordResult:
+                case $saveRecordResult === false:
                     switch (true) {
                         case $save:
                             // incorrect option
@@ -175,6 +169,8 @@ try {
                     }
                     break;
                 default:
+                    echo "<br/>Boarding Form Record - Failed, likely an error has occurred.";
+                    $success = false;
                     AuditTable::audit("Db2 Error in " . __FILE__ . " POST:" . print_r($_POST,true) , AuditTable::RECORD_TYPE_DETAILS);
                     break;
             }
