@@ -44,6 +44,7 @@ class squadCrosscheck {
         { data: "CNUM", defaultContent: "" },
         { data: "WORKER_ID", defaultContent: "" },
         { data: "EMAIL_ADDRESS", defaultContent: "" },
+        { data: "KYN_EMAIL_ADDRESS", defaultContent: "" },
         { data: "SQUAD_NUMBER", defaultContent: "" },
         {
           data: "SQUAD_NAME",
@@ -61,7 +62,7 @@ class squadCrosscheck {
         {
           visible: false,
           targets: [
-            3, 5, 6, 8, 9, 10
+            3, 4, 6, 7, 9, 10, 11
           ],
         },
       ],

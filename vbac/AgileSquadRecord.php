@@ -17,6 +17,8 @@ class AgileSquadRecord extends DbRecord {
     protected $ORGANISATION;
     protected $tribeOrganisation;
 
+    const NOT_ALLOCATED = 'Not allocated to Squad';
+
     function setTribeOrganisation($version){
         $this->tribeOrganisation = $version;
     }

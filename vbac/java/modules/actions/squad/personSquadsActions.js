@@ -16,9 +16,9 @@ let reset = await cacheBustImport('./modules/actions/reportReset.js');
 class personSquadsActions extends actionsContainer {
 
   title = 'Agile Tribes/Squads assignment crosscheck';
-  visibleColumns = [0, 1, 2, 4, 7];
-  statusColumnIdx = 4;
-  resetColumns = [0, 1, 2, 4, 7];
+  visibleColumns = [0, 1, 2, 5, 8];
+  statusColumnIdx = 5;
+  resetColumns = [0, 1, 2, 5, 8];
 
   constructor(parent) {
     super(parent);

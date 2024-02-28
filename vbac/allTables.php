@@ -16,6 +16,7 @@ class allTables
     public static $AGILE_SQUAD_OLD = 'AGILE_SQUAD_OLD';
     public static $AGILE_TRIBE_OLD = 'AGILE_TRIBE_OLD';
 
+    public static $EMPLOYEE_AGILE_MAPPING  = 'EMPLOYEE_AGILE_MAPPING';
 
     public static $ASSET_REQUESTS     = 'ASSET_REQUESTS';
     public static $ASSET_REQUESTS_EVENTS  = 'ASSET_REQUESTS_EVENTS';
@@ -68,4 +69,5 @@ class allTables
     public static $CANDIDATE_DOCUMENTS    = 'CANDIDATE_DOCUMENT';
 
     public static $CFIRST_PERSON          = 'CFIRST_PERSON';
+    public static $TEST_TBL               = 'TEST_TBL';
 }

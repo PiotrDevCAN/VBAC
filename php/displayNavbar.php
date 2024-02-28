@@ -11,7 +11,6 @@ use vbac\personTable;
 $beginNavBar = microtime(true);
 
 include ('itdq/PlannedOutages.php');
-include ('itdq/DbTable.php');
 $plannedOutagesLabel = "Planned Outages";
 $plannedOutages = new PlannedOutages();
 include ('UserComms/responsiveOutages_V2.php');
@@ -24,7 +23,7 @@ $pageDetails = explode("/", $_SERVER['PHP_SELF']);
 $page = isset($pageDetails[2]) ? $pageDetails[2] : $pageDetails[1];
 
 $OKTAGroups = new OKTAGroups();
-$navbar = new Navbar($navBarImage, $navBarBrand,$navBarSearch);
+$navbar = new Navbar($navBarImage, $navBarBrand, $navBarSearch);
 
 $cdiAdmin       		= new NavbarMenu("CDI Admin");
 $trace          		= new NavbarOption('View Trace','pi_trace.php','accessCdi');
@@ -87,6 +86,7 @@ $CTIDDataUpdate= new NavbarOption('CT ID Update', 'pc_CTIDUpdate.php','accessCdi
 // $email          = new NavbarOption('Email Log', 'pi_emailLog.php','accessCdi');
 $tribes         = new NavbarOption('Tribes','pa_agileTribes.php','accessCdi accessPmo ');
 $squads         = new NavbarOption('Squad (Current)','pa_agileSquads.php','accessCdi accessPmo ');
+$squadAssign	= new NavbarOption('Squad Assignment <b>NEW!</b>', 'pa_squadAssignment.php','accessCdi accessPmo accessFm');
 $squadALog      = new NavbarOption('Squadalog', 'pa_squadalog.php','accessCdi accessPmo accessFm');
 $squadCrosscheck = new NavbarOption('Squad Crosscheck <b>NEW!</b>', 'pa_squadCrosscheck.php','accessCdi accessPmo accessFm');
 $adminMenu->addOption($pmo);
@@ -118,15 +118,19 @@ $adminMenu->addOption( new NavbarDivider('accessPmo accessCdi'));
 $adminMenu->addOption($odcDataUpload);
 $adminMenu->addOption( new NavbarDivider('accessPmo accessCdi'));
 $adminMenu->addOption($CTIDDataUpdate);
-$adminMenu->addOption( new NavbarDivider('accessPmo accessCdi'));
-$adminMenu->addOption($tribes);
-$adminMenu->addOption($squads);
-$adminMenu->addOption($squadALog);
-$adminMenu->addOption($squadCrosscheck);
+// $adminMenu->addOption( new NavbarDivider('accessPmo accessCdi'));
+// $adminMenu->addOption($tribes);
+// $adminMenu->addOption($squads);
+// $adminMenu->addOption($squadALog);
+// $adminMenu->addOption($squadCrosscheck);
 
-// $agileMenu      = new NavbarMenu('Agile');
-// $agileMenu->addOption($tribes);
-// $agileMenu->addOption($squads);
+$agileMenu      = new NavbarMenu('Agile Admin');
+$agileMenu->addOption($tribes);
+$agileMenu->addOption($squads);
+// $agileMenu->addOption($squadAssign);
+$agileMenu->addOption( new NavbarDivider('accessPmo accessCdi'));
+$agileMenu->addOption($squadALog);
+$agileMenu->addOption($squadCrosscheck);
 
 $boarding       = new NavbarMenu('Boarding');
 $onBoarding     = new NavbarOption('OnBoard','pb_onboard.php','accessCdi accessPmo accessFm');
@@ -183,7 +187,7 @@ $outages = new NavbarOption($plannedOutagesLabel, 'ppo_PlannedOutages.php','acce
 // bind all menus together
 $navbar->addMenu($cdiAdmin);
 $navbar->addMenu($adminMenu);
-// $navbar->addMenu($agileMenu);
+$navbar->addMenu($agileMenu);
 $navbar->addMenu($boarding);
 $navbar->addMenu($access);
 $navbar->addMenu($reports);

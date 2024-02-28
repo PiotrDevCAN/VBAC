@@ -12,6 +12,8 @@ class AgileTribeRecord extends DbRecord {
     protected $TRIBE_LEADER;
     protected $ORGANISATION;
     protected $ITERATION_MGR;
+    
+    const NOT_ALLOCATED = 'Not allocated to Tribe';
 
     function displayForm($mode,$version=null){
         $notEditable = $mode == FormClass::$modeEDIT ? ' disabled ' : '';

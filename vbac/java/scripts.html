@@ -52,6 +52,7 @@ $isRequestableAsset = strpos($file, 'pa_requestableAssets.php') !== false;
 $isDelegate = strpos($file, 'pc_delegate.php') !== false;
 $isAgileTribes = strpos($file, 'pa_agileTribes.php') !== false;
 $isAgileSquads = strpos($file, 'pa_agileSquads.php') !== false;
+$isSquadAssignment = strpos($file, 'pa_squadAssignment.php') !== false;
 $isSquadALog = strpos($file, 'pa_squadalog.php') !== false;
 $isSquadCrosscheck = strpos($file, 'pa_squadCrosscheck.php') !== false;
 $isPESTracker = strpos($file, 'pc_pesTracker.php') !== false;
@@ -148,6 +149,11 @@ switch (true) {
     case $isAgileSquads:
         ?>
             <script type="module" src="vbac/java/admin/agileSquad.js?<?=$hash;?>"></script>
+        <?php
+        break;
+    case $isSquadAssignment:
+        ?>
+            <script type="module" src="vbac/java/admin/squadAssignment.js?<?=$hash;?>"></script>
         <?php
         break;
     case $isSquadALog:

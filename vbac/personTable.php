@@ -977,6 +977,10 @@ class personTable extends DbTable
         }
         $row['FM_CNUM'] .= $functionalMgr;
 
+        // TRIBE_NAME
+        $tribeName = !empty($row['TRIBE_NAME']) ? $row['TRIBE_NAME'] : AgileTribeRecord::NOT_ALLOCATED;
+        $row['TRIBE_NAME'] = $tribeName;
+
         // SQUAD_NAME
         $row['SQUAD_NAME'] = $this->getAgileSquadWithButtons($row, true);
         $row['OLD_SQUAD_NAME'] = $this->getAgileSquadWithButtons($row, false);

@@ -19,6 +19,7 @@ class personSquadCrosscheckReport extends DbTable{
             P.CNUM,
             P.WORKER_ID,
             P.EMAIL_ADDRESS,
+            P.KYN_EMAIL_ADDRESS,
             AS1.SQUAD_NUMBER, 
             AS1.SQUAD_NAME,
             AS1.SQUAD_LEADER, 
@@ -54,16 +55,19 @@ class personSquadCrosscheckReport extends DbTable{
     }
 
     function addIcons($row){
+        // TRIBE_NAME
+        $tribeName = !empty($row['TRIBE_NAME']) ? $row['TRIBE_NAME'] : AgileTribeRecord::NOT_ALLOCATED;
+        $row['TRIBE_NAME'] = $tribeName;
+
         // SQUAD_NAME
         $row['SQUAD_NAME'] = $this->getAgileSquadWithButtons($row, true);
-
         return $row;
     }
 
     public function getAgileSquadWithButtons($row, $original = true)
     {
         $squadNumberField = $row['SQUAD_NUMBER'];
-        $squadName = !empty($row['SQUAD_NAME']) ? $row['SQUAD_NAME'] : "Not allocated to Squad";
+        $squadName = !empty($row['SQUAD_NAME']) ? $row['SQUAD_NAME'] : AgileSquadRecord::NOT_ALLOCATED;
         $cnum = $row['CNUM'];
         $workerId = $row['WORKER_ID'];
 
@@ -103,6 +107,7 @@ class personSquadCrosscheckReport extends DbTable{
             'CNUM',
             'WORKER_ID',
             'EMAIL_ADDRESS',
+            'KYN_EMAIL_ADDRESS',
             'SQUAD_NUMBER', 
             'SQUAD_NAME',
             'SQUAD_LEADER', 
