@@ -3,7 +3,7 @@ use vbac\personTable;
 
 ob_start();
 
-$details = !empty($_GET['cnum']) ? personTable::getLbgLocationForCnum($_GET['cnum']) : false ;
+$details = !empty($_GET['cnum']) ? personTable::getLbgLocationForCnum($_GET['cnum'], $_GET['workerId']) : false ;
 
 $messages = ob_get_clean();
 ob_start();

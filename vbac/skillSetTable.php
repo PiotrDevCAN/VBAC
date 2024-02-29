@@ -61,7 +61,4 @@ class skillSetTable extends DbTable{
         $row['SKILLSET_ID'] = array('display'=>$idWithIcon,'sort'=>$id);
         return $row;
     }
-
-
-
 }

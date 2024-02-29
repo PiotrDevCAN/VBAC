@@ -3028,7 +3028,7 @@ class personTable extends DbTable
 
                     try {
                         $insert = -microtime(true);
-                        $inserted = $this->saveCtid($recordData['CNUM'], $recordData['NEW_CT_ID']);
+                        $inserted = $this->saveCtid($recordData['CNUM'], $recordData['WORKER_ID'], $recordData['NEW_CT_ID']);
                         $inserted ? null : $failedRecords++;
                         $insert += microtime(true);
                         echo  $withTimings ?  "Row: $row Cnum " . $recordData['CNUM'] . " CT ID " . $recordData['NEW_CT_ID'] . " Insert Row:" . sprintf('%f', $insert) . PHP_EOL : null ;
