@@ -71,7 +71,7 @@ class pesRequestEmail implements notificationEmail {
             $fmEmail,
             $level
         );
-        $to[] = $pesTaskId;
+        $to = array($pesTaskId);
         $title = 'vBAC PES Request - ' . $cnum ." / " . $workerId . " (" . trim($firstName) . " " . trim($lastName) . ")";
         $message = preg_replace(self::$pesEmailPatterns, $replacements, self::$pesEmailBody);
         

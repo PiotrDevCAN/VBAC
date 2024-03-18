@@ -96,7 +96,7 @@ class AgileSquadRecord extends DbRecord {
         $this->formHiddenInput('mode',$mode,'mode');
         $allButtons = array();
    		$submitButton = $mode==FormClass::$modeEDIT ?  $this->formButton('submit','Submit','updateTribe',null,'Update') :  $this->formButton('submit','Submit','saveTribe',null,'Submit');
-   		$resetButton  = $this->formButton('reset','Reset','resetTribe  Form',null,'Reset','btn-warning');
+   		$resetButton  = $this->formButton('reset','Reset','resetTribe',null,'Reset','btn-warning');
    		$allButtons[] = $submitButton;
    		$allButtons[] = $resetButton;
    		$this->formBlueButtons($allButtons);

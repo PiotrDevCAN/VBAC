@@ -806,7 +806,7 @@ class FormClass
             <?php
         }
 
-        ?><script>
+        ?><script type="text/javascript">
         $(document).ready(function() {
         var picker = new Pikaday({
                 field: document.getElementById('Input<?=$fieldName?>'),

@@ -127,7 +127,7 @@ $adminMenu->addOption($CTIDDataUpdate);
 $agileMenu      = new NavbarMenu('Agile Admin');
 $agileMenu->addOption($tribes);
 $agileMenu->addOption($squads);
-// $agileMenu->addOption($squadAssign);
+$agileMenu->addOption($squadAssign);
 $agileMenu->addOption( new NavbarDivider('accessPmo accessCdi'));
 $agileMenu->addOption($squadALog);
 $agileMenu->addOption($squadCrosscheck);

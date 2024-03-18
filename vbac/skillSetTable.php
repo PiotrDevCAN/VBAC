@@ -7,7 +7,7 @@ class skillSetTable extends DbTable{
 
     static function deleteSkillSet($id){
         $sql = " DELETE FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$STATIC_SKILLSETS;
-        $sql.= " WHERE SKILLSET_ID='" . htmlspecialchars($id) . "' ";
+        $sql.= " WHERE SKILLSET_ID = '" . htmlspecialchars($id) . "' ";
 
         $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
