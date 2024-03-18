@@ -32,8 +32,10 @@ class personSquadCrosscheckReport extends DbTable{
         $sql .= personTable::ORGANISATION_SELECT;
 
         $sql .= " FROM ". $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P
+        LEFT JOIN ". $GLOBALS['Db2Schema'] . "." . allTables::$EMPLOYEE_AGILE_MAPPING . " AS EA
+            ON P.CNUM = EA.CNUM AND P.WORKER_ID = EA.WORKER_ID
         LEFT JOIN ". $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS1
-            ON AS1.SQUAD_NUMBER = P.SQUAD_NUMBER
+            ON AS1.SQUAD_NUMBER = EA.SQUAD_NUMBER
         LEFT JOIN ". $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " AS AT
             ON AT.TRIBE_NUMBER = AS1.TRIBE_NUMBER ";
         $sql .= " WHERE " . $preBoardersPredicate;

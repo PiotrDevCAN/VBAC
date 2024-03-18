@@ -433,6 +433,13 @@ class personRecord extends DbRecord
         $this->EMPLOYEE_TYPE = ucwords($this->EMPLOYEE_TYPE,' -');
       }
 
+      $personSquadTable = new personSquadTable(allTables::$EMPLOYEE_AGILE_MAPPING);
+      $personPrimaryData = $personSquadTable->getWithPredicate(" CNUM='" . trim($this->CNUM) . "' AND WORKER_ID='" . trim($this->WORKER_ID) . "' AND TYPE='" . personSquadRecord::PRIMARY . "' ");
+
+      $personSquadRecord = new personSquadRecord();
+      $personSquadRecord->setFromArray($personPrimaryData);
+      $this->SQUAD_NUMBER = $personSquadRecord->getValue('SQUAD_NUMBER');
+
       $squadTable = new AgileSquadTable(allTables::$AGILE_SQUAD);
       $squadData = $squadTable->getWithPredicate(" SQUAD_NUMBER='" . trim($this->SQUAD_NUMBER) . "'");
       
@@ -614,6 +621,8 @@ class personRecord extends DbRecord
                   <?=$disabledSquad;?> >
                   <option value='0'>Select Agile Squad</option>
                 </select>
+                <input type='hidden' id='person_originalTRIBE_NUMBER' value='<?=$squadRecord->getValue('TRIBE_NUMBER') ?>' />
+                <input type='hidden' id='person_originalSQUAD_NUMBER' value='<?=$this->SQUAD_NUMBER ?>' />
               </div>
             </div>
           </div>
@@ -655,8 +664,6 @@ class personRecord extends DbRecord
           <div class="panel-body bg-danger" id='personFmPanelBodyCheckMsg' <?=$hideDivMgrChange?> >
           <input type='hidden' id='person_original_fm' value='<?=$this->FM_CNUM ?>' />
           <input type='hidden' id='person_originalLBG_LOCATION' value='<?=$this->LBG_LOCATION ?>' />
-          <input type='hidden' id='person_originalTRIBE_NUMBER' value='<?=$squadRecord->getValue('TRIBE_NUMBER') ?>' />
-          <input type='hidden' id='person_originalSQUAD_NUMBER' value='<?=$this->SQUAD_NUMBER ?>' />
           <p>Before submitting this change please ensure that all HR/Workday, Bluepages and Department Code (GUDA) updates have been completed as necessary. If moving to a new role please ensure the assignment reference number, JRSS and Squad/Tribe alignment are also correct.</p>
           <?php
             $buttons = null;
@@ -860,7 +867,6 @@ class personRecord extends DbRecord
           </div>
           </div>
         </div>
-
         <?php
 
         $allButtons = null;
@@ -1840,11 +1846,18 @@ function confirmTransferModal(){
 
 function editAgileSquadModal($version='original'){
 
-$squadNumber = $version=='original'  ? $this->SQUAD_NUMBER : $this->OLD_SQUAD_NUMBER;
-$title = $version=='original' ? "Edit Agile Squad" : "Edit Old Agile Squad" ;
+$personSquadTable = new personSquadTable(allTables::$EMPLOYEE_AGILE_MAPPING);
+$personPrimaryData = $personSquadTable->getWithPredicate(" CNUM='" . trim($this->CNUM) . "' AND WORKER_ID='" . trim($this->WORKER_ID) . "' AND TYPE='" . personSquadRecord::PRIMARY . "' ");
 
-$squadDetails = !empty($squadNumber) ?  AgileSquadTable::getSquadDetails($this->SQUAD_NUMBER, $version) : array();
- ?>
+$personSquadRecord = new personSquadRecord();
+$personSquadRecord->setFromArray($personPrimaryData);
+$this->SQUAD_NUMBER = $personSquadRecord->getValue('SQUAD_NUMBER');
+
+$squadTable = new AgileSquadTable(allTables::$AGILE_SQUAD);
+$squadData = $squadTable->getWithPredicate(" SQUAD_NUMBER='" . trim($this->SQUAD_NUMBER) . "'");
+
+$title = $version=='original' ? "Edit Agile Squad" : "Edit Old Agile Squad" ;
+?>
 <!-- Modal -->
 <div id="editAgileSquadModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
@@ -1853,6 +1866,7 @@ $squadDetails = !empty($squadNumber) ?  AgileSquadTable::getSquadDetails($this->
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title"><?=$title?></h4>
+        <h5>Edit primary assignment</h5>
       </div>
       <div class="modal-body" >
         <div class='container-fluid'>
@@ -1866,25 +1880,25 @@ $squadDetails = !empty($squadNumber) ?  AgileSquadTable::getSquadDetails($this->
           <div class="form-group">
             <label for="agileSquadType">Squad Type</label>
             <input type="text" class="form-control" id="agileSquadType" name="agileSquadType"
-              value='<?=isset($squadDetails['SQUAD_TYPE'])? $squadDetails['SQUAD_TYPE'] : null ;?>'
+              value='<?=isset($squadData['SQUAD_TYPE'])? $squadData['SQUAD_TYPE'] : null ;?>'
               disabled >
           </div>
           <div class="form-group">
             <label for="agileTribeName">Tribe Name</label>
             <input type="text" class="form-control" id="agileTribeName" name="agileTribeName"
-              value='<?=isset($squadDetails['TRIBE_NAME'])? $squadDetails['TRIBE_NAME'] : null ;?>'
+              value='<?=isset($squadData['TRIBE_NAME'])? $squadData['TRIBE_NAME'] : null ;?>'
               disabled >
           </div>
           <div class="form-group">
             <label for="agileTribeNumber">Tribe Number</label>
             <input type="text" class="form-control" id="agileTribeNumber" name="agileTribeNumber"
-              value='<?=isset($squadDetails['TRIBE_NUMBER'])? $squadDetails['TRIBE_NUMBER'] : null ;?>'
+              value='<?=isset($squadData['TRIBE_NUMBER'])? $squadData['TRIBE_NUMBER'] : null ;?>'
               disabled >
           </div>
           <div class="form-group">
             <label for="agileTribeLeader">Tribe Leader</label>
             <input type="text" class="form-control" id="agileTribeLeader" name="agileTribeLeader"
-              value='<?=isset($squadDetails['TRIBE_LEADER'])? $squadDetails['TRIBE_LEADER'] : null ;?>'
+              value='<?=isset($squadData['TRIBE_LEADER'])? $squadData['TRIBE_LEADER'] : null ;?>'
               disabled >
           </div>
             <input type="hidden" class="form-control" id="agileCnum" name="agileCnum"

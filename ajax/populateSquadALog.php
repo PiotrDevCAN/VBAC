@@ -9,14 +9,15 @@ ob_start();
 
 $personTable = new personTable(allTables::$PERSON);
 
-$sql = " SELECT distinct P.CNUM, P.NOTES_ID, P.ROLE_ON_THE_ACCOUNT as JRSS, AS1.SQUAD_TYPE, AS1.TRIBE_NUMBER as TRIBE, ";
-$sql.= " AS1.SHIFT, AT.ITERATION_MGR,  AS1.SQUAD_LEADER, F.CNUM as FLL_CNUM, F.NOTES_ID as FLL_NOTES_ID, U.CNUM as SLL_CNUM, U.NOTES_ID as SLL_NOTES_ID, AS1.SQUAD_NUMBER, AS1.SQUAD_NAME ";
-$sql.= " ,AT.TRIBE_NAME ";
+$sql = " SELECT DISTINCT P.CNUM, P.NOTES_ID, P.ROLE_ON_THE_ACCOUNT as JRSS, ";
+$sql .= " F.CNUM AS FLL_CNUM, F.NOTES_ID AS FLL_NOTES_ID, U.CNUM AS SLL_CNUM, U.NOTES_ID AS SLL_NOTES_ID, ";
+$sql .= " AS1.SQUAD_TYPE, AS1.TRIBE_NUMBER as TRIBE, AS1.SHIFT, AS1.SQUAD_LEADER, AS1.SQUAD_NUMBER, AS1.SQUAD_NAME, ";
+$sql .= " AT.ITERATION_MGR, AT.TRIBE_NAME ";
 
 $sql.= personTable::getTablesForQuery();
 
 $sql.= " WHERE " . personTable::activePersonPredicate(true,"P");
-$sql.= " AND ( P.SQUAD_NUMBER is not null  AND P.SQUAD_NUMBER > 0 ) ";
+$sql.= " AND ( EA.SQUAD_NUMBER IS NOT NULL  AND EA.SQUAD_NUMBER > 0 ) ";
 
 $data = array();
 $rs = sqlsrv_query($GLOBALS['conn'], $sql, $data);

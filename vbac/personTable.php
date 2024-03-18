@@ -178,8 +178,10 @@ class personTable extends DbTable
         $sql.= " ON upper(P.EMPLOYEE_TYPE) = upper(EM.CODE) ";
         $sql.= " LEFT JOIN " .  $GLOBALS['Db2Schema'] . "." . allTables::$BUSINESS_TITLE_MAPPING . " AS BM ";
         $sql.= " ON P.BUSINESS_TITLE LIKE concat(BM.BUSINESS_TITLE, ',%')";
+        $sql.= " LEFT JOIN ". $GLOBALS['Db2Schema'] . "." . allTables::$EMPLOYEE_AGILE_MAPPING . " AS EA ";
+        $sql.= " ON P.CNUM = EA.CNUM AND P.WORKER_ID = EA.WORKER_ID AND EA.TYPE = '" . personSquadRecord::PRIMARY . "'";
         $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS1 ";
-        $sql.= " ON P.SQUAD_NUMBER = AS1.SQUAD_NUMBER ";
+        $sql.= " ON EA.SQUAD_NUMBER = AS1.SQUAD_NUMBER ";
         $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " AS AT ";
         $sql.= " ON AS1.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
         $sql.= " LEFT JOIN " .  $GLOBALS['Db2Schema'] . "." . allTables::$STATIC_SKILLSETS . " AS SS ";

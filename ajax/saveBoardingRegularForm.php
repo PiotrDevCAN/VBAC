@@ -12,6 +12,8 @@ use vbac\emails\offboardingWarningEmail;
 use vbac\knownValues\knownCNUMs;
 use vbac\knownValues\knownKyndrylEmails;
 use vbac\knownValues\knownWorkerIDs;
+use vbac\personSquadRecord;
+use vbac\personSquadTable;
 
 ob_start();
 
@@ -145,6 +147,8 @@ try {
     }
 
     $saveRecordResult = false;
+    $squadAssignmentSaveRecordResult = false;
+    $cFIRSTSaveRecordResult = false;
     $timeToWarnPmo = false;
     $allowPESInit = false;
 
@@ -229,6 +233,20 @@ try {
                                 }
                             }
 
+                            /*
+                            * add Agile assignment
+                            */
+                            $personSquadTable = new personSquadTable(allTables::$EMPLOYEE_AGILE_MAPPING);
+                            $personSquadRecord = new personSquadRecord();
+                            $agileSquadData = array(
+                                'CNUM' => $cnum,
+                                'WORKER_ID' => $workerId,
+                                'SQUAD_NUMBER' => $agileSquadId,
+                                'TYPE' => personSquadRecord::PRIMARY
+                            );
+                            $personSquadRecord->setFromArray($_POST);
+                            $squadAssignmentSaveRecordResult = $personSquadTable->saveRecord($personSquadRecord);
+                            
                             /*
                             * add record to cFIRST
                             */
@@ -391,6 +409,8 @@ $response = array(
     'messages'=>$messages,
     'allowPESInitalise'=>$allowPESInit,
     'saveRecord'=>$saveRecordResult,
+    'squadAssignmentSaveRecordResult'=>$squadAssignmentSaveRecordResult,
+    'cFIRSTSaveRecordResult'=>$cFIRSTSaveRecordResult,
     'post'=>print_r($_POST, true),
     'sendWarning'=>print_r($timeToWarnPmo, true)
 );

@@ -3,6 +3,7 @@
 namespace vbac\reports\person;
 
 use vbac\allTables;
+use vbac\personSquadRecord;
 use vbac\personTable;
 use vbac\reports\downloadablePerson;
 
@@ -15,8 +16,10 @@ class downloadablePersonDetailsActiveODC extends downloadablePerson
 
     public function getReport($resultSetOnly = false)
     {
-        $joins = " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS1 ";
-        $joins.= " ON P.SQUAD_NUMBER = AS1.SQUAD_NUMBER ";
+        $joins = " LEFT JOIN ". $GLOBALS['Db2Schema'] . "." . allTables::$EMPLOYEE_AGILE_MAPPING . " AS EA ";
+        $joins.= " ON P.CNUM = EA.CNUM AND P.WORKER_ID = EA.WORKER_ID AND EA.TYPE = '" . personSquadRecord::PRIMARY . "'";
+        $joins.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS1 ";
+        $joins.= " ON EA.SQUAD_NUMBER = AS1.SQUAD_NUMBER ";
         $joins.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " AS AT ";
         $joins.= " ON AS1.TRIBE_NUMBER = AT.TRIBE_NUMBER ";
         $joins.= " LEFT JOIN " .  $GLOBALS['Db2Schema'] . "." . allTables::$STATIC_SKILLSETS . " AS SS ";
