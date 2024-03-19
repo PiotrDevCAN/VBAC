@@ -97,7 +97,7 @@ jobs:
             kv-vbac-prod/data/azsp/apim AZURE_CLIENT_SECRET | CLIENT_SECRET   
       - name: Login to ARO Cluster
         id: set-aro-context
-        uses: redhat-actions/oc-login@v1
+        uses: redhat-actions/oc-login@v1.3
         with:
           openshift_server_url: ${{ steps.import-secrets.outputs.SERVER_URL }}
           openshift_token: ${{ steps.import-secrets.outputs.SA_TOKEN }}
