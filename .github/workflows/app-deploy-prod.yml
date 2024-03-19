@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Get JFROG Credentials
         id: import-secrets
-        uses: hashicorp/vault-action@v2.7.4
+        uses: hashicorp/vault-action@v3.0.0
         with:
           url: https://vault.kyndryl.net
           method: token
@@ -54,7 +54,7 @@ jobs:
         uses: actions/checkout@v3
       - name: Import JFROG & ARO Secrets
         id: import-secrets
-        uses: hashicorp/vault-action@v2.7.4
+        uses: hashicorp/vault-action@v3.0.0
         with:
           url: https://vault.kyndryl.net
           method: token
@@ -85,7 +85,7 @@ jobs:
             kps-gd-app-kpes/data/prod/w3us/cFIRST API_KEY | CFIRST_API_KEY
       - name: Get Worker API Credentials
         id: import-secrets-worker-api
-        uses: hashicorp/vault-action@v2.7.4
+        uses: hashicorp/vault-action@v3.0.0
         with:
           url: https://vault.kyndryl.net
           method: token
