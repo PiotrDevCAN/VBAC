@@ -13,6 +13,7 @@ jobs:
     steps:
       - name: Get JFROG Credentials
         id: import-secrets
+        # node 16
         uses: hashicorp/vault-action@v2.7.4
         with:
           url: https://vault.kyndryl.net
@@ -24,16 +25,20 @@ jobs:
             kps-gd-app-vbac/data/dev/w3us/jfrog JFROG_USER | JFROG_USER ; 
             kps-gd-app-vbac/data/dev/w3us/jfrog JFROG_TOKEN | JFROG_TOKEN
       - name: Checkout
+        # node 16
         uses: actions/checkout@v3
       - name: Login to Jfrog
+        # node 16
         uses: docker/login-action@v2
         with:
           registry: kyndryl.jfrog.io
           username: ${{ steps.import-secrets.outputs.JFROG_USER }}
           password: ${{ steps.import-secrets.outputs.JFROG_TOKEN }}
       - name: Set up Docker Buildx
+        # node 16
         uses: docker/setup-buildx-action@v2
       - name: Build and push
+        # node 16
         uses: docker/build-push-action@v4
         with:
           context: .
@@ -51,12 +56,12 @@ jobs:
     timeout-minutes: 60
     steps:
       - name: Checkout Sourcecode
-        # node 20
-        uses: actions/checkout@v4
+        # node 16
+        uses: actions/checkout@v3.6.0
       - name: Import JFROG & ARO Secrets
         id: import-secrets
-        # node 20
-        uses: hashicorp/vault-action@v3.0.0
+        # node 16
+        uses: hashicorp/vault-action@v2.8.1
         with:
           url: https://vault.kyndryl.net
           method: token
@@ -87,8 +92,8 @@ jobs:
             kps-gd-app-kpes/data/prod/w3us/cFIRST API_KEY | CFIRST_API_KEY
       - name: Get Worker API Credentials
         id: import-secrets-worker-api
-        # node 20
-        uses: hashicorp/vault-action@v3.0.0
+        # node 16
+        uses: hashicorp/vault-action@v2.8.1
         with:
           url: https://vault.kyndryl.net
           method: token
@@ -100,8 +105,8 @@ jobs:
             kv-vbac-prod/data/azsp/apim AZURE_CLIENT_SECRET | CLIENT_SECRET   
       - name: Login to ARO Cluster
         id: set-aro-context
-        # node 20
-        uses: redhat-actions/oc-login@v1.3
+        # node 16
+        uses: redhat-actions/oc-login@v1.2
         with:
           openshift_server_url: ${{ steps.import-secrets.outputs.SERVER_URL }}
           openshift_token: ${{ steps.import-secrets.outputs.SA_TOKEN }}
@@ -109,7 +114,8 @@ jobs:
           namespace: ${{ steps.import-secrets.outputs.NAMESPACE }}
       - name: Set ImagePullSecrets
         id: image_secret
-        uses: azure/k8s-create-secret@v1
+        # node 16
+        uses: azure/k8s-create-secret@v4.0
         with:
           namespace: ${{ steps.import-secrets.outputs.NAMESPACE }}
           secret-name: vbac-app-docker-secrets
@@ -118,7 +124,8 @@ jobs:
           container-registry-password: ${{ steps.import-secrets.outputs.JFROG_TOKEN }}
       - name: Set ImagePullSecrets DB
         id: image_secret-db
-        uses: azure/k8s-create-secret@v1
+        # node 16
+        uses: azure/k8s-create-secret@v4.0
         with:
           namespace: ${{ steps.import-secrets.outputs.NAMESPACE }}
           secret-name: vbac-app-docker-secrets-db
@@ -126,7 +133,8 @@ jobs:
           arguments: --from-literal=db-server=${{ steps.import-secrets.outputs.DB_SERVER }} --from-literal=db-name=${{ steps.import-secrets.outputs.DB_NAME }} --from-literal=db-user-name=${{ steps.import-secrets.outputs.DB_USER_NAME }} --from-literal=db-user-pw=${{ steps.import-secrets.outputs.DB_USER_PW }}
       - name: Set ImagePullSecrets SMTP
         id: image_secret-smtp
-        uses: azure/k8s-create-secret@v1
+        # node 16
+        uses: azure/k8s-create-secret@v4.0
         with:
           namespace: ${{ steps.import-secrets.outputs.NAMESPACE }}
           secret-name: vbac-app-docker-secrets-smtp
@@ -134,7 +142,8 @@ jobs:
           arguments: --from-literal=smtp-server=${{ steps.import-secrets.outputs.SMTP_HOST }} --from-literal=smtp-user-name=${{ steps.import-secrets.outputs.SMTP_USER_NAME }} --from-literal=smtp-user-pw=${{ steps.import-secrets.outputs.SMTP_USER_PW }}
       - name: Set ImagePullSecrets SSO
         id: image_secret-sso
-        uses: azure/k8s-create-secret@v1
+        # node 16
+        uses: azure/k8s-create-secret@v4.0
         with:
           namespace: ${{ steps.import-secrets.outputs.NAMESPACE }}
           secret-name: vbac-app-docker-secrets-sso
@@ -142,7 +151,8 @@ jobs:
           arguments: --from-literal=sso_host=${{ steps.import-secrets.outputs.SSO_HOST }} --from-literal=sso_client_id=${{ steps.import-secrets.outputs.SSO_CLIENT_ID }} --from-literal=sso_client_secret=${{ steps.import-secrets.outputs.SSO_CLIENT_SECRET }} --from-literal=sso_api_token=${{ steps.import-secrets.outputs.SSO_API_TOKEN }}
       - name: Set ImagePullSecrets Worker API
         id: image_secret-worker-api
-        uses: azure/k8s-create-secret@v1
+        # node 16
+        uses: azure/k8s-create-secret@v4.0
         with:
           namespace: ${{ steps.import-secrets.outputs.NAMESPACE }}
           secret-name: vbac-app-docker-secrets-worker-api
@@ -150,7 +160,8 @@ jobs:
           arguments: --from-literal=worker_api_authority=${{ vars.WORKER_API_URL }} --from-literal=worker_api_token_scope=${{ vars.WORKER_API_SCOPE }} --from-literal=worker_api_host=${{ vars.WORKER_API_URL_EXT }}  --from-literal=worker_api_client_id=${{ steps.import-secrets-worker-api.outputs.CLIENT_ID }} --from-literal=worker_api_client_secret=${{ steps.import-secrets-worker-api.outputs.CLIENT_SECRET }}
       - name: Set ImagePullSecrets Redis
         id: image_secret-worker-redis
-        uses: azure/k8s-create-secret@v1
+        # node 16
+        uses: azure/k8s-create-secret@v4.0
         with:
           namespace: ${{ steps.import-secrets.outputs.NAMESPACE }}
           secret-name: vbac-app-docker-secrets-redis
@@ -158,7 +169,8 @@ jobs:
           arguments: --from-literal=redis_host=${{ vars.REDIS_URL }} --from-literal=redis_port=${{ steps.import-secrets.outputs.REDIS_PORT }} --from-literal=redis_password=${{ steps.import-secrets.outputs.REDIS_PW }}          
       - name: Set ImagePullSecrets cFIRST
         id: image_secret-worker-cfirst
-        uses: azure/k8s-create-secret@v1
+        # node 16
+        uses: azure/k8s-create-secret@v4.0
         with:
           namespace: ${{ steps.import-secrets.outputs.NAMESPACE }}
           secret-name: vbac-app-docker-secrets-cfirst
@@ -166,7 +178,8 @@ jobs:
           arguments: --from-literal=cfirst_api_base_host=${{ vars.CFIRST_BASE_URL }} --from-literal=cfirst_api_aux_host=${{ vars.CFIRST_AUX_URL }} --from-literal=cfirst_user_id=${{ steps.import-secrets.outputs.CFIRST_USER_ID }} --from-literal=cfirst_password=${{ steps.import-secrets.outputs.CFIRST_PW }} --from-literal=cfirst_api_key=${{ steps.import-secrets.outputs.CFIRST_API_KEY }} 
       - name: Deploy application
         id: deploy-app
-        uses: Azure/k8s-deploy@v1
+        # node 
+        uses: Azure/k8s-deploy@v4.10.0
         with:
           namespace: ${{ steps.import-secrets.outputs.NAMESPACE }}
           images: |
