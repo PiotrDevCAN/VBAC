@@ -192,7 +192,7 @@ jobs:
           arguments: --from-literal=cfirst_api_base_host=${{ vars.CFIRST_BASE_URL }} --from-literal=cfirst_api_aux_host=${{ vars.CFIRST_AUX_URL }} --from-literal=cfirst_user_id=${{ steps.import-secrets.outputs.CFIRST_USER_ID }} --from-literal=cfirst_password=${{ steps.import-secrets.outputs.CFIRST_PW }} --from-literal=cfirst_api_key=${{ steps.import-secrets.outputs.CFIRST_API_KEY }} 
       - name: Deploy application
         id: deploy-app
-        # node 
+        # node 16
         uses: Azure/k8s-deploy@v4.10.0
         with:
           namespace: ${{ steps.import-secrets.outputs.NAMESPACE }}
