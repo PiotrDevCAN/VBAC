@@ -18,9 +18,9 @@ ob_start();
 </form>
 <div id='squadDisplayForm'>
 <?php
-$tribeRecord = new AgileSquadRecord();
-$tribeRecord->setTribeOrganisation('Original');
-$tribeRecord->displayForm(FormClass::$modeDEFINE);
+$squadRecord = new AgileSquadRecord();
+$squadRecord->setTribeOrganisation('Original');
+$squadRecord->displayForm(FormClass::$modeDEFINE);
 ?>
 </div>
 </div>
@@ -37,3 +37,8 @@ $tribeRecord->displayForm(FormClass::$modeDEFINE);
 </tfoot>
 </table>
 </div>
+
+<?php
+$squadRecord->confirmDeleteSquadModal();
+// include_once 'includes/modalConfirmDeleteSquad.html';
+?>

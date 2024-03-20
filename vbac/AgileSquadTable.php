@@ -18,6 +18,19 @@ use itdq\Loader;
 
 class AgileSquadTable extends DbTable{
 
+    static function deleteSquad($id){
+        $sql = " DELETE FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD;
+        $sql.= " WHERE SQUAD_NUMBER = '" . htmlspecialchars($id) . "' ";
+
+        $rs = sqlsrv_query($GLOBALS['conn'], $sql);
+
+        if(!$rs){
+            DbTable::displayErrorMessage($rs, __CLASS__, __METHOD__, $sql);
+            return false;
+        }
+        return true;
+    }
+
     static function nextAvailableSquadNumber($version=null) {
 
         $table = $version=='Original' ? allTables::$AGILE_SQUAD : allTables::$AGILE_SQUAD_OLD;
@@ -86,21 +99,36 @@ class AgileSquadTable extends DbTable{
 
         $squadNumber = $row['SQUAD_NUMBER'];
 
-        $squadNumberNumberWithIcon  = "<button type='button' class='btn btn-default btn-xs btnEditSquad' aria-label='Left Align' ";
-        $squadNumberNumberWithIcon .= "data-squadnumber='" .$squadNumber . "' ";
-        $squadNumberNumberWithIcon .= "data-squadname='" .$row['SQUAD_NAME'] . "' ";
-        $squadNumberNumberWithIcon .= "data-squadleader='" .$row['SQUAD_LEADER'] . "' ";
-        $squadNumberNumberWithIcon .= "data-squadtype='" .$row['SQUAD_TYPE'] . "' ";
-        $squadNumberNumberWithIcon .= "data-shift='" .$row['SHIFT'] . "' ";
-        $squadNumberNumberWithIcon .= "data-tribenumber='" .$row['TRIBE_NUMBER'] . "' ";
-        $squadNumberNumberWithIcon .= "data-organisation='" .$row['ORGANISATION'] . "' ";
-        $squadNumberNumberWithIcon .= " data-toggle='tooltip' data-placement='top' title='Edit Tribe'";
-        $squadNumberNumberWithIcon .= " > ";
-        $squadNumberNumberWithIcon .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
-        $squadNumberNumberWithIcon .= " </button> ";
-        $squadNumberNumberWithIcon .= "&nbsp; " . $squadNumber;
+        $editButton  = "<button type='button' class='btn btn-default btn-xs btnEditSquad' aria-label='Left Align' ";
+        $editButton .= "data-squadnumber='" .$squadNumber . "' ";
+        $editButton .= "data-squadname='" .$row['SQUAD_NAME'] . "' ";
+        $editButton .= "data-squadleader='" .$row['SQUAD_LEADER'] . "' ";
+        $editButton .= "data-squadtype='" .$row['SQUAD_TYPE'] . "' ";
+        $editButton .= "data-shift='" .$row['SHIFT'] . "' ";
+        $editButton .= "data-tribenumber='" .$row['TRIBE_NUMBER'] . "' ";
+        $editButton .= "data-organisation='" .$row['ORGANISATION'] . "' ";
+        $editButton .= "data-toggle='tooltip' data-placement='top' title='Edit Tribe'";
+        $editButton .= " > ";
+        $editButton .= "<span class='glyphicon glyphicon-edit ' aria-hidden='true'></span>";
+        $editButton .= " </button> ";
 
-        $row['SQUAD_NUMBER'] = array('display'=>$squadNumberNumberWithIcon,'sort'=>$squadNumber);
+        $deleteButton  = "";
+        $deleteButton  = "<button type='button' class='btn btn-default btn-xs btnDeleteSquad btn-danger' aria-label='Left Align' ";
+        $deleteButton .= "data-squadnumber='" .$squadNumber . "' ";
+        $deleteButton .= "data-squadname='" .$row['SQUAD_NAME'] . "' ";
+        $deleteButton .= "data-squadleader='" .$row['SQUAD_LEADER'] . "' ";
+        $deleteButton .= "data-squadtype='" .$row['SQUAD_TYPE'] . "' ";
+        $deleteButton .= "data-shift='" .$row['SHIFT'] . "' ";
+        $deleteButton .= "data-tribenumber='" .$row['TRIBE_NUMBER'] . "' ";
+        $deleteButton .= "data-organisation='" .$row['ORGANISATION'] . "' ";
+        $deleteButton .= "data-toggle='tooltip' data-placement='top' title='Delete Tribe'";
+        $deleteButton .= " > ";
+        $deleteButton .= "<span class='glyphicon glyphicon-trash ' aria-hidden='true'></span>";
+        $deleteButton .= " </button> ";
+
+        $idWithIcon = $editButton . $deleteButton . " &nbsp; Squad " . $squadNumber;
+
+        $row['SQUAD_NUMBER'] = array('display'=>$idWithIcon,'sort'=>$squadNumber);
         return $row;
     }
 

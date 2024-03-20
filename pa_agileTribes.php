@@ -34,3 +34,8 @@ $tribeRecord->displayForm(FormClass::$modeDEFINE, 'Original');
 </tfoot>
 </table>
 </div>
+
+<?php
+$tribeRecord->confirmDeleteTribeModal();
+// include_once 'includes/modalConfirmDeleteTribe.html';
+?>

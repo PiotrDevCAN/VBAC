@@ -13,6 +13,8 @@ class editTribeBox extends box {
 
         super(parent);
         this.listenForEditTribe();
+        this.listenForDeleteTribe();
+        this.listenForConfirmTribeDelete();
         this.listenForSubmitTribeForm();
 
         console.log('--- Function --- editTribeBox.constructor');
@@ -34,6 +36,71 @@ class editTribeBox extends box {
             $("#TRIBE_LEADER").typeahead('val', $(this).data("tribeleader"));
             $("#ITERATION_MGR").typeahead('val', $(this).data("iterationmgr"));
             $("#mode").val("edit");
+        });
+    }
+
+    listenForDeleteTribe() {
+        $(document).on("click", ".btnDeleteTribe", function (e) {
+            var id = $(this).data("tribenumber");
+            var tribe = $(this).data("tribename");
+            var message = "<p>Id: <b>" + id + "</b></p>";
+            message += "<p>Tribe: <b>" + tribe + "</b></p>";
+            message +=
+                "<input id='dSsId' name='id' value='" +
+                id +
+                "' type='hidden' >";
+            message +=
+                "<input id='dSsTribe' name='tribe' value='" +
+                tribe +
+                "'  type='hidden' >";
+
+            $("#confirmDeleteTribeModal .panel").html(message);
+            $("#confirmDeleteTribe").attr("disabled", false);
+            $("#confirmDeleteTribeModal").modal("show");
+            return false;
+        });
+    }
+
+    listenForConfirmTribeDelete() {
+        var $this = this;
+        $(document).on('submit', '#confirmDeleteTribeForm', function (e) {
+            var form = document.getElementById("confirmDeleteTribeForm");
+            var formValid = form.checkValidity();
+            if (formValid) {
+                var allDisabledFields = $("input:disabled");
+                $(allDisabledFields).attr("disabled", false);
+                var formData = $("#confirmDeleteTribeForm").serialize();
+                $(allDisabledFields).attr("disabled", true);
+                $("#confirmDeleteTribe").attr("disabled", true);
+                $.ajax({
+                    url: "ajax/deleteTribe.php",
+                    data: formData,
+                    type: "POST",
+                    success: function (result) {
+                        var resultObj = JSON.parse(result);
+                        var message = "";
+                        var panelclass = "";
+                        if (resultObj.success == true) {
+                            message += "<div class=panel-heading><h3 class=panel-title>Success</h3>";
+                            message += "<br/><h4>Tribe record has been deleted</h4></br>";
+                            panelclass = "panel-success";
+                        } else {
+                            message += "<div class=panel-heading><h3 class=panel-title>Failure</h3>";
+                            message += "<br/><h4>Tribe record has been not deleted</h4></br>";
+                            panelclass = "panel-danger";
+                        }
+                        $("#confirmDeleteTribeModal .panel").html(message);
+                        $("#confirmDeleteTribeModal .panel")
+                            .removeClass("panel-danger")
+                            .removeClass("panel-warning")
+                            .removeClass("panel-success");
+                        $("#confirmDeleteTribeModal .panel").addClass(panelclass);
+                        $("#confirmDeleteTribeModal").modal("show");
+                        $this.tableObj.table.ajax.reload();
+                    },
+                });
+            }
+            return false;
         });
     }
 

@@ -107,4 +107,34 @@ class AgileSquadRecord extends DbRecord {
     <?php
     }
 
+    function confirmDeleteSquadModal(){
+        ?>
+        <!-- Modal -->
+        <div id="confirmDeleteSquadModal" class="modal fade" role="dialog">
+          <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Confirm deletion of Squad</h4>
+              </div>
+              <form id='confirmDeleteSquadForm' class="form-horizontal" method='post'>
+                <div class="modal-body">
+                  <div class="panel"></div>
+                </div>
+                <div class='modal-footer'>
+                  <?php
+                  $allButtons = null;
+                  $submitButton = $this->formButton('submit','Submit','confirmDeleteSquad',null,'Confirm','btn-primary');
+                  $allButtons[] = $submitButton;
+                  $this->formBlueButtons($allButtons);
+                  ?>
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <?php
+    }
 }
