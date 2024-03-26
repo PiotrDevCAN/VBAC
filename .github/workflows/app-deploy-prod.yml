@@ -4,6 +4,20 @@ on:
   push:
     branches:
       - prod
+env:
+  JFROG_URL: ${{ vars.JFROG_URL }}
+  JFROG_CONTAINER: ${{ vars.JFROG_CONTAINER }}
+  REDIS_URL: ${{ vars.REDIS_URL }}
+  CFIRST_BASE_URL: ${{ vars.CFIRST_BASE_URL }}
+  CFIRST_AUX_URL: ${{ vars.CFIRST_AUX_URL }}
+  WORKER_API_URL: ${{ vars.WORKER_API_URL }}
+  WORKER_API_SCOPE: ${{ vars.WORKER_API_SCOPE }}
+  WORKER_API_URL_EXT: ${{ vars.WORKER_API_URL_EXT }}  
+  APP_EMAIL_TYPE: ${{ vars.APP_EMAIL_TYPE }}
+  APP_ENV: ${{ vars.APP_ENV }}
+  APP_HOST_URL: ${{ vars.APP_HOST_URL }}
+  SHORT_NAME: ${{ vars.SHORT_NAME }}
+  GITHUB_RUN_NUMBER: ${{ github.run_number }}
 jobs:
   Build:
     runs-on:
@@ -13,7 +27,6 @@ jobs:
     steps:
       - name: Get JFROG Credentials
         id: import-secrets
-        # node 16
         uses: hashicorp/vault-action@v2.7.4
         with:
           url: https://vault.kyndryl.net
@@ -25,27 +38,23 @@ jobs:
             kps-gd-app-vbac/data/dev/w3us/jfrog JFROG_USER | JFROG_USER ; 
             kps-gd-app-vbac/data/dev/w3us/jfrog JFROG_TOKEN | JFROG_TOKEN
       - name: Checkout
-        # node 16
         uses: actions/checkout@v3
       - name: Login to Jfrog
-        # node 16
         uses: docker/login-action@v2
         with:
           registry: kyndryl.jfrog.io
-          username: ${{ steps.import-secrets.outputs.JFROG_USER }}
-          password: ${{ steps.import-secrets.outputs.JFROG_TOKEN }}
+          username: ${{ env.JFROG_USER }}
+          password: ${{ env.JFROG_TOKEN }}
       - name: Set up Docker Buildx
-        # node 16
         uses: docker/setup-buildx-action@v2
       - name: Build and push
-        # node 16
         uses: docker/build-push-action@v4
         with:
           context: .
           file: ./Dockerfile
           push: true
           tags: | 
-            ${{ vars.JFROG_URL }}/${{ vars.JFROG_CONTAINER }}/vbac:${{ vars.SHORT_NAME }}_${{ github.run_number }}
+            ${{ env.JFROG_URL }}/${{ env.JFROG_CONTAINER }}/vbac:${{ env.SHORT_NAME }}_${{ env.GITHUB_RUN_NUMBER }}
   Deploy:
     name: Deploy
     needs:
@@ -56,12 +65,10 @@ jobs:
     timeout-minutes: 60
     steps:
       - name: Checkout Sourcecode
-        # node 16
-        uses: actions/checkout@v3.6.0
+        uses: actions/checkout@v3
       - name: Import JFROG & ARO Secrets
         id: import-secrets
-        # node 16
-        uses: hashicorp/vault-action@v2.8.1
+        uses: hashicorp/vault-action@v2.7.4
         with:
           url: https://vault.kyndryl.net
           method: token
@@ -92,8 +99,7 @@ jobs:
             kps-gd-app-kpes/data/prod/w3us/cFIRST API_KEY | CFIRST_API_KEY
       - name: Get Worker API Credentials
         id: import-secrets-worker-api
-        # node 16
-        uses: hashicorp/vault-action@v2.8.1
+        uses: hashicorp/vault-action@v2.7.4
         with:
           url: https://vault.kyndryl.net
           method: token
@@ -105,116 +111,143 @@ jobs:
             kv-vbac-prod/data/azsp/apim AZURE_CLIENT_SECRET | CLIENT_SECRET   
       - name: Login to ARO Cluster
         id: set-aro-context
-        # node 16
         uses: redhat-actions/oc-login@v1.2
         with:
-          openshift_server_url: ${{ steps.import-secrets.outputs.SERVER_URL }}
-          openshift_token: ${{ steps.import-secrets.outputs.SA_TOKEN }}
+          openshift_server_url: ${{ env.SERVER_URL }}
+          openshift_token: ${{ env.SA_TOKEN }}
           insecure_skip_tls_verify: true
-          namespace: ${{ steps.import-secrets.outputs.NAMESPACE }}
-      - name: Set ImagePullSecrets
+          namespace: ${{ env.NAMESPACE }}
+      - name: Set ImagePullSecrets CORE
         id: image_secret
-        # node 12
-        uses: azure/k8s-actions/k8s-create-secret@master
-        # node 16
-        # uses: azure/k8s-create-secret@v4.0
+        uses: Azure/k8s-create-secret@v4.0
         with:
-          namespace: ${{ steps.import-secrets.outputs.NAMESPACE }}
+          namespace: ${{ env.NAMESPACE }}
           secret-name: vbac-app-docker-secrets
           container-registry-url: kyndryl.jfrog.io
-          container-registry-username: ${{ steps.import-secrets.outputs.JFROG_USER }}
-          container-registry-password: ${{ steps.import-secrets.outputs.JFROG_TOKEN }}
-      - name: Set ImagePullSecrets DB
-        id: image_secret-db
-        # node 12
-        uses: azure/k8s-actions/k8s-create-secret@master
-        # node 16
-        # uses: azure/k8s-create-secret@v4.0
-        with:
-          namespace: ${{ steps.import-secrets.outputs.NAMESPACE }}
-          secret-name: vbac-app-docker-secrets-db
-          secret-type: 'generic'
-          arguments: --from-literal=db-server=${{ steps.import-secrets.outputs.DB_SERVER }} --from-literal=db-name=${{ steps.import-secrets.outputs.DB_NAME }} --from-literal=db-user-name=${{ steps.import-secrets.outputs.DB_USER_NAME }} --from-literal=db-user-pw=${{ steps.import-secrets.outputs.DB_USER_PW }}
-      - name: Set ImagePullSecrets SMTP
-        id: image_secret-smtp
-        # node 12
-        uses: azure/k8s-actions/k8s-create-secret@master
-        # node 16
-        # uses: azure/k8s-create-secret@v4.0
-        with:
-          namespace: ${{ steps.import-secrets.outputs.NAMESPACE }}
-          secret-name: vbac-app-docker-secrets-smtp
-          secret-type: 'generic'
-          arguments: --from-literal=smtp-server=${{ steps.import-secrets.outputs.SMTP_HOST }} --from-literal=smtp-user-name=${{ steps.import-secrets.outputs.SMTP_USER_NAME }} --from-literal=smtp-user-pw=${{ steps.import-secrets.outputs.SMTP_USER_PW }}
-      - name: Set ImagePullSecrets SSO
-        id: image_secret-sso
-        # node 12
-        uses: azure/k8s-actions/k8s-create-secret@master
-        # node 16
-        # uses: azure/k8s-create-secret@v4.0
-        with:
-          namespace: ${{ steps.import-secrets.outputs.NAMESPACE }}
-          secret-name: vbac-app-docker-secrets-sso
-          secret-type: 'generic'
-          arguments: --from-literal=sso_host=${{ steps.import-secrets.outputs.SSO_HOST }} --from-literal=sso_client_id=${{ steps.import-secrets.outputs.SSO_CLIENT_ID }} --from-literal=sso_client_secret=${{ steps.import-secrets.outputs.SSO_CLIENT_SECRET }} --from-literal=sso_api_token=${{ steps.import-secrets.outputs.SSO_API_TOKEN }}
-      - name: Set ImagePullSecrets Worker API
-        id: image_secret-worker-api
-        # node 12
-        uses: azure/k8s-actions/k8s-create-secret@master
-        # node 16
-        # uses: azure/k8s-create-secret@v4.0
-        with:
-          namespace: ${{ steps.import-secrets.outputs.NAMESPACE }}
-          secret-name: vbac-app-docker-secrets-worker-api
-          secret-type: 'generic'
-          arguments: --from-literal=worker_api_authority=${{ vars.WORKER_API_URL }} --from-literal=worker_api_token_scope=${{ vars.WORKER_API_SCOPE }} --from-literal=worker_api_host=${{ vars.WORKER_API_URL_EXT }}  --from-literal=worker_api_client_id=${{ steps.import-secrets-worker-api.outputs.CLIENT_ID }} --from-literal=worker_api_client_secret=${{ steps.import-secrets-worker-api.outputs.CLIENT_SECRET }}
-      - name: Set ImagePullSecrets Redis
-        id: image_secret-worker-redis
-        # node 12
-        uses: azure/k8s-actions/k8s-create-secret@master
-        # node 16
-        # uses: azure/k8s-create-secret@v4.0
-        with:
-          namespace: ${{ steps.import-secrets.outputs.NAMESPACE }}
-          secret-name: vbac-app-docker-secrets-redis
-          secret-type: 'generic'
-          arguments: --from-literal=redis_host=${{ vars.REDIS_URL }} --from-literal=redis_port=${{ steps.import-secrets.outputs.REDIS_PORT }} --from-literal=redis_password=${{ steps.import-secrets.outputs.REDIS_PW }}          
+          container-registry-username: ${{ env.JFROG_USER }}
+          container-registry-password: ${{ env.JFROG_TOKEN }}
       - name: Set ImagePullSecrets cFIRST
-        id: image_secret-worker-cfirst
-        # node 12
-        uses: azure/k8s-actions/k8s-create-secret@master
-        # node 16
-        # uses: azure/k8s-create-secret@v4.0
+        id: image_secret_cfirst
+        uses: azure/k8s-create-secret@v4.0
         with:
-          namespace: ${{ steps.import-secrets.outputs.NAMESPACE }}
+          namespace: ${{ env.NAMESPACE }}
           secret-name: vbac-app-docker-secrets-cfirst
           secret-type: 'generic'
-          arguments: --from-literal=cfirst_api_base_host=${{ vars.CFIRST_BASE_URL }} --from-literal=cfirst_api_aux_host=${{ vars.CFIRST_AUX_URL }} --from-literal=cfirst_user_id=${{ steps.import-secrets.outputs.CFIRST_USER_ID }} --from-literal=cfirst_password=${{ steps.import-secrets.outputs.CFIRST_PW }} --from-literal=cfirst_api_key=${{ steps.import-secrets.outputs.CFIRST_API_KEY }} 
+          string-data: |
+            {
+              "cfirst_api_base_host": "${{ env.CFIRST_BASE_URL }}",
+              "cfirst_api_aux_host": "${{ env.CFIRST_AUX_URL }}",
+              "cfirst_user_id": "${{ env.CFIRST_USER_ID }}",
+              "cfirst_password": "${{ env.CFIRST_PW }}",
+              "cfirst_api_key": "${{ env.CFIRST_API_KEY }}"
+            }
+      - name: Set ImagePullSecrets DB
+        id: image_secret_db
+        uses: azure/k8s-create-secret@v4.0
+        with:
+          namespace: ${{ env.NAMESPACE }}
+          secret-name: vbac-app-docker-secrets-db
+          secret-type: 'generic'
+          string-data: |
+            {
+              "db-server": "${{ env.DB_SERVER }}",
+              "db-name": "${{ env.DB_NAME }}",
+              "db-user-name": "${{ env.DB_USER_NAME }}",
+              "db-user-pw": "${{ env.DB_USER_PW }}"
+            }
+      - name: Set ImagePullSecrets REDIS
+        id: image_secret_redis
+        uses: azure/k8s-create-secret@v4.0
+        with:
+          namespace: ${{ env.NAMESPACE }}
+          secret-name: vbac-app-docker-secrets-redis
+          secret-type: 'generic'
+          string-data: |
+            {
+              "redis_host": "${{ env.REDIS_URL }}",
+              "redis_port": "${{ env.REDIS_PORT }}",
+              "redis_password": "${{ env.REDIS_PW }}"
+            }
+      - name: Set ImagePullSecrets SMTP
+        id: image_secret_smtp
+        uses: azure/k8s-create-secret@v4.0
+        with:
+          namespace: ${{ env.NAMESPACE }}
+          secret-name: vbac-app-docker-secrets-smtp
+          secret-type: 'generic'
+          string-data: |
+            {
+              "smtp-server": "${{ env.SMTP_HOST }}",
+              "smtp-user-name": "${{ env.SMTP_USER_NAME }}",
+              "smtp-user-pw": "${{ env.SMTP_USER_PW }}"
+            }
+      - name: Set ImagePullSecrets SSO
+        id: image_secret_sso
+        uses: azure/k8s-create-secret@v4.0
+        with:
+          namespace: ${{ env.NAMESPACE }}
+          secret-name: vbac-app-docker-secrets-sso
+          secret-type: 'generic'
+          string-data: |
+            {
+              "sso_host": "${{ env.SSO_HOST }}",
+              "sso_client_id": "${{ env.SSO_CLIENT_ID }}",
+              "sso_client_secret": "${{ env.SSO_CLIENT_SECRET }}",
+              "sso_api_token": "${{ env.SSO_API_TOKEN }}"
+            }
+      - name: Set ImagePullSecrets WORKER API
+        id: image_secret_worker_api
+        uses: azure/k8s-create-secret@v4.0
+        with:
+          namespace: ${{ env.NAMESPACE }}
+          secret-name: vbac-app-docker-secrets-worker-api
+          secret-type: 'generic'
+          string-data: |
+            {
+              "worker_api_authority": "${{ env.WORKER_API_URL }}",
+              "worker_api_token_scope": "${{ env.WORKER_API_SCOPE }}",
+              "worker_api_host": "${{ env.WORKER_API_URL_EXT }}",
+              "worker_api_client_id": "${{ env.CLIENT_ID }}",
+              "worker_api_client_secret": "${{ env.CLIENT_SECRET }}"
+            }
+      - name: Update all configMap manifests
+        uses: swdotcom/update-and-apply-kubernetes-configs@v1.3.0
+        with:
+          namespace: ${{ env.NAMESPACE }}
+          k8-config-file-paths: |
+            ./env-configmap.yml
+          replacement-method: all
+      # Bake manifests using helm
+      - name: Bake using helm
+        id: bake
+        uses: azure/k8s-bake@v2.4
+        with:
+          renderEngine: 'helm'
+          helmChart: './vbac-chart/'
+          overrideFiles: |
+            ./vbac-chart/values.yaml
+          overrides: |
+            replicaCount: 2
+            nameOverride: ${{ env.NAMESPACE }}
+            hostUrlOverride: ${{ env.APP_HOST_URL }}
+            image.repository: ${{ env.JFROG_URL }}/${{ env.JFROG_CONTAINER }}/vbac
+            image.pullPolicy: Always
+            image.tag: ${{ env.SHORT_NAME }}_${{ env.GITHUB_RUN_NUMBER }}
+          helm-version: 'latest'
       - name: Deploy application
         id: deploy-app
-        # node 16
-        uses: Azure/k8s-deploy@v4.10.0
+        uses: Azure/k8s-deploy@v4
         with:
-          namespace: ${{ steps.import-secrets.outputs.NAMESPACE }}
+          namespace: ${{ env.NAMESPACE }}
           images: |
-            ${{ vars.JFROG_URL }}/${{ vars.JFROG_CONTAINER }}/vbac:${{ vars.SHORT_NAME }}_${{ github.run_number }}
-          # Path to the manifest files to be used for deployment. 
-          manifests: |
-            ./env-configmap-prod.yml
-            ./env-secrets.yml
-            ./myapp-deployment-prod.yml
-            ./myapp-service.yml
-            ./myapp-sn-route-prod.yml
-          # Multiline input where each line contains the name of a docker-registry secret 
-          # that has already been setup within the cluster. 
-          # Each of these secret names are added under imagePullSecrets field for the workloads found in the input manifest files
+            ${{ env.JFROG_URL }}/${{ env.JFROG_CONTAINER }}/vbac:${{ env.SHORT_NAME }}_${{ env.GITHUB_RUN_NUMBER }}
+          manifests: ${{ steps.bake.outputs.manifestsBundle }}
           imagepullsecrets: |
+            env-configmap
             vbac-app-docker-secrets
+            vbac-app-docker-secrets-cfirst
             vbac-app-docker-secrets-db
+            vbac-app-docker-secrets-redis
             vbac-app-docker-secrets-smtp
             vbac-app-docker-secrets-sso
             vbac-app-docker-secrets-worker-api
-            vbac-app-docker-secrets-redis
-            vbac-app-docker-secrets-cfirst
-            env-configmap-prod
-            env-secrets

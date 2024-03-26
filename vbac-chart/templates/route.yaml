@@ -5,11 +5,11 @@ metadata:
     app: vBAC
     type: internal-apps-001
   name: vbac-route
-  namespace: ns-vbac-gd-kps-testqa-wus3
+  namespace: {{ .Values.nameOverride }}
 spec:
-  host: vbac-testqa.zkpw3uspriv.app.kyndryl.net
+  host: {{ .Values.hostUrlOverride }}
   port:
-    targetPort: 8080
+    targetPort: {{ .Values.service.port }}
   tls:
     insecureEdgeTerminationPolicy: Redirect
     termination: edge
