@@ -5,7 +5,7 @@ metadata:
   labels:
     app: vbac
 spec:
-  type: ClusterIP
+  type: {{ .Values.service.type }}
   selector:
     app: vbac
   ports:

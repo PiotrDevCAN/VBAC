@@ -227,7 +227,7 @@ jobs:
           overrideFiles: |
             ./vbac-chart/values.yaml
           overrides: |
-            replicaCount: 2
+            replicaCount: 5
             nameOverride: ${{ env.NAMESPACE }}
             hostUrlOverride: ${{ env.APP_HOST_URL }}
             image.repository: ${{ env.JFROG_URL }}/${{ env.JFROG_CONTAINER }}/vbac
