@@ -165,7 +165,7 @@ class personTable extends DbTable
         return $sql;
     }
 
-    public static function getTablesForQuery()
+    public static function getTablesForQuery($primarySquadOnly = true)
     {
         $sql = " FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS P ";
         $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$PERSON . " AS F "; // lookup firstline
@@ -179,7 +179,11 @@ class personTable extends DbTable
         $sql.= " LEFT JOIN " .  $GLOBALS['Db2Schema'] . "." . allTables::$BUSINESS_TITLE_MAPPING . " AS BM ";
         $sql.= " ON P.BUSINESS_TITLE LIKE concat(BM.BUSINESS_TITLE, ',%')";
         $sql.= " LEFT JOIN ". $GLOBALS['Db2Schema'] . "." . allTables::$EMPLOYEE_AGILE_MAPPING . " AS EA ";
-        $sql.= " ON P.CNUM = EA.CNUM AND P.WORKER_ID = EA.WORKER_ID AND EA.TYPE = '" . personSquadRecord::PRIMARY . "'";
+        if ($primarySquadOnly) {
+            $sql.= " ON P.CNUM = EA.CNUM AND P.WORKER_ID = EA.WORKER_ID AND EA.TYPE = '" . personSquadRecord::PRIMARY . "'";
+        } else {
+            $sql.= " ON P.CNUM = EA.CNUM AND P.WORKER_ID = EA.WORKER_ID";
+        }
         $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_SQUAD . " AS AS1 ";
         $sql.= " ON EA.SQUAD_NUMBER = AS1.SQUAD_NUMBER ";
         $sql.= " LEFT JOIN " . $GLOBALS['Db2Schema'] . "." . allTables::$AGILE_TRIBE . " AS AT ";

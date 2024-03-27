@@ -22,6 +22,9 @@ $cnum    = !empty($_GET['cnum']) ? $_GET['cnum'] : null;
 $onlyActiveStr = !empty($_GET['onlyactive']) ? $_GET['onlyactive'] : 'true';
 $onlyActiveBool = $onlyActiveStr=='true';
 
+$onlyPrimarySquadStr = !empty($_GET['onlyprimary']) ? $_GET['onlyprimary'] : 'true';
+$onlyPrimarySquadBool = $onlyPrimarySquadStr=='true';
+
 // parameter for query - 6 or 12 months
 $onlyActiveInTimeBool = false;
 
@@ -208,7 +211,7 @@ if (!is_null($additionalFields)) {
 
 $sql = " SELECT DISTINCT ";
 $sql.= $additionalSelect;
-$sql.= personTable::getTablesForQuery();
+$sql.= personTable::getTablesForQuery($onlyPrimarySquadBool);
 $sql.= " WHERE 1=1 AND trim(P.KYN_EMAIL_ADDRESS) != '' ";
 $sql.= $onlyActiveBool ? " AND " . personTable::activePersonPredicate($withProvClear, 'P') : null;
 $sql.= $onlyActiveInTimeBool ? " AND (" . personTable::activePersonPredicate($withProvClear, 'P') . " OR P.OFFBOARDED_DATE > '" . $offboardedDate->format('Y-m-d') . "')" : null;
