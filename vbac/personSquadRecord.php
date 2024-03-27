@@ -13,11 +13,13 @@ class personSquadRecord extends DbRecord {
     protected $TYPE;
 
     const PRIMARY = '1';
+    const PRIMARY_NAME = 'Primary';
     const SECONDARY = '2';
+    const SECONDARY_NAME = 'Secondary';
     
     static public $allTypes = array(
-      self::PRIMARY => 'Primary', 
-      self::SECONDARY => 'Secondary' 
+      self::PRIMARY => self::PRIMARY_NAME, 
+      self::SECONDARY => self::SECONDARY_NAME 
     );
     
     function displayForm($mode){

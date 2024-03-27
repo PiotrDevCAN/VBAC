@@ -1,10 +1,11 @@
 <?php
 
 use itdq\DbTable;
-use vbac\allTables;
 use vbac\AgileSquadRecord;
 use vbac\AgileTribeRecord;
 use vbac\personRecord;
+use vbac\personSquadRecord;
+use vbac\personSquadTable;
 use vbac\personTable;
 use vbac\staticDataSkillsetsRecord;
 
@@ -72,6 +73,10 @@ if (!is_null($additionalFields)) {
     $personRecord = new personRecord();
     $availablePersonColumns = $personRecord->getColumns();
     $personTableAliases = array('P.', 'F.', 'U.');
+
+    $personSquadRecord = new personSquadRecord();
+    $availablePersonSquadColumns = $personSquadRecord->getColumns();
+    $personSquadTableAliases = array('EA.');
 
     $agileSquadRecord = new AgileSquadRecord();
     $availableAgileSquadColumns = $agileSquadRecord->getColumns();
@@ -151,6 +156,10 @@ if (!is_null($additionalFields)) {
                 $additionalSelect .= ", AT.ITERATION_MGR AS ITERATION_MGR";
                 continue 2;
                 break;
+            case 'ASSIGNMENT_TYPE':
+                $fieldExpression = personSquadTable::ASSIGNMENT_TYPE_SELECT;
+                $additionalSelect .= ", " . htmlspecialchars($fieldExpression);
+                continue 2;
             default:
                 break;
         }
@@ -160,6 +169,14 @@ if (!is_null($additionalFields)) {
 
         if (array_key_exists($tableField, $availablePersonColumns)) {
             $additionalSelect .= ", " . htmlspecialchars("P.".$tableField);
+            continue;
+        }
+
+        // validate field against EMPLOYEE_AGILE_MAPPING table
+        $tableField = str_replace($personSquadTableAliases, '', $field);
+
+        if (array_key_exists($tableField, $availablePersonSquadColumns)) {
+            $additionalSelect .= ", " . htmlspecialchars("EA.".$tableField);
             continue;
         }
 

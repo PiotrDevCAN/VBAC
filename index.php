@@ -1,14 +1,14 @@
 <?php
 use itdq\WorkerAPI;
 
-$start = microtime(true);
+// $start = microtime(true);
 
-$workerAPI = new WorkerAPI();
-$workerData = $workerAPI->getworkerByEmail($_SESSION['ssoEmail']);
+// $workerAPI = new WorkerAPI();
+// $workerData = $workerAPI->getworkerByEmail($_SESSION['ssoEmail']);
 
-$elapsed = microtime(true);
-echo ("WorkerAPI call took:" . (float)($elapsed-$start));
-echo '</br>';
+// $elapsed = microtime(true);
+// echo ("WorkerAPI call took:" . (float)($elapsed-$start));
+// echo '</br>';
 
 // $redis = new Redis();
 // //Connecting to Redis

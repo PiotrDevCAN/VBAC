@@ -1,10 +1,11 @@
 <?php
 
 use itdq\DbTable;
-use vbac\allTables;
 use vbac\AgileSquadRecord;
 use vbac\AgileTribeRecord;
 use vbac\personRecord;
+use vbac\personSquadRecord;
+use vbac\personSquadTable;
 use vbac\personTable;
 use vbac\staticDataSkillsetsRecord;
 
@@ -62,9 +63,9 @@ if (isset($_REQUEST['plus'])) {
 
 $additionalFields = !empty($_REQUEST['plus']) ? explode(",", $_REQUEST['plus']) : null;
 // default fields
-$additionalSelect = " P.NOTES_ID, P.EMAIL_ADDRESS, P.KYN_EMAIL_ADDRESS, P.FIRST_NAME, P.LAST_NAME ";
-$additionalSelect .= ", " . personTable::FULLNAME_SELECT;
-$additionalSelect .= ", AS1.SQUAD_NUMBER, AS1.SQUAD_NAME, AT.TRIBE_NUMBER, AT.TRIBE_NAME, ";
+$additionalSelect = " P.NOTES_ID, P.EMAIL_ADDRESS, P.KYN_EMAIL_ADDRESS, P.FIRST_NAME, P.LAST_NAME, ";
+$additionalSelect .= personTable::FULLNAME_SELECT . ", ";
+$additionalSelect .= " AS1.SQUAD_NUMBER, AS1.SQUAD_NAME, AT.TRIBE_NUMBER, AT.TRIBE_NAME, ";
 $additionalSelect .= personTable::getStatusSelect($withProvClear, 'P');
 $employees = array();
 
@@ -73,6 +74,10 @@ if (!is_null($additionalFields)) {
     $personRecord = new personRecord();
     $availablePersonColumns = $personRecord->getColumns();
     $personTableAliases = array('P.', 'F.', 'U.');
+
+    $personSquadRecord = new personSquadRecord();
+    $availablePersonSquadColumns = $personSquadRecord->getColumns();
+    $personSquadTableAliases = array('EA.');
 
     $agileSquadRecord = new AgileSquadRecord();
     $availableAgileSquadColumns = $agileSquadRecord->getColumns();
@@ -152,6 +157,10 @@ if (!is_null($additionalFields)) {
                 $additionalSelect .= ", AT.ITERATION_MGR AS ITERATION_MGR";
                 continue 2;
                 break;
+            case 'ASSIGNMENT_TYPE':
+                $fieldExpression = personSquadTable::ASSIGNMENT_TYPE_SELECT;
+                $additionalSelect .= ", " . htmlspecialchars($fieldExpression);
+                continue 2;
             default:
                 break;
         }
@@ -164,6 +173,14 @@ if (!is_null($additionalFields)) {
             continue;
         }
 
+        // validate field against EMPLOYEE_AGILE_MAPPING table
+        $tableField = str_replace($personSquadTableAliases, '', $field);
+
+        if (array_key_exists($tableField, $availablePersonSquadColumns)) {
+            $additionalSelect .= ", " . htmlspecialchars("EA.".$tableField);
+            continue;
+        }
+        
         // validate field against AGILE_SQUAD table
         $tableField = str_replace($agileSquadTableAliases, '', $field);
 

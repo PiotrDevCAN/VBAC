@@ -1,6 +1,6 @@
 <?php
 
-use vbac\allTables;
+use vbac\personSquadTable;
 use vbac\personTable;
 
 ob_start();
@@ -43,6 +43,8 @@ $sql.=" AT.TRIBE_NAME, ";
 $sql.=" AT.TRIBE_LEADER, ";
 // $sql.=" AT.ORGANISATION AS TRIBE_ORGANISATION, ";
 $sql.=" AT.ITERATION_MGR, ";
+
+$sql.= personSquadTable::ASSIGNMENT_TYPE_SELECT.", ";
 
 $sql.=personTable::ORGANISATION_SELECT_ALL.", ";
 $sql.=personTable::FLM_SELECT.", ";

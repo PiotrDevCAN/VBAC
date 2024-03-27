@@ -5,6 +5,8 @@ use itdq\DbTable;
 
 class personSquadTable extends DbTable{
 
+    const ASSIGNMENT_TYPE_SELECT = " EA.TYPE AS ASSIGNMENT_TYPE_CODE, CASE WHEN EA.TYPE = '" . personSquadRecord::PRIMARY . "' THEN '" . personSquadRecord::PRIMARY_NAME . "' WHEN EA.TYPE = '" . personSquadRecord::SECONDARY . "' THEN '" . personSquadRecord::SECONDARY_NAME . "' ELSE '' END AS ASSIGNMENT_TYPE ";
+    
     static function deleteAssignment($id){
         $sql = " DELETE FROM " . $GLOBALS['Db2Schema'] . "." . allTables::$EMPLOYEE_AGILE_MAPPING;
         $sql.= " WHERE ID = '" . htmlspecialchars($id) . "' ";
