@@ -53,6 +53,8 @@ try {
     $notification = new pesStatusChangeNotification();
 
     $cFirst = new cFIRST();
+
+    $stepCounter = 0;
     $totalCounter = 0;
 
     $foundInVbac = 0;
@@ -68,117 +70,131 @@ try {
     do {
         $data = $cFirst->getBackgroundCheckRequestList(null, null, $i);
         list(
-            'BGVErrors' => $error,
+            'BGVErrors' => $errors,
             'BGVListResponse' => $list
         ) = $data;
-        foreach($list as $key => $entry) {
-			list(
-				"APIReferenceCode" => $refCode,
-				"UniqueReferenceNo" => $uniqueReferenceNo,
-				"ProfileId" => $profileId,
-                "CandidateId" => $candidateId,
-				"CurrentStatus" => $cFirstStatus,
-				"Email" => $emailAddress,
-				"FirstName" => $firstName,
-				"MiddleName" => $middleName,
-				"LastName" => $lastName,
-                "Phone" => $phone,
-				"AddedOn" => $addedDate,
-				"InfoReceivedOn" => $infoReceivedDate,
-				"InfoRequestedOn" => $infoRequestedDate,
-				"InvitedOn" => $invitedDate,
-				"SubmittedOn" => $submittedDate,
-				"CompletedOn" => $completedDate,
-			) = $entry;
-
-            $additionalFields = array();
-            $additionalFields['API_REFERENCE_CODE'] = trim($refCode);
-            $additionalFields['UNIQUE_REFERENCE_NO'] = trim($uniqueReferenceNo);
-            $additionalFields['PROFILE_ID'] = trim($profileId);
-            $additionalFields['CANDIDATE_ID'] = trim($candidateId);
-            $additionalFields['STATUS'] = trim($cFirstStatus);
-            $additionalFields['EMAIL_ADDRESS'] = trim($emailAddress);
-            $additionalFields['FIRST_NAME'] = trim($firstName);
-            $additionalFields['MIDDLE_NAME'] = trim($middleName);
-            $additionalFields['LAST_NAME'] = trim($lastName);
-            $additionalFields['PHONE'] = trim($phone);
-            $additionalFields['ADDED_ON_DATE'] = trim($addedDate);
-            $additionalFields['INFO_RECEIVED_ON_DATE'] = trim($infoReceivedDate);
-            $additionalFields['INFO_REQUESTED_ON_DATE'] = trim($infoRequestedDate);
-            $additionalFields['INVITED_ON_DATE'] = trim($invitedDate);
-            $additionalFields['SUBMITTED_ON_DATE'] = trim($submittedDate);
-            $additionalFields['COMPLETED_ON_DATE'] = trim($completedDate);
-            
-            $record->setFromArray($additionalFields);
-
-            switch($cFirstStatus) {
-                case cFIRSTPersonRecord::PROFILE_STATUS_COMPLETED:
-
-                    // try EMAIL_ADDRESS
-                    $personData = $personTable->getWithPredicate(" EMAIL_ADDRESS='" . trim($emailAddress) . "' ");
-                    if (empty($personData)) {
-                        // try KYN_EMAIL_ADDRESS
-                        $personData = $personTable->getWithPredicate(" KYN_EMAIL_ADDRESS='" . trim($emailAddress) . "' ");
-                    }
-                    
-                    if (!empty($personData)) {
-
-                        $vBACpesStatus = $personData['PES_STATUS'];
-                        $vBACrevalidationStatus = $personData['REVALIDATION_STATUS'];
-                        switch ($vBACpesStatus) {
-                            case personRecord::PES_STATUS_CLEARED:
-                            case personRecord::PES_STATUS_CLEARED_PERSONAL:
-                            case personRecord::PES_STATUS_CLEARED_AMBER:
-                            case personRecord::PES_STATUS_CANCEL_REQ:
-                            case personRecord::PES_STATUS_PROVISIONAL: // For Covid
-                                $completedInVbac++;
-                                break;
-                            default:
-                                $person->setFromArray($personData);
-                            
-                                // PES Status to set
-                                $pesStatusCleared = personRecord::PES_STATUS_CLEARED;
-            
-                                $requestor = $_SESSION['ssoEmail'];
-                                $pesDetail = $firstName . ' ' . $lastName . ' ['. $candidateId .']';
-
-                                // prepare date
-                                $dateToUseObj = \DateTime::createFromFormat('d-M-Y', $completedDate);
-                                $pesDateResponded = $dateToUseObj->format('Y-m-d');
-                                
-                                $txt .= '<li>';
-                                $txt .= $pesDetail;
-                                $txt .= ' === ';
-                                $txt .= $pesDateResponded;
-                                $txt .= ' === ';
-                                $txt .= $requestor;
-                                $txt .= '</li>';
-
-                                $success = $pesStatus->change($personTable, $person, $pesStatusCleared, $requestor, $pesDetail, $pesDateResponded);
-                                if ($success) {
-
-                                    $notificationStatus = $notification->save($person, $pesStatusCleared, $vBACrevalidationStatus);
-                                    AuditTable::audit("PES Status Email: " . $notificationStatus, AuditTable::RECORD_TYPE_DETAILS);
-                                    
-                                    $insertCounter++;
-                                } else {
-                                    $failedCounter++;
-                                }
-                                break;
+        
+        if (is_countable($list)) {
+            foreach($list as $key => $entry) {
+                list(
+                    "APIReferenceCode" => $refCode,
+                    "UniqueReferenceNo" => $uniqueReferenceNo,
+                    "ProfileId" => $profileId,
+                    "CandidateId" => $candidateId,
+                    "CurrentStatus" => $cFirstStatus,
+                    "Email" => $emailAddress,
+                    "FirstName" => $firstName,
+                    "MiddleName" => $middleName,
+                    "LastName" => $lastName,
+                    "Phone" => $phone,
+                    "AddedOn" => $addedDate,
+                    "InfoReceivedOn" => $infoReceivedDate,
+                    "InfoRequestedOn" => $infoRequestedDate,
+                    "InvitedOn" => $invitedDate,
+                    "SubmittedOn" => $submittedDate,
+                    "CompletedOn" => $completedDate,
+                ) = $entry;
+    
+                $additionalFields = array();
+                $additionalFields['API_REFERENCE_CODE'] = trim($refCode);
+                $additionalFields['UNIQUE_REFERENCE_NO'] = trim($uniqueReferenceNo);
+                $additionalFields['PROFILE_ID'] = trim($profileId);
+                $additionalFields['CANDIDATE_ID'] = trim($candidateId);
+                $additionalFields['STATUS'] = trim($cFirstStatus);
+                $additionalFields['EMAIL_ADDRESS'] = trim($emailAddress);
+                $additionalFields['FIRST_NAME'] = trim($firstName);
+                $additionalFields['MIDDLE_NAME'] = trim($middleName);
+                $additionalFields['LAST_NAME'] = trim($lastName);
+                $additionalFields['PHONE'] = trim($phone);
+                $additionalFields['ADDED_ON_DATE'] = trim($addedDate);
+                $additionalFields['INFO_RECEIVED_ON_DATE'] = trim($infoReceivedDate);
+                $additionalFields['INFO_REQUESTED_ON_DATE'] = trim($infoRequestedDate);
+                $additionalFields['INVITED_ON_DATE'] = trim($invitedDate);
+                $additionalFields['SUBMITTED_ON_DATE'] = trim($submittedDate);
+                $additionalFields['COMPLETED_ON_DATE'] = trim($completedDate);
+                
+                $record->setFromArray($additionalFields);
+    
+                switch($cFirstStatus) {
+                    case cFIRSTPersonRecord::PROFILE_STATUS_COMPLETED:
+    
+                        // try EMAIL_ADDRESS
+                        $personData = $personTable->getWithPredicate(" EMAIL_ADDRESS='" . trim($emailAddress) . "' ");
+                        if (empty($personData)) {
+                            // try KYN_EMAIL_ADDRESS
+                            $personData = $personTable->getWithPredicate(" KYN_EMAIL_ADDRESS='" . trim($emailAddress) . "' ");
                         }
-                        $foundInVbac++;
-                    } else {
-                        // person not found
-                        $notFoundInVbac++;
-                    }
-                    break;
-                default:
-                    break;
+                        
+                        if (!empty($personData)) {
+    
+                            $vBACpesStatus = $personData['PES_STATUS'];
+                            $vBACrevalidationStatus = $personData['REVALIDATION_STATUS'];
+                            switch ($vBACpesStatus) {
+                                case personRecord::PES_STATUS_CLEARED:
+                                case personRecord::PES_STATUS_CLEARED_PERSONAL:
+                                case personRecord::PES_STATUS_CLEARED_AMBER:
+                                case personRecord::PES_STATUS_CANCEL_REQ:
+                                case personRecord::PES_STATUS_PROVISIONAL: // For Covid
+                                    $completedInVbac++;
+                                    break;
+                                default:
+                                    $person->setFromArray($personData);
+                                
+                                    // PES Status to set
+                                    $pesStatusCleared = personRecord::PES_STATUS_CLEARED;
+                
+                                    $requestor = $_SESSION['ssoEmail'];
+                                    $pesDetail = $firstName . ' ' . $lastName . ' ['. $candidateId .']';
+    
+                                    // prepare date
+                                    $dateToUseObj = \DateTime::createFromFormat('d-M-Y', $completedDate);
+                                    $pesDateResponded = $dateToUseObj->format('Y-m-d');
+                                    
+                                    $txt .= '<li>';
+                                    $txt .= $pesDetail;
+                                    $txt .= ' === ';
+                                    $txt .= $pesDateResponded;
+                                    $txt .= ' === ';
+                                    $txt .= $requestor;
+                                    $txt .= '</li>';
+    
+                                    $success = $pesStatus->change($personTable, $person, $pesStatusCleared, $requestor, $pesDetail, $pesDateResponded);
+                                    if ($success) {
+    
+                                        $notificationStatus = $notification->save($person, $pesStatusCleared, $vBACrevalidationStatus);
+                                        AuditTable::audit("PES Status Email: " . $notificationStatus, AuditTable::RECORD_TYPE_DETAILS);
+                                        
+                                        $insertCounter++;
+                                    } else {
+                                        $failedCounter++;
+                                    }
+                                    break;
+                            }
+                            $foundInVbac++;
+                        } else {
+                            // person not found
+                            $notFoundInVbac++;
+                        }
+                        break;
+                    default:
+                        break;
+                }
             }
+            $stepCounter = count($list);      
+        } else {
+            $subject = 'Error in: cFIRST call - PES Fields From cFIRST';
+            $message = serialize($errors);
+
+            $to = array($_ENV['devemailid']);
+            $replyto = $_ENV['noreplyemailid'];
+            
+            $resonse = BlueMail::send_mail($to, $subject, $message, $replyto);
+            // trigger_error($subject . " - ". $message, E_USER_ERROR);
         }
+
         $i++;
-        $totalCounter += count($list);
-    } while (count($list) > 0);
+        $totalCounter += $stepCounter;
+    } while ($stepCounter > 0);
         
     $subject = 'Update PES Fields From cFIRST';
     $message = 'Candidates records have been updated';

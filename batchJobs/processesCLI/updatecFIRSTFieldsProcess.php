@@ -38,41 +38,57 @@ try {
     $timeMeasurements = array();
     $start =  microtime(true);
     $startPhase1 = microtime(true);
+    
+    $stepCounter = 0;
     $totalCounter = 0;
     
     $i = 1;
     do {
         $data = $cFirst->getBackgroundCheckRequestList(null, null, $i);
         list(
-            'BGVErrors' => $error,
+            'BGVErrors' => $errors,
             'BGVListResponse' => $list
         ) = $data;
-        foreach($list as $key => $entry) {
-            list(
-                // "APIReferenceCode" => $refCode,
-                // "UniqueReferenceNo" => $uniqueReferenceNo,
-                // "ProfileId" => $profileId,
-                "CandidateId" => $candidateId,
-                // "CurrentStatus" => $status,
-                "Email" => $emailAddress,
-                // "FirstName" => $firstName,
-                // "MiddleName" => $middleName,
-                // "LastName" => $lastName,
-                // "Phone" => $phone,
-                // "AddedOn" => $addedDate,
-                // "InfoReceivedOn" => $infoReceivedDate,
-                // "InfoRequestedOn" => $infoRequestedDate,
-                // "InvitedOn" => $invitedDate,
-                // "SubmittedOn" => $submittedDate,
-                // "CompletedOn" => $completedDate,
-            ) = $entry;
-            if (!empty($emailAddress)) {
-                $personTable->setcFIRSTDataByEmail($emailAddress, $candidateId);
+        
+        if (is_countable($list)) {
+            foreach($list as $key => $entry) {
+                list(
+                    // "APIReferenceCode" => $refCode,
+                    // "UniqueReferenceNo" => $uniqueReferenceNo,
+                    // "ProfileId" => $profileId,
+                    "CandidateId" => $candidateId,
+                    // "CurrentStatus" => $status,
+                    "Email" => $emailAddress,
+                    // "FirstName" => $firstName,
+                    // "MiddleName" => $middleName,
+                    // "LastName" => $lastName,
+                    // "Phone" => $phone,
+                    // "AddedOn" => $addedDate,
+                    // "InfoReceivedOn" => $infoReceivedDate,
+                    // "InfoRequestedOn" => $infoRequestedDate,
+                    // "InvitedOn" => $invitedDate,
+                    // "SubmittedOn" => $submittedDate,
+                    // "CompletedOn" => $completedDate,
+                ) = $entry;
+                if (!empty($emailAddress)) {
+                    $personTable->setcFIRSTDataByEmail($emailAddress, $candidateId);
+                }
             }
+            $stepCounter = count($list);
+        } else {
+            $subject = 'Error in: cFIRST call - cFIRST API fields';
+            $message = serialize($errors);
+
+            $to = array($_ENV['devemailid']);
+            $replyto = $_ENV['noreplyemailid'];
+            
+            $resonse = BlueMail::send_mail($to, $subject, $message, $replyto);
+            // trigger_error($subject . " - ". $message, E_USER_ERROR);
         }
+
         $i++;
-        $totalCounter += count($list);
-    } while (count($list) > 0);
+        $totalCounter += $stepCounter;
+    } while ($stepCounter > 0);
     
     $endPhase1 = microtime(true);
     $timeMeasurements['phase_1'] = (float)($endPhase1-$startPhase1);

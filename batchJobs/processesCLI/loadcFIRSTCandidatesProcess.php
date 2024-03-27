@@ -39,6 +39,8 @@ try {
     $table->clear(false);
     
     $cFirst = new cFIRST();
+
+    $stepCounter = 0;
     $totalCounter = 0;
     $insertCounter = 0;
     $failedCounter = 0;
@@ -46,62 +48,76 @@ try {
     do {
         $data = $cFirst->getBackgroundCheckRequestList(null, null, $i);
         list(
-            'BGVErrors' => $error,
+            'BGVErrors' => $errors,
             'BGVListResponse' => $list
         ) = $data;
-        foreach($list as $key => $entry) {
-			list(
-				"APIReferenceCode" => $refCode,
-				"UniqueReferenceNo" => $uniqueReferenceNo,
-				"ProfileId" => $profileId,
-                "CandidateId" => $candidateId,
-				"CurrentStatus" => $status,
-				"Email" => $emailAddress,
-				"FirstName" => $firstName,
-				"MiddleName" => $middleName,
-				"LastName" => $lastName,
-                "Phone" => $phone,
-				"AddedOn" => $addedDate,
-				"InfoReceivedOn" => $infoReceivedDate,
-				"InfoRequestedOn" => $infoRequestedDate,
-				"InvitedOn" => $invitedDate,
-				"SubmittedOn" => $submittedDate,
-				"CompletedOn" => $completedDate,
-			) = $entry;
-
-            $additionalFields = array();
-            $additionalFields['API_REFERENCE_CODE'] = trim($refCode);
-            $additionalFields['UNIQUE_REFERENCE_NO'] = trim($uniqueReferenceNo);
-            $additionalFields['PROFILE_ID'] = trim($profileId);
-            $additionalFields['CANDIDATE_ID'] = trim($candidateId);
-            $additionalFields['STATUS'] = trim($status);
-            $additionalFields['EMAIL_ADDRESS'] = trim($emailAddress);
-            $additionalFields['FIRST_NAME'] = trim($firstName);
-            $additionalFields['MIDDLE_NAME'] = trim($middleName);
-            $additionalFields['LAST_NAME'] = trim($lastName);
-            $additionalFields['PHONE'] = trim($phone);
-            $additionalFields['ADDED_ON_DATE'] = trim($addedDate);
-            $additionalFields['INFO_RECEIVED_ON_DATE'] = trim($infoReceivedDate);
-            $additionalFields['INFO_REQUESTED_ON_DATE'] = trim($infoRequestedDate);
-            $additionalFields['INVITED_ON_DATE'] = trim($invitedDate);
-            $additionalFields['SUBMITTED_ON_DATE'] = trim($submittedDate);
-            $additionalFields['COMPLETED_ON_DATE'] = trim($completedDate);
-            
-            $record->setFromArray($additionalFields);
-
-            // $table->insert($record);
-            // null - default return value
-            // false - update row
-            $saveRecordResult = $table->saveRecord($record);
-            if ($saveRecordResult) {
-                $insertCounter++;
-            } else {
-                $failedCounter++;
+        
+        if (is_countable($list)) {
+            foreach($list as $key => $entry) {
+                list(
+                    "APIReferenceCode" => $refCode,
+                    "UniqueReferenceNo" => $uniqueReferenceNo,
+                    "ProfileId" => $profileId,
+                    "CandidateId" => $candidateId,
+                    "CurrentStatus" => $status,
+                    "Email" => $emailAddress,
+                    "FirstName" => $firstName,
+                    "MiddleName" => $middleName,
+                    "LastName" => $lastName,
+                    "Phone" => $phone,
+                    "AddedOn" => $addedDate,
+                    "InfoReceivedOn" => $infoReceivedDate,
+                    "InfoRequestedOn" => $infoRequestedDate,
+                    "InvitedOn" => $invitedDate,
+                    "SubmittedOn" => $submittedDate,
+                    "CompletedOn" => $completedDate,
+                ) = $entry;
+    
+                $additionalFields = array();
+                $additionalFields['API_REFERENCE_CODE'] = trim($refCode);
+                $additionalFields['UNIQUE_REFERENCE_NO'] = trim($uniqueReferenceNo);
+                $additionalFields['PROFILE_ID'] = trim($profileId);
+                $additionalFields['CANDIDATE_ID'] = trim($candidateId);
+                $additionalFields['STATUS'] = trim($status);
+                $additionalFields['EMAIL_ADDRESS'] = trim($emailAddress);
+                $additionalFields['FIRST_NAME'] = trim($firstName);
+                $additionalFields['MIDDLE_NAME'] = trim($middleName);
+                $additionalFields['LAST_NAME'] = trim($lastName);
+                $additionalFields['PHONE'] = trim($phone);
+                $additionalFields['ADDED_ON_DATE'] = trim($addedDate);
+                $additionalFields['INFO_RECEIVED_ON_DATE'] = trim($infoReceivedDate);
+                $additionalFields['INFO_REQUESTED_ON_DATE'] = trim($infoRequestedDate);
+                $additionalFields['INVITED_ON_DATE'] = trim($invitedDate);
+                $additionalFields['SUBMITTED_ON_DATE'] = trim($submittedDate);
+                $additionalFields['COMPLETED_ON_DATE'] = trim($completedDate);
+                
+                $record->setFromArray($additionalFields);
+    
+                // $table->insert($record);
+                // null - default return value
+                // false - update row
+                $saveRecordResult = $table->saveRecord($record);
+                if ($saveRecordResult) {
+                    $insertCounter++;
+                } else {
+                    $failedCounter++;
+                }
             }
+            $stepCounter = count($list);
+        } else {
+            $subject = 'Error in: cFIRST call - cFIRST Candidates Records';
+            $message = serialize($errors);
+
+            $to = array($_ENV['devemailid']);
+            $replyto = $_ENV['noreplyemailid'];
+            
+            $resonse = BlueMail::send_mail($to, $subject, $message, $replyto);
+            // trigger_error($subject . " - ". $message, E_USER_ERROR);
         }
+
         $i++;
-        $totalCounter += count($list);
-    } while (count($list) > 0);
+        $totalCounter += $stepCounter;
+    } while ($stepCounter > 0);
         
     $subject = 'Load cFIRST Candidates Records';
     $message = 'Candidates records have been loaded';
