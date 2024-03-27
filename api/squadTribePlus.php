@@ -221,9 +221,6 @@ $sql.= !empty($notesId) ? " AND lower(P.NOTES_ID) = '" . htmlspecialchars(strtol
 $sql.= !empty($cnum) ? " AND lower(P.CNUM) = '" . htmlspecialchars(strtolower($cnum)) . "'  " : null;
 $sql.= " ORDER BY P.KYN_EMAIL_ADDRESS ";
 
-echo $sql;
-exit;
-
 $rs = sqlsrv_query($GLOBALS['conn'], $sql);
 
 if($rs){
