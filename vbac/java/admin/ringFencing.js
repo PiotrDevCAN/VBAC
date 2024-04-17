@@ -83,7 +83,6 @@ class ringFencing {
     // Apply the search
     this.table.columns().every(function () {
       var that = this;
-
       $("input", this.footer()).on("keyup change", function () {
         if (that.search() !== this.value) {
           that.search(this.value).draw();

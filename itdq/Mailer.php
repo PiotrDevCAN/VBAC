@@ -15,7 +15,8 @@ class Mailer {
 		$mailer = new PHPMailer();
 		$mailer->SMTPDebug = SMTP::DEBUG_OFF; // Enable verbose debug output ; SMTP::DEBUG_OFF
 		$mailer->isSMTP(); // Send using SMTP
-		$mailer->Host = $_ENV['smtp-server']; // Set the SMTP server to send through
+		// $mailer->Host = $_ENV['smtp-server']; // Set the SMTP server to send through
+		$mailer->Host = $_ENV['smtp-server-new']; // Set the SMTP server to send through
 		$mailer->SMTPAuth = true;
 		$mailer->SMTPAutoTLS = true;
 		$mailer->SMTPSecure = 'ssl';

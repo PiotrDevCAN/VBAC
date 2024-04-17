@@ -86,6 +86,7 @@ jobs:
             kps-gd-app-vbac/data/testqa/w3us/sqlserver_wus3 username | DB_USER_NAME ;
             kps-gd-app-vbac/data/testqa/w3us/sqlserver_wus3 password | DB_USER_PW ;
             kps-gd-app-vbac/data/dev/w3us/smtpserver host | SMTP_HOST ;
+            kps-gd-app-vbac/data/dev/w3us/smtpserver host_new | SMTP_HOST_NEW ;
             kps-gd-app-vbac/data/dev/w3us/smtpserver username | SMTP_USER_NAME ;
             kps-gd-app-vbac/data/dev/w3us/smtpserver password | SMTP_USER_PW ;
             kps-gd-app-vbac/data/testqa/w3us/SSOserver host | SSO_HOST ;
@@ -178,6 +179,7 @@ jobs:
           string-data: |
             {
               "smtp-server": "${{ env.SMTP_HOST }}",
+              "smtp-server-new": "${{ env.SMTP_HOST_NEW }}",
               "smtp-user-name": "${{ env.SMTP_USER_NAME }}",
               "smtp-user-pw": "${{ env.SMTP_USER_PW }}"
             }
