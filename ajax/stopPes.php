@@ -21,12 +21,13 @@ try {
     $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER);
     $pesTracker->savePesComment($cnum, $workerId, "PES Stop Requested");
     
+    $basicPersonDetails = array(
+        'CNUM'=>$cnum,
+        'WORKER_ID'=>$workerId
+    );
     $person = new personRecord();
     $person->setFromArray(
-        array(
-            'CNUM'=>$cnum,
-            'WORKER_ID'=>$workerId
-        )
+        $basicPersonDetails
     );
     $email = new pesTeamOfOffStopRequestEmail();
     $email->send($person, $requestor) ;

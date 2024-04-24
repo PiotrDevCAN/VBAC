@@ -35,6 +35,6 @@ class pesTeamOfOffboardingEmail implements notificationEmail {
         $pesEmail.="</tbody></table>";
         $pesEmail.= "<style> th { background:red; padding:15px; } </style>";
 
-        return BlueMail::send_mail(array($pesTaskId), "vbac Offboarding - $cnum : $notesId (Reval:$revalidationStatusWas)", $pesEmail, $pesTaskId);
+        return BlueMail::send_mail(array($pesTaskId), "vbac Offboarding - $cnum / $workerId : $notesId (Reval:$revalidationStatusWas)", $pesEmail, $pesTaskId);
     }
 }

@@ -2149,11 +2149,16 @@ class personTable extends DbTable
             }
 
             $this->notifyFmOfRevalStatusChange($cnum, $workerId, personRecord::REVALIDATED_OFFBOARDING);
+            $basicPersonDetails = array(
+                'CNUM'=>$cnum,
+                'WORKER_ID'=>$workerId
+            );
             $person = new personRecord();
             $person->setFromArray(
+                $basicPersonDetails
+            );
+            $person->setFromArray(
                 array(
-                    'CNUM'=>$cnum,
-                    'WORKER_ID'=>$workerId,
                     'NOTES_ID'=>$notesId
                 )
             );
@@ -2188,12 +2193,13 @@ class personTable extends DbTable
             }
 
             $this->notifyFmOfRevalStatusChange($cnum, $workerId, personRecord::REVALIDATED_OFFBOARDED);
+            $basicPersonDetails = array(
+                'CNUM'=>$cnum,
+                'WORKER_ID'=>$workerId
+            );
             $person = new personRecord();
             $person->setFromArray(
-                array(
-                    'CNUM'=>$cnum,
-                    'WORKER_ID'=>$workerId
-                )
+                $basicPersonDetails
             );
             $email = new pesTeamOfOffboardedEmail();
             $email->send($person, $revalidationStatus);

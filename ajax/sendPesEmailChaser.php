@@ -16,11 +16,16 @@ $emailAddress = $_POST['emailaddress'];
 $chaser = $_POST['chaser'];
 $flm = $_POST['flm'];
 
+$basicPersonDetails = array(
+    'CNUM'=>$cnum,
+    'WORKER_ID'=>$workerId
+);
 $person = new personRecord();
 $person->setFromArray(
+    $basicPersonDetails
+);
+$person->setFromArray(
     array(
-        'CNUM'=>$cnum,
-        'WORKER_ID'=>$workerId,
         'EMAIL_ADDRESS'=>$emailAddress
     )
 );

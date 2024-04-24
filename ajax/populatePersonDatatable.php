@@ -106,11 +106,11 @@ ob_start();
 if ($dataJsonAble) {
     $response = array(
         'draw' => $draw,
-        "data" => $data,
+        'data' => $data,
         'recordsTotal' => $total,
         'recordsFiltered' => $filtered,
-        "error" => $messages,
-        "sql" => $sql,
+        'error' => $messages,
+        'sql' => $sql,
     );
 } else {
     $personTable->findDirtyData();

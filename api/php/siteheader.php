@@ -5,6 +5,8 @@ use itdq\Connection;
 use itdq\Mailer;
 use itdq\Redis;
 use itdq\WorkerAPI;
+use itdq\OKTAGroups;
+use itdq\OKTAUsers;
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -55,3 +57,5 @@ $dbClient = new Connection();
 $redisClient = new Redis();
 // $mailerClient = new Mailer();
 // $workerAPIClient = new WorkerAPI();
+// $OKTAGroups = new OKTAGroups();
+// $OKTAUsers = new OKTAUsers();

@@ -13,10 +13,10 @@ $emailAddress = !empty($_POST['EMAIL_ADDRESS']) ? trim($_POST['EMAIL_ADDRESS']) 
 
 if (!empty($groupName) && !empty($emailAddress)) {
 
-    $OKTAGroups = new OKTAGroups();
+    $OKTAGroups = $GLOBALS['OKTAGroups'];
     $groupId = $OKTAGroups->getGroupId($groupName);
 
-    $OKTAUsers = new OKTAUsers();
+    $OKTAUsers = $GLOBALS['OKTAUsers'];
     $userId = $OKTAUsers->getUserID($emailAddress);
 
     $result = $OKTAGroups->addMember($groupId, $userId);

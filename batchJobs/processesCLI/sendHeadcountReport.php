@@ -52,6 +52,7 @@ try {
     DbTable::autoFilter($spreadsheet);
     DbTable::autoSizeColumns($spreadsheet);
     DbTable::setRowColor($spreadsheet,'19DDEBF7',1);
+    DbTable::setColumnFormatting($spreadsheet);
     
     $spreadsheet->setActiveSheetIndex(0);
     $spreadsheet->getActiveSheet()->setTitle('Headcount Report');

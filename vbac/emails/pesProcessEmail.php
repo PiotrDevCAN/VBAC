@@ -12,22 +12,12 @@ class pesProcessEmail implements notificationEmail {
 
         $cnum = $person->getValue('CNUM');
         $workerId = $person->getValue('WORKER_ID');
-        $openSeat = $person->getValue('OPEN_SEAT');
-        $country = $person->getValue('COUNTRY');
         $emailAddress = $person->getValue('EMAIL_ADDRESS');
+        $country = $person->getValue('COUNTRY');
+        $openSeat = $person->getValue('OPEN_SEAT');
         $firstName = $person->getValue('FIRST_NAME');
         $lastName = $person->getValue('LAST_NAME');
 
-        $person = new personRecord();
-        $person->setFromArray(
-            array(
-                'CNUM'=>$cnum,
-                'WORKER_ID'=>$workerId,
-                'EMAIL_ADDRESS'=>$emailAddress,
-                'COUNTRY'=>$country,
-                'OPEN_SEAT'=>$openSeat
-            )
-        );
         $email = new pesEmail();
         $emailDetailsData = $email->getEmailDetails($person, $recheck, true);
         list('filename' => $filename, 'attachments' => $attachments, 'attachmentFileNames' => $attachmentFileNames) = $emailDetailsData;
@@ -46,7 +36,7 @@ class pesProcessEmail implements notificationEmail {
         
         $revalidation = $recheck=='yes' ? " - REVALIDATION " : "";
         
-        $sendResponse = BlueMail::send_mail(array($emailAddress), "NEW URGENT - Pre Employment Screening $revalidation - $cnum : $firstName, $lastName", $emailBody, $pesTaskId, array(), array(),false,$pesAttachments, pesEmail::EMAIL_PES_SUPRESSABLE);
+        $sendResponse = BlueMail::send_mail(array($emailAddress), "NEW URGENT - Pre Employment Screening $revalidation - $cnum / $workerId : $firstName, $lastName", $emailBody, $pesTaskId, array(), array(),false,$pesAttachments, pesEmail::EMAIL_PES_SUPRESSABLE);
         return $sendResponse;
     }
 }

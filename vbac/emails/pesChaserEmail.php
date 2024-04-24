@@ -12,6 +12,7 @@ class pesChaserEmail implements notificationEmail {
     function send(personRecord $person, $chaserLevel = null, $flm = null){
 
         $cnum = $person->getValue('CNUM');
+        $workerId = $person->getValue('WORKER_ID');
         $emailAddress = $person->getValue('EMAIL_ADDRESS');
 
         $pesEmailPattern = array(); // Will be overridden when we include_once from emailBodies later.
@@ -28,7 +29,7 @@ class pesChaserEmail implements notificationEmail {
         include_once 'emailBodies/' . $emailBodyFileName;
         $emailBody = preg_replace($pesEmailPattern, $replacements, $pesEmail);
         
-        $sendResponse = BlueMail::send_mail(array($emailAddress), "Reminder- Pre Employment Screening - $cnum : $firstName, $lastName", $emailBody, $pesTaskId, array($flm),array(),true, array(),pesEmail::EMAIL_PES_SUPRESSABLE);
+        $sendResponse = BlueMail::send_mail(array($emailAddress), "Reminder- Pre Employment Screening - $cnum / $workerId : $firstName, $lastName", $emailBody, $pesTaskId, array($flm),array(),true, array(),pesEmail::EMAIL_PES_SUPRESSABLE);
         return $sendResponse;
     }
 }

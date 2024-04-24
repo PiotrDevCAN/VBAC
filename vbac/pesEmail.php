@@ -266,7 +266,7 @@ class pesEmail {
         $cnum = $person->getValue('CNUM');
         $workerId = $person->getValue('WORKER_ID');
         $emailAddress = $person->getValue('EMAIL_ADDRESS');
-        $country = $person->getValue('COUNTRY'); 
+        $country = $person->getValue('COUNTRY');
         $openSeat = $person->getValue('OPEN_SEAT'); 
 
         $revalidationStatus = personTable::getRevalidationStatus($cnum, $workerId, $emailAddress);

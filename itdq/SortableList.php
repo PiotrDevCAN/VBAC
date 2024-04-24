@@ -1638,7 +1638,7 @@ class SortableList
      */
     function displayProfileOptions()
     {
-        $OKTAGroups = new OKTAGroups();
+        $OKTAGroups = $GLOBALS['OKTAGroups'];
         if ($this->profileSaveable && isset(AllITdqTables::$PROFILES)) { // They are setup to have saved profiles.
             $loader = new Loader();
             $myProfiles = $loader->load('PROFILE_NAME', AllITdqTables::$PROFILES, " (INTRANET='" . htmlspecialchars(trim($_SESSION['ssoEmail'])) . "' or INTRANET='global' ) AND PAGE='" . htmlspecialchars(trim($_SERVER['PHP_SELF'])) . "' ");
@@ -1715,7 +1715,7 @@ class SortableList
      */
     function saveProfile()
     {
-        $OKTAGroups = new OKTAGroups();
+        $OKTAGroups = $GLOBALS['OKTAGroups'];
         if ($this->profileSaveable && isset(AllITdqTables::$PROFILES) && isset($_REQUEST['sbifProfile_Name']) && isset($_REQUEST['sbbSave_Profile'])) {
             if (! empty($_REQUEST['sbifProfile_Name']) && ! empty($_REQUEST['sbbSave_Profile'])) {
                 $table = new DbTable(AllITdqTables::$PROFILES);
@@ -1748,7 +1748,7 @@ class SortableList
      */
     function deleteProfile()
     {
-        $OKTAGroups = new OKTAGroups();
+        $OKTAGroups = $GLOBALS['OKTAGroups'];
         if ($this->profileSaveable && isset(AllITdqTables::$PROFILES) && isset($_REQUEST['sbsLoad_Profile']) && isset($_REQUEST['sbbDelete_Profile'])) {
             if (! empty($_REQUEST['sbsLoad_Profile']) && ! empty($_REQUEST['sbbDelete_Profile'])) {
                 $table = new DbTable(AllITdqTables::$PROFILES);

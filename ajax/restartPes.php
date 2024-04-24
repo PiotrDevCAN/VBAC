@@ -20,18 +20,25 @@ try {
     $pesDetail = $_POST['psm_detail'];
     $pesDateResponded = $_POST['PES_DATE_RESPONDED'];
     
+    $basicPersonDetails = array(
+        'CNUM'=>$cnum,
+        'WORKER_ID'=>$workerId
+    );
+
     $personTable = new personTable(allTables::$PERSON);
     $person = new personRecord();
     $person->setFromArray(
-        array(
-            'CNUM'=>$cnum,
-            'WORKER_ID'=>$workerId
-        )
+        $basicPersonDetails
     );
     $pesStatus = new pesStatus();
     $success = $pesStatus->change($personTable, $person, $status, $requestor, $pesDetail, $pesDateResponded);
     
     if ($success) {
+        // get person from DB
+        $personData = $personTable->getRecord($person);
+        $person->setFromArray(
+            $personData
+        );
         $notification = new pesStatusChangeNotification();
         $notificationStatus = $notification->restart($person, $status);
         AuditTable::audit("PES Status Email: " . $notificationStatus, AuditTable::RECORD_TYPE_DETAILS);

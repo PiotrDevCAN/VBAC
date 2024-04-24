@@ -10,7 +10,7 @@ $data = array();
 
 $group = !empty($_POST['group']) ? trim($_POST['group']) : null;
 if (!empty($group)) {
-    $OKTAGroups = new OKTAGroups();
+    $OKTAGroups = $GLOBALS['OKTAGroups'];
     $groupName = $GLOBALS['site']['allGroups'][$group];
     $groupId = $OKTAGroups->getGroupId($groupName);
     $membersData = $OKTAGroups->getGroupMembers($groupName);

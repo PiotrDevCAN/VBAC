@@ -22,6 +22,8 @@ class OKTAUsers {
 		$this->token = trim($_ENV['sso_api_token']);
 		
 		$this->redis = $GLOBALS['redis'];
+
+		$GLOBALS['OKTAUsers'] = $this;
 	}
 
 	private function createCurl($type = "GET")
@@ -37,7 +39,10 @@ class OKTAUsers {
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $type);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		
+		if (stripos($_ENV['environment'], 'local')) {
+			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		};	
 		return $ch;
 	}
 

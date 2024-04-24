@@ -22,7 +22,7 @@ $navBarSearch = false;
 $pageDetails = explode("/", $_SERVER['PHP_SELF']);
 $page = isset($pageDetails[2]) ? $pageDetails[2] : $pageDetails[1];
 
-$OKTAGroups = new OKTAGroups();
+$OKTAGroups = $GLOBALS['OKTAGroups'];
 $navbar = new Navbar($navBarImage, $navBarBrand, $navBarSearch);
 
 $cdiAdmin       		= new NavbarMenu("CDI Admin");

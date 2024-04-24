@@ -13,11 +13,17 @@ $country = $_GET['country'];
 $openSeat = null;
 
 try {
+    $basicPersonDetails = array(
+        'CNUM'=>$cnum,
+        'WORKER_ID'=>$workerId
+    );
+
     $person = new personRecord();
     $person->setFromArray(
+        $basicPersonDetails
+    );
+    $person->setFromArray(
         array(
-            'CNUM'=>$cnum,
-            'WORKER_ID'=>$workerId,
             'EMAIL_ADDRESS'=>$emailAddress,
             'COUNTRY'=>$country,
             'OPEN_SEAT'=>$openSeat

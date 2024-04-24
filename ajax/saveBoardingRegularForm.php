@@ -222,8 +222,8 @@ try {
                             * assign employee to requested groups
                             */
                             if (isset($_POST['OktaRoles'])) {
-                                $OKTAGroups = new OKTAGroups();
-                                $OKTAUsers = new OKTAUsers();
+                                $OKTAGroups = $GLOBALS['OKTAGroups'];
+                                $OKTAUsers = $GLOBALS['OKTAUsers'];
                                 foreach($_POST['OktaRoles'] as $key => $groupName) {
                                     // add on-boarded employee to OKTA groups
                                     $groupId = $OKTAGroups->getGroupId($groupName);

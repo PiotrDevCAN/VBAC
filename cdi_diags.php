@@ -26,7 +26,7 @@ unset($_SESSION['isPmo']);
 unset($_SESSION['isUser']);
 unset($_SESSION['isPes']);
 
-$OKTAGroups = new OKTAGroups();
+$OKTAGroups = $GLOBALS['OKTAGroups'];
 $isFm   = personTable::isManager($_SESSION['ssoEmail']) ? ".not('.accessFm')" : null;
 $isCdi  = $OKTAGroups->inAGroup($_SESSION['cdiBgAz'],  $_SESSION['ssoEmail']) ? ".not('.accessCdi')" : null;
 $isPmo  = $OKTAGroups->inAGroup($_SESSION['pmoBgAz'],  $_SESSION['ssoEmail']) ? ".not('.accessPmo')" : null;

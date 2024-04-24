@@ -8,6 +8,8 @@ use itdq\ByJgJwtSecureSession;
 use PhpOffice\PhpSpreadsheet\Helper\Sample;
 use itdq\Connection;
 use itdq\Mailer;
+use itdq\OKTAGroups;
+use itdq\OKTAUsers;
 use itdq\Redis;
 use itdq\WorkerAPI;
 
@@ -400,6 +402,14 @@ if (isset($_SERVER['HTTP_USER_AGENT']) && !empty($_SERVER['HTTP_USER_AGENT'])) {
     $elapsed = microtime(true);
     error_log("Pre Worker API:" . (float)($elapsed-$start));
     // $workerAPIClient = new WorkerAPI();
+
+    $elapsed = microtime(true);
+    error_log("Pre OCTA Groups:" . (float)($elapsed-$start));
+    $OKTAGroups = new OKTAGroups();
+    
+    $elapsed = microtime(true);
+    error_log("Pre OCTA Users:" . (float)($elapsed-$start));
+    $OKTAUsers = new OKTAUsers();
 
     /*
     $twigLoader = new \Twig\Loader\FilesystemLoader('./templates');

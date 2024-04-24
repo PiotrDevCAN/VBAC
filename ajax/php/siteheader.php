@@ -4,6 +4,8 @@ use itdq\ByJgJwtSecureSession;
 use itdq\Connection;
 use itdq\Redis;
 use itdq\Mailer;
+use itdq\OKTAGroups;
+use itdq\OKTAUsers;
 
 // use itdq\WorkerAPI;
 
@@ -85,3 +87,5 @@ $dbClient = new Connection();
 $redisClient = new Redis();
 // $mailerClient = new Mailer();
 // $workerAPIClient = new WorkerAPI();
+$OKTAGroups = new OKTAGroups();
+$OKTAUsers = new OKTAUsers();

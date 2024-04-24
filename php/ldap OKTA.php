@@ -8,7 +8,7 @@ use itdq\OKTAGroups;
 // an email address.
 function employee_in_group($group, $employee, $depth = 2)
 {
-    $OKTAGroups = new OKTAGroups();
+    $OKTAGroups = $GLOBALS['OKTAGroups'];
     return $OKTAGroups->inAGroup($group, $employee, $depth);       
 }
 ?>

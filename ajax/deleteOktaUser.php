@@ -12,7 +12,7 @@ $userId = !empty($_POST['USER_ID']) ? trim($_POST['USER_ID']) : null;
 
 if (!empty($groupId) && !empty($userId)) {
 
-    $OKTAGroups = new OKTAGroups();
+    $OKTAGroups = $GLOBALS['OKTAGroups'];
     $result = $OKTAGroups->removeMember($groupId, $userId);
 
     $groupName = $OKTAGroups->getGroupName($groupId);

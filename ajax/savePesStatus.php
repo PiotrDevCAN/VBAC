@@ -26,46 +26,37 @@ try {
     $firstName = isset($_POST['psm_passportFirst']) ? $_POST['psm_passportFirst'] : null;
     $lastName = isset($_POST['psm_passportSurname']) ? $_POST['psm_passportSurname'] : null;
 
+    $basicPersonDetails = array(
+        'CNUM'=>$cnum,
+        'WORKER_ID'=>$workerId
+    );
+
     $personTable = new personTable(allTables::$PERSON);
     $person = new personRecord();
     $person->setFromArray(
-        array(
-            'CNUM'=>$cnum,
-            'WORKER_ID'=>$workerId
-        )
+        $basicPersonDetails
     );
     $pesStatus = new pesStatus();
     $success = $pesStatus->change($personTable, $person, $status, $requestor, $pesDetail, $pesDateResponded);
 
     if ($success) {
+        // get person from DB
+        $personData = $personTable->getRecord($person);
+        $person->setFromArray(
+            $personData
+        );
+
         $notification = new pesStatusChangeNotification();
         $notificationStatus = $notification->save($person, $status, $revalidationStatus);
         AuditTable::audit("PES Status Email: " . $notificationStatus, AuditTable::RECORD_TYPE_DETAILS);
-    
-        /*
-        *
-        */
-        // get person from DB
-        $person = new personRecord();
-        $person->setFromArray(
-            array(
-                'CNUM'=>$cnum,
-                'WORKER_ID'=>$workerId
-            )
-        );
-        $personData = $personTable->getRecord($person);
-        $person->setFromArray($personData);
-        
+
         $formattedPesStatusField = personTable::getPesStatusWithButtons($personData);
 
         if (!$firstName && !$lastName) {
             // We've been called from the PES TRACKER Screen;
             $pesTrackeRecord = new pesTrackerRecord();
             $pesTrackeRecord->setFromArray(
-                array(
-                    'CNUM'=>$cnum,
-                    'WORKER_ID'=>$workerId
-                )
+                $basicPersonDetails
             );
 
             $pesTracker = new pesTrackerTable(allTables::$PES_TRACKER);

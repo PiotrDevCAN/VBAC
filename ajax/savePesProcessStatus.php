@@ -28,11 +28,17 @@ try {
     ob_start();
     $success   = empty($messages);
 
+    $basicPersonDetails = array(
+        'CNUM'=>$cnum,
+        'WORKER_ID'=>$workerId
+    );
+
     $person = new personRecord();
     $person->setFromArray(
+        $basicPersonDetails
+    );
+    $person->setFromArray(
         array(
-            'CNUM'=>$cnum,
-            'WORKER_ID'=>$workerId,
             'FIRST_NAME'=>$firstName, 
             'LAST_NAME'=>$lastName, 
             'EMAIL_ADDRESS'=>$emailAddress

@@ -68,7 +68,7 @@ class assetRequestRecord extends DbRecord {
         $myManagersCnum = personTable::myManagersCnum();
         $isFm   = personTable::isManager($_SESSION['ssoEmail']);
         $isPmo  = $_SESSION['isPmo'];
-        $OKTAGroups = new OKTAGroups();
+        $OKTAGroups = $GLOBALS['OKTAGroups'];
         $isRequestor = $OKTAGroups->inAGroup($_SESSION['reqBgAz'], $_SESSION['ssoEmail']);
 
         $iAmDelegateForArray = $loader->load('CNUM',allTables::$DELEGATE," AND DELEGATE_CNUM='" . htmlspecialchars($myCnum) . "' ");

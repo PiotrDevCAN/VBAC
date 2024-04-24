@@ -18,7 +18,12 @@ $messages = ob_get_clean();
 ob_start();
 
 if($dataJsonAble) {
-   $response = array("data"=>$data,'messages'=>$messages,'sql'=>$sql,'post'=>print_r($_POST,true));
+   $response = array(
+      'data'=>$data,
+      'messages'=>$messages,
+      'sql'=>$sql,
+      'post'=>print_r($_POST,true)
+   );
 } else {
    $personTable->findDirtyData();
    $dirtyDetails = ob_get_clean();
